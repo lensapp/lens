@@ -4,9 +4,9 @@
  */
 import type { EnvironmentVariables } from "./compute-shell-environment.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
-import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 import spawnInjectable from "../../child-process/spawn.injectable";
 import randomUUIDInjectable from "../../crypto/random-uuid.injectable";
+import { basename } from "path";
 
 export interface UnixShellEnvOptions {
   signal?: AbortSignal;
@@ -20,12 +20,11 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
     const powerShellName = /^pwsh(-preview)?$/;
     const nonBashLikeShellName = /^t?csh$/;
 
-    const getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
     const spawn = di.inject(spawnInjectable);
     const randomUUID = di.inject(randomUUIDInjectable);
 
     const getShellSpecifices = (shellPath: string, mark: string) => {
-      const shellName = getBasenameOfPath(shellPath);
+      const shellName = basename(shellPath);
 
       if (powerShellName.test(shellName)) {
         // Older versions of PowerShell removes double quotes sometimes so we use "double single quotes" which is how
