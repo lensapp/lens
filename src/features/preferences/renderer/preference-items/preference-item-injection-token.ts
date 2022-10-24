@@ -7,7 +7,7 @@ import type React from "react";
 import type { ChildOfParentComposite, ParentOfChildComposite } from "../../../../common/utils/composite/interfaces";
 import type { Discriminable } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
 import type { Labelable } from "../../../../common/utils/composable-responsibilities/labelable/labelable";
-import type { Showable } from "../../../../common/utils/composable-responsibilities/showable/showable";
+import type { MaybeShowable } from "../../../../common/utils/composable-responsibilities/showable/showable";
 import type { Orderable } from "../../../../common/utils/composable-responsibilities/orderable/orderable";
 import type { GetSeparator } from "../../../../common/utils/add-separator/add-separator";
 import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
@@ -27,7 +27,7 @@ export type PreferenceTab =
   & Discriminable<"tab">
   & ParentOfChildComposite
   & ChildOfParentComposite
-  & Showable
+  & MaybeShowable
   & Labelable
   & Orderable
   & { pathId: string };
@@ -36,7 +36,7 @@ export type PreferenceTabGroup =
   & Discriminable<"tab-group">
   & ParentOfChildComposite
   & ChildOfParentComposite<"preference-tabs">
-  & Showable
+  & MaybeShowable
   & Labelable
   & Orderable
   & { iconName? : string };
@@ -50,14 +50,14 @@ export type PreferencePage =
   & Discriminable<"page">
   & ParentOfChildComposite
   & ChildOfParentComposite
-  & Showable
+  & MaybeShowable
   & RenderableWithSiblings<PreferencePage>;
 
 export type PreferenceBlock =
   & Discriminable<"block">
   & ParentOfChildComposite
   & ChildOfParentComposite
-  & Showable
+  & MaybeShowable
   & RenderableWithSiblings<PreferenceBlock>;
 
 export type PreferenceTypes = PreferenceTabGroup | PreferenceTab | PreferenceBlock | PreferencePage;
