@@ -13,8 +13,7 @@ import {
   uniq,
   without,
   compact,
-  get,
-  sortBy,
+  identity,
 } from "lodash/fp";
 
 export interface Composite<T> {
@@ -24,21 +23,21 @@ export interface Composite<T> {
   children: Composite<T>[];
 }
 
-export default <T>({
-  source,
-  rootId,
-  getId = get("id"),
-  getParentId = get("parentId"),
-  getOrderedChildren = (things: T[]) => sortBy("orderNumber", things),
-  handleMissingParentIds = throwMissingParentIds,
-}: {
-  source: T[];
+interface Configuration<T> {
   rootId?: string;
-  getId?: (thing: T) => string;
-  getParentId?: (thing: T) => string | undefined;
-  getOrderedChildren?: (things: T[]) => T[];
+  getId: (thing: T) => string;
+  getParentId: (thing: T) => string | undefined;
+  transformChildren?: (things: T[]) => T[];
   handleMissingParentIds?: (parentIdsForHandling: ParentIdsForHandling) => void;
-}) => {
+}
+
+export default <T>({
+  rootId = undefined,
+  getId,
+  getParentId,
+  transformChildren = identity,
+  handleMissingParentIds = throwMissingParentIds,
+}: Configuration<T>) => (source: T[]) => {
   const undefinedIds = pipeline(
     source,
     filter((x) => getId(x) === undefined),
@@ -107,7 +106,7 @@ export default <T>({
           return parentId !== undefined && parentId === thingId;
         }),
 
-        getOrderedChildren,
+        transformChildren,
 
         map(toComposite),
       ),
