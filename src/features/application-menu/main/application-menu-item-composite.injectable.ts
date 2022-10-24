@@ -11,14 +11,11 @@ import { pipeline } from "@ogre-tools/fp";
 import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-item-injection-token";
 import type { RootComposite } from "../../../common/utils/composite/interfaces";
 import type { Discriminable } from "../../../common/utils/composable-responsibilities/discriminable/discriminable";
-import type { Orderable } from "../../../common/utils/composable-responsibilities/orderable/orderable";
 import { orderByOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
 import logErrorInjectable from "../../../common/log-error.injectable";
 import { isShown } from "../../../common/utils/composable-responsibilities/showable/showable";
 
-export type MenuItemRoot = Discriminable<"root"> &
-  RootComposite<"root"> &
-  Orderable;
+export type MenuItemRoot = Discriminable<"root"> & RootComposite<"root">;
 
 const applicationMenuItemCompositeInjectable = getInjectable({
   id: "application-menu-item-composite",
@@ -33,10 +30,9 @@ const applicationMenuItemCompositeInjectable = getInjectable({
       return pipeline(
         [
           {
-            id: "root" as const,
             parentId: undefined,
+            id: "root" as const,
             kind: "root" as const,
-            orderNumber: 0 as const,
           },
 
           ...items,
