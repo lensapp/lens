@@ -287,7 +287,7 @@ Available parent ids are:
 
     const items = [root, someItem, someOtherItem];
 
-    const getComposite = getCompositeFor<SomeItem>({
+    const getComposite = getCompositeFor<any>({
       getId: (x) => x.id,
       getParentId: (x) => x.parentId,
     });
