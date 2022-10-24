@@ -15,17 +15,15 @@ interface SomeItem {
 }
 
 describe("get-composite", () => {
-  it("given items and a specified root id, creates a composite", () => {
-    const getComposite = getCompositeFor<SomeItem>({
-      rootId: "some-root-id",
-      getId: (x) => x.id,
-      getParentId: (x) => x.parentId,
-    });
-
+  it("given items and an explicit root id, creates a composite", () => {
     const someRootItem = {
       id: "some-root-id",
-      parentId: undefined,
       someProperty: "some-root-content",
+    };
+
+    const someIrrelevantRootItem = {
+      id: "some-irrelevant-root-id",
+      someProperty: "some-other-root-content",
     };
 
     const someItem = {
@@ -40,7 +38,13 @@ describe("get-composite", () => {
       someProperty: "some-nested-content",
     };
 
-    const items = [someRootItem, someItem, someNestedItem];
+    const items = [someRootItem, someIrrelevantRootItem, someItem, someNestedItem];
+
+    const getComposite = getCompositeFor<SomeItem>({
+      rootId: "some-root-id",
+      getId: (x) => x.id,
+      getParentId: (x) => x.parentId,
+    });
 
     const composite = getComposite(items);
 
@@ -67,11 +71,11 @@ describe("get-composite", () => {
     });
   });
 
-  it("given items and an unspecified root id and single item without parent as root, creates a composite", () => {
+  it("given items and implicit root, creates a composite", () => {
     const someRootItem = {
       id: "some-root-id",
       someProperty: "some-root-content",
-      // Notice: no "parentId" makes this the root.
+      // Notice: no "parentId" makes this the implicit root.
       parentId: undefined,
     };
 
