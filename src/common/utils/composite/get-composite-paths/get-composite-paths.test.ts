@@ -2,11 +2,12 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import getComposite from "../get-composite/get-composite";
 import { getCompositePaths } from "./get-composite-paths";
+import getCompositeFor from "../get-composite/get-composite";
+import { sortBy } from "lodash/fp";
 
 describe("get-composite-paths", () => {
-  it("given composite with ordered children, returns ordered paths", () => {
+  it("given composite with transformed children, returns paths of transformed children in hierarchical order", () => {
     const someRootItem = {
       id: "some-root-id",
     };
@@ -44,9 +45,18 @@ describe("get-composite-paths", () => {
       someGrandchildItem1,
     ];
 
-    const composite = getComposite({
-      source: items,
+    const getComposite = getCompositeFor<{
+      id: string;
+      parentId?: string;
+      orderNumber?: number;
+    }>({
+      rootId: "some-root-id",
+      getId: (x) => x.id,
+      getParentId: (x) => x.parentId,
+      transformChildren: children => sortBy(child => child.orderNumber, children),
     });
+
+    const composite = getComposite(items);
 
     const actual = getCompositePaths(composite);
 

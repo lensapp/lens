@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getCompositeNormalization } from "./get-composite-normalization";
-import getComposite from "../get-composite/get-composite";
+import getCompositeFor from "../get-composite/get-composite";
 
 describe("get-composite-normalization", () => {
   it("given a composite, flattens it to paths and composites", () => {
@@ -24,9 +24,17 @@ describe("get-composite-normalization", () => {
 
     const items = [someRootItem, someItem, someNestedItem];
 
-    const composite = getComposite({
-      source: items,
+    const getComposite = getCompositeFor<{
+      id: string;
+      parentId?: string;
+      orderNumber?: number;
+    }>({
+      rootId: "some-root-id",
+      getId: (x) => x.id,
+      getParentId: (x) => x.parentId,
     });
+
+    const composite = getComposite(items);
 
     const actual = getCompositeNormalization(composite);
 

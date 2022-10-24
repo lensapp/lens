@@ -3,23 +3,28 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { Composite } from "../get-composite/get-composite";
-import getComposite from "../get-composite/get-composite";
 import { findComposite } from "./find-composite";
+import getCompositeFor from "../get-composite/get-composite";
 
 describe("find-composite", () => {
   let composite: Composite<{ id: string; parentId?: string }>;
 
   beforeEach(() => {
-    composite = getComposite({
-      source: [
-        { id: "some-root-id" },
-        { id: "some-child-id", parentId: "some-root-id" },
-        { id: "some-grandchild-id", parentId: "some-child-id" },
-        { id: "some-other-grandchild-id", parentId: "some-child-id" },
-      ],
-
+    const getComposite = getCompositeFor<{
+      id: string;
+      parentId?: string;
+    }>({
       rootId: "some-root-id",
+      getId: (x) => x.id,
+      getParentId: (x) => x.parentId,
     });
+
+    composite = getComposite([
+      { id: "some-root-id" },
+      { id: "some-child-id", parentId: "some-root-id" },
+      { id: "some-grandchild-id", parentId: "some-child-id" },
+      { id: "some-other-grandchild-id", parentId: "some-child-id" },
+    ]);
   });
 
   it("when finding root using path, does so", () => {
