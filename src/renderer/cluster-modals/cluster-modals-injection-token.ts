@@ -4,9 +4,8 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { IComputedValue } from "mobx";
 import type { ClusterModalRegistration } from "../../extensions/registries";
 
 export const clusterModalsInjectionToken = getInjectionToken<
-  IComputedValue<ClusterModalRegistration[]>
+  ClusterModalRegistration
 >({ id: "cluster-modals-injection-token" });

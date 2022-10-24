@@ -9,15 +9,16 @@ import React from "react";
 import type { ClusterModalRegistration } from "../../extensions/registries";
 import clusterModalsInjectable from "./cluster-modals.injectable";
 import { observer } from "mobx-react";
+import type { IComputedValue } from "mobx";
 
 interface Dependencies {
-  clusterModals: ClusterModalRegistration[];
+  clusterModals: IComputedValue<ClusterModalRegistration[]>;
 }
 
 export const NonInjectedClusterModals = observer(({ clusterModals }: Dependencies) => {
   return (
     <div className={styles.clusterModals} style={{ height: 0 }}>
-      {clusterModals.map((modal) => {
+      {clusterModals.get().map((modal) => {
         return modal.visible.get() ? <modal.Component key={modal.id} /> : null;
       })}
     </div>

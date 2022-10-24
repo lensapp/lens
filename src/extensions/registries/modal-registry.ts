@@ -12,4 +12,3 @@ export interface ClusterModalRegistration {
   Component: React.ComponentType;
   visible: IComputedValue<boolean>;
 }
-

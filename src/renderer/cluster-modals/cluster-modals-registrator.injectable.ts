@@ -2,28 +2,35 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { pipeline } from "@ogre-tools/fp";
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ExtensionRegistrator } from "../../extensions/extension-loader/extension-registrator-injection-token";
+import { map } from "lodash/fp";
 import { extensionRegistratorInjectionToken } from "../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
+import { clusterModalsInjectionToken } from "./cluster-modals-injection-token";
 
 const clusterModalsRegistratorInjectable = getInjectable({
   id: "cluster-modals-registrator",
 
-  instantiate: (): ExtensionRegistrator => {
+  instantiate: (di) => {
     return (ext) => {
       const extension = ext as LensRendererExtension;
 
-      return extension.clusterModals.map(registration => {
-        return getInjectable({
-          id: registration.id,
+      return pipeline(
+        extension.clusterModals,
 
-          instantiate: () => ({
-            Component: registration.Component,
-            visible: registration.visible,
-          }),
-        });
-      });
+        map((modal) => {
+          return getInjectable({
+            id: modal.id,
+            injectionToken: clusterModalsInjectionToken,
+            instantiate: () => ({
+              id: `${modal.id}-id`,
+              visible: modal.visible,
+              Component: modal.Component
+            })
+          })
+        })
+      )
     };
   },
   injectionToken: extensionRegistratorInjectionToken,

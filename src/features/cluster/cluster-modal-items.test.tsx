@@ -5,7 +5,7 @@
 import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
-import type { IComputedValue, IObservableValue } from "mobx";
+import type { IObservableValue } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import React from "react";
 import type { ClusterModalRegistration } from "../../extensions/registries";
@@ -24,8 +24,8 @@ describe("<body/> elements originated from cluster modal registration", () => {
 
   describe("given custom components for cluster view available", () => {
     let someObservable: IObservableValue<boolean>;
-    let clusterModalInjectable: Injectable<IComputedValue<ClusterModalRegistration[]>, any, any>;
-    let clusterDialogInjectable: Injectable<IComputedValue<ClusterModalRegistration[]>, any, any>;
+    let clusterModalInjectable: Injectable<ClusterModalRegistration, any, any>;
+    let clusterDialogInjectable: Injectable<ClusterModalRegistration, any, any>;
   
     beforeEach(async () => {
       someObservable = observable.box(false);
@@ -34,11 +34,11 @@ describe("<body/> elements originated from cluster modal registration", () => {
         id: "some-cluster-modal-injectable",
       
         instantiate: () => {
-          return computed((): ClusterModalRegistration[] => [{
+          return {
             id: "test-modal-id",
             Component: () => <div data-testid="test-modal">test modal</div>,
             visible: computed(() => true),
-          }]);
+          };
         },
       
         injectionToken: clusterModalsInjectionToken,
@@ -48,11 +48,11 @@ describe("<body/> elements originated from cluster modal registration", () => {
         id: "dialog-with-observable-visibility-injectable",
       
         instantiate: () => {
-          return computed((): ClusterModalRegistration[] => [{
+          return {
             id: "dialog-with-observable-visibility-id",
             Component: () => <div data-testid="dialog-with-observable-visibility">dialog contents</div>,
             visible: computed(() => someObservable.get()),
-          }]);
+          };
         },
       
         injectionToken: clusterModalsInjectionToken,
