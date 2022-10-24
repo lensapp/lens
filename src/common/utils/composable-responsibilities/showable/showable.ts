@@ -6,12 +6,8 @@
 import type { IComputedValue } from "mobx";
 import { isBoolean } from "../../type-narrowing";
 
-export interface Showable<
-  T extends IComputedValue<boolean> | boolean =
-    | IComputedValue<boolean>
-    | boolean,
-> {
-  isShown?: T;
+export interface Showable {
+  isShown: IComputedValue<boolean> | boolean;
 }
 
 export const isShown = (showable: Showable | {}) => {

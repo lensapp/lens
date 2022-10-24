@@ -12,8 +12,8 @@ import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-ite
 import type { RootComposite } from "../../../common/utils/composite/interfaces";
 import type { Discriminable } from "../../../common/utils/composable-responsibilities/discriminable/discriminable";
 import type { Orderable } from "../../../common/utils/composable-responsibilities/orderable/orderable";
+import { orderByOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
 import logErrorInjectable from "../../../common/log-error.injectable";
-import { sortBy } from "lodash/fp";
 import { isShown } from "../../../common/utils/composable-responsibilities/showable/showable";
 
 export type MenuItemRoot = Discriminable<"root"> &
@@ -48,8 +48,8 @@ const applicationMenuItemCompositeInjectable = getInjectable({
           transformChildren: (children) =>
             pipeline(
               children,
-              sortBy((child) => child.orderNumber),
-              (children) => children.filter(child => isShown(child)),
+              orderByOrderNumber,
+              (children) => children.filter(isShown),
             ),
 
           handleMissingParentIds: ({ missingParentIds }) => {

@@ -7,12 +7,13 @@ import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-f
 import { computed } from "mobx";
 import type { PreferenceTypes } from "./preference-item-injection-token";
 import { preferenceItemInjectionToken } from "./preference-item-injection-token";
-import getComposite from "../../../../common/utils/composite/get-composite/get-composite";
-import { filter } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
+import type { PreferenceTabsRoot } from "./preference-tab-root";
 import { preferenceTabsRoot } from "./preference-tab-root";
 import logErrorInjectable from "../../../../common/log-error.injectable";
 import { isShown } from "../../../../common/utils/composable-responsibilities/showable/showable";
+import getCompositeFor from "../../../../common/utils/composite/get-composite/get-composite";
+import { orderByOrderNumber } from "../../../../common/utils/composable-responsibilities/orderable/orderable";
 
 const preferencesCompositeInjectable = getInjectable({
   id: "preferences-composite",
@@ -22,25 +23,29 @@ const preferencesCompositeInjectable = getInjectable({
     const preferenceItems = computedInjectMany(preferenceItemInjectionToken);
     const logError = di.inject(logErrorInjectable);
 
+    const getComposite = getCompositeFor<PreferenceTypes | PreferenceTabsRoot>({
+      getId: (x) => x.id,
+      getParentId: (x) => x.parentId,
+
+      handleMissingParentIds: (ids) => {
+        logError(
+          `Tried to create preferences, but encountered references to unknown ids: "${ids.missingParentIds.join(
+            '", "',
+          )}". Available ids are: "${ids.availableParentIds.join('", "')}"`,
+        );
+      },
+
+      transformChildren: (children) =>
+        pipeline(
+          children.filter(isShown),
+          orderByOrderNumber,
+        ),
+    });
+
     return computed(() =>
       pipeline(
         [preferenceTabsRoot, ...preferenceItems.get()],
-        filter((item: PreferenceTypes) => isShown(item)),
-
-        (items) =>
-          getComposite({
-            source: items,
-
-            handleMissingParentIds: (ids) => {
-              logError(
-                `Tried to create preferences, but encountered references to unknown ids: "${ids.missingParentIds.join(
-                  '", "',
-                )}". Available ids are: "${ids.availableParentIds.join(
-                  '", "',
-                )}"`,
-              );
-            },
-          }),
+        getComposite,
       ),
     );
   },
