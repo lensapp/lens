@@ -5,14 +5,14 @@
 import { pipeline } from "@ogre-tools/fp";
 import { getInjectable } from "@ogre-tools/injectable";
 import { map } from "lodash/fp";
-import { extensionRegistratorInjectionToken } from "../../extensions/extension-loader/extension-registrator-injection-token";
+import { ExtensionRegistrator, extensionRegistratorInjectionToken } from "../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import { clusterModalsInjectionToken } from "./cluster-modals-injection-token";
 
 const clusterModalsRegistratorInjectable = getInjectable({
   id: "cluster-modals-registrator",
 
-  instantiate: (di) => {
+  instantiate: (): ExtensionRegistrator => {
     return (ext) => {
       const extension = ext as LensRendererExtension;
 
