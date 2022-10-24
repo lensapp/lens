@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { PreferenceTypes } from "../../preference-item-injection-token";
+import type { PreferenceItemTypes } from "../../preference-item-injection-token";
 import { preferenceItemInjectionToken } from "../../preference-item-injection-token";
 import Gutter from "../../../../../../renderer/components/gutter/gutter";
 import React from "react";
@@ -13,7 +13,7 @@ const PreferenceItemGroup = ({
   item,
 }: {
   children: React.ReactElement;
-  item: PreferenceTypes;
+  item: PreferenceItemTypes;
 }) => <section id={item.id}>{children}</section>;
 
 const kubectlGroupPreferenceItemInjectable = getInjectable({

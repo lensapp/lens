@@ -13,7 +13,7 @@ import type { GetSeparator } from "../../../../common/utils/add-separator/add-se
 import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
 
 export type ChildrenAreSeparated =
-  & { childSeparator: GetSeparator<Composite<PreferenceTypes>, React.ReactElement> };
+  & { childSeparator: GetSeparator<Composite<PreferenceItemTypes>, React.ReactElement> };
 
 export type ChildrenAreMaybeSeparated =
   & Partial<ChildrenAreSeparated>;
@@ -41,7 +41,7 @@ export type PreferenceTabGroup =
   & Orderable
   & { iconName? : string };
 
-interface RenderableWithSiblings<T extends PreferenceTypes>
+interface RenderableWithSiblings<T extends PreferenceItemTypes>
   extends ChildrenAreMaybeSeparated {
   Component: PreferenceItemComponent<T>;
 }
@@ -60,9 +60,9 @@ export type PreferenceBlock =
   & MaybeShowable
   & RenderableWithSiblings<PreferenceBlock>;
 
-export type PreferenceTypes = PreferenceTabGroup | PreferenceTab | PreferenceBlock | PreferencePage;
+export type PreferenceItemTypes = PreferenceTabGroup | PreferenceTab | PreferenceBlock | PreferencePage;
 
-export const preferenceItemInjectionToken = getInjectionToken<PreferenceTypes>({
+export const preferenceItemInjectionToken = getInjectionToken<PreferenceItemTypes>({
   id: "preference-item-injection-token",
 });
 

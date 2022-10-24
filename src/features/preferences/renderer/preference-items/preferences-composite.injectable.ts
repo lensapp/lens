@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { computed } from "mobx";
-import type { PreferenceTypes } from "./preference-item-injection-token";
+import type { PreferenceItemTypes } from "./preference-item-injection-token";
 import { preferenceItemInjectionToken } from "./preference-item-injection-token";
 import { pipeline } from "@ogre-tools/fp";
 import type { PreferenceTabsRoot } from "./preference-tab-root";
@@ -23,7 +23,7 @@ const preferencesCompositeInjectable = getInjectable({
     const preferenceItems = computedInjectMany(preferenceItemInjectionToken);
     const logError = di.inject(logErrorInjectable);
 
-    const getComposite = getCompositeFor<PreferenceTypes | PreferenceTabsRoot>({
+    const getComposite = getCompositeFor<PreferenceItemTypes | PreferenceTabsRoot>({
       getId: (x) => x.id,
       getParentId: (x) => x.parentId,
 

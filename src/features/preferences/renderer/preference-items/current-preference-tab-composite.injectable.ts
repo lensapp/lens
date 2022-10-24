@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import type { PreferenceTab, PreferenceTypes } from "./preference-item-injection-token";
+import type { PreferenceTab, PreferenceItemTypes } from "./preference-item-injection-token";
 import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
 import { filter, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
@@ -40,7 +40,7 @@ const currentPreferenceTabCompositeInjectable = getInjectable({
 });
 
 const isPreferenceTab = (
-  composite: Composite<PreferenceTypes | PreferenceTabsRoot>,
+  composite: Composite<PreferenceItemTypes | PreferenceTabsRoot>,
 ): composite is Composite<PreferenceTab> => composite.value.kind === "tab";
 
 const hasMatchingPathId =

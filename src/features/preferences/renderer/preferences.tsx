@@ -10,7 +10,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import closePreferencesInjectable from "./close-preferences/close-preferences.injectable";
 import currentPreferenceTabCompositeInjectable from "./preference-items/current-preference-tab-composite.injectable";
 import type { Composite } from "../../../common/utils/composite/get-composite/get-composite";
-import type { PreferenceTypes, PreferenceTab } from "./preference-items/preference-item-injection-token";
+import type { PreferenceItemTypes, PreferenceTab } from "./preference-items/preference-item-injection-token";
 import type { IComputedValue } from "mobx";
 import { Map } from "../../../renderer/components/map/map";
 import { observer } from "mobx-react";
@@ -50,7 +50,7 @@ const NonInjectedPreferences = observer(
   },
 );
 
-const toPreferenceItemHierarchy = (composite: Composite<PreferenceTypes>) => {
+const toPreferenceItemHierarchy = (composite: Composite<PreferenceItemTypes>) => {
   const value = composite.value;
 
   switch (value.kind) {

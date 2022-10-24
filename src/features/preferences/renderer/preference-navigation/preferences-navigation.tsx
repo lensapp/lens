@@ -5,7 +5,7 @@
 import { Tabs } from "../../../../renderer/components/tabs";
 import React from "react";
 import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
-import type { PreferenceTypes } from "../preference-items/preference-item-injection-token";
+import type { PreferenceItemTypes } from "../preference-items/preference-item-injection-token";
 import { Map } from "../../../../renderer/components/map/map";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
@@ -18,7 +18,7 @@ import { Icon } from "../../../../renderer/components/icon";
 import { checkThatAllDiscriminablesAreExhausted } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
 
 interface Dependencies {
-  composite: IComputedValue<Composite<PreferenceTypes | PreferenceTabsRoot>>;
+  composite: IComputedValue<Composite<PreferenceItemTypes | PreferenceTabsRoot>>;
 }
 
 const NonInjectedPreferencesNavigation = observer(({ composite }: Dependencies) => (
@@ -37,7 +37,7 @@ export const PreferencesNavigation = withInjectables<Dependencies>(
   },
 );
 
-const toNavigationHierarchy = (composite: Composite<PreferenceTypes | PreferenceTabsRoot>) => {
+const toNavigationHierarchy = (composite: Composite<PreferenceItemTypes | PreferenceTabsRoot>) => {
   const value = composite.value;
 
   switch (value.kind) {
@@ -80,7 +80,7 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes | Preference
       return (
         <Map
           // Note: stricter typing for composite children could maybe remove this curiosity.
-          items={composite.children.filter(hasContent) as Composite<PreferenceTypes>[]}
+          items={composite.children.filter(hasContent) as Composite<PreferenceItemTypes>[]}
           getSeparator={value.childSeparator}
         >
           {toNavigationHierarchy}
@@ -94,7 +94,7 @@ const toNavigationHierarchy = (composite: Composite<PreferenceTypes | Preference
   }
 };
 
-const hasContent = compositeHasDescendant<PreferenceTypes | PreferenceTabsRoot>(
+const hasContent = compositeHasDescendant<PreferenceItemTypes | PreferenceTabsRoot>(
   (composite) => composite.value.kind === "block",
 );
 
