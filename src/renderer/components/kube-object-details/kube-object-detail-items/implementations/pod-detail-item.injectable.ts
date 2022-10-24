@@ -17,7 +17,7 @@ const podDetailItemInjectable = getInjectable({
 
     return {
       Component: PodDetails,
-      enabled: computed(() => isPod(kubeObject.get())),
+      enabled: computed(() => isPod(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

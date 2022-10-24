@@ -58,7 +58,7 @@ export class CustomResourceDefinitionStore extends KubeObjectStore<CustomResourc
   }
 
   getByObject(obj: KubeObject) {
-    if (!obj) return null;
+    if (!obj) return undefined;
     const { kind, apiVersion } = obj;
 
     return this.items.find(crd => (

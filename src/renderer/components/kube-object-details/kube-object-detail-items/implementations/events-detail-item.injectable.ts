@@ -17,7 +17,7 @@ const eventsDetailItemInjectable = getInjectable({
 
     return {
       Component: EventDetails,
-      enabled: computed(() => isEvent(kubeObject.get())),
+      enabled: computed(() => isEvent(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

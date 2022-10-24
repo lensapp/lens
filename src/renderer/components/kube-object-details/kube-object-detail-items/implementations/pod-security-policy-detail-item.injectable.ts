@@ -17,7 +17,7 @@ const podSecurityPolicyDetailItemInjectable = getInjectable({
 
     return {
       Component: PodSecurityPolicyDetails,
-      enabled: computed(() => isPodSecurityPolicy(kubeObject.get())),
+      enabled: computed(() => isPodSecurityPolicy(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

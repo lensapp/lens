@@ -17,7 +17,7 @@ const endpointsDetailItemInjectable = getInjectable({
 
     return {
       Component: EndpointsDetails,
-      enabled: computed(() => isEndpoint(kubeObject.get())),
+      enabled: computed(() => isEndpoint(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },
