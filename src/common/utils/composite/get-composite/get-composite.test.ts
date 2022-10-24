@@ -4,9 +4,9 @@
  */
 
 import type { Composite } from "./get-composite";
-import getCompositeFor from "./get-composite";
 import { getCompositePaths } from "../get-composite-paths/get-composite-paths";
 import { sortBy } from "lodash/fp";
+import { getCompositeFor } from "./get-composite";
 
 interface SomeItem {
   id: string;

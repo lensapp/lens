@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getCompositePaths } from "./get-composite-paths";
-import getCompositeFor from "../get-composite/get-composite";
 import { sortBy } from "lodash/fp";
+import { getCompositeFor } from "../get-composite/get-composite";
 
 describe("get-composite-paths", () => {
   it("given composite with transformed children, returns paths of transformed children in hierarchical order", () => {

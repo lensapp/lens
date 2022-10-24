@@ -5,7 +5,7 @@
 
 import type { Composite } from "../get-composite/get-composite";
 import { compositeHasDescendant } from "./composite-has-descendant";
-import getCompositeFor from "../get-composite/get-composite";
+import { getCompositeFor } from "../get-composite/get-composite";
 
 describe("composite-has-descendant, given composite with children and grand children", () => {
   let composite: Composite<{ id: string; parentId?: string }>;

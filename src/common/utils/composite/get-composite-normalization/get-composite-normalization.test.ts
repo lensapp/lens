@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getCompositeNormalization } from "./get-composite-normalization";
-import getCompositeFor from "../get-composite/get-composite";
+import { getCompositeFor } from "../get-composite/get-composite";
+
 
 describe("get-composite-normalization", () => {
   it("given a composite, flattens it to paths and composites", () => {

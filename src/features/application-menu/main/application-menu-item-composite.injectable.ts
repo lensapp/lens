@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuItemsInjectable from "./application-menu-items.injectable";
 import type { Composite } from "../../../common/utils/composite/get-composite/get-composite";
-import getCompositeFor from "../../../common/utils/composite/get-composite/get-composite";
 import { computed } from "mobx";
 import { pipeline } from "@ogre-tools/fp";
 import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-item-injection-token";
@@ -15,6 +14,7 @@ import type { Orderable } from "../../../common/utils/composable-responsibilitie
 import { orderByOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
 import logErrorInjectable from "../../../common/log-error.injectable";
 import { isShown } from "../../../common/utils/composable-responsibilities/showable/showable";
+import { getCompositeFor } from "../../../common/utils/composite/get-composite/get-composite";
 
 export type MenuItemRoot = Discriminable<"root"> &
   RootComposite<"root"> &
