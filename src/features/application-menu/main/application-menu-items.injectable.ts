@@ -7,7 +7,6 @@ import type { MenuItemConstructorOptions } from "electron";
 import { computed } from "mobx";
 import applicationMenuItemInjectionToken from "./menu-items/application-menu-item-injection-token";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
-import { isShown } from "../../../common/utils/composable-responsibilities/showable/showable";
 
 export interface MenuItemOpts extends MenuItemConstructorOptions {
   submenu?: MenuItemConstructorOptions[];
@@ -20,9 +19,7 @@ const applicationMenuItemsInjectable = getInjectable({
     const computedInjectMany = di.inject(computedInjectManyInjectable);
 
     return computed(() =>
-      computedInjectMany(applicationMenuItemInjectionToken)
-        .get()
-        .filter(isShown),
+      computedInjectMany(applicationMenuItemInjectionToken).get(),
     );
   },
 });

@@ -5,26 +5,27 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuItemsInjectable from "./application-menu-items.injectable";
 import type { Composite } from "../../../common/utils/composite/get-composite/get-composite";
-import getComposite from "../../../common/utils/composite/get-composite/get-composite";
+import getCompositeFor from "../../../common/utils/composite/get-composite/get-composite";
 import { computed } from "mobx";
 import { pipeline } from "@ogre-tools/fp";
 import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-item-injection-token";
-import loggerInjectable from "../../../common/logger.injectable";
 import type { RootComposite } from "../../../common/utils/composite/interfaces";
 import type { Discriminable } from "../../../common/utils/composable-responsibilities/discriminable/discriminable";
 import type { Orderable } from "../../../common/utils/composable-responsibilities/orderable/orderable";
+import logErrorInjectable from "../../../common/log-error.injectable";
+import { sortBy } from "lodash/fp";
+import { isShown } from "../../../common/utils/composable-responsibilities/showable/showable";
 
-export type MenuItemRoot =
-  & Discriminable<"root">
-  & RootComposite<"root">
-  & Orderable;
+export type MenuItemRoot = Discriminable<"root"> &
+  RootComposite<"root"> &
+  Orderable;
 
 const applicationMenuItemCompositeInjectable = getInjectable({
   id: "application-menu-item-composite",
 
   instantiate: (di) => {
     const menuItems = di.inject(applicationMenuItemsInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logError = di.inject(logErrorInjectable);
 
     return computed((): Composite<ApplicationMenuItemTypes | MenuItemRoot> => {
       const items = menuItems.get();
@@ -41,12 +42,21 @@ const applicationMenuItemCompositeInjectable = getInjectable({
           ...items,
         ],
 
-        (x) => getComposite({
-          source: x,
+        getCompositeFor({
+          getId: (x) => x.id,
+          getParentId: (x) => x.parentId,
+          transformChildren: (children) =>
+            pipeline(
+              children,
+              sortBy((child) => child.orderNumber),
+              (children) => children.filter(child => isShown(child)),
+            ),
 
           handleMissingParentIds: ({ missingParentIds }) => {
-            logger.error(
-              `[MENU]: cannot render menu item for missing parentIds: "${missingParentIds.join('", "')}"`,
+            logError(
+              `[MENU]: cannot render menu item for missing parentIds: "${missingParentIds.join(
+                '", "',
+              )}"`,
             );
           },
         }),
