@@ -110,6 +110,13 @@ describe("preferences - navigation to telemetry preferences", () => {
         name: "some-test-extension-name",
 
         rendererOptions: {
+          appPreferenceTabs: [
+            {
+              title: "irrelevant",
+              id: "not-telemetry",
+            },
+          ],
+
           appPreferences: [
             {
               title: "irrelevant",

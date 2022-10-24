@@ -4,28 +4,25 @@
  */
 
 import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
-import loggerInjectable from "../../logger.injectable";
-import type { Logger } from "../../logger";
 import withErrorLoggingInjectable from "./with-error-logging.injectable";
 import { pipeline } from "@ogre-tools/fp";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "../../test-utils/get-promise-status";
+import logErrorInjectable from "../../log-error.injectable";
 
 describe("with-error-logging", () => {
   describe("given decorated sync function", () => {
-    let loggerStub: Logger;
     let toBeDecorated: jest.Mock<number | undefined, [string, string]>;
     let decorated: (a: string, b: string) => number | undefined;
+    let logErrorMock: jest.Mock;
 
     beforeEach(() => {
       const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-      loggerStub = {
-        error: jest.fn(),
-      } as unknown as Logger;
+      logErrorMock = jest.fn();
 
-      di.override(loggerInjectable, () => loggerStub);
+      di.override(logErrorInjectable, () => logErrorMock);
 
       const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
 
@@ -52,7 +49,7 @@ describe("with-error-logging", () => {
       });
 
       it("does not log error", () => {
-        expect(loggerStub.error).not.toHaveBeenCalled();
+        expect(logErrorMock).not.toHaveBeenCalled();
       });
 
       it("returns the value", () => {
@@ -75,7 +72,7 @@ describe("with-error-logging", () => {
       });
 
       it("does not log error", () => {
-        expect(loggerStub.error).not.toHaveBeenCalled();
+        expect(logErrorMock).not.toHaveBeenCalled();
       });
 
       it("returns nothing", () => {
@@ -104,7 +101,7 @@ describe("with-error-logging", () => {
       });
 
       it("logs the error", () => {
-        expect(loggerStub.error).toHaveBeenCalledWith("some-error-message-for-some-error", error);
+        expect(logErrorMock).toHaveBeenCalledWith("some-error-message-for-some-error", error);
       });
 
       it("throws", () => {
@@ -114,18 +111,16 @@ describe("with-error-logging", () => {
   });
 
   describe("given decorated async function", () => {
-    let loggerStub: Logger;
     let decorated: (a: string, b: string) => Promise<number | undefined>;
     let toBeDecorated: AsyncFnMock<typeof decorated>;
+    let logErrorMock: jest.Mock;
 
     beforeEach(() => {
       const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-      loggerStub = {
-        error: jest.fn(),
-      } as unknown as Logger;
+      logErrorMock = jest.fn();
 
-      di.override(loggerInjectable, () => loggerStub);
+      di.override(logErrorInjectable, () => logErrorMock);
 
       const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
 
@@ -153,7 +148,7 @@ describe("with-error-logging", () => {
       });
 
       it("does not log error yet", () => {
-        expect(loggerStub.error).not.toHaveBeenCalled();
+        expect(logErrorMock).not.toHaveBeenCalled();
       });
 
       it("does not resolve yet", async () => {
@@ -176,7 +171,7 @@ describe("with-error-logging", () => {
             error = e;
           }
 
-          expect(loggerStub.error).toHaveBeenCalledWith("some-error-message-for-some-error", error);
+          expect(logErrorMock).toHaveBeenCalledWith("some-error-message-for-some-error", error);
         });
 
         it("rejects", () => {
@@ -198,7 +193,7 @@ describe("with-error-logging", () => {
         });
 
         it("logs the rejection", () => {
-          expect(loggerStub.error).toHaveBeenCalledWith(
+          expect(logErrorMock).toHaveBeenCalledWith(
             "some-error-message-for-some-rejection",
             error,
           );
@@ -215,7 +210,7 @@ describe("with-error-logging", () => {
         });
 
         it("does not log error", () => {
-          expect(loggerStub.error).not.toHaveBeenCalled();
+          expect(logErrorMock).not.toHaveBeenCalled();
         });
 
         it("resolves with the value", async () => {
@@ -231,7 +226,7 @@ describe("with-error-logging", () => {
         });
 
         it("does not log error", () => {
-          expect(loggerStub.error).not.toHaveBeenCalled();
+          expect(logErrorMock).not.toHaveBeenCalled();
         });
 
         it("resolves without value", async () => {
