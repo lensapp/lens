@@ -26,11 +26,11 @@ const clusterModalsRegistratorInjectable = getInjectable({
             instantiate: () => ({
               id: `${modal.id}-id`,
               visible: modal.visible,
-              Component: modal.Component
-            })
-          })
-        })
-      )
+              Component: modal.Component,
+            }),
+          });
+        }),
+      );
     };
   },
   injectionToken: extensionRegistratorInjectionToken,
