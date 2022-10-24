@@ -15,20 +15,26 @@ import { checkThatAllDiscriminablesAreExhausted } from "../../../common/utils/co
 const populateApplicationMenuInjectable = getInjectable({
   id: "populate-application-menu",
 
-  instantiate: () => (composite: Composite<ApplicationMenuItemTypes | MenuItemRoot>) => {
-    const topLevelMenus = composite.children.filter(
-      (x): x is Composite<ApplicationMenuItemTypes> => x.value.kind !== "root",
-    );
+  instantiate:
+    () => (composite: Composite<ApplicationMenuItemTypes | MenuItemRoot>) => {
+      const electronTemplate = getApplicationMenuTemplate(composite);
+      const menu = Menu.buildFromTemplate(electronTemplate);
 
-    const electronTemplate = topLevelMenus.map(toHierarchicalElectronMenuItem);
-
-    Menu.setApplicationMenu(Menu.buildFromTemplate(electronTemplate));
-  },
+      Menu.setApplicationMenu(menu);
+    },
 
   causesSideEffects: true,
 });
 
 export default populateApplicationMenuInjectable;
+
+export const getApplicationMenuTemplate = (composite: Composite<ApplicationMenuItemTypes | MenuItemRoot>) => {
+  const topLevelMenus = composite.children.filter(
+    (x): x is Composite<ApplicationMenuItemTypes> => x.value.kind !== "root",
+  );
+
+  return topLevelMenus.map(toHierarchicalElectronMenuItem);
+};
 
 const toHierarchicalElectronMenuItem = (
   composite: Composite<ApplicationMenuItemTypes>,
