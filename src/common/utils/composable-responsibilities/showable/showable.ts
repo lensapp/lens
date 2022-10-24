@@ -14,7 +14,11 @@ export interface Showable<
   isShown?: T;
 }
 
-export const isShown = (showable: Showable) => {
+export const isShown = (showable: Showable | {}) => {
+  if (!("isShown" in showable)) {
+    return true;
+  }
+
   if (showable.isShown === undefined) {
     return true;
   }
