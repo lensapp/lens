@@ -62,7 +62,7 @@ if (ipcMain) {
          * called in the main process
          */
         dirname: app.getPath("logs"),
-        maxsize: 16 * 1024,
+        maxsize: 1024 * 1024,
         maxFiles: 16,
         tailable: true,
       }),
