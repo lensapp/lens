@@ -6,7 +6,7 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 import type { BrowserWindow, KeyboardEvent, MenuItemConstructorOptions, MenuItem as ElectronMenuItem } from "electron";
 import type { SetOptional } from "type-fest";
 import type { ChildOfParentComposite, ParentOfChildComposite } from "../../../../common/utils/composite/interfaces";
-import type { Showable } from "../../../../common/utils/composable-responsibilities/showable/showable";
+import type { MaybeShowable } from "../../../../common/utils/composable-responsibilities/showable/showable";
 import type { Discriminable } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
 import type { Orderable } from "../../../../common/utils/composable-responsibilities/orderable/orderable";
 
@@ -31,7 +31,7 @@ type ApplicationMenuItemType<T extends string> =
   & Discriminable<T>
   & ParentOfChildComposite
   & ChildOfParentComposite
-  & Showable
+  & MaybeShowable
   & Orderable;
 
 export type TopLevelMenu =

@@ -10,6 +10,8 @@ export interface Showable {
   isShown: IComputedValue<boolean> | boolean;
 }
 
+export type MaybeShowable = Partial<Showable>;
+
 export const isShown = (showable: Showable | {}) => {
   if (!("isShown" in showable)) {
     return true;
