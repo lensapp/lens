@@ -10,7 +10,6 @@ import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { RuntimeClass } from "../../../common/k8s-api/endpoints";
-import { KubeObjectMeta } from "../kube-object-meta";
 import { Badge } from "../badge";
 import { RuntimeClassDetailsTolerations } from "./runtime-classes-details-tolerations";
 
@@ -26,8 +25,6 @@ export class RuntimeClassesDetails extends React.Component<RuntimeClassesDetails
 
     return (
       <div className="RuntimeClassesDetails">
-        <KubeObjectMeta object={rc} />
-
         <DrawerItem name="Handler">
           {rc.getHandler()}
         </DrawerItem>

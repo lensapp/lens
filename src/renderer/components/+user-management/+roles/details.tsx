@@ -11,7 +11,6 @@ import React from "react";
 import type { Role } from "../../../../common/k8s-api/endpoints";
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
-import { KubeObjectMeta } from "../../kube-object-meta";
 
 export interface RoleDetailsProps extends KubeObjectDetailsProps<Role> {
 }
@@ -26,7 +25,6 @@ export class RoleDetails extends React.Component<RoleDetailsProps> {
 
     return (
       <div className="RoleDetails">
-        <KubeObjectMeta object={role}/>
         <DrawerTitle>Rules</DrawerTitle>
         {rules.map(({ resourceNames, apiGroups, resources, verbs }, index) => {
           return (

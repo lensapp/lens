@@ -14,7 +14,6 @@ import { Input } from "../input";
 import { Button } from "../button";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ConfigMap } from "../../../common/k8s-api/endpoints";
-import { KubeObjectMeta } from "../kube-object-meta";
 import type { Logger } from "../../../common/logger";
 import type { ConfigMapStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -95,7 +94,6 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
 
     return (
       <div className="ConfigMapDetails">
-        <KubeObjectMeta object={configMap}/>
         {
           data.length > 0 && (
             <>

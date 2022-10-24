@@ -13,7 +13,6 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ResourceQuota } from "../../../common/k8s-api/endpoints/resource-quota.api";
 import { LineProgress } from "../line-progress";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 
 export interface ResourceQuotaDetailsProps extends KubeObjectDetailsProps<ResourceQuota> {
@@ -93,8 +92,6 @@ export class ResourceQuotaDetails extends React.Component<ResourceQuotaDetailsPr
 
     return (
       <div className="ResourceQuotaDetails">
-        <KubeObjectMeta object={quota}/>
-
         <DrawerItem name="Quotas" className="quota-list">
           {renderQuotas(quota)}
         </DrawerItem>

@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
-import { KubeObjectMeta } from "../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import logger from "../../../common/logger";
@@ -52,8 +51,6 @@ const NonInjectedEventDetails = observer(({
 
   return (
     <div className={cssNames("EventDetails", className)}>
-      <KubeObjectMeta object={event}/>
-
       <DrawerItem name="Message">
         {message}
       </DrawerItem>
