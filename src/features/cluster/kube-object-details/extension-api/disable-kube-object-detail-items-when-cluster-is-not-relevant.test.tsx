@@ -19,6 +19,7 @@ import extensionShouldBeEnabledForClusterFrameInjectable from "../../../../rende
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import { KubeObjectDetails } from "../../../../renderer/components/kube-object-details";
 import type { ApiManager } from "../../../../common/k8s-api/api-manager";
+import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 
 describe("disable kube object detail items when cluster is not relevant", () => {
   let builder: ApplicationBuilder;
@@ -32,16 +33,11 @@ describe("disable kube object detail items when cluster is not relevant", () => 
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(
-        apiManagerInjectable,
-        () =>
-          ({
-            getStore: () => ({
-              getByPath: () =>
-                getKubeObjectStub("some-kind", "some-api-version"),
-            }),
-          } as unknown as ApiManager),
-      );
+      windowDi.override(apiManagerInjectable, () => ({
+        getStore: () => ({
+          loadFromPath: async () => getKubeObjectStub("some-kind", "some-api-version"),
+        }) as Partial<KubeObjectStore> as KubeObjectStore,
+      }) as Partial<ApiManager> as ApiManager);
 
       windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
 
