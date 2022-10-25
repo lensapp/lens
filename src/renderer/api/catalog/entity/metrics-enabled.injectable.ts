@@ -12,7 +12,7 @@ const enabledMetricsInjectable = getInjectable({
   instantiate: (di, kind) => {
     const getActiveClusterEntity = di.inject(getActiveClusterEntityInjectable);
 
-    return computed(() => !getActiveClusterEntity()?.isMetricsHidden(kind));
+    return computed(() => !getActiveClusterEntity()?.isMetricHidden(kind));
   },
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di, kind: ClusterMetricsResourceType) => kind,
