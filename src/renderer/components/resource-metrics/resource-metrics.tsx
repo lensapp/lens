@@ -14,6 +14,7 @@ import type { MetricsTab } from "../chart/options";
 import type { MetricData } from "../../../common/k8s-api/endpoints/metrics.api";
 import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { isComputed } from "mobx";
+import { observer } from "mobx-react-lite";
 
 export type AtLeastOneMetricTab = [MetricsTab, ...MetricsTab[]];
 
@@ -37,7 +38,13 @@ export interface ResourceMetricsValue {
 
 export const ResourceMetricsContext = createContext<ResourceMetricsValue | null>(null);
 
-export function ResourceMetrics<Keys extends string>({ object, tabs, children, className, metrics }: ResourceMetricsProps<Keys>) {
+export const ResourceMetrics = observer(<Keys extends string>({
+  object,
+  tabs,
+  children,
+  className,
+  metrics,
+}: ResourceMetricsProps<Keys>) => {
   const [tab, setTab] = useState<MetricsTab>(tabs[0]);
 
   return (
@@ -76,4 +83,4 @@ export function ResourceMetrics<Keys extends string>({ object, tabs, children, c
       </div>
     </div>
   );
-}
+});
