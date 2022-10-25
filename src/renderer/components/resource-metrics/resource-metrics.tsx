@@ -13,6 +13,7 @@ import { Spinner } from "../spinner";
 import type { MetricsTab } from "../chart/options";
 import type { MetricData } from "../../../common/k8s-api/endpoints/metrics.api";
 import type { IAsyncComputed } from "@ogre-tools/injectable-react";
+import { isComputed } from "mobx";
 
 export type AtLeastOneMetricTab = [MetricsTab, ...MetricsTab[]];
 
@@ -20,8 +21,12 @@ export interface ResourceMetricsProps<Keys extends string> {
   tabs: AtLeastOneMetricTab;
   object: KubeObject;
   className?: string;
-  metrics: IAsyncComputed<Partial<Record<Keys, MetricData>> | null | undefined>;
+  metrics: IAsyncComputed<Partial<Record<Keys, MetricData>> | null | undefined> | Partial<Record<Keys, MetricData>>;
   children: React.ReactChild | React.ReactChild[];
+}
+
+function isAsyncComputedMetrics<Keys extends string>(metrics: IAsyncComputed<Partial<Record<Keys, MetricData>> | null | undefined> | Partial<Record<Keys, MetricData>>): metrics is IAsyncComputed<Partial<Record<Keys, MetricData>> | null | undefined> {
+  return isComputed((metrics as any).value);
 }
 
 export interface ResourceMetricsValue {
@@ -57,7 +62,9 @@ export function ResourceMetrics<Keys extends string>({ object, tabs, children, c
         value={{
           object,
           tab,
-          metrics: metrics.value.get(),
+          metrics: isAsyncComputedMetrics(metrics)
+            ? metrics.value.get()
+            : metrics,
         }}
       >
         <div className="graph">
