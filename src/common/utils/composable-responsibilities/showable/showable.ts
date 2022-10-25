@@ -7,7 +7,7 @@ import type { IComputedValue } from "mobx";
 import { isBoolean } from "../../type-narrowing";
 
 export interface Showable {
-  isShown: IComputedValue<boolean> | boolean;
+  readonly isShown: IComputedValue<boolean> | boolean;
 }
 
 export type MaybeShowable = Partial<Showable>;

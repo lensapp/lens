@@ -6,7 +6,7 @@
 import { sortBy } from "lodash/fp";
 
 export interface Orderable {
-  orderNumber: number;
+  readonly orderNumber: number;
 }
 
 export const orderByOrderNumber = <T extends Orderable | {}>(maybeOrderables: T[]) =>
