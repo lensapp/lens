@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import enabledMetricsInjectable from "../../api/catalog/entity/metrics-enabled.injectable";
+import metricsDetailsComponentEnabledInjectable from "../../api/catalog/entity/metrics-details-component-enabled.injectable";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-details/kube-object-detail-items/kube-object-detail-item-injection-token";
 import { ResourceMetrics } from "../resource-metrics";
 import persistentVolumeClaimMetricsInjectable from "./metrics.injectable";
@@ -25,7 +25,7 @@ const persistentVolumeClaimMetricsDetailsComponentInjectable = getInjectable({
         <VolumeClaimDiskChart />
       </ResourceMetrics>
     ),
-    enabled: di.inject(enabledMetricsInjectable, ClusterMetricsResourceType.VolumeClaim),
+    enabled: di.inject(metricsDetailsComponentEnabledInjectable, ClusterMetricsResourceType.VolumeClaim),
     orderNumber: -1,
   }),
   injectionToken: kubeObjectDetailItemInjectionToken,
