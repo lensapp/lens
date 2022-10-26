@@ -8,7 +8,7 @@ import activeHelmRepositoriesInjectable from "../../active-helm-repositories.inj
 import showErrorNotificationInjectable from "../../../../../../../renderer/components/notifications/show-error-notification.injectable";
 import showSuccessNotificationInjectable from "../../../../../../../renderer/components/notifications/show-success-notification.injectable";
 import { addHelmRepositoryChannel } from "../../../../../../../common/helm/add-helm-repository-channel";
-import requestFromChannelInjectable from "../../../../../../utils/channel/request-from-channel.injectable";
+import requestFromChannelInjectable from "../../../../../../../renderer/utils/channel/request-from-channel.injectable";
 
 const addHelmRepositoryInjectable = getInjectable({
   id: "add-public-helm-repository",

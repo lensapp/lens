@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { HelmRepo } from "../../../../../common/helm/helm-repo";
 import activeHelmRepositoriesInjectable from "./active-helm-repositories.injectable";
 import { removeHelmRepositoryChannel } from "../../../../../common/helm/remove-helm-repository-channel";
-import requestFromChannelInjectable from "../../../../utils/channel/request-from-channel.injectable";
+import requestFromChannelInjectable from "../../../../../renderer/utils/channel/request-from-channel.injectable";
 
 const removePublicHelmRepositoryInjectable = getInjectable({
   id: "remove-public-helm-repository",
