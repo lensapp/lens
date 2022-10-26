@@ -31,9 +31,9 @@ const applicationMenuItemCompositeInjectable = getInjectable({
         [
           {
             parentId: undefined,
-            id: "root" as const,
-            kind: "root" as const,
-          },
+            id: "root",
+            kind: "root",
+          } as const,
 
           ...items,
         ],
