@@ -9,11 +9,12 @@ import type { UserStore } from "../../../../../../../common/user-store";
 import userStoreInjectable from "../../../../../../../common/user-store/user-store.injectable";
 import { observer } from "mobx-react";
 import { Input, InputValidators } from "../../../../../../../renderer/components/input";
-import directoryForBinariesInjectable from "../../../../../../../common/app-paths/directory-for-binaries/directory-for-binaries.injectable";
+import directoryForBinariesInjectable from "../../../../../../../common/app-paths/directory-for-binaries.injectable";
+import type { LazyInitializableState } from "../../../../../../../common/initializable-state/create-lazy";
 
 interface Dependencies {
   userStore: UserStore;
-  defaultPathForGeneralBinaries: string;
+  defaultPathForGeneralBinaries: LazyInitializableState<string>;
 }
 
 const NonInjectedKubectlDirectoryForBinaries = observer(
@@ -31,7 +32,7 @@ const NonInjectedKubectlDirectoryForBinaries = observer(
         <Input
           theme="round-black"
           value={downloadPath}
-          placeholder={defaultPathForGeneralBinaries}
+          placeholder={defaultPathForGeneralBinaries.get()}
           validators={pathValidator}
           onChange={setDownloadPath}
           onBlur={save}
