@@ -53,9 +53,9 @@ jobs:
           rm -fr ./docs/clusters ./docs/contributing ./docs/faq ./docs/getting-started ./docs/helm ./docs/support ./docs/supporting
           sed -i '/Protocol Handlers/d' ./mkdocs.yml
           sed -i '/IPC/d' ./mkdocs.yml
-          sed -i 's#../../clusters/adding-clusters.md#https://docs.k8slens.dev/latest/clusters/adding-clusters/#g' ./docs/extensions/get-started/your-first-extension.md
-          sed -i 's#clusters/adding-clusters.md#https://docs.k8slens.dev/latest/clusters/adding-clusters/#g' ./docs/README.md
-          sed -i 's#../../contributing/README.md#https://docs.k8slens.dev/latest/contributing/#g' ./docs/extensions/guides/generator.md
+          sed -i 's#../../clusters/adding-clusters.md#https://docs.k8slens.dev/getting-started/add-cluster/#g' ./docs/extensions/get-started/your-first-extension.md
+          sed -i 's#clusters/adding-clusters.md#https://docs.k8slens.dev//getting-started/adding-clusters/#g' ./docs/README.md
+          sed -i 's#../../contributing/README.md#https://docs.k8slens.dev/contributing/#g' ./docs/extensions/guides/generator.md
 
       - name: git config
         run: |

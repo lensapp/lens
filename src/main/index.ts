@@ -6,6 +6,7 @@
 // Main process
 
 import * as Mobx from "mobx";
+import { spawn } from "node-pty";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { getDi } from "./getDi";
@@ -30,4 +31,8 @@ const LensExtensions = {
   Main: LensExtensionsMainApi,
 };
 
-export { Mobx, LensExtensions };
+const Pty = {
+  spawn,
+};
+
+export { Mobx, LensExtensions, Pty };
