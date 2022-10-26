@@ -12,7 +12,10 @@ const helmChartsInjectable = getInjectable({
   instantiate: (di) => {
     const requestHelmCharts = di.inject(requestHelmChartsInjectable);
 
-    return asyncComputed(async () => await requestHelmCharts(), []);
+    return asyncComputed({
+      getValueFromObservedPromise: requestHelmCharts,
+      valueWhenPending: [],
+    });
   },
 });
 

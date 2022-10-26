@@ -11,13 +11,16 @@ const versionsOfSelectedHelmChartInjectable = getInjectable({
   id: "versions-of-selected-helm-chart",
 
   instantiate: (di, chart: HelmChart) => {
-    const requestHelmChartVersions = di.inject(requestHelmChartVersionsInjectable);
-
-    return asyncComputed(
-      async () =>
-        await requestHelmChartVersions(chart.getRepository(), chart.getName()),
-      [],
+    const requestHelmChartVersions = di.inject(
+      requestHelmChartVersionsInjectable,
     );
+
+    return asyncComputed({
+      getValueFromObservedPromise: async () =>
+        await requestHelmChartVersions(chart.getRepository(), chart.getName()),
+
+      valueWhenPending: [],
+    });
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
