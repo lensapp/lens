@@ -12,7 +12,7 @@ export interface Showable {
 
 export type MaybeShowable = Partial<Showable>;
 
-export const isShown = (showable: Showable | {}) => {
+export const isShown = (showable: Showable | object) => {
   if (!("isShown" in showable)) {
     return true;
   }
