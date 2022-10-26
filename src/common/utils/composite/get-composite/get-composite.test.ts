@@ -206,7 +206,7 @@ Available parent ids are:
     );
   });
 
-  describe("given items with missing parent ids, when creating composite with handling for missing parents", () => {
+  describe("given items with missing parents, when creating composite with handling for missing parents", () => {
     let composite: Composite<any>;
     let handleMissingParentIdMock: jest.Mock;
 
@@ -217,7 +217,8 @@ Available parent ids are:
 
       const someItemWithMissingParentId = {
         id: "some-orphan-id",
-        // Note: missing parent id makes the item orphan.
+        // Note: the item corresponding to this id does not exist,
+        // making this item have a "missing parent".
         parentId: "some-missing-id",
       };
 
