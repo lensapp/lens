@@ -9,7 +9,9 @@ export interface Orderable {
   readonly orderNumber: number;
 }
 
-export const orderByOrderNumber = <T extends Orderable | object>(maybeOrderables: T[]) =>
+export type MaybeOrderable = Orderable | object;
+
+export const orderByOrderNumber = <T extends MaybeOrderable>(maybeOrderables: T[]) =>
   sortBy(
     (orderable) =>
       "orderNumber" in orderable
