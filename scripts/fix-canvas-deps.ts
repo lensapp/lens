@@ -25,7 +25,7 @@ const exec = promisify(child_process.exec);
 const pipeline = promisify(stream.pipeline);
 
 // This is done so that we can skip the scripts for only this package
-await exec("npm install canvas@2 --no-save --no-package-lock --ignore-scripts");
+await exec("npm install canvas@2 --no-save --no-package-lock --ignore-scripts --legacy-peer-deps");
 
 const nodeModuleVersion = process.versions.modules;
 const canvasVersion = (await readJson("./node_modules/canvas/package.json")).version as string;
