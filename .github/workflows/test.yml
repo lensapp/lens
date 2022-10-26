@@ -85,7 +85,7 @@ jobs:
 
       - run: |
           make build
-          ./dist/win-unpacked/Lens.exe
+          ./dist/win-unpacked/OpenLens.exe
         name: Run Windows integration tests
         shell: bash
         env:
