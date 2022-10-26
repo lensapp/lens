@@ -44,10 +44,9 @@ const toNavigationHierarchy = (composite: Composite<PreferenceItemTypes | Prefer
     // Note: These preference item types are not rendered in navigation,
     // yet they are interesting for deciding if eg. a tab group or a tab has content
     // somewhere in structure, and therefore not be hidden.
-    case "page": {
-      return emptyRender;
-    }
+    case "page":
 
+    // Intentional case fallthrough
     case "block": {
       return emptyRender;
     }
