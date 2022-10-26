@@ -35,7 +35,7 @@ const requestSystemCAsInjectable = getInjectable({
       const result = await execFile(wincaRootsExePath);
 
       if (!result.callWasSuccessful) {
-        logger.warn(`[INJECT-CAS]: Error retreiving CAs: ${result.error}`);
+        logger.warn(`[INJECT-CAS]: Error retreiving CAs`, result.error);
 
         return [];
       }
