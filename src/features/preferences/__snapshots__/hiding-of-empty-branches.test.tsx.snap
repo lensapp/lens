@@ -843,7 +843,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </div>
               </div>
               <div
-                style="padding: 0px 10px;"
+                class="TabSeparator"
               >
                 <div
                   class="HorizontalLine size-sm"
@@ -1560,7 +1560,7 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
                 </div>
               </div>
               <div
-                style="padding: 0px 10px;"
+                class="TabSeparator"
               >
                 <div
                   class="HorizontalLine size-sm"
