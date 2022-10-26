@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import execFileInjectable from "../fs/exec-file.injectable";
+import loggerInjectable from "../logger.injectable";
 import { requestSystemCAsInjectionToken } from "./request-system-cas-token";
 
 const pemEncoding = (hexEncodedCert: String) => {
@@ -24,15 +25,23 @@ const requestSystemCAsInjectable = getInjectable({
   instantiate: (di) => {
     const wincaRootsExePath: string = __non_webpack_require__.resolve("win-ca/lib/roots.exe");
     const execFile = di.inject(execFileInjectable);
+    const logger = di.inject(loggerInjectable);
 
     return async () => {
       /**
        * This needs to be done manually because for some reason calling the api from "win-ca"
        * directly fails to load "child_process" correctly on renderer
        */
-      const output = await execFile(wincaRootsExePath);
+      const result = await execFile(wincaRootsExePath);
 
-      return output
+      if (!result.callWasSuccessful) {
+        logger.warn(`[INJECT-CAS]: Error retreiving CAs: ${result.error}`);
+
+        return [];
+      }
+
+      return result
+        .response
         .split("\r\n")
         .filter(Boolean)
         .map(pemEncoding);
