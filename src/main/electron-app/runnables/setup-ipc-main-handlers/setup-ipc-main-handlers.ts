@@ -15,16 +15,19 @@ import { pushCatalogToRenderer } from "../../../catalog-pusher";
 import type { ClusterManager } from "../../../cluster/manager";
 import { ResourceApplier } from "../../../resource-applier";
 import type { IComputedValue } from "mobx";
-import type { MenuItemOpts } from "../../../menu/application-menu-items.injectable";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
 import { handleWindowAction, onLocationChange } from "../../../ipc/window";
 import { openFilePickingDialogChannel } from "../../../../common/ipc/dialog";
 import { getNativeThemeChannel } from "../../../../common/ipc/native-theme";
 import type { Theme } from "../../../theme/operating-system-theme-state.injectable";
 import type { AskUserForFilePaths } from "../../../ipc/ask-user-for-file-paths.injectable";
+import type { ApplicationMenuItemTypes } from "../../../../features/application-menu/main/menu-items/application-menu-item-injection-token";
+import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
+import { getApplicationMenuTemplate } from "../../../../features/application-menu/main/populate-application-menu.injectable";
+import type { MenuItemRoot } from "../../../../features/application-menu/main/application-menu-item-composite.injectable";
 
 interface Dependencies {
-  applicationMenuItems: IComputedValue<MenuItemOpts[]>;
+  applicationMenuItemComposite: IComputedValue<Composite<ApplicationMenuItemTypes | MenuItemRoot>>;
   clusterManager: ClusterManager;
   catalogEntityRegistry: CatalogEntityRegistry;
   clusterStore: ClusterStore;
@@ -33,7 +36,7 @@ interface Dependencies {
 }
 
 export const setupIpcMainHandlers = ({
-  applicationMenuItems,
+  applicationMenuItemComposite,
   clusterManager,
   catalogEntityRegistry,
   clusterStore,
@@ -124,9 +127,8 @@ export const setupIpcMainHandlers = ({
   ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel, ...args));
 
   ipcMainOn(windowOpenAppMenuAsContextMenuChannel, async (event) => {
-    const appMenu = applicationMenuItems.get();
-
-    const menu = Menu.buildFromTemplate(appMenu);
+    const electronTemplate = getApplicationMenuTemplate(applicationMenuItemComposite.get());
+    const menu = Menu.buildFromTemplate(electronTemplate);
 
     menu.popup({
       ...BrowserWindow.fromWebContents(event.sender),

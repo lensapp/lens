@@ -34,7 +34,7 @@ import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import releaseChannelInjectable from "../vars/release-channel.injectable";
-import defaultUpdateChannelInjectable from "../application-update/selected-update-channel/default-update-channel.injectable";
+import defaultUpdateChannelInjectable from "../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 
 console = new Console(stdout, stderr);
 

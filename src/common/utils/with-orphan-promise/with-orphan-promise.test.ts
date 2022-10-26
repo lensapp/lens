@@ -5,21 +5,20 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
-import loggerInjectable from "../../logger.injectable";
-import type { Logger } from "../../logger";
 import withOrphanPromiseInjectable from "./with-orphan-promise.injectable";
+import logErrorInjectable from "../../log-error.injectable";
 
 describe("with orphan promise, when called", () => {
   let toBeDecorated: AsyncFnMock<(arg1: string, arg2: string) => Promise<string>>;
   let actual: void;
-  let loggerStub: Logger;
+  let logErrorMock: jest.Mock;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    loggerStub = { error: jest.fn() } as unknown as Logger;
+    logErrorMock = jest.fn();
 
-    di.override(loggerInjectable, () => loggerStub);
+    di.override(logErrorInjectable, () => logErrorMock);
 
     const withOrphanPromise = di.inject(withOrphanPromiseInjectable);
 
@@ -49,7 +48,7 @@ describe("with orphan promise, when called", () => {
     });
 
     it("logs the rejection", () => {
-      expect(loggerStub.error).toHaveBeenCalledWith("Orphan promise rejection encountered", "some-error");
+      expect(logErrorMock).toHaveBeenCalledWith("Orphan promise rejection encountered", "some-error");
     });
 
     it("nothing else happens", () => {

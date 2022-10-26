@@ -11,8 +11,10 @@ import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
 import { DESCRIPTORS } from "./preferences-helpers";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import logger from "../../main/logger";
-import type { SelectedUpdateChannel } from "../application-update/selected-update-channel/selected-update-channel.injectable";
-import type { ReleaseChannel } from "../application-update/update-channels";
+
+// TODO: Remove coupling with Feature
+import type { SelectedUpdateChannel } from "../../features/application-update/common/selected-update-channel/selected-update-channel.injectable";
+import type { ReleaseChannel } from "../../features/application-update/common/update-channels";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;

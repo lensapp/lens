@@ -17,12 +17,8 @@ import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { compact, filter, first, flatMap, get, join, last, map, matches } from "lodash/fp";
-import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
-import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
-import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
-import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
-import type { MenuItem, MenuItemConstructorOptions } from "electron";
+import { filter, first, join, last, map, matches } from "lodash/fp";
+import navigateToPreferencesInjectable from "../../../features/preferences/common/navigate-to-preferences.injectable";
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
@@ -68,6 +64,10 @@ import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-exte
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
+import applicationMenuItemCompositeInjectable from "../../../features/application-menu/main/application-menu-item-composite.injectable";
+import { getCompositePaths } from "../../../common/utils/composite/get-composite-paths/get-composite-paths";
+import { discoverFor } from "./discovery-of-html-elements";
+import { findComposite } from "../../../common/utils/composite/find-composite/find-composite";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -126,7 +126,8 @@ export interface ApplicationBuilder {
   };
 
   applicationMenu: {
-    click: (path: string) => void;
+    click: (...path: string[]) => void;
+    items: string[][];
   };
   preferences: {
     close: () => void;
@@ -343,37 +344,27 @@ export const getApplicationBuilder = () => {
       select: action((namespace) => selectedNamespaces.add(namespace)),
     },
     applicationMenu: {
-      click: (path: string) => {
-        const applicationMenuItems = mainDi.inject(
-          applicationMenuItemsInjectable,
-        );
+      get items() {
+        const composite = mainDi.inject(
+          applicationMenuItemCompositeInjectable,
+        ).get();
 
-        const menuItems = pipeline(
-          applicationMenuItems.get(),
-          flatMap(toFlatChildren(null)),
-          filter((menuItem) => !!menuItem.click),
-        );
+        return getCompositePaths(composite);
+      },
 
-        const menuItem = menuItems.find((menuItem) => menuItem.path === path);
+      click: (...path: string[]) => {
+        const composite = mainDi.inject(
+          applicationMenuItemCompositeInjectable,
+        ).get();
 
-        if (!menuItem) {
-          const availableIds = menuItems.map(get("path")).join('", "');
+        const clickableMenuItem = findComposite(...path)(composite).value;
 
-          throw new Error(
-            `Tried to click application menu item with ID "${path}" which does not exist. Available IDs are: "${availableIds}"`,
-          );
+        if(clickableMenuItem.kind === "clickable-menu-item") {
+          // Todo: prevent leaking of Electron
+          (clickableMenuItem.onClick as any)();
+        } else {
+          throw new Error(`Tried to trigger clicking of an application menu item, but item at path '${path.join(" -> ")}' isn't clickable.`);
         }
-
-        menuItem.click?.(
-          {
-            menu: null as never,
-            commandId: 0,
-            userAccelerator: null,
-            ...menuItem,
-          } as MenuItem,
-          undefined,
-          {},
-        );
       },
     },
 
@@ -444,24 +435,15 @@ export const getApplicationBuilder = () => {
       },
 
       navigation: {
-        click: (id: string) => {
-          const { di: windowDi, rendered } = builder.applicationWindow.only;
+        click: (pathId: string) => {
+          const { rendered } = builder.applicationWindow.only;
 
-          const link = rendered.queryByTestId(`tab-link-for-${id}`);
+          const discover = discoverFor(() => rendered);
 
-          if (!link) {
-            const preferencesNavigationItems = windowDi.inject(
-              preferenceNavigationItemsInjectable,
-            );
-
-            const availableIds = preferencesNavigationItems
-              .get()
-              .map(get("id"));
-
-            throw new Error(
-              `Tried to click navigation item "${id}" which does not exist in preferences. Available IDs are "${availableIds.join('", "')}"`,
-            );
-          }
+          const { discovered: link } = discover.getSingleElement(
+            "preference-tab-link",
+            pathId,
+          );
 
           fireEvent.click(link);
         },
@@ -747,25 +729,6 @@ export const getApplicationBuilder = () => {
   return builder;
 };
 
-export type ToFlatChildren = (opts: MenuItemConstructorOptions) => (MenuItemOpts & { path: string })[];
-
-function toFlatChildren(parentId: string | null | undefined): ToFlatChildren {
-  return ({ submenu = [], ...menuItem }) => [
-    {
-      ...menuItem,
-      path: pipeline([parentId, menuItem.id], compact, join(".")),
-    },
-    ...(
-      Array.isArray(submenu)
-        ? submenu.flatMap(toFlatChildren(menuItem.id))
-        : [{
-          ...submenu,
-          path: pipeline([parentId, menuItem.id], compact, join(".")),
-        }]
-    ),
-  ];
-}
-
 export const rendererExtensionsStateInjectable = getInjectable({
   id: "renderer-extensions-state",
   instantiate: () => observable.map<string, LensRendererExtension>(),
@@ -896,4 +859,3 @@ const disableExtensionFor =
         extensionsState.delete(id);
       });
     };
-

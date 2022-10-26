@@ -5,18 +5,18 @@
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
+import publishIsConfiguredInjectable from "./main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { CheckForPlatformUpdates } from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
-import checkForPlatformUpdatesInjectable from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
+import type { CheckForPlatformUpdates } from "./main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
+import checkForPlatformUpdatesInjectable from "./main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
 import appEventBusInjectable from "../../common/app-event-bus/app-event-bus.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
-import type { DownloadPlatformUpdate } from "../../main/application-update/download-platform-update/download-platform-update.injectable";
-import downloadPlatformUpdateInjectable from "../../main/application-update/download-platform-update/download-platform-update.injectable";
-import quitAndInstallUpdateInjectable from "../../main/application-update/quit-and-install-update.injectable";
-import periodicalCheckForUpdatesInjectable from "../../main/application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
+import processCheckingForUpdatesInjectable from "./main/process-checking-for-updates.injectable";
+import type { DownloadPlatformUpdate } from "./main/download-update/download-platform-update/download-platform-update.injectable";
+import downloadPlatformUpdateInjectable from "./main/download-update/download-platform-update/download-platform-update.injectable";
+import quitAndInstallUpdateInjectable from "./main/quit-and-install-update.injectable";
+import periodicalCheckForUpdatesInjectable from "./child-features/periodical-checking-of-updates/main/periodical-check-for-updates.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 import emitEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import getBuildVersionInjectable from "../../main/vars/build-version/get-build-version.injectable";
@@ -142,7 +142,7 @@ describe("analytics for installing update", () => {
     it("when checking for updates using application menu, sends event to analytics for being checked from application menu", async () => {
       analyticsListenerMock.mockClear();
 
-      builder.applicationMenu.click("root.check-for-updates");
+      builder.applicationMenu.click("root", "mac", "check-for-updates");
 
       expect(analyticsListenerMock.mock.calls).toEqual([
         [

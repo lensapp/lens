@@ -5,7 +5,9 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import navigateToProxyPreferencesInjectable from "../../common/front-end-routing/routes/preferences/proxy/navigate-to-proxy-preferences.injectable";
+import navigateToProxyPreferencesInjectable from "./common/navigate-to-proxy-preferences.injectable";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to application preferences", () => {
   let builder: ApplicationBuilder;
@@ -16,6 +18,7 @@ describe("preferences - navigation to application preferences", () => {
 
   describe("given in some child page of preferences, when rendered", () => {
     let rendered: RenderResult;
+    let discover: Discover;
 
     beforeEach(async () => {
       builder.beforeWindowStart((windowDi) => {
@@ -25,6 +28,8 @@ describe("preferences - navigation to application preferences", () => {
       });
 
       rendered = await builder.render();
+
+      discover = discoverFor(() => rendered);
     });
 
     it("renders", () => {
@@ -32,14 +37,17 @@ describe("preferences - navigation to application preferences", () => {
     });
 
     it("does not show application preferences yet", () => {
-      const page = rendered.queryByTestId("application-preferences-page");
+      const { discovered } = discover.querySingleElement(
+        "preference-page",
+        "application-page",
+      );
 
-      expect(page).toBeNull();
+      expect(discovered).toBeNull();
     });
 
     describe("when navigating to application preferences using navigation", () => {
       beforeEach(() => {
-        builder.preferences.navigation.click("application");
+        builder.preferences.navigation.click("app");
       });
 
       it("renders", () => {
@@ -47,10 +55,33 @@ describe("preferences - navigation to application preferences", () => {
       });
 
       it("shows application preferences", () => {
-        const page = rendered.getByTestId("application-preferences-page");
+        const { discovered } = discover.getSingleElement(
+          "preference-page",
+          "application-page",
+        );
 
-        expect(page).not.toBeNull();
+        expect(discovered).not.toBeNull();
+      });
+    });
+
+    describe("when navigating to preferences without specifying the tab", () => {
+      beforeEach(() => {
+        builder.preferences.navigate();
+      });
+
+      it("renders", () => {
+        expect(rendered.baseElement).toMatchSnapshot();
+      });
+
+      it("shows tab for application preferences for it being the default", () => {
+        const { discovered } = discover.getSingleElement(
+          "preference-page",
+          "application-page",
+        );
+
+        expect(discovered).not.toBeNull();
       });
     });
   });
 });
+

@@ -5,9 +5,7 @@
 
 import { noop, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
-import {
-  createContainer,
-} from "@ogre-tools/injectable";
+import { createContainer, isInjectable } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
@@ -29,21 +27,14 @@ import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.inject
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
 import { observable, computed, runInAction } from "mobx";
-import defaultShellInjectable from "./components/+preferences/default-shell.injectable";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
-import getFilePathsInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
-import callForPublicHelmRepositoriesInjectable from "./components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import getFilePathsInjectable from "../features/helm-charts/child-features/preferences/renderer/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
+import callForPublicHelmRepositoriesInjectable from "../features/helm-charts/child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
-import openAppContextMenuInjectable from "./components/layout/top-bar/open-app-context-menu.injectable";
-import goBackInjectable from "./components/layout/top-bar/go-back.injectable";
-import goForwardInjectable from "./components/layout/top-bar/go-forward.injectable";
-import closeWindowInjectable from "./components/layout/top-bar/close-window.injectable";
-import maximizeWindowInjectable from "./components/layout/top-bar/maximize-window.injectable";
-import toggleMaximizeWindowInjectable from "./components/layout/top-bar/toggle-maximize-window.injectable";
 import type { HotbarStore } from "../common/hotbars/store";
 import cronJobTriggerDialogClusterFrameChildComponentInjectable from "./components/+workloads-cronjobs/cron-job-trigger-dialog-cluster-frame-child-component.injectable";
 import deploymentScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-deployments/scale/deployment-scale-dialog-cluster-frame-child-component.injectable";
@@ -55,7 +46,6 @@ import portForwardDialogClusterFrameChildComponentInjectable from "./port-forwar
 import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injectable";
 import extensionShouldBeEnabledForClusterFrameInjectable from "./extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
-import forceUpdateModalRootFrameComponentInjectable from "./application-update/force-update-modal/force-update-modal-root-frame-component.injectable";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import getEntitySettingCommandsInjectable from "./components/command-palette/registered-commands/get-entity-setting-commands.injectable";
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
@@ -75,9 +65,11 @@ export const getDiForUnitTesting = (
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
   const injectables: Injectable<any, any, any>[] = (
-      global as any
-  ).rendererInjectablePaths.map(
-    (filePath: string) => require(filePath).default,
+    global as any
+  ).rendererInjectablePaths.flatMap((filePath: string) =>
+    Object.values(require(filePath)).filter(
+      (maybeInjectable: any) => isInjectable(maybeInjectable),
+    ),
   );
 
   runInAction(() => {
@@ -124,12 +116,6 @@ export const getDiForUnitTesting = (
     // TODO: remove when entity settings registry is refactored
     di.override(getEntitySettingCommandsInjectable, () => () => []);
 
-    di.override(forceUpdateModalRootFrameComponentInjectable, () => ({
-      id: "force-update-modal",
-      Component: () => null,
-      shouldRender: computed(() => false),
-    }));
-
     // TODO: Remove after "LensRendererExtension.isEnabledForCluster" is removed
     di.override(extensionShouldBeEnabledForClusterFrameInjectable, () =>
       asyncComputed(async () => true, true),
@@ -156,12 +142,6 @@ export const getDiForUnitTesting = (
 
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(watchHistoryStateInjectable, () => () => () => {});
-    di.override(openAppContextMenuInjectable, () => () => {});
-    di.override(goBackInjectable, () => () => {});
-    di.override(goForwardInjectable, () => () => {});
-    di.override(closeWindowInjectable, () => () => {});
-    di.override(maximizeWindowInjectable, () => () => {});
-    di.override(toggleMaximizeWindowInjectable, () => () => {});
 
     overrideFunctionalInjectables(di, [
       broadcastMessageInjectable,
@@ -178,7 +158,6 @@ export const getDiForUnitTesting = (
     }) as unknown as HotbarStore);
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
-    di.override(defaultShellInjectable, () => "some-default-shell");
 
     di.override(userStoreInjectable, () => ({
       isTableColumnHidden: () => false,

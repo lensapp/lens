@@ -1,0 +1,15 @@
+@mixin gutterSize(
+  $sizeName,
+  $size
+) {
+  .size-#{$sizeName} {
+    min-width: $size;
+    min-height: $size;
+  }
+}
+
+$baseline: 8px;
+
+@include gutterSize('sm', 2 * $baseline);
+@include gutterSize('md', 3 * $baseline);
+@include gutterSize('xl', 5 * $baseline);

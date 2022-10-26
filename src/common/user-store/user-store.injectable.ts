@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { UserStore } from "./user-store";
-import selectedUpdateChannelInjectable from "../application-update/selected-update-channel/selected-update-channel.injectable";
+import selectedUpdateChannelInjectable from "../../features/application-update/common/selected-update-channel/selected-update-channel.injectable";
 
 const userStoreInjectable = getInjectable({
   id: "user-store",

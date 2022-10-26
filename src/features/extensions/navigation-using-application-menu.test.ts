@@ -48,7 +48,7 @@ describe("extensions - navigation using application menu", () => {
 
   describe("when navigating to extensions using application menu", () => {
     beforeEach(() => {
-      builder.applicationMenu.click("root.extensions");
+      builder.applicationMenu.click("root", "mac", "navigate-to-extensions");
     });
 
     it("focuses the window", () => {
