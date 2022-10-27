@@ -10524,10 +10524,10 @@ react-select-event@^5.5.1:
   dependencies:
     "@testing-library/dom" ">=7"
 
-react-select@^5.5.6:
-  version "5.5.6"
-  resolved "https://registry.yarnpkg.com/react-select/-/react-select-5.5.6.tgz#30735524f0d48c8442d2ecf84cfe1bd52e4b039f"
-  integrity sha512-1pynAh7scLBmrNEeDrYVYTImXowmEPzGqVlG7xdvXmBUSD6gVhNMPKdhlpwAHfPANcTwGIqms0Xerm0n5o2WxA==
+react-select@^5.5.7:
+  version "5.5.7"
+  resolved "https://registry.yarnpkg.com/react-select/-/react-select-5.5.7.tgz#87760030e6377a7ae3d0b1e419190af175ec2a0e"
+  integrity sha512-izQBXNhTPqXDw4gxzTbc9aLII4tCJ2pdMm6l/WVzKhfHm3RLErheqDNgeenU0XxzqbwT9swYO4CAYk5IzqLlYw==
   dependencies:
     "@babel/runtime" "^7.12.0"
     "@emotion/cache" "^11.4.0"
