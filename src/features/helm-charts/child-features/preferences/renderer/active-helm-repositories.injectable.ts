@@ -16,26 +16,34 @@ const activeHelmRepositoriesInjectable = getInjectable({
   instantiate: (di) => {
     const requestFromChannel = di.inject(requestFromChannelInjectionToken);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
-    const helmRepositoriesErrorState = di.inject(helmRepositoriesErrorStateInjectable);
+    const helmRepositoriesErrorState = di.inject(
+      helmRepositoriesErrorStateInjectable,
+    );
 
-    return asyncComputed(async () => {
-      const result = await requestFromChannel(getActiveHelmRepositoriesChannel);
-
-      if (result.callWasSuccessful) {
-        return result.response;
-      } else {
-        showErrorNotification(result.error);
-
-        runInAction(() =>
-          helmRepositoriesErrorState.set({
-            controlsAreShown: false,
-            errorMessage: result.error,
-          }),
+    return asyncComputed({
+      getValueFromObservedPromise: async () => {
+        const result = await requestFromChannel(
+          getActiveHelmRepositoriesChannel,
         );
 
-        return [];
-      }
-    }, []);
+        if (result.callWasSuccessful) {
+          return result.response;
+        } else {
+          showErrorNotification(result.error);
+
+          runInAction(() =>
+            helmRepositoriesErrorState.set({
+              controlsAreShown: false,
+              errorMessage: result.error,
+            }),
+          );
+
+          return [];
+        }
+      },
+
+      valueWhenPending: [],
+    });
   },
 });
 

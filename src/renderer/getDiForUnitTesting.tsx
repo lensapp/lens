@@ -118,7 +118,7 @@ export const getDiForUnitTesting = (
 
     // TODO: Remove after "LensRendererExtension.isEnabledForCluster" is removed
     di.override(extensionShouldBeEnabledForClusterFrameInjectable, () =>
-      asyncComputed(async () => true, true),
+      asyncComputed({ getValueFromObservedPromise: async () => true, valueWhenPending: true }),
     );
 
     // TODO: Remove side-effects and shared global state

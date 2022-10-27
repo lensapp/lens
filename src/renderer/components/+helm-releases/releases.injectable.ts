@@ -18,16 +18,23 @@ const releasesInjectable = getInjectable({
     const requestHelmReleases = di.inject(requestHelmReleasesInjectable);
     const toHelmRelease = di.inject(toHelmReleaseInjectable);
 
-    return asyncComputed(async () => {
-      void releaseSecrets.get();
+    return asyncComputed({
+      getValueFromObservedPromise: async () => {
+        void releaseSecrets.get();
 
-      const releaseArrays = await (clusterContext.hasSelectedAll
-        ? requestHelmReleases()
-        : Promise.all(clusterContext.contextNamespaces.map(namespace => requestHelmReleases(namespace)))
-      );
+        const releaseArrays = await (clusterContext.hasSelectedAll
+          ? requestHelmReleases()
+          : Promise.all(
+            clusterContext.contextNamespaces.map((namespace) =>
+              requestHelmReleases(namespace),
+            ),
+          ));
 
-      return releaseArrays.flat().map(toHelmRelease);
-    }, []);
+        return releaseArrays.flat().map(toHelmRelease);
+      },
+
+      valueWhenPending: [],
+    });
   },
 });
 

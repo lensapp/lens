@@ -54,12 +54,19 @@ const upgradeChartModelInjectable = getInjectable({
           && release.getNs() === tabData.releaseNamespace
         ))
     ));
+
     const versions = di.inject(helmChartVersionsInjectable, release);
-    const storedConfiguration = asyncComputed(() => requestHelmReleaseConfiguration(
-      release.getName(),
-      release.getNs(),
-      true,
-    ), "");
+
+    const storedConfiguration = asyncComputed({
+      getValueFromObservedPromise: () =>
+        requestHelmReleaseConfiguration(
+          release.getName(),
+          release.getNs(),
+          true,
+        ),
+
+      valueWhenPending: "",
+    });
 
     await when(() => !versions.pending.get());
 

@@ -12,9 +12,10 @@ const publicHelmRepositoriesInjectable = getInjectable({
   instantiate: (di) => {
     const callForPublicHelmRepositories = di.inject(callForPublicHelmRepositoriesInjectable);
 
-    return asyncComputed(async () => {
-      return await callForPublicHelmRepositories();
-    }, []);
+    return asyncComputed({
+      getValueFromObservedPromise: callForPublicHelmRepositories,
+      valueWhenPending: [],
+    });
   },
 });
 
