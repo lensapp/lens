@@ -183,6 +183,7 @@ exports[`selection of update stability when started renders 1`] = `
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"

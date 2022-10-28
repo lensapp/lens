@@ -560,6 +560,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1149,6 +1150,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1738,6 +1740,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -2438,6 +2441,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -3035,6 +3039,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -3735,6 +3740,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -4617,6 +4623,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -5317,6 +5324,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -6199,6 +6207,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -6900,6 +6909,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -7486,6 +7496,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -8072,6 +8083,7 @@ exports[`add custom helm repository in preferences when navigating to preference
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"

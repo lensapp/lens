@@ -182,6 +182,7 @@ exports[`extensions - navigation using application menu renders 1`] = `
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -408,6 +409,7 @@ exports[`extensions - navigation using application menu when navigating to exten
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"

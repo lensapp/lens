@@ -646,6 +646,7 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"

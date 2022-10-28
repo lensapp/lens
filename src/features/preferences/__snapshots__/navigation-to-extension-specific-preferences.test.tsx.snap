@@ -286,6 +286,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -586,6 +587,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -886,6 +888,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -1209,6 +1212,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -1847,6 +1851,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -2520,6 +2525,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -2831,6 +2837,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -3089,6 +3096,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -3378,6 +3386,7 @@ exports[`preferences - navigation to extension specific preferences when navigat
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -3666,6 +3675,7 @@ exports[`preferences - navigation to extension specific preferences when navigat
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"

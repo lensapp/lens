@@ -182,6 +182,7 @@ exports[`welcome - navigation using application menu renders 1`] = `
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
@@ -821,6 +822,7 @@ exports[`welcome - navigation using application menu when navigated somewhere el
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -1021,6 +1023,7 @@ exports[`welcome - navigation using application menu when navigated somewhere el
     </div>
     <div
       class="StatusBar"
+      data-testid="status-bar"
     >
       <div
         class="leftSide"
