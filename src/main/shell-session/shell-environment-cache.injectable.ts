@@ -18,10 +18,13 @@ const shellEnvironmentCacheInjectable = getInjectable({
     const cache = new Map<ClusterId, IAsyncComputed<Partial<Record<string, string>>>>();
 
     return async (clusterId, builder) => {
-      const cacheLine = getOrInsert(cache, clusterId, asyncComputed(() => {
-        now(1000 * 60 * 10); // update every 10 minutes
+      const cacheLine = getOrInsert(cache, clusterId, asyncComputed({
+        getValueFromObservedPromise: async () => {
+          now(1000 * 60 * 10); // update every 10 minutes
 
-        return builder();
+          return builder();
+        },
+        betweenUpdates: "show-latest-value",
       }));
 
       await when(() => !cacheLine.pending.get());
