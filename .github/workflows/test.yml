@@ -83,9 +83,7 @@ jobs:
           ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --arm64"
         if: ${{ runner.os == 'macOS' && matrix.type == 'smoke' }}
 
-      - run: |
-          make build
-          ./dist/win-unpacked/OpenLens.exe
+      - run: make integration
         name: Run Windows integration tests
         shell: bash
         env:
