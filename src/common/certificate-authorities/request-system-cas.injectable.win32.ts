@@ -32,7 +32,9 @@ const requestSystemCAsInjectable = getInjectable({
        * This needs to be done manually because for some reason calling the api from "win-ca"
        * directly fails to load "child_process" correctly on renderer
        */
-      const result = await execFile(wincaRootsExePath);
+      const result = await execFile(wincaRootsExePath, {
+        maxBuffer: 128 * 1024 * 1024, // 128 MiB
+      });
 
       if (!result.callWasSuccessful) {
         logger.warn(`[INJECT-CAS]: Error retreiving CAs`, result.error);
