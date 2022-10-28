@@ -64,15 +64,19 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
           env,
         });
         const stdout: Buffer[] = [];
+        const stderr: Buffer[] = [];
 
         opts.signal?.addEventListener("abort", () => shellProcess.kill());
 
         shellProcess.stdout.on("data", b => stdout.push(b));
+        shellProcess.stderr.on("data", b => stderr.push(b));
 
         shellProcess.on("error", (err) => reject(err));
         shellProcess.on("close", (code, signal) => {
           if (code || signal) {
-            return reject(new Error(`Unexpected return code from spawned shell (code: ${code}, signal: ${signal})`));
+            return reject(Object.assign(new Error(`Unexpected return code from spawned shellPath=${shellPath} (code: ${code}, signal: ${signal})`), {
+              stderr: Buffer.concat(stderr).toString("utf-8"),
+            }));
           }
 
           try {
