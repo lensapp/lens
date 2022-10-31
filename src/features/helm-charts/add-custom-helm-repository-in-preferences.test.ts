@@ -185,10 +185,9 @@ describe("add custom helm repository in preferences", () => {
               beforeEach(async () => {
                 await execFileMock.resolve({
                   callWasSuccessful: false,
-                  error: {
-                    error: new Error("Some error"),
+                  error: Object.assign(new Error("Some error"), {
                     stderr: "",
-                  },
+                  }),
                 });
               });
 

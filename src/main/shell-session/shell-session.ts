@@ -10,14 +10,14 @@ import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
 import os, { userInfo } from "os";
 import type * as pty from "node-pty";
-import { appEventBus } from "../../common/app-event-bus/event-bus";
-import { stat } from "fs/promises";
 import { getOrInsertWith } from "../../common/utils";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 import type { Logger } from "../../common/logger";
 import type { ComputeShellEnvironment } from "../utils/shell-env/compute-shell-environment.injectable";
 import type { SpawnPty } from "./spawn-pty.injectable";
 import type { InitializableState } from "../../common/initializable-state/create";
+import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
+import type { Stat } from "../../common/fs/stat/stat.injectable";
 
 export class ShellOpenError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -112,6 +112,8 @@ export interface ShellSessionDependencies {
   readonly buildVersion: InitializableState<string>;
   computeShellEnvironment: ComputeShellEnvironment;
   spawnPty: SpawnPty;
+  emitAppEvent: EmitAppEvent;
+  stat: Stat;
 }
 
 export interface ShellSessionArgs {
@@ -213,7 +215,7 @@ export abstract class ShellSession {
       }
 
       try {
-        const stats = await stat(potentialCwd);
+        const stats = await this.dependencies.stat(potentialCwd);
 
         if (stats.isDirectory()) {
           return potentialCwd;
@@ -310,7 +312,7 @@ export abstract class ShellSession {
         }
       });
 
-    appEventBus.emit({ name: this.ShellType, action: "open" });
+    this.dependencies.emitAppEvent({ name: this.ShellType, action: "open" });
   }
 
   protected getPathEntries(): string[] {

@@ -7,19 +7,19 @@ import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry
 import logger from "../../../../main/logger";
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { Notifications } from "../../../components/notifications";
-import type { AppEvent } from "../../../../common/app-event-bus/event-bus";
 import type { CatalogEntity } from "../../../../common/catalog";
 import { when } from "mobx";
 import type { ClusterFrameContext } from "../../../cluster-frame-context/cluster-frame-context";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import { requestSetClusterFrameId } from "../../../ipc";
+import type { EmitAppEvent } from "../../../../common/app-event-bus/emit-event.injectable";
 
 interface Dependencies {
   hostedCluster: Cluster;
   loadExtensions: (getCluster: () => CatalogEntity) => void;
   catalogEntityRegistry: CatalogEntityRegistry;
   frameRoutingId: number;
-  emitEvent: (event: AppEvent) => void;
+  emitAppEvent: EmitAppEvent;
 
   // TODO: This dependency belongs to KubeObjectStore
   clusterFrameContext: ClusterFrameContext;
@@ -32,7 +32,7 @@ export const initClusterFrame = ({
   loadExtensions,
   catalogEntityRegistry,
   frameRoutingId,
-  emitEvent,
+  emitAppEvent,
   clusterFrameContext,
 }: Dependencies) =>
   async (unmountRoot: () => void) => {
@@ -70,7 +70,7 @@ export const initClusterFrame = ({
     );
 
     setTimeout(() => {
-      emitEvent({
+      emitAppEvent({
         name: "cluster",
         action: "open",
         params: {

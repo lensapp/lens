@@ -3,26 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ExecFileOptions } from "child_process";
+import type { ExecFileException, ExecFileOptions } from "child_process";
 import { execFile } from "child_process";
 import type { AsyncResult } from "../utils/async-result";
 
 export interface ExecFile {
-  (filePath: string, args: string[], options: ExecFileOptions): Promise<AsyncResult<string, { stderr: string; error: Error }>>;
+  (filePath: string, args: string[], options?: ExecFileOptions): Promise<AsyncResult<string, ExecFileException & { stderr: string }>>;
 }
 
 const execFileInjectable = getInjectable({
   id: "exec-file",
 
   instantiate: (): ExecFile => (filePath, args, options) => new Promise((resolve) => {
-    execFile(filePath, args, options, (error, stdout, stderr) => {
+    execFile(filePath, args, options ?? {}, (error, stdout, stderr) => {
       if (error) {
         resolve({
           callWasSuccessful: false,
-          error: {
-            error,
-            stderr,
-          },
+          error: Object.assign(error, { stderr }),
         });
       } else {
         resolve({

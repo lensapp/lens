@@ -19,9 +19,6 @@ import type { FileSystemProvisionerStore } from "../extensions/extension-loader/
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
-import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
-import { EventEmitter } from "../common/event-emitter";
-import type { AppEvent } from "../common/app-event-bus/event-bus";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
 import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
@@ -166,9 +163,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       readFileInjectable,
       execFileInjectable,
     ]);
-
-    // TODO: Remove usages of globally exported appEventBus to get rid of this
-    di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
 
     di.override(broadcastMessageInjectable, () => (channel) => {
       throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);

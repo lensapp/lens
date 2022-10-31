@@ -10,7 +10,6 @@ import { BaseStore } from "../base-store";
 import { Cluster } from "../cluster/cluster";
 import migrations from "../../migrations/cluster-store";
 import logger from "../../main/logger";
-import { appEventBus } from "../app-event-bus/event-bus";
 import { ipcMainHandle } from "../ipc";
 import { disposer, toJS } from "../utils";
 import type { ClusterModel, ClusterId, ClusterState } from "../cluster-types";
@@ -18,6 +17,7 @@ import { requestInitialClusterStates } from "../../renderer/ipc";
 import { clusterStates } from "../ipc/cluster";
 import type { CreateCluster } from "../cluster/create-cluster-injection-token";
 import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
+import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
 
 export interface ClusterStoreModel {
   clusters?: ClusterModel[];
@@ -26,6 +26,7 @@ export interface ClusterStoreModel {
 interface Dependencies {
   createCluster: CreateCluster;
   readClusterConfigSync: ReadClusterConfigSync;
+  emitAppEvent: EmitAppEvent;
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
@@ -34,7 +35,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   protected disposer = disposer();
 
-  constructor(private dependencies: Dependencies) {
+  constructor(private readonly dependencies: Dependencies) {
     super({
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
@@ -115,7 +116,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   addCluster(clusterOrModel: ClusterModel | Cluster): Cluster {
-    appEventBus.emit({ name: "cluster", action: "add" });
+    this.dependencies.emitAppEvent({ name: "cluster", action: "add" });
 
     const cluster = clusterOrModel instanceof Cluster
       ? clusterOrModel

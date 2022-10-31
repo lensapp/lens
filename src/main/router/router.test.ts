@@ -20,6 +20,7 @@ import type { SetRequired } from "type-fest";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
+import fsInjectable from "../../common/fs/fs.injectable";
 import { runInAction } from "mobx";
 
 describe("router", () => {
@@ -32,6 +33,7 @@ describe("router", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     mockFs();
+    di.permitSideEffects(fsInjectable);
 
     di.override(parseRequestInjectable, () => () => Promise.resolve({
       payload: "some-payload",

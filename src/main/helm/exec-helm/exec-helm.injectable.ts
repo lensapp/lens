@@ -3,11 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { ExecFileException } from "child_process";
 import execFileInjectable from "../../../common/fs/exec-file.injectable";
-import helmBinaryPathInjectable from "../helm-binary-path.injectable";
 import type { AsyncResult } from "../../../common/utils/async-result";
+import helmBinaryPathInjectable from "../helm-binary-path.injectable";
 
-export type ExecHelm = (args: string[]) => Promise<AsyncResult<string, string>>;
+export type ExecHelm = (args: string[]) => Promise<AsyncResult<string, ExecFileException & { stderr: string }>>;
 
 const execHelmInjectable = getInjectable({
   id: "exec-helm",
@@ -16,20 +17,9 @@ const execHelmInjectable = getInjectable({
     const execFile = di.inject(execFileInjectable);
     const helmBinaryPath = di.inject(helmBinaryPathInjectable);
 
-    return async (args) => {
-      const response = await execFile(helmBinaryPath, args, {
-        maxBuffer: 32 * 1024 * 1024 * 1024, // 32 MiB
-      });
-
-      if (response.callWasSuccessful) {
-        return response;
-      }
-
-      return {
-        callWasSuccessful: false,
-        error: response.error.stderr || response.error.error.message,
-      };
-    };
+    return async (args) => execFile(helmBinaryPath, args, {
+      maxBuffer: 32 * 1024 * 1024 * 1024, // 32 MiB
+    });
   },
 });
 

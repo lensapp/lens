@@ -3,21 +3,29 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Cluster } from "../common/cluster/cluster";
-import { exec } from "child_process";
-import fs from "fs-extra";
+import type { Cluster } from "../../common/cluster/cluster";
 import * as yaml from "js-yaml";
-import path from "path";
 import tempy from "tempy";
-import logger from "./logger";
-import { appEventBus } from "../common/app-event-bus/event-bus";
-import { isChildProcessError } from "../common/utils";
 import type { Patch } from "rfc6902";
-import { promiseExecFile } from "../common/utils/promise-exec";
 import type { KubernetesObject } from "@kubernetes/client-node";
+import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
+import type { Logger } from "../../common/logger";
+import type { WriteFile } from "../../common/fs/write-file.injectable";
+import type { DeleteFile } from "../../common/fs/delete-file.injectable";
+import type { ExecFile } from "../../common/fs/exec-file.injectable";
+import type { JoinPaths } from "../../common/path/join-paths.injectable";
+
+export interface ResourceApplierDependencies {
+  emitAppEvent: EmitAppEvent;
+  writeFile: WriteFile;
+  deleteFile: DeleteFile;
+  execFile: ExecFile;
+  joinPaths: JoinPaths;
+  readonly logger: Logger;
+}
 
 export class ResourceApplier {
-  constructor(protected cluster: Cluster) {}
+  constructor(protected readonly dependencies: ResourceApplierDependencies, protected readonly cluster: Cluster) {}
 
   /**
    * Patch a kube resource's manifest, throwing any error that occurs.
@@ -27,7 +35,7 @@ export class ResourceApplier {
    * @param ns The optional namespace of the kube resource
    */
   async patch(name: string, kind: string, patch: Patch, ns?: string): Promise<string> {
-    appEventBus.emit({ name: "resource", action: "patch" });
+    this.dependencies.emitAppEvent({ name: "resource", action: "patch" });
 
     const kubectl = await this.cluster.ensureKubectl();
     const kubectlPath = await kubectl.getPath();
@@ -49,23 +57,17 @@ export class ResourceApplier {
       "-o", "json",
     );
 
-    try {
-      const { stdout } = await promiseExecFile(kubectlPath, args);
+    const result = await this.dependencies.execFile(kubectlPath, args);
 
-      return stdout;
-    } catch (error) {
-      if (isChildProcessError(error)) {
-        throw error.stderr ?? error;
-      }
-
-      throw error;
+    if (result.callWasSuccessful) {
+      return result.response;
     }
+
+    throw result.error.stderr || result.error.message;
   }
 
   async create(resource: string): Promise<string> {
-    appEventBus.emit({ name: "resource", action: "apply" });
-
-    console.log({ resource });
+    this.dependencies.emitAppEvent({ name: "resource", action: "apply" });
 
     return this.kubectlApply(this.sanitizeObject(resource));
   }
@@ -82,7 +84,7 @@ export class ResourceApplier {
       "-f", fileName,
     ];
 
-    logger.debug(`shooting manifests with ${kubectlPath}`, { args });
+    this.dependencies.logger.debug(`shooting manifests with ${kubectlPath}`, { args });
 
     const execEnv = { ...process.env };
     const httpsProxy = this.cluster.preferences?.httpsProxy;
@@ -92,18 +94,17 @@ export class ResourceApplier {
     }
 
     try {
-      await fs.writeFile(fileName, content);
-      const { stdout } = await promiseExecFile(kubectlPath, args);
+      await this.dependencies.writeFile(fileName, content);
 
-      return stdout;
-    } catch (error) {
-      if (isChildProcessError(error)) {
-        throw error.stderr ?? error;
+      const result = await this.dependencies.execFile(kubectlPath, args);
+
+      if (result.callWasSuccessful) {
+        return result.response;
       }
 
-      throw error;
+      throw result.error.stderr || result.error.message;
     } finally {
-      await fs.unlink(fileName);
+      await this.dependencies.deleteFile(fileName);
     }
   }
 
@@ -115,39 +116,36 @@ export class ResourceApplier {
     return this.kubectlCmdAll("delete", resources, extraArgs);
   }
 
-  protected async kubectlCmdAll(subCmd: string, resources: string[], args: string[] = []): Promise<string> {
+  protected async kubectlCmdAll(subCmd: string, resources: string[], parentArgs: string[] = []): Promise<string> {
     const kubectl = await this.cluster.ensureKubectl();
     const kubectlPath = await kubectl.getPath();
     const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
+    const tmpDir = tempy.directory();
 
-    return new Promise((resolve, reject) => {
-      const tmpDir = tempy.directory();
+    await Promise.all(resources.map((resource, index) => this.dependencies.writeFile(
+      this.dependencies.joinPaths(tmpDir, `${index}.yaml`),
+      resource,
+    )));
 
-      // Dump each resource into tmpDir
-      resources.forEach((resource, index) => {
-        fs.writeFileSync(path.join(tmpDir, `${index}.yaml`), resource);
-      });
-      args.push("-f", `"${tmpDir}"`);
-      const cmd = `"${kubectlPath}" ${subCmd} --kubeconfig "${proxyKubeconfigPath}" ${args.join(" ")}`;
+    const args = [
+      subCmd,
+      "--kubeconfig", `"${proxyKubeconfigPath}"`,
+      ...parentArgs,
+      "-f", `"${tmpDir}"`,
+    ];
 
-      logger.info(`[RESOURCE-APPLIER] running cmd ${cmd}`);
-      exec(cmd, (error, stdout) => {
-        if (error) {
-          logger.error(`[RESOURCE-APPLIER] cmd errored: ${error}`);
-          const splitError = error.toString().split(`.yaml": `);
+    this.dependencies.logger.info(`[RESOURCE-APPLIER] running kubectl`, { args });
+    const result = await this.dependencies.execFile(kubectlPath, args);
 
-          if (splitError[1]) {
-            reject(splitError[1]);
-          } else {
-            reject(error);
-          }
+    if (result.callWasSuccessful) {
+      return result.response;
+    }
 
-          return;
-        }
+    this.dependencies.logger.error(`[RESOURCE-APPLIER] kubectl errored: ${result.error.message}`);
 
-        resolve(stdout);
-      });
-    });
+    const splitError = result.error.stderr.split(`.yaml": `);
+
+    throw splitError[1] || result.error.message;
   }
 
   protected sanitizeObject(resource: string) {

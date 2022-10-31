@@ -8,12 +8,10 @@ import { clusterFrameMap } from "../../../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ClusterStore } from "../../../../common/cluster-store/cluster-store";
-import { appEventBus } from "../../../../common/app-event-bus/event-bus";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
 import type { CatalogEntityRegistry } from "../../../catalog";
 import { pushCatalogToRenderer } from "../../../catalog-pusher";
 import type { ClusterManager } from "../../../cluster/manager";
-import { ResourceApplier } from "../../../resource-applier";
 import type { IComputedValue } from "mobx";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
 import { handleWindowAction, onLocationChange } from "../../../ipc/window";
@@ -25,6 +23,8 @@ import type { ApplicationMenuItemTypes } from "../../../../features/application-
 import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
 import { getApplicationMenuTemplate } from "../../../../features/application-menu/main/populate-application-menu.injectable";
 import type { MenuItemRoot } from "../../../../features/application-menu/main/application-menu-item-composite.injectable";
+import type { EmitAppEvent } from "../../../../common/app-event-bus/emit-event.injectable";
+import type { CreateResourceApplier } from "../../../resource-applier/create-resource-applier.injectable";
 
 interface Dependencies {
   applicationMenuItemComposite: IComputedValue<Composite<ApplicationMenuItemTypes | MenuItemRoot>>;
@@ -33,6 +33,8 @@ interface Dependencies {
   clusterStore: ClusterStore;
   operatingSystemTheme: IComputedValue<Theme>;
   askUserForFilePaths: AskUserForFilePaths;
+  emitAppEvent: EmitAppEvent;
+  createResourceApplier: CreateResourceApplier;
 }
 
 export const setupIpcMainHandlers = ({
@@ -42,6 +44,8 @@ export const setupIpcMainHandlers = ({
   clusterStore,
   operatingSystemTheme,
   askUserForFilePaths,
+  emitAppEvent,
+  createResourceApplier,
 }: Dependencies) => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
@@ -71,7 +75,7 @@ export const setupIpcMainHandlers = ({
   });
 
   ipcMainHandle(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
-    appEventBus.emit({ name: "cluster", action: "stop" });
+    emitAppEvent({ name: "cluster", action: "stop" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
@@ -81,11 +85,11 @@ export const setupIpcMainHandlers = ({
   });
 
   ipcMainHandle(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({ name: "cluster", action: "kubectl-apply-all" });
+    emitAppEvent({ name: "cluster", action: "kubectl-apply-all" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
-      const applier = new ResourceApplier(cluster);
+      const applier = createResourceApplier(cluster);
 
       try {
         const stdout = await applier.kubectlApplyAll(resources, extraArgs);
@@ -100,11 +104,11 @@ export const setupIpcMainHandlers = ({
   });
 
   ipcMainHandle(clusterKubectlDeleteAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({ name: "cluster", action: "kubectl-delete-all" });
+    emitAppEvent({ name: "cluster", action: "kubectl-delete-all" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
-      const applier = new ResourceApplier(cluster);
+      const applier = createResourceApplier(cluster);
 
       try {
         const stdout = await applier.kubectlDeleteAll(resources, extraArgs);

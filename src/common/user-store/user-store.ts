@@ -11,6 +11,7 @@ import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
 import { DESCRIPTORS } from "./preferences-helpers";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import logger from "../../main/logger";
+import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
 
 // TODO: Remove coupling with Feature
 import type { SelectedUpdateChannel } from "../../features/application-update/common/selected-update-channel/selected-update-channel.injectable";
@@ -23,6 +24,7 @@ export interface UserStoreModel {
 
 interface Dependencies {
   readonly selectedUpdateChannel: SelectedUpdateChannel;
+  emitAppEvent: EmitAppEvent;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> /* implements UserStoreFlatModel (when strict null is enabled) */ {

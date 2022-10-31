@@ -3,13 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { EventEmitter } from "../event-emitter";
-
+/**
+ * Data for telemetry
+ */
 export interface AppEvent {
   name: string;
   action: string;
   destination?: string;
   params?: Record<string, any>;
 }
-
-export const appEventBus = new EventEmitter<[AppEvent]>();

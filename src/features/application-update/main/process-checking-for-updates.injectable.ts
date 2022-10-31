@@ -9,7 +9,7 @@ import discoveredUpdateVersionInjectable from "../common/discovered-update-versi
 import { runInAction } from "mobx";
 import downloadUpdateInjectable from "./download-update/download-update.injectable";
 import checkForUpdatesStartingFromChannelInjectable from "./check-for-updates/check-for-updates-starting-from-channel.injectable";
-import emitEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
+import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import { getCurrentDateTime } from "../../../common/utils/date/get-current-date-time";
 
 const processCheckingForUpdatesInjectable = getInjectable({
@@ -21,7 +21,7 @@ const processCheckingForUpdatesInjectable = getInjectable({
     const checkingForUpdatesState = di.inject(updatesAreBeingDiscoveredInjectable);
     const discoveredVersionState = di.inject(discoveredUpdateVersionInjectable);
     const checkForUpdatesStartingFromChannel = di.inject(checkForUpdatesStartingFromChannelInjectable);
-    const emitEvent = di.inject(emitEventInjectable);
+    const emitEvent = di.inject(emitAppEventInjectable);
 
     return async (source: string) => {
       emitEvent({

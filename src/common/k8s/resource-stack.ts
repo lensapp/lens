@@ -5,7 +5,6 @@
 import fse from "fs-extra";
 import path from "path";
 import hb from "handlebars";
-import { ResourceApplier } from "../../main/resource-applier";
 import type { KubernetesCluster } from "../catalog-entities";
 import logger from "../../main/logger";
 import { app } from "electron";
@@ -14,6 +13,8 @@ import yaml from "js-yaml";
 import { requestKubectlApplyAll, requestKubectlDeleteAll } from "../../renderer/ipc";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import productNameInjectable from "../vars/product-name.injectable";
+import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import createResourceApplierInjectable from "../../main/resource-applier/create-resource-applier.injectable";
 
 export class ResourceStack {
   constructor(protected cluster: KubernetesCluster, protected name: string) {}
@@ -52,7 +53,9 @@ export class ResourceStack {
     kubectlArgs = this.appendKubectlArgs(kubectlArgs);
 
     if (app) {
-      return await new ResourceApplier(clusterModel).kubectlApplyAll(resources, kubectlArgs);
+      const createResourceApplier = asLegacyGlobalFunctionForExtensionApi(createResourceApplierInjectable);
+
+      return await createResourceApplier(clusterModel).kubectlApplyAll(resources, kubectlArgs);
     } else {
       const response = await requestKubectlApplyAll(this.cluster.getId(), resources, kubectlArgs);
 
@@ -76,7 +79,9 @@ export class ResourceStack {
     kubectlArgs = this.appendKubectlArgs(kubectlArgs);
 
     if (app) {
-      return await new ResourceApplier(clusterModel).kubectlDeleteAll(resources, kubectlArgs);
+      const createResourceApplier = asLegacyGlobalFunctionForExtensionApi(createResourceApplierInjectable);
+
+      return await createResourceApplier(clusterModel).kubectlDeleteAll(resources, kubectlArgs);
     } else {
       const response = await requestKubectlDeleteAll(this.cluster.getId(), resources, kubectlArgs);
 
