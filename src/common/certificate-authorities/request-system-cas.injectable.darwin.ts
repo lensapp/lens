@@ -23,7 +23,7 @@ const requestSystemCAsInjectable = getInjectable({
       if (!result.callWasSuccessful) {
         return {
           callWasSuccessful: false,
-          error: result.error.stderr || result.error.error.message,
+          error: result.error.stderr || result.error.message,
         };
       }
 
