@@ -3,6 +3,9 @@
 exports[`preferences - navigation to telemetry preferences given URL for Sentry DNS, when navigating to preferences when navigating to telemetry preferences renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -392,6 +395,9 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
 
 exports[`preferences - navigation to telemetry preferences given in preferences, when rendered renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -1142,6 +1148,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
 
 exports[`preferences - navigation to telemetry preferences given in preferences, when rendered when extension with telemetry preference items gets enabled renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -1905,6 +1914,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
 exports[`preferences - navigation to telemetry preferences given in preferences, when rendered when extension with telemetry preference items gets enabled when clicking link to telemetry preferences from navigation renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -2283,6 +2295,9 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
 
 exports[`preferences - navigation to telemetry preferences given no URL for Sentry DNS, when navigating to telemetry preferences renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >

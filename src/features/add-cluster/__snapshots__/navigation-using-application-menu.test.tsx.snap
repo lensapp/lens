@@ -3,6 +3,9 @@
 exports[`add-cluster - navigation using application menu renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -285,6 +288,9 @@ exports[`add-cluster - navigation using application menu renders 1`] = `
 
 exports[`add-cluster - navigation using application menu when navigating to add cluster using application menu renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >

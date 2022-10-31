@@ -4,6 +4,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -767,6 +770,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extension with registered tab when navigating to specific extension tab renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -1145,6 +1151,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
 
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extensions with tabs having same id when navigating to first extension tab renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -1537,6 +1546,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given extensions with tabs having same id when navigating to second extension tab renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -1927,6 +1939,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
 
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered given multiple extensions with specific preferences, when navigating to extension specific preferences page renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -2344,6 +2359,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
 
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -3094,6 +3112,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
 
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered when extension with specific preferences is enabled renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -3883,6 +3904,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered when extension with specific preferences is enabled when navigating to extension preferences using navigation renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -4288,6 +4312,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
 exports[`preferences - navigation to extension specific preferences given in preferences, when rendered when extension with specific preferences is enabled when navigating to extension preferences using navigation when extension is disabled renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >

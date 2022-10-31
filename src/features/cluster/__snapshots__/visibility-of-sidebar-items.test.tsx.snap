@@ -3,6 +3,9 @@
 exports[`cluster - visibility of sidebar items given kube resource for route is not allowed renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -15,7 +18,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
         <div
           class="drawer-title-text flex gaps align-center"
         >
-          
+
         </div>
         <i
           class="Icon material interactive focusable"
@@ -56,16 +59,33 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       >
         <div
           class="SidebarCluster"
+          data-testid="sidebar-cluster-dropdown"
+          id="cluster-some-cluster-id"
+          role="menubar"
+          tabindex="0"
         >
           <div
-            class="Avatar rounded loadingAvatar"
-            style="width: 40px; height: 40px;"
+            class="Avatar rounded avatar"
+            style="width: 40px; height: 40px; background: rgb(198, 167, 9);"
           >
-            ??
+            scn
           </div>
           <div
-            class="loadingClusterName"
-          />
+            class="clusterName"
+            id="tooltip-cluster-some-cluster-id"
+          >
+            some-context-name
+          </div>
+          <i
+            class="Icon dropdown material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
         </div>
         <div
           class="sidebarNav sidebar-active-status"
@@ -551,6 +571,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
 exports[`cluster - visibility of sidebar items given kube resource for route is not allowed when kube resource becomes allowed renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -563,7 +586,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
         <div
           class="drawer-title-text flex gaps align-center"
         >
-          
+
         </div>
         <i
           class="Icon material interactive focusable"
@@ -604,16 +627,33 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       >
         <div
           class="SidebarCluster"
+          data-testid="sidebar-cluster-dropdown"
+          id="cluster-some-cluster-id"
+          role="menubar"
+          tabindex="0"
         >
           <div
-            class="Avatar rounded loadingAvatar"
-            style="width: 40px; height: 40px;"
+            class="Avatar rounded avatar"
+            style="width: 40px; height: 40px; background: rgb(198, 167, 9);"
           >
-            ??
+            scn
           </div>
           <div
-            class="loadingClusterName"
-          />
+            class="clusterName"
+            id="tooltip-cluster-some-cluster-id"
+          >
+            some-context-name
+          </div>
+          <i
+            class="Icon dropdown material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
         </div>
         <div
           class="sidebarNav sidebar-active-status"

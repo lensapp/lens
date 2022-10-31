@@ -25,6 +25,7 @@ import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluste
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
+import currentLocationInjectable from "../../api/current-location.injectable";
 
 describe("<ClusterFrame />", () => {
   let render: () => RenderResult;
@@ -46,6 +47,12 @@ describe("<ClusterFrame />", () => {
     di.override(directoryForUserDataInjectable, () => "/some/irrelavent/path");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.override(currentlyInClusterFrameInjectable, () => true);
+
+    di.override(currentLocationInjectable, () => ({
+      hostname: "localhost",
+      port: "12345",
+      protocol: "http",
+    }));
 
     testUsingFakeTime("2000-01-01 12:00:00am");
 

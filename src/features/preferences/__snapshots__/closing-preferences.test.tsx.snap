@@ -3,6 +3,9 @@
 exports[`preferences - closing-preferences given accessing preferences directly renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -765,6 +768,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
 exports[`preferences - closing-preferences given accessing preferences directly when navigating to a tab in preferences renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -1113,6 +1119,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
 exports[`preferences - closing-preferences given accessing preferences directly when navigating to a tab in preferences when preferences are closed renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -1319,6 +1328,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
 exports[`preferences - closing-preferences given accessing preferences directly when preferences are closed renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -1522,8 +1534,155 @@ exports[`preferences - closing-preferences given accessing preferences directly 
 </div>
 `;
 
-exports[`preferences - closing-preferences given already in a page and then navigated to preferences renders 1`] = `
+exports[`preferences - closing-preferences given already in a page renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
+  <div
+    class="ClusterManager"
+  >
+    <div
+      class="topBar"
+    >
+      <div
+        class="items"
+      >
+        <div
+          class="preventedDragging"
+        >
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+        </div>
+        <div
+          class="size-sm"
+        />
+        <div
+          class="preventedDragging"
+        >
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+        </div>
+        <div
+          class="size-sm"
+        />
+        <div
+          class="preventedDragging"
+        >
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="separator"
+        />
+      </div>
+    </div>
+    <main>
+      <div
+        id="lens-views"
+      />
+      <div
+        data-testid="some-page"
+      >
+        Some content
+      </div>
+    </main>
+    <div
+      class="HotbarMenu flex column"
+    >
+      <div
+        class="HotbarItems flex column gaps"
+      />
+      <div
+        class="HotbarSelector"
+      >
+        <i
+          class="Icon Icon previous material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_left"
+          >
+            arrow_left
+          </span>
+        </i>
+        <div
+          class="HotbarIndex"
+        >
+          <div
+            class="badge Badge small clickable"
+            id="hotbarIndex"
+          >
+            0
+          </div>
+        </div>
+        <i
+          class="Icon material interactive focusable"
+          tabindex="0"
+        >
+          <span
+            class="icon"
+            data-icon-name="arrow_right"
+          >
+            arrow_right
+          </span>
+        </i>
+      </div>
+    </div>
+    <div
+      class="StatusBar"
+      data-testid="status-bar"
+    >
+      <div
+        class="leftSide"
+        data-testid="status-bar-left"
+      />
+      <div
+        class="rightSide"
+        data-testid="status-bar-right"
+      />
+    </div>
+  </div>
+  <div
+    class="Notifications flex column align-flex-end"
+  />
+</div>
+`;
+
+exports[`preferences - closing-preferences given already in a page when navigated to preferences renders 1`] = `
+<div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -2284,8 +2443,11 @@ exports[`preferences - closing-preferences given already in a page and then navi
 </div>
 `;
 
-exports[`preferences - closing-preferences given already in a page and then navigated to preferences when navigating to a tab in preferences renders 1`] = `
+exports[`preferences - closing-preferences given already in a page when navigated to preferences when navigating to a tab in preferences renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -2632,8 +2794,11 @@ exports[`preferences - closing-preferences given already in a page and then navi
 </div>
 `;
 
-exports[`preferences - closing-preferences given already in a page and then navigated to preferences when navigating to a tab in preferences when preferences are closed renders 1`] = `
+exports[`preferences - closing-preferences given already in a page when navigated to preferences when navigating to a tab in preferences when preferences are closed renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -2838,8 +3003,11 @@ exports[`preferences - closing-preferences given already in a page and then navi
 </div>
 `;
 
-exports[`preferences - closing-preferences given already in a page and then navigated to preferences when preferences are closed renders 1`] = `
+exports[`preferences - closing-preferences given already in a page when navigated to preferences when preferences are closed renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >

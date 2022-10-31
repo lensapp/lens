@@ -16,35 +16,24 @@ const kubeObjectStatusTextRegistratorInjectable = getInjectable({
   instantiate: (di) => {
     const getRandomId = di.inject(getRandomIdInjectable);
 
-    const getExtensionShouldBeEnabledForClusterFrame = (
-      extension: LensRendererExtension,
-    ) =>
-      di.inject(extensionShouldBeEnabledForClusterFrameInjectable, extension);
-
     return (ext) => {
       const extension = ext as LensRendererExtension;
+      const extensionShouldBeEnabledForClusterFrame = di.inject(extensionShouldBeEnabledForClusterFrameInjectable, extension);
 
-      const extensionShouldBeEnabledForClusterFrame =
-        getExtensionShouldBeEnabledForClusterFrame(extension);
-
-      return extension.kubeObjectStatusTexts.map((registration) => {
-        const id = `kube-object-status-text-registration-from-${
-          extension.sanitizedExtensionId
-        }-${getRandomId()}`;
+      return extension.kubeObjectStatusTexts.map(({
+        visible = computed(() => true),
+        ...registration
+      }) => {
+        const id = `kube-object-status-text-registration-from-${extension.sanitizedExtensionId}-${getRandomId()}`;
 
         return getInjectable({
           id,
-
           instantiate: () => ({
             ...registration,
-
-            enabled: computed(() => {
-              if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
-                return false;
-              }
-
-              return registration.visible ? registration.visible.get() : true;
-            }),
+            enabled: computed(() => (
+              extensionShouldBeEnabledForClusterFrame.value.get()
+              && visible.get()
+            )),
           }),
 
           injectionToken: kubeObjectStatusTextInjectionToken,

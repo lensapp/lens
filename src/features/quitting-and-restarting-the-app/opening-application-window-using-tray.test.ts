@@ -14,6 +14,7 @@ import createElectronWindowInjectable from "../../main/start-main-application/le
 import splashWindowInjectable from "../../main/start-main-application/lens-window/splash-window/splash-window.injectable";
 import { runInAction } from "mobx";
 import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
+import { matches } from "jest-mock-extended";
 
 describe("opening application window using tray", () => {
   describe("given application has started", () => {
@@ -136,7 +137,7 @@ describe("opening application window using tray", () => {
           });
 
           it("starts loading of content for the application window", () => {
-            expect(callForApplicationWindowHtmlMock).toHaveBeenCalledWith("https://lens.app:42");
+            expect(callForApplicationWindowHtmlMock).toHaveBeenCalledWith(matches((val) => val.startsWith("http://lens.app:")));
           });
 
           describe("given static HTML of application window has not resolved yet, when opening from tray again", () => {

@@ -4,6 +4,9 @@ exports[`selection of update stability when started renders 1`] = `
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div

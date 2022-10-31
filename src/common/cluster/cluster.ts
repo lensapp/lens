@@ -20,12 +20,12 @@ import { disposer, isDefined, isRequestError, toJS } from "../utils";
 import type { Response } from "request";
 import { clusterListNamespaceForbiddenChannel } from "../ipc/cluster";
 import type { CanI } from "./authorization-review.injectable";
-import type { ListNamespaces } from "./list-namespaces.injectable";
+import type { ListNamespacesFor } from "./list-namespaces.injectable";
 import assert from "assert";
 import type { Logger } from "../logger";
 import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
 import type { LoadConfigfromFile } from "../kube-helpers/load-config-from-file.injectable";
-import type { CanListResource, RequestNamespaceListPermissions, RequestNamespaceListPermissionsFor } from "./request-namespace-list-permissions.injectable";
+import type { RequestNamespaceListPermissions, RequestNamespaceListPermissionsFor } from "./request-namespace-list-permissions.injectable";
 import type { RequestApiResources } from "../../main/cluster/request-api-resources.injectable";
 
 export interface ClusterDependencies {
@@ -38,7 +38,7 @@ export interface ClusterDependencies {
   createAuthorizationReview: (config: KubeConfig) => CanI;
   requestApiResources: RequestApiResources;
   requestNamespaceListPermissionsFor: RequestNamespaceListPermissionsFor;
-  createListNamespaces: (config: KubeConfig) => ListNamespaces;
+  listNamespacesFor: ListNamespacesFor;
   createVersionDetector: (cluster: Cluster) => VersionDetector;
   broadcastMessage: BroadcastMessage;
   loadConfigfromFile: LoadConfigfromFile;
@@ -644,7 +644,7 @@ export class Cluster implements ClusterModel {
     }
 
     try {
-      const listNamespaces = this.dependencies.createListNamespaces(proxyConfig);
+      const listNamespaces = this.dependencies.listNamespacesFor(proxyConfig);
 
       return await listNamespaces();
     } catch (error) {
@@ -672,10 +672,9 @@ export class Cluster implements ClusterModel {
       const canListResourceCheckers = await Promise.all((
         this.allowedNamespaces.map(namespace => apiLimit(() => requestNamespaceListPermissions(namespace)))
       ));
-      const canListNamespacedResource: CanListResource = (resource) => canListResourceCheckers.some(fn => fn(resource));
 
       return this.knownResources
-        .filter(canListNamespacedResource)
+        .filter((resource) => canListResourceCheckers.some(fn => fn(resource)))
         .map(formatKubeApiResource);
     } catch (error) {
       return [];

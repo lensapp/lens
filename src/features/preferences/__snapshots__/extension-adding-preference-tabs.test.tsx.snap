@@ -4,6 +4,9 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div

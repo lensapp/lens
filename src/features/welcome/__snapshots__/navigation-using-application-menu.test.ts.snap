@@ -3,6 +3,9 @@
 exports[`welcome - navigation using application menu renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -286,6 +289,9 @@ exports[`welcome - navigation using application menu renders 1`] = `
 exports[`welcome - navigation using application menu when navigated somewhere else renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -1037,6 +1043,9 @@ exports[`welcome - navigation using application menu when navigated somewhere el
 
 exports[`welcome - navigation using application menu when navigated somewhere else when navigated to welcome using application menu renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >

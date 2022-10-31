@@ -4,6 +4,9 @@ exports[`installing update using tray when started renders 1`] = `
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -288,6 +291,9 @@ exports[`installing update using tray when started renders 1`] = `
 exports[`installing update using tray when started when user checks for updates using tray renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -574,6 +580,9 @@ exports[`installing update using tray when started when user checks for updates 
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -858,6 +867,9 @@ exports[`installing update using tray when started when user checks for updates 
 exports[`installing update using tray when started when user checks for updates using tray when new update is discovered when download fails renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -1169,6 +1181,9 @@ exports[`installing update using tray when started when user checks for updates 
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1478,6 +1493,9 @@ exports[`installing update using tray when started when user checks for updates 
 exports[`installing update using tray when started when user checks for updates using tray when no new update is discovered renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >

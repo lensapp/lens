@@ -17,19 +17,25 @@ export type CreateTerminalApi = (query: TerminalApiQuery) => TerminalApi;
 const createTerminalApiInjectable = getInjectable({
   id: "create-terminal-api",
   instantiate: (di): CreateTerminalApi => {
-    const hostedClusterId = di.inject(hostedClusterIdInjectable);
-
-    assert(hostedClusterId, "Can only create Terminal APIs within cluster frames");
-
-    const deps: TerminalApiDependencies = {
+    const partialDeps = {
       requestShellApiToken: di.inject(requestShellApiTokenInjectable),
       defaultParams: di.inject(defaultWebsocketApiParamsInjectable),
       logger: di.inject(loggerInjectable),
       currentLocation: di.inject(currentLocationInjectable),
-      hostedClusterId,
     };
 
-    return (query) => new TerminalApi(deps, query);
+    return (query) => {
+      const hostedClusterId = di.inject(hostedClusterIdInjectable);
+
+      assert(hostedClusterId, "Can only create Terminal APIs within cluster frames");
+
+      const deps: TerminalApiDependencies = {
+        ...partialDeps,
+        hostedClusterId,
+      };
+
+      return new TerminalApi(deps, query);
+    };
   },
 });
 

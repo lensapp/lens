@@ -4,6 +4,9 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -380,6 +383,9 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -755,6 +761,9 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
 exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHIFT+CTRL+P renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -1144,6 +1153,9 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1520,6 +1532,9 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1805,6 +1820,9 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2089,6 +2107,9 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
 exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHIFT+CMD+P renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -2386,6 +2407,9 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
 exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHIFT+CMD+P when pressing ESC renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >

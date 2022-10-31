@@ -3,6 +3,9 @@
 exports[`preferences - hiding-of-empty-branches, given in preferences page given tab group and empty tabs renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -752,6 +755,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
 
 exports[`preferences - hiding-of-empty-branches, given in preferences page given tab group and empty tabs when an item appears for one of the tabs renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -1530,6 +1536,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
 
 exports[`preferences - hiding-of-empty-branches, given in preferences page given tab group and empty tabs when an item appears for one of the tabs when an item appears for the remaining tab renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >

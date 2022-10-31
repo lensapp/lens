@@ -9,6 +9,7 @@ import type { History } from "history";
 const historyInjectable = getInjectable({
   id: "history",
   instantiate: (): History => createBrowserHistory(),
+  causesSideEffects: true,
 });
 
 export default historyInjectable;

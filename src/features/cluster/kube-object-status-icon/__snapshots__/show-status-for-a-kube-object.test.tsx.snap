@@ -4,6 +4,9 @@ exports[`show status for a kube object given application starts and in test page
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -16,7 +19,7 @@ exports[`show status for a kube object given application starts and in test page
           <div
             class="drawer-title-text flex gaps align-center"
           >
-            
+
           </div>
           <i
             class="Icon material interactive focusable"
@@ -57,16 +60,33 @@ exports[`show status for a kube object given application starts and in test page
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background: rgb(198, 167, 9);"
             >
-              ??
+              scn
             </div>
             <div
-              class="loadingClusterName"
-            />
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
+            >
+              some-context-name
+            </div>
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -426,6 +446,9 @@ exports[`show status for a kube object given application starts and in test page
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -438,7 +461,7 @@ exports[`show status for a kube object given application starts and in test page
           <div
             class="drawer-title-text flex gaps align-center"
           >
-            
+
           </div>
           <i
             class="Icon material interactive focusable"
@@ -479,16 +502,33 @@ exports[`show status for a kube object given application starts and in test page
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background: rgb(198, 167, 9);"
             >
-              ??
+              scn
             </div>
             <div
-              class="loadingClusterName"
-            />
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
+            >
+              some-context-name
+            </div>
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -739,11 +779,11 @@ exports[`show status for a kube object given application starts and in test page
               <div
                 class="status msg"
               >
-                - Some critical status for some-name 
+                - Some critical status for some-name
                 <span
                   class="age"
                 >
-                   . 
+                   .
                   2d
                 </span>
               </div>
@@ -888,6 +928,9 @@ exports[`show status for a kube object given application starts and in test page
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -900,7 +943,7 @@ exports[`show status for a kube object given application starts and in test page
           <div
             class="drawer-title-text flex gaps align-center"
           >
-            
+
           </div>
           <i
             class="Icon material interactive focusable"
@@ -941,16 +984,33 @@ exports[`show status for a kube object given application starts and in test page
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background: rgb(198, 167, 9);"
             >
-              ??
+              scn
             </div>
             <div
-              class="loadingClusterName"
-            />
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
+            >
+              some-context-name
+            </div>
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -1201,11 +1261,11 @@ exports[`show status for a kube object given application starts and in test page
               <div
                 class="status msg"
               >
-                - Some info status for some-name 
+                - Some info status for some-name
                 <span
                   class="age"
                 >
-                   . 
+                   .
                   2d
                 </span>
               </div>
@@ -1350,6 +1410,9 @@ exports[`show status for a kube object given application starts and in test page
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -1362,7 +1425,7 @@ exports[`show status for a kube object given application starts and in test page
           <div
             class="drawer-title-text flex gaps align-center"
           >
-            
+
           </div>
           <i
             class="Icon material interactive focusable"
@@ -1403,16 +1466,33 @@ exports[`show status for a kube object given application starts and in test page
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background: rgb(198, 167, 9);"
             >
-              ??
+              scn
             </div>
             <div
-              class="loadingClusterName"
-            />
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
+            >
+              some-context-name
+            </div>
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -1772,6 +1852,9 @@ exports[`show status for a kube object given application starts and in test page
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -1784,7 +1867,7 @@ exports[`show status for a kube object given application starts and in test page
           <div
             class="drawer-title-text flex gaps align-center"
           >
-            
+
           </div>
           <i
             class="Icon material interactive focusable"
@@ -1825,16 +1908,33 @@ exports[`show status for a kube object given application starts and in test page
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background: rgb(198, 167, 9);"
             >
-              ??
+              scn
             </div>
             <div
-              class="loadingClusterName"
-            />
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
+            >
+              some-context-name
+            </div>
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -2194,6 +2294,9 @@ exports[`show status for a kube object given application starts and in test page
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
@@ -2206,7 +2309,7 @@ exports[`show status for a kube object given application starts and in test page
           <div
             class="drawer-title-text flex gaps align-center"
           >
-            
+
           </div>
           <i
             class="Icon material interactive focusable"
@@ -2247,16 +2350,33 @@ exports[`show status for a kube object given application starts and in test page
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background: rgb(198, 167, 9);"
             >
-              ??
+              scn
             </div>
             <div
-              class="loadingClusterName"
-            />
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
+            >
+              some-context-name
+            </div>
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -2507,11 +2627,11 @@ exports[`show status for a kube object given application starts and in test page
               <div
                 class="status msg"
               >
-                - Some warning status for some-name 
+                - Some warning status for some-name
                 <span
                   class="age"
                 >
-                   . 
+                   .
                   2d
                 </span>
               </div>

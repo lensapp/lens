@@ -1534,6 +1534,9 @@ exports[`preferences - navigation to application preferences given in preference
 exports[`preferences - navigation to application preferences given in some child page of preferences, when rendered renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -1939,6 +1942,9 @@ exports[`preferences - navigation to application preferences given in some child
 
 exports[`preferences - navigation to application preferences given in some child page of preferences, when rendered when navigating to application preferences using navigation renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -2690,6 +2696,9 @@ exports[`preferences - navigation to application preferences given in some child
 exports[`preferences - navigation to application preferences given in some child page of preferences, when rendered when navigating to preferences without specifying the tab renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >

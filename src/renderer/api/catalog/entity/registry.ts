@@ -23,7 +23,7 @@ export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promis
 interface Dependencies {
   navigate: Navigate;
   readonly categoryRegistry: CatalogCategoryRegistry;
-  logger: Logger;
+  readonly logger: Logger;
 }
 
 export class CatalogEntityRegistry {

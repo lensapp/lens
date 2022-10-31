@@ -12,13 +12,11 @@ import { frontEndRouteInjectionToken } from "../../common/front-end-routing/fron
 import { computed, runInAction } from "mobx";
 import React from "react";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
-import observableHistoryInjectable from "../../renderer/navigation/observable-history.injectable";
 import { createMemoryHistory } from "history";
-import { createObservableHistory } from "mobx-observable-history";
 import navigateToFrontPageInjectable from "../../common/front-end-routing/navigate-to-front-page.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import { preferenceItemInjectionToken } from "./renderer/preference-items/preference-item-injection-token";
-import { searchParamsOptions } from "../../renderer/navigation/search-params";
+import historyInjectable from "../../renderer/navigation/history.injectable";
 
 describe("preferences - closing-preferences", () => {
   let builder: ApplicationBuilder;
@@ -53,59 +51,35 @@ describe("preferences - closing-preferences", () => {
     builder.quit();
   });
 
-  describe("given already in a page and then navigated to preferences", () => {
+  describe("given already in a page", () => {
     let rendered: RenderResult;
     let windowDi: DiContainer;
 
     beforeEach(async () => {
       builder.beforeWindowStart((windowDi) => {
-        windowDi.override(observableHistoryInjectable, () => {
-          const historyFake = createMemoryHistory({
-            initialEntries: ["/some-page"],
-            initialIndex: 0,
-          });
-
-          return createObservableHistory(historyFake, {
-            searchParams: searchParamsOptions,
-          });
-        });
+        windowDi.override(historyInjectable, () => createMemoryHistory({
+          initialEntries: ["/some-page"],
+          initialIndex: 0,
+        }));
       });
 
       rendered = await builder.render();
       windowDi = builder.applicationWindow.only.di;
-
-      builder.preferences.navigate();
     });
 
     it("renders", () => {
       expect(rendered.container).toMatchSnapshot();
     });
 
-    describe("when preferences are closed", () => {
-      beforeEach(() => {
-        builder.preferences.close();
-      });
+    it("is at the initial page", () => {
+      const currentPath = windowDi.inject(currentPathInjectable).get();
 
-      it("renders", () => {
-        expect(rendered.container).toMatchSnapshot();
-      });
-
-      it("navigates back to the original page", () => {
-        const currentPath = windowDi.inject(currentPathInjectable).get();
-
-        expect(currentPath).toBe("/some-page");
-      });
-
-      it("shows the original page", () => {
-        expect(rendered.getByTestId("some-page")).toBeInTheDocument();
-      });
+      expect(currentPath).toBe("/some-page");
     });
 
-    describe("when navigating to a tab in preferences", () => {
+    describe("when navigated to preferences", () => {
       beforeEach(() => {
-        builder.preferences.navigation.click(
-          "some-path-id-for-some-test-tab-id",
-        );
+        builder.preferences.navigate();
       });
 
       it("renders", () => {
@@ -131,6 +105,38 @@ describe("preferences - closing-preferences", () => {
           expect(rendered.getByTestId("some-page")).toBeInTheDocument();
         });
       });
+
+      describe("when navigating to a tab in preferences", () => {
+        beforeEach(() => {
+          builder.preferences.navigation.click(
+            "some-path-id-for-some-test-tab-id",
+          );
+        });
+
+        it("renders", () => {
+          expect(rendered.container).toMatchSnapshot();
+        });
+
+        describe("when preferences are closed", () => {
+          beforeEach(() => {
+            builder.preferences.close();
+          });
+
+          it("renders", () => {
+            expect(rendered.container).toMatchSnapshot();
+          });
+
+          it("navigates back to the original page", () => {
+            const currentPath = windowDi.inject(currentPathInjectable).get();
+
+            expect(currentPath).toBe("/some-page");
+          });
+
+          it("shows the original page", () => {
+            expect(rendered.getByTestId("some-page")).toBeInTheDocument();
+          });
+        });
+      });
     });
   });
 
@@ -140,16 +146,10 @@ describe("preferences - closing-preferences", () => {
 
     beforeEach(async () => {
       builder.beforeWindowStart((windowDi) => {
-        windowDi.override(observableHistoryInjectable, () => {
-          const historyFake = createMemoryHistory({
-            initialEntries: ["/preferences/app"],
-            initialIndex: 0,
-          });
-
-          return createObservableHistory(historyFake, {
-            searchParams: searchParamsOptions,
-          });
-        });
+        windowDi.override(historyInjectable, () => createMemoryHistory({
+          initialEntries: ["/preferences/app"],
+          initialIndex: 0,
+        }));
       });
 
       rendered = await builder.render();

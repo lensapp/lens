@@ -3,6 +3,9 @@
 exports[`preferences - navigation to terminal preferences given in preferences, when rendered renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -752,6 +755,9 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
 
 exports[`preferences - navigation to terminal preferences given in preferences, when rendered when navigating to terminal preferences using navigation renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >

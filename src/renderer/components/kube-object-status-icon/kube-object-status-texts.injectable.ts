@@ -14,9 +14,11 @@ const kubeObjectStatusTextsInjectable = getInjectable({
     const computedInjectMany = di.inject(computedInjectManyInjectable);
     const statusTexts = computedInjectMany(kubeObjectStatusTextInjectionToken);
 
-    return computed(() =>
-      statusTexts.get().filter((statusText) => statusText.enabled.get()),
-    );
+    return computed(() => (
+      statusTexts
+        .get()
+        .filter(({ enabled }) => enabled.get())
+    ));
   },
 });
 

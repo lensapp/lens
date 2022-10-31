@@ -4,6 +4,9 @@ exports[`show-about-using-tray renders 1`] = `
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -288,6 +291,9 @@ exports[`show-about-using-tray renders 1`] = `
 exports[`show-about-using-tray when navigating using tray renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >

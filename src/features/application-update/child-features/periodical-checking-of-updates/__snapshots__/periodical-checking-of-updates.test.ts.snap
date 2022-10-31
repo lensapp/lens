@@ -4,6 +4,9 @@ exports[`periodical checking of updates given updater is enabled and configurati
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div

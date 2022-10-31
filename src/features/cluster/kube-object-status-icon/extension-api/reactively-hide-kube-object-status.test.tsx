@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { RenderResult } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import { getInjectable } from "@ogre-tools/injectable";
@@ -71,24 +72,16 @@ describe("reactively hide kube object status", () => {
     builder.quit();
   });
 
-  it("does not show the kube object status", () => {
-    const actual = rendered.baseElement.querySelectorAll(
-      ".KubeObjectStatusIcon",
-    );
-
-    expect(actual).toHaveLength(0);
+  it("does not show the kube object status", async () => {
+    await waitFor(() => expect(rendered.baseElement.querySelectorAll(".KubeObjectStatusIcon")).toHaveLength(0));
   });
 
-  it("given item should be shown, shows the kube object status", () => {
+  it("given item should be shown, shows the kube object status", async () => {
     runInAction(() => {
       someObservable.set(true);
     });
 
-    const actual = rendered.baseElement.querySelectorAll(
-      ".KubeObjectStatusIcon",
-    );
-
-    expect(actual).toHaveLength(1);
+    await waitFor(() => expect(rendered.baseElement.querySelectorAll(".KubeObjectStatusIcon")).toHaveLength(1));
   });
 });
 

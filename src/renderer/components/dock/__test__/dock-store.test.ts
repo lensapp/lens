@@ -4,6 +4,7 @@
  */
 
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import currentLocationInjectable from "../../../api/current-location.injectable";
 import hostedClusterIdInjectable from "../../../cluster-frame-context/hosted-cluster-id.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DockStore, DockTab } from "../dock/store";
@@ -26,6 +27,12 @@ describe("DockStore", () => {
 
     di.override(hostedClusterIdInjectable, () => "some-cluster-id");
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
+    di.override(currentLocationInjectable, () => ({
+      hostname: "localhost",
+      port: "12345",
+      protocol: "http",
+    }));
 
     dockStore = di.inject(dockStoreInjectable);
   });

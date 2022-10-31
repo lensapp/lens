@@ -8,22 +8,21 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { isDefined } from "../utils";
 
 export type ListNamespaces = () => Promise<string[]>;
+export type ListNamespacesFor = (config: KubeConfig) => ListNamespaces;
 
-export function listNamespaces(config: KubeConfig): ListNamespaces {
-  const coreApi = config.makeApiClient(CoreV1Api);
+const listNamespacesForInjectable = getInjectable({
+  id: "list-namespaces-for",
+  instantiate: (): ListNamespacesFor => (config) => {
+    const coreApi = config.makeApiClient(CoreV1Api);
 
-  return async () => {
-    const { body: { items }} = await coreApi.listNamespace();
+    return async () => {
+      const { body: { items }} = await coreApi.listNamespace();
 
-    return items
-      .map(ns => ns.metadata?.name)
-      .filter(isDefined);
-  };
-}
-
-const listNamespacesInjectable = getInjectable({
-  id: "list-namespaces",
-  instantiate: () => listNamespaces,
+      return items
+        .map(ns => ns.metadata?.name)
+        .filter(isDefined);
+    };
+  },
 });
 
-export default listNamespacesInjectable;
+export default listNamespacesForInjectable;

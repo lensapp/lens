@@ -4,6 +4,9 @@ exports[`force user to update when too long since update was downloaded when app
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -313,6 +316,9 @@ exports[`force user to update when too long since update was downloaded when app
 exports[`force user to update when too long since update was downloaded when application is started given checking for updates and it resolves, when update was downloaded when enough time passes to consider that update must be installed renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -670,6 +676,9 @@ exports[`force user to update when too long since update was downloaded when app
 exports[`force user to update when too long since update was downloaded when application is started given checking for updates and it resolves, when update was downloaded when not enough time passes to consider that update must be installed renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >

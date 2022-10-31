@@ -4,10 +4,24 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import routesInjectable from "./routes.injectable";
-import { matches } from "lodash/fp";
 import { computed } from "mobx";
 import { matchPath } from "react-router";
 import currentPathInjectable from "./current-path.injectable";
+import type { Route } from "../../common/front-end-routing/front-end-route-injection-token";
+import { iter } from "../utils";
+
+const getMatchDataForRouteFrom = (currentPath: string) => (route: Route<unknown>) => {
+  const match = matchPath(currentPath, {
+    path: route.path,
+    exact: true,
+  });
+
+  return {
+    route,
+    isMatching: Boolean(match),
+    pathParameters: match?.params ?? {},
+  };
+};
 
 const matchingRouteInjectable = getInjectable({
   id: "matching-route",
@@ -16,22 +30,11 @@ const matchingRouteInjectable = getInjectable({
     const routes = di.inject(routesInjectable);
     const currentPath = di.inject(currentPathInjectable);
 
-    return computed(() => {
-      const matchedRoutes = routes.get().map((route) => {
-        const match = matchPath(currentPath.get(), {
-          path: route.path,
-          exact: true,
-        });
-
-        return {
-          route,
-          isMatching: !!match,
-          pathParameters: match ? match.params : {},
-        };
-      });
-
-      return matchedRoutes.find(matches({ isMatching: true }));
-    });
+    return computed(() => (
+      iter.pipeline(routes.get().values())
+        .map(getMatchDataForRouteFrom(currentPath.get()))
+        .find(data => data.isMatching)
+    ));
   },
 });
 

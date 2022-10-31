@@ -28,7 +28,7 @@ const createClusterInjectable = getInjectable({
       createContextHandler: () => undefined as never,
       createAuthorizationReview: () => { throw new Error("Tried to access back-end feature in front-end."); },
       requestNamespaceListPermissionsFor: () => { throw new Error("Tried to access back-end feature in front-end."); },
-      createListNamespaces: () => { throw new Error("Tried to access back-end feature in front-end."); },
+      listNamespacesFor: () => { throw new Error("Tried to access back-end feature in front-end."); },
       requestApiResources: ()=> { throw new Error("Tried to access back-end feature in front-end."); },
       detectorRegistry: undefined as never,
       createVersionDetector: () => { throw new Error("Tried to access back-end feature in front-end."); },

@@ -3,6 +3,9 @@
 exports[`preferences - navigation using application menu renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -285,6 +288,9 @@ exports[`preferences - navigation using application menu renders 1`] = `
 
 exports[`preferences - navigation using application menu when navigating to preferences using application menu renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >

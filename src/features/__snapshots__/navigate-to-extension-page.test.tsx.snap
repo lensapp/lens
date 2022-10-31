@@ -3,6 +3,9 @@
 exports[`navigate to extension page renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -286,6 +289,9 @@ exports[`navigate to extension page renders 1`] = `
 exports[`navigate to extension page when extension navigates to child route renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -489,6 +495,9 @@ exports[`navigate to extension page when extension navigates to child route rend
 
 exports[`navigate to extension page when extension navigates to route with parameters renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
@@ -710,6 +719,9 @@ exports[`navigate to extension page when extension navigates to route with param
 exports[`navigate to extension page when extension navigates to route without parameters renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -929,6 +941,9 @@ exports[`navigate to extension page when extension navigates to route without pa
 
 exports[`navigate to extension page when extension navigates to route without parameters when changing page parameters renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >

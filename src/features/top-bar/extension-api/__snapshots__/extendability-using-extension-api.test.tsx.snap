@@ -4,6 +4,9 @@ exports[`extendability-using-extension-api given an extension with a weakly type
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -288,6 +291,9 @@ exports[`extendability-using-extension-api given an extension with a weakly type
 exports[`extendability-using-extension-api given an extension with top-bar items is enabled renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -583,6 +589,9 @@ exports[`extendability-using-extension-api given an extension with top-bar items
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -867,6 +876,9 @@ exports[`extendability-using-extension-api given an extension with top-bar items
 exports[`extendability-using-extension-api renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >

@@ -4,6 +4,9 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
