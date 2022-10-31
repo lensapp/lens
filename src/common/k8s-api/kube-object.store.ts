@@ -432,7 +432,7 @@ export abstract class KubeObjectStore<
   protected eventsBuffer = observable.array<IKubeWatchEvent<D>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {
-    reaction(() => this.eventsBuffer.length, this.updateFromEventsBuffer, {
+    reaction(() => [...this.eventsBuffer], this.updateFromEventsBuffer, {
       delay,
     });
   }
