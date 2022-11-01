@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { createInitializableState } from "../../../common/initializable-state/create";
-import { buildVersionInjectionToken } from "../../../common/vars/build-semantic-version.injectable";
+import { buildVersionInjectionToken } from "../../../common/vars/build-version/token";
 import { beforeApplicationIsLoadingInjectionToken } from "../../start-main-application/runnable-tokens/before-application-is-loading-injection-token";
 import getBuildVersionInjectable from "./get-build-version.injectable";
 

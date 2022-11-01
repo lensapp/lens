@@ -8,6 +8,7 @@ import asyncFn from "@async-fn/jest";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { runInAction } from "mobx";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import type { Runnable } from "../runnable/run-many-for";
 import type { InitializableState } from "./create";
 import { createInitializableState } from "./create";
 
@@ -20,11 +21,15 @@ describe("InitializableState tests", () => {
 
   describe("when created", () => {
     let stateInjectable: Injectable<InitializableState<number>, unknown, void>;
+    let initStateInjectable: Injectable<Runnable<void>, Runnable<void>, void>;
     let initMock: AsyncFnMock<() => number>;
 
     beforeEach(() => {
       initMock = asyncFn();
-      ({ value: stateInjectable } = createInitializableState({
+      ({
+        value: stateInjectable,
+        initializer: initStateInjectable,
+      } = createInitializableState({
         id: "my-state",
         init: initMock,
         when: null as any,
@@ -32,6 +37,7 @@ describe("InitializableState tests", () => {
 
       runInAction(() => {
         di.register(stateInjectable);
+        di.register(initStateInjectable);
       });
     });
 
@@ -47,8 +53,10 @@ describe("InitializableState tests", () => {
       });
 
       describe("when init is called", () => {
-        beforeEach(() => {
-          state.init();
+        beforeEach(async () => {
+          const initState = di.inject(initStateInjectable);
+
+          await initState.run();
         });
 
         it("should call provided initialization function", () => {
@@ -69,7 +77,9 @@ describe("InitializableState tests", () => {
           });
 
           it("when init is called again, throws", async () => {
-            await expect(() => state.init()).rejects.toThrow("Cannot initialize InitializableState(my-state) more than once");
+            const initState = di.inject(initStateInjectable);
+
+            await expect(() => initState.run()).rejects.toThrow("Cannot initialize InitializableState(my-state) more than once");
           });
         });
       });

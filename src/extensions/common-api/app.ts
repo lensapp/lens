@@ -14,7 +14,7 @@ import getEnabledExtensionsInjectable from "./get-enabled-extensions/get-enabled
 import type { UserPreferenceExtensionItems } from "./user-preferences";
 import { Preferences } from "./user-preferences";
 import { slackUrl, issuesTrackerUrl } from "../../common/vars";
-import { buildVersionInjectionToken } from "../../common/vars/build-semantic-version.injectable";
+import { buildVersionInjectionToken } from "../../common/vars/build-version/token";
 
 export interface AppExtensionItems {
   readonly Preferences: UserPreferenceExtensionItems;

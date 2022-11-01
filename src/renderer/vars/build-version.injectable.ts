@@ -4,7 +4,8 @@
  */
 import { createInitializableState } from "../../common/initializable-state/create";
 import { requestFromChannelInjectionToken } from "../../common/utils/channel/request-from-channel-injection-token";
-import { buildVersionChannel, buildVersionInjectionToken } from "../../common/vars/build-semantic-version.injectable";
+import { buildVersionChannel } from "../../common/vars/build-version/channel";
+import { buildVersionInjectionToken } from "../../common/vars/build-version/token";
 import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
 
 const {

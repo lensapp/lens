@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { buildVersionChannel } from "../../common/vars/build-semantic-version.injectable";
+import { buildVersionChannel } from "../../common/vars/build-version/channel";
 import { getRequestChannelListenerInjectable } from "../utils/channel/channel-listeners/listener-tokens";
 import buildVersionInjectable from "../vars/build-version/build-version.injectable";
 
