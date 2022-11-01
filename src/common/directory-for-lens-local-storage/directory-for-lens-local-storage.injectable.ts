@@ -2,19 +2,33 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import directoryForUserDataInjectable from "../app-paths/directory-for-user-data.injectable";
-import { createLazyInitializableState } from "../initializable-state/create-lazy";
+import directoryForUserDataInjectable, { initDirectoryForUserDataOnMainInjectable, initDirectoryForUserDataOnRendererInjectable } from "../app-paths/directory-for-user-data.injectable";
+import { createDependentInitializableState } from "../initializable-state/create-dependent";
 import joinPathsInjectable from "../path/join-paths.injectable";
 
-const directoryForLensLocalStorageInjectable = createLazyInitializableState({
+const {
+  value: directoryForLensLocalStorageInjectable,
+  initializers: [
+    initDirectoryForLensLocalStorageOnMainInjectable,
+    initDirectoryForLensLocalStorageOnRendererInjectable,
+  ],
+} = createDependentInitializableState({
   id: "directory-for-lens-local-storage",
-
   init: (di) => {
     const joinPaths = di.inject(joinPathsInjectable);
     const directoryForUserData = di.inject(directoryForUserDataInjectable);
 
     return joinPaths(directoryForUserData.get(), "lens-local-storage");
   },
+  initAfter: [
+    initDirectoryForUserDataOnMainInjectable,
+    initDirectoryForUserDataOnRendererInjectable,
+  ],
 });
+
+export {
+  initDirectoryForLensLocalStorageOnMainInjectable,
+  initDirectoryForLensLocalStorageOnRendererInjectable,
+};
 
 export default directoryForLensLocalStorageInjectable;

@@ -9,7 +9,7 @@ import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-f
 
 const {
   value: buildVersionInjectable,
-  initializer: initializeBuildVersionInjectable,
+  initializer: initializeBuildVersionOnRendererInjectable,
 } = createInitializableState({
   id: "build-version",
   init: (di) => {
@@ -21,6 +21,6 @@ const {
   when: beforeFrameStartsInjectionToken,
 });
 
-export { initializeBuildVersionInjectable };
+export { initializeBuildVersionOnRendererInjectable };
 
 export default buildVersionInjectable;

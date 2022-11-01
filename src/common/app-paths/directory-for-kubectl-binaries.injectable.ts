@@ -2,11 +2,17 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import directoryForBinariesInjectable from "./directory-for-binaries.injectable";
-import { createLazyInitializableState } from "../initializable-state/create-lazy";
+import directoryForBinariesInjectable, { initDirectoryForBinariesOnMainInjectable, initDirectoryForBinariesOnRendererInjectable } from "./directory-for-binaries.injectable";
 import joinPathsInjectable from "../path/join-paths.injectable";
+import { createDependentInitializableState } from "../initializable-state/create-dependent";
 
-const directoryForKubectlBinariesInjectable = createLazyInitializableState({
+const {
+  value: directoryForKubectlBinariesInjectable,
+  initializers: [
+    initDirectoryForKubectlBinariesOnMainInjectable,
+    initDirectoryForKubectlBinariesOnRendererInjectable,
+  ],
+} = createDependentInitializableState({
   id: "directory-for-kubectl-binaries",
   init: (di) => {
     const joinPaths = di.inject(joinPathsInjectable);
@@ -14,6 +20,15 @@ const directoryForKubectlBinariesInjectable = createLazyInitializableState({
 
     return joinPaths(directoryForBinaries.get(), "kubectl");
   },
+  initAfter: [
+    initDirectoryForBinariesOnMainInjectable,
+    initDirectoryForBinariesOnRendererInjectable,
+  ],
 });
+
+export {
+  initDirectoryForKubectlBinariesOnMainInjectable,
+  initDirectoryForKubectlBinariesOnRendererInjectable,
+};
 
 export default directoryForKubectlBinariesInjectable;

@@ -11,7 +11,7 @@ import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-f
 
 const {
   value: appPathsInjectable,
-  initializer: initAppPathsInjectable,
+  initializer: initAppPathsOnRendererInjectable,
 } = createInitializableState({
   id: "app-paths",
   init: (di) => {
@@ -23,6 +23,6 @@ const {
   when: beforeFrameStartsInjectionToken,
 });
 
-export { initAppPathsInjectable };
+export { initAppPathsOnRendererInjectable };
 
 export default appPathsInjectable;

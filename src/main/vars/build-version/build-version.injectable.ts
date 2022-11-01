@@ -9,7 +9,7 @@ import getBuildVersionInjectable from "./get-build-version.injectable";
 
 const {
   value: buildVersionInjectable,
-  initializer: initializeBuildVersionInjectable,
+  initializer: initializeBuildVersionOnMainInjectable,
 } = createInitializableState({
   id: "build-version",
   init: (di) => {
@@ -21,6 +21,6 @@ const {
   when: beforeApplicationIsLoadingInjectionToken,
 });
 
-export { initializeBuildVersionInjectable };
+export { initializeBuildVersionOnMainInjectable };
 
 export default buildVersionInjectable;

@@ -15,7 +15,7 @@ import setElectronAppPathInjectable from "./set-electron-app-path/set-electron-a
 
 const {
   value: appPathsInjectable,
-  initializer: initAppPathsInjectable,
+  initializer: initAppPathsOnMainInjectable,
 } = createInitializableState({
   id: "app-paths",
   init: (di) => {
@@ -41,6 +41,6 @@ const {
   when: beforeElectronIsReadyInjectionToken,
 });
 
-export { initAppPathsInjectable };
+export { initAppPathsOnMainInjectable };
 
 export default appPathsInjectable;
