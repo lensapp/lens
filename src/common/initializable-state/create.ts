@@ -63,10 +63,22 @@ export function createInitializableState<T>(args: CreateInitializableStateArgs<T
         }
 
         initCalled = true;
-        box = {
-          set: true,
-          value: await init(di),
-        };
+        const potentialValue = init(di);
+
+        if (potentialValue instanceof Promise) {
+          // This is done because we have to run syncronously if `init` is syncronous to prevent ordering issues
+          return (async () => {
+            box = {
+              set: true,
+              value: await potentialValue,
+            };
+          })();
+        } else {
+          box = {
+            set: true,
+            value: potentialValue,
+          };
+        }
       },
     }),
     injectionToken: when,

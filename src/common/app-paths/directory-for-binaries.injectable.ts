@@ -2,9 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { initAppPathsOnMainInjectable } from "../../main/app-paths/impl.injectable";
-import { initAppPathsOnRendererInjectable } from "../../renderer/app-paths/impl.injectable";
-import directoryForUserDataInjectable from "./directory-for-user-data.injectable";
+import directoryForUserDataInjectable, { initDirectoryForUserDataOnMainInjectable, initDirectoryForUserDataOnRendererInjectable } from "./directory-for-user-data.injectable";
 import joinPathsInjectable from "../path/join-paths.injectable";
 import { createDependentInitializableState } from "../initializable-state/create-dependent";
 
@@ -22,7 +20,10 @@ const {
 
     return joinPaths(directoryForUserData.get(), "binaries");
   },
-  initAfter: [initAppPathsOnMainInjectable, initAppPathsOnRendererInjectable],
+  initAfter: [
+    initDirectoryForUserDataOnMainInjectable,
+    initDirectoryForUserDataOnRendererInjectable,
+  ],
 });
 
 export {

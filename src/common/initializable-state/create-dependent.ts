@@ -47,19 +47,31 @@ export function createDependentInitializableState<T>(args: CreateDependentInitia
   });
 
   const initializers = initAfter.map(runnableInjectable => getInjectable({
-    id: `initialize-${id}`,
+    id: `initialize-${id}-during-${runnableInjectable.injectionToken?.id}`,
     instantiate: (di) => ({
       id: `initialize-${id}`,
-      run: async () => {
+      run: (): void | Promise<void> => {
         if (initCalled) {
           throw new Error(`Cannot initialize InitializableState(${id}) more than once`);
         }
 
         initCalled = true;
-        box = {
-          set: true,
-          value: await init(di),
-        };
+        const potentialValue = init(di);
+
+        if (potentialValue instanceof Promise) {
+          // This is done because we have to run syncronously if `init` is syncronous to prevent ordering issues
+          return (async () => {
+            box = {
+              set: true,
+              value: await potentialValue,
+            };
+          })();
+        } else {
+          box = {
+            set: true,
+            value: potentialValue,
+          };
+        }
       },
       runAfter: di.inject(runnableInjectable),
     }),
