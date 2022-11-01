@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { createDependentInitializableState } from "../../../../common/initializable-state/create-dependent";
+import { createDependentInitializableState } from "../../../../common/initializable-state/create";
 import releaseChannelInjectable, { initReleaseChannelOnMainInjectable, initReleaseChannelOnRendererInjectable } from "../../../../common/vars/release-channel.injectable";
 import { updateChannels } from "../update-channels";
 

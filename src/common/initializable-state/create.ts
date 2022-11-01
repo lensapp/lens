@@ -6,6 +6,7 @@
 import type { DiContainerForInjection, Injectable, InjectionToken } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Runnable } from "../runnable/run-many-for";
+import type { Discriminable } from "../utils/composable-responsibilities/discriminable/discriminable";
 
 export interface CreateInitializableStateArgs<T> {
   id: string;
@@ -14,13 +15,23 @@ export interface CreateInitializableStateArgs<T> {
   when: InjectionToken<Runnable<void>, void>;
 }
 
+const setInitializing = Symbol("set-initializing");
+const initialize = Symbol("initialize");
+
 export interface InitializableState<T> {
   get: () => T;
+  [setInitializing]: () => void;
+  [initialize]: (value: T) => void;
 }
 
+export type UnsetValue = Discriminable<"uninitialized">;
+export type InitializingValue = Discriminable<"initializing">;
+export type InitializedValue<T> = Discriminable<"initialized"> & { value: T };
+
 export type InitializableStateValue<T> =
-  | { set: false }
-  | { set: true; value: T };
+  | UnsetValue
+  | InitializingValue
+  | InitializedValue<T>;
 
 export interface CreateInitializableStateResult<T> {
   value: Injectable<InitializableState<T>, unknown, void>;
@@ -30,54 +41,62 @@ export interface CreateInitializableStateResult<T> {
 export function createInitializableState<T>(args: CreateInitializableStateArgs<T>): CreateInitializableStateResult<T> {
   const { id, init, injectionToken, when } = args;
 
-  let box: InitializableStateValue<T> = {
-    set: false,
-  };
-  let initCalled = false;
-
   const valueInjectable = getInjectable({
     id,
-    instantiate: (): InitializableState<T> => ({
-      get: () => {
-        if (!initCalled) {
-          throw new Error(`InitializableState(${id}) has not been initialized yet`);
-        }
+    instantiate: (): InitializableState<T> => {
+      let box: InitializableStateValue<T> = {
+        kind: "uninitialized",
+      };
 
-        if (box.set === false) {
-          throw new Error(`InitializableState(${id}) has not finished initializing`);
-        }
+      return {
+        get: () => {
+          if (box.kind !== "initialized") {
+            throw new Error(`Cannot get value from "${id}"; it is currently in state=${box.kind}`);
+          }
 
-        return box.value;
-      },
-    }),
+          return box.value;
+        },
+        [setInitializing]: () => {
+          if (box.kind !== "uninitialized") {
+            throw new Error(`Cannot start initializing value for "${id}"; it is currently in state=${box.kind}`);
+          }
+
+          box = {
+            kind: "initializing",
+          };
+        },
+        [initialize]: (value) => {
+          if (box.kind !== "initializing") {
+            throw new Error(`Cannot initialize value for "${id}"; it is currently in state=${box.kind}`);
+          }
+
+          box = {
+            kind: "initialized",
+            value,
+          };
+        },
+      };
+    },
     injectionToken,
   });
 
+  const subId = `initialize id="${id}" during id="${when.id}"`;
   const initializer = getInjectable({
-    id: `initialize-${id}`,
+    id: subId,
     instantiate: (di) => ({
-      id: `initialize-${id}`,
-      run: async () => {
-        if (initCalled) {
-          throw new Error(`Cannot initialize InitializableState(${id}) more than once`);
-        }
+      id: subId,
+      run: (): void | Promise<void> => {
+        const value = di.inject(valueInjectable);
 
-        initCalled = true;
+        value[setInitializing]();
+
         const potentialValue = init(di);
 
         if (potentialValue instanceof Promise) {
           // This is done because we have to run syncronously if `init` is syncronous to prevent ordering issues
-          return (async () => {
-            box = {
-              set: true,
-              value: await potentialValue,
-            };
-          })();
+          return potentialValue.then(value[initialize]);
         } else {
-          box = {
-            set: true,
-            value: potentialValue,
-          };
+          value[initialize](potentialValue);
         }
       },
     }),
@@ -87,5 +106,93 @@ export function createInitializableState<T>(args: CreateInitializableStateArgs<T
   return {
     value: valueInjectable,
     initializer,
+  };
+}
+
+
+export interface CreateDependentInitializableStateArgs<T> {
+  id: string;
+  init: (di: DiContainerForInjection) => Promise<T> | T;
+  injectionToken?: InjectionToken<InitializableState<T>, void>;
+  initAfter: Injectable<Runnable<void>, Runnable<void>, void>[];
+}
+
+export interface CreateDependentInitializableStateResult<T> {
+  value: Injectable<InitializableState<T>, unknown, void>;
+  initializers: Injectable<Runnable<void>, Runnable<void>, void>[];
+}
+
+export function createDependentInitializableState<T>(args: CreateDependentInitializableStateArgs<T>): CreateDependentInitializableStateResult<T> {
+  const { id, init, injectionToken, initAfter } = args;
+
+  const valueInjectable = getInjectable({
+    id,
+    instantiate: (): InitializableState<T> => {
+      let box: InitializableStateValue<T> = {
+        kind: "uninitialized",
+      };
+
+      return {
+        get: () => {
+          if (box.kind !== "initialized") {
+            throw new Error(`Cannot get value from "${id}"; it is currently in state=${box.kind}`);
+          }
+
+          return box.value;
+        },
+        [setInitializing]: () => {
+          if (box.kind !== "uninitialized") {
+            throw new Error(`Cannot start initializing value for "${id}"; it is currently in state=${box.kind}`);
+          }
+
+          box = {
+            kind: "initializing",
+          };
+        },
+        [initialize]: (value) => {
+          if (box.kind !== "initializing") {
+            throw new Error(`Cannot initialize value for "${id}"; it is currently in state=${box.kind}`);
+          }
+
+          box = {
+            kind: "initialized",
+            value,
+          };
+        },
+      };
+    },
+    injectionToken,
+  });
+
+  const initializers = initAfter.map(runnableInjectable => {
+    const subId = `initialize "${id}" after "${runnableInjectable.id}"`;
+
+    return getInjectable({
+      id: subId,
+      instantiate: (di) => ({
+        id: subId,
+        run: (): void | Promise<void> => {
+          const value = di.inject(valueInjectable);
+
+          value[setInitializing]();
+
+          const potentialValue = init(di);
+
+          if (potentialValue instanceof Promise) {
+            // This is done because we have to run syncronously if `init` is syncronous to prevent ordering issues
+            return potentialValue.then(value[initialize]);
+          } else {
+            value[initialize](potentialValue);
+          }
+        },
+        runAfter: di.inject(runnableInjectable),
+      }),
+      injectionToken: runnableInjectable.injectionToken,
+    });
+  });
+
+  return {
+    value: valueInjectable,
+    initializers,
   };
 }

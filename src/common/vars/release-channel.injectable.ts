@@ -4,7 +4,7 @@
  */
 import buildSemanticVersionInjectable, { initBuildSemanticVersionOnMainInjectable, initBuildSemanticVersionOnRendererInjectable } from "./build-version/semantic-version.injectable";
 import type { ReleaseChannel } from "../../features/application-update/common/update-channels";
-import { createDependentInitializableState } from "../initializable-state/create-dependent";
+import { createDependentInitializableState } from "../initializable-state/create";
 
 const {
   value: releaseChannelInjectable,

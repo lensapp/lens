@@ -4,7 +4,7 @@
  */
 import directoryForBinariesInjectable, { initDirectoryForBinariesOnMainInjectable, initDirectoryForBinariesOnRendererInjectable } from "./directory-for-binaries.injectable";
 import joinPathsInjectable from "../path/join-paths.injectable";
-import { createDependentInitializableState } from "../initializable-state/create-dependent";
+import { createDependentInitializableState } from "../initializable-state/create";
 
 const {
   value: directoryForKubectlBinariesInjectable,

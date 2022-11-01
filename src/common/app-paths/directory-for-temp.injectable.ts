@@ -4,7 +4,7 @@
  */
 import { initAppPathsOnMainInjectable } from "../../main/app-paths/impl.injectable";
 import { initAppPathsOnRendererInjectable } from "../../renderer/app-paths/impl.injectable";
-import { createDependentInitializableState } from "../initializable-state/create-dependent";
+import { createDependentInitializableState } from "../initializable-state/create";
 import { appPathsInjectionToken } from "./token";
 
 const {

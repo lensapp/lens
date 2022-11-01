@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import directoryForUserDataInjectable, { initDirectoryForUserDataOnMainInjectable, initDirectoryForUserDataOnRendererInjectable } from "../app-paths/directory-for-user-data.injectable";
-import { createDependentInitializableState } from "../initializable-state/create-dependent";
+import { createDependentInitializableState } from "../initializable-state/create";
 import joinPathsInjectable from "../path/join-paths.injectable";
 
 const {

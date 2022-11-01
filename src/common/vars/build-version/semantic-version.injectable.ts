@@ -6,7 +6,7 @@
 import { SemVer } from "semver";
 import { initializeBuildVersionOnMainInjectable } from "../../../main/vars/build-version/build-version.injectable";
 import { initializeBuildVersionOnRendererInjectable } from "../../../renderer/vars/build-version.injectable";
-import { createDependentInitializableState } from "../../initializable-state/create-dependent";
+import { createDependentInitializableState } from "../../initializable-state/create";
 import { buildVersionInjectionToken } from "./token";
 
 const {
