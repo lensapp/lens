@@ -167,7 +167,7 @@ export class Kubectl {
       ]);
 
       if (!result.callWasSuccessful) {
-        this.dependencies.logger.error(`Local kubectl failed to run properly (${result.error}), removing`);
+        this.dependencies.logger.error(`[KUBECTL]: version at "${path}" failed to run properly, removing: ${result.error}`);
         await this.dependencies.removePath(this.path);
 
         return false;
