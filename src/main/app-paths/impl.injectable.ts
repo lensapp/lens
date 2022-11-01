@@ -8,11 +8,15 @@ import { createInitializableState } from "../../common/initializable-state/creat
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import { object } from "../../common/utils";
 import appNameInjectable from "../../common/vars/app-name.injectable";
+import { beforeElectronIsReadyInjectionToken } from "../start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
 import directoryForIntegrationTestingInjectable from "./directory-for-integration-testing/directory-for-integration-testing.injectable";
 import getElectronAppPathInjectable from "./get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./set-electron-app-path/set-electron-app-path.injectable";
 
-const appPathsInjectable = createInitializableState({
+const {
+  value: appPathsInjectable,
+  initializer: initAppPathsInjectable,
+} = createInitializableState({
   id: "app-paths",
   init: (di) => {
     const setElectronAppPath = di.inject(setElectronAppPathInjectable);
@@ -34,6 +38,9 @@ const appPathsInjectable = createInitializableState({
     );
   },
   injectionToken: appPathsInjectionToken,
+  when: beforeElectronIsReadyInjectionToken,
 });
+
+export { initAppPathsInjectable };
 
 export default appPathsInjectable;

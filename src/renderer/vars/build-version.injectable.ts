@@ -2,27 +2,25 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-import { appPathsChannel } from "../../common/app-paths/channel";
-import { appPathsInjectionToken } from "../../common/app-paths/token";
 import { createInitializableState } from "../../common/initializable-state/create";
 import { requestFromChannelInjectionToken } from "../../common/utils/channel/request-from-channel-injection-token";
+import { buildVersionChannel, buildVersionInjectionToken } from "../../common/vars/build-semantic-version.injectable";
 import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
 
 const {
-  value: appPathsInjectable,
-  initializer: initAppPathsInjectable,
+  value: buildVersionInjectable,
+  initializer: initializeBuildVersionInjectable,
 } = createInitializableState({
-  id: "app-paths",
+  id: "build-version",
   init: (di) => {
     const requestFromChannel = di.inject(requestFromChannelInjectionToken);
 
-    return requestFromChannel(appPathsChannel);
+    return requestFromChannel(buildVersionChannel);
   },
-  injectionToken: appPathsInjectionToken,
+  injectionToken: buildVersionInjectionToken,
   when: beforeFrameStartsInjectionToken,
 });
 
-export { initAppPathsInjectable };
+export { initializeBuildVersionInjectable };
 
-export default appPathsInjectable;
+export default buildVersionInjectable;

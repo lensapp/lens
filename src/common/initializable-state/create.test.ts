@@ -24,10 +24,11 @@ describe("InitializableState tests", () => {
 
     beforeEach(() => {
       initMock = asyncFn();
-      stateInjectable = createInitializableState({
+      ({ value: stateInjectable } = createInitializableState({
         id: "my-state",
         init: initMock,
-      });
+        when: null as any,
+      }));
 
       runInAction(() => {
         di.register(stateInjectable);
