@@ -32,13 +32,13 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { GetRelativePath } from "../../common/path/get-relative-path.injectable";
 import type { RemovePath } from "../../common/fs/remove-path.injectable";
 import type TypedEventEmitter from "typed-emitter";
-import type { LazyInitializableState } from "../../common/initializable-state/create-lazy";
+import type { InitializableState } from "../../common/initializable-state/create";
 
 interface Dependencies {
   readonly extensionLoader: ExtensionLoader;
   readonly extensionsStore: ExtensionsStore;
   readonly extensionInstallationStateStore: ExtensionInstallationStateStore;
-  readonly extensionPackageRootDirectory: LazyInitializableState<string>;
+  readonly extensionPackageRootDirectory: InitializableState<string>;
   readonly staticFilesDirectory: string;
   readonly logger: Logger;
   readonly isProduction: boolean;

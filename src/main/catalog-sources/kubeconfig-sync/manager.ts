@@ -11,10 +11,10 @@ import { iter } from "../../../common/utils";
 import type { KubeconfigSyncValue } from "../../../common/user-store";
 import type { Logger } from "../../../common/logger";
 import type { WatchKubeconfigFileChanges } from "./watch-file-changes.injectable";
-import type { LazyInitializableState } from "../../../common/initializable-state/create-lazy";
+import type { InitializableState } from "../../../common/initializable-state/create";
 
 interface KubeconfigSyncManagerDependencies {
-  readonly directoryForKubeConfigs: LazyInitializableState<string>;
+  readonly directoryForKubeConfigs: InitializableState<string>;
   readonly logger: Logger;
   readonly kubeconfigSyncs: ObservableMap<string, KubeconfigSyncValue>;
   watchKubeconfigFileChanges: WatchKubeconfigFileChanges;

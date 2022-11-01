@@ -15,10 +15,10 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { PathExists } from "../../common/fs/path-exists.injectable";
 import type { DeleteFile } from "../../common/fs/delete-file.injectable";
 import type { WriteFile } from "../../common/fs/write-file.injectable";
-import type { LazyInitializableState } from "../../common/initializable-state/create-lazy";
+import type { InitializableState } from "../../common/initializable-state/create";
 
 export interface KubeconfigManagerDependencies {
-  readonly directoryForTemp: LazyInitializableState<string>;
+  readonly directoryForTemp: InitializableState<string>;
   readonly logger: Logger;
   readonly lensProxyPort: { get: () => number };
   joinPaths: JoinPaths;

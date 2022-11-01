@@ -16,7 +16,6 @@ export interface CreateInitializableStateArgs<T> {
 
 export interface InitializableState<T> {
   get: () => T;
-  init: () => Promise<void>;
 }
 
 export type InitializableStateValue<T> =
@@ -31,52 +30,45 @@ export interface CreateInitializableStateResult<T> {
 export function createInitializableState<T>(args: CreateInitializableStateArgs<T>): CreateInitializableStateResult<T> {
   const { id, init, injectionToken, when } = args;
 
+  let box: InitializableStateValue<T> = {
+    set: false,
+  };
+  let initCalled = false;
+
   const valueInjectable = getInjectable({
     id,
-    instantiate: (di) => {
-      let box: InitializableStateValue<T> = {
-        set: false,
-      };
-      let initCalled = false;
+    instantiate: (): InitializableState<T> => ({
+      get: () => {
+        if (!initCalled) {
+          throw new Error(`InitializableState(${id}) has not been initialized yet`);
+        }
 
-      return {
-        init: async () => {
-          if (initCalled) {
-            throw new Error(`Cannot initialize InitializableState(${id}) more than once`);
-          }
+        if (box.set === false) {
+          throw new Error(`InitializableState(${id}) has not finished initializing`);
+        }
 
-          initCalled = true;
-          box = {
-            set: true,
-            value: await init(di),
-          };
-        },
-        get: () => {
-          if (!initCalled) {
-            throw new Error(`InitializableState(${id}) has not been initialized yet`);
-          }
-
-          if (box.set === false) {
-            throw new Error(`InitializableState(${id}) has not finished initializing`);
-          }
-
-          return box.value;
-        },
-      };
-    },
+        return box.value;
+      },
+    }),
     injectionToken,
   });
 
   const initializer = getInjectable({
     id: `initialize-${id}`,
-    instantiate: (di) => {
-      const value = di.inject(valueInjectable);
+    instantiate: (di) => ({
+      id: `initialize-${id}`,
+      run: async () => {
+        if (initCalled) {
+          throw new Error(`Cannot initialize InitializableState(${id}) more than once`);
+        }
 
-      return {
-        id: `initialize-${id}`,
-        run: () => value.init(),
-      };
-    },
+        initCalled = true;
+        box = {
+          set: true,
+          value: await init(di),
+        };
+      },
+    }),
     injectionToken: when,
   });
 

@@ -25,10 +25,10 @@ import assert from "assert";
 import type { Logger } from "../logger";
 import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
 import type { LoadConfigfromFile } from "../kube-helpers/load-config-from-file.injectable";
-import type { LazyInitializableState } from "../initializable-state/create-lazy";
+import type { InitializableState } from "../initializable-state/create";
 
 export interface ClusterDependencies {
-  readonly directoryForKubeConfigs: LazyInitializableState<string>;
+  readonly directoryForKubeConfigs: InitializableState<string>;
   readonly logger: Logger;
   readonly detectorRegistry: DetectorRegistry;
   createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;

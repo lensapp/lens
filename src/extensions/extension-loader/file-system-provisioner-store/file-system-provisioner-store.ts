@@ -11,14 +11,14 @@ import path from "path";
 import { BaseStore } from "../../../common/base-store";
 import type { LensExtensionId } from "../../lens-extension";
 import { getOrInsertWith, toJS } from "../../../common/utils";
-import type { LazyInitializableState } from "../../../common/initializable-state/create-lazy";
+import type { InitializableState } from "../../../common/initializable-state/create";
 
 interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths
 }
 
 interface Dependencies {
-  readonly directoryForExtensionData: LazyInitializableState<string>;
+  readonly directoryForExtensionData: InitializableState<string>;
 }
 
 export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {

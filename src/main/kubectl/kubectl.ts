@@ -17,12 +17,12 @@ import { noop } from "lodash/fp";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 import type { GetBasenameOfPath } from "../../common/path/get-basename.injectable";
-import type { LazyInitializableState } from "../../common/initializable-state/create-lazy";
+import type { InitializableState } from "../../common/initializable-state/create";
 
 const initScriptVersionString = "# lens-initscript v3";
 
 export interface KubectlDependencies {
-  readonly directoryForKubectlBinaries: LazyInitializableState<string>;
+  readonly directoryForKubectlBinaries: InitializableState<string>;
   readonly normalizedDownloadPlatform: "darwin" | "linux" | "windows";
   readonly normalizedDownloadArch: "amd64" | "arm64" | "386";
   readonly kubectlBinaryName: string;

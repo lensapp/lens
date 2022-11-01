@@ -9,12 +9,12 @@ import fs from "fs-extra";
 import path from "path";
 import logger from "../../main/logger";
 import type { PackageJson } from "type-fest";
-import type { LazyInitializableState } from "../../common/initializable-state/create-lazy";
+import type { InitializableState } from "../../common/initializable-state/create";
 
 const logModule = "[EXTENSION-INSTALLER]";
 
 interface Dependencies {
-  readonly extensionPackageRootDirectory: LazyInitializableState<string>;
+  readonly extensionPackageRootDirectory: InitializableState<string>;
 }
 
 /**

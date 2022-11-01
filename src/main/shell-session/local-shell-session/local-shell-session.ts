@@ -10,10 +10,10 @@ import type { ModifyTerminalShellEnv } from "../shell-env-modifier/modify-termin
 import type { JoinPaths } from "../../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../../common/path/get-dirname.injectable";
 import type { GetBasenameOfPath } from "../../../common/path/get-basename.injectable";
-import type { LazyInitializableState } from "../../../common/initializable-state/create-lazy";
+import type { InitializableState } from "../../../common/initializable-state/create";
 
 export interface LocalShellSessionDependencies extends ShellSessionDependencies {
-  readonly directoryForBinaries: LazyInitializableState<string>;
+  readonly directoryForBinaries: InitializableState<string>;
   readonly userStore: UserStore;
   modifyTerminalShellEnv: ModifyTerminalShellEnv;
   joinPaths: JoinPaths;

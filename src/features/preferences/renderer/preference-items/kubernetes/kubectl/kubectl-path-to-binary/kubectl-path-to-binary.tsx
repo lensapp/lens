@@ -10,11 +10,11 @@ import userStoreInjectable from "../../../../../../../common/user-store/user-sto
 import { observer } from "mobx-react";
 import { Input, InputValidators } from "../../../../../../../renderer/components/input";
 import directoryForKubectlBinariesInjectable from "../../../../../../../common/app-paths/directory-for-kubectl-binaries.injectable";
-import type { LazyInitializableState } from "../../../../../../../common/initializable-state/create-lazy";
+import type { InitializableState } from "../../../../../../../common/initializable-state/create";
 
 interface Dependencies {
   userStore: UserStore;
-  defaultPathForKubectlBinaries: LazyInitializableState<string>;
+  defaultPathForKubectlBinaries: InitializableState<string>;
 }
 
 const NonInjectedKubectlPathToBinary = observer(

@@ -23,53 +23,46 @@ export interface CreateDependentInitializableStateResult<T> {
 export function createDependentInitializableState<T>(args: CreateDependentInitializableStateArgs<T>): CreateDependentInitializableStateResult<T> {
   const { id, init, injectionToken, initAfter } = args;
 
+  let box: InitializableStateValue<T> = {
+    set: false,
+  };
+  let initCalled = false;
+
   const valueInjectable = getInjectable({
     id,
-    instantiate: (di) => {
-      let box: InitializableStateValue<T> = {
-        set: false,
-      };
-      let initCalled = false;
+    instantiate: (): InitializableState<T> => ({
+      get: () => {
+        if (!initCalled) {
+          throw new Error(`InitializableState(${id}) has not been initialized yet`);
+        }
 
-      return {
-        init: async () => {
-          if (initCalled) {
-            throw new Error(`Cannot initialize InitializableState(${id}) more than once`);
-          }
+        if (box.set === false) {
+          throw new Error(`InitializableState(${id}) has not finished initializing`);
+        }
 
-          initCalled = true;
-          box = {
-            set: true,
-            value: await init(di),
-          };
-        },
-        get: () => {
-          if (!initCalled) {
-            throw new Error(`InitializableState(${id}) has not been initialized yet`);
-          }
-
-          if (box.set === false) {
-            throw new Error(`InitializableState(${id}) has not finished initializing`);
-          }
-
-          return box.value;
-        },
-      };
-    },
+        return box.value;
+      },
+    }),
     injectionToken,
   });
 
   const initializers = initAfter.map(runnableInjectable => getInjectable({
     id: `initialize-${id}`,
-    instantiate: (di) => {
-      const value = di.inject(valueInjectable);
+    instantiate: (di) => ({
+      id: `initialize-${id}`,
+      run: async () => {
+        if (initCalled) {
+          throw new Error(`Cannot initialize InitializableState(${id}) more than once`);
+        }
 
-      return {
-        id: `initialize-${id}`,
-        run: () => value.init(),
-        runAfter: di.inject(runnableInjectable),
-      };
-    },
+        initCalled = true;
+        box = {
+          set: true,
+          value: await init(di),
+        };
+      },
+      runAfter: di.inject(runnableInjectable),
+    }),
     injectionToken: runnableInjectable.injectionToken,
   }));
 
