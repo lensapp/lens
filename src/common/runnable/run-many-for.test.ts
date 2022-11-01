@@ -223,7 +223,7 @@ describe("runManyFor", () => {
     );
 
     return expect(() => runMany()).rejects.toThrow(
-      'Tried to run runnable "some-runnable-1" after the runnable "some-runnable-2" which does not share the "some-injection-token" injection token.',
+      /Tried to get a composite but encountered missing parent ids: "some-runnable-2".\n\nAvailable parent ids are:\n"[0-9a-z-]+",\n"some-runnable-1"/,
     );
   });
 
