@@ -19,7 +19,7 @@ type RunSync<Param> = (parameter: Param) => void;
 export type RunManySync = <Param>(injectionToken: InjectionToken<RunnableSync<Param>, void>) => RunSync<Param>;
 
 function runCompositeRunnableSyncs<Param>(param: Param, composite: Composite<RunnableSync<Param>>) {
-  assert(!((composite.value.run(param) as any) instanceof Promise), "Cannot be an async function for runnable sync");
+  assert(!((composite.value.run(param) as unknown) instanceof Promise), `Cannot be an async function for runnable sync`);
   composite.children.map(composite => runCompositeRunnableSyncs(param, composite));
 }
 
