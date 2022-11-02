@@ -6,7 +6,7 @@
 import type { AsyncResult } from "../../../common/utils/async-result";
 import { getInjectable } from "@ogre-tools/injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
-import { disposer } from "../../../common/utils";
+import { disposer, hasTypedProperty, isString } from "../../../common/utils";
 import computeUnixShellEnvironmentInjectable from "./compute-unix-shell-environment.injectable";
 
 export type EnvironmentVariables = Partial<Record<string, string>>;
@@ -44,6 +44,13 @@ const computeShellEnvironmentInjectable = getInjectable({
           return {
             callWasSuccessful: false,
             error: "Resolving shell environment is taking very long. Please review your shell configuration.",
+          };
+        }
+
+        if (error && hasTypedProperty(error, "stderr", isString)) {
+          return {
+            callWasSuccessful: false,
+            error: `${error}:\n${error.stderr}`,
           };
         }
 
