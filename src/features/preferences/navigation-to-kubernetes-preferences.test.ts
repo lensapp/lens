@@ -5,8 +5,10 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import callForPublicHelmRepositoriesInjectable from "../helm-charts/child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to kubernetes preferences", () => {
   let builder: ApplicationBuilder;
@@ -17,6 +19,7 @@ describe("preferences - navigation to kubernetes preferences", () => {
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
+    let discover: Discover;
 
     beforeEach(async () => {
       builder.beforeApplicationStart((mainDi) => {
@@ -35,6 +38,8 @@ describe("preferences - navigation to kubernetes preferences", () => {
       });
 
       rendered = await builder.render();
+
+      discover = discoverFor(() => rendered);
     });
 
     it("renders", () => {
@@ -42,9 +47,12 @@ describe("preferences - navigation to kubernetes preferences", () => {
     });
 
     it("does not show kubernetes preferences yet", () => {
-      const page = rendered.queryByTestId("kubernetes-preferences-page");
+      const { discovered } = discover.querySingleElement(
+        "preference-page",
+        "kubernetes-page",
+      );
 
-      expect(page).toBeNull();
+      expect(discovered).toBeNull();
     });
 
     describe("when navigating to kubernetes preferences using navigation", () => {
@@ -57,9 +65,12 @@ describe("preferences - navigation to kubernetes preferences", () => {
       });
 
       it("shows kubernetes preferences", () => {
-        const page = rendered.getByTestId("kubernetes-preferences-page");
+        const { discovered } = discover.getSingleElement(
+          "preference-page",
+          "kubernetes-page",
+        );
 
-        expect(page).not.toBeNull();
+        expect(discovered).not.toBeNull();
       });
     });
   });

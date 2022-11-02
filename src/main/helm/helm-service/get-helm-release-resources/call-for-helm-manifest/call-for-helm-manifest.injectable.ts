@@ -30,7 +30,7 @@ const callForHelmManifestInjectable = getInjectable({
       ]);
 
       if (!result.callWasSuccessful) {
-        return { callWasSuccessful: false, error: result.error };
+        return { callWasSuccessful: false, error: result.error.message };
       }
 
       return {

@@ -13,120 +13,148 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
           class="items"
         >
           <div
-            class="winMenu"
+            class="preventedDragging"
           >
             <div
-              data-testid="window-menu"
+              class="winMenu"
             >
-              <svg
-                height="12"
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
-                width="12"
+              <div
+                data-testid="window-menu"
               >
-                <path
-                  d="M0,8.5h12v1H0V8.5z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M0,5.5h12v1H0V5.5z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M0,2.5h12v1H0V2.5z"
-                  fill="currentColor"
-                />
-              </svg>
+                <svg
+                  height="12"
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                  width="12"
+                >
+                  <path
+                    d="M0,8.5h12v1H0V8.5z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M0,5.5h12v1H0V5.5z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M0,2.5h12v1H0V2.5z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
-          >
-            <span
-              class="icon"
-              data-icon-name="home"
-            >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
-            >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
-            >
-              arrow_forward
-            </span>
-          </i>
-        </div>
-        <div
-          class="items"
-        >
           <div
-            class="windowButtons linuxButtons"
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
+            >
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
+          <div
+            class="preventedDragging"
           >
             <div
-              class="minimize"
-              data-testid="window-minimize"
+              class="windowButtons linuxButtons"
             >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+              <div
+                class="minimize"
+                data-testid="window-minimize"
               >
-                <rect
-                  fill="currentColor"
-                  height="1"
-                  width="10"
-                  x="1"
-                  y="9"
-                />
-              </svg>
-            </div>
-            <div
-              class="maximize"
-              data-testid="window-maximize"
-            >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <rect
+                    fill="currentColor"
+                    height="1"
+                    width="10"
+                    x="1"
+                    y="9"
+                  />
+                </svg>
+              </div>
+              <div
+                class="maximize"
+                data-testid="window-maximize"
               >
-                <rect
-                  fill="none"
-                  height="9"
-                  stroke="currentColor"
-                  width="9"
-                  x="1.5"
-                  y="1.5"
-                />
-              </svg>
-            </div>
-            <div
-              class="close"
-              data-testid="window-close"
-            >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <rect
+                    fill="none"
+                    height="9"
+                    stroke="currentColor"
+                    width="9"
+                    x="1.5"
+                    y="1.5"
+                  />
+                </svg>
+              </div>
+              <div
+                class="close"
+                data-testid="window-close"
               >
-                <polygon
-                  fill="currentColor"
-                  points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
-                />
-              </svg>
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <polygon
+                    fill="currentColor"
+                    points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -296,120 +324,148 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
           class="items"
         >
           <div
-            class="winMenu"
+            class="preventedDragging"
           >
             <div
-              data-testid="window-menu"
+              class="winMenu"
             >
-              <svg
-                height="12"
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
-                width="12"
+              <div
+                data-testid="window-menu"
               >
-                <path
-                  d="M0,8.5h12v1H0V8.5z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M0,5.5h12v1H0V5.5z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M0,2.5h12v1H0V2.5z"
-                  fill="currentColor"
-                />
-              </svg>
+                <svg
+                  height="12"
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                  width="12"
+                >
+                  <path
+                    d="M0,8.5h12v1H0V8.5z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M0,5.5h12v1H0V5.5z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M0,2.5h12v1H0V2.5z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
-          >
-            <span
-              class="icon"
-              data-icon-name="home"
-            >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
-            >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
-            >
-              arrow_forward
-            </span>
-          </i>
-        </div>
-        <div
-          class="items"
-        >
           <div
-            class="windowButtons linuxButtons"
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
+            >
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
+          <div
+            class="preventedDragging"
           >
             <div
-              class="minimize"
-              data-testid="window-minimize"
+              class="windowButtons linuxButtons"
             >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+              <div
+                class="minimize"
+                data-testid="window-minimize"
               >
-                <rect
-                  fill="currentColor"
-                  height="1"
-                  width="10"
-                  x="1"
-                  y="9"
-                />
-              </svg>
-            </div>
-            <div
-              class="maximize"
-              data-testid="window-maximize"
-            >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <rect
+                    fill="currentColor"
+                    height="1"
+                    width="10"
+                    x="1"
+                    y="9"
+                  />
+                </svg>
+              </div>
+              <div
+                class="maximize"
+                data-testid="window-maximize"
               >
-                <rect
-                  fill="none"
-                  height="9"
-                  stroke="currentColor"
-                  width="9"
-                  x="1.5"
-                  y="1.5"
-                />
-              </svg>
-            </div>
-            <div
-              class="close"
-              data-testid="window-close"
-            >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <rect
+                    fill="none"
+                    height="9"
+                    stroke="currentColor"
+                    width="9"
+                    x="1.5"
+                    y="1.5"
+                  />
+                </svg>
+              </div>
+              <div
+                class="close"
+                data-testid="window-close"
               >
-                <polygon
-                  fill="currentColor"
-                  points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
-                />
-              </svg>
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <polygon
+                    fill="currentColor"
+                    points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -579,120 +635,148 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
           class="items"
         >
           <div
-            class="winMenu"
+            class="preventedDragging"
           >
             <div
-              data-testid="window-menu"
+              class="winMenu"
             >
-              <svg
-                height="12"
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
-                width="12"
+              <div
+                data-testid="window-menu"
               >
-                <path
-                  d="M0,8.5h12v1H0V8.5z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M0,5.5h12v1H0V5.5z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M0,2.5h12v1H0V2.5z"
-                  fill="currentColor"
-                />
-              </svg>
+                <svg
+                  height="12"
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                  width="12"
+                >
+                  <path
+                    d="M0,8.5h12v1H0V8.5z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M0,5.5h12v1H0V5.5z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M0,2.5h12v1H0V2.5z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
-          >
-            <span
-              class="icon"
-              data-icon-name="home"
-            >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
-            >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
-            >
-              arrow_forward
-            </span>
-          </i>
-        </div>
-        <div
-          class="items"
-        >
           <div
-            class="windowButtons linuxButtons"
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
+            >
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
+          <div
+            class="preventedDragging"
           >
             <div
-              class="minimize"
-              data-testid="window-minimize"
+              class="windowButtons linuxButtons"
             >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+              <div
+                class="minimize"
+                data-testid="window-minimize"
               >
-                <rect
-                  fill="currentColor"
-                  height="1"
-                  width="10"
-                  x="1"
-                  y="9"
-                />
-              </svg>
-            </div>
-            <div
-              class="maximize"
-              data-testid="window-maximize"
-            >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <rect
+                    fill="currentColor"
+                    height="1"
+                    width="10"
+                    x="1"
+                    y="9"
+                  />
+                </svg>
+              </div>
+              <div
+                class="maximize"
+                data-testid="window-maximize"
               >
-                <rect
-                  fill="none"
-                  height="9"
-                  stroke="currentColor"
-                  width="9"
-                  x="1.5"
-                  y="1.5"
-                />
-              </svg>
-            </div>
-            <div
-              class="close"
-              data-testid="window-close"
-            >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <rect
+                    fill="none"
+                    height="9"
+                    stroke="currentColor"
+                    width="9"
+                    x="1.5"
+                    y="1.5"
+                  />
+                </svg>
+              </div>
+              <div
+                class="close"
+                data-testid="window-close"
               >
-                <polygon
-                  fill="currentColor"
-                  points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
-                />
-              </svg>
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <polygon
+                    fill="currentColor"
+                    points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -874,120 +958,148 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
           class="items"
         >
           <div
-            class="winMenu"
+            class="preventedDragging"
           >
             <div
-              data-testid="window-menu"
+              class="winMenu"
             >
-              <svg
-                height="12"
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
-                width="12"
+              <div
+                data-testid="window-menu"
               >
-                <path
-                  d="M0,8.5h12v1H0V8.5z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M0,5.5h12v1H0V5.5z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M0,2.5h12v1H0V2.5z"
-                  fill="currentColor"
-                />
-              </svg>
+                <svg
+                  height="12"
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                  width="12"
+                >
+                  <path
+                    d="M0,8.5h12v1H0V8.5z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M0,5.5h12v1H0V5.5z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M0,2.5h12v1H0V2.5z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
-          >
-            <span
-              class="icon"
-              data-icon-name="home"
-            >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
-            >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
-            >
-              arrow_forward
-            </span>
-          </i>
-        </div>
-        <div
-          class="items"
-        >
           <div
-            class="windowButtons linuxButtons"
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
+            >
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
+          <div
+            class="preventedDragging"
           >
             <div
-              class="minimize"
-              data-testid="window-minimize"
+              class="windowButtons linuxButtons"
             >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+              <div
+                class="minimize"
+                data-testid="window-minimize"
               >
-                <rect
-                  fill="currentColor"
-                  height="1"
-                  width="10"
-                  x="1"
-                  y="9"
-                />
-              </svg>
-            </div>
-            <div
-              class="maximize"
-              data-testid="window-maximize"
-            >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <rect
+                    fill="currentColor"
+                    height="1"
+                    width="10"
+                    x="1"
+                    y="9"
+                  />
+                </svg>
+              </div>
+              <div
+                class="maximize"
+                data-testid="window-maximize"
               >
-                <rect
-                  fill="none"
-                  height="9"
-                  stroke="currentColor"
-                  width="9"
-                  x="1.5"
-                  y="1.5"
-                />
-              </svg>
-            </div>
-            <div
-              class="close"
-              data-testid="window-close"
-            >
-              <svg
-                shape-rendering="crispEdges"
-                viewBox="0 0 12 12"
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <rect
+                    fill="none"
+                    height="9"
+                    stroke="currentColor"
+                    width="9"
+                    x="1.5"
+                    y="1.5"
+                  />
+                </svg>
+              </div>
+              <div
+                class="close"
+                data-testid="window-close"
               >
-                <polygon
-                  fill="currentColor"
-                  points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
-                />
-              </svg>
+                <svg
+                  shape-rendering="crispEdges"
+                  viewBox="0 0 12 12"
+                >
+                  <polygon
+                    fill="currentColor"
+                    points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -1156,43 +1268,61 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -1358,43 +1488,61 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -1560,43 +1708,61 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -1774,43 +1940,61 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div

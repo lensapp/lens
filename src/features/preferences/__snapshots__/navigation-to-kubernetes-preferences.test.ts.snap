@@ -11,44 +11,62 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
       <div
         class="items"
       >
-        <i
-          class="Icon material interactive focusable"
-          data-testid="home-button"
-          tabindex="0"
+        <div
+          class="preventedDragging"
         >
-          <span
-            class="icon"
-            data-icon-name="home"
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
           >
-            home
-          </span>
-        </i>
-        <i
-          class="Icon material interactive disabled focusable"
-          data-testid="history-back"
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+        </div>
+        <div
+          class="size-sm"
+        />
+        <div
+          class="preventedDragging"
         >
-          <span
-            class="icon"
-            data-icon-name="arrow_back"
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
           >
-            arrow_back
-          </span>
-        </i>
-        <i
-          class="Icon material interactive disabled focusable"
-          data-testid="history-forward"
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+        </div>
+        <div
+          class="size-sm"
+        />
+        <div
+          class="preventedDragging"
         >
-          <span
-            class="icon"
-            data-icon-name="arrow_forward"
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
           >
-            arrow_forward
-          </span>
-        </i>
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="separator"
+        />
       </div>
-      <div
-        class="items"
-      />
     </div>
     <main>
       <div
@@ -56,7 +74,6 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
       />
       <div
         class="SettingLayout showNavigation Preferences"
-        data-testid="application-preferences-page"
       >
         <nav
           class="sidebarRegion"
@@ -68,68 +85,72 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="Tabs flex column"
             >
               <div
-                class="header"
-              >
-                Preferences
-              </div>
-              <div
-                class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-application"
-                role="tab"
-                tabindex="0"
+                data-preference-tab-group-test="general-tab-group"
               >
                 <div
-                  class="label"
+                  class="header flex items-center"
                 >
-                  App
+                  Preferences
                 </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
-                role="tab"
-                tabindex="0"
-              >
                 <div
-                  class="label"
+                  class="Tab flex gaps align-center active"
+                  data-preference-tab-link-test="app"
+                  role="tab"
+                  tabindex="0"
                 >
-                  Proxy
+                  <div
+                    class="label"
+                  >
+                    App
+                  </div>
                 </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-kubernetes"
-                role="tab"
-                tabindex="0"
-              >
                 <div
-                  class="label"
+                  class="Tab flex gaps align-center"
+                  data-preference-tab-link-test="proxy"
+                  role="tab"
+                  tabindex="0"
                 >
-                  Kubernetes
+                  <div
+                    class="label"
+                  >
+                    Proxy
+                  </div>
                 </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
-                role="tab"
-                tabindex="0"
-              >
                 <div
-                  class="label"
+                  class="Tab flex gaps align-center"
+                  data-preference-tab-link-test="kubernetes"
+                  role="tab"
+                  tabindex="0"
                 >
-                  Editor
+                  <div
+                    class="label"
+                  >
+                    Kubernetes
+                  </div>
                 </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
-                role="tab"
-                tabindex="0"
-              >
                 <div
-                  class="label"
+                  class="Tab flex gaps align-center"
+                  data-preference-tab-link-test="editor"
+                  role="tab"
+                  tabindex="0"
                 >
-                  Terminal
+                  <div
+                    class="label"
+                  >
+                    Editor
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-preference-tab-link-test="terminal"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Terminal
+                  </div>
                 </div>
               </div>
             </div>
@@ -143,400 +164,429 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             class="content"
           >
             <section
-              id="application"
+              data-preference-page-test="application-page"
+              id="application-page"
             >
               <h2
-                data-testid="application-header"
+                data-preference-page-title-test="true"
               >
                 Application
               </h2>
-              <section
-                id="appearance"
+              <div
+                data-preference-item-test="theme"
               >
-                <div
-                  class="SubTitle"
+                <section
+                  id="appearance"
                 >
-                  Theme
-                   
-                </div>
-                <div
-                  class="Select theme-lens css-b62m3t-container"
-                >
-                  <span
-                    class="css-1f43avz-a11yText-A11yText"
-                    id="react-select-theme-input-live-region"
-                  />
-                  <span
-                    aria-atomic="false"
-                    aria-live="polite"
-                    aria-relevant="additions text"
-                    class="css-1f43avz-a11yText-A11yText"
-                  />
                   <div
-                    class="Select__control css-1s2u09g-control"
+                    class="SubTitle"
                   >
+                    Theme
+                     
+                  </div>
+                  <div
+                    class="Select theme-lens css-b62m3t-container"
+                  >
+                    <span
+                      class="css-1f43avz-a11yText-A11yText"
+                      id="react-select-theme-input-live-region"
+                    />
+                    <span
+                      aria-atomic="false"
+                      aria-live="polite"
+                      aria-relevant="additions text"
+                      class="css-1f43avz-a11yText-A11yText"
+                    />
                     <div
-                      class="Select__value-container css-319lph-ValueContainer"
+                      class="Select__control css-1s2u09g-control"
                     >
                       <div
-                        class="Select__placeholder css-14el2xx-placeholder"
-                        id="react-select-theme-input-placeholder"
+                        class="Select__value-container css-319lph-ValueContainer"
                       >
-                        Select...
-                      </div>
-                      <div
-                        class="Select__input-container css-6j8wv5-Input"
-                        data-value=""
-                      >
-                        <input
-                          aria-autocomplete="list"
-                          aria-describedby="react-select-theme-input-placeholder"
-                          aria-expanded="false"
-                          aria-haspopup="true"
-                          autocapitalize="none"
-                          autocomplete="off"
-                          autocorrect="off"
-                          class="Select__input"
-                          id="theme-input"
-                          role="combobox"
-                          spellcheck="false"
-                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                          tabindex="0"
-                          type="text"
-                          value=""
-                        />
-                      </div>
-                    </div>
-                    <div
-                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
-                    >
-                      <span
-                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
-                      />
-                      <div
-                        aria-hidden="true"
-                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="css-tj5bde-Svg"
-                          focusable="false"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          width="20"
+                        <div
+                          class="Select__placeholder css-14el2xx-placeholder"
+                          id="react-select-theme-input-placeholder"
                         >
-                          <path
-                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          Select...
+                        </div>
+                        <div
+                          class="Select__input-container css-6j8wv5-Input"
+                          data-value=""
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            aria-describedby="react-select-theme-input-placeholder"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            autocapitalize="none"
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="Select__input"
+                            id="theme-input"
+                            role="combobox"
+                            spellcheck="false"
+                            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                            tabindex="0"
+                            type="text"
+                            value=""
                           />
-                        </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                      >
+                        <span
+                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                        />
+                        <div
+                          aria-hidden="true"
+                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="css-tj5bde-Svg"
+                            focusable="false"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            width="20"
+                          >
+                            <path
+                              d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                            />
+                          </svg>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </section>
-              <hr />
-              <section
-                id="extensionRegistryUrl"
+                </section>
+              </div>
+              <div
+                class="HorizontalLine size-xl"
+              />
+              <div
+                data-preference-item-test="extension-install-registry"
               >
-                <div
-                  class="SubTitle"
+                <section
+                  id="extensionRegistryUrl"
                 >
-                  Extension Install Registry
-                   
-                </div>
-                <div
-                  class="Select theme-lens css-b62m3t-container"
-                >
-                  <span
-                    class="css-1f43avz-a11yText-A11yText"
-                    id="react-select-extension-install-registry-input-live-region"
-                  />
-                  <span
-                    aria-atomic="false"
-                    aria-live="polite"
-                    aria-relevant="additions text"
-                    class="css-1f43avz-a11yText-A11yText"
-                  />
                   <div
-                    class="Select__control css-1s2u09g-control"
+                    class="SubTitle"
                   >
+                    Extension Install Registry
+                     
+                  </div>
+                  <div
+                    class="Select theme-lens css-b62m3t-container"
+                  >
+                    <span
+                      class="css-1f43avz-a11yText-A11yText"
+                      id="react-select-extension-install-registry-input-live-region"
+                    />
+                    <span
+                      aria-atomic="false"
+                      aria-live="polite"
+                      aria-relevant="additions text"
+                      class="css-1f43avz-a11yText-A11yText"
+                    />
                     <div
-                      class="Select__value-container css-319lph-ValueContainer"
+                      class="Select__control css-1s2u09g-control"
                     >
                       <div
-                        class="Select__placeholder css-14el2xx-placeholder"
-                        id="react-select-extension-install-registry-input-placeholder"
+                        class="Select__value-container css-319lph-ValueContainer"
                       >
-                        Select...
-                      </div>
-                      <div
-                        class="Select__input-container css-6j8wv5-Input"
-                        data-value=""
-                      >
-                        <input
-                          aria-autocomplete="list"
-                          aria-describedby="react-select-extension-install-registry-input-placeholder"
-                          aria-expanded="false"
-                          aria-haspopup="true"
-                          autocapitalize="none"
-                          autocomplete="off"
-                          autocorrect="off"
-                          class="Select__input"
-                          id="extension-install-registry-input"
-                          role="combobox"
-                          spellcheck="false"
-                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                          tabindex="0"
-                          type="text"
-                          value=""
-                        />
-                      </div>
-                    </div>
-                    <div
-                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
-                    >
-                      <span
-                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
-                      />
-                      <div
-                        aria-hidden="true"
-                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="css-tj5bde-Svg"
-                          focusable="false"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          width="20"
+                        <div
+                          class="Select__placeholder css-14el2xx-placeholder"
+                          id="react-select-extension-install-registry-input-placeholder"
                         >
-                          <path
-                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          Select...
+                        </div>
+                        <div
+                          class="Select__input-container css-6j8wv5-Input"
+                          data-value=""
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            aria-describedby="react-select-extension-install-registry-input-placeholder"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            autocapitalize="none"
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="Select__input"
+                            id="extension-install-registry-input"
+                            role="combobox"
+                            spellcheck="false"
+                            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                            tabindex="0"
+                            type="text"
+                            value=""
                           />
-                        </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                      >
+                        <span
+                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                        />
+                        <div
+                          aria-hidden="true"
+                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="css-tj5bde-Svg"
+                            focusable="false"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            width="20"
+                          >
+                            <path
+                              d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                            />
+                          </svg>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <p
-                  class="mt-4 mb-5 leading-relaxed"
+                  <p
+                    class="mt-4 mb-5 leading-relaxed"
+                  >
+                    This setting is to change the registry URL for installing extensions by name. 
+                    If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
+                    <b>
+                      .npmrc
+                    </b>
+                     file or in the input below.
+                  </p>
+                  <div
+                    class="Input theme round black disabled invalid"
+                  >
+                    <label
+                      class="input-area flex gaps align-center"
+                      id=""
+                    >
+                      <input
+                        class="input box grow"
+                        disabled=""
+                        placeholder="Custom Extension Registry URL..."
+                        spellcheck="false"
+                        value="some-custom-url"
+                      />
+                    </label>
+                    <div
+                      class="input-info flex gaps"
+                    />
+                  </div>
+                </section>
+              </div>
+              <div
+                class="HorizontalLine size-xl"
+              />
+              <div
+                data-preference-item-test="start-up"
+              >
+                <section
+                  id="other"
                 >
-                  This setting is to change the registry URL for installing extensions by name. 
-                  If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
-                  <b>
-                    .npmrc
-                  </b>
-                   file or in the input below.
-                </p>
-                <div
-                  class="Input theme round black disabled invalid"
-                >
+                  <div
+                    class="SubTitle"
+                  >
+                    Start-up
+                     
+                  </div>
                   <label
-                    class="input-area flex gaps align-center"
-                    id=""
+                    class="Switch"
+                    data-testid="switch"
                   >
+                    Automatically start Lens on login
                     <input
-                      class="input box grow"
-                      disabled=""
-                      placeholder="Custom Extension Registry URL..."
-                      spellcheck="false"
-                      value="some-custom-url"
+                      role="switch"
+                      type="checkbox"
                     />
                   </label>
-                  <div
-                    class="input-info flex gaps"
-                  />
-                </div>
-              </section>
-              <hr />
-              <section
-                id="other"
+                </section>
+              </div>
+              <div
+                class="HorizontalLine size-xl"
+              />
+              <div
+                data-preference-item-test="update-channel"
               >
-                <div
-                  class="SubTitle"
+                <section
+                  id="update-channel"
                 >
-                  Start-up
-                   
-                </div>
-                <label
-                  class="Switch"
-                  data-testid="switch"
-                >
-                  Automatically start Lens on login
-                  <input
-                    role="switch"
-                    type="checkbox"
-                  />
-                </label>
-              </section>
-              <hr />
-              <section
-                id="update-channel"
-              >
-                <div
-                  class="SubTitle"
-                >
-                  Update Channel
-                   
-                </div>
-                <div
-                  class="Select theme-lens css-b62m3t-container"
-                >
-                  <span
-                    class="css-1f43avz-a11yText-A11yText"
-                    id="react-select-update-channel-input-live-region"
-                  />
-                  <span
-                    aria-atomic="false"
-                    aria-live="polite"
-                    aria-relevant="additions text"
-                    class="css-1f43avz-a11yText-A11yText"
-                  />
                   <div
-                    class="Select__control css-1s2u09g-control"
+                    class="SubTitle"
                   >
+                    Update Channel
+                     
+                  </div>
+                  <div
+                    class="Select theme-lens css-b62m3t-container"
+                  >
+                    <span
+                      class="css-1f43avz-a11yText-A11yText"
+                      id="react-select-update-channel-input-live-region"
+                    />
+                    <span
+                      aria-atomic="false"
+                      aria-live="polite"
+                      aria-relevant="additions text"
+                      class="css-1f43avz-a11yText-A11yText"
+                    />
                     <div
-                      class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
+                      class="Select__control css-1s2u09g-control"
                     >
                       <div
-                        class="Select__single-value css-qc6sy-singleValue"
+                        class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
                       >
-                        Stable
-                      </div>
-                      <div
-                        class="Select__input-container css-6j8wv5-Input"
-                        data-value=""
-                      >
-                        <input
-                          aria-autocomplete="list"
-                          aria-expanded="false"
-                          aria-haspopup="true"
-                          autocapitalize="none"
-                          autocomplete="off"
-                          autocorrect="off"
-                          class="Select__input"
-                          id="update-channel-input"
-                          role="combobox"
-                          spellcheck="false"
-                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                          tabindex="0"
-                          type="text"
-                          value=""
-                        />
-                      </div>
-                    </div>
-                    <div
-                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
-                    >
-                      <span
-                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
-                      />
-                      <div
-                        aria-hidden="true"
-                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="css-tj5bde-Svg"
-                          focusable="false"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          width="20"
+                        <div
+                          class="Select__single-value css-qc6sy-singleValue"
                         >
-                          <path
-                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          Stable
+                        </div>
+                        <div
+                          class="Select__input-container css-6j8wv5-Input"
+                          data-value=""
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            autocapitalize="none"
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="Select__input"
+                            id="update-channel-input"
+                            role="combobox"
+                            spellcheck="false"
+                            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                            tabindex="0"
+                            type="text"
+                            value=""
                           />
-                        </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                      >
+                        <span
+                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                        />
+                        <div
+                          aria-hidden="true"
+                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="css-tj5bde-Svg"
+                            focusable="false"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            width="20"
+                          >
+                            <path
+                              d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                            />
+                          </svg>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </section>
-              <hr />
-              <section
-                id="locale"
+                </section>
+              </div>
+              <div
+                class="HorizontalLine size-xl"
+              />
+              <div
+                data-preference-item-test="timezone"
               >
-                <div
-                  class="SubTitle"
+                <section
+                  id="locale"
                 >
-                  Locale Timezone
-                   
-                </div>
-                <div
-                  class="Select theme-lens css-b62m3t-container"
-                >
-                  <span
-                    class="css-1f43avz-a11yText-A11yText"
-                    id="react-select-timezone-input-live-region"
-                  />
-                  <span
-                    aria-atomic="false"
-                    aria-live="polite"
-                    aria-relevant="additions text"
-                    class="css-1f43avz-a11yText-A11yText"
-                  />
                   <div
-                    class="Select__control css-1s2u09g-control"
+                    class="SubTitle"
                   >
+                    Locale Timezone
+                     
+                  </div>
+                  <div
+                    class="Select theme-lens css-b62m3t-container"
+                  >
+                    <span
+                      class="css-1f43avz-a11yText-A11yText"
+                      id="react-select-timezone-input-live-region"
+                    />
+                    <span
+                      aria-atomic="false"
+                      aria-live="polite"
+                      aria-relevant="additions text"
+                      class="css-1f43avz-a11yText-A11yText"
+                    />
                     <div
-                      class="Select__value-container css-319lph-ValueContainer"
+                      class="Select__control css-1s2u09g-control"
                     >
                       <div
-                        class="Select__placeholder css-14el2xx-placeholder"
-                        id="react-select-timezone-input-placeholder"
+                        class="Select__value-container css-319lph-ValueContainer"
                       >
-                        Select...
-                      </div>
-                      <div
-                        class="Select__input-container css-6j8wv5-Input"
-                        data-value=""
-                      >
-                        <input
-                          aria-autocomplete="list"
-                          aria-describedby="react-select-timezone-input-placeholder"
-                          aria-expanded="false"
-                          aria-haspopup="true"
-                          autocapitalize="none"
-                          autocomplete="off"
-                          autocorrect="off"
-                          class="Select__input"
-                          id="timezone-input"
-                          role="combobox"
-                          spellcheck="false"
-                          style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                          tabindex="0"
-                          type="text"
-                          value=""
-                        />
-                      </div>
-                    </div>
-                    <div
-                      class="Select__indicators css-1hb7zxy-IndicatorsContainer"
-                    >
-                      <span
-                        class="Select__indicator-separator css-1okebmr-indicatorSeparator"
-                      />
-                      <div
-                        aria-hidden="true"
-                        class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="css-tj5bde-Svg"
-                          focusable="false"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          width="20"
+                        <div
+                          class="Select__placeholder css-14el2xx-placeholder"
+                          id="react-select-timezone-input-placeholder"
                         >
-                          <path
-                            d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                          Select...
+                        </div>
+                        <div
+                          class="Select__input-container css-6j8wv5-Input"
+                          data-value=""
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            aria-describedby="react-select-timezone-input-placeholder"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            autocapitalize="none"
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="Select__input"
+                            id="timezone-input"
+                            role="combobox"
+                            spellcheck="false"
+                            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                            tabindex="0"
+                            type="text"
+                            value=""
                           />
-                        </svg>
+                        </div>
+                      </div>
+                      <div
+                        class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                      >
+                        <span
+                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                        />
+                        <div
+                          aria-hidden="true"
+                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="css-tj5bde-Svg"
+                            focusable="false"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            width="20"
+                          >
+                            <path
+                              d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                            />
+                          </svg>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </section>
+                </section>
+              </div>
             </section>
           </div>
           <div
@@ -650,44 +700,62 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
       <div
         class="items"
       >
-        <i
-          class="Icon material interactive focusable"
-          data-testid="home-button"
-          tabindex="0"
+        <div
+          class="preventedDragging"
         >
-          <span
-            class="icon"
-            data-icon-name="home"
+          <i
+            class="Icon material interactive focusable"
+            data-testid="home-button"
+            tabindex="0"
           >
-            home
-          </span>
-        </i>
-        <i
-          class="Icon material interactive disabled focusable"
-          data-testid="history-back"
+            <span
+              class="icon"
+              data-icon-name="home"
+            >
+              home
+            </span>
+          </i>
+        </div>
+        <div
+          class="size-sm"
+        />
+        <div
+          class="preventedDragging"
         >
-          <span
-            class="icon"
-            data-icon-name="arrow_back"
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-back"
           >
-            arrow_back
-          </span>
-        </i>
-        <i
-          class="Icon material interactive disabled focusable"
-          data-testid="history-forward"
+            <span
+              class="icon"
+              data-icon-name="arrow_back"
+            >
+              arrow_back
+            </span>
+          </i>
+        </div>
+        <div
+          class="size-sm"
+        />
+        <div
+          class="preventedDragging"
         >
-          <span
-            class="icon"
-            data-icon-name="arrow_forward"
+          <i
+            class="Icon material interactive disabled focusable"
+            data-testid="history-forward"
           >
-            arrow_forward
-          </span>
-        </i>
+            <span
+              class="icon"
+              data-icon-name="arrow_forward"
+            >
+              arrow_forward
+            </span>
+          </i>
+        </div>
+        <div
+          class="separator"
+        />
       </div>
-      <div
-        class="items"
-      />
     </div>
     <main>
       <div
@@ -695,7 +763,6 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
       />
       <div
         class="SettingLayout showNavigation Preferences"
-        data-testid="kubernetes-preferences-page"
       >
         <nav
           class="sidebarRegion"
@@ -707,68 +774,72 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
               class="Tabs flex column"
             >
               <div
-                class="header"
-              >
-                Preferences
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-application"
-                role="tab"
-                tabindex="0"
+                data-preference-tab-group-test="general-tab-group"
               >
                 <div
-                  class="label"
+                  class="header flex items-center"
                 >
-                  App
+                  Preferences
                 </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-proxy"
-                role="tab"
-                tabindex="0"
-              >
                 <div
-                  class="label"
+                  class="Tab flex gaps align-center"
+                  data-preference-tab-link-test="app"
+                  role="tab"
+                  tabindex="0"
                 >
-                  Proxy
+                  <div
+                    class="label"
+                  >
+                    App
+                  </div>
                 </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center active"
-                data-testid="tab-link-for-kubernetes"
-                role="tab"
-                tabindex="0"
-              >
                 <div
-                  class="label"
+                  class="Tab flex gaps align-center"
+                  data-preference-tab-link-test="proxy"
+                  role="tab"
+                  tabindex="0"
                 >
-                  Kubernetes
+                  <div
+                    class="label"
+                  >
+                    Proxy
+                  </div>
                 </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-editor"
-                role="tab"
-                tabindex="0"
-              >
                 <div
-                  class="label"
+                  class="Tab flex gaps align-center active"
+                  data-preference-tab-link-test="kubernetes"
+                  role="tab"
+                  tabindex="0"
                 >
-                  Editor
+                  <div
+                    class="label"
+                  >
+                    Kubernetes
+                  </div>
                 </div>
-              </div>
-              <div
-                class="Tab flex gaps align-center"
-                data-testid="tab-link-for-terminal"
-                role="tab"
-                tabindex="0"
-              >
                 <div
-                  class="label"
+                  class="Tab flex gaps align-center"
+                  data-preference-tab-link-test="editor"
+                  role="tab"
+                  tabindex="0"
                 >
-                  Terminal
+                  <div
+                    class="label"
+                  >
+                    Editor
+                  </div>
+                </div>
+                <div
+                  class="Tab flex gaps align-center"
+                  data-preference-tab-link-test="terminal"
+                  role="tab"
+                  tabindex="0"
+                >
+                  <div
+                    class="label"
+                  >
+                    Terminal
+                  </div>
                 </div>
               </div>
             </div>
@@ -782,231 +853,61 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             class="content"
           >
             <section
-              id="kubernetes"
+              data-preference-page-test="kubernetes-page"
+              id="kubernetes-page"
             >
-              <section
-                id="kubectl"
+              <h2
+                data-preference-page-title-test="true"
               >
-                <h2
-                  data-testid="kubernetes-header"
+                Kubernetes
+              </h2>
+              <div
+                data-preference-item-test="kubectl"
+              >
+                <section
+                  id="kubectl"
                 >
-                  Kubernetes
-                </h2>
-                <section>
                   <div
-                    class="SubTitle"
+                    data-preference-item-test="kubectl-binary-download"
                   >
-                    Kubectl binary download
-                     
-                  </div>
-                  <label
-                    class="Switch"
-                    data-testid="switch"
-                  >
-                    Download kubectl binaries matching the Kubernetes cluster version
-                    <input
-                      role="switch"
-                      type="checkbox"
-                    />
-                  </label>
-                </section>
-                <section>
-                  <div
-                    class="SubTitle"
-                  >
-                    Download mirror
-                     
-                  </div>
-                  <div
-                    class="Select theme-lens Select--is-disabled css-3iigni-container"
-                  >
-                    <span
-                      class="css-1f43avz-a11yText-A11yText"
-                      id="react-select-download-mirror-input-live-region"
-                    />
-                    <span
-                      aria-atomic="false"
-                      aria-live="polite"
-                      aria-relevant="additions text"
-                      class="css-1f43avz-a11yText-A11yText"
-                    />
-                    <div
-                      class="Select__control Select__control--is-disabled css-1insrsq-control"
-                    >
+                    <section>
                       <div
-                        class="Select__value-container css-319lph-ValueContainer"
+                        class="SubTitle"
                       >
-                        <div
-                          class="Select__placeholder css-14el2xx-placeholder"
-                          id="react-select-download-mirror-input-placeholder"
-                        >
-                          Download mirror for kubectl
-                        </div>
-                        <div
-                          class="Select__input-container css-jzldcf-Input"
-                          data-value=""
-                        >
-                          <input
-                            aria-autocomplete="list"
-                            aria-describedby="react-select-download-mirror-input-placeholder"
-                            aria-expanded="false"
-                            aria-haspopup="true"
-                            autocapitalize="none"
-                            autocomplete="off"
-                            autocorrect="off"
-                            class="Select__input"
-                            disabled=""
-                            id="download-mirror-input"
-                            role="combobox"
-                            spellcheck="false"
-                            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
-                            tabindex="0"
-                            type="text"
-                            value=""
-                          />
-                        </div>
+                        Kubectl binary download
+                         
                       </div>
-                      <div
-                        class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                      <label
+                        class="Switch"
+                        data-testid="switch"
                       >
-                        <span
-                          class="Select__indicator-separator css-109onse-indicatorSeparator"
+                        Download kubectl binaries matching the Kubernetes cluster version
+                        <input
+                          role="switch"
+                          type="checkbox"
                         />
-                        <div
-                          aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
-                        >
-                          <svg
-                            aria-hidden="true"
-                            class="css-tj5bde-Svg"
-                            focusable="false"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            width="20"
-                          >
-                            <path
-                              d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-                <section>
-                  <div
-                    class="SubTitle"
-                  >
-                    Directory for binaries
-                     
+                      </label>
+                    </section>
                   </div>
                   <div
-                    class="Input theme round black disabled"
-                  >
-                    <label
-                      class="input-area flex gaps align-center"
-                      id=""
-                    >
-                      <input
-                        class="input box grow"
-                        disabled=""
-                        placeholder="/some-electron-app-path-for-user-data/binaries"
-                        spellcheck="false"
-                        value=""
-                      />
-                    </label>
-                    <div
-                      class="input-info flex gaps"
-                    />
-                  </div>
+                    class="size-xl"
+                  />
                   <div
-                    class="hint"
+                    data-preference-item-test="kubectl-download-mirror"
                   >
-                    The directory to download binaries into.
-                  </div>
-                </section>
-                <section>
-                  <div
-                    class="SubTitle"
-                  >
-                    Path to kubectl binary
-                     
-                  </div>
-                  <div
-                    class="Input theme round black"
-                  >
-                    <label
-                      class="input-area flex gaps align-center"
-                      id=""
-                    >
-                      <input
-                        class="input box grow"
-                        placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
-                        spellcheck="false"
-                        value=""
-                      />
-                    </label>
-                    <div
-                      class="input-info flex gaps"
-                    />
-                  </div>
-                </section>
-              </section>
-              <hr />
-              <section
-                id="kube-sync"
-              >
-                <h2
-                  data-testid="kubernetes-sync-header"
-                >
-                  Kubeconfig Syncs
-                </h2>
-                <div
-                  class="self-start mb-5"
-                >
-                  <button
-                    class="Button PathPicker primary"
-                    type="button"
-                  >
-                    Sync Files and Folders
-                  </button>
-                </div>
-                <div
-                  class="SubTitle pt-5"
-                >
-                  Synced Items
-                   
-                </div>
-                <div
-                  class="notice mt-3"
-                >
-                  <div
-                    class="flex-grow text-center"
-                  >
-                    No files and folders have been synced yet
-                  </div>
-                </div>
-              </section>
-              <hr />
-              <section
-                id="helm"
-              >
-                <h2>
-                  Helm Charts
-                </h2>
-                <div>
-                  <div
-                    data-testid="helm-controls"
-                  >
-                    <div
-                      class="flex gaps"
-                    >
+                    <section>
                       <div
-                        class="Select theme-lens box grow css-b62m3t-container"
+                        class="SubTitle"
+                      >
+                        Download mirror
+                         
+                      </div>
+                      <div
+                        class="Select theme-lens Select--is-disabled css-3iigni-container"
                       >
                         <span
                           class="css-1f43avz-a11yText-A11yText"
-                          id="react-select-selection-of-active-public-helm-repository-live-region"
+                          id="react-select-download-mirror-input-live-region"
                         />
                         <span
                           aria-atomic="false"
@@ -1015,31 +916,32 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                           class="css-1f43avz-a11yText-A11yText"
                         />
                         <div
-                          class="Select__control css-1s2u09g-control"
+                          class="Select__control Select__control--is-disabled css-1insrsq-control"
                         >
                           <div
                             class="Select__value-container css-319lph-ValueContainer"
                           >
                             <div
                               class="Select__placeholder css-14el2xx-placeholder"
-                              id="react-select-selection-of-active-public-helm-repository-placeholder"
+                              id="react-select-download-mirror-input-placeholder"
                             >
-                              Repositories
+                              Download mirror for kubectl
                             </div>
                             <div
-                              class="Select__input-container css-6j8wv5-Input"
+                              class="Select__input-container css-jzldcf-Input"
                               data-value=""
                             >
                               <input
                                 aria-autocomplete="list"
-                                aria-describedby="react-select-selection-of-active-public-helm-repository-placeholder"
+                                aria-describedby="react-select-download-mirror-input-placeholder"
                                 aria-expanded="false"
                                 aria-haspopup="true"
                                 autocapitalize="none"
                                 autocomplete="off"
                                 autocorrect="off"
                                 class="Select__input"
-                                id="selection-of-active-public-helm-repository"
+                                disabled=""
+                                id="download-mirror-input"
                                 role="combobox"
                                 spellcheck="false"
                                 style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
@@ -1053,7 +955,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                           >
                             <span
-                              class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                              class="Select__indicator-separator css-109onse-indicatorSeparator"
                             />
                             <div
                               aria-hidden="true"
@@ -1075,21 +977,232 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                           </div>
                         </div>
                       </div>
-                      <button
-                        class="Button primary"
-                        data-testid="add-custom-helm-repo-button"
-                        type="button"
-                      >
-                        Add Custom Helm Repo
-                      </button>
-                    </div>
-                    <div
-                      class="repos"
-                    />
-                    <div />
+                    </section>
                   </div>
-                </div>
-              </section>
+                  <div
+                    class="size-xl"
+                  />
+                  <div
+                    data-preference-item-test="kubectl-directory-for-binaries"
+                  >
+                    <section>
+                      <div
+                        class="SubTitle"
+                      >
+                        Directory for binaries
+                         
+                      </div>
+                      <div
+                        class="Input theme round black disabled"
+                      >
+                        <label
+                          class="input-area flex gaps align-center"
+                          id=""
+                        >
+                          <input
+                            class="input box grow"
+                            disabled=""
+                            placeholder="/some-electron-app-path-for-user-data/binaries"
+                            spellcheck="false"
+                            value=""
+                          />
+                        </label>
+                        <div
+                          class="input-info flex gaps"
+                        />
+                      </div>
+                      <div
+                        class="hint"
+                      >
+                        The directory to download binaries into.
+                      </div>
+                    </section>
+                  </div>
+                  <div
+                    class="size-xl"
+                  />
+                  <div
+                    data-preference-item-test="kubectl-path-to-binary"
+                  >
+                    <section>
+                      <div
+                        class="SubTitle"
+                      >
+                        Path to kubectl binary
+                         
+                      </div>
+                      <div
+                        class="Input theme round black"
+                      >
+                        <label
+                          class="input-area flex gaps align-center"
+                          id=""
+                        >
+                          <input
+                            class="input box grow"
+                            placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
+                            spellcheck="false"
+                            value=""
+                          />
+                        </label>
+                        <div
+                          class="input-info flex gaps"
+                        />
+                      </div>
+                    </section>
+                  </div>
+                </section>
+              </div>
+              <div
+                class="HorizontalLine size-xl"
+              />
+              <div
+                data-preference-item-test="kubeconfig-sync"
+              >
+                <section
+                  id="kube-sync"
+                >
+                  <h2
+                    data-testid="kubernetes-sync-header"
+                  >
+                    Kubeconfig Syncs
+                  </h2>
+                  <div
+                    class="self-start mb-5"
+                  >
+                    <button
+                      class="Button PathPicker primary"
+                      type="button"
+                    >
+                      Sync Files and Folders
+                    </button>
+                  </div>
+                  <div
+                    class="SubTitle pt-5"
+                  >
+                    Synced Items
+                     
+                  </div>
+                  <div
+                    class="notice mt-3"
+                  >
+                    <div
+                      class="flex-grow text-center"
+                    >
+                      No files and folders have been synced yet
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <div
+                class="HorizontalLine size-xl"
+              />
+              <div
+                data-preference-item-test="helm-charts"
+              >
+                <section
+                  id="helm"
+                >
+                  <h2>
+                    Helm Charts
+                  </h2>
+                  <div>
+                    <div
+                      data-testid="helm-controls"
+                    >
+                      <div
+                        class="flex gaps"
+                      >
+                        <div
+                          class="Select theme-lens box grow css-b62m3t-container"
+                        >
+                          <span
+                            class="css-1f43avz-a11yText-A11yText"
+                            id="react-select-selection-of-active-public-helm-repository-live-region"
+                          />
+                          <span
+                            aria-atomic="false"
+                            aria-live="polite"
+                            aria-relevant="additions text"
+                            class="css-1f43avz-a11yText-A11yText"
+                          />
+                          <div
+                            class="Select__control css-1s2u09g-control"
+                          >
+                            <div
+                              class="Select__value-container css-319lph-ValueContainer"
+                            >
+                              <div
+                                class="Select__placeholder css-14el2xx-placeholder"
+                                id="react-select-selection-of-active-public-helm-repository-placeholder"
+                              >
+                                Repositories
+                              </div>
+                              <div
+                                class="Select__input-container css-6j8wv5-Input"
+                                data-value=""
+                              >
+                                <input
+                                  aria-autocomplete="list"
+                                  aria-describedby="react-select-selection-of-active-public-helm-repository-placeholder"
+                                  aria-expanded="false"
+                                  aria-haspopup="true"
+                                  autocapitalize="none"
+                                  autocomplete="off"
+                                  autocorrect="off"
+                                  class="Select__input"
+                                  id="selection-of-active-public-helm-repository"
+                                  role="combobox"
+                                  spellcheck="false"
+                                  style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                                  tabindex="0"
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                            <div
+                              class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                            >
+                              <span
+                                class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                              />
+                              <div
+                                aria-hidden="true"
+                                class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  class="css-tj5bde-Svg"
+                                  focusable="false"
+                                  height="20"
+                                  viewBox="0 0 20 20"
+                                  width="20"
+                                >
+                                  <path
+                                    d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                                  />
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          class="Button primary"
+                          data-testid="add-custom-helm-repo-button"
+                          type="button"
+                        >
+                          Add Custom Helm Repo
+                        </button>
+                      </div>
+                      <div
+                        class="repos"
+                      />
+                      <div />
+                    </div>
+                  </div>
+                </section>
+              </div>
             </section>
           </div>
           <div

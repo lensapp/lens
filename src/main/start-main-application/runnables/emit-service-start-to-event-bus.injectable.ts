@@ -3,19 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
+import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import { afterApplicationIsLoadedInjectionToken } from "../runnable-tokens/after-application-is-loaded-injection-token";
 
 const emitServiceStartToEventBusInjectable = getInjectable({
   id: "emit-service-start-to-event-bus",
 
   instantiate: (di) => {
-    const appEventBus = di.inject(appEventBusInjectable);
+    const emitAppEvent = di.inject(emitAppEventInjectable);
 
     return {
       id: "emit-service-start-to-event-bus",
       run: () => {
-        appEventBus.emit({ name: "service", action: "start" });
+        emitAppEvent({ name: "service", action: "start" });
       },
     };
   },

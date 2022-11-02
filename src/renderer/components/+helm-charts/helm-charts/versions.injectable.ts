@@ -11,16 +11,25 @@ import requestVersionsOfHelmChartInjectable from "./request-versions-of-chart-fo
 
 const helmChartVersionsInjectable = getInjectable({
   id: "helm-chart-versions-loader",
+
   instantiate: (di, release) => {
     const helmCharts = di.inject(helmChartsInjectable);
-    const requestVersionsOfHelmChart = di.inject(requestVersionsOfHelmChartInjectable);
 
-    return asyncComputed(async () => {
-      await when(() => !helmCharts.pending.get());
+    const requestVersionsOfHelmChart = di.inject(
+      requestVersionsOfHelmChartInjectable,
+    );
 
-      return requestVersionsOfHelmChart(release, helmCharts.value.get());
-    }, []);
+    return asyncComputed({
+      getValueFromObservedPromise: async () => {
+        await when(() => !helmCharts.pending.get());
+
+        return requestVersionsOfHelmChart(release, helmCharts.value.get());
+      },
+
+      valueWhenPending: [],
+    });
   },
+
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di, release: HelmRelease) => release.getName(),
   }),

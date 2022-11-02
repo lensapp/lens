@@ -2,12 +2,12 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getAllEntries } from "../components/+preferences/kubeconfig-syncs";
+import { getAllEntries } from "../../features/preferences/renderer/preference-items/kubernetes/kubeconfig-sync/kubeconfig-sync";
 import { Notifications } from "../components/notifications";
 import { getInjectable } from "@ogre-tools/injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import React from "react";
-import navigateToKubernetesPreferencesInjectable from "../../common/front-end-routing/routes/preferences/kubernetes/navigate-to-kubernetes-preferences.injectable";
+import navigateToKubernetesPreferencesInjectable from "../../features/preferences/common/navigate-to-kubernetes-preferences.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 
 const addSyncEntriesInjectable = getInjectable({

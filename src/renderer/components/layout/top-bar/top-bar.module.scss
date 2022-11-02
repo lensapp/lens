@@ -4,13 +4,10 @@
  */
 
 .topBar {
-  display: flex;
   background-color: var(--layoutBackground);
   z-index: 2;
-  width: 100%;
   grid-area: topbar;
   height: var(--main-layout-header);
-  justify-content: space-between;
 
   /* Use topbar as draggable region */
   user-select: none;
@@ -18,26 +15,20 @@
 }
 
 .topBar .items {
+  justify-content: space-between;
   align-items: center;
   display: flex;
   height: 100%;
+  padding-left: calc(var(--padding) * 2);
+  padding-right: calc(var(--padding) * 2);
+}
+
+.preventedDragging {
   -webkit-app-region: no-drag;
+}
 
-  &:first-of-type {
-    padding-left: calc(var(--padding) * 2);
-
-    & > *:not(:empty) {
-      margin-right: calc(var(--padding) * 1.5);
-    }
-  }
-
-  &:last-of-type {
-    padding-right: calc(var(--padding) * 2);
-
-    & > *:not(:empty) {
-      margin-left: calc(var(--padding) * 1.5);
-    }
-  }
+.separator {
+  flex-basis: 100%;
 }
 
 :global(.is-mac) .topBar {

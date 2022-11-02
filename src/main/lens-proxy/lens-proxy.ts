@@ -10,13 +10,13 @@ import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import type { Router } from "../router/router";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
-import logger from "../logger";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
-import { appEventBus } from "../../common/app-event-bus/event-bus";
 import { getBoolean } from "../utils/parse-query";
 import assert from "assert";
 import type { SetRequired } from "type-fest";
+import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
+import type { Logger } from "../../common/logger";
 
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 
@@ -26,10 +26,12 @@ interface Dependencies {
   getClusterForRequest: GetClusterForRequest;
   shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
   kubeApiUpgradeRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
+  emitAppEvent: EmitAppEvent;
   readonly router: Router;
   readonly proxy: httpProxy;
   readonly lensProxyPort: { set: (portNumber: number) => void };
   readonly contentSecurityPolicy: string;
+  readonly logger: Logger;
 }
 
 const watchParam = "watch";
@@ -81,14 +83,14 @@ export class LensProxy {
         const cluster = dependencies.getClusterForRequest(req);
 
         if (!cluster) {
-          logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
+          this.dependencies.logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
           socket.destroy();
         } else {
           const isInternal = req.url.startsWith(`${apiPrefix}?`);
           const reqHandler = isInternal ? dependencies.shellApiRequest : dependencies.kubeApiUpgradeRequest;
 
           (async () => reqHandler({ req, socket, head, cluster }))()
-            .catch(error => logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
+            .catch(error => this.dependencies.logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
         }
       });
   }
@@ -111,17 +113,17 @@ export class LensProxy {
 
           this.dependencies.lensProxyPort.set(port);
 
-          logger.info(`[LENS-PROXY]: Proxy server has started at ${address}:${port}`);
+          this.dependencies.logger.info(`[LENS-PROXY]: Proxy server has started at ${address}:${port}`);
 
           this.proxyServer.on("error", (error) => {
-            logger.info(`[LENS-PROXY]: Subsequent error: ${error}`);
+            this.dependencies.logger.info(`[LENS-PROXY]: Subsequent error: ${error}`);
           });
 
-          appEventBus.emit({ name: "lens-proxy", action: "listen", params: { port }});
+          this.dependencies.emitAppEvent({ name: "lens-proxy", action: "listen", params: { port }});
           resolve(port);
         })
         .once("error", (error) => {
-          logger.info(`[LENS-PROXY]: Proxy server failed to start: ${error}`);
+          this.dependencies.logger.info(`[LENS-PROXY]: Proxy server failed to start: ${error}`);
           reject(error);
         });
     });
@@ -144,7 +146,7 @@ export class LensProxy {
         return;
       }
 
-      logger.warn(`[LENS-PROXY]: Proxy server has with port known to be considered unsafe to connect to by chrome, restarting...`);
+      this.dependencies.logger.warn(`[LENS-PROXY]: Proxy server has with port known to be considered unsafe to connect to by chrome, restarting...`);
 
       if (seenPorts.has(port)) {
         /**
@@ -160,7 +162,7 @@ export class LensProxy {
   }
 
   close() {
-    logger.info("[LENS-PROXY]: Closing server");
+    this.dependencies.logger.info("[LENS-PROXY]: Closing server");
     this.proxyServer.close();
     this.closed = true;
   }
@@ -183,10 +185,10 @@ export class LensProxy {
         return;
       }
 
-      logger.error(`[LENS-PROXY]: http proxy errored for cluster: ${error}`, { url: req.url });
+      this.dependencies.logger.error(`[LENS-PROXY]: http proxy errored for cluster: ${error}`, { url: req.url });
 
       if (target) {
-        logger.debug(`Failed proxy to target: ${JSON.stringify(target, null, 2)}`);
+        this.dependencies.logger.debug(`Failed proxy to target: ${JSON.stringify(target, null, 2)}`);
 
         if (req.method === "GET" && (!res.statusCode || res.statusCode >= 500)) {
           const reqId = this.getRequestId(req);
@@ -194,11 +196,11 @@ export class LensProxy {
           const timeoutMs = retryCount * 250;
 
           if (retryCount < 20) {
-            logger.debug(`Retrying proxy request to url: ${reqId}`);
+            this.dependencies.logger.debug(`Retrying proxy request to url: ${reqId}`);
             setTimeout(() => {
               this.retryCounters.set(reqId, retryCount + 1);
               this.handleRequest(req as ServerIncomingMessage, res)
-                .catch(error => logger.error(`[LENS-PROXY]: failed to handle request on proxy error: ${error}`));
+                .catch(error => this.dependencies.logger.error(`[LENS-PROXY]: failed to handle request on proxy error: ${error}`));
             }, timeoutMs);
           }
         }
@@ -207,7 +209,7 @@ export class LensProxy {
       try {
         res.writeHead(500).end(`Oops, something went wrong.\n${error}`);
       } catch (e) {
-        logger.error(`[LENS-PROXY]: Failed to write headers: `, e);
+        this.dependencies.logger.error(`[LENS-PROXY]: Failed to write headers: `, e);
       }
     });
 

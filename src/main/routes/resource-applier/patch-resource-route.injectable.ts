@@ -4,10 +4,10 @@
  */
 import { getRouteInjectable } from "../../router/router.injectable";
 import { apiPrefix } from "../../../common/vars";
-import { ResourceApplier } from "../../resource-applier";
 import { payloadValidatedClusterRoute } from "../../router/route";
 import Joi from "joi";
 import type { Patch } from "rfc6902";
+import createResourceApplierInjectable from "../../resource-applier/create-resource-applier.injectable";
 
 interface PatchResourcePayload {
   name: string;
@@ -40,18 +40,22 @@ const patchResourcePayloadValidator = Joi.object<PatchResourcePayload, true, Pat
 const patchResourceRouteInjectable = getRouteInjectable({
   id: "patch-resource-route",
 
-  instantiate: () => payloadValidatedClusterRoute({
-    method: "patch",
-    path: `${apiPrefix}/stack`,
-    payloadValidator: patchResourcePayloadValidator,
-  })(async ({ cluster, payload }) => ({
-    response: await new ResourceApplier(cluster).patch(
-      payload.name,
-      payload.kind,
-      payload.patch,
-      payload.ns,
-    ),
-  })),
+  instantiate: (di) => {
+    const createResourceApplier = di.inject(createResourceApplierInjectable);
+
+    return payloadValidatedClusterRoute({
+      method: "patch",
+      path: `${apiPrefix}/stack`,
+      payloadValidator: patchResourcePayloadValidator,
+    })(async ({ cluster, payload }) => ({
+      response: await createResourceApplier(cluster).patch(
+        payload.name,
+        payload.kind,
+        payload.patch,
+        payload.ns,
+      ),
+    }));
+  },
 });
 
 export default patchResourceRouteInjectable;

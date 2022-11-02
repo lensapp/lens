@@ -45,7 +45,7 @@ describe("quitting the app using application menu", () => {
 
     describe("when application is quit", () => {
       beforeEach(() => {
-        builder.applicationMenu.click("root.quit");
+        builder.applicationMenu.click("root", "mac", "quit");
       });
 
       it("closes all windows", () => {

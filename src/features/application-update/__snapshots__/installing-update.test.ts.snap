@@ -12,43 +12,61 @@ exports[`installing update when started renders 1`] = `
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -214,43 +232,61 @@ exports[`installing update when started when user checks for updates renders 1`]
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -416,43 +452,61 @@ exports[`installing update when started when user checks for updates when new up
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -618,61 +672,83 @@ exports[`installing update when started when user checks for updates when new up
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
-            >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
-            >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
-            >
-              arrow_forward
-            </span>
-          </i>
-          <button
-            class="updateButton"
-            data-testid="update-button"
-            data-warning-level="light"
-            id="update-lens-button"
-          >
-            Update
             <i
-              class="Icon icon material focusable"
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
             >
               <span
                 class="icon"
-                data-icon-name="arrow_drop_down"
+                data-icon-name="home"
               >
-                arrow_drop_down
+                home
               </span>
             </i>
-          </button>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <button
+              class="updateButton"
+              data-testid="update-button"
+              data-warning-level="light"
+              id="update-lens-button"
+            >
+              Update
+              <i
+                class="Icon icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="arrow_drop_down"
+                >
+                  arrow_drop_down
+                </span>
+              </i>
+            </button>
+          </div>
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -838,61 +914,83 @@ exports[`installing update when started when user checks for updates when new up
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
-            >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
-            >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
-            >
-              arrow_forward
-            </span>
-          </i>
-          <button
-            class="updateButton"
-            data-testid="update-button"
-            data-warning-level="light"
-            id="update-lens-button"
-          >
-            Update
             <i
-              class="Icon icon material focusable"
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
             >
               <span
                 class="icon"
-                data-icon-name="arrow_drop_down"
+                data-icon-name="home"
               >
-                arrow_drop_down
+                home
               </span>
             </i>
-          </button>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
+          <div
+            class="preventedDragging"
+          >
+            <button
+              class="updateButton"
+              data-testid="update-button"
+              data-warning-level="light"
+              id="update-lens-button"
+            >
+              Update
+              <i
+                class="Icon icon material focusable"
+              >
+                <span
+                  class="icon"
+                  data-icon-name="arrow_drop_down"
+                >
+                  arrow_drop_down
+                </span>
+              </i>
+            </button>
+          </div>
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -1058,43 +1156,61 @@ exports[`installing update when started when user checks for updates when no new
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="home-button"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div

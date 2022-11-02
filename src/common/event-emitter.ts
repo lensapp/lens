@@ -29,7 +29,7 @@ export class EventEmitter<D extends [...any[]]> {
     this.listeners.length = 0;
   }
 
-  emit = (...data: D) => {
+  emit(...data: D) {
     for (const [callback, { once }] of this.listeners) {
       if (once) {
         this.removeListener(callback);
@@ -39,5 +39,5 @@ export class EventEmitter<D extends [...any[]]> {
         break;
       }
     }
-  };
+  }
 }

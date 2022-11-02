@@ -4,20 +4,24 @@
  */
 import { getRouteInjectable } from "../../router/router.injectable";
 import { apiPrefix } from "../../../common/vars";
-import { ResourceApplier } from "../../resource-applier";
 import { payloadValidatedClusterRoute } from "../../router/route";
 import Joi from "joi";
+import createResourceApplierInjectable from "../../resource-applier/create-resource-applier.injectable";
 
 const createResourceRouteInjectable = getRouteInjectable({
   id: "create-resource-route",
 
-  instantiate: () => payloadValidatedClusterRoute({
-    method: "post",
-    path: `${apiPrefix}/stack`,
-    payloadValidator: Joi.string(),
-  })(async ({ cluster, payload }) => ({
-    response: await new ResourceApplier(cluster).create(payload),
-  })),
+  instantiate: (di) => {
+    const createResourceApplier = di.inject(createResourceApplierInjectable);
+
+    return payloadValidatedClusterRoute({
+      method: "post",
+      path: `${apiPrefix}/stack`,
+      payloadValidator: Joi.string(),
+    })(async ({ cluster, payload }) => ({
+      response: await createResourceApplier(cluster).create(payload),
+    }));
+  },
 });
 
 export default createResourceRouteInjectable;

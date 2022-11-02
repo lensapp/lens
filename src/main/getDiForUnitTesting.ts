@@ -5,7 +5,7 @@
 
 import { kebabCase, noop, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
-import { createContainer } from "@ogre-tools/injectable";
+import { createContainer, isInjectable } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
@@ -19,9 +19,6 @@ import type { FileSystemProvisionerStore } from "../extensions/extension-loader/
 import userStoreInjectable from "../common/user-store/user-store.injectable";
 import type { UserStore } from "../common/user-store";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
-import appEventBusInjectable from "../common/app-event-bus/app-event-bus.injectable";
-import { EventEmitter } from "../common/event-emitter";
-import type { AppEvent } from "../common/app-event-bus/event-bus";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
 import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
@@ -31,7 +28,6 @@ import setupLensProxyInjectable from "./start-main-application/runnables/setup-l
 import setupShellInjectable from "./start-main-application/runnables/setup-shell.injectable";
 import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
 import stopServicesAndExitAppInjectable from "./stop-services-and-exit-app.injectable";
-import applicationMenuInjectable from "./menu/application-menu.injectable";
 import isDevelopmentInjectable from "../common/vars/is-development.injectable";
 import setupSystemCaInjectable from "./start-main-application/runnables/setup-system-ca.injectable";
 import setupDeepLinkingInjectable from "./electron-app/runnables/setup-deep-linking.injectable";
@@ -59,15 +55,11 @@ import syncThemeFromOperatingSystemInjectable from "./electron-app/features/sync
 import platformInjectable from "../common/vars/platform.injectable";
 import electronQuitAndInstallUpdateInjectable from "./electron-app/features/electron-quit-and-install-update.injectable";
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "./application-update/publish-is-configured.injectable";
-import checkForPlatformUpdatesInjectable from "./application-update/check-for-platform-updates/check-for-platform-updates.injectable";
 import baseBundledBinariesDirectoryInjectable from "../common/vars/base-bundled-binaries-dir.injectable";
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
-import downloadPlatformUpdateInjectable from "./application-update/download-platform-update/download-platform-update.injectable";
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
 import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
-import periodicalCheckForUpdatesInjectable from "./application-update/periodical-check-for-updates/periodical-check-for-updates.injectable";
 import execFileInjectable from "../common/fs/exec-file.injectable";
 import normalizedPlatformArchitectureInjectable from "../common/vars/normalized-platform-architecture.injectable";
 import getHelmChartVersionsInjectable from "./helm/helm-service/get-helm-chart-versions.injectable";
@@ -100,8 +92,12 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   di.preventSideEffects();
 
-  const injectables: Injectable<any, any, any>[] = (global as any).mainInjectablePaths.map(
-    (filePath: string) => require(filePath).default,
+  const injectables: Injectable<any, any, any>[] = (
+    global as any
+  ).mainInjectablePaths.flatMap((filePath: string) =>
+    Object.values(require(filePath)).filter(
+      (maybeInjectable: any) => isInjectable(maybeInjectable),
+    ),
   );
 
   runInAction(() => {
@@ -152,10 +148,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(stopServicesAndExitAppInjectable, () => () => {});
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
 
-    di.override(applicationMenuInjectable, () => ({ start: () => {}, stop: () => {} }));
-
-    di.override(periodicalCheckForUpdatesInjectable, () => ({ start: () => {}, stop: () => {}, started: false }));
-
     overrideFunctionalInjectables(di, [
       getHelmChartVersionsInjectable,
       getHelmChartValuesInjectable,
@@ -171,9 +163,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       readFileInjectable,
       execFileInjectable,
     ]);
-
-    // TODO: Remove usages of globally exported appEventBus to get rid of this
-    di.override(appEventBusInjectable, () => new EventEmitter<[AppEvent]>());
 
     di.override(broadcastMessageInjectable, () => (channel) => {
       throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
@@ -252,12 +241,7 @@ const overrideElectronFeatures = (di: DiContainer) => {
   di.override(syncThemeFromOperatingSystemInjectable, () => ({ start: () => {}, stop: () => {} }));
   di.override(electronQuitAndInstallUpdateInjectable, () => () => {});
   di.override(setUpdateOnQuitInjectable, () => () => {});
-  di.override(downloadPlatformUpdateInjectable, () => async () => ({ downloadWasSuccessful: true }));
   di.override(focusApplicationInjectable, () => () => {});
-
-  di.override(checkForPlatformUpdatesInjectable, () => () => {
-    throw new Error("Tried to check for platform updates without explicit override.");
-  });
 
   di.override(
     getElectronAppPathInjectable,
@@ -265,7 +249,6 @@ const overrideElectronFeatures = (di: DiContainer) => {
   );
 
   di.override(setElectronAppPathInjectable, () => () => {});
-  di.override(publishIsConfiguredInjectable, () => false);
   di.override(electronUpdaterIsActiveInjectable, () => false);
 };
 

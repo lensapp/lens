@@ -55,7 +55,7 @@ if (ipcMain) {
     transports.push(
       new winston.transports.File({
         handleExceptions: false,
-        level: logLevel,
+        level: "debug",
         filename: "lens.log",
         /**
          * SAFTEY: the `ipcMain` check above should mean that this is only

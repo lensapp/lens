@@ -11,6 +11,8 @@ import clusterManagerInjectable from "../cluster/manager.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import lensProxyPortInjectable from "./lens-proxy-port.injectable";
 import contentSecurityPolicyInjectable from "../../common/vars/content-security-policy.injectable";
+import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
+import loggerInjectable from "../../common/logger.injectable";
 
 const lensProxyInjectable = getInjectable({
   id: "lens-proxy",
@@ -23,6 +25,8 @@ const lensProxyInjectable = getInjectable({
     getClusterForRequest: di.inject(clusterManagerInjectable).getClusterForRequest,
     lensProxyPort: di.inject(lensProxyPortInjectable),
     contentSecurityPolicy: di.inject(contentSecurityPolicyInjectable),
+    emitAppEvent: di.inject(emitAppEventInjectable),
+    logger: di.inject(loggerInjectable),
   }),
 });
 

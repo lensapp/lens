@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import showApplicationWindowInjectable from "../../../start-main-application/lens-window/show-application-window.injectable";
-import showAboutInjectable from "../../../menu/show-about.injectable";
+import showAboutInjectable from "../../../../features/application-menu/main/menu-items/special-menu-for-mac-application/show-about-application/show-about.injectable";
 import { trayMenuItemInjectionToken } from "../tray-menu-item-injection-token";
 import { computed } from "mobx";
 import withErrorLoggingInjectable from "../../../../common/utils/with-error-logging/with-error-logging.injectable";

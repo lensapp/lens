@@ -4,7 +4,7 @@
  */
 export type { StatusBarRegistration } from "../../renderer/components/status-bar/status-bar-registration";
 export type { KubeObjectMenuRegistration, KubeObjectMenuComponents } from "../../renderer/components/kube-object-menu/kube-object-menu-registration";
-export type { AppPreferenceRegistration, AppPreferenceComponents } from "../../renderer/components/+preferences/app-preferences/app-preference-registration";
+export type { AppPreferenceRegistration, AppPreferenceComponents } from "../../features/preferences/renderer/compliance-for-legacy-extension-api/app-preference-registration";
 export type { KubeObjectDetailRegistration, KubeObjectDetailComponents } from "../../renderer/components/kube-object-details/kube-object-detail-registration";
 export type { KubeObjectStatusRegistration } from "../../renderer/components/kube-object-status-icon/kube-object-status-registration";
 export type { PageRegistration, RegisteredPage, PageParams, PageComponentProps, PageComponents, PageTarget } from "../registries/page-registry";

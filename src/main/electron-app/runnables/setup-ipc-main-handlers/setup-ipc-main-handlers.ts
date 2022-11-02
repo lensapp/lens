@@ -8,37 +8,44 @@ import { clusterFrameMap } from "../../../../common/cluster-frames";
 import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ClusterStore } from "../../../../common/cluster-store/cluster-store";
-import { appEventBus } from "../../../../common/app-event-bus/event-bus";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
 import type { CatalogEntityRegistry } from "../../../catalog";
 import { pushCatalogToRenderer } from "../../../catalog-pusher";
 import type { ClusterManager } from "../../../cluster/manager";
-import { ResourceApplier } from "../../../resource-applier";
 import type { IComputedValue } from "mobx";
-import type { MenuItemOpts } from "../../../menu/application-menu-items.injectable";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
 import { handleWindowAction, onLocationChange } from "../../../ipc/window";
 import { openFilePickingDialogChannel } from "../../../../common/ipc/dialog";
 import { getNativeThemeChannel } from "../../../../common/ipc/native-theme";
 import type { Theme } from "../../../theme/operating-system-theme-state.injectable";
 import type { AskUserForFilePaths } from "../../../ipc/ask-user-for-file-paths.injectable";
+import type { ApplicationMenuItemTypes } from "../../../../features/application-menu/main/menu-items/application-menu-item-injection-token";
+import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
+import { getApplicationMenuTemplate } from "../../../../features/application-menu/main/populate-application-menu.injectable";
+import type { MenuItemRoot } from "../../../../features/application-menu/main/application-menu-item-composite.injectable";
+import type { EmitAppEvent } from "../../../../common/app-event-bus/emit-event.injectable";
+import type { CreateResourceApplier } from "../../../resource-applier/create-resource-applier.injectable";
 
 interface Dependencies {
-  applicationMenuItems: IComputedValue<MenuItemOpts[]>;
+  applicationMenuItemComposite: IComputedValue<Composite<ApplicationMenuItemTypes | MenuItemRoot>>;
   clusterManager: ClusterManager;
   catalogEntityRegistry: CatalogEntityRegistry;
   clusterStore: ClusterStore;
   operatingSystemTheme: IComputedValue<Theme>;
   askUserForFilePaths: AskUserForFilePaths;
+  emitAppEvent: EmitAppEvent;
+  createResourceApplier: CreateResourceApplier;
 }
 
 export const setupIpcMainHandlers = ({
-  applicationMenuItems,
+  applicationMenuItemComposite,
   clusterManager,
   catalogEntityRegistry,
   clusterStore,
   operatingSystemTheme,
   askUserForFilePaths,
+  emitAppEvent,
+  createResourceApplier,
 }: Dependencies) => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
@@ -68,7 +75,7 @@ export const setupIpcMainHandlers = ({
   });
 
   ipcMainHandle(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
-    appEventBus.emit({ name: "cluster", action: "stop" });
+    emitAppEvent({ name: "cluster", action: "stop" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
@@ -78,11 +85,11 @@ export const setupIpcMainHandlers = ({
   });
 
   ipcMainHandle(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({ name: "cluster", action: "kubectl-apply-all" });
+    emitAppEvent({ name: "cluster", action: "kubectl-apply-all" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
-      const applier = new ResourceApplier(cluster);
+      const applier = createResourceApplier(cluster);
 
       try {
         const stdout = await applier.kubectlApplyAll(resources, extraArgs);
@@ -97,11 +104,11 @@ export const setupIpcMainHandlers = ({
   });
 
   ipcMainHandle(clusterKubectlDeleteAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    appEventBus.emit({ name: "cluster", action: "kubectl-delete-all" });
+    emitAppEvent({ name: "cluster", action: "kubectl-delete-all" });
     const cluster = ClusterStore.getInstance().getById(clusterId);
 
     if (cluster) {
-      const applier = new ResourceApplier(cluster);
+      const applier = createResourceApplier(cluster);
 
       try {
         const stdout = await applier.kubectlDeleteAll(resources, extraArgs);
@@ -124,9 +131,8 @@ export const setupIpcMainHandlers = ({
   ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel, ...args));
 
   ipcMainOn(windowOpenAppMenuAsContextMenuChannel, async (event) => {
-    const appMenu = applicationMenuItems.get();
-
-    const menu = Menu.buildFromTemplate(appMenu);
+    const electronTemplate = getApplicationMenuTemplate(applicationMenuItemComposite.get());
+    const menu = Menu.buildFromTemplate(electronTemplate);
 
     menu.popup({
       ...BrowserWindow.fromWebContents(event.sender),

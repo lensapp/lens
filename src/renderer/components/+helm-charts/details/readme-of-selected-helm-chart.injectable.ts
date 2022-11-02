@@ -12,22 +12,29 @@ const readmeOfSelectedHelmChartInjectable = getInjectable({
   id: "readme-of-selected-helm-chart",
 
   instantiate: (di, chart: HelmChart) => {
-    const selection = di.inject(helmChartDetailsVersionSelectionInjectable, chart);
+    const selection = di.inject(
+      helmChartDetailsVersionSelectionInjectable,
+      chart,
+    );
     const requestHelmChartReadme = di.inject(requestHelmChartReadmeInjectable);
 
-    return asyncComputed(async () => {
-      const chartVersion = selection.value.get();
+    return asyncComputed({
+      getValueFromObservedPromise: async () => {
+        const chartVersion = selection.value.get();
 
-      if (!chartVersion) {
-        return "";
-      }
+        if (!chartVersion) {
+          return "";
+        }
 
-      return await requestHelmChartReadme(
-        chartVersion.getRepository(),
-        chartVersion.getName(),
-        chartVersion.getVersion(),
-      );
-    }, "");
+        return await requestHelmChartReadme(
+          chartVersion.getRepository(),
+          chartVersion.getName(),
+          chartVersion.getVersion(),
+        );
+      },
+
+      valueWhenPending: "",
+    });
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({

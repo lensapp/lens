@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterStore } from "./cluster-store";
 import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
 import readClusterConfigSyncInjectable from "./read-cluster-config.injectable";
+import emitAppEventInjectable from "../app-event-bus/emit-event.injectable";
 
 const clusterStoreInjectable = getInjectable({
   id: "cluster-store",
@@ -16,6 +17,7 @@ const clusterStoreInjectable = getInjectable({
     return ClusterStore.createInstance({
       createCluster: di.inject(createClusterInjectionToken),
       readClusterConfigSync: di.inject(readClusterConfigSyncInjectable),
+      emitAppEvent: di.inject(emitAppEventInjectable),
     });
   },
 

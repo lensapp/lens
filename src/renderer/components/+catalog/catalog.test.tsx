@@ -57,7 +57,7 @@ describe("<Catalog />", () => {
   let di: DiContainer;
   let catalogEntityStore: CatalogEntityStore;
   let catalogEntityRegistry: CatalogEntityRegistry;
-  let emitEvent: (event: AppEvent) => void;
+  let appEventListener: jest.MockedFunction<(event: AppEvent) => void>;
   let onRun: jest.MockedFunction<(context: CatalogEntityActionContext) => void | Promise<void>>;
   let catalogEntityItem: MockCatalogEntity;
   let render: DiRender;
@@ -78,11 +78,8 @@ describe("<Catalog />", () => {
     catalogEntityItem = createMockCatalogEntity(onRun);
     catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
 
-    emitEvent = jest.fn();
-
-    di.override(appEventBusInjectable, () => ({
-      emit: emitEvent,
-    }));
+    appEventListener = jest.fn();
+    di.inject(appEventBusInjectable).addListener(appEventListener);
 
     catalogEntityStore = di.inject(catalogEntityStoreInjectable);
     Object.assign(catalogEntityStore, {
@@ -204,24 +201,20 @@ describe("<Catalog />", () => {
   });
 
   it("emits catalog open AppEvent", () => {
-    render(
-      <Catalog />,
-    );
+    render(<Catalog />);
 
-    expect(emitEvent).toHaveBeenCalledWith( {
+    expect(appEventListener).toHaveBeenCalledWith( {
       action: "open",
       name: "catalog",
     });
   });
 
   it("emits catalog change AppEvent when changing the category", () => {
-    render(
-      <Catalog />,
-    );
+    render(<Catalog />);
 
     userEvent.click(screen.getByText("Web Links"));
 
-    expect(emitEvent).toHaveBeenLastCalledWith({
+    expect(appEventListener).toHaveBeenCalledWith({
       action: "change-category",
       name: "catalog",
       params: {
