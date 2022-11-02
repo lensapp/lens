@@ -28,18 +28,18 @@ const currentPreferenceTabIdInjectable = getInjectable({
     return computed(() => {
       const nonLegacyPreferenceTabId = nonLegacyRoutePathParameters.get().preferenceTabId;
 
-      if(nonLegacyPreferenceTabId) {
+      if (nonLegacyPreferenceTabId) {
         return nonLegacyPreferenceTabId;
       }
 
-      const legacy = legacyRoutePathParameters.get();
+      const legacyParameters = legacyRoutePathParameters.get();
 
-      if(legacy.extensionId) {
-        if(legacy.preferenceTabId) {
-          return `extension-${legacy.extensionId}-${legacy.preferenceTabId}`;
+      if (legacyParameters.extensionId) {
+        if (legacyParameters.preferenceTabId) {
+          return `extension-${legacyParameters.extensionId}-${legacyParameters.preferenceTabId}`;
         }
 
-        return legacy.extensionId;
+        return legacyParameters.extensionId;
       }
 
       return "app";
