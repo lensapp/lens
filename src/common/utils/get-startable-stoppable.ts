@@ -3,58 +3,85 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-type Stopper = () => Promise<void> | void;
-type Starter = () => Promise<Stopper> | Stopper;
+export type Stopper = () => Promise<void> | void;
+export type Starter = () => Promise<Stopper> | Stopper;
 
-export const getStartableStoppable = (
-  id: string,
-  startAndGetStopCallback: Starter,
-) => {
+export type SyncStopper = () => void;
+export type SyncStarter = () => SyncStopper;
+
+export interface SyncStartableStoppable {
+  readonly started: boolean;
+  start: () => void;
+  stop: () => void;
+}
+
+export interface StartableStoppable {
+  readonly started: boolean;
+  start: () => Promise<void>;
+  stop: () => Promise<void>;
+}
+
+type StartableStoppableState = "stopped" | "started" | "starting";
+
+export function getSyncStartableStoppable(id: string, syncStartAndGetSyncStopper: SyncStarter): SyncStartableStoppable {
   let stop: Stopper;
-  let stopped = false;
-  let started = false;
-  let starting = false;
+  let state: StartableStoppableState = "stopped";
+
+  return {
+    get started() {
+      return state === "started";
+    },
+
+    start: (): void | Promise<void> => {
+      if (state !== "stopped") {
+        throw new Error(`Tried to start "${id}", but it is already ${state}.`);
+      }
+
+      state = "starting";
+      stop = syncStartAndGetSyncStopper();
+      state = "started";
+    },
+
+    stop: (): void | Promise<void> => {
+      if (state !== "started") {
+        throw new Error(`Tried to stop "${id}", but it is already ${state}.`);
+      }
+
+      stop();
+      state = "stopped";
+    },
+  };
+}
+
+export function getStartableStoppable(id: string, startAndGetStopCallback: Starter): StartableStoppable {
+  let stop: Stopper;
+  let state: StartableStoppableState = "stopped";
   let startingPromise: Promise<Stopper> | Stopper;
 
   return {
     get started() {
-      return started;
+      return state === "started";
     },
 
     start: async () => {
-      if (starting) {
-        throw new Error(`Tried to start "${id}", but it is already being started.`);
+      if (state !== "stopped") {
+        throw new Error(`Tried to start "${id}", but it is already ${state}.`);
       }
 
-      starting = true;
-
-      if (started) {
-        throw new Error(`Tried to start "${id}", but it has already started.`);
-      }
-
+      state = "starting";
       startingPromise = startAndGetStopCallback();
       stop = await startingPromise;
-
-      stopped = false;
-      started = true;
-      starting = false;
+      state = "started";
     },
 
     stop: async () => {
+      if (state === "stopped") {
+        throw new Error(`Tried to stop "${id}", but it is already ${state}.`);
+      }
+
       await startingPromise;
-
-      if (stopped) {
-        throw new Error(`Tried to stop "${id}", but it has already stopped.`);
-      }
-
-      if (!started) {
-        throw new Error(`Tried to stop "${id}", but it has not started yet.`);
-      }
-
       await stop();
-
-      started = false;
-      stopped = true;
+      state = "stopped";
     },
   };
-};
+}

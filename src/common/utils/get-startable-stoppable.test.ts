@@ -4,14 +4,15 @@
  */
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { getStartableStoppable } from "./get-startable-stoppable";
+import type { StartableStoppable, SyncStartableStoppable } from "./get-startable-stoppable";
+import { getSyncStartableStoppable, getStartableStoppable } from "./get-startable-stoppable";
 import { getPromiseStatus } from "../test-utils/get-promise-status";
 import { flushPromises } from "../test-utils/flush-promises";
 
 describe("getStartableStoppable", () => {
   let stopMock: AsyncFnMock<() => Promise<void>>;
   let startMock: AsyncFnMock<() => Promise<() => Promise<void>>>;
-  let actual: { stop: () => Promise<void>; start: () => Promise<void>; started: boolean };
+  let actual: StartableStoppable;
 
   beforeEach(() => {
     stopMock = asyncFn();
@@ -29,7 +30,7 @@ describe("getStartableStoppable", () => {
   });
 
   it("when stopping before ever starting, throws", () => {
-    expect(actual.stop).rejects.toThrow("Tried to stop \"some-id\", but it has not started yet.");
+    expect(async () => actual.stop()).rejects.toThrow("Tried to stop \"some-id\", but it is already stopped.");
   });
 
   it("is not started", () => {
@@ -71,7 +72,7 @@ describe("getStartableStoppable", () => {
       });
 
       it("throws", () => {
-        expect(error.message).toBe("Tried to start \"some-id\", but it is already being started.");
+        expect(error.message).toBe("Tried to start \"some-id\", but it is already starting.");
       });
     });
 
@@ -91,7 +92,7 @@ describe("getStartableStoppable", () => {
       });
 
       it("when started again, throws", () => {
-        expect(actual.start).rejects.toThrow("Tried to start \"some-id\", but it has already started.");
+        expect(actual.start).rejects.toThrow("Tried to start \"some-id\", but it is already started.");
       });
 
       it("does not stop yet", () => {
@@ -135,7 +136,7 @@ describe("getStartableStoppable", () => {
           });
 
           it("when stopped again, throws", () => {
-            expect(actual.stop).rejects.toThrow("Tried to stop \"some-id\", but it has already stopped.");
+            expect(actual.stop).rejects.toThrow("Tried to stop \"some-id\", but it is already stopped.");
           });
 
           describe("when started again", () => {
@@ -229,6 +230,62 @@ describe("getStartableStoppable", () => {
             expect(promiseStatus.fulfilled).toBe(true);
           });
         });
+      });
+    });
+  });
+});
+
+describe("getSyncStartableStoppable", () => {
+  let stopMock: jest.MockedFunction<() => void>;
+  let startMock: jest.MockedFunction<() => () => void>;
+  let actual: SyncStartableStoppable;
+
+  beforeEach(() => {
+    stopMock = jest.fn();
+    startMock = jest.fn().mockImplementation(() => stopMock);
+    actual = getSyncStartableStoppable("some-id", startMock);
+  });
+
+  it("does not start yet", () => {
+    expect(startMock).not.toHaveBeenCalled();
+  });
+
+  it("does not stop yet", () => {
+    expect(stopMock).not.toHaveBeenCalled();
+  });
+
+  it("when stopping before ever starting, throws", () => {
+    expect(() => actual.stop()).toThrow("Tried to stop \"some-id\", but it is already stopped.");
+  });
+
+  it("is not started", () => {
+    expect(actual.started).toBe(false);
+  });
+
+  describe("when started", () => {
+    beforeEach(() => {
+      actual.start();
+    });
+
+    it("calls start function", () => {
+      expect(startMock).toHaveBeenCalled();
+    });
+
+    it("is started", () => {
+      expect(actual.started).toBe(true);
+    });
+
+    describe("when stopped", () => {
+      beforeEach(() => {
+        actual.stop();
+      });
+
+      it("calls stop function", () => {
+        expect(stopMock).toBeCalled();
+      });
+
+      it("is stopped", () => {
+        expect(actual.started).toBe(false);
       });
     });
   });
