@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { reaction } from "mobx";
-import { getStartableStoppable } from "../../../common/utils/get-startable-stoppable";
+import { getSyncStartableStoppable } from "../../../common/utils/get-startable-stoppable";
 import { setNativeThemeChannel } from "../../../common/ipc/native-theme";
 import operatingSystemThemeInjectable from "../operating-system-theme.injectable";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
@@ -16,7 +16,7 @@ const broadcastThemeChangeInjectable = getInjectable({
     const currentTheme = di.inject(operatingSystemThemeInjectable);
     const broadcastMessage = di.inject(broadcastMessageInjectable);
 
-    return getStartableStoppable("broadcast-theme-change", () =>
+    return getSyncStartableStoppable("broadcast-theme-change", () =>
       reaction(() => currentTheme.get(), (theme) => {
         broadcastMessage(setNativeThemeChannel, theme);
       }),

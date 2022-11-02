@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { startCatalogSyncToRenderer } from "../catalog-pusher";
-import { getStartableStoppable } from "../../common/utils/get-startable-stoppable";
+import { getSyncStartableStoppable } from "../../common/utils/get-startable-stoppable";
 import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
 
 const catalogSyncToRendererInjectable = getInjectable({
@@ -13,7 +13,7 @@ const catalogSyncToRendererInjectable = getInjectable({
   instantiate: (di) => {
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
 
-    return getStartableStoppable("catalog-sync", () =>
+    return getSyncStartableStoppable("catalog-sync", () =>
       startCatalogSyncToRenderer(catalogEntityRegistry),
     );
   },

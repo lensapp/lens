@@ -14,8 +14,8 @@ const startSyncingThemeFromOperatingSystemInjectable = getInjectable({
 
     return {
       id: "start-syncing-theme-from-operating-system",
-      run: async () => {
-        await syncTheme.start();
+      run: () => {
+        syncTheme.start();
       },
     };
   },

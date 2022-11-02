@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { reaction } from "mobx";
-import { getStartableStoppable } from "../../../common/utils/get-startable-stoppable";
+import { getSyncStartableStoppable } from "../../../common/utils/get-startable-stoppable";
 import electronTrayInjectable from "../electron-tray/electron-tray.injectable";
 import trayIconInjectable from "./tray-icon.injectable";
 
@@ -15,7 +15,7 @@ const reactiveTrayMenuIconInjectable = getInjectable({
     const trayMenuIcon = di.inject(trayIconInjectable);
     const electronTray = di.inject(electronTrayInjectable);
 
-    return getStartableStoppable("reactive-tray-menu-icon", () => (
+    return getSyncStartableStoppable("reactive-tray-menu-icon", () => (
       reaction(
         () => trayMenuIcon.get(),
         icon => {

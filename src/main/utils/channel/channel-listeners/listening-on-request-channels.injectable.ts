@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { disposer } from "../../../../common/utils";
 import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
-import { getStartableStoppable } from "../../../../common/utils/get-startable-stoppable";
+import { getSyncStartableStoppable } from "../../../../common/utils/get-startable-stoppable";
 import enlistRequestChannelListenerInjectable from "./enlist-request-channel-listener.injectable";
 import { requestChannelListenerInjectionToken } from "./listener-tokens";
 
@@ -15,7 +15,7 @@ const listeningOnRequestChannelsInjectable = getInjectable({
     const enlistRequestChannelListener = di.inject(enlistRequestChannelListenerInjectable);
     const requestChannelListeners = di.injectMany(requestChannelListenerInjectionToken);
 
-    return getStartableStoppable("listening-on-request-channels", () => {
+    return getSyncStartableStoppable("listening-on-request-channels", () => {
       const seenChannels = new Set<RequestChannel<unknown, unknown>>();
 
       for (const listener of requestChannelListeners) {

@@ -15,8 +15,8 @@ const startReactiveTrayMenuItemsInjectable = getInjectable({
 
     return {
       id: "start-reactive-tray-menu-items",
-      run: async () => {
-        await reactiveTrayMenuItems.start();
+      run: () => {
+        reactiveTrayMenuItems.start();
       },
 
       runAfter: di.inject(startTrayInjectable),

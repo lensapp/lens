@@ -14,8 +14,8 @@ const startBroadcastingThemeChangeInjectable = getInjectable({
 
     return {
       id: "start-broadcasting-theme-change",
-      run: async () => {
-        await broadcastThemeChange.start();
+      run: () => {
+        broadcastThemeChange.start();
       },
     };
   },
