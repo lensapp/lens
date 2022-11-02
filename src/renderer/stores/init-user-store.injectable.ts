@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
+import { initDefaultUpdateChannelOnRendererInjectable } from "../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
-import { initializeBuildVersionOnRendererInjectable } from "../vars/build-version.injectable";
 
 const initUserStoreInjectable = getInjectable({
   id: "init-user-store",
@@ -15,7 +15,7 @@ const initUserStoreInjectable = getInjectable({
     return {
       id: "init-user-store",
       run: () => userStore.load(),
-      runAfter: di.inject(initializeBuildVersionOnRendererInjectable),
+      runAfter: di.inject(initDefaultUpdateChannelOnRendererInjectable),
     };
   },
   injectionToken: beforeFrameStartsInjectionToken,
