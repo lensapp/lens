@@ -5,7 +5,6 @@
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
-import directoryForLensLocalStorageInjectable from "../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import routesInjectable from "../../renderer/routes/routes.injectable";
 import { matches } from "lodash/fp";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
@@ -34,10 +33,6 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
     applicationBuilder.beforeWindowStart((windowDi) => {
       windowDi.override(storageSaveDelayInjectable, () => 250);
-
-      windowDi.override(directoryForLensLocalStorageInjectable, () => ({
-        get: () => "/some-directory-for-lens-local-storage",
-      }));
     });
   });
 
@@ -175,7 +170,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           const writeJsonFileFake = windowDi.inject(writeJsonFileInjectable);
 
           await writeJsonFileFake(
-            "/some-directory-for-lens-local-storage/some-cluster-id.json",
+            "/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json",
             {
               sidebar: {
                 expanded: { "some-extension-name-some-parent-id": true },
@@ -211,7 +206,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           const writeJsonFileFake = windowDi.inject(writeJsonFileInjectable);
 
           await writeJsonFileFake(
-            "/some-directory-for-lens-local-storage/some-cluster-id.json",
+            "/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json",
             {
               sidebar: {
                 expanded: { "some-extension-name-some-unknown-parent-id": true },
@@ -241,7 +236,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
           const writeJsonFileFake = windowDi.inject(writeJsonFileInjectable);
 
           await writeJsonFileFake(
-            "/some-directory-for-lens-local-storage/some-cluster-id.json",
+            "/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json",
             {
               someThingButSidebar: {},
             },
@@ -387,7 +382,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
             const pathExistsFake = windowDi.inject(pathExistsInjectable);
 
             const actual = await pathExistsFake(
-              "/some-directory-for-lens-local-storage/some-cluster-id.json",
+              "/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json",
             );
 
             expect(actual).toBe(false);
@@ -399,7 +394,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
             const readJsonFileFake = windowDi.inject(readJsonFileInjectable);
 
             const actual = await readJsonFileFake(
-              "/some-directory-for-lens-local-storage/some-cluster-id.json",
+              "/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json",
             );
 
             expect(actual).toEqual({

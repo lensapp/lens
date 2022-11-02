@@ -14,7 +14,6 @@ import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
 import mockFs from "mock-fs";
-import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data.injectable";
 import type { Route } from "./route";
 import type { SetRequired } from "type-fest";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
@@ -22,6 +21,10 @@ import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 import fsInjectable from "../../common/fs/fs.injectable";
 import { runInAction } from "mobx";
+import { runManyFor } from "../../common/runnable/run-many-for";
+import { runManySyncFor } from "../../common/runnable/run-many-sync-for";
+import { beforeApplicationIsLoadingInjectionToken } from "../start-main-application/runnable-tokens/before-application-is-loading-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "../start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
 
 describe("router", () => {
   let router: Router;
@@ -39,12 +42,17 @@ describe("router", () => {
       payload: "some-payload",
       mime: "some-mime",
     }));
-    di.override(directoryForUserDataInjectable, () => ({
-      get: () => "some-directory-for-user-data",
-    }));
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
+
+    const runManySync = runManySyncFor(di);
+    const runMany = runManyFor(di);
+    const runAllBeforeElectronIsReady = runManySync(beforeElectronIsReadyInjectionToken);
+    const runAllBeforeApplicationIsLoading = runMany(beforeApplicationIsLoadingInjectionToken);
+
+    runAllBeforeElectronIsReady();
+    await runAllBeforeApplicationIsLoading();
 
     const injectable = getInjectable({
       id: "some-route",

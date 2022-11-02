@@ -14,7 +14,6 @@ import type { RequestCreateHelmRelease } from "../../../common/k8s-api/endpoints
 import requestCreateHelmReleaseInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
 import currentPathInjectable from "../../../renderer/routes/current-path.injectable";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
-import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import type { ReadJsonFile } from "../../../common/fs/read-json-file.injectable";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
@@ -52,9 +51,6 @@ describe("installing helm chart from new tab", () => {
     requestCreateHelmReleaseMock = asyncFn();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(directoryForLensLocalStorageInjectable, () => ({
-        get: () => "/some-directory-for-lens-local-storage",
-      }));
       windowDi.override(requestDetailedHelmReleaseInjectable, () => requestDetailedHelmReleaseMock);
       windowDi.override(requestHelmChartsInjectable, () => requestHelmChartsMock);
       windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
@@ -88,7 +84,7 @@ describe("installing helm chart from new tab", () => {
       const writeJsonFile = windowDi.inject(writeJsonFileInjectable);
 
       await writeJsonFile(
-        "/some-directory-for-lens-local-storage/some-cluster-id.json",
+        "/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json",
         {
           dock: {
             height: 300,
@@ -688,7 +684,7 @@ describe("installing helm chart from new tab", () => {
               });
 
               it("stores the selected version", async () => {
-                const actual = await readJsonFile("/some-directory-for-lens-local-storage/some-cluster-id.json");
+                const actual = await readJsonFile("/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json");
 
                 expect(actual).toMatchObject({
                   install_charts: {
@@ -765,7 +761,7 @@ describe("installing helm chart from new tab", () => {
               });
 
               it("stores the selected namespace", async () => {
-                const actual = await readJsonFile("/some-directory-for-lens-local-storage/some-cluster-id.json");
+                const actual = await readJsonFile("/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json");
 
                 expect(actual).toMatchObject({
                   install_charts: {
@@ -878,7 +874,7 @@ describe("installing helm chart from new tab", () => {
             });
 
             it("stores the changed configuration", async () => {
-              const actual = await readJsonFile("/some-directory-for-lens-local-storage/some-cluster-id.json");
+              const actual = await readJsonFile("/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json");
 
               expect(actual).toMatchObject({
                 install_charts: {
@@ -946,7 +942,7 @@ describe("installing helm chart from new tab", () => {
             });
 
             it("stores the changed custom name", async () => {
-              const actual = await readJsonFile("/some-directory-for-lens-local-storage/some-cluster-id.json");
+              const actual = await readJsonFile("/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json");
 
               expect(actual).toMatchObject({
                 install_charts: {

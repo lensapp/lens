@@ -8,9 +8,7 @@ import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import extensionDiscoveryInjectable from "../extension-discovery/extension-discovery.injectable";
 import type { ExtensionDiscovery } from "../extension-discovery/extension-discovery";
 import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
-import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data.injectable";
 import { delay } from "../../renderer/utils";
-import { observable, runInAction, when } from "mobx";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import watchInjectable from "../../common/fs/watch/watch.injectable";
@@ -19,6 +17,10 @@ import removePathInjectable from "../../common/fs/remove-path.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
+import { runManyFor } from "../../common/runnable/run-many-for";
+import { runManySyncFor } from "../../common/runnable/run-many-sync-for";
+import { beforeApplicationIsLoadingInjectionToken } from "../../main/start-main-application/runnable-tokens/before-application-is-loading-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "../../main/start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
 
 describe("ExtensionDiscovery", () => {
   let extensionDiscovery: ExtensionDiscovery;
@@ -28,14 +30,19 @@ describe("ExtensionDiscovery", () => {
   let joinPaths: JoinPaths;
   let homeDirectoryPath: string;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => ({
-      get: () => "/some-directory-for-user-data",
-    }));
     di.override(installExtensionInjectable, () => () => Promise.resolve());
     di.override(extensionApiVersionInjectable, () => "5.0.0");
+
+    const runManySync = runManySyncFor(di);
+    const runMany = runManyFor(di);
+    const runAllBeforeElectronIsReady = runManySync(beforeElectronIsReadyInjectionToken);
+    const runAllBeforeApplicationIsLoading = runMany(beforeApplicationIsLoadingInjectionToken);
+
+    runAllBeforeElectronIsReady();
+    await runAllBeforeApplicationIsLoading();
 
     joinPaths = di.inject(joinPathsInjectable);
     homeDirectoryPath = di.inject(homeDirectoryPathInjectable);
@@ -55,7 +62,6 @@ describe("ExtensionDiscovery", () => {
   });
 
   it("emits add for added extension", async () => {
-    const letTestFinish = observable.box(false);
     let addHandler!: (filePath: string) => void;
 
     readJsonFileMock.mockImplementation((p) => {
@@ -87,27 +93,27 @@ describe("ExtensionDiscovery", () => {
 
     await extensionDiscovery.watchExtensions();
 
-    extensionDiscovery.events.on("add", extension => {
-      expect(extension).toEqual({
-        absolutePath: expect.any(String),
-        id: "/some-directory-for-user-data/node_modules/my-extension/package.json",
-        isBundled: false,
-        isEnabled: false,
-        isCompatible: true,
-        manifest:  {
-          name: "my-extension",
-          version: "1.0.0",
-          engines: {
-            lens: "5.0.0",
-          },
-        },
-        manifestPath: "/some-directory-for-user-data/node_modules/my-extension/package.json",
-      });
-      runInAction(() => letTestFinish.set(true));
-    });
+    const onAdd = jest.fn();
+
+    extensionDiscovery.events.on("add", onAdd);
 
     addHandler(joinPaths(extensionDiscovery.localFolderPath, "/my-extension/package.json"));
-    await when(() => letTestFinish.get());
+    await delay(10);
+    expect(onAdd).toBeCalledWith({
+      absolutePath: "/some-home-directory/.k8slens/extensions/my-extension",
+      id: "/some-electron-app-path-for-user-data/node_modules/my-extension/package.json",
+      isBundled: false,
+      isEnabled: false,
+      isCompatible: true,
+      manifest:  {
+        name: "my-extension",
+        version: "1.0.0",
+        engines: {
+          lens: "5.0.0",
+        },
+      },
+      manifestPath: "/some-electron-app-path-for-user-data/node_modules/my-extension/package.json",
+    });
   });
 
   it("doesn't emit add for added file under extension", async () => {

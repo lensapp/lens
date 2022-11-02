@@ -5,8 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import userStoreFileNameMigrationInjectable from "../../common/user-store/file-name-migration.injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
+import { initDefaultUpdateChannelOnMainInjectable } from "../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "../start-main-application/runnable-tokens/before-application-is-loading-injection-token";
-import { initializeBuildVersionOnMainInjectable } from "../vars/build-version/build-version.injectable";
 
 const initUserStoreInjectable = getInjectable({
   id: "init-user-store",
@@ -20,7 +20,7 @@ const initUserStoreInjectable = getInjectable({
         await userStoreFileNameMigration();
         userStore.load();
       },
-      runAfter: di.inject(initializeBuildVersionOnMainInjectable),
+      runAfter: di.inject(initDefaultUpdateChannelOnMainInjectable),
     };
   },
   injectionToken: beforeApplicationIsLoadingInjectionToken,

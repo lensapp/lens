@@ -5,13 +5,15 @@
 
 import type { DiContainer } from "@ogre-tools/injectable";
 import { WebSocket } from "ws";
-import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
+import { runManyFor } from "../../../common/runnable/run-many-for";
+import { runManySyncFor } from "../../../common/runnable/run-many-sync-for";
 import platformInjectable from "../../../common/vars/platform.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import createKubectlInjectable from "../../kubectl/create-kubectl.injectable";
 import type { Kubectl } from "../../kubectl/kubectl";
-import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
+import { beforeApplicationIsLoadingInjectionToken } from "../../start-main-application/runnable-tokens/before-application-is-loading-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "../../start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
 import type { OpenShellSession } from "../create-shell-session.injectable";
 import type { SpawnPty } from "../spawn-pty.injectable";
 import spawnPtyInjectable from "../spawn-pty.injectable";
@@ -20,17 +22,18 @@ import openLocalShellSessionInjectable from "./open.injectable";
 describe("technical unit tests for local shell sessions", () => {
   let di: DiContainer;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     di = getDiForUnitTesting({
       doGeneralOverrides: true,
     });
 
-    di.override(directoryForUserDataInjectable, () => ({
-      get: () => "/some-directory-for-user-data",
-    }));
-    di.override(buildVersionInjectable, () => ({
-      get: () => "1.1.1",
-    }));
+    const runManySync = runManySyncFor(di);
+    const runMany = runManyFor(di);
+    const runAllBeforeElectronIsReady = runManySync(beforeElectronIsReadyInjectionToken);
+    const runAllBeforeApplicationIsLoading = runMany(beforeApplicationIsLoadingInjectionToken);
+
+    runAllBeforeElectronIsReady();
+    await runAllBeforeApplicationIsLoading();
   });
 
   describe("when on windows", () => {

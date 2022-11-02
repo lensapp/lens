@@ -12,8 +12,6 @@ import { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import getRandomInstallChartTabIdInjectable from "../../../renderer/components/dock/install-chart/get-random-install-chart-tab-id.injectable";
 import requestCreateHelmReleaseInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
 import { flushPromises } from "../../../common/test-utils/flush-promises";
-import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
-import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import type { RequestHelmCharts } from "../../../common/k8s-api/endpoints/helm-charts.api/request-charts.injectable";
 import type { RequestHelmChartVersions } from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
@@ -39,10 +37,6 @@ describe("opening dock tab for installing helm chart", () => {
     requestHelmChartValuesMock = jest.fn();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(directoryForLensLocalStorageInjectable, () => ({
-        get: () => "/some-directory-for-lens-local-storage",
-      }));
-      windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
       windowDi.override(requestHelmChartsInjectable, () => requestHelmChartsMock);
       windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
       windowDi.override(requestHelmChartReadmeInjectable, () => requestHelmChartReadmeMock);

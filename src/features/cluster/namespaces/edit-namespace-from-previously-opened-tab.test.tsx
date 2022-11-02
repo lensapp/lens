@@ -10,8 +10,6 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { CallForResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
 import callForResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
-import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
-import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-storage/storages-are-ready";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 import { TabKind } from "../../../renderer/components/dock/dock/store";
@@ -30,12 +28,6 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
     callForNamespaceMock = asyncFn();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(directoryForLensLocalStorageInjectable, () => ({
-        get: () => "/some-directory-for-lens-local-storage",
-      }));
-
-      windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
-
       storagesAreReady = controlWhenStoragesAreReady(windowDi);
 
       windowDi.override(callForResourceInjectable, () => callForNamespaceMock);
@@ -52,7 +44,7 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
         const writeJsonFile = windowDi.inject(writeJsonFileInjectable);
 
         await writeJsonFile(
-          "/some-directory-for-lens-local-storage/some-cluster-id.json",
+          "/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json",
           {
             dock: {
               height: 300,

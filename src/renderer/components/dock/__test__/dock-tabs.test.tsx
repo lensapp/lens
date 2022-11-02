@@ -14,9 +14,16 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import dockStoreInjectable from "../dock/store.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data.injectable";
 import assert from "assert";
 import hostedClusterIdInjectable from "../../../cluster-frame-context/hosted-cluster-id.injectable";
+import { beforeFrameStartsInjectionToken } from "../../../before-frame-starts/before-frame-starts-injection-token";
+import requestFromChannelInjectable from "../../../utils/channel/request-from-channel.injectable";
+import { appPathsChannel } from "../../../../common/app-paths/channel";
+import type { AppPaths } from "../../../../common/app-paths/token";
+import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import { runManyFor } from "../../../../common/runnable/run-many-for";
+import { syncBoxInitialValueChannel } from "../../../../common/utils/sync-box/channels";
+import { buildVersionChannel } from "../../../../common/vars/build-version/channel";
 
 jest.mock("electron", () => ({
   app: {
@@ -75,9 +82,43 @@ describe("<DockTabs />", () => {
     render = renderFor(di);
 
     di.override(hostedClusterIdInjectable, () => "some-cluster-id");
-    di.override(directoryForUserDataInjectable, () => ({
-      get: () => "/some-test-suite-specific-directory-for-user-data",
-    }));
+    di.override(requestFromChannelInjectable, () => async (channel: RequestChannel<any, any>) => {
+      if (channel === appPathsChannel) {
+        return {
+          appData: `/some-electron-app-path-for-app-data`,
+          home: `/some-electron-app-path-for-home`,
+          userData: `/some-electron-app-path-for-user-data`,
+          cache: `/some-electron-app-path-for-cache`,
+          temp: `/some-electron-app-path-for-temp`,
+          exe: `/some-electron-app-path-for-exe`,
+          module: `/some-electron-app-path-for-module`,
+          desktop: `/some-electron-app-path-for-desktop`,
+          documents: `/some-electron-app-path-for-documents`,
+          downloads: `/some-electron-app-path-for-downloads`,
+          music: `/some-electron-app-path-for-music`,
+          pictures: `/some-electron-app-path-for-pictures`,
+          videos: `/some-electron-app-path-for-videos`,
+          logs: `/some-electron-app-path-for-logs`,
+          crashDumps: `/some-electron-app-path-for-crash-dumps`,
+          recent: `/some-electron-app-path-for-recent`,
+        } as AppPaths;
+      }
+
+      if (channel === syncBoxInitialValueChannel) {
+        return [];
+      }
+
+      if (channel === buildVersionChannel) {
+        return "1.1.1";
+      }
+
+      throw new Error(`tried to request data from id="${channel.id}" without override`);
+    });
+
+    const runMany = runManyFor(di);
+    const runAllBeforeFrameStarts = runMany(beforeFrameStartsInjectionToken);
+
+    await runAllBeforeFrameStarts();
 
     dockStore = di.inject(dockStoreInjectable);
 

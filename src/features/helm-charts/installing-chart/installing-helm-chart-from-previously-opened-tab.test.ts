@@ -12,8 +12,6 @@ import getRandomInstallChartTabIdInjectable from "../../../renderer/components/d
 import namespaceStoreInjectable from "../../../renderer/components/+namespaces/store.injectable";
 import type { NamespaceStore } from "../../../renderer/components/+namespaces/store";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
-import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
-import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { TabKind } from "../../../renderer/components/dock/dock/store";
 import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-storage/storages-are-ready";
 import requestCreateHelmReleaseInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
@@ -39,10 +37,6 @@ describe("installing helm chart from previously opened tab", () => {
     builder.beforeWindowStart((windowDi) => {
       storagesAreReady = controlWhenStoragesAreReady(windowDi);
 
-      windowDi.override(directoryForLensLocalStorageInjectable, () => ({
-        get: () => "/some-directory-for-lens-local-storage",
-      }));
-      windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
       windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
       windowDi.override(requestHelmChartValuesInjectable, () => requestHelmChartValuesMock);
       windowDi.override(requestCreateHelmReleaseInjectable, () => jest.fn());
@@ -77,7 +71,7 @@ describe("installing helm chart from previously opened tab", () => {
         const writeJsonFile = windowDi.inject(writeJsonFileInjectable);
 
         await writeJsonFile(
-          "/some-directory-for-lens-local-storage/some-cluster-id.json",
+          "/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json",
           {
             dock: {
               height: 300,

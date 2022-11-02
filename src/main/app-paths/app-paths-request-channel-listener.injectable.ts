@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { appPathsChannel } from "../../common/app-paths/app-paths-channel";
+import { appPathsChannel } from "../../common/app-paths/channel";
 import { getRequestChannelListenerInjectable } from "../utils/channel/channel-listeners/listener-tokens";
 import appPathsInjectable from "./impl.injectable";
 

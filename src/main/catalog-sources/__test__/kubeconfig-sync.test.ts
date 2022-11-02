@@ -8,8 +8,6 @@ import type { CatalogEntity } from "../../../common/catalog";
 import { loadFromOptions } from "../../../common/kube-helpers";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data.injectable";
-import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp.injectable";
 import { iter, strictGet } from "../../../common/utils";
 import type { ComputeKubeconfigDiff } from "../kubeconfig-sync/compute-diff.injectable";
 import computeKubeconfigDiffInjectable from "../kubeconfig-sync/compute-diff.injectable";
@@ -33,6 +31,10 @@ import createReadFileStreamInjectable from "../../../common/fs/create-read-file-
 import kubectlBinaryNameInjectable from "../../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../../kubectl/normalized-arch.injectable";
 import normalizedPlatformInjectable from "../../../common/vars/normalized-platform.injectable";
+import { runManyFor } from "../../../common/runnable/run-many-for";
+import { runManySyncFor } from "../../../common/runnable/run-many-sync-for";
+import { beforeApplicationIsLoadingInjectionToken } from "../../start-main-application/runnable-tokens/before-application-is-loading-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "../../start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
 
 describe("kubeconfig-sync.source tests", () => {
   let computeKubeconfigDiff: ComputeKubeconfigDiff;
@@ -46,15 +48,17 @@ describe("kubeconfig-sync.source tests", () => {
 
     clusters = new Map();
     di.override(getClusterByIdInjectable, () => id => clusters.get(id));
-    di.override(directoryForUserDataInjectable, () => ({
-      get: () => "some-directory-for-user-data",
-    }));
-    di.override(directoryForTempInjectable, () => ({
-      get: () => "some-directory-for-temp",
-    }));
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
+
+    const runManySync = runManySyncFor(di);
+    const runMany = runManyFor(di);
+    const runAllBeforeElectronIsReady = runManySync(beforeElectronIsReadyInjectionToken);
+    const runAllBeforeApplicationIsLoading = runMany(beforeApplicationIsLoadingInjectionToken);
+
+    runAllBeforeElectronIsReady();
+    await runAllBeforeApplicationIsLoading();
 
     kubeconfigSyncs = observable.map();
 

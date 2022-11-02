@@ -21,8 +21,6 @@ import { Namespace } from "../../../common/k8s-api/endpoints";
 import showSuccessNotificationInjectable from "../../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../../renderer/components/notifications/show-error-notification.injectable";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
-import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
-import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-storage/storages-are-ready";
 
 describe("cluster/namespaces - edit namespace from new tab", () => {
@@ -45,12 +43,6 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
     showErrorNotificationMock = jest.fn();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(directoryForLensLocalStorageInjectable, () => ({
-        get: () => "/some-directory-for-lens-local-storage",
-      }));
-
-      windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
-
       storagesAreReady = controlWhenStoragesAreReady(windowDi);
 
       windowDi.override(
@@ -514,7 +506,7 @@ metadata:
                 );
 
                 const actual = (await readJsonFile(
-                  "/some-directory-for-lens-local-storage/some-cluster-id.json",
+                  "/some-electron-app-path-for-user-data/lens-local-storage/some-cluster-id.json",
                 )) as any;
 
                 expect(

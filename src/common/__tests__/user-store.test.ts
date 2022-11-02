@@ -26,14 +26,16 @@ import { Console } from "console";
 import { stdout, stderr } from "process";
 import userStoreInjectable from "../user-store/user-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import directoryForUserDataInjectable from "../app-paths/directory-for-user-data.injectable";
 import type { ClusterStoreModel } from "../cluster-store/cluster-store";
 import { defaultThemeId } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
-import releaseChannelInjectable from "../vars/release-channel.injectable";
+import { beforeApplicationIsLoadingInjectionToken } from "../../main/start-main-application/runnable-tokens/before-application-is-loading-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "../../main/start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
+import { runManyFor } from "../runnable/run-many-for";
+import { runManySyncFor } from "../runnable/run-many-sync-for";
 
 console = new Console(stdout, stderr);
 
@@ -47,18 +49,16 @@ describe("user store tests", () => {
     mockFs();
 
     di.override(writeFileInjectable, () => () => Promise.resolve());
-    di.override(directoryForUserDataInjectable, () => ({
-      get: () => "some-directory-for-user-data",
-    }));
+
     di.permitSideEffects(getConfigurationFileModelInjectable);
     di.permitSideEffects(userStoreInjectable);
 
-    di.override(releaseChannelInjectable, () => ({
-      get: () => "latest" as const,
-      init: async () => {},
-    }));
-
     di.unoverride(userStoreInjectable);
+
+    const runManySync = runManySyncFor(di);
+    const runAllBeforeElectronIsReady = runManySync(beforeElectronIsReadyInjectionToken);
+
+    runAllBeforeElectronIsReady();
   });
 
   afterEach(() => {
@@ -66,11 +66,15 @@ describe("user store tests", () => {
   });
 
   describe("for an empty config", () => {
-    beforeEach(() => {
-      mockFs({ "some-directory-for-user-data": { "config.json": "{}", "kube_config": "{}" }});
+    beforeEach(async () => {
+      mockFs({ "/some-electron-app-path-for-user-data": { "config.json": "{}", "kube_config": "{}" }});
 
       userStore = di.inject(userStoreInjectable);
-      userStore.load();
+
+      const runMany = runManyFor(di);
+      const runAllBeforeApplicationIsLoading = runMany(beforeApplicationIsLoadingInjectionToken);
+
+      await runAllBeforeApplicationIsLoading();
     });
 
     it("allows setting and retrieving lastSeenAppVersion", () => {
@@ -96,9 +100,9 @@ describe("user store tests", () => {
   });
 
   describe("migrations", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       mockFs({
-        "some-directory-for-user-data": {
+        "/some-electron-app-path-for-user-data": {
           "config.json": JSON.stringify({
             user: { username: "foobar" },
             preferences: { colorTheme: "light" },
@@ -108,7 +112,7 @@ describe("user store tests", () => {
             clusters: [
               {
                 id: "foobar",
-                kubeConfigPath: "some-directory-for-user-data/extension_data/foo/bar",
+                kubeConfigPath: "/some-electron-app-path-for-user-data/extension_data/foo/bar",
               },
               {
                 id: "barfoo",
@@ -128,15 +132,19 @@ describe("user store tests", () => {
       di.override(storeMigrationVersionInjectable, () => "10.0.0");
 
       userStore = di.inject(userStoreInjectable);
-      userStore.load();
+
+      const runMany = runManyFor(di);
+      const runAllBeforeApplicationIsLoading = runMany(beforeApplicationIsLoadingInjectionToken);
+
+      await runAllBeforeApplicationIsLoading();
     });
 
     it("sets last seen app version to 0.0.0", () => {
       expect(userStore.lastSeenAppVersion).toBe("0.0.0");
     });
 
-    it.only("skips clusters for adding to kube-sync with files under extension_data/", () => {
-      expect(userStore.syncKubeconfigEntries.has("some-directory-for-user-data/extension_data/foo/bar")).toBe(false);
+    it("skips clusters for adding to kube-sync with files under extension_data/", () => {
+      expect(userStore.syncKubeconfigEntries.has("/some-electron-app-path-for-user-data/extension_data/foo/bar")).toBe(false);
       expect(userStore.syncKubeconfigEntries.has("some/other/path")).toBe(true);
     });
   });

@@ -32,7 +32,9 @@ describe("InitializableState tests", () => {
       } = createInitializableState({
         id: "my-state",
         init: initMock,
-        when: null as any,
+        when: {
+          id: "some-id",
+        } as any,
       }));
 
       runInAction(() => {
@@ -49,14 +51,14 @@ describe("InitializableState tests", () => {
       });
 
       it("when get is called, throw", () => {
-        expect(() => state.get()).toThrowError("InitializableState(my-state) has not been initialized yet");
+        expect(() => state.get()).toThrowError("Cannot get value from \"my-state\"; it is currently in state=uninitialized");
       });
 
       describe("when init is called", () => {
         beforeEach(async () => {
           const initState = di.inject(initStateInjectable);
 
-          await initState.run();
+          initState.run();
         });
 
         it("should call provided initialization function", () => {
@@ -64,7 +66,7 @@ describe("InitializableState tests", () => {
         });
 
         it("when get is called, throw", () => {
-          expect(() => state.get()).toThrowError("InitializableState(my-state) has not finished initializing");
+          expect(() => state.get()).toThrowError("Cannot get value from \"my-state\"; it is currently in state=initializing");
         });
 
         describe("when initialization resolves", () => {
@@ -79,7 +81,7 @@ describe("InitializableState tests", () => {
           it("when init is called again, throws", async () => {
             const initState = di.inject(initStateInjectable);
 
-            await expect(() => initState.run()).rejects.toThrow("Cannot initialize InitializableState(my-state) more than once");
+            await expect(async () => initState.run()).rejects.toThrow("Cannot start initializing value for \"my-state\"; it is currently in state=initialized");
           });
         });
       });

@@ -6,6 +6,7 @@ import type { DiContainerForInjection, InjectionToken } from "@ogre-tools/inject
 import type { Composite } from "../utils/composite/get-composite/get-composite";
 import { getCompositeFor } from "../utils/composite/get-composite/get-composite";
 import * as uuid from "uuid";
+import assert from "assert";
 
 export interface RunnableSync<TParameter = void> {
   id: string;
@@ -18,7 +19,7 @@ type RunSync<Param> = (parameter: Param) => void;
 export type RunManySync = <Param>(injectionToken: InjectionToken<RunnableSync<Param>, void>) => RunSync<Param>;
 
 function runCompositeRunnableSyncs<Param>(param: Param, composite: Composite<RunnableSync<Param>>) {
-  composite.value.run(param);
+  assert(!((composite.value.run(param) as any) instanceof Promise), "Cannot be an async function for runnable sync");
   composite.children.map(composite => runCompositeRunnableSyncs(param, composite));
 }
 

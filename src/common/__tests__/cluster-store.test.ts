@@ -15,16 +15,18 @@ import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { CreateCluster } from "../cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
-import directoryForUserDataInjectable from "../app-paths/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import assert from "assert";
-import directoryForTempInjectable from "../app-paths/directory-for-temp.injectable";
 import kubectlBinaryNameInjectable from "../../main/kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../../main/kubectl/normalized-arch.injectable";
 import normalizedPlatformInjectable from "../vars/normalized-platform.injectable";
 import fsInjectable from "../fs/fs.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
+import { beforeApplicationIsLoadingInjectionToken } from "../../main/start-main-application/runnable-tokens/before-application-is-loading-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "../../main/start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
+import { runManyFor } from "../runnable/run-many-for";
+import { runManySyncFor } from "../runnable/run-many-sync-for";
 
 console = new Console(stdout, stderr);
 
@@ -86,12 +88,14 @@ describe("cluster-store", () => {
 
     mockFs();
 
-    mainDi.override(directoryForUserDataInjectable, () => ({
-      get: () => "some-directory-for-user-data",
-    }));
-    mainDi.override(directoryForTempInjectable, () => ({
-      get: () => "some-directory-for-temp",
-    }));
+    const runManySync = runManySyncFor(mainDi);
+    const runMany = runManyFor(mainDi);
+    const runAllBeforeElectronIsReady = runManySync(beforeElectronIsReadyInjectionToken);
+    const runAllBeforeApplicationIsLoading = runMany(beforeApplicationIsLoadingInjectionToken);
+
+    runAllBeforeElectronIsReady();
+    await runAllBeforeApplicationIsLoading();
+
     mainDi.override(kubectlBinaryNameInjectable, () => "kubectl");
     mainDi.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     mainDi.override(normalizedPlatformInjectable, () => "darwin");
@@ -213,7 +217,7 @@ describe("cluster-store", () => {
     beforeEach(() => {
       const mockOpts = {
         "temp-kube-config": kubeconfig,
-        "some-directory-for-user-data": {
+        "/some-electron-app-path-for-user-data": {
           "lens-cluster-store.json": JSON.stringify({
             __internal__: {
               migrations: {
@@ -304,7 +308,7 @@ users:
       const mockOpts = {
         "invalid-kube-config": invalidKubeconfig,
         "valid-kube-config": kubeconfig,
-        "some-directory-for-user-data": {
+        "/some-electron-app-path-for-user-data": {
           "lens-cluster-store.json": JSON.stringify({
             __internal__: {
               migrations: {
@@ -352,7 +356,7 @@ users:
   describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     beforeEach(() => {
       const mockOpts = {
-        "some-directory-for-user-data": {
+        "/some-electron-app-path-for-user-data": {
           "lens-cluster-store.json": JSON.stringify({
             __internal__: {
               migrations: {
