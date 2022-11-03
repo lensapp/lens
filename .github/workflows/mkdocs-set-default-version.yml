@@ -13,26 +13,24 @@ jobs:
       - name: Set up Python 3.7
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install git+https://${{ secrets.GH_TOKEN }}@github.com/lensapp/mkdocs-material-insiders.git
           pip install mike
-          
+
       - name: Checkout Release from lens
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: git config
         run: |
-           git config --local user.email "action@github.com"
-           git config --local user.name "GitHub Action"
-
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
 
       - name: mkdocs update default version
         run: |
-           mike set-default --push ${{ github.event.inputs.version }}
-           
+          mike set-default --push ${{ github.event.inputs.version }}
