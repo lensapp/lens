@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
+import { hasTypedProperty, isObject, isString } from "../../../../common/utils";
 import { getStartableStoppable } from "../../../../common/utils/get-startable-stoppable";
 import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
 import exitAppInjectable from "../../../electron-app/features/exit-app.injectable";
@@ -11,6 +12,14 @@ import showErrorPopupInjectable from "../../../electron-app/features/show-error-
 import lensProxyInjectable from "../../../lens-proxy/lens-proxy.injectable";
 import buildVersionInjectable from "../../../vars/build-version/build-version.injectable";
 import requestAppVersionViaProxyInjectable from "./request-app-version.injectable";
+
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (isObject(error) && hasTypedProperty(error, "message", isString)) {
+    return error.message;
+  }
+
+  return fallback;
+};
 
 const setupLensProxyStartableStoppableInjectable = getInjectable({
   id: "setup-lens-proxy-startable-stoppable",
@@ -30,10 +39,13 @@ const setupLensProxyStartableStoppableInjectable = getInjectable({
         try {
           logger.info("🔌 Starting LensProxy");
           await lensProxy.listen({ signal: controller.signal }); // lensProxy.port available
-        } catch (error: any) {
-          showErrorPopup("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
+        } catch (error) {
+          if (!controller.signal.aborted) {
+            showErrorPopup("Lens Error", `Could not start proxy: ${getErrorMessage(error, "unknown error")}`);
+            exitApp();
+          }
 
-          return exitApp();
+          return;
         }
 
         // test proxy connection
@@ -49,6 +61,10 @@ const setupLensProxyStartableStoppableInjectable = getInjectable({
 
           logger.info("⚡ LensProxy connection OK");
         } catch (error) {
+          if (controller.signal.aborted) {
+            return;
+          }
+
           logger.error(`🛑 LensProxy: failed connection test: ${error}`);
 
           const hostsPath = isWindows
