@@ -30,7 +30,7 @@ describe("preferences - navigation to kubernetes preferences", () => {
         mainDi.override(
           getActiveHelmRepositoriesInjectable,
           () => async () => ({ callWasSuccessful: true, response: [] }),
-        );
+        );requestPublicHelmRepositoriesInjectable;
       });
 
       builder.beforeWindowStart((windowDi) => {

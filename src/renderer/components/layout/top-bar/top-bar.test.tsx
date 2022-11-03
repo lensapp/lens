@@ -11,17 +11,17 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import { computed, observable } from "mobx";
+import { computed } from "mobx";
 import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
 import closeWindowInjectable from "./top-bar-items/window-controls/close-window/close-window.injectable";
 import goBackInjectable from "./top-bar-items/navigation-to-back/go-back/go-back.injectable";
 import maximizeWindowInjectable from "./top-bar-items/window-controls/maximize-window/maximize-window.injectable";
 import openAppContextMenuInjectable from "./top-bar-items/context-menu/open-app-context-menu/open-app-context-menu.injectable";
 import toggleMaximizeWindowInjectable from "./toggle-maximize-window/toggle-maximize-window.injectable";
-import topBarStateInjectable from "./state.injectable";
 import platformInjectable from "../../../../common/vars/platform.injectable";
 import goForwardInjectable from "./top-bar-items/navigation-to-forward/go-forward/go-forward.injectable";
 import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";
+import topBarStateInjectable from "../../../../features/top-bar/common/state.injectable";
 
 describe("<TopBar/>", () => {
   let di: DiContainer;
@@ -50,10 +50,10 @@ describe("<TopBar/>", () => {
 
   describe("with both previous and next history enabled", () => {
     beforeEach(() => {
-      di.override(topBarStateInjectable, () => observable.object({
+      di.inject(topBarStateInjectable).set({
         prevEnabled: true,
         nextEnabled: true,
-      }));
+      });
     });
 
     it("renders w/o errors", () => {

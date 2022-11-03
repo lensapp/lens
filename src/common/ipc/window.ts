@@ -5,7 +5,6 @@
 
 export const windowActionHandleChannel = "window:window-action";
 export const windowOpenAppMenuAsContextMenuChannel = "window:open-app-context-menu";
-export const windowLocationChangedChannel = "window:location-changed";
 
 /**
  * The supported actions on the current window. The argument for `windowActionHandleChannel`

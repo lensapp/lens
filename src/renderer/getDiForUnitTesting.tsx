@@ -12,9 +12,7 @@ import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
 import { runInAction } from "mobx";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
-import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
-import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
 import applicationInformationInjectable from "../common/vars/application-information-injectable";
@@ -60,21 +58,11 @@ export const getDiForUnitTesting = (
       di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
     }
 
-    [
-      startTopbarStateSyncInjectable,
-    ].forEach((injectable) => {
-      di.override(injectable, () => ({
-        id: injectable.id,
-        run: () => {},
-      }));
-    });
-
     di.override(hostedClusterIdInjectable, () => undefined);
 
     di.override(legacyOnChannelListenInjectable, () => () => noop);
 
     di.override(requestAnimationFrameInjectable, () => (callback) => callback());
-    di.override(watchHistoryStateInjectable, () => () => () => {});
 
     di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));
 

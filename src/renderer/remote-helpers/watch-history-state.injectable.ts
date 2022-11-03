@@ -4,23 +4,22 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
-import { emitWindowLocationChanged } from "../ipc";
 import { reaction } from "mobx";
 import observableHistoryInjectable from "../navigation/observable-history.injectable";
+import emitWindowLocationChangedInjectable from "../../features/window-location/renderer/emit.injectable";
 
 const watchHistoryStateInjectable = getInjectable({
   id: "watch-history-state",
 
   instantiate: (di) => {
     const observableHistory = di.inject(observableHistoryInjectable);
+    const emitWindowLocationChanged = di.inject(emitWindowLocationChangedInjectable);
 
     return () => reaction(
       () => observableHistory.location,
       emitWindowLocationChanged,
     );
   },
-
-  causesSideEffects: true,
 });
 
 export default watchHistoryStateInjectable;

@@ -3,24 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window.injectable";
+import type { ContentSource, ElectronWindow, ElectronWindowTitleBarStyle, SendToViewArgs } from "./create-electron-window.injectable";
 import createElectronWindowForInjectable from "./create-electron-window.injectable";
-import type { ClusterFrameInfo } from "../../../../common/cluster-frames";
-
-export interface ElectronWindow {
-  show: () => void;
-  close: () => void;
-  send: (args: SendToViewArgs) => void;
-  loadFile: (filePath: string) => Promise<void>;
-  loadUrl: (url: string) => Promise<void>;
-  reload: () => void;
-}
-
-export interface SendToViewArgs {
-  channel: string;
-  frameInfo?: ClusterFrameInfo;
-  data?: unknown;
-}
 
 export interface LensWindow {
   id: string;
@@ -31,6 +15,8 @@ export interface LensWindow {
   isVisible: boolean;
   isStarting: boolean;
   reload: () => void;
+  canGoBack: () => boolean;
+  canGoForward: () => boolean;
 }
 
 export interface LensWindowConfiguration {
@@ -78,15 +64,14 @@ const createLensWindowInjectable = getInjectable({
 
       return {
         id: configuration.id,
-
         get isVisible() {
           return windowIsShown;
         },
-
         get isStarting() {
           return windowIsStarting;
         },
-
+        canGoBack: () => Boolean(browserWindow?.canGoBack()),
+        canGoForward: () => Boolean(browserWindow?.canGoForward()),
         start: async () => {
           if (!browserWindow) {
             windowIsStarting = true;
