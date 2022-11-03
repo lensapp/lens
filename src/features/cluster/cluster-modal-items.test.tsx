@@ -2,18 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { Injectable } from "@ogre-tools/injectable";
-import { getInjectable } from "@ogre-tools/injectable";
-import type { RenderResult } from "@testing-library/react";
+import { act, RenderResult } from "@testing-library/react";
 import type { IObservableValue } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import React from "react";
-import type { ClusterModalRegistration } from "../../extensions/registries";
-import { clusterModalsInjectionToken } from "../../renderer/cluster-modals/cluster-modals-injection-token";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
-describe("<body/> elements originated from cluster modal registration", () => {
+describe("<body/> elements originated from cluster frame component registration", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
@@ -24,48 +20,32 @@ describe("<body/> elements originated from cluster modal registration", () => {
 
   describe("given custom components for cluster view available", () => {
     let someObservable: IObservableValue<boolean>;
-    let clusterModalInjectable: Injectable<ClusterModalRegistration, any, any>;
-    let clusterDialogInjectable: Injectable<ClusterModalRegistration, any, any>;
   
     beforeEach(async () => {
       someObservable = observable.box(false);
 
-      clusterModalInjectable = getInjectable({
-        id: "some-cluster-modal-injectable",
-      
-        instantiate: () => {
-          return {
-            id: "test-modal-id",
-            Component: () => <div data-testid="test-modal">test modal</div>,
-            visible: computed(() => true),
-          };
-        },
-      
-        injectionToken: clusterModalsInjectionToken,
-      });
+      const testExtension = {
+        id: "some-extension-id",
+        name: "some-extension-name",
 
-      clusterDialogInjectable = getInjectable({
-        id: "dialog-with-observable-visibility-injectable",
-      
-        instantiate: () => {
-          return {
-            id: "dialog-with-observable-visibility-id",
-            Component: () => <div data-testid="dialog-with-observable-visibility">dialog contents</div>,
-            visible: computed(() => someObservable.get()),
-          };
+        rendererOptions: {
+          clusterFrameComponents: [
+            {
+              id: "test-modal-id",
+              Component: () => <div data-testid="test-modal">test modal</div>,
+              shouldRender: computed(() => true),
+            },
+            {
+              id: "dialog-with-observable-visibility-id",
+              Component: () => <div data-testid="dialog-with-observable-visibility">dialog contents</div>,
+              shouldRender: computed(() => someObservable.get()),
+            }
+          ]
         },
-      
-        injectionToken: clusterModalsInjectionToken,
-      });
-
-      builder.beforeWindowStart((windowDi) => {
-        runInAction(() => {
-          windowDi.register(clusterModalInjectable);
-          windowDi.register(clusterDialogInjectable);
-        });
-      });
+      };
 
       rendered = await builder.render();
+      builder.extensions.enable(testExtension);
     });
 
     it("renders", () => {
@@ -86,28 +66,12 @@ describe("<body/> elements originated from cluster modal registration", () => {
 
     it("when injectable component becomes visible, shows it", () => {
       runInAction(() => {
-        someObservable.set(true);
+        act(() => someObservable.set(true));
       });
 
       const dialog = rendered.getByTestId("dialog-with-observable-visibility");
 
       expect(dialog).toBeInTheDocument();
-    });
-  });
-
-  describe("given custom component for cluster view not available", () => {
-    beforeEach(async () => {
-      rendered = await builder.render();
-    });
-
-    it("renders", () => {
-      expect(rendered.container).toMatchSnapshot();
-    });
-
-    it("doesn't render any custom html", () => {
-      const modal = rendered.queryByTestId("test-modal");
-
-      expect(modal).not.toBeInTheDocument();
     });
   });
 });
