@@ -10,4 +10,3 @@ export * from "./page-menu-registry";
 export * from "./entity-setting-registry";
 export * from "./catalog-entity-detail-registry";
 export * from "./protocol-handler";
-export * from "./modal-registry";

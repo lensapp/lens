@@ -14,4 +14,3 @@ export type { CustomCategoryViewProps, CustomCategoryViewComponents, CustomCateg
 export type { ShellEnvModifier, ShellEnvContext } from "../../main/shell-session/shell-env-modifier/shell-env-modifier-registration";
 export type { KubeObjectContextMenuItem, KubeObjectOnContextMenuOpenContext, KubeObjectOnContextMenuOpen, KubeObjectHandlers, KubeObjectHandlerRegistration } from "../../renderer/kube-object/handler";
 export type { TrayMenuRegistration } from "../../main/tray/tray-menu-registration";
-export type { ClusterModalRegistration } from "../registries/modal-registry";
