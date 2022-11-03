@@ -22,6 +22,10 @@ import type { GetClusterForRequest } from "../cluster/get-cluster-for-request.in
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
 export type ProxyRequestHandler = (args: ProxyApiRequestArgs) => void | Promise<void>;
 
+export interface ListenOptions {
+  signal: AbortSignal;
+}
+
 interface Dependencies {
   getClusterForRequest: GetClusterForRequest;
   shellApiRequest: ProxyRequestHandler;
@@ -108,9 +112,13 @@ export class LensProxy {
    *
    * Resolves with the port number that was picked
    */
-  private attemptToListen(): Promise<number> {
+  private attemptToListen(options: ListenOptions): Promise<number> {
     return new Promise<number>((resolve, reject) => {
       this.proxyServer.listen(0, "127.0.0.1");
+
+      options.signal.addEventListener("abort", () => {
+        this.close();
+      });
 
       this.proxyServer
         .once("listening", () => {
@@ -140,12 +148,12 @@ export class LensProxy {
    * @resolves After the server is listening on a good port
    * @rejects if there is an error before that happens
    */
-  async listen(): Promise<void> {
+  async listen(options: ListenOptions): Promise<void> {
     const seenPorts = new Set<number>();
 
     while(true) {
       this.proxyServer?.close();
-      const port = await this.attemptToListen();
+      const port = await this.attemptToListen(options);
 
       if (!disallowedPorts.has(port)) {
         // We didn't get a port that would result in an ERR_UNSAFE_PORT error, use it
