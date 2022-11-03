@@ -96,7 +96,7 @@ export class DistributionDetector extends BaseClusterDetector {
   }
 
   public async getKubernetesVersion() {
-    const response = await this.k8sRequest("/version");
+    const response = await this.k8sRequest("/version") as { gitVersion: string };
 
     return response.gitVersion;
   }
@@ -179,7 +179,7 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected async isOpenshift() {
     try {
-      const response = await this.k8sRequest("");
+      const response = await this.k8sRequest("") as { paths?: string[] };
 
       return response.paths?.includes("/apis/project.openshift.io");
     } catch (e) {

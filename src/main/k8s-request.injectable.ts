@@ -2,36 +2,21 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { RequestPromiseOptions } from "request-promise-native";
-import request from "request-promise-native";
+import { apiKubePrefix } from "../common/vars";
 import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";
-import lensProxyPortInjectable from "./lens-proxy/lens-proxy-port.injectable";
-import lensProxyCertificateInjectable from "../common/certificate/lens-proxy-certificate.injectable";
+import type { RequestInit } from "node-fetch";
+import lensFetchInjectable from "../common/fetch/lens-fetch.injectable";
 
-export type K8sRequest = (cluster: Cluster, path: string, options?: RequestPromiseOptions) => Promise<any>;
+export type K8sRequest = (cluster: Cluster, path: string, options?: RequestInit) => Promise<unknown>;
 
 const k8sRequestInjectable = getInjectable({
   id: "k8s-request",
 
-  instantiate: (di) => {
-    const lensProxyPort = di.inject(lensProxyPortInjectable);
-    const lensProxyCertificate = di.inject(lensProxyCertificateInjectable);
+  instantiate: (di): K8sRequest => {
+    const lensFetch = di.inject(lensFetchInjectable);
 
-    return async (
-      cluster: Cluster,
-      path: string,
-      options: RequestPromiseOptions = {},
-    ) => {
-      const kubeProxyUrl = `https://127.0.0.1:${lensProxyPort.get()}/${cluster.id}`;
-
-      options.ca = lensProxyCertificate.get().cert;
-      options.headers ??= {};
-      options.json ??= true;
-      options.timeout ??= 30000;
-
-      return request(kubeProxyUrl + path, options);
-    };
+    return async (cluster, path, init) => lensFetch(`/${cluster.id}${apiKubePrefix}${path}`, init);
   },
 });
 

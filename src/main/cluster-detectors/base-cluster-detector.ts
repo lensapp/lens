@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { RequestPromiseOptions } from "request-promise-native";
+import type { RequestInit } from "node-fetch";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { K8sRequest } from "../k8s-request.injectable";
 
@@ -19,7 +19,7 @@ export abstract class BaseClusterDetector {
 
   abstract detect(): Promise<ClusterDetectionResult | null>;
 
-  protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
+  protected async k8sRequest(path: string, options?: RequestInit): Promise<unknown> {
     return this._k8sRequest(this.cluster, path, options);
   }
 }

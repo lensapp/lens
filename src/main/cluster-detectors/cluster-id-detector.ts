@@ -24,7 +24,7 @@ export class ClusterIdDetector extends BaseClusterDetector {
   }
 
   protected async getDefaultNamespaceId() {
-    const response = await this.k8sRequest("/api/v1/namespaces/default");
+    const response = await this.k8sRequest("/api/v1/namespaces/default") as { metadata: { uid: string }};
 
     return response.metadata.uid;
   }
