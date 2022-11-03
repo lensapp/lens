@@ -8,6 +8,9 @@ import getBasenameOfPathInjectable from "../../../common/path/get-basename.injec
 import spawnInjectable from "../../child-process/spawn.injectable";
 import randomUUIDInjectable from "../../crypto/random-uuid.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import processExecPathInjectable from "./execPath.injectable";
+import processEnvInjectable from "./env.injectable";
+import { object } from "../../../common/utils";
 
 export interface UnixShellEnvOptions {
   signal: AbortSignal;
@@ -15,17 +18,26 @@ export interface UnixShellEnvOptions {
 
 export type ComputeUnixShellEnvironment = (shell: string, opts: UnixShellEnvOptions) => Promise<EnvironmentVariables>;
 
-const getResetProcessEnv = (src: Partial<Record<string, string>>, names: string[]): ((target: Partial<Record<string, string>>) => void) => {
-  const pairs = names.map(name => ([name, src[name]] as const));
+const getResetProcessEnv = (src: Partial<Record<string, string>>, overrides: Partial<Record<string, string>>): {
+  resetEnvPairs: (target: Partial<Record<string, string>>) => void;
+  env: Partial<Record<string, string>>;
+} => {
+  const originals = object.entries(overrides).map(([name]) => [name, src[name]] as const);
 
-  return (target) => {
-    for (const [name, orginalValue] of pairs) {
-      if (orginalValue) {
-        target[name] = orginalValue;
-      } else {
-        delete target[name];
+  return {
+    env: {
+      ...src,
+      ...overrides,
+    },
+    resetEnvPairs: (target) => {
+      for (const [name, orginalValue] of originals) {
+        if (orginalValue) {
+          target[name] = orginalValue;
+        } else {
+          delete target[name];
+        }
       }
-    }
+    },
   };
 };
 
@@ -40,54 +52,52 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
     const spawn = di.inject(spawnInjectable);
     const logger = di.inject(loggerInjectable);
     const randomUUID = di.inject(randomUUIDInjectable);
+    const processExecPath = di.inject(processExecPathInjectable);
+    const processEnv = di.inject(processEnvInjectable);
 
-    const getShellSpecifices = (shellName: string, mark: string) => {
+    const getShellSpecifices = (shellName: string) => {
+      const mark = randomUUID().replace(/-/g, "");
+      const regex = new RegExp(`${mark}(\\{.*\\})${mark}`);
+
       if (powerShellName.test(shellName)) {
         // Older versions of PowerShell removes double quotes sometimes so we use "double single quotes" which is how
         // you escape single quotes inside of a single quoted string.
         return {
-          command: `Command '${process.execPath}' -p '\\"${mark}\\" + JSON.stringify(process.env) + \\"${mark}\\"'`,
+          command: `Command '${processExecPath}' -p '\\"${mark}\\" + JSON.stringify(process.env) + \\"${mark}\\"'`,
           shellArgs: ["-Login"],
+          regex,
         };
       }
 
-      return {
-        command: `'${process.execPath}' -p '"${mark}" + JSON.stringify(process.env) + "${mark}"'`,
-        shellArgs: cshLikeShellName.test(shellName) || fishLikeShellName.test(shellName)
-          // Some shells don't support any other options when providing the -l (login) shell option
-          ? ["-l"]
-          // zsh (at least, maybe others) don't load RC files when in non-interactive mode, even when using -l (login) option
-          : ["-li"],
-      };
+      let command = `'${processExecPath}' -p '"${mark}" + JSON.stringify(process.env) + "${mark}"'`;
+      const shellArgs = ["-l"];
+
+      if (fishLikeShellName.test(shellName)) {
+        shellArgs.push("-c", command);
+        command = "";
+      } else if (!cshLikeShellName.test(shellName)) {
+        // zsh (at least, maybe others) don't load RC files when in non-interactive mode, even when using -l (login) option
+        shellArgs.push("-i");
+      } else {
+        // Some shells don't support any other options when providing the -l (login) shell option
+      }
+
+      return { command, shellArgs, regex };
     };
 
 
     return async (shellPath, opts) => {
-      const resetEnvPairs = getResetProcessEnv(process.env, [
-        "ELECTRON_RUN_AS_NODE",
-        "ELECTRON_NO_ATTACH_CONSOLE",
-        "TERM",
-      ]);
-      const env = {
-        ...process.env,
+      const { resetEnvPairs, env } = getResetProcessEnv(processEnv, {
         ELECTRON_RUN_AS_NODE: "1",
         ELECTRON_NO_ATTACH_CONSOLE: "1",
         TERM: "screen-256color-bce", // required for fish
-      };
-      const mark = randomUUID().replace(/-/g, "");
-      const regex = new RegExp(`${mark}(\\{.*\\})${mark}`);
-      const { command, shellArgs } = getShellSpecifices(shellPath, mark);
+      });
+      const shellName = getBasenameOfPath(shellPath);
+      const { command, shellArgs, regex } = getShellSpecifices(shellName);
 
       logger.info(`[UNIX-SHELL-ENV]: running against ${shellPath}`, { command, shellArgs });
 
       return new Promise((resolve, reject) => {
-        const shellName = getBasenameOfPath(shellPath);
-        const isFishShellLike = fishLikeShellName.test(shellName);
-
-        if (isFishShellLike) {
-          shellArgs.push("-c", command);
-        }
-
         const shellProcess = spawn(shellPath, shellArgs, {
           signal: opts.signal,
           env,
@@ -122,11 +132,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
           }
         });
 
-        if (isFishShellLike) {
-          shellProcess.stdin.end();
-        } else {
-          shellProcess.stdin.end(command);
-        }
+        shellProcess.stdin.end(command);
       });
     };
   },
