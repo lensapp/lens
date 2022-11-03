@@ -11,12 +11,13 @@ import loggerInjectable from "../../../common/logger.injectable";
 import processExecPathInjectable from "./execPath.injectable";
 import processEnvInjectable from "./env.injectable";
 import { object } from "../../../common/utils";
+import type { AsyncResult } from "../../../common/utils/async-result";
 
 export interface UnixShellEnvOptions {
   signal: AbortSignal;
 }
 
-export type ComputeUnixShellEnvironment = (shell: string, opts: UnixShellEnvOptions) => Promise<EnvironmentVariables>;
+export type ComputeUnixShellEnvironment = (shell: string, opts: UnixShellEnvOptions) => Promise<AsyncResult<EnvironmentVariables, string>>;
 
 const getResetProcessEnv = (src: Partial<Record<string, string>>, overrides: Partial<Record<string, string>>): {
   resetEnvPairs: (target: Partial<Record<string, string>>) => void;
@@ -111,9 +112,17 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
         shellProcess.on("error", (err) => reject(err));
         shellProcess.on("close", (code, signal) => {
           if (code || signal) {
-            return reject(Object.assign(new Error(`Unexpected return code from spawned shell (code: ${code}, signal: ${signal})`), {
+            const context = {
+              code,
+              signal,
+              stdout: Buffer.concat(stdout).toString("utf-8"),
               stderr: Buffer.concat(stderr).toString("utf-8"),
-            }));
+            };
+
+            return resolve({
+              callWasSuccessful: false,
+              error: `Shell did not exit sucessfully: ${JSON.stringify(context, null, 4)}`,
+            });
           }
 
           try {
@@ -123,12 +132,18 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
 
             const match = regex.exec(rawOutput);
             const strippedRawOutput = match ? match[1] : "{}";
-            const resolvedEnv = JSON.parse(strippedRawOutput);
+            const resolvedEnv = JSON.parse(strippedRawOutput) as Partial<Record<string, string>>;
 
             resetEnvPairs(resolvedEnv);
-            resolve(resolvedEnv);
+            resolve({
+              callWasSuccessful: true,
+              response: resolvedEnv,
+            });
           } catch (err) {
-            reject(err);
+            resolve({
+              callWasSuccessful: false,
+              error: String(err),
+            });
           }
         });
 
