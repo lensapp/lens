@@ -16,7 +16,6 @@ import computeUnixShellEnvironmentInjectable from "./compute-unix-shell-environm
 import processEnvInjectable from "./env.injectable";
 import processExecPathInjectable from "./execPath.injectable";
 import MemoryStream from "memorystream";
-import type { EnvironmentVariables } from "./compute-shell-environment.injectable";
 
 const expectedEnv = {
   SOME_ENV_VAR: "some-env-value",
@@ -34,7 +33,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
   let shellStdin: MemoryStream;
   let shellStdout: MemoryStream;
   let shellStderr: MemoryStream;
-  let unixShellEnv: Promise<EnvironmentVariables>;
+  let unixShellEnv: ReturnType<ComputeUnixShellEnvironment>;
 
   beforeEach(() => {
     di = getDiForUnitTesting({
@@ -121,8 +120,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("error", new Error("some-error"));
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("some-error");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: `Failed to spawn ${shellPath}: Error: some-error`,
+        });
       });
     });
 
@@ -131,8 +133,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("close", 1, null);
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("Unexpected return code from spawned shell (code: 1, signal: null)");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: 'Shell did not exit sucessfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
+        });
       });
     });
 
@@ -141,8 +146,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("close", 0, "SIGKILL");
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("Unexpected return code from spawned shell (code: 0, signal: SIGKILL)");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: 'Shell did not exit sucessfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
+        });
       });
     });
 
@@ -162,10 +170,13 @@ describe("computeUnixShellEnvironment technical tests", () => {
         });
 
         it("should resolve the env", async () => {
-          await expect(unixShellEnv).resolves.toMatchObject({
-            PATH: "/bin",
-            SOME_ENV_VAR: "some-env-value",
-            TERM: "some-other-value",
+          await expect(unixShellEnv).resolves.toEqual({
+            callWasSuccessful: true,
+            response: {
+              PATH: "/bin",
+              SOME_ENV_VAR: "some-env-value",
+              TERM: "some-other-value",
+            },
           });
         });
       });
@@ -208,8 +219,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("error", new Error("some-error"));
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("some-error");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: `Failed to spawn ${shellPath}: Error: some-error`,
+        });
       });
     });
 
@@ -218,8 +232,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("close", 1, null);
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("Unexpected return code from spawned shell (code: 1, signal: null)");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: 'Shell did not exit sucessfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
+        });
       });
     });
 
@@ -228,8 +245,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("close", 0, "SIGKILL");
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("Unexpected return code from spawned shell (code: 0, signal: SIGKILL)");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: 'Shell did not exit sucessfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
+        });
       });
     });
 
@@ -249,10 +269,13 @@ describe("computeUnixShellEnvironment technical tests", () => {
         });
 
         it("should resolve the env", async () => {
-          await expect(unixShellEnv).resolves.toMatchObject({
-            PATH: "/bin",
-            SOME_ENV_VAR: "some-env-value",
-            TERM: "some-other-value",
+          await expect(unixShellEnv).resolves.toEqual({
+            callWasSuccessful: true,
+            response: {
+              PATH: "/bin",
+              SOME_ENV_VAR: "some-env-value",
+              TERM: "some-other-value",
+            },
           });
         });
       });
@@ -294,8 +317,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("error", new Error("some-error"));
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("some-error");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: `Failed to spawn ${shellPath}: Error: some-error`,
+        });
       });
     });
 
@@ -304,8 +330,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("close", 1, null);
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("Unexpected return code from spawned shell (code: 1, signal: null)");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: 'Shell did not exit sucessfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
+        });
       });
     });
 
@@ -314,8 +343,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("close", 0, "SIGKILL");
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("Unexpected return code from spawned shell (code: 0, signal: SIGKILL)");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: 'Shell did not exit sucessfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
+        });
       });
     });
 
@@ -335,10 +367,13 @@ describe("computeUnixShellEnvironment technical tests", () => {
         });
 
         it("should resolve the env", async () => {
-          await expect(unixShellEnv).resolves.toMatchObject({
-            PATH: "/bin",
-            SOME_ENV_VAR: "some-env-value",
-            TERM: "some-other-value",
+          await expect(unixShellEnv).resolves.toEqual({
+            callWasSuccessful: true,
+            response: {
+              PATH: "/bin",
+              SOME_ENV_VAR: "some-env-value",
+              TERM: "some-other-value",
+            },
           });
         });
       });
@@ -379,8 +414,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("error", new Error("some-error"));
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("some-error");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: `Failed to spawn ${shellPath}: Error: some-error`,
+        });
       });
     });
 
@@ -389,8 +427,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("close", 1, null);
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("Unexpected return code from spawned shell (code: 1, signal: null)");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: 'Shell did not exit sucessfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
+        });
       });
     });
 
@@ -399,8 +440,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
         shellProcessFake.emit("close", 0, "SIGKILL");
       });
 
-      it("should reject the promise with the error", async () => {
-        await expect(unixShellEnv).rejects.toThrow("Unexpected return code from spawned shell (code: 0, signal: SIGKILL)");
+      it("should resolve with a failed call", async () => {
+        await expect(unixShellEnv).resolves.toEqual({
+          callWasSuccessful: false,
+          error: 'Shell did not exit sucessfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
+        });
       });
     });
 
@@ -420,10 +464,13 @@ describe("computeUnixShellEnvironment technical tests", () => {
         });
 
         it("should resolve the env", async () => {
-          await expect(unixShellEnv).resolves.toMatchObject({
-            PATH: "/bin",
-            SOME_ENV_VAR: "some-env-value",
-            TERM: "some-other-value",
+          await expect(unixShellEnv).resolves.toEqual({
+            callWasSuccessful: true,
+            response: {
+              PATH: "/bin",
+              SOME_ENV_VAR: "some-env-value",
+              TERM: "some-other-value",
+            },
           });
         });
       });

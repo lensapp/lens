@@ -98,7 +98,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
 
       logger.info(`[UNIX-SHELL-ENV]: running against ${shellPath}`, { command, shellArgs });
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         const shellProcess = spawn(shellPath, shellArgs, {
           signal: opts.signal,
           env,
@@ -109,7 +109,10 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
         shellProcess.stdout.on("data", b => stdout.push(b));
         shellProcess.stderr.on("data", b => stderr.push(b));
 
-        shellProcess.on("error", (err) => reject(err));
+        shellProcess.on("error", (err) => resolve({
+          callWasSuccessful: false,
+          error: `Failed to spawn ${shellPath}: ${err}`,
+        }));
         shellProcess.on("close", (code, signal) => {
           if (code || signal) {
             const context = {
