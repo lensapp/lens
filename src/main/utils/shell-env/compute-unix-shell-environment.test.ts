@@ -91,7 +91,9 @@ describe("computeUnixShellEnvironment technical tests", () => {
     "/bin/tcsh",
   ])("when shell is %s", (shellPath) => {
     beforeEach(async () => {
-      unixShellEnv = computeUnixShellEnvironment(shellPath, { signal: new AbortSignal() });
+      const controller = new AbortController();
+
+      unixShellEnv = computeUnixShellEnvironment(shellPath, { signal: controller.signal });
       await flushPromises();
     });
 
@@ -101,9 +103,9 @@ describe("computeUnixShellEnvironment technical tests", () => {
         [
           "-l",
         ],
-        {
+        expect.objectContaining({
           env: expectedEnv,
-        },
+        }),
       );
     });
 
@@ -189,7 +191,9 @@ describe("computeUnixShellEnvironment technical tests", () => {
     "/bin/zsh",
   ])("when shell is %s", (shellPath) => {
     beforeEach(async () => {
-      unixShellEnv = computeUnixShellEnvironment(shellPath, { signal: new AbortSignal() });
+      const controller = new AbortController();
+
+      unixShellEnv = computeUnixShellEnvironment(shellPath, { signal: controller.signal });
       await flushPromises();
     });
 
@@ -200,9 +204,9 @@ describe("computeUnixShellEnvironment technical tests", () => {
           "-l",
           "-i",
         ],
-        {
+        expect.objectContaining({
           env: expectedEnv,
-        },
+        }),
       );
     });
 
@@ -286,7 +290,9 @@ describe("computeUnixShellEnvironment technical tests", () => {
     "/usr/local/bin/fish",
   ])("when shell is %s", (shellPath) => {
     beforeEach(async () => {
-      unixShellEnv = computeUnixShellEnvironment(shellPath, { signal: new AbortSignal() });
+      const controller = new AbortController();
+
+      unixShellEnv = computeUnixShellEnvironment(shellPath, { signal: controller.signal });
       await flushPromises();
     });
 
@@ -298,9 +304,9 @@ describe("computeUnixShellEnvironment technical tests", () => {
           "-c",
           `'/some/process/exec/path' -p '"deadbeef" + JSON.stringify(process.env) + "deadbeef"'`,
         ],
-        {
+        expect.objectContaining({
           env: expectedEnv,
-        },
+        }),
       );
     });
 
@@ -385,7 +391,9 @@ describe("computeUnixShellEnvironment technical tests", () => {
     "/usr/local/bin/pwsh-preview",
   ])("when shell is %s", (shellPath) => {
     beforeEach(async () => {
-      unixShellEnv = computeUnixShellEnvironment(shellPath, { signal: new AbortSignal() });
+      const controller = new AbortController();
+
+      unixShellEnv = computeUnixShellEnvironment(shellPath, { signal: controller.signal });
       await flushPromises();
     });
 
@@ -395,9 +403,9 @@ describe("computeUnixShellEnvironment technical tests", () => {
         [
           "-Login",
         ],
-        {
+        expect.objectContaining({
           env: expectedEnv,
-        },
+        }),
       );
     });
 
