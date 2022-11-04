@@ -10,7 +10,7 @@ import React from "react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
-describe("<body/> elements originated from cluster frame component registration", () => {
+describe("legacy extension adding cluster frame components", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
 

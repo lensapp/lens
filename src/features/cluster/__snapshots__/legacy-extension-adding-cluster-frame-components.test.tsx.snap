@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<body/> elements originated from cluster frame component registration given custom components for cluster view available renders 1`] = `
+exports[`legacy extension adding cluster frame components given custom components for cluster view available renders 1`] = `
 <div>
   <div
     class="Notifications flex column align-flex-end"
