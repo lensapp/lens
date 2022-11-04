@@ -6,7 +6,6 @@
 import type { AsyncResult } from "../../../common/utils/async-result";
 import { getInjectable } from "@ogre-tools/injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
-import { disposer } from "../../../common/utils";
 import computeUnixShellEnvironmentInjectable from "./compute-unix-shell-environment.injectable";
 
 export type EnvironmentVariables = Partial<Record<string, string>>;
@@ -28,32 +27,24 @@ const computeShellEnvironmentInjectable = getInjectable({
     return async (shell) => {
       const controller = new AbortController();
       const shellEnv = computeUnixShellEnvironment(shell, { signal: controller.signal });
-      const cleanup = disposer();
-
       const timeoutHandle = setTimeout(() => controller.abort(), 30_000);
 
-      cleanup.push(() => clearTimeout(timeoutHandle));
+      const result = await shellEnv;
 
-      try {
-        return {
-          callWasSuccessful: true,
-          response: await shellEnv,
-        };
-      } catch (error) {
-        if (controller.signal.aborted) {
-          return {
-            callWasSuccessful: false,
-            error: "Resolving shell environment is taking very long. Please review your shell configuration.",
-          };
-        }
+      clearTimeout(timeoutHandle);
 
+      if (result.callWasSuccessful) {
+        return result;
+      }
+
+      if (controller.signal.aborted) {
         return {
           callWasSuccessful: false,
-          error: String(error),
+          error: `Resolving shell environment is taking very long. Please review your shell configuration: ${result.error}`,
         };
-      } finally {
-        cleanup();
       }
+
+      return result;
     };
   },
 });
