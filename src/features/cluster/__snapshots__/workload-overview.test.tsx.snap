@@ -4,10 +4,6 @@ exports[`workload overview when navigating to workload overview renders 1`] = `
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div

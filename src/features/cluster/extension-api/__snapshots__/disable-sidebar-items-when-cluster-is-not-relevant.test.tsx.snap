@@ -4,10 +4,6 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -536,10 +532,6 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -1049,10 +1041,6 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
 exports[`disable sidebar items when cluster is not relevant given not yet known if extension should be enabled for the cluster renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />

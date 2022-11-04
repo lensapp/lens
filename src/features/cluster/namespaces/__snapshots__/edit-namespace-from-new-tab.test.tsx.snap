@@ -4,10 +4,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -645,10 +641,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 exports[`cluster/namespaces - edit namespace from new tab when navigating to namespaces when namespaces resolve when clicking the context menu for a namespace when clicking to edit namespace when call for namespace resolves with failure renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -1292,10 +1284,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 exports[`cluster/namespaces - edit namespace from new tab when navigating to namespaces when namespaces resolve when clicking the context menu for a namespace when clicking to edit namespace when call for namespace resolves with namespace given change in configuration renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -2009,10 +1997,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -2702,10 +2686,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 exports[`cluster/namespaces - edit namespace from new tab when navigating to namespaces when namespaces resolve when clicking the context menu for a namespace when clicking to edit namespace when call for namespace resolves with namespace given clicking the context menu for second namespace, when clicking to edit namespace when second namespace resolves renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -3468,10 +3448,6 @@ metadata:
 exports[`cluster/namespaces - edit namespace from new tab when navigating to namespaces when namespaces resolve when clicking the context menu for a namespace when clicking to edit namespace when call for namespace resolves with namespace given clicking the context menu for second namespace, when clicking to edit namespace when second namespace resolves when clicking dock tab for the first namespace renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -4237,10 +4213,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -4967,10 +4939,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -5692,10 +5660,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -6407,10 +6371,6 @@ metadata:
 exports[`cluster/namespaces - edit namespace from new tab when navigating to namespaces when namespaces resolve when clicking the context menu for a namespace when clicking to edit namespace when call for namespace resolves with namespace given no changes in the configuration, when selecting to save when saving resolves with success renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -7124,10 +7084,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -7840,10 +7796,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -8390,10 +8342,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 exports[`cluster/namespaces - edit namespace from new tab when navigating to namespaces when namespaces resolve when clicking the context menu for a namespace when clicking to edit namespace when call for namespace resolves with namespace when selecting to save and close renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -9116,10 +9064,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -9667,10 +9611,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -10217,10 +10157,6 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
 exports[`cluster/namespaces - edit namespace from new tab when navigating to namespaces when namespaces resolve when clicking the context menu for a namespace when clicking to edit namespace when call for namespace resolves without namespace renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />

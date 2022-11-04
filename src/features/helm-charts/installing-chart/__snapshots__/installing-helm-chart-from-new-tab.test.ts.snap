@@ -4,10 +4,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -436,10 +432,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 exports[`installing helm chart from new tab given tab for installing chart was not previously opened and application is started when navigating to helm charts renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -1354,10 +1346,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -2115,10 +2103,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 exports[`installing helm chart from new tab given tab for installing chart was not previously opened and application is started when navigating to helm charts when selecting to install the chart when default configuration and versions resolve given changing version to be installed renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -3122,10 +3106,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -4102,10 +4082,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -5077,10 +5053,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -6051,10 +6023,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 exports[`installing helm chart from new tab given tab for installing chart was not previously opened and application is started when navigating to helm charts when selecting to install the chart when default configuration and versions resolve given invalid change in configuration renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -7048,10 +7016,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 exports[`installing helm chart from new tab given tab for installing chart was not previously opened and application is started when navigating to helm charts when selecting to install the chart when default configuration and versions resolve given namespace selection is opened renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -8055,10 +8019,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -9029,10 +8989,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 exports[`installing helm chart from new tab given tab for installing chart was not previously opened and application is started when navigating to helm charts when selecting to install the chart when default configuration and versions resolve given no changes in configuration, when installing the chart renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -10013,10 +9969,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     >
       <div
@@ -10855,10 +10807,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     >
       <div
@@ -11631,10 +11579,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 exports[`installing helm chart from new tab given tab for installing chart was not previously opened and application is started when navigating to helm charts when selecting to install the chart when default configuration and versions resolve given no changes in configuration, when installing the chart when installation resolves when selected to show execution output renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     >
@@ -12533,10 +12477,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 exports[`installing helm chart from new tab given tab for installing chart was not previously opened and application is started when navigating to helm charts when selecting to install the chart when default configuration and versions resolve given opening details for second chart, when details resolve renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -13755,10 +13695,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -14568,10 +14504,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 exports[`installing helm chart from new tab given tab for installing chart was not previously opened and application is started when navigating to helm charts when selecting to install the chart when default configuration and versions resolve given opening details for second chart, when details resolve when selecting to install second chart when configuration and versions resolve renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -15598,10 +15530,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -16625,10 +16553,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -17600,10 +17524,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -18574,10 +18494,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 exports[`installing helm chart from new tab given tab for installing chart was not previously opened and application is started when navigating to helm charts when selecting to install the chart when default configuration and versions resolve when cancelled renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />

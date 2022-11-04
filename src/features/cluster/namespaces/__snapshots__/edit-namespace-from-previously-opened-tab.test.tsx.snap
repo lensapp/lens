@@ -4,10 +4,6 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -552,10 +548,6 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
 exports[`cluster/namespaces - edit namespaces from previously opened tab given tab was previously opened, when application is started when call for namespace resolves with namespace renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />

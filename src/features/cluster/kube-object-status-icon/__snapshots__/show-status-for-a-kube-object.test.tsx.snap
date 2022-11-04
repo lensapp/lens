@@ -4,10 +4,6 @@ exports[`show status for a kube object given application starts and in test page
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -391,10 +387,6 @@ exports[`show status for a kube object given application starts and in test page
 exports[`show status for a kube object given application starts and in test page when critical status emerges renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -820,10 +812,6 @@ exports[`show status for a kube object given application starts and in test page
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -1248,10 +1236,6 @@ exports[`show status for a kube object given application starts and in test page
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -1636,10 +1620,6 @@ exports[`show status for a kube object given application starts and in test page
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -2023,10 +2003,6 @@ exports[`show status for a kube object given application starts and in test page
 exports[`show status for a kube object given application starts and in test page when warning status emerges renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />

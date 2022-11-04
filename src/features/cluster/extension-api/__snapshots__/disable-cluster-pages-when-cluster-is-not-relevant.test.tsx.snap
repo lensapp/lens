@@ -4,10 +4,6 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -397,10 +393,6 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
 exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shouldn't be enabled for the cluster, when navigating renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -911,10 +903,6 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
 exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known if extension should be enabled for the cluster, when navigating renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />

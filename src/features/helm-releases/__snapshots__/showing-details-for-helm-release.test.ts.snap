@@ -4,10 +4,6 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -748,10 +744,6 @@ exports[`showing details for helm release given application is started when navi
 exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve but there is none, renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -1498,10 +1490,6 @@ exports[`showing details for helm release given application is started when navi
 exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -2418,10 +2406,6 @@ exports[`showing details for helm release given application is started when navi
 exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -3400,10 +3384,6 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -4380,10 +4360,6 @@ exports[`showing details for helm release given application is started when navi
 exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details when call for release resolve with release when configuration resolves renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -5607,10 +5583,6 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -6832,10 +6804,6 @@ exports[`showing details for helm release given application is started when navi
 exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details when call for release resolve with release when configuration resolves when changing the configuration when saving renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -8059,10 +8027,6 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -9109,10 +9073,6 @@ exports[`showing details for helm release given application is started when navi
 exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details when call for release resolve with release when configuration resolves when changing the configuration when saving when requestHelmCharts resolves when requestHelmChartVersions resolves when update resolves with success renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -10162,10 +10122,6 @@ exports[`showing details for helm release given application is started when navi
 exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details when call for release resolve with release when configuration resolves when changing the configuration when toggling to see only user defined values when configuration resolves renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -11389,10 +11345,6 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -12369,10 +12321,6 @@ exports[`showing details for helm release given application is started when navi
 exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details when call for release resolves with error renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -13354,10 +13302,6 @@ exports[`showing details for helm release given application is started when navi
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -14273,10 +14217,6 @@ exports[`showing details for helm release given application is started when navi
 exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details when details is closed when opening details for same release renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
@@ -15254,10 +15194,6 @@ exports[`showing details for helm release given application is started when navi
 exports[`showing details for helm release given application is started when navigating to helm releases when releases resolve when selecting release to see details when opening details for second release renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />

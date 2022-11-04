@@ -4,10 +4,6 @@ exports[`installing helm chart from previously opened tab given tab for installi
 <body>
   <div>
     <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -527,10 +523,6 @@ exports[`installing helm chart from previously opened tab given tab for installi
 exports[`installing helm chart from previously opened tab given tab for installing chart was previously opened, when application is started when configuration and version resolves renders 1`] = `
 <body>
   <div>
-    <div
-      class="clusterModals"
-      style="height: 0px;"
-    />
     <div
       class="Notifications flex column align-flex-end"
     />
