@@ -9,10 +9,10 @@ import randomUUIDInjectable from "../../crypto/random-uuid.injectable";
 import { basename } from "path";
 
 export interface UnixShellEnvOptions {
-  signal?: AbortSignal;
+  signal: AbortSignal;
 }
 
-export type ComputeUnixShellEnvironment = (shell: string, opts?: UnixShellEnvOptions) => Promise<EnvironmentVariables>;
+export type ComputeUnixShellEnvironment = (shell: string, opts: UnixShellEnvOptions) => Promise<EnvironmentVariables>;
 
 const computeUnixShellEnvironmentInjectable = getInjectable({
   id: "compute-unix-shell-environment",
@@ -45,7 +45,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
       };
     };
 
-    return async (shellPath, opts = {}) => {
+    return async (shellPath, opts) => {
       const runAsNode = process.env["ELECTRON_RUN_AS_NODE"];
       const noAttach = process.env["ELECTRON_NO_ATTACH_CONSOLE"];
       const env = {
@@ -60,11 +60,10 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
       return new Promise((resolve, reject) => {
         const shellProcess = spawn(shellPath, shellArgs, {
           detached: true,
+          signal: opts.signal,
           env,
         });
         const stdout: Buffer[] = [];
-
-        opts.signal?.addEventListener("abort", () => shellProcess.kill());
 
         shellProcess.stdout.on("data", b => stdout.push(b));
 
