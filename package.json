@@ -264,7 +264,7 @@
     "monaco-editor-webpack-plugin": "^5.0.0",
     "node-fetch": "^2.6.7",
     "node-pty": "0.10.1",
-    "npm": "^8.19.2",
+    "npm": "^8.19.3",
     "p-limit": "^3.1.0",
     "path-to-regexp": "^6.2.0",
     "proper-lockfile": "^4.1.2",
