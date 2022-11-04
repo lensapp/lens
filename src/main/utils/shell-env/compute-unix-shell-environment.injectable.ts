@@ -19,6 +19,11 @@ export interface UnixShellEnvOptions {
 
 export type ComputeUnixShellEnvironment = (shell: string, opts: UnixShellEnvOptions) => Promise<AsyncResult<EnvironmentVariables, string>>;
 
+/**
+ * @param src The object containing the current environment variables
+ * @param overrides The environment variables that want to be overridden before passing the env to a child process
+ * @returns The combination of environment variables and a function which resets an object of environment variables to the values the keys corresponded to in `src` (rather than `overrides`)
+ */
 const getResetProcessEnv = (src: Partial<Record<string, string>>, overrides: Partial<Record<string, string>>): {
   resetEnvPairs: (target: Partial<Record<string, string>>) => void;
   env: Partial<Record<string, string>>;
