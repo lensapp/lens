@@ -6,7 +6,7 @@ jobs:
   milestone:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Require Milestone
         run: |
           exit $(gh pr view ${{ github.event.pull_request.number }} --json milestone | jq 'if .milestone == null then 1 else 0 end')

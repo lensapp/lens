@@ -55,7 +55,8 @@ const setupShellInjectable = getInjectable({
           ...process.env,
         };
 
-        logger.debug(`[SHELL-SYNC]: Synced shell env, and updating`, env, process.env);
+        logger.info(`[SHELL-SYNC]: Synced shell env`);
+        logger.debug(`[SHELL-SYNC]: updated env`, process.env);
       },
     };
   },

@@ -23,12 +23,12 @@ jobs:
           python-version: "3.x"
 
       - name: Checkout Release from lens
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Using Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -61,7 +61,7 @@ jobs:
           pip install mike
 
       - name: Checkout Release from lens
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -71,7 +71,7 @@ jobs:
           git config --local user.name "GitHub Action"
 
       - name: Using Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -88,7 +88,7 @@ jobs:
       - name: Get the release version
         if: contains(github.ref, 'refs/tags/v') && !github.event.release.prerelease
         id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
 
       - name: mkdocs deploy new release
         if: contains(github.ref, 'refs/tags/v') && !github.event.release.prerelease
