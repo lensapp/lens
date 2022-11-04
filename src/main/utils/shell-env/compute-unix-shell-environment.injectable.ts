@@ -32,7 +32,7 @@ const getResetProcessEnv = (src: Partial<Record<string, string>>, overrides: Par
     },
     resetEnvPairs: (target) => {
       for (const [name, orginalValue] of originals) {
-        if (orginalValue) {
+        if (typeof orginalValue === "string") {
           target[name] = orginalValue;
         } else {
           delete target[name];

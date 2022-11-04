@@ -22,6 +22,7 @@ const expectedEnv = {
   ELECTRON_RUN_AS_NODE: "1",
   ELECTRON_NO_ATTACH_CONSOLE: "1",
   TERM: "screen-256color-bce",
+  SOME_THIRD_NON_UNDEFINED_VALUE: "",
 };
 
 describe("computeUnixShellEnvironment technical tests", () => {
@@ -78,6 +79,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
     di.override(processEnvInjectable, () => ({
       SOME_ENV_VAR: "some-env-value",
       TERM: "some-other-value",
+      SOME_THIRD_NON_UNDEFINED_VALUE: "",
     }));
     di.override(processExecPathInjectable, () => "/some/process/exec/path");
 
@@ -178,6 +180,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
               PATH: "/bin",
               SOME_ENV_VAR: "some-env-value",
               TERM: "some-other-value",
+              SOME_THIRD_NON_UNDEFINED_VALUE: "",
             },
           });
         });
@@ -279,6 +282,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
               PATH: "/bin",
               SOME_ENV_VAR: "some-env-value",
               TERM: "some-other-value",
+              SOME_THIRD_NON_UNDEFINED_VALUE: "",
             },
           });
         });
@@ -379,6 +383,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
               PATH: "/bin",
               SOME_ENV_VAR: "some-env-value",
               TERM: "some-other-value",
+              SOME_THIRD_NON_UNDEFINED_VALUE: "",
             },
           });
         });
@@ -478,6 +483,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
               PATH: "/bin",
               SOME_ENV_VAR: "some-env-value",
               TERM: "some-other-value",
+              SOME_THIRD_NON_UNDEFINED_VALUE: "",
             },
           });
         });
