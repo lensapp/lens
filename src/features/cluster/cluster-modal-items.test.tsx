@@ -2,7 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { act, RenderResult } from "@testing-library/react";
+import type { RenderResult } from "@testing-library/react";
+import { act } from "@testing-library/react";
 import type { IObservableValue } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import React from "react";
@@ -20,7 +21,7 @@ describe("<body/> elements originated from cluster frame component registration"
 
   describe("given custom components for cluster view available", () => {
     let someObservable: IObservableValue<boolean>;
-  
+
     beforeEach(async () => {
       someObservable = observable.box(false);
 
@@ -39,8 +40,8 @@ describe("<body/> elements originated from cluster frame component registration"
               id: "dialog-with-observable-visibility-id",
               Component: () => <div data-testid="dialog-with-observable-visibility">dialog contents</div>,
               shouldRender: computed(() => someObservable.get()),
-            }
-          ]
+            },
+          ],
         },
       };
 

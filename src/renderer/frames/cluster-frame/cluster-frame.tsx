@@ -58,7 +58,7 @@ export const ClusterFrame = withInjectables<Dependencies>(NonInjectedClusterFram
       subscribeStores: di.inject(subscribeStoresInjectable),
       childComponents: computedInjectMany(clusterFrameChildComponentInjectionToken),
       watchHistoryState: di.inject(watchHistoryStateInjectable),
-    }
+    };
   },
 });
 
