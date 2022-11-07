@@ -3,58 +3,43 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-type Stopper = () => Promise<void> | void;
-type Starter = () => Promise<Stopper> | Stopper;
+export type Stopper = () => void;
+export type Starter = () => Stopper;
 
-export const getStartableStoppable = (
-  id: string,
-  startAndGetStopCallback: Starter,
-) => {
+export interface StartableStoppable {
+  readonly started: boolean;
+  start: () => void;
+  stop: () => void;
+}
+
+type StartableStoppableState = "stopped" | "started" | "starting";
+
+export function getStartableStoppable(id: string, startAndGetStopper: Starter): StartableStoppable {
   let stop: Stopper;
-  let stopped = false;
-  let started = false;
-  let starting = false;
-  let startingPromise: Promise<Stopper> | Stopper;
+  let state: StartableStoppableState = "stopped";
 
   return {
     get started() {
-      return started;
+      return state === "started";
     },
 
-    start: async () => {
-      if (starting) {
-        throw new Error(`Tried to start "${id}", but it is already being started.`);
+    start: () => {
+      if (state !== "stopped") {
+        throw new Error(`Tried to start "${id}", but it is already ${state}.`);
       }
 
-      starting = true;
-
-      if (started) {
-        throw new Error(`Tried to start "${id}", but it has already started.`);
-      }
-
-      startingPromise = startAndGetStopCallback();
-      stop = await startingPromise;
-
-      stopped = false;
-      started = true;
-      starting = false;
+      state = "starting";
+      stop = startAndGetStopper();
+      state = "started";
     },
 
-    stop: async () => {
-      await startingPromise;
-
-      if (stopped) {
-        throw new Error(`Tried to stop "${id}", but it has already stopped.`);
+    stop: () => {
+      if (state !== "started") {
+        throw new Error(`Tried to stop "${id}", but it is already ${state}.`);
       }
 
-      if (!started) {
-        throw new Error(`Tried to stop "${id}", but it has not started yet.`);
-      }
-
-      await stop();
-
-      started = false;
-      stopped = true;
+      stop();
+      state = "stopped";
     },
   };
-};
+}
