@@ -111,25 +111,37 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
         const stdout: Buffer[] = [];
         const stderr: Buffer[] = [];
 
+        const getErrorContext = (other: object = {}) => {
+          const context = {
+            ...other,
+            stdout: Buffer.concat(stdout).toString("utf-8"),
+            stderr: Buffer.concat(stderr).toString("utf-8"),
+          };
+
+          return JSON.stringify(context, null, 4);
+        };
+
         shellProcess.stdout.on("data", b => stdout.push(b));
         shellProcess.stderr.on("data", b => stderr.push(b));
 
-        shellProcess.on("error", (err) => resolve({
-          callWasSuccessful: false,
-          error: `Failed to spawn ${shellPath}: ${err}`,
-        }));
+        shellProcess.on("error", (error) => {
+          if (opts.signal.aborted) {
+            resolve({
+              callWasSuccessful: false,
+              error: `timeout: ${getErrorContext()}`,
+            });
+          } else {
+            resolve({
+              callWasSuccessful: false,
+              error: `Failed to spawn ${shellPath}: ${getErrorContext({ error })}`,
+            });
+          }
+        });
         shellProcess.on("close", (code, signal) => {
           if (code || signal) {
-            const context = {
-              code,
-              signal,
-              stdout: Buffer.concat(stdout).toString("utf-8"),
-              stderr: Buffer.concat(stderr).toString("utf-8"),
-            };
-
             return resolve({
               callWasSuccessful: false,
-              error: `Shell did not exit sucessfully: ${JSON.stringify(context, null, 4)}`,
+              error: `Shell did not exit sucessfully: ${getErrorContext({ code, signal })}`,
             });
           }
 
