@@ -136,6 +136,8 @@ class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
     window.removeEventListener("resize", this.onWindowResize);
     window.removeEventListener("click", this.onClickOutside, true);
     window.removeEventListener("scroll", this.onScrollOutside, true);
+    window.removeEventListener("blur", this.onBlur, true);
+    window.removeEventListener("contextmenu", this.onContextMenu, true);
   }
 
   componentDidUpdate(prevProps: MenuProps) {
