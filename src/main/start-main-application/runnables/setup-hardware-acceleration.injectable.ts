@@ -20,6 +20,8 @@ const setupHardwareAccelerationInjectable = getInjectable({
         if (hardwareAccelerationShouldBeDisabled) {
           disableHardwareAcceleration();
         }
+
+        return undefined;
       },
     };
   },

@@ -11,9 +11,7 @@ const cleanUpShellSessionsInjectable = getInjectable({
 
   instantiate: () => ({
     id: "clean-up-shell-sessions",
-    run: () => {
-      ShellSession.cleanup();
-    },
+    run: () => void ShellSession.cleanup(),
   }),
 
   injectionToken: beforeQuitOfBackEndInjectionToken,

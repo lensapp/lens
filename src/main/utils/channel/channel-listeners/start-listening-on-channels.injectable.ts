@@ -16,9 +16,9 @@ const startListeningOnChannelsInjectable = getInjectable({
 
     return {
       id: "start-listening-on-channels-main",
-      run: async () => {
-        await listeningOnMessageChannels.start();
-        await listeningOnRequestChannels.start();
+      run: () => {
+        listeningOnMessageChannels.start();
+        listeningOnRequestChannels.start();
       },
     };
   },

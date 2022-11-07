@@ -20,6 +20,8 @@ const enforceSingleApplicationInstanceInjectable = getInjectable({
         if (!requestSingleInstanceLock()) {
           exitApp();
         }
+
+        return undefined;
       },
     };
   },

@@ -14,9 +14,7 @@ const stopReactiveTrayMenuItemsInjectable = getInjectable({
 
     return {
       id: "stop-reactive-tray-menu-items",
-      run: async () => {
-        await reactiveTrayMenuItems.stop();
-      },
+      run: () => void reactiveTrayMenuItems.stop(),
     };
   },
 

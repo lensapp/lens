@@ -5,7 +5,6 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { RunnableSync } from "../../../common/runnable/run-many-sync-for";
 
-export const beforeQuitOfFrontEndInjectionToken =
-  getInjectionToken<RunnableSync>({
-    id: "before-quit-of-front-end",
-  });
+export const beforeQuitOfFrontEndInjectionToken = getInjectionToken<RunnableSync>({
+  id: "before-quit-of-front-end",
+});

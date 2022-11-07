@@ -14,9 +14,7 @@ const cleanUpDeepLinkingInjectable = getInjectable({
 
     return {
       id: "clean-up-deep-linking",
-      run: () => {
-        lensProtocolRouterMain.cleanup();
-      },
+      run: () => void lensProtocolRouterMain.cleanup(),
     };
   },
 

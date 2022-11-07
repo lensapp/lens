@@ -18,6 +18,8 @@ const setupApplicationNameInjectable = getInjectable({
       id: "setup-application-name",
       run: () => {
         app.setName(appName);
+
+        return undefined;
       },
     };
   },

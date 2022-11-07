@@ -15,24 +15,16 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
   id: "setup-closing-of-application",
 
   instantiate: (di) => {
-    const runMany = runManySyncFor(di);
-
-    const runRunnablesBeforeQuitOfFrontEnd = runMany(
-      beforeQuitOfFrontEndInjectionToken,
-    );
-
-    const runRunnablesBeforeQuitOfBackEnd = runMany(
-      beforeQuitOfBackEndInjectionToken,
-    );
+    const runManySync = runManySyncFor(di);
+    const runRunnablesBeforeQuitOfFrontEnd = runManySync(beforeQuitOfFrontEndInjectionToken);
+    const runRunnablesBeforeQuitOfBackEnd = runManySync(beforeQuitOfBackEndInjectionToken);
+    const app = di.inject(electronAppInjectable);
+    const isIntegrationTesting = di.inject(isIntegrationTestingInjectable);
+    const autoUpdater = di.inject(autoUpdaterInjectable);
 
     return {
       id: "setup-closing-of-application",
       run: () => {
-        const app = di.inject(electronAppInjectable);
-
-        const isIntegrationTesting = di.inject(isIntegrationTestingInjectable);
-        const autoUpdater = di.inject(autoUpdaterInjectable);
-
         let isAutoUpdating = false;
 
         autoUpdater.on("before-quit-for-update", () => {
@@ -51,6 +43,8 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
             event.preventDefault();
           }
         });
+
+        return undefined;
       },
     };
   },

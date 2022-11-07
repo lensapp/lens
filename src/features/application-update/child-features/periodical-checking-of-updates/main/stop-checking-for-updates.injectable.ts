@@ -14,10 +14,12 @@ const stopCheckingForUpdatesInjectable = getInjectable({
 
     return {
       id: "stop-checking-for-updates",
-      run: async () => {
+      run: () => {
         if (periodicalCheckForUpdates.started) {
-          await periodicalCheckForUpdates.stop();
+          periodicalCheckForUpdates.stop();
         }
+
+        return undefined;
       },
     };
   },

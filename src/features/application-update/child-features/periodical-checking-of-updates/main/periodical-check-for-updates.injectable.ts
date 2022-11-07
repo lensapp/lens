@@ -7,6 +7,8 @@ import { getStartableStoppable } from "../../../../../common/utils/get-startable
 import processCheckingForUpdatesInjectable from "../../../main/process-checking-for-updates.injectable";
 import withOrphanPromiseInjectable from "../../../../../common/utils/with-orphan-promise/with-orphan-promise.injectable";
 
+const TWO_HOURS = 1000 * 60 * 60 * 2;
+
 const periodicalCheckForUpdatesInjectable = getInjectable({
   id: "periodical-check-for-updates",
 
@@ -15,12 +17,9 @@ const periodicalCheckForUpdatesInjectable = getInjectable({
     const processCheckingForUpdates = withOrphanPromise(di.inject(processCheckingForUpdatesInjectable));
 
     return getStartableStoppable("periodical-check-for-updates", () => {
-      const TWO_HOURS = 1000 * 60 * 60 * 2;
-
       processCheckingForUpdates("periodic");
 
       const intervalId = setInterval(() => {
-
         processCheckingForUpdates("periodic");
       }, TWO_HOURS);
 

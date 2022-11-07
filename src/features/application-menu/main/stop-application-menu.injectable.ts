@@ -10,15 +10,11 @@ const stopApplicationMenuInjectable = getInjectable({
   id: "stop-application-menu",
 
   instantiate: (di) => {
-    const applicationMenu = di.inject(
-      applicationMenuReactivityInjectable,
-    );
+    const applicationMenu = di.inject(applicationMenuReactivityInjectable);
 
     return {
       id: "stop-application-menu",
-      run: async () => {
-        await applicationMenu.stop();
-      },
+      run: () => void applicationMenu.stop(),
     };
   },
 

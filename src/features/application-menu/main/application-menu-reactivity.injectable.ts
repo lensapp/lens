@@ -15,8 +15,9 @@ const applicationMenuReactivityInjectable = getInjectable({
     const applicationMenuItemComposite = di.inject(applicationMenuItemCompositeInjectable);
     const populateApplicationMenu = di.inject(populateApplicationMenuInjectable);
 
-    return getStartableStoppable("application-menu-reactivity", () =>
-      autorun(() => populateApplicationMenu(applicationMenuItemComposite.get()), {
+    return getStartableStoppable(
+      "application-menu-reactivity",
+      () => autorun(() => populateApplicationMenu(applicationMenuItemComposite.get()), {
         delay: 100,
       }),
     );

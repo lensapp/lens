@@ -16,6 +16,8 @@ const emitCloseToEventBusInjectable = getInjectable({
       id: "emit-close-to-event-bus",
       run: () => {
         emitAppEvent({ name: "app", action: "close" });
+
+        return undefined;
       },
     };
   },
