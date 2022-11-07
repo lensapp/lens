@@ -17,7 +17,6 @@ import plimit from "p-limit";
 import type { ClusterState, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate, ClusterConfigData } from "../cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus, clusterModelIdChecker, updateClusterModelChecker } from "../cluster-types";
 import { disposer, isDefined, isRequestError, toJS } from "../utils";
-import type { Response } from "request";
 import { clusterListNamespaceForbiddenChannel } from "../ipc/cluster";
 import type { CanI } from "./authorization-review.injectable";
 import type { ListNamespacesFor } from "./list-namespaces.injectable";
@@ -652,7 +651,7 @@ export class Cluster implements ClusterModel {
       const namespaceList = [ctx?.namespace].filter(isDefined);
 
       if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
-        const { response } = error as HttpError & { response: Response };
+        const { response } = error as HttpError & { response: { body: unknown }};
 
         this.dependencies.logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id, error: response.body });
         this.dependencies.broadcastMessage(clusterListNamespaceForbiddenChannel, this.id);

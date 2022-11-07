@@ -13,9 +13,7 @@ const stopSettingUpLensProxyInjectable = getInjectable({
 
     return {
       id: "stop-setting-up-lens-proxy",
-      run: () => {
-        setupLensProxyStartableStoppable.stop();
-      },
+      run: () => void setupLensProxyStartableStoppable.stop(),
     };
   },
   injectionToken: beforeQuitOfBackEndInjectionToken,

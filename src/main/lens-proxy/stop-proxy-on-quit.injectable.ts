@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeQuitOfBackEndInjectionToken } from "../start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
+import stopSettingUpLensProxyInjectable from "../start-main-application/runnables/lens-proxy/teardown.injectable";
 import lensProxyInjectable from "./lens-proxy.injectable";
 
 const stopLensProxyOnQuitInjectable = getInjectable({
@@ -13,9 +14,8 @@ const stopLensProxyOnQuitInjectable = getInjectable({
 
     return {
       id: "stop-lens-proxy",
-      run: () => {
-        lensProxy.close();
-      },
+      run: () => void lensProxy.close(),
+      runAfter: di.inject(stopSettingUpLensProxyInjectable),
     };
   },
   injectionToken: beforeQuitOfBackEndInjectionToken,
