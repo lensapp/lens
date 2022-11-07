@@ -127,7 +127,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: `Failed to spawn ${shellPath}: Error: some-error`,
+          error: `Failed to spawn ${shellPath}: ${JSON.stringify({
+            error: "Error: some-error",
+            stdout: "",
+            stderr: "",
+          }, null, 4)}`,
         });
       });
     });
@@ -229,7 +233,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: `Failed to spawn ${shellPath}: Error: some-error`,
+          error: `Failed to spawn ${shellPath}: ${JSON.stringify({
+            error: "Error: some-error",
+            stdout: "",
+            stderr: "",
+          }, null, 4)}`,
         });
       });
     });
@@ -330,7 +338,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: `Failed to spawn ${shellPath}: Error: some-error`,
+          error: `Failed to spawn ${shellPath}: ${JSON.stringify({
+            error: "Error: some-error",
+            stdout: "",
+            stderr: "",
+          }, null, 4)}`,
         });
       });
     });
@@ -430,7 +442,11 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: `Failed to spawn ${shellPath}: Error: some-error`,
+          error: `Failed to spawn ${shellPath}: ${JSON.stringify({
+            error: "Error: some-error",
+            stdout: "",
+            stderr: "",
+          }, null, 4)}`,
         });
       });
     });
