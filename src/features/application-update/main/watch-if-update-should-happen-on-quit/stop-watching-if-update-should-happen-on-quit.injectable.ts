@@ -14,9 +14,7 @@ const stopWatchingIfUpdateShouldHappenOnQuitInjectable = getInjectable({
 
     return {
       id: "stop-watching-if-update-should-happen-on-quit",
-      run: () => {
-        watchIfUpdateShouldHappenOnQuit.stop();
-      },
+      run: () => void watchIfUpdateShouldHappenOnQuit.stop(),
     };
   },
 

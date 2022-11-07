@@ -16,6 +16,8 @@ const setupImmerInjectable = getInjectable({
       // Required in `utils/storage-helper.ts`
       Immer.setAutoFreeze(false); // allow to merge mobx observables
       Immer.enableMapSet(); // allow to merge maps and sets
+
+      return undefined;
     },
   }),
 

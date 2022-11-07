@@ -2,13 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { pipeline } from "@ogre-tools/fp";
-import type {
-  DiContainerForInjection,
-  InjectionToken,
-} from "@ogre-tools/injectable";
-import { filter, forEach, map, tap } from "lodash/fp";
-import { throwWithIncorrectHierarchyFor } from "./throw-with-incorrect-hierarchy-for";
+import type { DiContainerForInjection, InjectionToken } from "@ogre-tools/injectable";
+import type { Composite } from "../utils/composite/get-composite/get-composite";
+import { getCompositeFor } from "../utils/composite/get-composite/get-composite";
+import * as uuid from "uuid";
 
 export interface Runnable<TParameter = void> {
   id: string;
@@ -18,35 +15,34 @@ export interface Runnable<TParameter = void> {
 
 type Run<Param> = (parameter: Param) => Promise<void> | void;
 
-export type RunMany = <Param>(
-  injectionToken: InjectionToken<Runnable<Param>, void>
-) => Run<Param>;
+export type RunMany = <Param>(injectionToken: InjectionToken<Runnable<Param>, void>) => Run<Param>;
+
+async function runCompositeRunnables<Param>(param: Param, composite: Composite<Runnable<Param>>) {
+  await composite.value.run(param);
+  await Promise.all(composite.children.map(composite => runCompositeRunnables(param, composite)));
+}
 
 export function runManyFor(di: DiContainerForInjection): RunMany {
-  return (injectionToken) => async (parameter) => {
+  return <Param>(injectionToken: InjectionToken<Runnable<Param>, void>) => async (param: Param) => {
     const allRunnables = di.injectMany(injectionToken);
+    const rootId = uuid.v4();
+    const getCompositeRunnables = getCompositeFor<Runnable<Param>>({
+      getId: (runnable) => runnable.id,
+      getParentId: (runnable) => (
+        runnable.id === rootId
+          ? undefined
+          : runnable.runAfter?.id ?? rootId
+      ),
+    });
+    const composite = getCompositeRunnables([
+      // This is a dummy runnable to conform to the requirements of `getCompositeFor` to only have one root
+      {
+        id: rootId,
+        run: () => {},
+      },
+      ...allRunnables,
+    ]);
 
-    const throwWithIncorrectHierarchy = throwWithIncorrectHierarchyFor((injectionToken as any).id, allRunnables);
-
-    const recursedRun = async (
-      runAfterRunnable: Runnable<any> | undefined = undefined,
-    ) =>
-      await pipeline(
-        allRunnables,
-
-        tap(runnables => forEach(throwWithIncorrectHierarchy, runnables)),
-
-        filter((runnable) => runnable.runAfter === runAfterRunnable),
-
-        map(async (runnable) => {
-          await runnable.run(parameter);
-
-          await recursedRun(runnable);
-        }),
-
-        (promises) => Promise.all(promises),
-      );
-
-    await recursedRun();
+    await runCompositeRunnables(param, composite);
   };
 }

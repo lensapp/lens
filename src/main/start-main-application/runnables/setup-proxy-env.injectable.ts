@@ -34,6 +34,8 @@ const setupProxyEnvInjectable = getInjectable({
         if (getCommandLineSwitch("proxy-server") !== "") {
           process.env.HTTPS_PROXY = getCommandLineSwitch("proxy-server");
         }
+
+        return undefined;
       },
     };
   },

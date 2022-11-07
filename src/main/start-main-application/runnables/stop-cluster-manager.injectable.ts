@@ -16,13 +16,13 @@ const stopClusterManagerInjectable = getInjectable({
       id: "stop-cluster-manager",
       run: () => {
         clusterManager.stop();
+
+        return undefined;
       },
     };
   },
 
   injectionToken: beforeQuitOfFrontEndInjectionToken,
-
-  causesSideEffects: true,
 });
 
 export default stopClusterManagerInjectable;

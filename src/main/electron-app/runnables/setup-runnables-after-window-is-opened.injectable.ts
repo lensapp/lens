@@ -13,15 +13,14 @@ const setupRunnablesAfterWindowIsOpenedInjectable = getInjectable({
 
   instantiate: (di) => {
     const afterWindowIsOpened = runManyFor(di)(afterWindowIsOpenedInjectionToken);
+    const app = di.inject(electronAppInjectable);
 
     return {
       id: "setup-runnables-after-window-is-opened",
       run: () => {
-        const app = di.inject(electronAppInjectable);
+        app.on("browser-window-created", () => afterWindowIsOpened);
 
-        app.on("browser-window-created", async () => {
-          await afterWindowIsOpened();
-        });
+        return undefined;
       },
     };
   },

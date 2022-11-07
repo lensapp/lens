@@ -44,6 +44,9 @@ const setupAppPathsInjectable = getInjectable({
         ) as AppPaths;
 
         appPathsState.set(appPaths);
+
+        // NOTE: this is the worse of two evils. This makes sure that `RunnableSync` always is sync
+        return undefined;
       },
     };
   },

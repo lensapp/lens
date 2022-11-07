@@ -21,6 +21,8 @@ const setupMobxInjectable = getInjectable({
         // reactionRequiresObservable: true,
         // observableRequiresReaction: true,
       });
+
+      return undefined;
     },
   }),
 

@@ -5,7 +5,6 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { RunnableSync } from "../../../common/runnable/run-many-sync-for";
 
-export const beforeElectronIsReadyInjectionToken =
-  getInjectionToken<RunnableSync>({
-    id: "before-electron-is-ready",
-  });
+export const beforeElectronIsReadyInjectionToken = getInjectionToken<RunnableSync>({
+  id: "before-electron-is-ready",
+});

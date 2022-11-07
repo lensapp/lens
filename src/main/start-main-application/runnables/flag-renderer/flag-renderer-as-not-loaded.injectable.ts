@@ -20,6 +20,8 @@ const flagRendererAsNotLoadedInjectable = getInjectable({
           // Todo: remove this kludge which enables out-of-place temporal dependency.
           lensProtocolRouterMain.rendererLoaded = false;
         });
+
+        return undefined;
       },
     };
   },

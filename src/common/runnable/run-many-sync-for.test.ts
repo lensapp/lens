@@ -69,7 +69,7 @@ describe("runManySyncFor", () => {
 
         instantiate: (di) => ({
           id: "some-injectable-1",
-          run: () => runMock("third-level-run"),
+          run: () => void runMock("third-level-run"),
           runAfter: di.inject(someInjectable2),
         }),
 
@@ -81,7 +81,7 @@ describe("runManySyncFor", () => {
 
         instantiate: (di) => ({
           id: "some-injectable-2",
-          run: () => runMock("second-level-run"),
+          run: () => void runMock("second-level-run"),
           runAfter: di.inject(someInjectable3),
         }),
 
@@ -92,7 +92,7 @@ describe("runManySyncFor", () => {
         id: "some-injectable-3",
         instantiate: () => ({
           id: "some-injectable-3",
-          run: () => runMock("first-level-run"),
+          run: () => void runMock("first-level-run"),
         }),
         injectionToken: someInjectionTokenForRunnables,
       });
@@ -151,13 +151,13 @@ describe("runManySyncFor", () => {
       someInjectionToken,
     );
 
-    return expect(() => runMany()).rejects.toThrow(
-      'Tried to run runnable "some-runnable-1" after the runnable "some-runnable-2" which does not share the "some-injection-token" injection token.',
+    return expect(() => runMany()).toThrow(
+      /Tried to get a composite but encountered missing parent ids: "some-runnable-2".\n\nAvailable parent ids are:\n"[0-9a-z-]+",\n"some-runnable-1"/,
     );
   });
 
   describe("when running many with parameter", () => {
-    let runMock: jest.Mock<(arg: string, arg2: string) => void>;
+    let runMock: jest.Mock<(arg: string, arg2: string) => undefined>;
 
     beforeEach(() => {
       const rootDi = createContainer("irrelevant");
@@ -175,7 +175,7 @@ describe("runManySyncFor", () => {
 
         instantiate: () => ({
           id: "some-runnable-1",
-          run: (parameter) => runMock("run-of-some-runnable-1", parameter),
+          run: (parameter) => void runMock("run-of-some-runnable-1", parameter),
         }),
 
         injectionToken: someInjectionTokenForRunnablesWithParameter,
@@ -186,7 +186,7 @@ describe("runManySyncFor", () => {
 
         instantiate: () => ({
           id: "some-runnable-2",
-          run: (parameter) => runMock("run-of-some-runnable-2", parameter),
+          run: (parameter) => void runMock("run-of-some-runnable-2", parameter),
         }),
 
         injectionToken: someInjectionTokenForRunnablesWithParameter,

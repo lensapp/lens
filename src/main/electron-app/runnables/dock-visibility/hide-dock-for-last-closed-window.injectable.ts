@@ -23,6 +23,8 @@ const hideDockForLastClosedWindowInjectable = getInjectable({
         if (isEmpty(visibleWindows)) {
           app.dock?.hide();
         }
+
+        return undefined;
       },
     };
   },

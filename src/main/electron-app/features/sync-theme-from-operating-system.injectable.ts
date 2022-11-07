@@ -18,9 +18,7 @@ const syncThemeFromOperatingSystemInjectable = getInjectable({
 
     return getStartableStoppable("sync-theme-from-operating-system", () => {
       const updateThemeState = () => {
-        const newTheme = getElectronTheme();
-
-        currentThemeState.set(newTheme);
+        currentThemeState.set(getElectronTheme());
       };
 
       nativeTheme.on("updated", updateThemeState);

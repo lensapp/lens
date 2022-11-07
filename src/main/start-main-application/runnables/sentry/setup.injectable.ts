@@ -15,7 +15,7 @@ const setupSentryInjectable = getInjectable({
 
     return {
       id: "setup-sentry",
-      run: () => initializeSentryReportingWith(initializeSentryOnMain),
+      run: () => void initializeSentryReportingWith(initializeSentryOnMain),
     };
   },
   injectionToken: beforeElectronIsReadyInjectionToken,
