@@ -132,7 +132,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
           } else {
             resolve({
               callWasSuccessful: false,
-              error: `Failed to spawn ${shellPath}: ${getErrorContext({ error })}`,
+              error: `Failed to spawn ${shellPath}: ${getErrorContext({ error: String(error) })}`,
             });
           }
         });
