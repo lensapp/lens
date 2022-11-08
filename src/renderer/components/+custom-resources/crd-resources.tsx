@@ -11,7 +11,7 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { IComputedValue } from "mobx";
 import { computed, makeObservable } from "mobx";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
-import { safeJSONPathValue } from "../../utils/jsonPath";
+import { formatJSONValue, safeJSONPathValue } from "../../utils/jsonPath";
 import { TabLayout } from "../layout/tab-layout-2";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import customResourcesRouteParametersInjectable from "./custom-resources-route-parameters.injectable";
@@ -73,7 +73,7 @@ class NonInjectedCustomResources extends React.Component<Dependencies> {
             [columnId.age]: customResource => -customResource.getCreationTimestamp(),
             ...Object.fromEntries(extraColumns.map(({ name, jsonPath }) => [
               name,
-              customResource => safeJSONPathValue(customResource, jsonPath),
+              customResource => formatJSONValue(safeJSONPathValue(customResource, jsonPath)),
             ])),
           }}
           searchFilters={[
