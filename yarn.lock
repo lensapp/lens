@@ -8725,10 +8725,10 @@ markdown@^0.5.0:
   dependencies:
     nopt "~2.1.1"
 
-marked@^4.0.19, marked@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-4.2.1.tgz#eaa32594e45b4e58c02e4d118531fd04345de3b4"
-  integrity sha512-VK1/jNtwqDLvPktNpL0Fdg3qoeUZhmRsuiIjPEy/lHwXW4ouLoZfO4XoWd4ClDt+hupV1VLpkZhEovjU0W/kqA==
+marked@^4.0.19, marked@^4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.2.2.tgz#1d2075ad6cdfe42e651ac221c32d949a26c0672a"
+  integrity sha512-JjBTFTAvuTgANXx82a5vzK9JLSMoV6V3LBVn4Uhdso6t7vXrGx7g1Cd2r6NYSsxrYbQGFCMqBDhFHyK5q2UvcQ==
 
 matcher-collection@^2.0.0:
   version "2.0.1"
