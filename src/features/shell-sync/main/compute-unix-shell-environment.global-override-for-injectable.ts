@@ -6,6 +6,7 @@
 import { getGlobalOverride } from "../../../common/test-utils/get-global-override";
 import computeUnixShellEnvironmentInjectable from "./compute-unix-shell-environment.injectable";
 
-export default getGlobalOverride(computeUnixShellEnvironmentInjectable, () => async () => {
-  throw new Error("Tried to get unix shell env without override");
-});
+export default getGlobalOverride(computeUnixShellEnvironmentInjectable, () => async () => ({
+  callWasSuccessful: true,
+  response: process.env,
+}));
