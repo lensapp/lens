@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { PreferenceItemComponent, PreferencePage } from "../preference-item-injection-token";
-import { preferenceItemInjectionToken } from "../preference-item-injection-token";
 import { PreferencePageComponent } from "../../preference-page-component";
 import { HorizontalLine } from "../../../../../renderer/components/horizontal-line/horizontal-line";
 import React from "react";
+import type { PreferenceItemComponent, PreferencePage } from "@lensapp/preferences";
+import { preferenceItemInjectionToken } from "@lensapp/preferences";
 
 const KubernetesPage: PreferenceItemComponent<PreferencePage> = ({ children, item }) => (
   <PreferencePageComponent title="Kubernetes" id={item.id}>

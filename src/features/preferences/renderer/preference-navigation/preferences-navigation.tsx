@@ -5,7 +5,6 @@
 import { Tabs } from "../../../../renderer/components/tabs";
 import React from "react";
 import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
-import type { PreferenceItemTypes } from "../preference-items/preference-item-injection-token";
 import { Map } from "../../../../renderer/components/map/map";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
@@ -16,6 +15,7 @@ import { compositeHasDescendant } from "../../../../common/utils/composite/compo
 import type { PreferenceTabsRoot } from "../preference-items/preference-tab-root";
 import { Icon } from "../../../../renderer/components/icon";
 import { checkThatAllDiscriminablesAreExhausted } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
+import type { PreferenceItemTypes } from "@lensapp/preferences";
 
 interface Dependencies {
   composite: IComputedValue<Composite<PreferenceItemTypes | PreferenceTabsRoot>>;

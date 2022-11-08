@@ -5,8 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { computed } from "mobx";
-import type { PreferenceItemTypes } from "./preference-item-injection-token";
-import { preferenceItemInjectionToken } from "./preference-item-injection-token";
 import { pipeline } from "@ogre-tools/fp";
 import type { PreferenceTabsRoot } from "./preference-tab-root";
 import { preferenceTabsRoot } from "./preference-tab-root";
@@ -14,6 +12,8 @@ import logErrorInjectable from "../../../../common/log-error.injectable";
 import { isShown } from "../../../../common/utils/composable-responsibilities/showable/showable";
 import { orderByOrderNumber } from "../../../../common/utils/composable-responsibilities/orderable/orderable";
 import { getCompositeFor } from "../../../../common/utils/composite/get-composite/get-composite";
+import type { PreferenceItemTypes } from "@lensapp/preferences";
+import { preferenceItemInjectionToken } from "@lensapp/preferences";
 
 const preferencesCompositeInjectable = getInjectable({
   id: "preferences-composite",

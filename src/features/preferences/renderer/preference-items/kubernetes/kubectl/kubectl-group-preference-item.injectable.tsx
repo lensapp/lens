@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { PreferenceItemTypes } from "../../preference-item-injection-token";
-import { preferenceItemInjectionToken } from "../../preference-item-injection-token";
 import Gutter from "../../../../../../renderer/components/gutter/gutter";
 import React from "react";
+import type { PreferenceItemTypes } from "@lensapp/preferences";
+import { preferenceItemInjectionToken } from "@lensapp/preferences";
 
 const PreferenceItemGroup = ({
   children,

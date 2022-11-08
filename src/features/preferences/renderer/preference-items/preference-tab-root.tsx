@@ -6,8 +6,8 @@ import React from "react";
 import { HorizontalLine } from "../../../../renderer/components/horizontal-line/horizontal-line";
 import type { RootComposite } from "../../../../common/utils/composite/interfaces";
 import type { Discriminable } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
-import type { ChildrenAreSeparated } from "./preference-item-injection-token";
 import styles from "./preference-tab-root.module.scss";
+import type { ChildrenAreSeparated } from "@lensapp/preferences";
 
 export type PreferenceTabsRoot =
   & Discriminable<"preference-tabs-root">

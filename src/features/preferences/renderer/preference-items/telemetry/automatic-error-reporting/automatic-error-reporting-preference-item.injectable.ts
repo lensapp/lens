@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { preferenceItemInjectionToken } from "../../preference-item-injection-token";
 import { AutomaticErrorReporting } from "./automatic-error-reporting";
 import sentryDataSourceNameInjectable from "../../../../../../common/vars/sentry-dsn-url.injectable";
+import { preferenceItemInjectionToken } from "@lensapp/preferences";
 
 const automaticErrorReportingPreferenceItemInjectable = getInjectable({
   id: "automatic-error-reporting-preference-item",

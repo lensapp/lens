@@ -10,13 +10,13 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import closePreferencesInjectable from "./close-preferences/close-preferences.injectable";
 import currentPreferenceTabCompositeInjectable from "./preference-items/current-preference-tab-composite.injectable";
 import type { Composite } from "../../../common/utils/composite/get-composite/get-composite";
-import type { PreferenceItemTypes, PreferenceTab } from "./preference-items/preference-item-injection-token";
 import type { IComputedValue } from "mobx";
 import { Map } from "../../../renderer/components/map/map";
 import { observer } from "mobx-react";
 import { PreferencesNavigation } from "./preference-navigation/preferences-navigation";
 import Gutter from "../../../renderer/components/gutter/gutter";
 import { checkThatAllDiscriminablesAreExhausted } from "../../../common/utils/composable-responsibilities/discriminable/discriminable";
+import type { PreferenceTab, PreferenceItemTypes } from "@lensapp/preferences";
 
 interface Dependencies {
   closePreferences: () => void;

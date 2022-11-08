@@ -5,12 +5,12 @@
 import React from "react";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
-import { preferenceItemInjectionToken } from "../preference-items/preference-item-injection-token";
 import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
 import { PreferencePageComponent } from "../preference-page-component";
 import { ExtensionPreferenceBlock } from "./extension-preference-block";
 import { computed } from "mobx";
 import { HorizontalLine } from "../../../../renderer/components/horizontal-line/horizontal-line";
+import { preferenceItemInjectionToken } from "@lensapp/preferences";
 
 const registratorForPreferenceItemsInjectable = getInjectable({
   id: "registrator-for-preference-items",
