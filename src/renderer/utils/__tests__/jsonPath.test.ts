@@ -5,7 +5,7 @@
 
 import { convertKubectlJsonPathToNodeJsonPath, safeJSONPathValue } from "../jsonPath";
 
-describe("parseJsonPath", () => {
+describe("convertKubectlJsonPathToNodeJsonPath", () => {
   it("should convert \\. to use indexed notation", () => {
     const res = convertKubectlJsonPathToNodeJsonPath(".metadata.labels.kubesphere\\.io/alias-name");
 
@@ -82,13 +82,13 @@ describe("safeJSONPathValue", () => {
   it("should convert boolean values to strings", () => {
     const res = safeJSONPathValue({ bar: false }, ".bar");
 
-    expect(res).toBe("false");
+    expect(res).toBe(false);
   });
 
   it("should convert number values to strings", () => {
     const res = safeJSONPathValue({ bar: 0 }, ".bar");
 
-    expect(res).toBe("0");
+    expect(res).toBe(0);
   });
 
   it("should join sliced entries with commas only", () => {
@@ -103,7 +103,7 @@ describe("safeJSONPathValue", () => {
       ],
     }, ".bar[].foo");
 
-    expect(res).toBe("1");
+    expect(res).toBe(1);
   });
 
   it("should join an array of values using JSON.stringify", () => {
@@ -114,7 +114,7 @@ describe("safeJSONPathValue", () => {
       ],
     }, ".bar");
 
-    expect(res).toBe(`["world","hello"]`);
+    expect(res).toEqual(["world", "hello"]);
   });
 
   it("should stringify an object value", () => {
@@ -122,7 +122,7 @@ describe("safeJSONPathValue", () => {
       foo: { bar: "bat" },
     }, ".foo");
 
-    expect(res).toBe(`{"bar":"bat"}`);
+    expect(res).toEqual({ "bar":"bat" });
   });
 
   it("should use convertKubectlJsonPathToNodeJsonPath", () => {
@@ -155,7 +155,7 @@ describe("safeJSONPathValue", () => {
 
     const res = safeJSONPathValue(obj, ".spec.metrics[*].external.highWatermark..");
 
-    expect(res).toBe("100, 100");
+    expect(res).toEqual(["100", "100"]);
   });
 
   it("should not throw if path is invalid jsonpath", () => {
@@ -163,6 +163,16 @@ describe("safeJSONPathValue", () => {
       foo: { "hello.world": "bat" },
     }, "asd[");
 
-    expect(res).toBe("<unknown>");
+    expect(res).toBe(undefined);
+  });
+
+  it("should retrive value with '/' in jsonpath", () => {
+    const res = safeJSONPathValue({
+      foo: {
+        "hello/world": "bat",
+      },
+    }, ".foo.hello/world");
+
+    expect(res).toBe("bat");
   });
 });

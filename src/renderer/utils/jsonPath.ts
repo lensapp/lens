@@ -6,7 +6,7 @@
 import { JSONPath } from "@astronautlabs/jsonpath";
 import { TypedRegEx } from "typed-regex";
 
-const slashDashSearch = /[\\-]/g;
+const slashDashSearch = /[/\\-]/g;
 const pathByBareDots = /(?<=\w)\./;
 const textBeforeFirstSquare = /^.*(?=\[)/g;
 const backSlash = /\\/g;
@@ -22,6 +22,7 @@ const trailingDotDot = /\.\.$/;
  *
  * Known shorthands:
  * - Leading `$` is optional (but implied)
+ * - The string `/` can be used without a leading `\` escapement
  * - The string `\.` is used to denote the "value of '.'" and not "next key"
  * - The string `-` can be used while not in quotes
  * - `[]` as shorthand for `[0]`
@@ -75,7 +76,15 @@ function convertToIndexNotation(key: string, firstItem = false) {
   }
 }
 
-function formatJSONValue(value: unknown) {
+export function formatJSONValue(value: unknown): string {
+  if (value == null) {
+    return "";
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(formatJSONValue).join(", ");
+  }
+
   if (typeof value === "object") {
     return JSON.stringify(value);
   }
@@ -88,21 +97,21 @@ function formatJSONValue(value: unknown) {
  *
  * This function will also stringify the value retreived from the object
  */
-export function safeJSONPathValue(obj: object, path: string): string {
+export function safeJSONPathValue(obj: object, path: string): unknown {
   try {
     const parsedPath = JSONPath.parse(convertKubectlJsonPathToNodeJsonPath(path));
-    const isSlice = parsedPath.some((exp: any) => exp.expression.type === "slice" || "wildcard");
+    const isSlice = parsedPath.some((exp: any) => exp.expression.type === "slice" || exp.expression.type === "wildcard");
     const value = JSONPath.query(obj, JSONPath.stringify(parsedPath), isSlice ? Infinity : 1);
 
     if (isSlice) {
-      return value.map(formatJSONValue).join(", ");
+      return value;
     }
 
-    return formatJSONValue(value[0]);
+    return value[0];
   } catch (error) {
     // something failed
     console.warn("[JSON-PATH]: failed to parse jsonpath", error);
 
-    return "<unknown>";
+    return undefined;
   }
 }
