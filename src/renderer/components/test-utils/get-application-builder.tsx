@@ -71,7 +71,6 @@ import createClusterInjectable from "../../../main/create-cluster/create-cluster
 import { onLoadOfApplicationInjectionToken } from "../../../main/start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import currentLocationInjectable from "../../api/current-location.injectable";
 import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
-import { runManyFor } from "../../../common/runnable/run-many-for";
 import { beforeQuitOfBackEndInjectionToken } from "../../../main/start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import { KubernetesCluster, LensKubernetesClusterStatus } from "../../../common/catalog-entities";
@@ -79,6 +78,9 @@ import listNamespacesForInjectable from "../../../common/cluster/list-namespaces
 import requestApiResourcesInjectable from "../../../common/cluster/request-api-resources.injectable";
 import { object } from "../../utils";
 import requestNamespaceListPermissionsForInjectable from "../../../common/cluster/request-namespace-list-permissions.injectable";
+import { beforeQuitOfFrontEndInjectionToken } from "../../../main/start-main-application/runnable-tokens/before-quit-of-front-end-injection-token";
+import { runManySyncFor } from "../../../common/runnable/run-many-sync-for";
+import type { MemoryHistory } from "history";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -283,11 +285,19 @@ export const getApplicationBuilder = () => {
           </>
         ));
       },
-
       send: (arg) => {
         sendToWindow(windowId, arg);
       },
+      canGoBack: () => {
+        const history = windowDi.inject(historyInjectable) as MemoryHistory;
 
+        return history.canGo(-1);
+      },
+      canGoForward: () => {
+        const history = windowDi.inject(historyInjectable) as MemoryHistory;
+
+        return history.canGo(1);
+      },
       reload: () => {
         throw new Error("Tried to reload application window which is not implemented yet.");
       },
@@ -741,9 +751,11 @@ export const getApplicationBuilder = () => {
     },
 
     quit() {
-      const runMany = runManyFor(builder.mainDi);
-      const beforeQuitOfBackEnd = runMany(beforeQuitOfBackEndInjectionToken);
+      const runManySync = runManySyncFor(builder.mainDi);
+      const beforeQuitOfFrontEnd = runManySync(beforeQuitOfFrontEndInjectionToken);
+      const beforeQuitOfBackEnd = runManySync(beforeQuitOfBackEndInjectionToken);
 
+      beforeQuitOfFrontEnd();
       beforeQuitOfBackEnd();
     },
 
