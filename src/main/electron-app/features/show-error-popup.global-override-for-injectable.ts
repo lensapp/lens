@@ -3,9 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getGlobalOverride } from "../../../common/test-utils/get-global-override";
+import { getGlobalOverrideForFunction } from "../../../common/test-utils/get-global-override-for-function";
 import showErrorPopupInjectable from "./show-error-popup.injectable";
 
-export default getGlobalOverride(showErrorPopupInjectable, () => () => {
-  throw new Error("Tried to show an error popup without an override");
-});
+export default getGlobalOverrideForFunction(showErrorPopupInjectable);
