@@ -45,11 +45,7 @@ exports[`<CustomResourceDetails /> with a CRD with a boolean field should displa
       <span
         class="value"
       >
-        <ul>
-          <li>
-            false
-          </li>
-        </ul>
+        false
       </span>
     </div>
   </div>
@@ -101,11 +97,7 @@ exports[`<CustomResourceDetails /> with a CRD with a boolean field should displa
       <span
         class="value"
       >
-        <ul>
-          <li>
-            true
-          </li>
-        </ul>
+        true
       </span>
     </div>
   </div>
@@ -157,11 +149,7 @@ exports[`<CustomResourceDetails /> with a CRD with a number field should display
       <span
         class="value"
       >
-        <ul>
-          <li>
-            0
-          </li>
-        </ul>
+        0
       </span>
     </div>
   </div>
@@ -213,11 +201,7 @@ exports[`<CustomResourceDetails /> with a CRD with a number field should display
       <span
         class="value"
       >
-        <ul>
-          <li>
-            1234
-          </li>
-        </ul>
+        1234
       </span>
     </div>
   </div>

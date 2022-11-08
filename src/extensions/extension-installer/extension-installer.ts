@@ -16,6 +16,16 @@ interface Dependencies {
   extensionPackageRootDirectory: string;
 }
 
+const baseNpmInstallArgs = [
+  "install",
+  "--audit=false",
+  "--fund=false",
+  "--omit=dev",
+  "--omit=optional",
+  "--omit=peer",
+  "--prefer-offline",
+];
+
 /**
  * Installs dependencies for extensions
  */
@@ -42,7 +52,7 @@ export class ExtensionInstaller {
       });
 
       logger.info(`${logModule} installing dependencies at ${this.dependencies.extensionPackageRootDirectory}`);
-      await this.npm(["install", "--audit=false", "--fund=false", "--only=prod", "--prefer-offline"]);
+      await this.npm(...baseNpmInstallArgs);
       logger.info(`${logModule} dependencies installed at ${this.dependencies.extensionPackageRootDirectory}`);
     } finally {
       this.installLock.release();
@@ -58,14 +68,14 @@ export class ExtensionInstaller {
 
     try {
       logger.info(`${logModule} installing package from ${name} to ${this.dependencies.extensionPackageRootDirectory}`);
-      await this.npm(["install", "--audit=false", "--fund=false", "--only=prod", "--prefer-offline", name]);
+      await this.npm(...baseNpmInstallArgs, name);
       logger.info(`${logModule} package ${name} installed to ${this.dependencies.extensionPackageRootDirectory}`);
     } finally {
       this.installLock.release();
     }
   };
 
-  private npm(args: string[]): Promise<void> {
+  private npm(...args: string[]): Promise<void> {
     return new Promise((resolve, reject) => {
       const child = child_process.fork(this.npmPath, args, {
         cwd: this.dependencies.extensionPackageRootDirectory,
