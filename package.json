@@ -295,7 +295,9 @@
     "@lensapp/composable-responsibilities": "0.0.1",
     "@lensapp/utils": "0.0.1",
     "@lensapp/composite": "0.0.1",
-    "@lensapp/preferences": "0.0.1"
+    "@lensapp/preferences": "0.0.1",
+    "@lensapp/test-feature": "0.0.1",
+    "@lensapp/feature-core": "0.0.1"
   },
   "devDependencies": {
     "@async-fn/jest": "1.6.4",

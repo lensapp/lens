@@ -45,6 +45,7 @@ import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-regis
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
 import initializeSentryReportingWithInjectable from "../common/error-reporting/initialize-sentry-reporting.injectable";
+import registerFeatures from "./register-features";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -61,6 +62,8 @@ async function attachChromeDebugger() {
 }
 
 export async function bootstrap(di: DiContainer) {
+  registerFeatures(di);
+
   const initializeSentryReportingWith = di.inject(initializeSentryReportingWithInjectable);
 
   if (process.isMainFrame) {
