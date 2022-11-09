@@ -7,17 +7,14 @@ import path from "path";
 export default {
   entry: "./node_modules/node-fetch/src/index.js",
   output: {
-    library: {
-      type: "module",
-    },
     path: path.resolve(__dirname, "..", "build", "webpack"),
     filename: "node-fetch.bundle.js",
-    module: true,
+    library: {
+      name: "NodeFetch",
+      type: "commonjs",
+    },
     clean: true,
     asyncChunks: false, // This is required so that only one file is created
-  },
-  experiments: {
-    outputModule: true,
   },
   mode: "production",
   target: "electron-renderer",
