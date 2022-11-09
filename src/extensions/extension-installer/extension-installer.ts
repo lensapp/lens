@@ -20,8 +20,8 @@ const baseNpmInstallArgs = [
   "install",
   "--audit=false",
   "--fund=false",
+  // NOTE: we do not omit the `optional` dependencies because that is how we specify the non-bundled extensions
   "--omit=dev",
-  "--omit=optional",
   "--omit=peer",
   "--prefer-offline",
 ];
