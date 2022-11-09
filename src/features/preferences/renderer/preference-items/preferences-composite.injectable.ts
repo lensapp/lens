@@ -31,7 +31,7 @@ const preferencesCompositeInjectable = getInjectable({
         logError(
           `Tried to create preferences, but encountered references to unknown ids: "${ids.missingParentIds.join(
             '", "',
-          )}". Available ids are: "${ids.availableParentIds.join('", "')}"`,
+          )}".\n\nAvailable ids are:\n\n${ids.availableParentIds.join("\n")}`,
         );
       },
 
