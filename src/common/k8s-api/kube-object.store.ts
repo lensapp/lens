@@ -7,7 +7,7 @@ import type { ClusterContext } from "./cluster-context";
 
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import type { Disposer } from "../utils";
-import { waitUntilDefined, autoBind, includes, isRequestError, noop, rejectPromiseBy } from "../utils";
+import { waitUntilDefined, autoBind, includes, noop, rejectPromiseBy } from "../utils";
 import type { KubeJsonApiDataFor, KubeObject } from "./kube-object";
 import { KubeStatus } from "./kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-event";
@@ -221,11 +221,7 @@ export abstract class KubeObjectStore<
         try {
           return await res ?? [];
         } catch (error) {
-          onLoadFailure((
-            isRequestError(error)
-              ? error.message || error.toString()
-              : "Unknown error"
-          ));
+          onLoadFailure(String(error));
 
           // reset the store because we are loading all, so that nothing is displayed
           this.items.clear();
