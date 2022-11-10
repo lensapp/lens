@@ -416,7 +416,7 @@
     "react-select-event": "^5.5.1",
     "react-table": "^7.8.0",
     "react-window": "^1.8.8",
-    "sass": "^1.56.0",
+    "sass": "^1.56.1",
     "sass-loader": "^12.6.0",
     "sharp": "^0.31.2",
     "style-loader": "^3.3.1",
