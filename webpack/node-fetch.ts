@@ -22,21 +22,8 @@ export default {
     concatenateModules: true,
     minimize: true,
   },
-  externals: {
-    "node:buffer": "commonjs node:buffer",
-    buffer: "commonjs node:buffer",
-    worker_threads: "commonjs node:worker_threads",
-    "node:fs": "commonjs node:fs",
-    "node:https": "commonjs node:https",
-    "node:http": "commonjs node:http",
-    "node:net": "commonjs node:net",
-    "node:path": "commonjs node:path",
-    "node:process": "commonjs node:process",
-    "node:stream/web": "commonjs node:stream/web",
-    "node:stream": "commonjs node:stream",
-    "node:url": "commonjs node:url",
-    "node:util": "commonjs node:util",
-    "node:zlib": "commonjs node:zlib",
+  externalsPresets: {
+    node: true,
   },
   resolve: {
     extensions: [".js"],
