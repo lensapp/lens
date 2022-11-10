@@ -73,7 +73,7 @@ export class CronJob extends KubeObject<
 > {
   static readonly kind = "CronJob";
   static readonly namespaced = true;
-  static readonly apiBase = "/apis/batch/v1beta1/cronjobs";
+  static readonly apiBase = "/apis/batch/v1/cronjobs";
 
   getSuspendFlag() {
     return (this.spec.suspend ?? false).toString();
