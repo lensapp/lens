@@ -14,7 +14,7 @@ export type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
 
 const fetchInjectable = getInjectable({
   id: "fetch",
-  instantiate: () => fetch,
+  instantiate: (): Fetch => fetch,
   causesSideEffects: true,
 });
 

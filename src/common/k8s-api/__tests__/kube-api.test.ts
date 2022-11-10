@@ -21,8 +21,7 @@ import { flushPromises } from "../../test-utils/flush-promises";
 import createKubeJsonApiInjectable from "../create-kube-json-api.injectable";
 import type { IKubeWatchEvent } from "../kube-watch-event";
 import type { KubeJsonApiDataFor } from "../kube-object";
-import { Headers as NodeFetchHeaders } from "node-fetch";
-import type { Response } from "node-fetch";
+import type { Response, Headers as NodeFetchHeaders } from "node-fetch";
 import AbortController from "abort-controller";
 
 const createMockResponseFromString = (url: string, data: string, statusCode = 200) => {
@@ -33,7 +32,7 @@ const createMockResponseFromString = (url: string, data: string, statusCode = 20
     blob: jest.fn(async () => { throw new Error("blob() is not supported"); }),
     body: new PassThrough(),
     bodyUsed: false,
-    headers: new NodeFetchHeaders(),
+    headers: new Headers() as NodeFetchHeaders,
     json: jest.fn(async () => JSON.parse(await res.text())),
     ok: 200 <= statusCode && statusCode < 300,
     redirected: 300 <= statusCode && statusCode < 400,
@@ -43,8 +42,7 @@ const createMockResponseFromString = (url: string, data: string, statusCode = 20
     text: jest.fn(async () => data),
     type: "basic",
     url,
-    textConverted: jest.fn(async () => { throw new Error("textConverted() is not supported"); }),
-    timeout: 0,
+    formData: jest.fn(async () => { throw new Error("formData() is not supported"); }),
   };
 
   return res;
@@ -58,7 +56,7 @@ const createMockResponseFromStream = (url: string, stream: NodeJS.ReadableStream
     blob: jest.fn(async () => { throw new Error("blob() is not supported"); }),
     body: stream,
     bodyUsed: false,
-    headers: new NodeFetchHeaders(),
+    headers: new Headers() as NodeFetchHeaders,
     json: jest.fn(async () => JSON.parse(await res.text())),
     ok: 200 <= statusCode && statusCode < 300,
     redirected: 300 <= statusCode && statusCode < 400,
@@ -76,8 +74,7 @@ const createMockResponseFromStream = (url: string, stream: NodeJS.ReadableStream
     }),
     type: "basic",
     url,
-    textConverted: jest.fn(async () => { throw new Error("textConverted() is not supported"); }),
-    timeout: 0,
+    formData: jest.fn(async () => { throw new Error("formData() is not supported"); }),
   };
 
   return res;
