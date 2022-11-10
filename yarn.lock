@@ -11776,10 +11776,10 @@ table@^5.4.1:
     slice-ansi "^2.1.0"
     string-width "^3.0.0"
 
-tailwindcss@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.2.2.tgz#705f78cec8f4de2feb52abdb7a8a056e67f2d736"
-  integrity sha512-c2GtSdqg+harR4QeoTmex0Ngfg8IIHNeLQH5yr2B9uZbZR1Xt1rYbjWOWTcj3YLTZhrmZnPowoQDbSRFyZHQ5Q==
+tailwindcss@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.2.3.tgz#c5ee3cb95dae7a80592d43a460d277915c7b2938"
+  integrity sha512-Xt9D4PK4zuuQCEB8bwK9JUCKmTgUwyac/6b0/42Vqhgl6YJkep+Wf5wq+5uXYfmrupdAD0YY2NY1hyZp1HjRrg==
   dependencies:
     arg "^5.0.2"
     chokidar "^3.5.3"

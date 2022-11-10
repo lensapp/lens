@@ -420,7 +420,7 @@
     "sass-loader": "^12.6.0",
     "sharp": "^0.31.2",
     "style-loader": "^3.3.1",
-    "tailwindcss": "^3.2.2",
+    "tailwindcss": "^3.2.3",
     "tar-stream": "^2.2.0",
     "ts-loader": "^9.4.1",
     "ts-node": "^10.9.1",
