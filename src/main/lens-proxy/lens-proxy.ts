@@ -10,22 +10,29 @@ import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import type { Router } from "../router/router";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
-import type { Cluster } from "../../common/cluster/cluster";
-import type { ProxyApiRequestArgs } from "./proxy-functions";
 import { getBoolean } from "../utils/parse-query";
 import assert from "assert";
 import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
-
-type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
+import type { GetClusterForRequest } from "./get-cluster-for-request.injectable";
+import type { Cluster } from "../../common/cluster/cluster";
 
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
 
+export interface ProxyApiRequestArgs {
+  req: SetRequired<http.IncomingMessage, "url" | "method">;
+  socket: net.Socket;
+  head: Buffer;
+  cluster: Cluster;
+}
+
+export type ProxyApiRequestHandler = (args: ProxyApiRequestArgs) => Promise<void> | void;
+
 interface Dependencies {
   getClusterForRequest: GetClusterForRequest;
-  shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
-  kubeApiUpgradeRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
+  shellApiRequestHandler: ProxyApiRequestHandler;
+  kubeApiUpgradeRequestHandler: ProxyApiRequestHandler;
   emitAppEvent: EmitAppEvent;
   readonly router: Router;
   readonly proxy: httpProxy;
@@ -86,11 +93,18 @@ export class LensProxy {
           this.dependencies.logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
           socket.destroy();
         } else {
-          const isInternal = req.url.startsWith(`${apiPrefix}?`);
-          const reqHandler = isInternal ? dependencies.shellApiRequest : dependencies.kubeApiUpgradeRequest;
-
-          (async () => reqHandler({ req, socket, head, cluster }))()
-            .catch(error => this.dependencies.logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
+          (async () => {
+            try {
+              if (req.url.startsWith(`${apiPrefix}?`)) {
+                // internal request
+                await this.dependencies.shellApiRequestHandler({ req, socket, head, cluster });
+              } else {
+                await this.dependencies.kubeApiUpgradeRequestHandler({ req, socket, head, cluster });
+              }
+            } catch (error) {
+              this.dependencies.logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error);
+            }
+          })();
         }
       });
   }

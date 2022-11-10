@@ -12,7 +12,7 @@ export interface OpenShellSessionArgs {
   websocket: WebSocket;
   cluster: Cluster;
   tabId: string;
-  nodeName?: string;
+  nodeName: string | null;
 }
 
 export type OpenShellSession = (args: OpenShellSessionArgs) => Promise<void>;

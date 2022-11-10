@@ -3,6 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { TabId } from "../../renderer/components/dock/dock/store";
+import type { ClusterId } from "../cluster-types";
+import type { RequestChannel } from "../utils/channel/request-channel-listener-injection-token";
+
 
 export enum TerminalChannels {
   STDIN = "stdin",
@@ -28,4 +32,13 @@ export type TerminalMessage = {
   };
 } | {
   type: TerminalChannels.PING;
+};
+
+export interface ClusterShellAuthenticationArgs {
+  clusterId: ClusterId;
+  tabId: TabId;
+}
+
+export const clusterShellAuthenticationChannel: RequestChannel<ClusterShellAuthenticationArgs, Uint8Array> = {
+  id: "cluster-shell-authentication-request",
 };
