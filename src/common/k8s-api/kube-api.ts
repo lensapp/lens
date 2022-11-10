@@ -643,7 +643,7 @@ export class KubeApi<
       clearTimeout(timedRetry);
     });
 
-    setTimeoutFor(abortController, 60 * 1000);
+    setTimeoutFor(abortController, 600 * 1000);
 
     const requestParams = timeout ? { query: { timeoutSeconds: timeout }} : {};
     const watchUrl = this.getWatchUrl(namespace);
