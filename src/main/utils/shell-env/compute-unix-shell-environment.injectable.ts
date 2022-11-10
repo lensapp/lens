@@ -106,6 +106,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
       return new Promise((resolve) => {
         const shellProcess = spawn(shellPath, shellArgs, {
           signal: opts.signal,
+          detached: true,
           env,
         });
         const stdout: Buffer[] = [];
