@@ -13,10 +13,12 @@ const jobMetricsInjectable = getInjectable({
   instantiate: (di, job) => {
     const requestPodMetricsForJobs = di.inject(requestPodMetricsForJobsInjectable);
 
-    return asyncComputed(() => {
-      now(60 * 1000);
+    return asyncComputed({
+      getValueFromObservedPromise: () => {
+        now(60 * 1000);
 
-      return requestPodMetricsForJobs([job], job.getNs());
+        return requestPodMetricsForJobs([job], job.getNs());
+      },
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({

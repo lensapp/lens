@@ -13,10 +13,12 @@ const namespaceMetricsInjectable = getInjectable({
   instantiate: (di, namespace) => {
     const requestPodMetricsInNamespace = di.inject(requestPodMetricsInNamespaceInjectable);
 
-    return asyncComputed(async () => {
-      now(60 * 1000); // Update every minute
+    return asyncComputed({
+      getValueFromObservedPromise: async () => {
+        now(60 * 1000); // Update every minute
 
-      return requestPodMetricsInNamespace(namespace.getName());
+        return requestPodMetricsInNamespace(namespace.getName());
+      },
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({

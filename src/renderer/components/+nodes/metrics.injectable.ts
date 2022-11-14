@@ -13,10 +13,12 @@ const nodeMetricsInjectable = getInjectable({
   instantiate: (di, node) => {
     const requestClusterMetricsByNodeNames = di.inject(requestClusterMetricsByNodeNamesInjectable);
 
-    return asyncComputed(() => {
-      now(60 * 1000);
+    return asyncComputed({
+      getValueFromObservedPromise: () => {
+        now(60 * 1000);
 
-      return requestClusterMetricsByNodeNames([node.getName()]);
+        return requestClusterMetricsByNodeNames([node.getName()]);
+      },
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({

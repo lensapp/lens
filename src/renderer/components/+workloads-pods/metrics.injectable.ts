@@ -13,10 +13,12 @@ const podMetricsInjectable = getInjectable({
   instantiate: (di, pod) => {
     const requestPodMetrics = di.inject(requestPodMetricsInjectable);
 
-    return asyncComputed(() => {
-      now(60 * 1000);
+    return asyncComputed({
+      getValueFromObservedPromise: () => {
+        now(60 * 1000);
 
-      return requestPodMetrics([pod], pod.getNs());
+        return requestPodMetrics([pod], pod.getNs());
+      },
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({

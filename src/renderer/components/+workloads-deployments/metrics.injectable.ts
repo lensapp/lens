@@ -13,10 +13,12 @@ const deploymentMetricsInjectable = getInjectable({
   instantiate: (di, deployment) => {
     const requestPodMetricsForDeployments = di.inject(requestPodMetricsForDeploymentsInjectable);
 
-    return asyncComputed(() => {
-      now(60 * 1000);
+    return asyncComputed({
+      getValueFromObservedPromise: () => {
+        now(60 * 1000);
 
-      return requestPodMetricsForDeployments([deployment], deployment.getNs());
+        return requestPodMetricsForDeployments([deployment], deployment.getNs());
+      },
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({

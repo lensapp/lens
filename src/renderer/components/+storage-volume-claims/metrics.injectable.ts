@@ -13,10 +13,12 @@ const persistentVolumeClaimMetricsInjectable = getInjectable({
   instantiate: (di, persistentVolumeClaim) => {
     const requestPersistentVolumeClaimMetrics = di.inject(requestPersistentVolumeClaimMetricsInjectable);
 
-    return asyncComputed(() => {
-      now(60 * 1000); // update every minute
+    return asyncComputed({
+      getValueFromObservedPromise: () => {
+        now(60 * 1000); // update every minute
 
-      return requestPersistentVolumeClaimMetrics(persistentVolumeClaim);
+        return requestPersistentVolumeClaimMetrics(persistentVolumeClaim);
+      },
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({

@@ -13,10 +13,12 @@ const daemonSetMetricsInjectable = getInjectable({
   instantiate: (di, daemonSet) => {
     const requestPodMetricsForDaemonSets = di.inject(requestPodMetricsForDaemonSetsInjectable);
 
-    return asyncComputed(() => {
-      now(60 * 1000); // update every minute
+    return asyncComputed({
+      getValueFromObservedPromise: () => {
+        now(60 * 1000); // update every minute
 
-      return requestPodMetricsForDaemonSets([daemonSet], daemonSet.getNs());
+        return requestPodMetricsForDaemonSets([daemonSet], daemonSet.getNs());
+      },
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({

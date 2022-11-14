@@ -13,10 +13,12 @@ const replicaSetMetricsInjectable = getInjectable({
   instantiate: (di, replicaSet) => {
     const requestPodMetricsForReplicaSets = di.inject(requestPodMetricsForReplicaSetsInjectable);
 
-    return asyncComputed(() => {
-      now(60 * 1000); // update every minute
+    return asyncComputed({
+      getValueFromObservedPromise: async () => {
+        now(60 * 1000); // update every minute
 
-      return requestPodMetricsForReplicaSets([replicaSet], replicaSet.getNs());
+        return requestPodMetricsForReplicaSets([replicaSet], replicaSet.getNs());
+      },
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({

@@ -13,10 +13,12 @@ const statefulSetMetricsInjectable = getInjectable({
   instantiate: (di, statefulSet) => {
     const requestPodMetricsForStatefulSets = di.inject(requestPodMetricsForStatefulSetsInjectable);
 
-    return asyncComputed(() => {
-      now(60 * 1000);
+    return asyncComputed({
+      getValueFromObservedPromise: async () => {
+        now(60 * 1000);
 
-      return requestPodMetricsForStatefulSets([statefulSet], statefulSet.getNs());
+        return requestPodMetricsForStatefulSets([statefulSet], statefulSet.getNs());
+      },
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({

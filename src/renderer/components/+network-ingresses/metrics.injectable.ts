@@ -13,10 +13,12 @@ const ingressMetricsInjectable = getInjectable({
   instantiate: (di, ingress) => {
     const requestIngressMetrics = di.inject(requestIngressMetricsInjectable);
 
-    return asyncComputed(async () => {
-      now(60 * 1000); // Update every minute
+    return asyncComputed({
+      getValueFromObservedPromise: async () => {
+        now(60 * 1000); // Update every minute
 
-      return requestIngressMetrics(ingress.getName(), ingress.getNs());
+        return requestIngressMetrics(ingress.getName(), ingress.getNs());
+      },
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({
