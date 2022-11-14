@@ -33,7 +33,7 @@ const canvasPrebuildUrl = canvasPrebuiltUrlBuilder(canvasVersion, nodeModuleVers
 
 const canvasPrebuilt = await fetch(canvasPrebuildUrl);
 
-if (canvasPrebuilt.status !== 200) {
+if (canvasPrebuilt.status !== 200 || !canvasPrebuilt.body) {
   throw new Error(`Failed to download prebuilt from ${canvasPrebuildUrl}: ${canvasPrebuilt.statusText}`);
 }
 

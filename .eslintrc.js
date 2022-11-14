@@ -296,5 +296,22 @@ module.exports = {
         }],
       },
     },
+    {
+      files: [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+      ],
+      rules: {
+        "@typescript-eslint/no-restricted-imports": ["error", {
+          "paths": [
+            {
+              "name": "node-fetch",
+              "allowTypeImports": true,
+              "message": "node-fetch@v3 is an ESM package and there cannot be directly imported.",
+            },
+          ],
+        }],
+      },
+    },
   ],
 };
