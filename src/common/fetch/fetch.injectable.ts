@@ -10,11 +10,7 @@ export type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
 
 const fetchInjectable = getInjectable({
   id: "fetch",
-  instantiate: (di): Fetch => {
-    const { default: fetch } = di.inject(nodeFetchModuleInjectable);
-
-    return (url, init) => fetch(url, init);
-  },
+  instantiate: (di): Fetch => di.inject(nodeFetchModuleInjectable).default,
   causesSideEffects: true,
 });
 

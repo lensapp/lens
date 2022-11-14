@@ -277,7 +277,7 @@ export class Kubectl {
 
     const response = await this.dependencies.fetch(this.url, { compress: true });
 
-    if (!response.body || !response.body.readable) {
+    if (!response.body || !response.body.readable || response.status !== 200) {
       throw new Error("Body missing or not readable");
     }
 
