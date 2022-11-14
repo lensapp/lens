@@ -4,7 +4,7 @@
  */
 
 import type { LensApiRequest, Route } from "../router/route";
-import staticFileRouteInjectable from "../routes/static-file-route.injectable";
+import staticFileRouteInjectable from "../routes/files/static-file-route.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 
 jest.mock("electron", () => ({

@@ -473,7 +473,6 @@ export abstract class KubeObjectStore<
       callback,
     });
 
-    // TODO: upgrade node-fetch once we are starting to use ES modules
     const signal = abortController.signal;
 
     const callback: KubeApiWatchCallback<D> = (data, error) => {

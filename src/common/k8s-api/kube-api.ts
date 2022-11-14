@@ -14,7 +14,7 @@ import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-event";
 import type { KubeJsonApiData, KubeJsonApi } from "./kube-json-api";
 import type { Disposer } from "../utils";
-import { isDefined, noop, WrappedAbortController } from "../utils";
+import { setTimeoutFor, isDefined, noop, WrappedAbortController } from "../utils";
 import type { RequestInit, Response } from "node-fetch";
 import type { Patch } from "rfc6902";
 import assert from "assert";
@@ -643,11 +643,12 @@ export class KubeApi<
       clearTimeout(timedRetry);
     });
 
+    setTimeoutFor(abortController, 600 * 1000);
+
     const requestParams = timeout ? { query: { timeoutSeconds: timeout }} : {};
     const watchUrl = this.getWatchUrl(namespace);
     const responsePromise = this.request.getResponse(watchUrl, requestParams, {
       signal: abortController.signal,
-      timeout: 600_000,
     });
 
     logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
@@ -686,7 +687,19 @@ export class KubeApi<
           }, timeout * 1000 * 1.1);
         }
 
-        ["end", "close", "error"].forEach((eventName) => {
+        if (!response.body) {
+          logger.error(`[KUBE-API]: watch (${watchId}) did not return a body`);
+          requestRetried = true;
+
+          clearTimeout(timedRetry);
+          timedRetry = setTimeout(() => { // we did not get any kubernetes errors so let's retry
+            this.watch({ ...opts, namespace, callback, watchId, retry: true });
+          }, 1000);
+
+          return;
+        }
+
+        for (const eventName of ["end", "close", "error"]) {
           response.body.on(eventName, () => {
             // We only retry if we haven't retried, haven't aborted and haven't received k8s error
             // kubernetes errors (=errorReceived set) should be handled in a callback
@@ -703,7 +716,7 @@ export class KubeApi<
               this.watch({ ...opts, namespace, callback, watchId, retry: true });
             }, 1000);
           });
-        });
+        }
 
         byline(response.body).on("data", (line) => {
           try {

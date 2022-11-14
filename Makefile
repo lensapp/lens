@@ -44,7 +44,7 @@ tag-release:
 	scripts/tag-release.sh $(CMD_ARGS)
 
 .PHONY: test
-test: binaries/client
+test: node_modules binaries/client
 	yarn run jest $(or $(CMD_ARGS), "src")
 
 .PHONY: integration

@@ -12,6 +12,7 @@ module.exports = {
     "**/static/**/*",
     "**/site/**/*",
     "extensions/*/*.tgz",
+    "build/webpack/**/*",
   ],
   settings: {
     react: {
