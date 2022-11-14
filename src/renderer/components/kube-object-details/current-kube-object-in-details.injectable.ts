@@ -20,21 +20,23 @@ const currentKubeObjectInDetailsInjectable = getInjectable({
     const urlParam = di.inject(kubeDetailsUrlParamInjectable);
     const apiManager = di.inject(apiManagerInjectable);
 
-    return asyncComputed(async (): Promise<CurrentKubeObject> => {
-      const path = urlParam.get();
-      const store = apiManager.getStore(path);
+    return asyncComputed({
+      getValueFromObservedPromise: async (): Promise<CurrentKubeObject> => {
+        const path = urlParam.get();
+        const store = apiManager.getStore(path);
 
-      if (!store) {
-        return undefined;
-      }
+        if (!store) {
+          return undefined;
+        }
 
-      try {
-        const object = await store.loadFromPath(path);
+        try {
+          const object = await store.loadFromPath(path);
 
-        return { object };
-      } catch (error) {
-        return { error: String(error) };
-      }
+          return { object };
+        } catch (error) {
+          return { error: String(error) };
+        }
+      },
     });
   },
 });
