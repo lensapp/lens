@@ -18,6 +18,10 @@ describe("preferences: URLs of legacy extensions", () => {
     builder = getApplicationBuilder();
   });
 
+  afterEach(() => {
+    builder.quit();
+  });
+
   describe("given extension with custom preferences and a custom preference tab", () => {
     let rendered: RenderResult;
     let discover: Discover;

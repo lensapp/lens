@@ -4,6 +4,9 @@ exports[`preferences: URLs of legacy extensions given extension with both custom
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -432,6 +435,9 @@ exports[`preferences: URLs of legacy extensions given extension with both custom
 exports[`preferences: URLs of legacy extensions given extension with both custom preference tabs and content for the default tab when navigating to unspecified custom preferences tab using magic string URL renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -862,6 +868,9 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1253,6 +1262,9 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1617,6 +1629,9 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
 exports[`preferences: URLs of legacy extensions given extension with custom preferences but without a custom preference tab when navigating to the default preference tab using magic string URL renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
