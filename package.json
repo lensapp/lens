@@ -316,7 +316,7 @@
     "@types/color": "^3.0.3",
     "@types/command-line-args": "^5.2.0",
     "@types/crypto-js": "^3.1.47",
-    "@types/dompurify": "^2.3.4",
+    "@types/dompurify": "^2.4.0",
     "@types/electron-devtools-installer": "^2.2.1",
     "@types/fs-extra": "^9.0.13",
     "@types/glob-to-regexp": "^0.4.1",
