@@ -5,4 +5,3 @@
 
 export * from "./ipc";
 export * from "./invalid-kubeconfig";
-export * from "./type-enforced-ipc";
