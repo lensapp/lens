@@ -6,9 +6,9 @@
 import { app, ipcMain } from "electron";
 import winston, { format } from "winston";
 import type Transport from "winston-transport";
-import { consoleFormat } from "winston-console-format";
 import { isDebugging, isTestEnv } from "./vars";
 import BrowserConsole from "winston-transport-browserconsole";
+import { ConsoleFormat } from "./logger-formaters/console-format";
 
 export interface Logger {
   info: (message: string, ...args: any) => void;
@@ -37,7 +37,7 @@ if (ipcMain) {
         format.colorize({ level: true, message: false }),
         format.padLevels(),
         format.ms(),
-        consoleFormat({
+        new ConsoleFormat({
           showMeta: true,
           inspectOptions: {
             depth: 4,

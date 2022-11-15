@@ -107,7 +107,7 @@ export class KubeWatchApi {
         unsubscribe.push(store.subscribe({ onLoadFailure, abortController: childController }));
       } catch (error) {
         if (!(error instanceof DOMException)) {
-          this.log(Object.assign(new Error("Loading stores has failed"), { cause: error }), {
+          this.log(new Error("Loading stores has failed", { cause: error }), {
             meta: { store, namespaces },
           });
         }

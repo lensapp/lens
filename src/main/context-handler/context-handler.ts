@@ -111,14 +111,12 @@ export class ContextHandler implements ClusterContextHandler {
     const potentialServices = await Promise.allSettled(
       providers.map(provider => provider.getPrometheusService(apiClient)),
     );
-    const errors: any[] = [];
+    const errors = [];
 
     for (const res of potentialServices) {
       switch (res.status) {
         case "rejected":
-          if (res.reason) {
-            errors.push(String(res.reason));
-          }
+          errors.push(res.reason);
           break;
 
         case "fulfilled":
@@ -128,7 +126,7 @@ export class ContextHandler implements ClusterContextHandler {
       }
     }
 
-    throw Object.assign(new Error("No Prometheus service found"), { cause: errors });
+    throw new Error("No Prometheus service found", { cause: errors });
   }
 
   async resolveAuthProxyUrl(): Promise<string> {
