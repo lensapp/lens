@@ -745,7 +745,7 @@ export class KubeApi<
       })
       .catch(error => {
         if (!abortController.signal.aborted) {
-          this.dependencies.logger.error(`[KUBE-API] watch (${watchId}) throwed ${watchUrl}`, error);
+          this.dependencies.logger.error(`[KUBE-API] watch (${watchId}) threw ${watchUrl}`, error);
         }
         callback(null, error);
       });
