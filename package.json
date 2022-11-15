@@ -257,7 +257,7 @@
     "md5-file": "^5.0.0",
     "mobx": "^6.6.2",
     "mobx-observable-history": "^2.0.3",
-    "mobx-react": "^7.5.3",
+    "mobx-react": "^7.6.0",
     "mobx-utils": "^6.0.4",
     "mock-fs": "^5.2.0",
     "moment": "^2.29.4",
