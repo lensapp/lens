@@ -5,10 +5,9 @@
 
 import type { IpcRendererEvent } from "electron";
 import { ipcRenderer } from "electron";
-import { onCorrect } from "../../common/ipc";
 import { Notifications } from "../components/notifications";
 import { defaultHotbarCells } from "../../common/hotbars/types";
-import { type ListNamespaceForbiddenArgs, clusterListNamespaceForbiddenChannel, isListNamespaceForbiddenArgs } from "../../common/ipc/cluster";
+import { type ListNamespaceForbiddenArgs, clusterListNamespaceForbiddenChannel } from "../../common/ipc/cluster";
 import { hotbarTooManyItemsChannel } from "../../common/ipc/hotbar";
 
 function HotbarTooManyItemsHandler(): void {
@@ -23,15 +22,6 @@ interface Dependencies {
 }
 
 export const registerIpcListeners = ({ listNamespacesForbiddenHandler }: Dependencies) => () => {
-  onCorrect({
-    source: ipcRenderer,
-    channel: clusterListNamespaceForbiddenChannel,
-    listener: listNamespacesForbiddenHandler,
-    verifier: isListNamespaceForbiddenArgs,
-  });
-  onCorrect({
-    source: ipcRenderer,
-    channel: hotbarTooManyItemsChannel,
-    listener: HotbarTooManyItemsHandler,
-    verifier: (args: unknown[]): args is [] => args.length === 0,
-  });};
+  ipcRenderer.on(clusterListNamespaceForbiddenChannel, listNamespacesForbiddenHandler);
+  ipcRenderer.on(hotbarTooManyItemsChannel, HotbarTooManyItemsHandler);
+};
