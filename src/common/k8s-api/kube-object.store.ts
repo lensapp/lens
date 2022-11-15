@@ -221,7 +221,7 @@ export abstract class KubeObjectStore<
         try {
           return await res ?? [];
         } catch (error) {
-          onLoadFailure(String(error));
+          onLoadFailure(new Error(`Failed to load ${this.api.apiBase}`, { cause: error }));
 
           // reset the store because we are loading all, so that nothing is displayed
           this.items.clear();
@@ -249,7 +249,7 @@ export abstract class KubeObjectStore<
 
         case "rejected":
           if (onLoadFailure) {
-            onLoadFailure(result.reason.message || result.reason);
+            onLoadFailure(new Error(`Failed to load ${this.api.apiBase}`, { cause: result.reason }));
           } else {
             // if onLoadFailure is not provided then preserve old behaviour
             throw result.reason;
