@@ -4,7 +4,7 @@
  */
 
 import { LEVEL, MESSAGE, SPLAT } from "triple-beam";
-import colors from "colors/safe";
+import chalk from "chalk";
 import type { InspectOptions } from "util";
 import { inspect } from "util";
 
@@ -77,7 +77,7 @@ export class ConsoleFormat {
   private message(info: TransformableInfo, chr: string, color: string): string {
     const message = info.message.replace(
       ConsoleFormat.reSpacesOrEmpty,
-      `$1${color}${colors.dim(chr)}${colors.reset(" ")}`,
+      `$1${color}${chalk.dim(chr)}${chalk.reset(" ")}`,
     );
 
     return `${info.level}:${message}`;
@@ -89,7 +89,7 @@ export class ConsoleFormat {
 
   private ms(info: TransformableInfo): string {
     if (info.ms) {
-      return colors.italic(colors.dim(` ${info.ms}`));
+      return chalk.italic(chalk.dim(` ${info.ms}`));
     }
 
     return "";
@@ -152,13 +152,13 @@ export class ConsoleFormat {
     const pad = this.pad(info.message);
 
     messages.forEach((line, index, arr) => {
-      const lineNumber = colors.dim(`[${(index + 1).toString().padStart(arr.length.toString().length, " ")}]`);
+      const lineNumber = chalk.dim(`[${(index + 1).toString().padStart(arr.length.toString().length, " ")}]`);
       let chr = ConsoleFormat.chars.line;
 
       if (index === arr.length - 1) {
         chr = ConsoleFormat.chars.endLine;
       }
-      info[MESSAGE] += `\n${colors.dim(info.level)}:${pad}${color}${colors.dim(chr)}${colors.reset(" ")}`;
+      info[MESSAGE] += `\n${chalk.dim(info.level)}:${pad}${color}${chalk.dim(chr)}${chalk.reset(" ")}`;
       info[MESSAGE] += `${lineNumber} ${line}`;
     });
   }

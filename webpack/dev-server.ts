@@ -6,7 +6,6 @@
 import Webpack from "webpack";
 import WebpackDevServer from "webpack-dev-server";
 import { webpackLensRenderer } from "./renderer";
-import logger from "../src/common/logger";
 import { buildDir, webpackDevServerPort } from "./vars";
 
 /**
@@ -42,6 +41,6 @@ const server = new WebpackDevServer({
   },
 }, compiler);
 
-logger.info(`[WEBPACK-DEV-SERVER]: created with options`, server.options);
+console.info(`[WEBPACK-DEV-SERVER]: created with options`, server.options);
 
 server.start();

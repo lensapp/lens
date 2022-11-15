@@ -68,6 +68,7 @@ import applicationMenuItemCompositeInjectable from "../../../features/applicatio
 import { getCompositePaths } from "../../../common/utils/composite/get-composite-paths/get-composite-paths";
 import { discoverFor } from "./discovery-of-html-elements";
 import { findComposite } from "../../../common/utils/composite/find-composite/find-composite";
+import shouldStartHiddenInjectable from "../../../main/electron-app/features/should-start-hidden.injectable";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -313,11 +314,9 @@ export const getApplicationBuilder = () => {
           .map(toWindowWithHelpersFor(windowHelpers)),
 
       get: (id) => {
-        const applicationWindows = builder.applicationWindow.getAll();
-
-        const applicationWindow = applicationWindows.find(
-          (window) => window.id === id,
-        );
+        const applicationWindow = builder.applicationWindow
+          .getAll()
+          .find((window) => window.id === id);
 
         if (!applicationWindow) {
           throw new Error(`Tried to get application window with ID "${id}" but it was not found.`);
@@ -327,9 +326,7 @@ export const getApplicationBuilder = () => {
       },
 
       create: (id) => {
-        const createApplicationWindow = mainDi.inject(
-          createApplicationWindowInjectable,
-        );
+        const createApplicationWindow = mainDi.inject(createApplicationWindowInjectable);
 
         createApplicationWindow(id);
 
@@ -656,11 +653,8 @@ export const getApplicationBuilder = () => {
         await callback(mainDi);
       }
 
-      const startMainApplication = mainDi.inject(
-        startMainApplicationInjectable,
-      );
-
-      await startMainApplication(false);
+      mainDi.override(shouldStartHiddenInjectable, () => true);
+      await mainDi.inject(startMainApplicationInjectable);
 
       applicationHasStarted = true;
     },
@@ -672,21 +666,15 @@ export const getApplicationBuilder = () => {
         await callback(mainDi);
       }
 
-      const startMainApplication = mainDi.inject(
-        startMainApplicationInjectable,
-      );
-
-      await startMainApplication(true);
+      mainDi.override(shouldStartHiddenInjectable, () => false);
+      await mainDi.inject(startMainApplicationInjectable);
 
       applicationHasStarted = true;
 
-      const applicationWindow = builder.applicationWindow.get(
-        "first-application-window",
-      );
-
-      assert(applicationWindow);
-
-      return applicationWindow.rendered;
+      return builder
+        .applicationWindow
+        .get("first-application-window")
+        .rendered;
     },
 
     select: {

@@ -365,6 +365,7 @@
     "@typescript-eslint/parser": "^5.42.1",
     "adr": "^1.4.3",
     "ansi_up": "^5.1.0",
+    "chalk": "^4.1.2",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
     "cli-progress": "^3.11.2",
