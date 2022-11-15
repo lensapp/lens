@@ -26,6 +26,7 @@ import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-global
 import { apiKubeInjectionToken } from "./api-kube";
 import type AbortController from "abort-controller";
 import loggerInjectable from "../logger.injectable";
+import { matches } from "lodash/fp";
 
 /**
  * The options used for creating a `KubeApi`
@@ -156,24 +157,12 @@ export interface KubeApiResourceVersionList {
   versions: KubeApiResourceVersion[];
 }
 
-const getOrderedVersions = (list: KubeApiResourceVersionList): KubeApiResourceVersion[] => {
-  const result = [
-    list.preferredVersion,
-  ];
+const not = <T>(fn: (val: T) => boolean) => (val: T) => !(fn(val));
 
-  for (const version of list.versions) {
-    if (
-      version.groupVersion === list.preferredVersion.groupVersion
-      && version.version === list.preferredVersion.version
-    ) {
-      continue;
-    }
-
-    result.push(version);
-  }
-
-  return result;
-};
+const getOrderedVersions = (list: KubeApiResourceVersionList): KubeApiResourceVersion[] => [
+  list.preferredVersion,
+  ...list.versions.filter(not(matches(list.preferredVersion))),
+];
 
 export type PropagationPolicy = undefined | "Orphan" | "Foreground" | "Background";
 
