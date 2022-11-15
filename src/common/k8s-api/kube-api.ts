@@ -19,12 +19,14 @@ import type { RequestInit, Response } from "node-fetch";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
-import logger from "../logger";
+import type { Logger } from "../logger";
 import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import autoRegistrationEmitterInjectable from "./api-manager/auto-registration-emitter.injectable";
 import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import { apiKubeInjectionToken } from "./api-kube";
 import type AbortController from "abort-controller";
+import loggerInjectable from "../logger.injectable";
+import { matches } from "lodash/fp";
 
 /**
  * The options used for creating a `KubeApi`
@@ -142,6 +144,26 @@ export interface KubeApiResourceList {
   resources: KubeApiResource[];
 }
 
+export interface KubeApiResourceVersion {
+  groupVersion: string;
+  version: string;
+}
+
+export interface KubeApiResourceVersionList {
+  apiVersion: string;
+  kind: string;
+  name: string;
+  preferredVersion: KubeApiResourceVersion;
+  versions: KubeApiResourceVersion[];
+}
+
+const not = <T>(fn: (val: T) => boolean) => (val: T) => !(fn(val));
+
+const getOrderedVersions = (list: KubeApiResourceVersionList): KubeApiResourceVersion[] => [
+  list.preferredVersion,
+  ...list.versions.filter(not(matches(list.preferredVersion))),
+];
+
 export type PropagationPolicy = undefined | "Orphan" | "Foreground" | "Background";
 
 export type KubeApiWatchCallback<T extends KubeJsonApiData = KubeJsonApiData> = (data: IKubeWatchEvent<T> | null, error: KubeStatus | Response | null | any) => void;
@@ -233,6 +255,10 @@ function legacyRegisterApi(api: KubeApi<any, any>): void {
   }
 }
 
+export interface KubeApiDependencies {
+  readonly logger: Logger;
+}
+
 export class KubeApi<
   Object extends KubeObject = KubeObject,
   Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
@@ -254,6 +280,8 @@ export class KubeApi<
   protected readonly doCheckPreferredVersion: boolean;
   protected readonly fullApiPathname: string;
   protected readonly fallbackApiBases: string[] | undefined;
+
+  protected readonly dependencies: KubeApiDependencies;
 
   constructor(opts: KubeApiOptions<Object, Data>) {
     const {
@@ -287,6 +315,10 @@ export class KubeApi<
     this.request = request;
     this.objectConstructor = objectConstructor;
     legacyRegisterApi(this);
+
+    this.dependencies = {
+      logger: asLegacyGlobalForExtensionApi(loggerInjectable),
+    };
   }
 
   get apiVersionWithGroup() {
@@ -310,15 +342,20 @@ export class KubeApi<
 
     for (const apiUrl of apiBases) {
       try {
-        // Split e.g. "/apis/extensions/v1beta1/ingresses" to parts
-        const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = parseKubeApi(apiUrl);
+        const { apiPrefix, apiGroup, resource } = parseKubeApi(apiUrl);
+        const list = await this.request.get(`${apiPrefix}/${apiGroup}`) as KubeApiResourceVersionList;
+        const resourceVersions = getOrderedVersions(list);
 
-        // Request available resources
-        const { resources } = (await this.request.get(`${apiPrefix}/${apiVersionWithGroup}`)) as unknown as KubeApiResourceList;
+        for (const resourceVersion of resourceVersions) {
+          const { resources } = await this.request.get(`${apiPrefix}/${resourceVersion.groupVersion}`) as KubeApiResourceList;
 
-        // If the resource is found in the group, use this apiUrl
-        if (resources.find(({ name }) => name === resource)) {
-          return { apiPrefix, apiGroup };
+          if (resources.some(({ name }) => name === resource)) {
+            return {
+              apiPrefix,
+              apiGroup,
+              apiVersionPreferred: resourceVersion.version,
+            };
+          }
         }
       } catch (error) {
         // Exception is ignored as we can try the next url
@@ -328,48 +365,19 @@ export class KubeApi<
     throw new Error(`Can't find working API for the Kubernetes resource ${this.apiResource}`);
   }
 
-  /**
-   * Get the apiPrefix and apiGroup to be used for fetching the preferred version.
-   */
-  private async getPreferredVersionPrefixGroup() {
-    if (this.fallbackApiBases) {
-      try {
-        return await this.getLatestApiPrefixGroup();
-      } catch (error) {
-        // If valid API wasn't found, log the error and return defaults below
-        logger.error(`[KUBE-API]: ${error}`);
-      }
-    }
-
-    return {
-      apiPrefix: this.apiPrefix,
-      apiGroup: this.apiGroup,
-    };
-  }
-
   protected async checkPreferredVersion() {
     if (this.fallbackApiBases && !this.doCheckPreferredVersion) {
       throw new Error("checkPreferredVersion must be enabled if fallbackApiBases is set in KubeApi");
     }
 
     if (this.doCheckPreferredVersion && this.apiVersionPreferred === undefined) {
-      const { apiPrefix, apiGroup } = await this.getPreferredVersionPrefixGroup();
+      const { apiPrefix, apiGroup, apiVersionPreferred } = await this.getLatestApiPrefixGroup();
 
-      assert(apiPrefix);
-
-      // The apiPrefix and apiGroup might change due to fallbackApiBases, so we must override them
       this.apiPrefix = apiPrefix;
       this.apiGroup = apiGroup;
-
-      const url = [apiPrefix, apiGroup].filter(Boolean).join("/");
-      const res = await this.request.get(url) as IKubePreferredVersion;
-
-      this.apiVersionPreferred = res?.preferredVersion?.version;
-
-      if (this.apiVersionPreferred) {
-        this.apiBase = this.computeApiBase();
-        legacyRegisterApi(this);
-      }
+      this.apiVersionPreferred = apiVersionPreferred;
+      this.apiBase = this.computeApiBase();
+      legacyRegisterApi(this);
     }
   }
 
@@ -639,7 +647,7 @@ export class KubeApi<
     const abortController = new WrappedAbortController(opts?.abortController);
 
     abortController.signal.addEventListener("abort", () => {
-      logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
+      this.dependencies.logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
       clearTimeout(timedRetry);
     });
 
@@ -651,7 +659,7 @@ export class KubeApi<
       signal: abortController.signal,
     });
 
-    logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
+    this.dependencies.logger.info(`[KUBE-API] watch (${watchId}) ${retry === true ? "retried" : "started"} ${watchUrl}`);
 
     responsePromise
       .then(response => {
@@ -659,7 +667,7 @@ export class KubeApi<
         let requestRetried = false;
 
         if (!response.ok) {
-          logger.warn(`[KUBE-API] watch (${watchId}) error response ${watchUrl}`, { status: response.status });
+          this.dependencies.logger.warn(`[KUBE-API] watch (${watchId}) error response ${watchUrl}`, { status: response.status });
 
           return callback(null, response);
         }
@@ -676,7 +684,7 @@ export class KubeApi<
             // Close current request
             abortController.abort();
 
-            logger.info(`[KUBE-API] Watch timeout set, but not retried, retrying now`);
+            this.dependencies.logger.info(`[KUBE-API] Watch timeout set, but not retried, retrying now`);
 
             requestRetried = true;
 
@@ -688,7 +696,7 @@ export class KubeApi<
         }
 
         if (!response.body) {
-          logger.error(`[KUBE-API]: watch (${watchId}) did not return a body`);
+          this.dependencies.logger.error(`[KUBE-API]: watch (${watchId}) did not return a body`);
           requestRetried = true;
 
           clearTimeout(timedRetry);
@@ -707,7 +715,7 @@ export class KubeApi<
               return;
             }
 
-            logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}`);
+            this.dependencies.logger.info(`[KUBE-API] watch (${watchId}) ${eventName} ${watchUrl}`);
 
             requestRetried = true;
 
@@ -736,8 +744,9 @@ export class KubeApi<
         });
       })
       .catch(error => {
-        logger.error(`[KUBE-API] watch (${watchId}) throwed ${watchUrl}`, error);
-
+        if (!abortController.signal.aborted) {
+          this.dependencies.logger.error(`[KUBE-API] watch (${watchId}) threw ${watchUrl}`, error);
+        }
         callback(null, error);
       });
 

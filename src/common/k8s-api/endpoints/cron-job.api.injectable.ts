@@ -14,9 +14,6 @@ const cronJobApiInjectable = getInjectable({
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "cronJobApi is only available in certain environments");
 
     return new CronJobApi({
-      fallbackApiBases: [
-        "/apis/batch/v1beta1/cronjobs",
-      ],
       checkPreferredVersion: true,
     });
   },

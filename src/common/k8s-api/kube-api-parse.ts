@@ -17,6 +17,7 @@ export interface IKubeApiLinkRef {
 
 export interface IKubeApiParsed extends IKubeApiLinkRef {
   apiBase: string;
+  apiPrefix: string;
   apiGroup: string;
   apiVersionWithGroup: string;
 }
