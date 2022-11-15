@@ -95,7 +95,10 @@ describe("opening dock tab for installing helm chart", () => {
             urls: [],
             annotations: {},
             dependencies: [],
-            maintainers: [],
+            maintainers: [{
+              email: "some@foo.com",
+              name: "Some Foo",
+            }],
             deprecated: false,
           }),
 
@@ -111,7 +114,10 @@ describe("opening dock tab for installing helm chart", () => {
             urls: [],
             annotations: {},
             dependencies: [],
-            maintainers: [],
+            maintainers: [{
+              email: "other@bar.com",
+              name: "Other Bar",
+            }],
             deprecated: false,
           }),
         ]);
@@ -162,7 +168,10 @@ describe("opening dock tab for installing helm chart", () => {
                 urls: [],
                 annotations: {},
                 dependencies: [],
-                maintainers: [],
+                maintainers: [{
+                  email: "some@foo.com",
+                  name: "Some Foo",
+                }],
                 deprecated: false,
               }),
 
@@ -178,7 +187,10 @@ describe("opening dock tab for installing helm chart", () => {
                 urls: [],
                 annotations: {},
                 dependencies: [],
-                maintainers: [],
+                maintainers: [{
+                  email: "other@bar.com",
+                  name: "Other Bar",
+                }],
                 deprecated: false,
               }),
             ]);

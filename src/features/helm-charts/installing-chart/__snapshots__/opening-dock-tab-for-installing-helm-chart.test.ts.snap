@@ -2773,7 +2773,11 @@ exports[`opening dock tab for installing helm chart given application is started
                 </span>
                 <span
                   class="value"
-                />
+                >
+                  <li>
+                    Some Foo&lt;some@foo.com&gt;
+                  </li>
+                </span>
               </div>
             </div>
           </div>
@@ -3676,7 +3680,11 @@ exports[`opening dock tab for installing helm chart given application is started
                 </span>
                 <span
                   class="value"
-                />
+                >
+                  <li>
+                    Some Foo&lt;some@foo.com&gt;
+                  </li>
+                </span>
               </div>
             </div>
           </div>
@@ -4589,7 +4597,11 @@ exports[`opening dock tab for installing helm chart given application is started
                 </span>
                 <span
                   class="value"
-                />
+                >
+                  <li>
+                    Some Foo&lt;some@foo.com&gt;
+                  </li>
+                </span>
               </div>
             </div>
           </div>
@@ -5492,7 +5504,11 @@ exports[`opening dock tab for installing helm chart given application is started
                 </span>
                 <span
                   class="value"
-                />
+                >
+                  <li>
+                    Some Foo&lt;some@foo.com&gt;
+                  </li>
+                </span>
               </div>
             </div>
           </div>
