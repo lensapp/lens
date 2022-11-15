@@ -35,12 +35,18 @@ export default class EventResourceStatusRendererExtension extends Renderer.LensE
     },
     {
       kind: "Job",
-      apiVersions: ["batch/v1"],
+      apiVersions: [
+        "batch/v1",
+        "batch/v1beta1",
+      ],
       resolve: (job: Renderer.K8sApi.Job) => resolveStatus(job),
     },
     {
       kind: "CronJob",
-      apiVersions: ["batch/v1"],
+      apiVersions: [
+        "batch/v1",
+        "batch/v1beta1",
+      ],
       resolve: (cronJob: Renderer.K8sApi.CronJob) => resolveStatusForCronJobs(cronJob),
     },
   ];
