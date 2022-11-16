@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
 import os from "os";
 import { unionPATHs } from "../../../common/utils/union-env-path";
 import isSnapPackageInjectable from "../../../common/vars/is-snap-package.injectable";
@@ -61,7 +60,7 @@ const setupShellInjectable = getInjectable({
     };
   },
 
-  injectionToken: onLoadOfApplicationInjectionToken,
+  // injectionToken: onLoadOfApplicationInjectionToken,
   causesSideEffects: true,
 });
 
