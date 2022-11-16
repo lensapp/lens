@@ -34,6 +34,11 @@ import User from "./user.svg";
 import Users from "./users.svg";
 import Wheel from "./wheel.svg";
 import Workloads from "./workloads.svg";
+import type { Logger } from "../../../common/logger";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
+
+const hrefValidation = /https?:\/\//;
 
 /**
  * Mapping between the local file names and the svgs
@@ -155,16 +160,21 @@ export function isSvg(content: string): boolean {
   return String(content).includes("<svg");
 }
 
-const RawIcon = withTooltip((props: IconProps) => {
+interface Dependencies {
+  logger: Logger;
+}
+
+const RawIcon = withTooltip((props: IconProps & Dependencies) => {
   const ref = createRef<HTMLAnchorElement>();
 
   const {
-  // skip passing props to icon's html element
+    // skip passing props to icon's html element
     className, href, link, material, svg, size, smallest, small, big,
     disabled, sticker, active,
     focusable = true,
     children,
     interactive, onClick, onKeyDown,
+    logger,
     ...elemProps
   } = props;
   const isInteractive = interactive ?? !!(onClick || href || link);
@@ -245,6 +255,12 @@ const RawIcon = withTooltip((props: IconProps) => {
   }
 
   if (href) {
+    if (hrefValidation.exec(href) === null) {
+      logger.warn("[ICON]: href prop is unsafe, blocking", { href });
+
+      return null;
+    }
+
     return (
       <a
         {...iconProps}
@@ -257,4 +273,11 @@ const RawIcon = withTooltip((props: IconProps) => {
   return <i {...iconProps} ref={ref} />;
 });
 
-export const Icon = Object.assign(RawIcon, { isSvg });
+const InjectedIcon = withInjectables<Dependencies, IconProps>(RawIcon, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+  }),
+});
+
+export const Icon = Object.assign(InjectedIcon, { isSvg });
