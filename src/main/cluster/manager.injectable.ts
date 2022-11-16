@@ -7,6 +7,7 @@ import clusterStoreInjectable from "../../common/cluster-store/cluster-store.inj
 import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
 import clustersThatAreBeingDeletedInjectable from "./are-being-deleted.injectable";
 import { ClusterManager } from "./manager";
+import visibleClusterInjectable from "./visible-cluster.injectable";
 
 const clusterManagerInjectable = getInjectable({
   id: "cluster-manager",
@@ -15,6 +16,7 @@ const clusterManagerInjectable = getInjectable({
     store: di.inject(clusterStoreInjectable),
     catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
     clustersThatAreBeingDeleted: di.inject(clustersThatAreBeingDeletedInjectable),
+    visibleCluster: di.inject(visibleClusterInjectable),
   }),
 });
 

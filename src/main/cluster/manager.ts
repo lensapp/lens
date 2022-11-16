@@ -5,7 +5,7 @@
 
 import "../../common/ipc/cluster";
 import type http from "http";
-import type { ObservableSet } from "mobx";
+import type { IObservableValue, ObservableSet } from "mobx";
 import { action, makeObservable, observe, reaction, toJS } from "mobx";
 import type { Cluster } from "../../common/cluster/cluster";
 import logger from "../logger";
@@ -18,7 +18,6 @@ import { once } from "lodash";
 import type { ClusterStore } from "../../common/cluster-store/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
 import type { CatalogEntityRegistry } from "../catalog";
-import type { ObservableValue } from "mobx/dist/internal";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
@@ -28,7 +27,7 @@ interface Dependencies {
   readonly store: ClusterStore;
   readonly catalogEntityRegistry: CatalogEntityRegistry;
   readonly clustersThatAreBeingDeleted: ObservableSet<ClusterId>;
-  readonly visibleCluster: ObservableValue<ClusterId | null>;
+  readonly visibleCluster: IObservableValue<ClusterId | null>;
 }
 
 export class ClusterManager {
