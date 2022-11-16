@@ -82,8 +82,6 @@ describe("BaseStore", () => {
     mainDi.override(directoryForUserDataInjectable, () => "some-user-data-directory");
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
 
-    TestStore.resetInstance();
-
     const mockOpts = {
       "some-user-data-directory": {
         "test-store.json": JSON.stringify({}),
@@ -92,13 +90,12 @@ describe("BaseStore", () => {
 
     mockFs(mockOpts);
 
-    store = TestStore.createInstance();
+    store = new TestStore();
   });
 
   afterEach(() => {
     mockFs.restore();
     store.disableSync();
-    TestStore.resetInstance();
   });
 
   describe("persistence", () => {

@@ -11,15 +11,11 @@ import emitAppEventInjectable from "../app-event-bus/emit-event.injectable";
 const clusterStoreInjectable = getInjectable({
   id: "cluster-store",
 
-  instantiate: (di) => {
-    ClusterStore.resetInstance();
-
-    return ClusterStore.createInstance({
-      createCluster: di.inject(createClusterInjectionToken),
-      readClusterConfigSync: di.inject(readClusterConfigSyncInjectable),
-      emitAppEvent: di.inject(emitAppEventInjectable),
-    });
-  },
+  instantiate: (di) => new ClusterStore({
+    createCluster: di.inject(createClusterInjectionToken),
+    readClusterConfigSync: di.inject(readClusterConfigSyncInjectable),
+    emitAppEvent: di.inject(emitAppEventInjectable),
+  }),
 
   causesSideEffects: true,
 });

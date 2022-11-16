@@ -10,14 +10,10 @@ import loggerInjectable from "../logger.injectable";
 const hotbarStoreInjectable = getInjectable({
   id: "hotbar-store",
 
-  instantiate: (di) => {
-    HotbarStore.resetInstance();
-
-    return HotbarStore.createInstance({
-      catalogCatalogEntity: di.inject(catalogCatalogEntityInjectable),
-      logger: di.inject(loggerInjectable),
-    });
-  },
+  instantiate: (di) => new HotbarStore({
+    catalogCatalogEntity: di.inject(catalogCatalogEntityInjectable),
+    logger: di.inject(loggerInjectable),
+  }),
 
   causesSideEffects: true,
 });

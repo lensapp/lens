@@ -10,14 +10,10 @@ import emitAppEventInjectable from "../app-event-bus/emit-event.injectable";
 const userStoreInjectable = getInjectable({
   id: "user-store",
 
-  instantiate: (di) => {
-    UserStore.resetInstance();
-
-    return UserStore.createInstance({
-      selectedUpdateChannel: di.inject(selectedUpdateChannelInjectable),
-      emitAppEvent: di.inject(emitAppEventInjectable),
-    });
-  },
+  instantiate: (di) => new UserStore({
+    selectedUpdateChannel: di.inject(selectedUpdateChannelInjectable),
+    emitAppEvent: di.inject(emitAppEventInjectable),
+  }),
 
   causesSideEffects: true,
 });

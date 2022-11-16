@@ -19,7 +19,6 @@ import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
 import logger from "../common/logger";
-import { WeblinkStore } from "../common/weblink-store";
 import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
@@ -129,8 +128,6 @@ export async function bootstrap(di: DiContainer) {
   // ThemeStore depends on: UserStore
   // TODO: Remove temporal dependencies
   di.inject(themeStoreInjectable);
-
-  WeblinkStore.createInstance();
 
   const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
 

@@ -7,14 +7,7 @@ import { ExtensionsStore } from "./extensions-store";
 
 const extensionsStoreInjectable = getInjectable({
   id: "extensions-store",
-
-  instantiate: () => {
-    ExtensionsStore.resetInstance();
-
-    return ExtensionsStore.createInstance();
-  },
-
-  causesSideEffects: true,
+  instantiate: () => new ExtensionsStore(),
 });
 
 export default extensionsStoreInjectable;

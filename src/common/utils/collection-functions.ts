@@ -52,7 +52,10 @@ export function getOrInsertSet<K, SK>(map: Map<K, Set<SK>>, key: K): Set<SK> {
  * Like `getOrInsert` but with delayed creation of the item. Which is useful
  * if it is very expensive to create the initial value.
  */
-export function getOrInsertWith<K, V>(map: Map<K, V>, key: K, builder: () => V): V {
+export function getOrInsertWith<K, V>(map: Map<K, V>, key: K, builder: () => V): V;
+export function getOrInsertWith<K extends object, V>(map: Map<K, V> | WeakMap<K, V>, key: K, builder: () => V): V;
+
+export function getOrInsertWith<K extends object, V>(map: Map<K, V> | WeakMap<K, V>, key: K, builder: () => V): V {
   if (!map.has(key)) {
     map.set(key, builder());
   }

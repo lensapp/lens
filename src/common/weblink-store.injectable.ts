@@ -7,12 +7,7 @@ import { WeblinkStore } from "./weblink-store";
 
 const weblinkStoreInjectable = getInjectable({
   id: "weblink-store",
-
-  instantiate: () => {
-    WeblinkStore.resetInstance();
-
-    return WeblinkStore.createInstance();
-  },
+  instantiate: () => new WeblinkStore(),
 });
 
 export default weblinkStoreInjectable;
