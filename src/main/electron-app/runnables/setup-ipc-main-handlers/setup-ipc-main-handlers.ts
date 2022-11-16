@@ -5,13 +5,12 @@
 import type { IpcMainInvokeEvent } from "electron";
 import { BrowserWindow, Menu } from "electron";
 import { clusterFrameMap } from "../../../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../../../../common/ipc/cluster";
+import { clusterActivateHandler, clusterSetFrameIdHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ClusterStore } from "../../../../common/cluster-store/cluster-store";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
 import type { CatalogEntityRegistry } from "../../../catalog";
 import { pushCatalogToRenderer } from "../../../catalog-pusher";
-import type { ClusterManager } from "../../../cluster/manager";
 import type { IComputedValue } from "mobx";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
 import { handleWindowAction, onLocationChange } from "../../../ipc/window";
@@ -28,7 +27,6 @@ import type { CreateResourceApplier } from "../../../resource-applier/create-res
 
 interface Dependencies {
   applicationMenuItemComposite: IComputedValue<Composite<ApplicationMenuItemTypes | MenuItemRoot>>;
-  clusterManager: ClusterManager;
   catalogEntityRegistry: CatalogEntityRegistry;
   clusterStore: ClusterStore;
   operatingSystemTheme: IComputedValue<Theme>;
@@ -39,7 +37,6 @@ interface Dependencies {
 
 export const setupIpcMainHandlers = ({
   applicationMenuItemComposite,
-  clusterManager,
   catalogEntityRegistry,
   clusterStore,
   operatingSystemTheme,
@@ -62,10 +59,6 @@ export const setupIpcMainHandlers = ({
 
       pushCatalogToRenderer(catalogEntityRegistry);
     }
-  });
-
-  ipcMainOn(clusterVisibilityHandler, (event, clusterId?: ClusterId) => {
-    clusterManager.visibleCluster = clusterId;
   });
 
   ipcMainHandle(clusterRefreshHandler, (event, clusterId: ClusterId) => {
