@@ -10,11 +10,11 @@ import type httpProxy from "http-proxy";
 import type { UrlWithStringQuery } from "url";
 import url from "url";
 import { CoreV1Api } from "@kubernetes/client-node";
-import logger from "../logger";
 import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
 import type { CreateKubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import type { GetPrometheusProviderByKind } from "../prometheus/get-by-kind.injectable";
 import type { IComputedValue } from "mobx";
+import type { Logger } from "../../common/logger";
 
 export interface PrometheusDetails {
   prometheusPath: string;
@@ -33,6 +33,7 @@ export interface ContextHandlerDependencies {
   getPrometheusProviderByKind: GetPrometheusProviderByKind;
   readonly authProxyCa: string;
   readonly prometheusProviders: IComputedValue<PrometheusProvider[]>;
+  readonly logger: Logger;
 }
 
 export interface ClusterContextHandler {
@@ -78,7 +79,7 @@ export class ContextHandler implements ClusterContextHandler {
 
   protected ensurePrometheusProvider(service: PrometheusService): PrometheusProvider {
     if (!this.prometheusProvider) {
-      logger.info(`[CONTEXT-HANDLER]: using ${service.kind} as prometheus provider for clusterId=${this.cluster.id}`);
+      this.dependencies.logger.info(`[CONTEXT-HANDLER]: using ${service.kind} as prometheus provider for clusterId=${this.cluster.id}`);
       this.prometheusProvider = service.kind;
     }
 
