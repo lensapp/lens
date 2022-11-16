@@ -3,12 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { homedir } from "os";
+import userInfoInjectable from "../user-store/user-info.injectable";
 
 const homeDirectoryPathInjectable = getInjectable({
   id: "home-directory-path",
-  instantiate: () => homedir(),
-  causesSideEffects: true,
+  instantiate: (di) => di.inject(userInfoInjectable).homedir,
 });
 
 export default homeDirectoryPathInjectable;

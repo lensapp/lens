@@ -4,7 +4,7 @@
  */
 
 import { app } from "electron";
-import { action, computed, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
+import { action, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
 import { BaseStore } from "../base-store";
 import migrations from "../../migrations/user-store";
 import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
@@ -90,10 +90,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    * The set of file/folder paths to be synced
    */
   @observable syncKubeconfigEntries!: StoreType<typeof DESCRIPTORS["syncKubeconfigEntries"]>;
-
-  @computed get resolvedShell(): string | undefined {
-    return this.shell || process.env.SHELL || process.env.PTYSHELL;
-  }
 
   startMainReactions() {
     // open at system start-up

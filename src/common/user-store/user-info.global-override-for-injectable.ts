@@ -4,6 +4,12 @@
  */
 
 import { getGlobalOverride } from "../test-utils/get-global-override";
-import homeDirectoryPathInjectable from "./home-directory-path.injectable";
+import userInfoInjectable from "./user-info.injectable";
 
-export default getGlobalOverride(homeDirectoryPathInjectable, () => "/some-home-directory");
+export default getGlobalOverride(userInfoInjectable, () => ({
+  gid: 1,
+  homedir: "/some-home-dir",
+  shell: "bash",
+  uid: 2,
+  username: "some-user-name",
+}));
