@@ -5,7 +5,7 @@
 import type { IpcMainInvokeEvent } from "electron";
 import { BrowserWindow, Menu } from "electron";
 import { clusterFrameMap } from "../../../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../../../../common/ipc/cluster";
+import { clusterActivateHandler, clusterSetFrameIdHandler, clusterDisconnectHandler } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ClusterStore } from "../../../../common/cluster-store/cluster-store";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
@@ -23,7 +23,6 @@ import type { Composite } from "../../../../common/utils/composite/get-composite
 import { getApplicationMenuTemplate } from "../../../../features/application-menu/main/populate-application-menu.injectable";
 import type { MenuItemRoot } from "../../../../features/application-menu/main/application-menu-item-composite.injectable";
 import type { EmitAppEvent } from "../../../../common/app-event-bus/emit-event.injectable";
-import type { CreateResourceApplier } from "../../../resource-applier/create-resource-applier.injectable";
 
 interface Dependencies {
   applicationMenuItemComposite: IComputedValue<Composite<ApplicationMenuItemTypes | MenuItemRoot>>;
@@ -32,7 +31,6 @@ interface Dependencies {
   operatingSystemTheme: IComputedValue<Theme>;
   askUserForFilePaths: AskUserForFilePaths;
   emitAppEvent: EmitAppEvent;
-  createResourceApplier: CreateResourceApplier;
 }
 
 export const setupIpcMainHandlers = ({
@@ -42,7 +40,6 @@ export const setupIpcMainHandlers = ({
   operatingSystemTheme,
   askUserForFilePaths,
   emitAppEvent,
-  createResourceApplier,
 }: Dependencies) => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return ClusterStore.getInstance()
@@ -68,44 +65,6 @@ export const setupIpcMainHandlers = ({
     if (cluster) {
       cluster.disconnect();
       clusterFrameMap.delete(cluster.id);
-    }
-  });
-
-  ipcMainHandle(clusterKubectlApplyAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    emitAppEvent({ name: "cluster", action: "kubectl-apply-all" });
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) {
-      const applier = createResourceApplier(cluster);
-
-      try {
-        const stdout = await applier.kubectlApplyAll(resources, extraArgs);
-
-        return { stdout };
-      } catch (error: any) {
-        return { stderr: error };
-      }
-    } else {
-      throw `${clusterId} is not a valid cluster id`;
-    }
-  });
-
-  ipcMainHandle(clusterKubectlDeleteAllHandler, async (event, clusterId: ClusterId, resources: string[], extraArgs: string[]) => {
-    emitAppEvent({ name: "cluster", action: "kubectl-delete-all" });
-    const cluster = ClusterStore.getInstance().getById(clusterId);
-
-    if (cluster) {
-      const applier = createResourceApplier(cluster);
-
-      try {
-        const stdout = await applier.kubectlDeleteAll(resources, extraArgs);
-
-        return { stdout };
-      } catch (error: any) {
-        return { stderr: error };
-      }
-    } else {
-      throw `${clusterId} is not a valid cluster id`;
     }
   });
 

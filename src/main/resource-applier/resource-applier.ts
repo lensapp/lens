@@ -14,6 +14,7 @@ import type { WriteFile } from "../../common/fs/write-file.injectable";
 import type { DeleteFile } from "../../common/fs/delete-file.injectable";
 import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
+import type { AsyncResult } from "../../common/utils/async-result";
 
 export interface ResourceApplierDependencies {
   emitAppEvent: EmitAppEvent;
@@ -66,13 +67,13 @@ export class ResourceApplier {
     throw result.error.stderr || result.error.message;
   }
 
-  async create(resource: string): Promise<string> {
+  async create(resource: string): Promise<AsyncResult<string, string>> {
     this.dependencies.emitAppEvent({ name: "resource", action: "apply" });
 
     return this.kubectlApply(this.sanitizeObject(resource));
   }
 
-  protected async kubectlApply(content: string): Promise<string> {
+  protected async kubectlApply(content: string): Promise<AsyncResult<string, string>> {
     const kubectl = await this.cluster.ensureKubectl();
     const kubectlPath = await kubectl.getPath();
     const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
@@ -99,24 +100,27 @@ export class ResourceApplier {
       const result = await this.dependencies.execFile(kubectlPath, args);
 
       if (result.callWasSuccessful) {
-        return result.response;
+        return result;
       }
 
-      throw result.error.stderr || result.error.message;
+      return {
+        callWasSuccessful: false,
+        error: result.error.stderr || result.error.message,
+      };
     } finally {
       await this.dependencies.deleteFile(fileName);
     }
   }
 
-  public async kubectlApplyAll(resources: string[], extraArgs = ["-o", "json"]): Promise<string> {
+  public async kubectlApplyAll(resources: string[], extraArgs = ["-o", "json"]): Promise<AsyncResult<string, string>> {
     return this.kubectlCmdAll("apply", resources, extraArgs);
   }
 
-  public async kubectlDeleteAll(resources: string[], extraArgs?: string[]): Promise<string> {
+  public async kubectlDeleteAll(resources: string[], extraArgs?: string[]): Promise<AsyncResult<string, string>> {
     return this.kubectlCmdAll("delete", resources, extraArgs);
   }
 
-  protected async kubectlCmdAll(subCmd: string, resources: string[], parentArgs: string[] = []): Promise<string> {
+  protected async kubectlCmdAll(subCmd: string, resources: string[], parentArgs: string[] = []): Promise<AsyncResult<string, string>> {
     const kubectl = await this.cluster.ensureKubectl();
     const kubectlPath = await kubectl.getPath();
     const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
@@ -138,14 +142,17 @@ export class ResourceApplier {
     const result = await this.dependencies.execFile(kubectlPath, args);
 
     if (result.callWasSuccessful) {
-      return result.response;
+      return result;
     }
 
     this.dependencies.logger.error(`[RESOURCE-APPLIER] kubectl errored: ${result.error.message}`);
 
     const splitError = result.error.stderr.split(`.yaml": `);
 
-    throw splitError[1] || result.error.message;
+    return {
+      callWasSuccessful: false,
+      error: splitError[1] || result.error.message,
+    };
   }
 
   protected sanitizeObject(resource: string) {
