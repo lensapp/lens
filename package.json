@@ -264,7 +264,7 @@
     "moment-timezone": "^0.5.39",
     "monaco-editor": "^0.29.1",
     "monaco-editor-webpack-plugin": "^5.0.0",
-    "node-fetch": "^3.2.10",
+    "node-fetch": "^3.3.0",
     "node-pty": "0.10.1",
     "npm": "^8.19.3",
     "p-limit": "^3.1.0",
