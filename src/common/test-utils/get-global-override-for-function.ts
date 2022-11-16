@@ -9,10 +9,16 @@ import { camelCase } from "lodash/fp";
 export const getGlobalOverrideForFunction = (
   injectable: Injectable<Function, any, any>,
 ) =>
-  getGlobalOverride(injectable, () => (...args: any[]) => {
+  getGlobalOverride(injectable, (di) => (...args: any[]) => {
     console.warn(
-      `Tried to invoke a function "${injectable.id}" without override. The args were:`,
+      `Tried to invoke a function "${injectable.id}" without override.`,
+      "\n\n",
+      "The args were:",
       args,
+      "\n\n",
+      `The context was: "${di.context
+        .map((x) => x.injectable.id)
+        .join(" -> ")}"`,
     );
 
     throw new Error(
