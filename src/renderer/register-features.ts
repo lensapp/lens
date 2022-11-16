@@ -3,13 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { registerFeature } from "@lensapp/feature-core";
-import type { DiContainer } from "@ogre-tools/injectable";
-import { runInAction } from "mobx";
-import testFeature from "@lensapp/test-feature";
+import { action } from "mobx";
 
-export default (di: DiContainer) => {
-  runInAction(() => {
-    registerFeature(di, testFeature);
-  });
-};
+export default action(() => {});
+

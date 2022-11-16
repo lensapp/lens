@@ -6,10 +6,18 @@
 import { action, computed, type IComputedValue, type IObservableArray, makeObservable, observable } from "mobx";
 import type { CatalogEntity } from "../../common/catalog";
 import type { HasCategoryForEntity } from "../../common/catalog/has-category-for-entity.injectable";
-import { iter } from "../../common/utils";
+import { filter, flatMap } from "lodash/fp";
+import { pipeline } from "@ogre-tools/fp";
+
+import {
+  getLegacyGlobalDiForExtensionApi,
+} from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+
+import catalogEntitiesInjectable from "./catalog-entities-from-features/catalog-entities.injectable";
 
 interface Dependencies {
   readonly hasCategoryForEntity: HasCategoryForEntity;
+  readonly decoupledCatalogEntities: IComputedValue<CatalogEntity[]>;
 }
 
 export class CatalogEntityRegistry {
@@ -32,11 +40,17 @@ export class CatalogEntityRegistry {
   }
 
   @computed get items(): CatalogEntity[] {
-    return Array.from(
-      iter.filter(
-        iter.flatMap(this.sources.values(), source => source.get()),
-        entity => this.dependencies.hasCategoryForEntity(entity),
-      ),
+    const di = getLegacyGlobalDiForExtensionApi();
+
+    const catalogEntities = di.inject(catalogEntitiesInjectable);
+
+    const asd = [...this.sources.values()];
+
+    return pipeline(
+      asd,
+      flatMap(source => source.get()),
+      x => [...x, ...catalogEntities.get()],
+      filter(entity => this.dependencies.hasCategoryForEntity(entity)),
     );
   }
 

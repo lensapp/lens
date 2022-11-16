@@ -1101,6 +1101,31 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@lensapp/composable-responsibilities@0.0.1":
+  version "0.1.2"
+  resolved "http://localhost:53093/@lensapp%2fcomposable-responsibilities/-/composable-responsibilities-0.1.2.tgz#93ed9e3d0337cfc64247573708909e7dca4acba7"
+  integrity sha512-7/lCX/uqn9/h86wV9/j76c1X0oTyp4QTJXwOEWugj8BaM61A6HRMXh3JQzV/g9+OJygp9n8fmy8Zl5exUu0g/g==
+
+"@lensapp/composite@0.0.1":
+  version "0.1.2"
+  resolved "http://localhost:53093/@lensapp%2fcomposite/-/composite-0.1.2.tgz#92d4723213a259caa47e7ea0354f1568442c112c"
+  integrity sha512-MZH7mG4au4Rd9eWmjijJ6ZcibRId2FMCYo4MzgKNl6EGRikKotVM4yNIGDY/Pjwp4+viYlndjTaj89uDSXmwiQ==
+
+"@lensapp/feature-core@0.0.1":
+  version "0.1.2"
+  resolved "http://localhost:53093/@lensapp%2ffeature-core/-/feature-core-0.1.2.tgz#9b1574ceee3a4d0a686c3c6bc4193a1b4f78a68a"
+  integrity sha512-O/FiUdT/sI3ocPWpNXlTFOOwZm1nc22NngCQkcFdBlJZODfOFwb/ngzvur1hI24ZBNXqz6sHoIXxz+PhxZlFiQ==
+
+"@lensapp/preferences@0.0.1":
+  version "0.1.2"
+  resolved "http://localhost:53093/@lensapp%2fpreferences/-/preferences-0.1.2.tgz#ab1e16afacfef219bcbece8f0a21ce44d3d3dbcd"
+  integrity sha512-Sv4GHs/p5IfGa/m5LX91uqJhnGyRGoxWVHSkrXqk98iBVltRIGFCu7R8px5o+C4HZOPCoc2gX2MKMqciAMnHJg==
+
+"@lensapp/utils@0.0.1":
+  version "0.1.2"
+  resolved "http://localhost:53093/@lensapp%2futils/-/utils-0.1.2.tgz#825c58b51ffe41022b3b46d32a175e08f158ec0b"
+  integrity sha512-Syc3KqKWlaBFhFM/Zww+f/hrTbz8jZI1n02eVFgsXhHo5iJh1+UFglE9JSmry9pPbltNMmAoOq8xiy/0NstdPQ==
+
 "@malept/cross-spawn-promise@^1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@malept/cross-spawn-promise/-/cross-spawn-promise-1.1.1.tgz#504af200af6b98e198bce768bc1730c6936ae01d"
