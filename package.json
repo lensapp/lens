@@ -296,6 +296,7 @@
     "@lensapp/utils": "0.0.1",
     "@lensapp/composite": "0.0.1",
     "@lensapp/preferences": "0.0.1",
+    "@lensapp/catalog": "0.0.1",
     "@lensapp/feature-core": "0.0.1"
   },
   "devDependencies": {

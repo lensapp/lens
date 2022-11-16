@@ -2,26 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { computed } from "mobx";
-
-export interface ClusterDto {
-  id: string;
-  name: string;
-  source: string;
-  labels: Record<string, string>;
-  distribution: string;
-
-  kubeconfigPath: string;
-  contextName: string;
-  clusterServerUrl: string;
-  version: string;
-}
-
-export const clusterInjectionToken = getInjectionToken<ClusterDto>({
-  id: "cluster-injection-token",
-});
+import { clusterInjectionToken } from "@lensapp/catalog";
 
 const clustersInjectable = getInjectable({
   id: "clusters",
