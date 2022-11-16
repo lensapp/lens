@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { runInAction } from "mobx";
+import type { IReactionDisposer } from "mobx";
+import { reaction, runInAction } from "mobx";
 import type { LensExtension } from "../../lens-extension";
 import { extensionRegistratorInjectionToken } from "../extension-registrator-injection-token";
 
@@ -21,19 +22,39 @@ const extensionInjectable = getInjectable({
 
       instantiate: (childDi) => {
         const extensionRegistrators = childDi.injectMany(extensionRegistratorInjectionToken);
+        const disposers: IReactionDisposer[] = [];
 
         return {
           register: () => {
-            const injectables = extensionRegistrators.flatMap((getInjectablesOfExtension) =>
-              getInjectablesOfExtension(instance),
-            );
+            extensionRegistrators.forEach((getInjectablesOfExtension) => {
+              const injectables = getInjectablesOfExtension(instance);
 
-            runInAction(() => {
-              childDi.register(...injectables);
+              disposers.push(
+                // injectables is either an array or a computed array, in which case
+                // we need to update the registered injectables with a reaction every time they change 
+                reaction(
+                  () => Array.isArray(injectables) ? injectables : injectables.get(),
+                  (currentInjectables, previousInjectables) => {
+                    // On the second reaction remove the previously registered injectables to avoid duplicate injectables
+                    if (previousInjectables) {
+                      childDi.deregister(...previousInjectables);
+                    }
+
+                    childDi.register(...currentInjectables);
+                  }, {
+                    fireImmediately: true,
+                  },
+                ));
             });
           },
 
           deregister: () => {
+            disposers.forEach(dispose => {
+              dispose();
+            });
+
+            disposers.length = 0;
+
             runInAction(() => {
               parentDi.deregister(extensionInjectable);
             });
@@ -50,7 +71,7 @@ const extensionInjectable = getInjectable({
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, instance: LensExtension) => instance,
+    getInstanceKey: (_di, instance: LensExtension) => instance,
   }),
 });
 
