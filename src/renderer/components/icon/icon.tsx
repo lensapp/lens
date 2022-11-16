@@ -164,7 +164,7 @@ interface Dependencies {
   logger: Logger;
 }
 
-const RawIcon = withTooltip((props: IconProps & Dependencies) => {
+const RawIcon = (props: IconProps & Dependencies) => {
   const ref = createRef<HTMLAnchorElement>();
 
   const {
@@ -271,7 +271,7 @@ const RawIcon = withTooltip((props: IconProps & Dependencies) => {
   }
 
   return <i {...iconProps} ref={ref} />;
-});
+};
 
 const InjectedIcon = withInjectables<Dependencies, IconProps>(RawIcon, {
   getProps: (di, props) => ({
@@ -280,4 +280,4 @@ const InjectedIcon = withInjectables<Dependencies, IconProps>(RawIcon, {
   }),
 });
 
-export const Icon = Object.assign(InjectedIcon, { isSvg });
+export const Icon = Object.assign(withTooltip(InjectedIcon), { isSvg });
