@@ -15,14 +15,22 @@ import type { SingleBar } from "cli-progress";
 import { MultiBar } from "cli-progress";
 import { extract } from "tar-stream";
 import gunzip from "gunzip-maybe";
-import { getBinaryName } from "../src/common/vars";
 import { isErrnoException, setTimeoutFor } from "../src/common/utils";
+import AbortController from "abort-controller";
 
 type Response = FetchModule.Response;
 type RequestInfo = FetchModule.RequestInfo;
 type RequestInit = FetchModule.RequestInit;
 
 const pipeline = promisify(_pipeline);
+
+const getBinaryName = (binaryName: string, { forPlatform }: { forPlatform : string }) => {
+  if (forPlatform === "windows") {
+    return `${binaryName}.exe`;
+  }
+
+  return binaryName;
+};
 
 interface BinaryDownloaderArgs {
   readonly version: string;
