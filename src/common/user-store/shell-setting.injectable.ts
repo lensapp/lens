@@ -7,8 +7,8 @@ import { computed } from "mobx";
 import userInfoInjectable from "./user-info.injectable";
 import userStoreInjectable from "./user-store.injectable";
 
-const resolvedUserShellSettingInjectable = getInjectable({
-  id: "resolved-user-shell-setting",
+const userShellSettingInjectable = getInjectable({
+  id: "user-shell-setting",
   instantiate: (di) => {
     const userStore = di.inject(userStoreInjectable);
     const userInfo = di.inject(userInfoInjectable);
@@ -17,4 +17,4 @@ const resolvedUserShellSettingInjectable = getInjectable({
   },
 });
 
-export default resolvedUserShellSettingInjectable;
+export default userShellSettingInjectable;

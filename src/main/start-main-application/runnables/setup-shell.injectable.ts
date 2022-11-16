@@ -9,7 +9,7 @@ import { unionPATHs } from "../../../common/utils/union-env-path";
 import isSnapPackageInjectable from "../../../common/vars/is-snap-package.injectable";
 import electronAppInjectable from "../../electron-app/electron-app.injectable";
 import computeShellEnvironmentInjectable from "../../utils/shell-env/compute-shell-environment.injectable";
-import resolvedUserShellSettingInjectable from "../../../common/user-store/resolved-shell.injectable";
+import userShellSettingInjectable from "../../../common/user-store/shell-setting.injectable";
 
 const setupShellInjectable = getInjectable({
   id: "setup-shell",
@@ -18,7 +18,7 @@ const setupShellInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
     const isSnapPackage = di.inject(isSnapPackageInjectable);
     const electronApp = di.inject(electronAppInjectable);
-    const resolvedUserShellSetting = di.inject(resolvedUserShellSettingInjectable);
+    const resolvedUserShellSetting = di.inject(userShellSettingInjectable);
     const computeShellEnvironment = di.inject(computeShellEnvironmentInjectable);
 
     return {
