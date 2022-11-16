@@ -24,7 +24,6 @@ import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id
 import historyInjectable from "./navigation/history.injectable";
 import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
-import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
 import { observable, computed, runInAction } from "mobx";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
@@ -144,7 +143,6 @@ export const getDiForUnitTesting = (
     di.override(watchHistoryStateInjectable, () => () => () => {});
 
     overrideFunctionalInjectables(di, [
-      broadcastMessageInjectable,
       getFilePathsInjectable,
       callForPublicHelmRepositoriesInjectable,
     ]);
