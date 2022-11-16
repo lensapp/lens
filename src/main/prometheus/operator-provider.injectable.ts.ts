@@ -3,22 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { PrometheusService } from "./provider-registry";
-import { PrometheusProvider } from "./provider-registry";
-import type { CoreV1Api } from "@kubernetes/client-node";
-import { inspect } from "util";
+import type { PrometheusProvider } from "./provider";
+import { bytesSent, createPrometheusProvider, findFirstNamespacedService, prometheusProviderInjectionToken  } from "./provider";
+import { getInjectable } from "@ogre-tools/injectable";
 
-export class PrometheusOperator extends PrometheusProvider {
-  readonly rateAccuracy: string = "1m";
-  readonly id: string = "operator";
-  readonly name: string = "Prometheus Operator";
-  readonly isConfigurable: boolean = true;
-
-  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
-    return this.getFirstNamespacedService(client, "operated-prometheus=true");
-  }
-
-  public getQuery(opts: Record<string, string>, queryName: string): string {
+export const getOperatorLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }): PrometheusProvider["getQuery"] => (
+  (opts, queryName) => {
     switch(opts.category) {
       case "cluster":
         switch (queryName) {
@@ -35,7 +25,7 @@ export class PrometheusOperator extends PrometheusProvider {
           case "memoryAllocatableCapacity":
             return `sum(kube_node_status_allocatable{node=~"${opts.nodes}", resource="memory"})`;
           case "cpuUsage":
-            return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}])* on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`;
+            return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${rateAccuracy}])* on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`;
           case "cpuRequests":
             return `sum(kube_pod_container_resource_requests{node=~"${opts.nodes}", resource="cpu"})`;
           case "cpuLimits":
@@ -67,7 +57,7 @@ export class PrometheusOperator extends PrometheusProvider {
           case "memoryAllocatableCapacity":
             return `sum(kube_node_status_allocatable{resource="memory"}) by (node)`;
           case "cpuUsage":
-            return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${this.rateAccuracy}]) * on (pod, namespace) group_left(node) kube_pod_info) by (node)`;
+            return `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[${rateAccuracy}]) * on (pod, namespace) group_left(node) kube_pod_info) by (node)`;
           case "cpuCapacity":
             return `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
           case "cpuAllocatableCapacity":
@@ -81,7 +71,7 @@ export class PrometheusOperator extends PrometheusProvider {
       case "pods":
         switch (queryName) {
           case "cpuUsage":
-            return `sum(rate(container_cpu_usage_seconds_total{container!="", image!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (${opts.selector})`;
+            return `sum(rate(container_cpu_usage_seconds_total{container!="", image!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
           case "cpuRequests":
             return `sum(kube_pod_container_resource_requests{pod=~"${opts.pods}", resource="cpu", namespace="${opts.namespace}"}) by (${opts.selector})`;
           case "cpuLimits":
@@ -95,13 +85,13 @@ export class PrometheusOperator extends PrometheusProvider {
           case "fsUsage":
             return `sum(container_fs_usage_bytes{container!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}) by (${opts.selector})`;
           case "fsWrites":
-            return `sum(rate(container_fs_writes_bytes_total{container!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (${opts.selector})`;
+            return `sum(rate(container_fs_writes_bytes_total{container!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
           case "fsReads":
-            return `sum(rate(container_fs_reads_bytes_total{container!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (${opts.selector})`;
+            return `sum(rate(container_fs_reads_bytes_total{container!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
           case "networkReceive":
-            return `sum(rate(container_network_receive_bytes_total{pod=~"${opts.pods}", namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (${opts.selector})`;
+            return `sum(rate(container_network_receive_bytes_total{pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
           case "networkTransmit":
-            return `sum(rate(container_network_transmit_bytes_total{pod=~"${opts.pods}", namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (${opts.selector})`;
+            return `sum(rate(container_network_transmit_bytes_total{pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
         }
         break;
       case "pvc":
@@ -115,17 +105,42 @@ export class PrometheusOperator extends PrometheusProvider {
       case "ingress":
         switch (queryName) {
           case "bytesSentSuccess":
-            return this.bytesSent(opts.ingress, opts.namespace, "^2\\\\d*");
+            return bytesSent({
+              rateAccuracy,
+              ingress: opts.ingress,
+              namespace: opts.namespace,
+              statuses: "^2\\\\d*",
+            });
           case "bytesSentFailure":
-            return this.bytesSent(opts.ingress, opts.namespace, "^5\\\\d*");
+            return bytesSent({
+              rateAccuracy,
+              ingress: opts.ingress,
+              namespace: opts.namespace,
+              statuses: "^5\\\\d*",
+            });
           case "requestDurationSeconds":
-            return `sum(rate(nginx_ingress_controller_request_duration_seconds_sum{ingress="${opts.ingress}", namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (ingress, namespace)`;
+            return `sum(rate(nginx_ingress_controller_request_duration_seconds_sum{ingress="${opts.ingress}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (ingress, namespace)`;
           case "responseDurationSeconds":
-            return `sum(rate(nginx_ingress_controller_response_duration_seconds_sum{ingress="${opts.ingress}", namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (ingress, namespace)`;
+            return `sum(rate(nginx_ingress_controller_response_duration_seconds_sum{ingress="${opts.ingress}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (ingress, namespace)`;
         }
         break;
     }
 
-    throw new Error(`Unknown query name ${inspect(queryName, false, undefined, false)} for category: ${inspect(opts.category, false, undefined, false)}`);
+    throw new Error(`Unknown queryName="${queryName}" for category="${opts.category}"`);
   }
-}
+);
+
+const operatorPrometheusProviderInjectable = getInjectable({
+  id: "operator-prometheus-provider",
+  instantiate: () => createPrometheusProvider({
+    kind: "operator",
+    name: "Prometheus Operator",
+    isConfigurable: true,
+    getService: (client) => findFirstNamespacedService(client, "operated-prometheus=true"),
+    getQuery: getOperatorLikeQueryFor({ rateAccuracy: "1m" }),
+  }),
+  injectionToken: prometheusProviderInjectionToken,
+});
+
+export default operatorPrometheusProviderInjectable;
+
