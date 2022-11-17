@@ -4,7 +4,6 @@
  */
 
 import React from "react";
-import type { RegisteredEntitySetting } from "../../../../extensions/registries";
 import { HotbarAddCommand } from "../../hotbar/hotbar-add-command";
 import { HotbarRemoveCommand } from "../../hotbar/hotbar-remove-command";
 import { HotbarSwitchCommand } from "../../hotbar/hotbar-switch-command";
@@ -37,10 +36,11 @@ import navigateToJobsInjectable from "../../../../common/front-end-routing/route
 import navigateToCronJobsInjectable from "../../../../common/front-end-routing/routes/cluster/workloads/cron-jobs/navigate-to-cron-jobs.injectable";
 import navigateToCustomResourcesInjectable from "../../../../common/front-end-routing/routes/cluster/custom-resources/custom-resources/navigate-to-custom-resources.injectable";
 import navigateToEntitySettingsInjectable from "../../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
-import getEntitySettingCommandsInjectable from "./get-entity-setting-commands.injectable";
 
 // TODO: Importing from features is not OK. Make commands to comply with Open Closed Principle to allow moving implementation under a feature
 import navigateToPreferencesInjectable from "../../../../features/preferences/common/navigate-to-preferences.injectable";
+import type { HasCatalogEntitySettingItems } from "../../+entity-settings/has-settings.injectable";
+import hasCatalogEntitySettingItemsInjectable from "../../+entity-settings/has-settings.injectable";
 
 export function isKubernetesClusterActive(context: CommandContext): boolean {
   return context.entity?.kind === "KubernetesCluster";
@@ -48,9 +48,8 @@ export function isKubernetesClusterActive(context: CommandContext): boolean {
 
 interface Dependencies {
   openCommandDialog: (component: React.ReactElement) => void;
-  getEntitySettingItems: (kind: string, apiVersion: string, source?: string) => RegisteredEntitySetting[];
+  hasCatalogEntitySettingItems: HasCatalogEntitySettingItems;
   createTerminalTab: () => DockTabCreate;
-
   navigateToPreferences: () => void;
   navigateToHelmCharts: () => void;
   navigateToHelmReleases: () => void;
@@ -214,8 +213,7 @@ function getInternalCommands(dependencies: Dependencies): CommandRegistration[] 
       title: ({ entity }) => `${entity.kind}/${entity.getName()}: View Settings`,
       action: ({ entity }) => dependencies.navigateToEntitySettings(entity.getId()),
       isActive: ({ entity }) => (
-        entity
-        && dependencies.getEntitySettingItems(entity.kind, entity.apiVersion, entity.metadata.source).length > 0
+        entity && dependencies.hasCatalogEntitySettingItems(entity)
       ),
     },
     {
@@ -257,7 +255,7 @@ const internalCommandsInjectable = getInjectable({
 
   instantiate: (di) => getInternalCommands({
     openCommandDialog: di.inject(commandOverlayInjectable).open,
-    getEntitySettingItems: di.inject(getEntitySettingCommandsInjectable),
+    hasCatalogEntitySettingItems: di.inject(hasCatalogEntitySettingItemsInjectable),
     createTerminalTab: di.inject(createTerminalTabInjectable),
     navigateToPreferences: di.inject(navigateToPreferencesInjectable),
     navigateToHelmCharts: di.inject(navigateToHelmChartsInjectable),

@@ -5,15 +5,15 @@
 
 import React from "react";
 import { waitFor } from "@testing-library/react";
-import { ClusterLocalTerminalSetting } from "../cluster-local-terminal-settings";
+import { ClusterLocalTerminalSetting } from "../local-terminal-settings";
 import userEvent from "@testing-library/user-event";
 import type { Stats } from "fs";
-import type { Cluster } from "../../../../../common/cluster/cluster";
-import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
-import type { DiRender } from "../../../test-utils/renderFor";
-import { renderFor } from "../../../test-utils/renderFor";
-import showErrorNotificationInjectable from "../../../notifications/show-error-notification.injectable";
-import statInjectable from "../../../../../common/fs/stat/stat.injectable";
+import type { Cluster } from "../../../../common/cluster/cluster";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
+import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
+import statInjectable from "../../../../common/fs/stat/stat.injectable";
 
 describe("ClusterLocalTerminalSettings", () => {
   let render: DiRender;

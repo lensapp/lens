@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ExtensionRegistrator } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
 import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import type { AdditionalCategoryColumnRegistration } from "../custom-category-columns";
@@ -11,12 +10,10 @@ import { customCatalogCategoryColumnInjectionToken } from "./custom-token";
 
 const customCategoryColumnsRegistratorInjectable = getInjectable({
   id: "custom-category-columns-registrator",
-  instantiate: (): ExtensionRegistrator => {
-    return (ext) => {
-      const extension = ext as LensRendererExtension;
+  instantiate: () => (ext) => {
+    const extension = ext as LensRendererExtension;
 
-      return extension.additionalCategoryColumns.map(getInjectableForColumnRegistrationFor(extension));
-    };
+    return extension.additionalCategoryColumns.map(getInjectableForColumnRegistrationFor(extension));
   },
   injectionToken: extensionRegistratorInjectionToken,
 });
