@@ -40,6 +40,8 @@ import loggerInjectable from "../../../common/logger.injectable";
 
 const hrefValidation = /https?:\/\//;
 
+const hrefIsSafe = (href: string) => Boolean(href.match(hrefValidation));
+
 /**
  * Mapping between the local file names and the svgs
  *
@@ -255,19 +257,17 @@ const RawIcon = (props: IconProps & Dependencies) => {
   }
 
   if (href) {
-    if (hrefValidation.exec(href) === null) {
-      logger.warn("[ICON]: href prop is unsafe, blocking", { href });
-
-      return null;
+    if (hrefIsSafe(href)) {
+      return (
+        <a
+          {...iconProps}
+          href={href}
+          ref={ref}
+        />
+      );
     }
 
-    return (
-      <a
-        {...iconProps}
-        href={href}
-        ref={ref}
-      />
-    );
+    logger.warn("[ICON]: href prop is unsafe, blocking", { href });
   }
 
   return <i {...iconProps} ref={ref} />;
