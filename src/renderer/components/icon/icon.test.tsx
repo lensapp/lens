@@ -39,7 +39,11 @@ describe("<Icon> href technical tests", () => {
       />
     ));
 
-    expect(result.queryByTestId("my-icon")).toBeInTheDocument();
+    const icon = result.queryByTestId("my-icon");
+
+    expect(icon).toBeInTheDocument();
+    expect(icon).toHaveAttribute("href", "http://localhost");
+    expect(logger.warn).not.toBeCalled();
   });
 
   it("should render an <Icon> with https href", () => {
@@ -50,7 +54,11 @@ describe("<Icon> href technical tests", () => {
       />
     ));
 
-    expect(result.queryByTestId("my-icon")).toBeInTheDocument();
+    const icon = result.queryByTestId("my-icon");
+
+    expect(icon).toBeInTheDocument();
+    expect(icon).toHaveAttribute("href", "https://localhost");
+    expect(logger.warn).not.toBeCalled();
   });
 
   it("should warn about ws hrefs", () => {
@@ -61,7 +69,10 @@ describe("<Icon> href technical tests", () => {
       />
     ));
 
-    expect(result.queryByTestId("my-icon")).not.toBeInTheDocument();
+    const icon = result.queryByTestId("my-icon");
+
+    expect(icon).toBeInTheDocument();
+    expect(icon).not.toHaveAttribute("href", "ws://localhost");
     expect(logger.warn).toBeCalled();
   });
 
@@ -73,7 +84,10 @@ describe("<Icon> href technical tests", () => {
       />
     ));
 
-    expect(result.queryByTestId("my-icon")).not.toBeInTheDocument();
+    const icon = result.queryByTestId("my-icon");
+
+    expect(icon).toBeInTheDocument();
+    expect(icon).not.toHaveAttribute("href", "javascript:void 0");
     expect(logger.warn).toBeCalled();
   });
 });
