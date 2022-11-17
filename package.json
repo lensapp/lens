@@ -290,7 +290,6 @@
     "uuid": "^8.3.2",
     "win-ca": "^3.5.0",
     "winston": "^3.8.2",
-    "winston-console-format": "^1.0.8",
     "winston-transport-browserconsole": "^1.0.5",
     "ws": "^8.11.0",
     "xterm-link-provider": "^1.3.1"
@@ -366,6 +365,7 @@
     "@typescript-eslint/parser": "^5.43.0",
     "adr": "^1.4.3",
     "ansi_up": "^5.1.0",
+    "chalk": "^4.1.2",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
     "cli-progress": "^3.11.2",

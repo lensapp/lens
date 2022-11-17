@@ -12,8 +12,8 @@ import { pathNames } from "../../common/app-paths/app-path-names";
 import { fromPairs, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
-import { beforeElectronIsReadyInjectionToken } from "../start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
 import appNameInjectable from "../../common/vars/app-name.injectable";
+import { appPathsRunnablePhaseInjectionToken } from "../start-main-application/runnable-tokens/phases";
 
 const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",
@@ -51,7 +51,7 @@ const setupAppPathsInjectable = getInjectable({
     };
   },
 
-  injectionToken: beforeElectronIsReadyInjectionToken,
+  injectionToken: appPathsRunnablePhaseInjectionToken,
 });
 
 export default setupAppPathsInjectable;

@@ -28,14 +28,17 @@ const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[],
         try {
           return await getMetrics(cluster, prometheusPath, { query, ...queryParams });
         } catch (error) {
-          if (isRequestError(error)) {
-            if (lastAttempt || (error.statusCode && error.statusCode >= 400 && error.statusCode < 500)) {
-              throw new Error("Metrics not available", { cause: error });
-            }
-          } else if (error instanceof Error) {
+          if (
+            !isRequestError(error)
+            || lastAttempt
+            || (
+              !lastAttempt && (
+                typeof error.statusCode === "number" &&
+                400 <= error.statusCode && error.statusCode < 500
+              )
+            )
+          ) {
             throw new Error("Metrics not available", { cause: error });
-          } else {
-            throw new Error("Metrics not available");
           }
 
           await new Promise(resolve => setTimeout(resolve, (attempt + 1) * 1000)); // add delay before repeating request
