@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import type { IReactionDisposer } from "mobx";
 import { reaction, runInAction } from "mobx";
+import { disposer } from "../../../common/utils/disposer";
 import type { LensExtension } from "../../lens-extension";
 import { extensionRegistratorInjectionToken } from "../extension-registrator-injection-token";
 
@@ -22,14 +22,14 @@ const extensionInjectable = getInjectable({
 
       instantiate: (childDi) => {
         const extensionRegistrators = childDi.injectMany(extensionRegistratorInjectionToken);
-        const disposers: IReactionDisposer[] = [];
+        const reactionDisposer = disposer();
 
         return {
           register: () => {
             extensionRegistrators.forEach((getInjectablesOfExtension) => {
               const injectables = getInjectablesOfExtension(instance);
 
-              disposers.push(
+              reactionDisposer.push(
                 // injectables is either an array or a computed array, in which case
                 // we need to update the registered injectables with a reaction every time they change 
                 reaction(
@@ -49,11 +49,7 @@ const extensionInjectable = getInjectable({
           },
 
           deregister: () => {
-            disposers.forEach(dispose => {
-              dispose();
-            });
-
-            disposers.length = 0;
+            reactionDisposer();
 
             runInAction(() => {
               parentDi.deregister(extensionInjectable);
@@ -71,7 +67,7 @@ const extensionInjectable = getInjectable({
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (_di, instance: LensExtension) => instance,
+    getInstanceKey: (di, instance: LensExtension) => instance,
   }),
 });
 
