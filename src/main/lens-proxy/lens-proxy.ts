@@ -4,8 +4,7 @@
  */
 
 import net from "net";
-import type http from "http";
-import spdy from "spdy";
+import http from "http";
 import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import type { Router } from "../router/router";
@@ -69,12 +68,7 @@ export class LensProxy {
   constructor(private readonly dependencies: Dependencies) {
     this.configureProxy(dependencies.proxy);
 
-    this.proxyServer = spdy.createServer({
-      spdy: {
-        plain: true,
-        protocols: ["http/1.1", "spdy/3.1"],
-      },
-    }, (req, res) => {
+    this.proxyServer = http.createServer((req, res) => {
       this.handleRequest(req as ServerIncomingMessage, res);
     });
 
