@@ -25,9 +25,13 @@ const trayMenuItemRegistratorInjectable = getInjectable({
     const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
     const getRandomId = di.inject(getRandomIdInjectable);
 
-    return mainExtension.trayMenus.flatMap(
-      toItemInjectablesFor(mainExtension, withErrorLoggingFor, getRandomId),
-    );
+    return computed(() => {
+      const trayMenus = Array.isArray(mainExtension.trayMenus) ? mainExtension.trayMenus : mainExtension.trayMenus.get();
+
+      return trayMenus.flatMap(
+        toItemInjectablesFor(mainExtension, withErrorLoggingFor, getRandomId),
+      );
+    });
   },
 
   injectionToken: extensionRegistratorInjectionToken,
@@ -117,5 +121,3 @@ const toItemInjectablesFor = (extension: LensMainExtension, withErrorLoggingFor:
 
   return _toItemInjectables(null);
 };
-
-

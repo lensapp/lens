@@ -5,7 +5,7 @@
 
 import { LensExtension, lensExtensionDependencies } from "./lens-extension";
 import type { CatalogEntity } from "../common/catalog";
-import type { IObservableArray } from "mobx";
+import type { IComputedValue, IObservableArray } from "mobx";
 import type { MenuRegistration } from "../features/application-menu/main/menu-registration";
 import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
 import type { ShellEnvModifier } from "../main/shell-session/shell-env-modifier/shell-env-modifier-registration";
@@ -13,7 +13,7 @@ import type { LensMainExtensionDependencies } from "./lens-extension-set-depende
 
 export class LensMainExtension extends LensExtension<LensMainExtensionDependencies> {
   appMenus: MenuRegistration[] = [];
-  trayMenus: TrayMenuRegistration[] = [];
+  trayMenus: TrayMenuRegistration[] | IComputedValue<TrayMenuRegistration[]> = [];
 
   /**
    * implement this to modify the shell environment that Lens terminals are opened with. The ShellEnvModifier type has the signature

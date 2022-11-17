@@ -2,13 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { IObservableValue } from "mobx";
+import type { IObservableArray, IObservableValue } from "mobx";
 import { computed, runInAction, observable } from "mobx";
+import type { TrayMenuRegistration } from "../../main/tray/tray-menu-registration";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
 describe("preferences: extension adding tray items", () => {
-  describe("when extension with tray items is enabled", () => {
+  describe("when extension with tray items are statically defined", () => {
     let builder: ApplicationBuilder;
     let someObservableForVisibility: IObservableValue<boolean>;
     let someObservableForEnabled: IObservableValue<boolean>;
@@ -188,6 +189,90 @@ describe("preferences: extension adding tray items", () => {
       );
 
       expect(item?.enabled).toBe(false);
+    });
+  });
+
+  describe("when extension with tray items are dynamically defined", () => {
+    let builder: ApplicationBuilder;
+    let menuItems: IObservableArray<TrayMenuRegistration>;
+
+    beforeEach(async () => {
+      builder = getApplicationBuilder();
+
+      await builder.render();
+
+      builder.preferences.navigate();
+
+      menuItems = observable.array([
+        {
+          id: "some-visible",
+          label: "some-visible",
+          click: () => {},
+          visible: computed(() => true),
+        },
+      ]);
+
+      const computedTrayMenu = computed(() => menuItems);
+
+      const testExtension = {
+        id: "some-extension-id",
+        name: "some-extension",
+
+        mainOptions: {
+          trayMenus: computedTrayMenu,
+        },
+      };
+
+      builder.extensions.enable(testExtension);
+    });
+
+    it("given item exists, it's shown", () => {
+      expect(
+        builder.tray.get(
+          "some-visible-tray-menu-item-for-extension-some-extension",
+        ),
+      ).not.toBeNull();
+    });
+
+    it("given item is added, it's shown", async () => {
+      menuItems.push({
+        id: "some-added",
+        label: "some-added",
+        click: () => {},
+        visible: computed(() => true),
+      });
+
+      expect(
+        builder.tray.get(
+          "some-added-tray-menu-item-for-extension-some-extension",
+        ),
+      ).not.toBeNull();
+    });
+
+    it("given item is removed, it's not shown", async () => {
+      menuItems.replace([]);
+
+      expect(
+        builder.tray.get(
+          "some-visible-tray-menu-item-for-extension-some-extension",
+        ),
+      ).toBeNull();
+    });
+
+    it("given items are removed and one added, it's shown", async () => {
+      menuItems.replace([]);
+      menuItems.push({
+        id: "some-added",
+        label: "some-added",
+        click: () => {},
+        visible: computed(() => true),
+      });
+
+      expect(
+        builder.tray.get(
+          "some-added-tray-menu-item-for-extension-some-extension",
+        ),
+      ).not.toBeNull();
     });
   });
 });
