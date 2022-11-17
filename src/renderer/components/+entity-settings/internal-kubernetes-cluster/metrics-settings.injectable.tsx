@@ -48,12 +48,12 @@ const MetricsKubernetesClusterSettings = withInjectables<Dependencies, EntitySet
 const metricsKubernetesClusterEntitySettingsInjectable = getInjectable({
   id: "metrics-kubernetes-cluster-entity-settings",
   instantiate: () => ({
-    apiVersions: ["entity.k8slens.dev/v1alpha1"],
+    apiVersions: new Set(["entity.k8slens.dev/v1alpha1"]),
     kind: "KubernetesCluster",
     title: "Metrics",
     group: "Settings",
     id: "metrics",
-    priority: 40,
+    orderNumber: 40,
     components: {
       View: MetricsKubernetesClusterSettings,
     },

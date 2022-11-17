@@ -98,16 +98,30 @@ const NonInjectedCatalogEntitySettings = observer((props: CatalogEntitySettingsP
     <SettingLayout
       navigation={renderNavigation()}
       contentGaps={false}
+      data-testid="entity-settings"
     >
       {
-        (tabId && setting) && (
-          <section>
-            <h2 data-testid={`${tabId}-header`}>{setting.title}</h2>
+        tabId && setting
+          ? (
             <section>
-              <setting.components.View entity={entity} />
+              <h2 data-testid={`${tabId}-header`}>{setting.title}</h2>
+              <section>
+                <setting.components.View entity={entity} />
+              </section>
             </section>
-          </section>
-        )
+          )
+          : (
+            <div
+              className="flex items-center"
+              data-preference-page-does-not-exist-test={true}
+            >
+              No settings found for
+              {" "}
+              {entity.apiVersion}
+              /
+              {entity.kind}
+            </div>
+          )
       }
     </SettingLayout>
   );

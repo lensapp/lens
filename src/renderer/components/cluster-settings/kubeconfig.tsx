@@ -4,11 +4,11 @@
  */
 
 import React from "react";
-import type { Cluster } from "../../../../common/cluster/cluster";
+import type { Cluster } from "../../../common/cluster/cluster";
 import { observer } from "mobx-react";
-import { SubTitle } from "../../layout/sub-title";
+import { SubTitle } from "../layout/sub-title";
 import { shell } from "electron";
-import { Notice } from "../../+extensions/notice";
+import { Notice } from "../+extensions/notice";
 
 export interface ClusterKubeconfigProps {
   cluster: Cluster;

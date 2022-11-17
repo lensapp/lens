@@ -3,15 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Cluster } from "../../../../common/cluster/cluster";
+import type { Cluster } from "../../../common/cluster/cluster";
 import { makeObservable, observable } from "mobx";
-import { SubTitle } from "../../layout/sub-title";
+import { SubTitle } from "../layout/sub-title";
 import React from "react";
-import { Input } from "../../input/input";
+import { Input } from "../input/input";
 import { observer } from "mobx-react";
-import { Icon } from "../../icon/icon";
-import { initialNodeShellImage } from "../../../../common/cluster-types";
-import Gutter from "../../gutter/gutter";
+import { Icon } from "../icon/icon";
+import { initialNodeShellImage } from "../../../common/cluster-types";
+import Gutter from "../gutter/gutter";
 
 export interface ClusterNodeShellSettingProps {
   cluster: Cluster;

@@ -5,17 +5,17 @@
 
 import React from "react";
 import { observer, disposeOnUnmount } from "mobx-react";
-import type { Cluster } from "../../../../common/cluster/cluster";
-import { SubTitle } from "../../layout/sub-title";
-import type { SelectOption } from "../../select";
-import { Select } from "../../select";
-import { Input } from "../../input";
+import type { Cluster } from "../../../common/cluster/cluster";
+import { SubTitle } from "../layout/sub-title";
+import type { SelectOption } from "../select";
+import { Select } from "../select";
+import { Input } from "../input";
 import { observable, computed, autorun, makeObservable } from "mobx";
-import { Spinner } from "../../spinner";
-import type { MetricProviderInfo, RequestMetricsProviders } from "../../../../common/k8s-api/endpoints/metrics.api/request-providers.injectable";
+import { Spinner } from "../spinner";
+import type { MetricProviderInfo, RequestMetricsProviders } from "../../../common/k8s-api/endpoints/metrics.api/request-providers.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import requestMetricsProvidersInjectable from "../../../../common/k8s-api/endpoints/metrics.api/request-providers.injectable";
-import productNameInjectable from "../../../../common/vars/product-name.injectable";
+import requestMetricsProvidersInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-providers.injectable";
+import productNameInjectable from "../../../common/vars/product-name.injectable";
 
 export interface ClusterPrometheusSettingProps {
   cluster: Cluster;

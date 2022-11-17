@@ -54,13 +54,13 @@ const GeneralKubernetesClusterSettings = withInjectables<Dependencies, EntitySet
 const generalKubernetesClusterEntitySettingsInjectable = getInjectable({
   id: "general-kubernetes-cluster-entity-settings",
   instantiate: () => ({
-    apiVersions: ["entity.k8slens.dev/v1alpha1"],
+    apiVersions: new Set(["entity.k8slens.dev/v1alpha1"]),
     kind: "KubernetesCluster",
     source: "local",
     title: "General",
     group: "Settings",
     id: "general",
-    priority: 40,
+    orderNumber: 0,
     components: {
       View: GeneralKubernetesClusterSettings,
     },

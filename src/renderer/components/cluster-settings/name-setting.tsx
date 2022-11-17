@@ -4,13 +4,13 @@
  */
 
 import React from "react";
-import type { Cluster } from "../../../../common/cluster/cluster";
-import { Input } from "../../input";
+import type { Cluster } from "../../../common/cluster/cluster";
+import { Input } from "../input";
 import { observable, autorun, makeObservable } from "mobx";
 import { observer, disposeOnUnmount } from "mobx-react";
-import { SubTitle } from "../../layout/sub-title";
-import { isRequired } from "../../input/input_validators";
-import type { KubernetesCluster } from "../../../../common/catalog-entities";
+import { SubTitle } from "../layout/sub-title";
+import { isRequired } from "../input/input_validators";
+import type { KubernetesCluster } from "../../../common/catalog-entities";
 
 export interface ClusterNameSettingProps {
   cluster: Cluster;

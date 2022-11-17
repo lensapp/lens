@@ -39,12 +39,12 @@ const TerminalKubernetesClusterSettings = withInjectables<Dependencies, EntitySe
 const terminalKubernetesClusterEntitySettingsInjectable = getInjectable({
   id: "terminal-kubernetes-cluster-entity-settings",
   instantiate: () => ({
-    apiVersions: ["entity.k8slens.dev/v1alpha1"],
+    apiVersions: new Set(["entity.k8slens.dev/v1alpha1"]),
     kind: "KubernetesCluster",
     title: "Terminal",
     group: "Settings",
     id: "terminal",
-    priority: 40,
+    orderNumber: 20,
     components: {
       View: TerminalKubernetesClusterSettings,
     },
