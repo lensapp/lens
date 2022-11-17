@@ -19,7 +19,7 @@ import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 import computeShellEnvironmentInjectable from "../../utils/shell-env/compute-shell-environment.injectable";
 import spawnPtyInjectable from "../spawn-pty.injectable";
-import resolvedShellInjectable from "../../../common/user-store/resolved-shell.injectable";
+import userShellSettingInjectable from "../../../common/user-store/shell-setting.injectable";
 import appNameInjectable from "../../../common/vars/app-name.injectable";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
@@ -44,7 +44,7 @@ const openLocalShellSessionInjectable = getInjectable({
       isWindows: di.inject(isWindowsInjectable),
       logger: di.inject(loggerInjectable),
       userStore: di.inject(userStoreInjectable),
-      resolvedShell: di.inject(resolvedShellInjectable),
+      userShellSetting: di.inject(userShellSettingInjectable),
       appName: di.inject(appNameInjectable),
       buildVersion: di.inject(buildVersionInjectable),
       modifyTerminalShellEnv: di.inject(modifyTerminalShellEnvInjectable),

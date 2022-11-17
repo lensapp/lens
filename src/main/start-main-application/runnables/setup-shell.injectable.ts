@@ -5,11 +5,11 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
-import os from "os";
 import { unionPATHs } from "../../../common/utils/union-env-path";
 import isSnapPackageInjectable from "../../../common/vars/is-snap-package.injectable";
 import electronAppInjectable from "../../electron-app/electron-app.injectable";
 import computeShellEnvironmentInjectable from "../../utils/shell-env/compute-shell-environment.injectable";
+import userShellSettingInjectable from "../../../common/user-store/shell-setting.injectable";
 
 const setupShellInjectable = getInjectable({
   id: "setup-shell",
@@ -18,6 +18,7 @@ const setupShellInjectable = getInjectable({
     const logger = di.inject(loggerInjectable);
     const isSnapPackage = di.inject(isSnapPackageInjectable);
     const electronApp = di.inject(electronAppInjectable);
+    const resolvedUserShellSetting = di.inject(userShellSettingInjectable);
     const computeShellEnvironment = di.inject(computeShellEnvironmentInjectable);
 
     return {
@@ -25,7 +26,7 @@ const setupShellInjectable = getInjectable({
       run: async (): Promise<void> => {
         logger.info("🐚 Syncing shell environment");
 
-        const result = await computeShellEnvironment(os.userInfo().shell);
+        const result = await computeShellEnvironment(resolvedUserShellSetting.get());
 
         if (!result.callWasSuccessful) {
           return void logger.error(`[SHELL-SYNC]: ${result.error}`);

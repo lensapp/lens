@@ -8,7 +8,7 @@ import type { Kubectl } from "../kubectl/kubectl";
 import type WebSocket from "ws";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
-import os, { userInfo } from "os";
+import os from "os";
 import type * as pty from "node-pty";
 import { getOrInsertWith } from "../../common/utils";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
@@ -18,6 +18,7 @@ import type { SpawnPty } from "./spawn-pty.injectable";
 import type { InitializableState } from "../../common/initializable-state/create";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Stat } from "../../common/fs/stat/stat.injectable";
+import type { IComputedValue } from "mobx";
 
 export class ShellOpenError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -107,7 +108,7 @@ export interface ShellSessionDependencies {
   readonly isWindows: boolean;
   readonly isMac: boolean;
   readonly logger: Logger;
-  readonly resolvedShell: string | undefined;
+  readonly userShellSetting: IComputedValue<string>;
   readonly appName: string;
   readonly buildVersion: InitializableState<string>;
   computeShellEnvironment: ComputeShellEnvironment;
@@ -338,7 +339,7 @@ export abstract class ShellSession {
   }
 
   protected async getShellEnv() {
-    const shell = this.dependencies.resolvedShell || userInfo().shell;
+    const shell = this.dependencies.userShellSetting.get();
     const result = await this.dependencies.computeShellEnvironment(shell);
     const rawEnv = (() => {
       if (result.callWasSuccessful) {
