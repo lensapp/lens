@@ -5,9 +5,11 @@
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { ScrollSpy } from "../scroll-spy";
 import { RecursiveTreeView } from "../../tree-view";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import { type DiRender, renderFor } from "../../test-utils/renderFor";
 
 const observe = jest.fn();
 
@@ -20,6 +22,14 @@ Object.defineProperty(window, "IntersectionObserver", {
 });
 
 describe("<ScrollSpy/>", () => {
+  let render: DiRender;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    render = renderFor(di);
+  });
+
   it("renders w/o errors", () => {
     const { container } = render((
       <ScrollSpy
@@ -94,6 +104,14 @@ describe("<ScrollSpy/>", () => {
 
 
 describe("<TreeView/> dataTree inside <ScrollSpy/>", () => {
+  let render: DiRender;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    render = renderFor(di);
+  });
+
   it("contains links to all sections", async () => {
     render((
       <ScrollSpy

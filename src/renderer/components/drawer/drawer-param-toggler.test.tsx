@@ -4,14 +4,19 @@
  */
 
 import type { RenderResult } from "@testing-library/react";
-import { render } from "@testing-library/react";
 import React from "react";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { type DiRender, renderFor } from "../test-utils/renderFor";
 import { DrawerParamToggler } from "./drawer-param-toggler";
 
 describe("<DrawerParamToggler />", () => {
   let result: RenderResult;
+  let render: DiRender;
 
   beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    render = renderFor(di);
     result = render((
       <DrawerParamToggler
         label="Foo"
