@@ -2,7 +2,9 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { difference, find, map } from "lodash";
 import { reaction, runInAction } from "mobx";
 import { disposer } from "../../../common/utils/disposer";
 import type { LensExtension } from "../../lens-extension";
@@ -12,6 +14,16 @@ export interface Extension {
   register: () => void;
   deregister: () => void;
 }
+
+const idsToInjectables = (ids: string[], injectables: Injectable<any, any, any>[]) => ids.map(id => {
+  const injectable = find(injectables, { id });
+
+  if (!injectable) {
+    throw new Error(`Injectable ${id} not found`);
+  }
+
+  return injectable;
+});
 
 const extensionInjectable = getInjectable({
   id: "extension",
@@ -34,13 +46,20 @@ const extensionInjectable = getInjectable({
                 // we need to update the registered injectables with a reaction every time they change 
                 reaction(
                   () => Array.isArray(injectables) ? injectables : injectables.get(),
-                  (currentInjectables, previousInjectables) => {
-                    // On the second reaction remove the previously registered injectables to avoid duplicate injectables
-                    if (previousInjectables) {
-                      childDi.deregister(...previousInjectables);
+                  (currentInjectables, previousInjectables = []) => {
+                    // Register new injectables and deregister removed injectables by id
+                    const currentIds = map(currentInjectables, "id");
+                    const previousIds = map(previousInjectables, "id");
+                    const idsToAdd = difference(currentIds, previousIds);
+                    const idsToRemove = previousIds.filter(previousId => !currentIds.includes(previousId));
+
+                    if (idsToRemove.length > 0) {
+                      childDi.deregister(...idsToInjectables(idsToRemove, previousInjectables));
                     }
 
-                    childDi.register(...currentInjectables);
+                    if (idsToAdd.length > 0) {
+                      childDi.register(...idsToInjectables(idsToAdd, currentInjectables));
+                    }
                   }, {
                     fireImmediately: true,
                   },

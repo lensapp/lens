@@ -258,5 +258,21 @@ describe("preferences: extension adding tray items", () => {
         ),
       ).toBeNull();
     });
+
+    it("given items are removed and one added, it's shown", async () => {
+      menuItems.replace([]);
+      menuItems.push({
+        id: "some-added",
+        label: "some-added",
+        click: () => {},
+        visible: computed(() => true),
+      });
+
+      expect(
+        builder.tray.get(
+          "some-added-tray-menu-item-for-extension-some-extension",
+        ),
+      ).not.toBeNull();
+    });
   });
 });
