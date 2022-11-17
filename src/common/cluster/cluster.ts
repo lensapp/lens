@@ -25,6 +25,7 @@ import assert from "assert";
 import type { Logger } from "../logger";
 import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
 import type { LoadConfigfromFile } from "../kube-helpers/load-config-from-file.injectable";
+import type { RequestNamespaceResources } from "./authorization-namespace-review.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
@@ -34,6 +35,7 @@ export interface ClusterDependencies {
   createContextHandler: (cluster: Cluster) => ClusterContextHandler;
   createKubectl: (clusterVersion: string) => Kubectl;
   createAuthorizationReview: (config: KubeConfig) => CanI;
+  createAuthorizationNamespaceReview: (config: KubeConfig) => RequestNamespaceResources;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
   createVersionDetector: (cluster: Cluster) => VersionDetector;
   broadcastMessage: BroadcastMessage;
@@ -472,8 +474,10 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
   private async refreshAccessibility(): Promise<void> {
+    this.dependencies.logger.info(`[CLUSTER]: refreshAccessibility`, this.getMeta());
     const proxyConfig = await this.getProxyKubeconfig();
     const canI = this.dependencies.createAuthorizationReview(proxyConfig);
+    const requestNamespaceResources = this.dependencies.createAuthorizationNamespaceReview(proxyConfig);
 
     this.isAdmin = await canI({
       namespace: "kube-system",
@@ -485,7 +489,7 @@ export class Cluster implements ClusterModel, ClusterState {
       resource: "*",
     });
     this.allowedNamespaces = await this.getAllowedNamespaces(proxyConfig);
-    this.allowedResources = await this.getAllowedResources(canI);
+    this.allowedResources = await this.getAllowedResources(requestNamespaceResources);
     this.ready = true;
   }
 
@@ -667,32 +671,39 @@ export class Cluster implements ClusterModel, ClusterState {
     }
   }
 
-  protected async getAllowedResources(canI: CanI) {
+  protected async getAllowedResources(requestNamespaceResources: RequestNamespaceResources) {
     try {
       if (!this.allowedNamespaces.length) {
         return [];
       }
+
       const resources = apiResources.filter((resource) => this.resourceAccessStatuses.get(resource) === undefined);
-      const apiLimit = plimit(5); // 5 concurrent api requests
-      const requests = [];
+      const unknownResources = new Map<string, KubeApiResource>(resources.map(resource => ([resource.apiName, resource])));
 
-      for (const apiResource of resources) {
-        requests.push(apiLimit(async () => {
-          for (const namespace of this.allowedNamespaces.slice(0, 10)) {
-            if (!this.resourceAccessStatuses.get(apiResource)) {
-              const result = await canI({
-                resource: apiResource.apiName,
-                group: apiResource.group,
-                verb: "list",
-                namespace,
-              });
+      if (unknownResources.size > 0) {
+        const apiLimit = plimit(5); // 5 concurrent api requests
 
-              this.resourceAccessStatuses.set(apiResource, result);
+        await Promise.all(this.allowedNamespaces.map(namespace => apiLimit(async () => {
+          if (unknownResources.size === 0) {
+            return;
+          }
+
+          const namespaceResources = await requestNamespaceResources(namespace);
+
+          for (const resourceName of namespaceResources) {
+            const unknownResource = unknownResources.get(resourceName);
+
+            if (unknownResource) {
+              this.resourceAccessStatuses.set(unknownResource, true);
+              unknownResources.delete(resourceName);
             }
           }
-        }));
+        })));
+
+        for (const forbiddenResource of unknownResources.values()) {
+          this.resourceAccessStatuses.set(forbiddenResource, false);
+        }
       }
-      await Promise.all(requests);
 
       return apiResources
         .filter((resource) => this.resourceAccessStatuses.get(resource))
