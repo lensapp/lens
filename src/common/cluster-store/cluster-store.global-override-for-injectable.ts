@@ -7,11 +7,6 @@ import clusterStoreInjectable from "./cluster-store.injectable";
 import type { Cluster } from "../cluster/cluster";
 import type { ClusterStore } from "./cluster-store";
 
-export default getGlobalOverride(
-  clusterStoreInjectable,
-  () =>
-    ({
-      provideInitialFromMain: () => {},
-      getById: (id) => (void id, {}) as Cluster,
-    } as ClusterStore),
-);
+export default getGlobalOverride(clusterStoreInjectable, () => ({
+  getById: () => ({}) as Cluster,
+} as Partial<ClusterStore> as ClusterStore));

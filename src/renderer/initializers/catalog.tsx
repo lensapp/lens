@@ -6,14 +6,17 @@
 import React from "react";
 import fs from "fs";
 import "../../common/catalog-entities/kubernetes-cluster";
-import { ClusterStore } from "../../common/cluster-store/cluster-store";
 import { catalogCategoryRegistry } from "../api/catalog-category-registry";
 import { WeblinkAddCommand } from "../components/catalog-entities/weblink-add-command";
 import { loadConfigFromString } from "../../common/kube-helpers";
 import type { OpenDeleteClusterDialog } from "../components/delete-cluster-dialog/open.injectable";
+import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
+
+const getClusterById = asLegacyGlobalFunctionForExtensionApi(getClusterByIdInjectable);
 
 async function onClusterDelete(clusterId: string, openDeleteClusterDialog: OpenDeleteClusterDialog) {
-  const cluster = ClusterStore.getInstance().getById(clusterId);
+  const cluster = getClusterById(clusterId);
 
   if (!cluster) {
     return console.warn("[KUBERNETES-CLUSTER]: cannot delete cluster, does not exist in store", { clusterId });

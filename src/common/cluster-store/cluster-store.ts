@@ -10,11 +10,9 @@ import { BaseStore } from "../base-store";
 import { Cluster } from "../cluster/cluster";
 import migrations from "../../migrations/cluster-store";
 import logger from "../../main/logger";
-import { ipcMainHandle } from "../ipc";
 import { disposer, toJS } from "../utils";
 import type { ClusterModel, ClusterId, ClusterState } from "../cluster-types";
 import { requestInitialClusterStates } from "../../renderer/ipc";
-import { clusterStates } from "../ipc/cluster";
 import type { CreateCluster } from "../cluster/create-cluster-injection-token";
 import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
@@ -56,15 +54,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     for (const { id, state } of await requestInitialClusterStates()) {
       this.getById(id)?.setState(state);
     }
-  }
-
-  provideInitialFromMain() {
-    ipcMainHandle(clusterStates, () => (
-      this.clustersList.map(cluster => ({
-        id: cluster.id,
-        state: cluster.getState(),
-      }))
-    ));
   }
 
   protected pushStateToViewsAutomatically() {

@@ -12,6 +12,7 @@ import catalogEntityRegistryInjectable from "../../../catalog/entity-registry.in
 import askUserForFilePathsInjectable from "../../../ipc/ask-user-for-file-paths.injectable";
 import applicationMenuItemCompositeInjectable from "../../../../features/application-menu/main/application-menu-item-composite.injectable";
 import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
+import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
@@ -24,6 +25,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
     const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
     const askUserForFilePaths = di.inject(askUserForFilePathsInjectable);
     const emitAppEvent = di.inject(emitAppEventInjectable);
+    const getClusterById = di.inject(getClusterByIdInjectable);
 
     return {
       id: "setup-ipc-main-handlers",
@@ -37,6 +39,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
           operatingSystemTheme,
           askUserForFilePaths,
           emitAppEvent,
+          getClusterById,
         });
       },
     };
