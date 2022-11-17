@@ -129,9 +129,9 @@ export class ResourceApplier {
 
     const args = [
       subCmd,
-      "--kubeconfig", `"${proxyKubeconfigPath}"`,
+      "--kubeconfig", proxyKubeconfigPath,
       ...parentArgs,
-      "-f", `"${tmpDir}"`,
+      "-f", tmpDir,
     ];
 
     this.dependencies.logger.info(`[RESOURCE-APPLIER] running kubectl`, { args });
