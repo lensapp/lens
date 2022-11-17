@@ -145,13 +145,19 @@ export const getDiForUnitTesting = (
       callForPublicHelmRepositoriesInjectable,
     ]);
 
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    di.override(extensionsStoreInjectable, () => ({ isEnabled: ({ id, isBundled }) => false }) as ExtensionsStore);
+    di.override(extensionsStoreInjectable, () => ({
+      isEnabled: () => false,
+    }) as Partial<ExtensionsStore> as ExtensionsStore);
 
     di.override(hotbarStoreInjectable, () => ({
-      getActive: () => ({ name: "some-hotbar", items: [] }),
+      getActive: () => ({
+        name: "some-hotbar",
+        items: [null, null, null, null, null, null, null, null, null, null, null, null],
+        id: "some-hotbar",
+      }),
       getDisplayIndex: () => "0",
-    }) as unknown as HotbarStore);
+      isAddedToActive: () => false,
+    }) as Partial<HotbarStore> as HotbarStore);
 
     di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 

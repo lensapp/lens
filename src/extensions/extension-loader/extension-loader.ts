@@ -12,8 +12,6 @@ import type { Disposer } from "../../common/utils";
 import { isDefined, toJS } from "../../common/utils";
 import type { InstalledExtension } from "../extension-discovery/extension-discovery";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
-import type { LensRendererExtension } from "../lens-renderer-extension";
-import * as registries from "../registries";
 import type { LensExtensionState } from "../extensions-store/extensions-store";
 import { extensionLoaderFromMainChannel, extensionLoaderFromRendererChannel } from "../../common/ipc/extension-handling";
 import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
@@ -252,28 +250,13 @@ export class ExtensionLoader {
   }
 
   loadOnMain() {
-    this.autoInitExtensions(() => Promise.resolve([]));
+    this.autoInitExtensions(async () => []);
   }
 
   loadOnClusterManagerRenderer = () => {
     this.dependencies.logger.debug(`${logModule}: load on main renderer (cluster manager)`);
 
-    return this.autoInitExtensions(async (ext) => {
-      const extension = ext as LensRendererExtension;
-      const removeItems = [
-        registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
-      ];
-
-      this.onRemoveExtensionId.addListener((removedExtensionId) => {
-        if (removedExtensionId === extension.id) {
-          removeItems.forEach(remove => {
-            remove();
-          });
-        }
-      });
-
-      return removeItems;
-    });
+    return this.autoInitExtensions(async () => []);
   };
 
   loadOnClusterRenderer = () => {

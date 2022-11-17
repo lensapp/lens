@@ -94,12 +94,6 @@ export async function bootstrap(di: DiContainer) {
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
 
-  logger.info(`${logPrefix} initializing Registries`);
-  initializers.initRegistries();
-
-  logger.info(`${logPrefix} initializing CatalogEntityDetailRegistry`);
-  initializers.initCatalogEntityDetailRegistry();
-
   logger.info(`${logPrefix} initializing CatalogCategoryRegistryEntries`);
   initializers.initCatalogCategoryRegistryEntries({
     navigateToAddCluster: di.inject(navigateToAddClusterInjectable),

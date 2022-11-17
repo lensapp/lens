@@ -131,6 +131,7 @@ export type ItemListLayoutProps<Item extends ItemObject, PreLoadStores extends b
   failedToLoadMessage?: React.ReactNode;
 
   filterCallbacks?: ItemsFilters<Item>;
+  "data-testid"?: string;
 } & (
   PreLoadStores extends true
     ? {
@@ -271,11 +272,12 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
   }
 
   render() {
-    const { renderHeaderTitle } = this.props;
+    const { renderHeaderTitle, "data-testid": dataTestId } = this.props;
 
     return untracked(() => (
       <div
         className={cssNames("ItemListLayout flex column", this.props.className)}
+        data-testid={dataTestId}
       >
         <ItemListLayoutHeader
           getItems={() => this.items}
