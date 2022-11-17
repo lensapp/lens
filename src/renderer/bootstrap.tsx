@@ -97,9 +97,6 @@ export async function bootstrap(di: DiContainer) {
   logger.info(`${logPrefix} initializing Registries`);
   initializers.initRegistries();
 
-  logger.info(`${logPrefix} initializing EntitySettingsRegistry`);
-  initializers.initEntitySettingsRegistry();
-
   logger.info(`${logPrefix} initializing CatalogEntityDetailRegistry`);
   initializers.initCatalogEntityDetailRegistry();
 
