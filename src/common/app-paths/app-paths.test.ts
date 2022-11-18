@@ -20,7 +20,7 @@ describe("app-paths", () => {
 
     const defaultAppPathsStub: AppPaths = {
       appData: "some-app-data",
-      cache: "some-cache",
+      sessionData: "some-session-data",
       crashDumps: "some-crash-dumps",
       desktop: "some-desktop",
       documents: "some-documents",
@@ -71,7 +71,7 @@ describe("app-paths", () => {
 
       expect(actual).toEqual({
         appData: "some-app-data",
-        cache: "some-cache",
+        sessionData: "some-session-data",
         crashDumps: "some-crash-dumps",
         desktop: "some-desktop",
         documents: "some-documents",
@@ -94,7 +94,7 @@ describe("app-paths", () => {
 
       expect(actual).toEqual({
         appData: "some-app-data",
-        cache: "some-cache",
+        sessionData: "some-session-data",
         crashDumps: "some-crash-dumps",
         desktop: "some-desktop",
         documents: "some-documents",
