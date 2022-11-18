@@ -14,7 +14,7 @@ import { apiResourceRecord, apiResources } from "../rbac";
 import type { VersionDetector } from "../../main/cluster-detectors/version-detector";
 import type { DetectorRegistry } from "../../main/cluster-detectors/detector-registry";
 import plimit from "p-limit";
-import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate, ClusterConfigData } from "../cluster-types";
+import type { ClusterState, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate, ClusterConfigData } from "../cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus, clusterModelIdChecker, updateClusterModelChecker } from "../cluster-types";
 import { disposer, isDefined, isRequestError, toJS } from "../utils";
 import type { Response } from "request";
@@ -311,7 +311,7 @@ export class Cluster implements ClusterModel, ClusterState {
   protected bindEvents() {
     this.dependencies.logger.info(`[CLUSTER]: bind events`, this.getMeta());
     const refreshTimer = setInterval(() => !this.disconnected && this.refresh(), 30000); // every 30s
-    const refreshMetadataTimer = setInterval(() => !this.disconnected && this.refreshMetadata(), 900000); // every 15 minutes
+    const refreshMetadataTimer = setInterval(() => this.available && this.refreshAccessibilityAndMetadata(), 900000); // every 15 minutes
 
     this.eventsDisposer.push(
       reaction(() => this.getState(), state => this.pushState(state)),
@@ -441,27 +441,26 @@ export class Cluster implements ClusterModel, ClusterState {
 
   /**
    * @internal
-   * @param opts refresh options
    */
   @action
-  async refresh(opts: ClusterRefreshOptions = {}) {
+  async refresh() {
     this.dependencies.logger.info(`[CLUSTER]: refresh`, this.getMeta());
     await this.refreshConnectionStatus();
-
-    if (this.accessible) {
-      await this.refreshAccessibility();
-
-      if (opts.refreshMetadata) {
-        this.refreshMetadata();
-      }
-    }
     this.pushState();
   }
 
   /**
    * @internal
    */
-  @action
+   @action
+   async refreshAccessibilityAndMetadata() {
+    await this.refreshAccessibility();
+    await this.refreshMetadata();
+   }
+
+  /**
+   * @internal
+   */
   async refreshMetadata() {
     this.dependencies.logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
     const metadata = await this.dependencies.detectorRegistry.detectForCluster(this);
