@@ -5,8 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { noop } from "lodash/fp";
 import { runInAction } from "mobx";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 import applicationMenuItemInjectionToken from "./main/menu-items/application-menu-item-injection-token";
 import logErrorInjectable from "../../common/log-error.injectable";
@@ -15,9 +15,9 @@ describe("application-menu-in-legacy-extension-api", () => {
   let builder: ApplicationBuilder;
   let logErrorMock: jest.Mock;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     builder.beforeApplicationStart(
       (mainDi) => {
         runInAction(() => {

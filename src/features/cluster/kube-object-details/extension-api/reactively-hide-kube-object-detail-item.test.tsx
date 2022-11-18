@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../../test-utils/application-builder";
 import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import React from "react";
@@ -19,9 +19,9 @@ describe("reactively hide kube object detail item", () => {
   let rendered: RenderResult;
   let someObservable: IObservableValue<boolean>;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     builder.setEnvironmentToClusterFrame();
 
     builder.afterWindowStart((windowDi) => {
@@ -72,11 +72,6 @@ describe("reactively hide kube object detail item", () => {
     showDetails("/apis/some-api-version/namespaces/some-namespace/some-kind/some-name");
 
     builder.extensions.enable(testExtension);
-  });
-
-
-  afterEach(() => {
-    builder.quit();
   });
 
   it("renders", () => {

@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "./main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
@@ -28,10 +28,10 @@ describe("analytics for installing update", () => {
   let analyticsListenerMock: jest.Mock;
   let mainDi: DiContainer;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(async () => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    builder = getApplicationBuilder();
 
     analyticsListenerMock = jest.fn();
 
@@ -60,10 +60,6 @@ describe("analytics for installing update", () => {
     });
 
     mainDi = builder.mainDi;
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given application is started and checking updates periodically", () => {

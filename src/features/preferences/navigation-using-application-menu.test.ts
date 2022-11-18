@@ -4,8 +4,8 @@
  */
 
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
 import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
@@ -13,16 +13,12 @@ describe("preferences - navigation using application menu", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let discover: Discover;
+  
+  setupInitializingApplicationBuilder(b => builder = b);
 
   beforeEach(async () => {
-    builder = getApplicationBuilder();
-
     rendered = await builder.render();
     discover = discoverFor(() => rendered);
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   it("renders", () => {

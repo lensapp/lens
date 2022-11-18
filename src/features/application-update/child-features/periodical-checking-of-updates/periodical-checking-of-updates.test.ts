@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../../test-utils/application-builder";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../../../main/electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "../../main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
@@ -17,10 +17,10 @@ describe("periodical checking of updates", () => {
   let builder: ApplicationBuilder;
   let processCheckingForUpdatesMock: jest.Mock;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(() => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    builder = getApplicationBuilder();
 
     builder.beforeApplicationStart((mainDi) => {
       mainDi.unoverride(periodicalCheckForUpdatesInjectable);
@@ -33,10 +33,6 @@ describe("periodical checking of updates", () => {
         () => processCheckingForUpdatesMock,
       );
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given updater is enabled and configuration exists, when started", () => {

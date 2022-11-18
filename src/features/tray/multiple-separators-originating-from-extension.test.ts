@@ -2,26 +2,22 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import getRandomIdInjectable from "../../common/utils/get-random-id.injectable";
 
 describe("multiple separators originating from extension", () => {
   let builder: ApplicationBuilder;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     builder.beforeApplicationStart((mainDi) => {
       mainDi.unoverride(getRandomIdInjectable);
       mainDi.permitSideEffects(getRandomIdInjectable);
     });
 
     await builder.render();
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   it("given extension with multiple separators, when extension is enabled, does not throw", () => {

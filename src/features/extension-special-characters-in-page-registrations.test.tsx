@@ -5,8 +5,8 @@
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import currentPathInjectable from "../renderer/routes/current-path.injectable";
-import type { ApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "./test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "./test-utils/application-builder";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { FakeExtensionOptions } from "../renderer/components/test-utils/get-extension-fake";
 
@@ -15,18 +15,14 @@ describe("extension special characters in page registrations", () => {
   let rendered: RenderResult;
   let windowDi: DiContainer;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     rendered = await builder.render();
 
     builder.extensions.enable(extensionWithPagesHavingSpecialCharacters);
 
     windowDi = builder.applicationWindow.only.di;
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   it("renders", () => {

@@ -5,8 +5,8 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../test-utils/application-builder";
 import type { KubernetesCluster } from "../../../common/catalog-entities";
 import React from "react";
 
@@ -15,9 +15,9 @@ describe("disable sidebar items when cluster is not relevant", () => {
   let rendered: RenderResult;
   let isEnabledForClusterMock: AsyncFnMock<(cluster: KubernetesCluster) => Promise<boolean>>;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     builder.setEnvironmentToClusterFrame();
 
     isEnabledForClusterMock = asyncFn();
@@ -51,10 +51,6 @@ describe("disable sidebar items when cluster is not relevant", () => {
     rendered = await builder.render();
 
     builder.extensions.enable(testExtension);
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given not yet known if extension should be enabled for the cluster", () => {

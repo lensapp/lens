@@ -6,8 +6,8 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { SendMessageToChannel } from "./message-to-channel-injection-token";
 import { sendMessageToChannelInjectionToken } from "./message-to-channel-injection-token";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../features/test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../../features/test-utils/application-builder";
 import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { MessageChannel } from "./message-channel-listener-injection-token";
 import { messageChannelListenerInjectionToken } from "./message-channel-listener-injection-token";
@@ -25,15 +25,16 @@ type TestMessageChannel = MessageChannel<string>;
 type TestRequestChannel = RequestChannel<string, string>;
 
 describe("channel", () => {
+  let builder: ApplicationBuilder;
+
+  setupInitializingApplicationBuilder(b => builder = b);
+
   describe("messaging from main to renderer, given listener for channel in a window and application has started", () => {
     let messageListenerInWindowMock: jest.Mock;
     let mainDi: DiContainer;
     let messageToChannel: SendMessageToChannel;
-    let builder: ApplicationBuilder;
 
     beforeEach(async () => {
-      builder = getApplicationBuilder();
-
       messageListenerInWindowMock = jest.fn();
 
       const testChannelListenerInTestWindowInjectable = getInjectable({
@@ -58,10 +59,6 @@ describe("channel", () => {
       await builder.startHidden();
 
       messageToChannel = mainDi.inject(sendMessageToChannelInjectionToken);
-    });
-
-    afterEach(() => {
-      builder.quit();
     });
 
     describe("given window is started", () => {
@@ -107,10 +104,8 @@ describe("channel", () => {
   describe("messaging from renderer to main, given listener for channel in a main and application has started", () => {
     let messageListenerInMainMock: jest.Mock;
     let messageToChannel: SendMessageToChannel;
-    let builder: ApplicationBuilder;
 
     beforeEach(async () => {
-      builder = getApplicationBuilder();
       messageListenerInMainMock = jest.fn();
 
       const testChannelListenerInMainInjectable = getInjectable({
@@ -137,10 +132,6 @@ describe("channel", () => {
       messageToChannel = windowDi.inject(sendMessageToChannelInjectionToken);
     });
 
-    afterEach(() => {
-      builder.quit();
-    });
-
     it("when sending message, triggers listener in main", () => {
       messageToChannel(testMessageChannel, "some-message");
 
@@ -151,10 +142,8 @@ describe("channel", () => {
   describe("requesting from main in renderer, given listener for channel in a main and application has started", () => {
     let requestListenerInMainMock: AsyncFnMock<RequestChannelHandler<TestRequestChannel>>;
     let requestFromChannel: RequestFromChannel;
-    let builder: ApplicationBuilder;
 
     beforeEach(async () => {
-      builder = getApplicationBuilder();
       requestListenerInMainMock = asyncFn();
 
       const testChannelListenerInMainInjectable = getRequestChannelListenerInjectable({
@@ -173,10 +162,6 @@ describe("channel", () => {
       const windowDi = builder.applicationWindow.only.di;
 
       requestFromChannel = windowDi.inject(requestFromChannelInjectable);
-    });
-
-    afterEach(() => {
-      builder.quit();
     });
 
     describe("when requesting from channel", () => {
@@ -207,11 +192,7 @@ describe("channel", () => {
   });
 
   describe("when registering multiple handlers for the same channel", () => {
-    let builder: ApplicationBuilder;
-
     beforeEach(() => {
-      builder = getApplicationBuilder();
-
       const testChannelListenerInMainInjectable = getRequestChannelListenerInjectable({
         channel: testRequestChannel,
         handler: () => () => "some-value",
@@ -229,10 +210,6 @@ describe("channel", () => {
           mainDi.register(testChannelListenerInMain2Injectable);
         });
       });
-    });
-
-    afterEach(() => {
-      builder.quit();
     });
 
     it("throws on startup", async () => {

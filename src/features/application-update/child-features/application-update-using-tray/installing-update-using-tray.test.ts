@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../../test-utils/application-builder";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../../../main/electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "../../main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
@@ -21,9 +21,9 @@ describe("installing update using tray", () => {
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(() => {
     builder.beforeApplicationStart((mainDi) => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
@@ -41,10 +41,6 @@ describe("installing update using tray", () => {
       mainDi.override(electronUpdaterIsActiveInjectable, () => true);
       mainDi.override(publishIsConfiguredInjectable, () => true);
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when started", () => {

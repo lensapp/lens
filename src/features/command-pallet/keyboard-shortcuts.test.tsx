@@ -6,19 +6,13 @@
 import type { RenderResult } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import platformInjectable from "../../common/vars/platform.injectable";
-import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { type ApplicationBuilder, setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 
 describe("Command Pallet: keyboard shortcut tests", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
-  });
-
-  afterEach(() => {
-    builder.quit();
-  });
+  setupInitializingApplicationBuilder(b => builder = b);
 
   describe("when on macOS", () => {
     beforeEach(async () => {

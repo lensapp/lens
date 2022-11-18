@@ -6,8 +6,8 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../test-utils/application-builder";
 import { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import getRandomInstallChartTabIdInjectable from "../../../renderer/components/dock/install-chart/get-random-install-chart-tab-id.injectable";
 import requestCreateHelmReleaseInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
@@ -30,9 +30,9 @@ describe("opening dock tab for installing helm chart", () => {
   let requestHelmChartReadmeMock: AsyncFnMock<RequestHelmChartReadme>;
   let requestHelmChartValuesMock: jest.Mock;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(() => {
     requestHelmChartsMock = asyncFn();
     requestHelmChartVersionsMock = asyncFn();
     requestHelmChartReadmeMock = asyncFn();
@@ -54,10 +54,6 @@ describe("opening dock tab for installing helm chart", () => {
     });
 
     builder.setEnvironmentToClusterFrame();
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given application is started, when navigating to helm charts", () => {

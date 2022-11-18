@@ -5,19 +5,20 @@
 import type { IObservableArray, IObservableValue } from "mobx";
 import { computed, runInAction, observable } from "mobx";
 import type { TrayMenuRegistration } from "../../main/tray/tray-menu-registration";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 
 describe("preferences: extension adding tray items", () => {
+  let builder: ApplicationBuilder;
+
+  setupInitializingApplicationBuilder(b => builder = b);
+
   describe("when extension with tray items are statically defined", () => {
-    let builder: ApplicationBuilder;
     let someObservableForVisibility: IObservableValue<boolean>;
     let someObservableForEnabled: IObservableValue<boolean>;
     let someObservableLabel: IObservableValue<string>;
 
     beforeEach(async () => {
-      builder = getApplicationBuilder();
-
       await builder.render();
 
       builder.preferences.navigate();
@@ -83,10 +84,6 @@ describe("preferences: extension adding tray items", () => {
       };
 
       builder.extensions.enable(testExtension);
-    });
-
-    afterEach(() => {
-      builder.quit();
     });
 
     describe("given controlled label", () => {
@@ -197,12 +194,9 @@ describe("preferences: extension adding tray items", () => {
   });
 
   describe("when extension with tray items are dynamically defined", () => {
-    let builder: ApplicationBuilder;
     let menuItems: IObservableArray<TrayMenuRegistration>;
 
     beforeEach(async () => {
-      builder = getApplicationBuilder();
-
       await builder.render();
 
       builder.preferences.navigate();

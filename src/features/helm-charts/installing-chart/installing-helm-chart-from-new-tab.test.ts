@@ -6,8 +6,8 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../test-utils/application-builder";
 import { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import getRandomInstallChartTabIdInjectable from "../../../renderer/components/dock/install-chart/get-random-install-chart-tab-id.injectable";
 import type { RequestCreateHelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
@@ -38,9 +38,9 @@ describe("installing helm chart from new tab", () => {
   let requestHelmChartValuesMock: AsyncFnMock<RequestHelmChartValues>;
   let requestCreateHelmReleaseMock: AsyncFnMock<RequestCreateHelmRelease>;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(() => {
     builder.setEnvironmentToClusterFrame();
 
     requestDetailedHelmReleaseMock = asyncFn();
@@ -69,10 +69,6 @@ describe("installing helm chart from new tab", () => {
 
     builder.namespaces.add("default");
     builder.namespaces.add("some-other-namespace");
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given tab for installing chart was not previously opened and application is started", () => {

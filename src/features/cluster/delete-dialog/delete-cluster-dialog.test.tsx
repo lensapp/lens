@@ -13,7 +13,7 @@ import normalizedPlatformInjectable from "../../../common/vars/normalized-platfo
 import kubectlBinaryNameInjectable from "../../../main/kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../../../main/kubectl/normalized-arch.injectable";
 import openDeleteClusterDialogInjectable, { type OpenDeleteClusterDialog } from "../../../renderer/components/delete-cluster-dialog/open.injectable";
-import { type ApplicationBuilder, getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import { type ApplicationBuilder, setupInitializingApplicationBuilder } from "../../test-utils/application-builder";
 import type { Cluster } from "../../../common/cluster/cluster";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
@@ -77,10 +77,10 @@ describe("Deleting a cluster", () => {
   let rendered: RenderResult;
   let config: KubeConfig;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(async () => {
     config = new KubeConfig();
-    builder = getApplicationBuilder();
-
     builder.beforeApplicationStart((mainDi) => {
       mainDi.override(createContextHandlerInjectable, () => () => undefined as never);
       mainDi.override(createKubeconfigManagerInjectable, () => () => undefined as never);
@@ -102,10 +102,6 @@ describe("Deleting a cluster", () => {
     });
 
     rendered = await builder.render();
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when the kubeconfig has multiple clusters", () => {

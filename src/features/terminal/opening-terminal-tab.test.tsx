@@ -14,8 +14,8 @@ import createKubeconfigManagerInjectable from "../../main/kubeconfig-manager/cre
 import type { KubeconfigManager } from "../../main/kubeconfig-manager/kubeconfig-manager";
 import type { SpawnPty } from "../../main/shell-session/spawn-pty.injectable";
 import spawnPtyInjectable from "../../main/shell-session/spawn-pty.injectable";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { FindByTextWithMarkup } from "../../test-utils/findByTextWithMarkup";
 import { findByTextWithMarkupFor } from "../../test-utils/findByTextWithMarkup";
 
@@ -25,6 +25,8 @@ describe("test for opening terminal tab within cluster frame", () => {
   let findByTextWithMarkup: FindByTextWithMarkup;
   let spawnPtyMock: jest.MockedFunction<SpawnPty>;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeAll(() => {
     jest.spyOn(window, "requestAnimationFrame").mockImplementation(function IAmAMockRequestAnimationFrame(cb) {
       return window.setTimeout(() => cb(Date.now()));
@@ -32,8 +34,6 @@ describe("test for opening terminal tab within cluster frame", () => {
   });
 
   beforeEach(async () => {
-    builder = getApplicationBuilder();
-
     builder.mainDi.override(createKubeconfigManagerInjectable, () => (cluster) => {
       return {
         getPath: async () => `/some-kubeconfig-managed-path-for-${cluster.id}`,
@@ -48,10 +48,6 @@ describe("test for opening terminal tab within cluster frame", () => {
 
     result = await builder.render();
     findByTextWithMarkup = findByTextWithMarkupFor(result);
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when new terminal tab is opened", () => {

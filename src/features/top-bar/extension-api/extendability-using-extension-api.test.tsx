@@ -5,18 +5,18 @@
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../test-utils/application-builder";
 import type { FakeExtensionOptions } from "../../../renderer/components/test-utils/get-extension-fake";
 
 describe("extendability-using-extension-api", () => {
   let rendered: RenderResult;
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
+
+  setupInitializingApplicationBuilder(b => builder = b);
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder();
-
-    rendered = await applicationBuilder.render();
+    rendered = await builder.render();
   });
 
   it("renders", () => {
@@ -48,7 +48,7 @@ describe("extendability-using-extension-api", () => {
         },
       };
 
-      applicationBuilder.extensions.enable(testExtension);
+      builder.extensions.enable(testExtension);
     });
 
     it("renders", () => {
@@ -61,7 +61,7 @@ describe("extendability-using-extension-api", () => {
 
     describe("when the extension is disabled", () => {
       beforeEach(() => {
-        applicationBuilder.extensions.disable(testExtension);
+        builder.extensions.disable(testExtension);
       });
 
       it("renders", () => {
@@ -98,7 +98,7 @@ describe("extendability-using-extension-api", () => {
         },
       };
 
-      applicationBuilder.extensions.enable(testExtension);
+      builder.extensions.enable(testExtension);
     });
 
     it("renders without blowing up", () => {

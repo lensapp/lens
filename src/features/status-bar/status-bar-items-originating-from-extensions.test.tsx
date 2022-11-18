@@ -4,8 +4,8 @@
  */
 import type { RenderResult } from "@testing-library/react";
 import React from "react";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import getRandomIdInjectable from "../../common/utils/get-random-id.injectable";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 import { computed } from "mobx";
@@ -13,17 +13,13 @@ import { computed } from "mobx";
 describe("status-bar-items-originating-from-extensions", () => {
   let builder: ApplicationBuilder;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(() => {
     builder.beforeWindowStart((windowDi) => {
       windowDi.unoverride(getRandomIdInjectable);
       windowDi.permitSideEffects(getRandomIdInjectable);
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when application starts", () => {

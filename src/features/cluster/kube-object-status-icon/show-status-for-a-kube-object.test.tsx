@@ -12,8 +12,8 @@ import type { IAtom } from "mobx";
 import { runInAction, createAtom, computed } from "mobx";
 import { frontEndRouteInjectionToken } from "../../../common/front-end-routing/front-end-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../renderer/routes/route-specific-component-injection-token";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../test-utils/application-builder";
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import type { RenderResult } from "@testing-library/react";
 import { act } from "@testing-library/react";
@@ -27,10 +27,10 @@ describe("show status for a kube object", () => {
   let warningStatusIsShown: boolean;
   let criticalStatusIsShown: boolean;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(() => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    builder = getApplicationBuilder();
 
     infoStatusIsShown = false;
 
@@ -108,10 +108,6 @@ describe("show status for a kube object", () => {
     });
 
     builder.setEnvironmentToClusterFrame();
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given application starts and in test page", () => {

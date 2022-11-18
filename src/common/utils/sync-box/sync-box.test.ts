@@ -5,8 +5,8 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { observe, runInAction } from "mobx";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../features/test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../../features/test-utils/application-builder";
 import createSyncBoxInjectable from "./create-sync-box.injectable";
 import type { SyncBox } from "./sync-box-injection-token";
 import { syncBoxInjectionToken } from "./sync-box-injection-token";
@@ -14,9 +14,9 @@ import { syncBoxInjectionToken } from "./sync-box-injection-token";
 describe("sync-box", () => {
   let builder: ApplicationBuilder;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(() => {
     builder.beforeApplicationStart(mainDi => {
       runInAction(() => {
         mainDi.register(someInjectable);
@@ -28,10 +28,6 @@ describe("sync-box", () => {
         windowDi.register(someInjectable);
       });
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given application is started, when value is set in main", () => {

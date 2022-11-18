@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
@@ -15,13 +15,7 @@ import logErrorInjectable from "../../common/log-error.injectable";
 describe("preferences - navigation to extension specific preferences", () => {
   let builder: ApplicationBuilder;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
-  });
-
-  afterEach(() => {
-    builder.quit();
-  });
+  setupInitializingApplicationBuilder(b => builder = b);
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;

@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../../test-utils/application-builder";
 import quitAndInstallUpdateInjectable from "../../main/quit-and-install-update.injectable";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../../../main/electron-app/features/electron-updater-is-active.injectable";
@@ -22,8 +22,7 @@ import setUpdateOnQuitInjectable from "../../../../main/electron-app/features/se
 import showInfoNotificationInjectable from "../../../../renderer/components/notifications/show-info-notification.injectable";
 import processCheckingForUpdatesInjectable from "../../main/process-checking-for-updates.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import getBuildVersionInjectable
-  from "../../../../main/vars/build-version/get-build-version.injectable";
+import getBuildVersionInjectable from "../../../../main/vars/build-version/get-build-version.injectable";
 
 describe("selection of update stability", () => {
   let builder: ApplicationBuilder;
@@ -34,9 +33,9 @@ describe("selection of update stability", () => {
   let showInfoNotificationMock: jest.Mock;
   let mainDi: DiContainer;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(() => {
     builder.beforeApplicationStart((mainDi) => {
       quitAndInstallUpdateMock = jest.fn();
       checkForPlatformUpdatesMock = asyncFn();
@@ -71,10 +70,6 @@ describe("selection of update stability", () => {
     });
 
     mainDi = builder.mainDi;
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when started", () => {

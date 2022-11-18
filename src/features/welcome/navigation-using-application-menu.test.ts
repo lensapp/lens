@@ -4,21 +4,17 @@
  */
 
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 
 describe("welcome - navigation using application menu", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(async () => {
-    builder = getApplicationBuilder();
-
     rendered = await builder.render();
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   it("renders", () => {

@@ -8,8 +8,8 @@ import { act, waitFor } from "@testing-library/react";
 import getPodByIdInjectable from "../../renderer/components/+workloads-pods/get-pod-by-id.injectable";
 import getPodsByOwnerIdInjectable from "../../renderer/components/+workloads-pods/get-pods-by-owner-id.injectable";
 import openSaveFileDialogInjectable from "../../renderer/utils/save-file.injectable";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import dockStoreInjectable from "../../renderer/components/dock/dock/store.injectable";
 import areLogsPresentInjectable from "../../renderer/components/dock/logs/are-logs-present.injectable";
 import type { CallForLogs } from "../../renderer/components/dock/logs/call-for-logs.injectable";
@@ -46,10 +46,10 @@ describe("download logs options in logs dock tab", () => {
     image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
   };
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(() => {
     const selectedPod = dockerPod;
-
-    builder = getApplicationBuilder();
 
     builder.setEnvironmentToClusterFrame();
 
@@ -93,10 +93,6 @@ describe("download logs options in logs dock tab", () => {
       showErrorNotificationMock = jest.fn();
       windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("opening pod logs", () => {

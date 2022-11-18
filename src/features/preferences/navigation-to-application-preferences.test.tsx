@@ -4,8 +4,8 @@
  */
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import navigateToProxyPreferencesInjectable from "./common/navigate-to-proxy-preferences.injectable";
 import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
 import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
@@ -14,13 +14,7 @@ import type { FakeExtensionOptions } from "../../renderer/components/test-utils/
 describe("preferences - navigation to application preferences", () => {
   let builder: ApplicationBuilder;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
-  });
-
-  afterEach(() => {
-    builder.quit();
-  });
+  setupInitializingApplicationBuilder(b => builder = b);
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;

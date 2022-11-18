@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "./main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
@@ -21,9 +21,9 @@ describe("downgrading version update", () => {
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let mainDi: DiContainer;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(() => {
     builder.beforeApplicationStart(mainDi => {
       checkForPlatformUpdatesMock = asyncFn();
 
@@ -37,10 +37,6 @@ describe("downgrading version update", () => {
     });
 
     mainDi = builder.mainDi;
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   [

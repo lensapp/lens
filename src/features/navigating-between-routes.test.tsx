@@ -11,8 +11,8 @@ import { routeSpecificComponentInjectionToken } from "../renderer/routes/route-s
 import { observer } from "mobx-react";
 import type { Route } from "../common/front-end-routing/front-end-route-injection-token";
 import { frontEndRouteInjectionToken } from "../common/front-end-routing/front-end-route-injection-token";
-import type { ApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "./test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "./test-utils/application-builder";
 import currentRouteInjectable from "../renderer/routes/current-route.injectable";
 import currentPathInjectable from "../renderer/routes/current-path.injectable";
 import queryParametersInjectable from "../renderer/routes/query-parameters.injectable";
@@ -23,13 +23,7 @@ describe("navigating between routes", () => {
   let rendered: RenderResult;
   let builder: ApplicationBuilder;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
-  });
-
-  afterEach(() => {
-    builder.quit();
-  });
+  setupInitializingApplicationBuilder(b => builder = b);
 
   describe("given route without path parameters", () => {
     let windowDi: DiContainer;

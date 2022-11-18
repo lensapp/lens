@@ -7,8 +7,8 @@ import type { IObservableValue } from "mobx";
 import { observable, runInAction, computed } from "mobx";
 import React from "react";
 import type { TestExtensionRenderer } from "../../../renderer/components/test-utils/get-extension-fake";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../test-utils/application-builder";
 
 describe("reactively disable cluster pages", () => {
   let builder: ApplicationBuilder;
@@ -16,9 +16,9 @@ describe("reactively disable cluster pages", () => {
   let someObservable: IObservableValue<boolean>;
   let testExtensionInstance: TestExtensionRenderer;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     builder.setEnvironmentToClusterFrame();
 
     someObservable = observable.box(false);
@@ -44,10 +44,6 @@ describe("reactively disable cluster pages", () => {
 
     testExtensionInstance =
       builder.extensions.get("test-extension-id").applicationWindows.only;
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   it("when navigating to the page, does not show the page", () => {

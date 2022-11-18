@@ -7,17 +7,17 @@ import type { IObservableValue } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import React from "react";
 import navigateToWorkloadsOverviewInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/overview/navigate-to-workloads-overview.injectable";
-import type { ApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../../../test-utils/application-builder";
 
 describe("reactively hide workloads overview details item", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let someObservable: IObservableValue<boolean>;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     builder.setEnvironmentToClusterFrame();
 
     someObservable = observable.box(false);
@@ -52,10 +52,6 @@ describe("reactively hide workloads overview details item", () => {
     navigateToWorkloadsOverview();
 
     builder.extensions.enable(testExtension);
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   it("does not show the workload overview detail item", () => {

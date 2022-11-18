@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { ReadYamlFile } from "../../common/fs/read-yaml-file.injectable";
 import readYamlFileInjectable from "../../common/fs/read-yaml-file.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
@@ -27,9 +27,9 @@ describe("listing active helm repositories in preferences", () => {
   let loggerStub: Logger;
   let showErrorNotificationMock: jest.Mock;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     readYamlFileMock = asyncFn();
     execFileMock = asyncFn();
     showErrorNotificationMock = jest.fn();
@@ -55,10 +55,6 @@ describe("listing active helm repositories in preferences", () => {
     });
 
     rendered = await builder.render();
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when navigating to preferences containing helm repositories", () => {

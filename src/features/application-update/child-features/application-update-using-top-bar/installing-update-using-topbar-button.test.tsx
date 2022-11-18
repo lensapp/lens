@@ -12,8 +12,8 @@ import type { DownloadPlatformUpdate } from "../../main/download-update/download
 import downloadPlatformUpdateInjectable from "../../main/download-update/download-platform-update/download-platform-update.injectable";
 import publishIsConfiguredInjectable from "../../main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
 import electronUpdaterIsActiveInjectable from "../../../../main/electron-app/features/electron-updater-is-active.injectable";
-import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../../test-utils/application-builder";
 import processCheckingForUpdatesInjectable from "../../main/process-checking-for-updates.injectable";
 import quitAndInstallUpdateInjectable from "../../main/quit-and-install-update.injectable";
 import { advanceFakeTime, testUsingFakeTime } from "../../../../common/test-utils/use-fake-time";
@@ -28,10 +28,10 @@ describe("encourage user to update when sufficient time passed since update was 
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let quitAndInstallUpdateMock: jest.MockedFunction<() => void>;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(() => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    builder = getApplicationBuilder();
 
     builder.beforeApplicationStart((mainDi) => {
       checkForPlatformUpdatesMock = asyncFn();
@@ -53,10 +53,6 @@ describe("encourage user to update when sufficient time passed since update was 
       quitAndInstallUpdateMock = jest.fn();
       mainDi.override(quitAndInstallUpdateInjectable, () => quitAndInstallUpdateMock);
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when started", () => {

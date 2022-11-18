@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import quitAndInstallUpdateInjectable from "./main/quit-and-install-update.injectable";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
@@ -26,10 +26,10 @@ describe("installing update", () => {
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let setUpdateOnQuitMock: jest.Mock;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(() => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    builder = getApplicationBuilder();
 
     builder.beforeApplicationStart((mainDi) => {
       quitAndInstallUpdateMock = jest.fn();
@@ -59,10 +59,6 @@ describe("installing update", () => {
       mainDi.override(electronUpdaterIsActiveInjectable, () => true);
       mainDi.override(publishIsConfiguredInjectable, () => true);
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when started", () => {

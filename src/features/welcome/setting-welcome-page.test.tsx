@@ -5,8 +5,8 @@
 
 import type { RenderResult } from "@testing-library/react";
 import React from "react";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 import welcomeRouteConfigInjectable from "../../common/front-end-routing/routes/welcome/welcome-route-config.injectable";
 import welcomeRouteInjectable from "../../common/front-end-routing/routes/welcome/welcome-route.injectable";
@@ -18,13 +18,7 @@ describe("setting-welcome-page", () => {
   let rendered : RenderResult;
   let welcomeRoute: Route;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
-  });
-
-  afterEach(() => {
-    builder.quit();
-  });
+  setupInitializingApplicationBuilder(b => builder = b);
 
   describe("given configuration of welcome page route is the default", () => {
     beforeEach(async () => {

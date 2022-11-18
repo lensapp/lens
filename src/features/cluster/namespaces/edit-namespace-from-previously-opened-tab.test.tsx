@@ -4,8 +4,8 @@
  */
 import type { RenderResult } from "@testing-library/react";
 import { act } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../test-utils/application-builder";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { CallForResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
@@ -19,9 +19,9 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
   let builder: ApplicationBuilder;
   let callForNamespaceMock: AsyncFnMock<CallForResource>;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(() => {
     builder.setEnvironmentToClusterFrame();
 
     callForNamespaceMock = asyncFn();
@@ -39,10 +39,6 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
       apiName: "namespaces",
       group: "v1",
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given tab was previously opened, when application is started", () => {

@@ -9,16 +9,16 @@ import type { SidebarItemRegistration } from "../../renderer/components/layout/s
 import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sidebar-items.injectable";
 import { computed, runInAction } from "mobx";
 import { noop } from "lodash/fp";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 
 describe("cluster - order of sidebar items", () => {
   let rendered: RenderResult;
   let builder: ApplicationBuilder;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(() => {
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeWindowStart((windowDi) => {
@@ -26,10 +26,6 @@ describe("cluster - order of sidebar items", () => {
         windowDi.register(testSidebarItemsInjectable);
       });
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when rendered", () => {

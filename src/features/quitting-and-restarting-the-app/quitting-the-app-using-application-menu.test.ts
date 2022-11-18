@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { ClusterManager } from "../../main/cluster/manager";
 import exitAppInjectable from "../../main/electron-app/features/exit-app.injectable";
 import clusterManagerInjectable from "../../main/cluster/manager.injectable";
@@ -12,15 +12,16 @@ import stopServicesAndExitAppInjectable from "../../main/stop-services-and-exit-
 import { advanceFakeTime, testUsingFakeTime } from "../../common/test-utils/use-fake-time";
 
 describe("quitting the app using application menu", () => {
+  let builder: ApplicationBuilder;
+
+  setupInitializingApplicationBuilder(b => builder = b);
+
   describe("given application has started", () => {
-    let builder: ApplicationBuilder;
     let clusterManagerStub: ClusterManager;
     let exitAppMock: jest.Mock;
 
     beforeEach(async () => {
       testUsingFakeTime("2015-10-21T07:28:00Z");
-
-      builder = getApplicationBuilder();
 
       builder.beforeApplicationStart(
         (mainDi) => {
@@ -35,10 +36,6 @@ describe("quitting the app using application menu", () => {
       );
 
       await builder.render();
-    });
-
-    afterEach(() => {
-      builder.quit();
     });
 
     it("first application window is open", () => {

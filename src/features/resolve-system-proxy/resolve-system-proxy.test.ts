@@ -4,8 +4,8 @@
  */
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { ResolveSystemProxy } from "../../common/utils/resolve-system-proxy/resolve-system-proxy-injection-token";
 import { resolveSystemProxyInjectionToken } from "../../common/utils/resolve-system-proxy/resolve-system-proxy-injection-token";
 import resolveSystemProxyFromElectronInjectable from "../../main/utils/resolve-system-proxy/resolve-system-proxy-from-electron.injectable";
@@ -16,9 +16,9 @@ describe("resolve-system-proxy", () => {
   let actualPromise: Promise<string>;
   let resolveSystemProxyFromElectronMock: AsyncFnMock<ResolveSystemProxy>;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     resolveSystemProxyFromElectronMock = asyncFn();
 
     builder.beforeApplicationStart((mainDi) => {
@@ -29,10 +29,6 @@ describe("resolve-system-proxy", () => {
     });
 
     await builder.render();
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given in main, when called with URL", () => {

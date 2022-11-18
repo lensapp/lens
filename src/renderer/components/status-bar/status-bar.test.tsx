@@ -10,18 +10,18 @@ import { computed, observable } from "mobx";
 import type { StatusBarItems } from "./status-bar-items.injectable";
 import statusBarItemsInjectable from "./status-bar-items.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import type { ApplicationBuilder } from "../test-utils/get-application-builder";
-import { getApplicationBuilder } from "../test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../features/test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../../features/test-utils/application-builder";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
 
 describe("<StatusBar />", () => {
   let statusBarItems: IObservableArray<any>;
   let builder: ApplicationBuilder;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(async () => {
     statusBarItems = observable.array([]);
-
-    builder = getApplicationBuilder();
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.unoverride(getRandomIdInjectable);
@@ -37,10 +37,6 @@ describe("<StatusBar />", () => {
         statusBarItems,
       },
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   it("renders w/o errors", async () => {

@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { LensWindow } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
@@ -17,8 +17,11 @@ import staticFilesDirectoryInjectable from "../../common/vars/static-files-direc
 import { matches } from "jest-mock-extended";
 
 describe("opening application window using tray", () => {
+  let builder: ApplicationBuilder;
+
+  setupInitializingApplicationBuilder(b => builder = b);
+
   describe("given application has started", () => {
-    let builder: ApplicationBuilder;
     let createElectronWindowMock: jest.Mock;
     let expectWindowsToBeOpen: (windowIds: string[]) => void;
     let callForSplashWindowHtmlMock: AsyncFnMock<() => Promise<void>>;
@@ -30,8 +33,6 @@ describe("opening application window using tray", () => {
       callForApplicationWindowHtmlMock = asyncFn();
 
       focusApplicationMock = jest.fn();
-
-      builder = getApplicationBuilder();
 
       builder.beforeApplicationStart((mainDi) => {
         mainDi.override(focusApplicationInjectable, () => focusApplicationMock);
@@ -74,10 +75,6 @@ describe("opening application window using tray", () => {
       });
 
       await builder.render();
-    });
-
-    afterEach(() => {
-      builder.quit();
     });
 
     it("only the first application window is open", () => {

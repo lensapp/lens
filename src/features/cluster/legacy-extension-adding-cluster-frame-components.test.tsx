@@ -7,15 +7,16 @@ import { act } from "@testing-library/react";
 import type { IObservableValue } from "mobx";
 import { computed, observable, runInAction } from "mobx";
 import React from "react";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 
 describe("legacy extension adding cluster frame components", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(() => {
-    builder = getApplicationBuilder();
     builder.setEnvironmentToClusterFrame();
   });
 

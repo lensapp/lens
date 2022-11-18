@@ -7,8 +7,8 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import { runInAction } from "mobx";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import { preferenceItemInjectionToken } from "./renderer/preference-items/preference-item-injection-token";
 import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
 import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
@@ -19,16 +19,14 @@ describe("preferences - hiding-of-empty-branches, given in preferences page", ()
   let windowDi: DiContainer;
   let discover: Discover;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(async () => {
-    builder = getApplicationBuilder();
-
     rendered = await builder.render();
-
     discover = discoverFor(() => rendered);
+    windowDi = builder.applicationWindow.only.di;
 
     builder.preferences.navigate();
-
-    windowDi = builder.applicationWindow.only.di;
   });
 
   describe("given tab group and empty tabs", () => {

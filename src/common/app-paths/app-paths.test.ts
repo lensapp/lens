@@ -7,17 +7,17 @@ import getElectronAppPathInjectable from "../../main/app-paths/get-electron-app-
 import type { PathName } from "./app-path-names";
 import setElectronAppPathInjectable from "../../main/app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import directoryForIntegrationTestingInjectable from "../../main/app-paths/directory-for-integration-testing/directory-for-integration-testing.injectable";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../features/test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../features/test-utils/application-builder";
 import type { DiContainer } from "@ogre-tools/injectable";
 import appPathsInjectable from "./app-paths.injectable";
 
 describe("app-paths", () => {
   let builder: ApplicationBuilder;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(() => {
     const defaultAppPathsStub: AppPaths = {
       currentApp: "/some-current-app",
       appData: "/some-app-data",
@@ -54,10 +54,6 @@ describe("app-paths", () => {
           },
       );
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("normally", () => {

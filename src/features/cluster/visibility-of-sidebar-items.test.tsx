@@ -10,8 +10,8 @@ import { computed, runInAction } from "mobx";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import React from "react";
 import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import { shouldShowResourceInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
 
@@ -19,9 +19,9 @@ describe("cluster - visibility of sidebar items", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(() => {
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeWindowStart((windowDi) => {
@@ -31,10 +31,6 @@ describe("cluster - visibility of sidebar items", () => {
         windowDi.register(testSidebarItemsInjectable);
       });
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given kube resource for route is not allowed", () => {

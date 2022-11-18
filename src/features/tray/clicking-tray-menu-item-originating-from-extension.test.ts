@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 import getRandomIdInjectable from "../../common/utils/get-random-id.injectable";
 import logErrorInjectable from "../../common/log-error.injectable";
@@ -12,9 +12,9 @@ describe("clicking tray menu item originating from extension", () => {
   let builder: ApplicationBuilder;
   let logErrorMock: jest.Mock;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     builder.beforeApplicationStart((mainDi) => {
       logErrorMock = jest.fn();
 
@@ -23,10 +23,6 @@ describe("clicking tray menu item originating from extension", () => {
     });
 
     await builder.render();
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when extension is enabled", () => {

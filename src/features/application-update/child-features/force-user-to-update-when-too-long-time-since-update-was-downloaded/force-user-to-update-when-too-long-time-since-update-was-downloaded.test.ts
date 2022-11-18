@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../../test-utils/application-builder";
 import type { CheckForPlatformUpdates } from "../../main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
 import checkForPlatformUpdatesInjectable from "../../main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
 import type { DownloadPlatformUpdate } from "../../main/download-update/download-platform-update/download-platform-update.injectable";
@@ -30,10 +30,10 @@ describe("force user to update when too long since update was downloaded", () =>
   let mainDi: DiContainer;
   let quitAndInstallUpdateMock: jest.Mock;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(() => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    builder = getApplicationBuilder();
 
     builder.beforeApplicationStart(mainDi => {
       checkForPlatformUpdatesMock = asyncFn();
@@ -58,10 +58,6 @@ describe("force user to update when too long since update was downloaded", () =>
     });
 
     mainDi = builder.mainDi;
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when application is started", () => {

@@ -4,8 +4,8 @@
  */
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { ExecFile } from "../../common/fs/exec-file.injectable";
@@ -28,11 +28,9 @@ describe("add custom helm repository in preferences", () => {
   let execFileMock: AsyncFnMock<ExecFile>;
   let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(async () => {
-    jest.useFakeTimers();
-
-    builder = getApplicationBuilder();
-
     testUsingFakeTime("2021-01-01 12:00:00");
 
     execFileMock = asyncFn();
@@ -56,10 +54,6 @@ describe("add custom helm repository in preferences", () => {
     });
 
     rendered = await builder.render();
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("when navigating to preferences containing helm repositories", () => {

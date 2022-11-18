@@ -8,8 +8,8 @@ import { fireEvent } from "@testing-library/react";
 import directoryForLensLocalStorageInjectable from "../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import routesInjectable from "../../renderer/routes/routes.injectable";
 import { matches } from "lodash/fp";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
@@ -26,10 +26,10 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(() => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    builder = getApplicationBuilder();
 
     builder.setEnvironmentToClusterFrame();
 
@@ -41,10 +41,6 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
         () => "/some-directory-for-lens-local-storage",
       );
     });
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given extension with cluster pages and cluster page menus", () => {

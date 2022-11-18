@@ -4,8 +4,8 @@
  */
 
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import focusWindowInjectable from "../../renderer/navigation/focus-window.injectable";
 
 // TODO: Make components free of side effects by making them deterministic
@@ -16,9 +16,9 @@ describe("extensions - navigation using application menu", () => {
   let rendered: RenderResult;
   let focusWindowMock: jest.Mock;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     builder.beforeWindowStart((windowDi) => {
       focusWindowMock = jest.fn();
 
@@ -26,10 +26,6 @@ describe("extensions - navigation using application menu", () => {
     });
 
     rendered = await builder.render();
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   it("renders", () => {

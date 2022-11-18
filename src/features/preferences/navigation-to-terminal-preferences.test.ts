@@ -3,21 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
 import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to terminal preferences", () => {
   let builder: ApplicationBuilder;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
-  });
-
-  afterEach(() => {
-    builder.quit();
-  });
+  setupInitializingApplicationBuilder(b => builder = b);
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;

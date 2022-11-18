@@ -5,8 +5,8 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../test-utils/application-builder";
 import type { TestExtensionRenderer } from "../../../renderer/components/test-utils/get-extension-fake";
 import type { KubernetesCluster } from "../../../common/catalog-entities";
 import React from "react";
@@ -17,9 +17,9 @@ describe("disable-cluster-pages-when-cluster-is-not-relevant", () => {
   let rendererTestExtension: TestExtensionRenderer;
   let isEnabledForClusterMock: AsyncFnMock<(cluster: KubernetesCluster) => Promise<boolean>>;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     builder.setEnvironmentToClusterFrame();
 
     isEnabledForClusterMock = asyncFn();
@@ -45,10 +45,6 @@ describe("disable-cluster-pages-when-cluster-is-not-relevant", () => {
 
     rendererTestExtension =
       builder.extensions.get("test-extension-id").applicationWindows.only;
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given not yet known if extension should be enabled for the cluster, when navigating", () => {

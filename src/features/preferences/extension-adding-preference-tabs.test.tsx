@@ -5,8 +5,8 @@
 import type { RenderResult } from "@testing-library/react";
 import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
 import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 import React from "react";
@@ -14,13 +14,7 @@ import React from "react";
 describe("preferences: extension adding preference tabs", () => {
   let builder: ApplicationBuilder;
 
-  beforeEach(() => {
-    builder = getApplicationBuilder();
-  });
-
-  afterEach(() => {
-    builder.quit();
-  });
+  setupInitializingApplicationBuilder(b => builder = b);
 
   describe("given in preferences, when extension with preference tabs is enabled", () => {
     let rendered: RenderResult;

@@ -19,8 +19,8 @@ import type { RequestHelmReleases } from "../../../common/k8s-api/endpoints/helm
 import requestHelmReleasesInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
 import { advanceFakeTime, testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
-import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../../test-utils/application-builder";
 
 describe("New Upgrade Helm Chart Dock Tab", () => {
   let builder: ApplicationBuilder;
@@ -31,8 +31,9 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
   let requestHelmChartVersionsMock: AsyncFnMock<RequestHelmChartVersions>;
   let navigateToHelmReleases: NavigateToHelmReleases;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(async () => {
-    builder = getApplicationBuilder();
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeWindowStart((windowDi) => {
@@ -62,10 +63,6 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
 
     // TODO: Make TerminalWindow unit testable to allow realistic behaviour
     dockStore.closeTab("terminal");
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given a namespace is selected", () => {

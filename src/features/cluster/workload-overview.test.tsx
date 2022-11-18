@@ -5,24 +5,26 @@
 
 import type { RenderResult } from "@testing-library/react";
 import navigateToWorkloadsOverviewInjectable from "../../common/front-end-routing/routes/cluster/workloads/overview/navigate-to-workloads-overview.injectable";
-import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { type ApplicationBuilder, setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 
 describe("workload overview", () => {
   let rendered: RenderResult;
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
+
+  setupInitializingApplicationBuilder(b => builder = b);
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder().setEnvironmentToClusterFrame();
-    applicationBuilder.allowKubeResource({
+    builder.setEnvironmentToClusterFrame();
+    builder.allowKubeResource({
       apiName: "pods",
       group: "v1",
     });
-    rendered = await applicationBuilder.render();
+    rendered = await builder.render();
   });
 
   describe("when navigating to workload overview", () => {
     beforeEach(() => {
-      applicationBuilder.navigateWith(navigateToWorkloadsOverviewInjectable);
+      builder.navigateWith(navigateToWorkloadsOverviewInjectable);
     });
 
     it("renders", () => {

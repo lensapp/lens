@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import navigateToHelmReleasesInjectable from "../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
@@ -44,10 +44,10 @@ describe("showing details for helm release", () => {
   let showSuccessNotificationMock: jest.Mock;
   let showCheckedErrorNotificationMock: jest.Mock;
 
+  setupInitializingApplicationBuilder(b => builder = b);
+
   beforeEach(() => {
     testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    builder = getApplicationBuilder();
 
     builder.setEnvironmentToClusterFrame();
 
@@ -81,10 +81,6 @@ describe("showing details for helm release", () => {
     builder.namespaces.select("some-namespace");
     builder.namespaces.add("some-namespace");
     builder.namespaces.select("some-other-namespace");
-  });
-
-  afterEach(() => {
-    builder.quit();
   });
 
   describe("given application is started", () => {
