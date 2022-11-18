@@ -30,6 +30,7 @@ import type { AppPreferenceTabRegistration } from "../features/preferences/rende
 import type { KubeObjectDetailRegistration } from "../renderer/components/kube-object-details/kube-object-detail-registration";
 import type { ClusterFrameChildComponent } from "../renderer/frames/cluster-frame/cluster-frame-child-component-injection-token";
 import type { EntitySettingRegistration } from "../renderer/components/+entity-settings/extension-registrator.injectable";
+import type { CatalogEntityDetailRegistration } from "../renderer/components/+catalog/entity-details/token";
 
 export class LensRendererExtension extends LensExtension<LensRendererExtensionDependencies> {
   globalPages: registries.PageRegistration[] = [];
@@ -47,7 +48,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
   commands: CommandRegistration[] = [];
   welcomeMenus: WelcomeMenuRegistration[] = [];
   welcomeBanners: WelcomeBannerRegistration[] = [];
-  catalogEntityDetailItems: registries.CatalogEntityDetailRegistration<CatalogEntity>[] = [];
+  catalogEntityDetailItems: CatalogEntityDetailRegistration<CatalogEntity>[] = [];
   topBarItems: TopBarRegistration[] = [];
   additionalCategoryColumns: AdditionalCategoryColumnRegistration[] = [];
   customCategoryViews: CustomCategoryViewRegistration[] = [];
