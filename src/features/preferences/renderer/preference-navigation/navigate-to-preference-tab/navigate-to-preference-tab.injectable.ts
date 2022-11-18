@@ -6,14 +6,16 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { navigateToRouteInjectionToken } from "../../../../../common/front-end-routing/navigate-to-route-injection-token";
 import preferencesRouteInjectable from "../../../common/preferences-route.injectable";
 
-const navigateToPreferenceTabInjectable = getInjectable({
-  id: "navigate-to-preference-tab-2",
+export type NavigateToPreferenceTab = (tabId: string) => void;
 
-  instantiate: (di) => {
+const navigateToPreferenceTabInjectable = getInjectable({
+  id: "navigate-to-preference-tab",
+
+  instantiate: (di): NavigateToPreferenceTab => {
     const navigateToRoute = di.inject(navigateToRouteInjectionToken);
     const route = di.inject(preferencesRouteInjectable);
 
-    return (preferenceTabId: string) => {
+    return (preferenceTabId) => {
       navigateToRoute(route, {
         withoutAffectingBackButton: true,
         parameters: { preferenceTabId },
