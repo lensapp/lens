@@ -724,7 +724,7 @@ exports[`installing update when started when user checks for updates when new up
             </i>
           </div>
           <div
-            class="separator"
+            class="size-sm"
           />
           <div
             class="preventedDragging"
@@ -748,6 +748,9 @@ exports[`installing update when started when user checks for updates when new up
               </i>
             </button>
           </div>
+          <div
+            class="separator"
+          />
         </div>
       </div>
       <main>
@@ -966,7 +969,7 @@ exports[`installing update when started when user checks for updates when new up
             </i>
           </div>
           <div
-            class="separator"
+            class="size-sm"
           />
           <div
             class="preventedDragging"
@@ -990,6 +993,9 @@ exports[`installing update when started when user checks for updates when new up
               </i>
             </button>
           </div>
+          <div
+            class="separator"
+          />
         </div>
       </div>
       <main>
