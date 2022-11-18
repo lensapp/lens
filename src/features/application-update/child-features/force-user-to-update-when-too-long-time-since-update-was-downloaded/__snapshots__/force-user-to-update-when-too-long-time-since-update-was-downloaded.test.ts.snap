@@ -64,7 +64,7 @@ exports[`force user to update when too long since update was downloaded when app
             </i>
           </div>
           <div
-            class="separator"
+            class="size-sm"
           />
           <div
             class="preventedDragging"
@@ -88,6 +88,9 @@ exports[`force user to update when too long since update was downloaded when app
               </i>
             </button>
           </div>
+          <div
+            class="separator"
+          />
         </div>
       </div>
       <main>
@@ -306,7 +309,7 @@ exports[`force user to update when too long since update was downloaded when app
             </i>
           </div>
           <div
-            class="separator"
+            class="size-sm"
           />
           <div
             class="preventedDragging"
@@ -330,6 +333,9 @@ exports[`force user to update when too long since update was downloaded when app
               </i>
             </button>
           </div>
+          <div
+            class="separator"
+          />
         </div>
       </div>
       <main>
@@ -595,7 +601,7 @@ exports[`force user to update when too long since update was downloaded when app
             </i>
           </div>
           <div
-            class="separator"
+            class="size-sm"
           />
           <div
             class="preventedDragging"
@@ -619,6 +625,9 @@ exports[`force user to update when too long since update was downloaded when app
               </i>
             </button>
           </div>
+          <div
+            class="separator"
+          />
         </div>
       </div>
       <main>
