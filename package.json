@@ -370,7 +370,7 @@
     "color": "^3.2.1",
     "command-line-args": "^5.2.1",
     "concurrently": "^7.5.0",
-    "css-loader": "^6.7.1",
+    "css-loader": "^6.7.2",
     "deepdash": "^5.3.9",
     "dompurify": "^2.4.1",
     "electron": "^19.1.6",
