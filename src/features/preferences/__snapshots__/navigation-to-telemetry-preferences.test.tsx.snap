@@ -266,7 +266,56 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
     >
       <div
         class="HotbarItems flex column gaps"
-      />
+      >
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="0"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="1"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="2"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="3"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="4"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="5"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="6"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="7"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="8"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="9"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="10"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="11"
+        />
+      </div>
       <div
         class="HotbarSelector"
       >
@@ -955,7 +1004,56 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
     >
       <div
         class="HotbarItems flex column gaps"
-      />
+      >
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="0"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="1"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="2"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="3"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="4"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="5"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="6"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="7"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="8"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="9"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="10"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="11"
+        />
+      </div>
       <div
         class="HotbarSelector"
       >
@@ -1656,7 +1754,56 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
     >
       <div
         class="HotbarItems flex column gaps"
-      />
+      >
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="0"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="1"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="2"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="3"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="4"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="5"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="6"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="7"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="8"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="9"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="10"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="11"
+        />
+      </div>
       <div
         class="HotbarSelector"
       >
@@ -1970,7 +2117,56 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
     >
       <div
         class="HotbarItems flex column gaps"
-      />
+      >
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="0"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="1"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="2"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="3"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="4"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="5"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="6"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="7"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="8"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="9"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="10"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="11"
+        />
+      </div>
       <div
         class="HotbarSelector"
       >
@@ -2244,7 +2440,56 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
     >
       <div
         class="HotbarItems flex column gaps"
-      />
+      >
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="0"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="1"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="2"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="3"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="4"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="5"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="6"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="7"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="8"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="9"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="10"
+        />
+        <div
+          class="HotbarCell isDraggingOwner animateDown"
+          index="11"
+        />
+      </div>
       <div
         class="HotbarSelector"
       >

@@ -278,7 +278,189 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
           >
             <div
               class="views"
-            />
+            >
+              <div
+                class="ItemListLayout flex column Catalog"
+                data-testid="catalog-list-for-browse-all"
+              >
+                <div
+                  class="header flex gaps align-center"
+                >
+                  <h5
+                    class="title"
+                  >
+                    Browse All
+                  </h5>
+                  <div
+                    class="info-panel box grow"
+                  >
+                    0 items
+                  </div>
+                  <div
+                    class="Input SearchInput"
+                  >
+                    <label
+                      class="input-area flex gaps align-center"
+                      id=""
+                    >
+                      <input
+                        class="input box grow"
+                        placeholder="Search..."
+                        spellcheck="false"
+                        value=""
+                      />
+                      <i
+                        class="Icon material focusable small"
+                      >
+                        <span
+                          class="icon"
+                          data-icon-name="search"
+                        >
+                          search
+                        </span>
+                      </i>
+                    </label>
+                    <div
+                      class="input-info flex gaps"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="items box grow flex column"
+                >
+                  <div
+                    class="Table flex column Catalog box grow dark selectable scrollable sortable autoSize virtual"
+                  >
+                    <div
+                      class="TableHead sticky nowrap topLine"
+                    >
+                      <div
+                        class="TableCell entityName nowrap sorting"
+                        id="name"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Name
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell nowrap sorting"
+                        id="kind"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Kind
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell sourceCell nowrap sorting"
+                        id="source"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Source
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell labelsCell scrollable nowrap"
+                        id="labels"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Labels
+                        </div>
+                      </div>
+                      <div
+                        class="TableCell statusCell nowrap sorting"
+                        id="status"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Status
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell menu nowrap"
+                      >
+                        <div
+                          class="content"
+                        >
+                          <i
+                            class="Icon material interactive focusable"
+                            id="menu-actions-for-item-object-list-content"
+                            tabindex="0"
+                          >
+                            <span
+                              class="icon"
+                              data-icon-name="more_vert"
+                            >
+                              more_vert
+                            </span>
+                          </i>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="NoItems flex box grow"
+                    >
+                      <div
+                        class="box center"
+                      >
+                        Item list is empty
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="AddRemoveButtons flex gaps"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div
             class="footer"
@@ -290,7 +472,56 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
       >
         <div
           class="HotbarItems flex column gaps"
-        />
+        >
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="0"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="1"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="2"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="3"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="4"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="5"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="6"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="7"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="8"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="9"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="10"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="11"
+          />
+        </div>
         <div
           class="HotbarSelector"
         >
@@ -683,7 +914,189 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           >
             <div
               class="views"
-            />
+            >
+              <div
+                class="ItemListLayout flex column Catalog"
+                data-testid="catalog-list-for-browse-all"
+              >
+                <div
+                  class="header flex gaps align-center"
+                >
+                  <h5
+                    class="title"
+                  >
+                    Browse All
+                  </h5>
+                  <div
+                    class="info-panel box grow"
+                  >
+                    0 items
+                  </div>
+                  <div
+                    class="Input SearchInput"
+                  >
+                    <label
+                      class="input-area flex gaps align-center"
+                      id=""
+                    >
+                      <input
+                        class="input box grow"
+                        placeholder="Search..."
+                        spellcheck="false"
+                        value=""
+                      />
+                      <i
+                        class="Icon material focusable small"
+                      >
+                        <span
+                          class="icon"
+                          data-icon-name="search"
+                        >
+                          search
+                        </span>
+                      </i>
+                    </label>
+                    <div
+                      class="input-info flex gaps"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="items box grow flex column"
+                >
+                  <div
+                    class="Table flex column Catalog box grow dark selectable scrollable sortable autoSize virtual"
+                  >
+                    <div
+                      class="TableHead sticky nowrap topLine"
+                    >
+                      <div
+                        class="TableCell entityName nowrap sorting"
+                        id="name"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Name
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell nowrap sorting"
+                        id="kind"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Kind
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell sourceCell nowrap sorting"
+                        id="source"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Source
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell labelsCell scrollable nowrap"
+                        id="labels"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Labels
+                        </div>
+                      </div>
+                      <div
+                        class="TableCell statusCell nowrap sorting"
+                        id="status"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Status
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell menu nowrap"
+                      >
+                        <div
+                          class="content"
+                        >
+                          <i
+                            class="Icon material interactive focusable"
+                            id="menu-actions-for-item-object-list-content"
+                            tabindex="0"
+                          >
+                            <span
+                              class="icon"
+                              data-icon-name="more_vert"
+                            >
+                              more_vert
+                            </span>
+                          </i>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="NoItems flex box grow"
+                    >
+                      <div
+                        class="box center"
+                      >
+                        Item list is empty
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="AddRemoveButtons flex gaps"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div
             class="footer"
@@ -695,7 +1108,56 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
       >
         <div
           class="HotbarItems flex column gaps"
-        />
+        >
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="0"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="1"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="2"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="3"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="4"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="5"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="6"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="7"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="8"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="9"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="10"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="11"
+          />
+        </div>
         <div
           class="HotbarSelector"
         >
@@ -1121,7 +1583,189 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           >
             <div
               class="views"
-            />
+            >
+              <div
+                class="ItemListLayout flex column Catalog"
+                data-testid="catalog-list-for-browse-all"
+              >
+                <div
+                  class="header flex gaps align-center"
+                >
+                  <h5
+                    class="title"
+                  >
+                    Browse All
+                  </h5>
+                  <div
+                    class="info-panel box grow"
+                  >
+                    0 items
+                  </div>
+                  <div
+                    class="Input SearchInput"
+                  >
+                    <label
+                      class="input-area flex gaps align-center"
+                      id=""
+                    >
+                      <input
+                        class="input box grow"
+                        placeholder="Search..."
+                        spellcheck="false"
+                        value=""
+                      />
+                      <i
+                        class="Icon material focusable small"
+                      >
+                        <span
+                          class="icon"
+                          data-icon-name="search"
+                        >
+                          search
+                        </span>
+                      </i>
+                    </label>
+                    <div
+                      class="input-info flex gaps"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="items box grow flex column"
+                >
+                  <div
+                    class="Table flex column Catalog box grow dark selectable scrollable sortable autoSize virtual"
+                  >
+                    <div
+                      class="TableHead sticky nowrap topLine"
+                    >
+                      <div
+                        class="TableCell entityName nowrap sorting"
+                        id="name"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Name
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell nowrap sorting"
+                        id="kind"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Kind
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell sourceCell nowrap sorting"
+                        id="source"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Source
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell labelsCell scrollable nowrap"
+                        id="labels"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Labels
+                        </div>
+                      </div>
+                      <div
+                        class="TableCell statusCell nowrap sorting"
+                        id="status"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Status
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell menu nowrap"
+                      >
+                        <div
+                          class="content"
+                        >
+                          <i
+                            class="Icon material interactive focusable"
+                            id="menu-actions-for-item-object-list-content"
+                            tabindex="0"
+                          >
+                            <span
+                              class="icon"
+                              data-icon-name="more_vert"
+                            >
+                              more_vert
+                            </span>
+                          </i>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="NoItems flex box grow"
+                    >
+                      <div
+                        class="box center"
+                      >
+                        Item list is empty
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="AddRemoveButtons flex gaps"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div
             class="footer"
@@ -1133,7 +1777,56 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
       >
         <div
           class="HotbarItems flex column gaps"
-        />
+        >
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="0"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="1"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="2"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="3"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="4"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="5"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="6"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="7"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="8"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="9"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="10"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="11"
+          />
+        </div>
         <div
           class="HotbarSelector"
         >
@@ -1638,7 +2331,189 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           >
             <div
               class="views"
-            />
+            >
+              <div
+                class="ItemListLayout flex column Catalog"
+                data-testid="catalog-list-for-browse-all"
+              >
+                <div
+                  class="header flex gaps align-center"
+                >
+                  <h5
+                    class="title"
+                  >
+                    Browse All
+                  </h5>
+                  <div
+                    class="info-panel box grow"
+                  >
+                    0 items
+                  </div>
+                  <div
+                    class="Input SearchInput focused"
+                  >
+                    <label
+                      class="input-area flex gaps align-center"
+                      id=""
+                    >
+                      <input
+                        class="input box grow"
+                        placeholder="Search..."
+                        spellcheck="false"
+                        value=""
+                      />
+                      <i
+                        class="Icon material focusable small"
+                      >
+                        <span
+                          class="icon"
+                          data-icon-name="search"
+                        >
+                          search
+                        </span>
+                      </i>
+                    </label>
+                    <div
+                      class="input-info flex gaps"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="items box grow flex column"
+                >
+                  <div
+                    class="Table flex column Catalog box grow dark selectable scrollable sortable autoSize virtual"
+                  >
+                    <div
+                      class="TableHead sticky nowrap topLine"
+                    >
+                      <div
+                        class="TableCell entityName nowrap sorting"
+                        id="name"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Name
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell nowrap sorting"
+                        id="kind"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Kind
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell sourceCell nowrap sorting"
+                        id="source"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Source
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell labelsCell scrollable nowrap"
+                        id="labels"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Labels
+                        </div>
+                      </div>
+                      <div
+                        class="TableCell statusCell nowrap sorting"
+                        id="status"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Status
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell menu nowrap"
+                      >
+                        <div
+                          class="content"
+                        >
+                          <i
+                            class="Icon material interactive focusable"
+                            id="menu-actions-for-item-object-list-content"
+                            tabindex="0"
+                          >
+                            <span
+                              class="icon"
+                              data-icon-name="more_vert"
+                            >
+                              more_vert
+                            </span>
+                          </i>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="NoItems flex box grow"
+                    >
+                      <div
+                        class="box center"
+                      >
+                        Item list is empty
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="AddRemoveButtons flex gaps"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div
             class="footer"
@@ -1650,7 +2525,56 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
       >
         <div
           class="HotbarItems flex column gaps"
-        />
+        >
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="0"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="1"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="2"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="3"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="4"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="5"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="6"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="7"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="8"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="9"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="10"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="11"
+          />
+        </div>
         <div
           class="HotbarSelector"
         >
@@ -2155,7 +3079,189 @@ exports[`Deleting a cluster when the kubeconfig has only one cluster when the di
           >
             <div
               class="views"
-            />
+            >
+              <div
+                class="ItemListLayout flex column Catalog"
+                data-testid="catalog-list-for-browse-all"
+              >
+                <div
+                  class="header flex gaps align-center"
+                >
+                  <h5
+                    class="title"
+                  >
+                    Browse All
+                  </h5>
+                  <div
+                    class="info-panel box grow"
+                  >
+                    0 items
+                  </div>
+                  <div
+                    class="Input SearchInput"
+                  >
+                    <label
+                      class="input-area flex gaps align-center"
+                      id=""
+                    >
+                      <input
+                        class="input box grow"
+                        placeholder="Search..."
+                        spellcheck="false"
+                        value=""
+                      />
+                      <i
+                        class="Icon material focusable small"
+                      >
+                        <span
+                          class="icon"
+                          data-icon-name="search"
+                        >
+                          search
+                        </span>
+                      </i>
+                    </label>
+                    <div
+                      class="input-info flex gaps"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="items box grow flex column"
+                >
+                  <div
+                    class="Table flex column Catalog box grow dark selectable scrollable sortable autoSize virtual"
+                  >
+                    <div
+                      class="TableHead sticky nowrap topLine"
+                    >
+                      <div
+                        class="TableCell entityName nowrap sorting"
+                        id="name"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Name
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell nowrap sorting"
+                        id="kind"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Kind
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell sourceCell nowrap sorting"
+                        id="source"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Source
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell labelsCell scrollable nowrap"
+                        id="labels"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Labels
+                        </div>
+                      </div>
+                      <div
+                        class="TableCell statusCell nowrap sorting"
+                        id="status"
+                      >
+                        <div
+                          class="content"
+                        >
+                          Status
+                        </div>
+                        <i
+                          class="Icon sortIcon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="arrow_drop_down"
+                          >
+                            arrow_drop_down
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="TableCell menu nowrap"
+                      >
+                        <div
+                          class="content"
+                        >
+                          <i
+                            class="Icon material interactive focusable"
+                            id="menu-actions-for-item-object-list-content"
+                            tabindex="0"
+                          >
+                            <span
+                              class="icon"
+                              data-icon-name="more_vert"
+                            >
+                              more_vert
+                            </span>
+                          </i>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="NoItems flex box grow"
+                    >
+                      <div
+                        class="box center"
+                      >
+                        Item list is empty
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="AddRemoveButtons flex gaps"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div
             class="footer"
@@ -2167,7 +3273,56 @@ exports[`Deleting a cluster when the kubeconfig has only one cluster when the di
       >
         <div
           class="HotbarItems flex column gaps"
-        />
+        >
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="0"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="1"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="2"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="3"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="4"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="5"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="6"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="7"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="8"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="9"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="10"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="11"
+          />
+        </div>
         <div
           class="HotbarSelector"
         >
