@@ -193,8 +193,8 @@ export class LogStore {
    */
   getLastSinceTime(tabId: TabId): string {
     const logs = this.podLogs.get(tabId) ?? [];
-    const timestamps = this.getTimestamps(logs[logs.length - 1]);
-    const stamp = timestamps[0] ? new Date(timestamps[0]) : new Date();
+    const [timestamp] = this.getTimestamps(logs[logs.length - 1]) ?? [];
+    const stamp = timestamp ? new Date(timestamp) : new Date();
 
     stamp.setSeconds(stamp.getSeconds() + 1); // avoid duplicates from last second
 
@@ -211,8 +211,8 @@ export class LogStore {
     return [extraction[1], extraction[2]];
   }
 
-  getTimestamps(logs: string): RegExpMatchArray {
-    return logs.match(/^\d+\S+/gm) ?? [];
+  getTimestamps(logs: string) {
+    return logs.match(/^\d+\S+/gm);
   }
 
   removeTimestamps(logs: string): string {
