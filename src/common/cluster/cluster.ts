@@ -453,55 +453,55 @@ export class Cluster implements ClusterModel, ClusterState {
    * @internal
    */
    @action
-   async refreshAccessibilityAndMetadata() {
+  async refreshAccessibilityAndMetadata() {
     await this.refreshAccessibility();
     await this.refreshMetadata();
+  }
+
+   /**
+   * @internal
+   */
+   async refreshMetadata() {
+     this.dependencies.logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
+     const metadata = await this.dependencies.detectorRegistry.detectForCluster(this);
+     const existingMetadata = this.metadata;
+
+     this.metadata = Object.assign(existingMetadata, metadata);
+   }
+
+   /**
+   * @internal
+   */
+   private async refreshAccessibility(): Promise<void> {
+     this.dependencies.logger.info(`[CLUSTER]: refreshAccessibility`, this.getMeta());
+     const proxyConfig = await this.getProxyKubeconfig();
+     const canI = this.dependencies.createAuthorizationReview(proxyConfig);
+     const requestNamespaceResources = this.dependencies.createAuthorizationNamespaceReview(proxyConfig);
+
+     this.isAdmin = await canI({
+       namespace: "kube-system",
+       resource: "*",
+       verb: "create",
+     });
+     this.isGlobalWatchEnabled = await canI({
+       verb: "watch",
+       resource: "*",
+     });
+     this.allowedNamespaces = await this.getAllowedNamespaces(proxyConfig);
+     this.allowedResources = await this.getAllowedResources(requestNamespaceResources);
+     this.ready = true;
    }
 
   /**
    * @internal
    */
-  async refreshMetadata() {
-    this.dependencies.logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
-    const metadata = await this.dependencies.detectorRegistry.detectForCluster(this);
-    const existingMetadata = this.metadata;
-
-    this.metadata = Object.assign(existingMetadata, metadata);
-  }
-
-  /**
-   * @internal
-   */
-  private async refreshAccessibility(): Promise<void> {
-    this.dependencies.logger.info(`[CLUSTER]: refreshAccessibility`, this.getMeta());
-    const proxyConfig = await this.getProxyKubeconfig();
-    const canI = this.dependencies.createAuthorizationReview(proxyConfig);
-    const requestNamespaceResources = this.dependencies.createAuthorizationNamespaceReview(proxyConfig);
-
-    this.isAdmin = await canI({
-      namespace: "kube-system",
-      resource: "*",
-      verb: "create",
-    });
-    this.isGlobalWatchEnabled = await canI({
-      verb: "watch",
-      resource: "*",
-    });
-    this.allowedNamespaces = await this.getAllowedNamespaces(proxyConfig);
-    this.allowedResources = await this.getAllowedResources(requestNamespaceResources);
-    this.ready = true;
-  }
-
-  /**
-   * @internal
-   */
   @action
-  async refreshConnectionStatus() {
-    const connectionStatus = await this.getConnectionStatus();
+   async refreshConnectionStatus() {
+     const connectionStatus = await this.getConnectionStatus();
 
-    this.online = connectionStatus > ClusterStatus.Offline;
-    this.accessible = connectionStatus == ClusterStatus.AccessGranted;
-  }
+     this.online = connectionStatus > ClusterStatus.Offline;
+     this.accessible = connectionStatus == ClusterStatus.AccessGranted;
+   }
 
   async getKubeconfig(): Promise<KubeConfig> {
     const { config } = await this.dependencies.loadConfigfromFile(this.kubeConfigPath);
