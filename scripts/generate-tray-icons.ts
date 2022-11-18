@@ -8,7 +8,7 @@ import { JSDOM } from "jsdom";
 import path from "path";
 import sharp from "sharp";
 
-const { ensureDir, readFile, move } = fsExtra;
+const { ensureDir, readFile } = fsExtra;
 
 const size = Number(process.env.OUTPUT_SIZE || "16");
 const outputFolder = process.env.OUTPUT_DIR || "./static/build/tray";
@@ -51,7 +51,7 @@ async function generateImage(image: Buffer, size: number, namePrefix: string) {
 }
 
 async function generateImages(image: Buffer, size: number, name: string) {
-  console.log(`Generating ${size}x${size} for ${name}`)
+  console.log(`Generating ${size}x${size} for ${name}`);
   await Promise.all([
     generateImage(image, size, name),
     generateImage(image, size*2, `${name}@2x`),
@@ -116,15 +116,15 @@ try {
   const checkingForUpdatesTemplateImage = await generateImageWithSvg(baseIconTemplateImage, "macos", spinnerFile);
   const checkingForUpdatesImage = await generateImageWithSvg(baseIconImage, "windows-or-linux", spinnerFile);
 
-  await generateImages(baseIconTemplateImage, size, "trayIconTemplate"),
-  await generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate"),
-  await generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate"),
-  await generateImages(checkingForUpdatesTemplateImage, size, "trayIconCheckingForUpdatesTemplate"),
+  await generateImages(baseIconTemplateImage, size, "trayIconTemplate");
+  await generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate");
+  await generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate");
+  await generateImages(checkingForUpdatesTemplateImage, size, "trayIconCheckingForUpdatesTemplate");
 
   // Non-templates are for windows and linux
-  await generateImages(baseIconImage, size, "trayIcon"),
-  await generateImages(updateAvailableImage, size, "trayIconUpdateAvailable"),
-  await generateImages(checkingForUpdatesImage, size, "trayIconCheckingForUpdates"),
+  await generateImages(baseIconImage, size, "trayIcon");
+  await generateImages(updateAvailableImage, size, "trayIconUpdateAvailable");
+  await generateImages(checkingForUpdatesImage, size, "trayIconCheckingForUpdates");
 
   console.log("Generated all images");
 } catch (error) {
