@@ -26,6 +26,7 @@ import type { Logger } from "../logger";
 import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
 import type { LoadConfigfromFile } from "../kube-helpers/load-config-from-file.injectable";
 import type { RequestNamespaceResources } from "./authorization-namespace-review.injectable";
+import type { RequestListApiResources } from "./list-api-resources.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
@@ -36,6 +37,7 @@ export interface ClusterDependencies {
   createKubectl: (clusterVersion: string) => Kubectl;
   createAuthorizationReview: (config: KubeConfig) => CanI;
   createAuthorizationNamespaceReview: (config: KubeConfig) => RequestNamespaceResources;
+  createListApiResources: (cluster: Cluster) => RequestListApiResources;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
   createVersionDetector: (cluster: Cluster) => VersionDetector;
   broadcastMessage: BroadcastMessage;
@@ -477,6 +479,7 @@ export class Cluster implements ClusterModel, ClusterState {
      const proxyConfig = await this.getProxyKubeconfig();
      const canI = this.dependencies.createAuthorizationReview(proxyConfig);
      const requestNamespaceResources = this.dependencies.createAuthorizationNamespaceReview(proxyConfig);
+     const listApiResources = this.dependencies.createListApiResources(this);
 
      this.isAdmin = await canI({
        namespace: "kube-system",
@@ -488,7 +491,7 @@ export class Cluster implements ClusterModel, ClusterState {
        resource: "*",
      });
      this.allowedNamespaces = await this.getAllowedNamespaces(proxyConfig);
-     this.allowedResources = await this.getAllowedResources(requestNamespaceResources);
+     this.allowedResources = await this.getAllowedResources(listApiResources, requestNamespaceResources);
      this.ready = true;
    }
 
@@ -670,14 +673,23 @@ export class Cluster implements ClusterModel, ClusterState {
     }
   }
 
-  protected async getAllowedResources(requestNamespaceResources: RequestNamespaceResources) {
+  protected async getAllowedResources(listApiResources:RequestListApiResources, requestNamespaceResources: RequestNamespaceResources) {
     try {
       if (!this.allowedNamespaces.length) {
         return [];
       }
 
-      const resources = apiResources.filter((resource) => this.resourceAccessStatuses.get(resource) === undefined);
-      const unknownResources = new Map<string, KubeApiResource>(resources.map(resource => ([resource.apiName, resource])));
+      const unknownResources = new Map<string, KubeApiResource>(apiResources.map(resource => ([resource.apiName, resource])));
+
+      const availableResources =  await listApiResources();
+      const availableResourcesNames = new Set(availableResources.map(apiResource => apiResource.apiName));
+
+      [...unknownResources.values()].map(unknownResource => {
+        if (!availableResourcesNames.has(unknownResource.apiName)) {
+          this.resourceAccessStatuses.set(unknownResource, false);
+          unknownResources.delete(unknownResource.apiName);
+        }
+      });
 
       if (unknownResources.size > 0) {
         const apiLimit = plimit(5); // 5 concurrent api requests
@@ -687,7 +699,7 @@ export class Cluster implements ClusterModel, ClusterState {
             return;
           }
 
-          const namespaceResources = await requestNamespaceResources(namespace);
+          const namespaceResources = await requestNamespaceResources(namespace, availableResources);
 
           for (const resourceName of namespaceResources) {
             const unknownResource = unknownResources.get(resourceName);

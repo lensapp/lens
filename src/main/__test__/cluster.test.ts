@@ -20,7 +20,8 @@ import directoryForTempInjectable from "../../common/app-paths/directory-for-tem
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
-import { apiResourceRecord } from "../../common/rbac";
+import { apiResourceRecord, apiResources } from "../../common/rbac";
+import listApiResourcesInjectable from "../../common/cluster/list-api-resources.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -42,6 +43,7 @@ describe("create clusters", () => {
     di.override(broadcastMessageInjectable, () => async () => {});
     di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
     di.override(authorizationNamespaceReviewInjectable, () => () => () => Promise.resolve(Object.keys(apiResourceRecord)));
+    di.override(listApiResourcesInjectable, () => () => () => Promise.resolve(apiResources));
     di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
     di.override(createContextHandlerInjectable, () => (cluster) => ({
       restartServer: jest.fn(),
