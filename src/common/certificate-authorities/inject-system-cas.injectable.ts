@@ -22,15 +22,30 @@ const injectSystemCAsInjectable = getInjectable({
     const requestSystemCAs = di.inject(requestSystemCAsInjectionToken);
 
     return async () => {
-      for (const cert of await requestSystemCAs()) {
-        if (isCertActive(cert)) {
-          if (Array.isArray(globalAgent.options.ca) && !globalAgent.options.ca.includes(cert)) {
-            globalAgent.options.ca.push(cert);
-          } else {
-            globalAgent.options.ca = [cert];
-          }
+      const certs = await requestSystemCAs();
+
+      if (certs.length === 0) {
+        // Leave the global option alone
+        return;
+      }
+
+      const cas = Array.isArray(globalAgent.options.ca)
+        ? globalAgent.options.ca
+        : globalAgent.options.ca
+          ? [globalAgent.options.ca]
+          : [];
+
+      for (const cert of certs) {
+        if (!isCertActive(cert)) {
+          continue;
+        }
+
+        if (!cas.includes(cert)) {
+          cas.push(cert);
         }
       }
+
+      globalAgent.options.ca = cas;
     };
   },
 });
