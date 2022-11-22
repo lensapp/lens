@@ -11,7 +11,9 @@ import getTypeScriptLoader from "./get-typescript-loader";
 import CircularDependencyPlugin from "circular-dependency-plugin";
 import { iconsAndImagesWebpackRules } from "./renderer";
 import type { WebpackPluginInstance } from "webpack";
+import { DefinePlugin } from "webpack";
 import { buildDir, isDevelopment, mainDir } from "./vars";
+import { platform } from "process";
 
 const configs: { (): webpack.Configuration }[] = [];
 
@@ -53,6 +55,10 @@ configs.push((): webpack.Configuration => {
       ],
     },
     plugins: [
+      new DefinePlugin({
+        CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
+        CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
+      }),
       new ForkTsCheckerPlugin(),
       new CircularDependencyPlugin({
         cwd: __dirname,

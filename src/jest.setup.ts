@@ -54,7 +54,7 @@ const getInjectables = (environment: "renderer" | "main", filePathGlob: string) 
   }),
 ].map(x => path.resolve(__dirname, x));
 
-(global as any).rendererInjectablePaths = getInjectables("renderer", "*.injectable.{ts,tsx}");
+(global as any).rendererInjectablePaths = getInjectables("renderer", "*.{injectable,injectable.testing-env}.{ts,tsx}");
 (global as any).rendererGlobalOverridePaths = getInjectables("renderer", "*.global-override-for-injectable.{ts,tsx}");
-(global as any).mainInjectablePaths = getInjectables("main", "*.injectable.{ts,tsx}");
+(global as any).mainInjectablePaths = getInjectables("main", "*.{injectable,injectable.testing-env}.{ts,tsx}");
 (global as any).mainGlobalOverridePaths = getInjectables("main", "*.global-override-for-injectable.{ts,tsx}");
