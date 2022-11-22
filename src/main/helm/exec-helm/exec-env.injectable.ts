@@ -17,7 +17,7 @@ const execHelmEnvInjectable = getInjectable({
         ...env
       } = process.env;
 
-      return { HTTPS_PROXY, ...env };
+      return { HTTPS_PROXY, ...env } as Partial<Record<string, string>>;
     });
   },
   causesSideEffects: true,

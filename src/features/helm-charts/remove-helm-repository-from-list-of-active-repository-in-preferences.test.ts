@@ -85,7 +85,10 @@ describe("remove helm repository from list of active repositories in preferences
           expect(execFileMock).toHaveBeenCalledWith(
             "some-helm-binary-path",
             ["repo", "remove", "some-active-repository"],
-            { "maxBuffer": 34359738368 },
+            {
+              maxBuffer: 34359738368,
+              env: {},
+            },
           );
         });
 
