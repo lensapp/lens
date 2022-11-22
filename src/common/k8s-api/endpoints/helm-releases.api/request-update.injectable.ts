@@ -30,13 +30,15 @@ const requestHelmReleaseUpdateInjectable = getInjectable({
 
     return async (name, namespace, { repo, chart, values, ...data }) => {
       try {
-        await apiBase.put(requestUpdateEndpoint.compile({ name, namespace }), {
+        const x = await apiBase.put(requestUpdateEndpoint.compile({ name, namespace }), {
           data: {
             chart: `${repo}/${chart}`,
             values: yaml.load(values),
             ...data,
           },
         });
+
+        console.log(x);
       } catch (e) {
         return { updateWasSuccessful: false, error: e };
       }

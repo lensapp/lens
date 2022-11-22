@@ -41,7 +41,7 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
           {"Release "}
           <b>{model.release.getName()}</b>
           {" successfully upgraded to version "}
-          <b>{model.version.value.get()}</b>
+          <b>{model.version.value.get()?.version}</b>
         </p>
       );
     }
