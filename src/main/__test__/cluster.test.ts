@@ -10,6 +10,7 @@ import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import type { CreateCluster } from "../../common/cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
+import authorizationNamespaceReviewInjectable from "../../common/cluster/authorization-namespace-review.injectable";
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
@@ -19,6 +20,8 @@ import directoryForTempInjectable from "../../common/app-paths/directory-for-tem
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
+import { apiResourceRecord, apiResources } from "../../common/rbac";
+import listApiResourcesInjectable from "../../common/cluster/list-api-resources.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -39,6 +42,8 @@ describe("create clusters", () => {
     di.override(normalizedPlatformInjectable, () => "darwin");
     di.override(broadcastMessageInjectable, () => async () => {});
     di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
+    di.override(authorizationNamespaceReviewInjectable, () => () => () => Promise.resolve(Object.keys(apiResourceRecord)));
+    di.override(listApiResourcesInjectable, () => () => () => Promise.resolve(apiResources));
     di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
     di.override(createContextHandlerInjectable, () => (cluster) => ({
       restartServer: jest.fn(),
