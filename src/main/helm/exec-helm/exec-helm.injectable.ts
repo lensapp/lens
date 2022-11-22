@@ -7,6 +7,7 @@ import type { ExecFileException } from "child_process";
 import execFileInjectable from "../../../common/fs/exec-file.injectable";
 import type { AsyncResult } from "../../../common/utils/async-result";
 import helmBinaryPathInjectable from "../helm-binary-path.injectable";
+import execHelmEnvInjectable from "./exec-env.injectable";
 
 export type ExecHelm = (args: string[]) => Promise<AsyncResult<string, ExecFileException & { stderr: string }>>;
 
@@ -15,10 +16,12 @@ const execHelmInjectable = getInjectable({
 
   instantiate: (di): ExecHelm => {
     const execFile = di.inject(execFileInjectable);
+    const execHelmEnv = di.inject(execHelmEnvInjectable);
     const helmBinaryPath = di.inject(helmBinaryPathInjectable);
 
     return async (args) => execFile(helmBinaryPath, args, {
       maxBuffer: 32 * 1024 * 1024 * 1024, // 32 MiB
+      env: execHelmEnv.get(),
     });
   },
 });

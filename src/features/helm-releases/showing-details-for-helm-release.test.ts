@@ -552,7 +552,7 @@ describe("showing details for helm release", () => {
                           requestHelmReleaseConfigurationMock.mockClear();
 
                           await requestHelmReleaseUpdateMock.resolve({
-                            updateWasSuccessful: true,
+                            callWasSuccessful: true,
                           });
                         });
 
@@ -591,7 +591,7 @@ describe("showing details for helm release", () => {
                           requestHelmReleaseConfigurationMock.mockClear();
 
                           await requestHelmReleaseUpdateMock.resolve({
-                            updateWasSuccessful: false,
+                            callWasSuccessful: false,
                             error: "some-error",
                           });
                         });
