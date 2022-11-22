@@ -196,13 +196,6 @@ export enum ClusterMetricsResourceType {
 export const initialNodeShellImage = "docker.io/alpine:3.13";
 
 /**
- * The arguments for requesting to refresh a cluster's metadata
- */
-export interface ClusterRefreshOptions {
-  refreshMetadata?: boolean;
-}
-
-/**
  * The data representing a cluster's state, for passing between main and renderer
  */
 export interface ClusterState {

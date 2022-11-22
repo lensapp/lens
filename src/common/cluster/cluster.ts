@@ -14,7 +14,7 @@ import { apiResourceRecord, apiResources } from "../rbac";
 import type { VersionDetector } from "../../main/cluster-detectors/version-detector";
 import type { DetectorRegistry } from "../../main/cluster-detectors/detector-registry";
 import plimit from "p-limit";
-import type { ClusterState, ClusterRefreshOptions, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate, ClusterConfigData } from "../cluster-types";
+import type { ClusterState, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate, ClusterConfigData } from "../cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus, clusterModelIdChecker, updateClusterModelChecker } from "../cluster-types";
 import { disposer, isDefined, isRequestError, toJS } from "../utils";
 import type { Response } from "request";
@@ -25,6 +25,8 @@ import assert from "assert";
 import type { Logger } from "../logger";
 import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
 import type { LoadConfigfromFile } from "../kube-helpers/load-config-from-file.injectable";
+import type { RequestNamespaceResources } from "./authorization-namespace-review.injectable";
+import type { RequestListApiResources } from "./list-api-resources.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
@@ -34,6 +36,8 @@ export interface ClusterDependencies {
   createContextHandler: (cluster: Cluster) => ClusterContextHandler;
   createKubectl: (clusterVersion: string) => Kubectl;
   createAuthorizationReview: (config: KubeConfig) => CanI;
+  createAuthorizationNamespaceReview: (config: KubeConfig) => RequestNamespaceResources;
+  createListApiResources: (cluster: Cluster) => RequestListApiResources;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
   createVersionDetector: (cluster: Cluster) => VersionDetector;
   broadcastMessage: BroadcastMessage;
@@ -309,7 +313,7 @@ export class Cluster implements ClusterModel, ClusterState {
   protected bindEvents() {
     this.dependencies.logger.info(`[CLUSTER]: bind events`, this.getMeta());
     const refreshTimer = setInterval(() => !this.disconnected && this.refresh(), 30000); // every 30s
-    const refreshMetadataTimer = setInterval(() => !this.disconnected && this.refreshMetadata(), 900000); // every 15 minutes
+    const refreshMetadataTimer = setInterval(() => this.available && this.refreshAccessibilityAndMetadata(), 900000); // every 15 minutes
 
     this.eventsDisposer.push(
       reaction(() => this.getState(), state => this.pushState(state)),
@@ -439,66 +443,68 @@ export class Cluster implements ClusterModel, ClusterState {
 
   /**
    * @internal
-   * @param opts refresh options
    */
   @action
-  async refresh(opts: ClusterRefreshOptions = {}) {
+  async refresh() {
     this.dependencies.logger.info(`[CLUSTER]: refresh`, this.getMeta());
     await this.refreshConnectionStatus();
-
-    if (this.accessible) {
-      await this.refreshAccessibility();
-
-      if (opts.refreshMetadata) {
-        this.refreshMetadata();
-      }
-    }
     this.pushState();
   }
 
   /**
    * @internal
    */
-  @action
-  async refreshMetadata() {
-    this.dependencies.logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
-    const metadata = await this.dependencies.detectorRegistry.detectForCluster(this);
-    const existingMetadata = this.metadata;
-
-    this.metadata = Object.assign(existingMetadata, metadata);
+   @action
+  async refreshAccessibilityAndMetadata() {
+    await this.refreshAccessibility();
+    await this.refreshMetadata();
   }
+
+   /**
+   * @internal
+   */
+   async refreshMetadata() {
+     this.dependencies.logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
+     const metadata = await this.dependencies.detectorRegistry.detectForCluster(this);
+     const existingMetadata = this.metadata;
+
+     this.metadata = Object.assign(existingMetadata, metadata);
+   }
+
+   /**
+   * @internal
+   */
+   private async refreshAccessibility(): Promise<void> {
+     this.dependencies.logger.info(`[CLUSTER]: refreshAccessibility`, this.getMeta());
+     const proxyConfig = await this.getProxyKubeconfig();
+     const canI = this.dependencies.createAuthorizationReview(proxyConfig);
+     const requestNamespaceResources = this.dependencies.createAuthorizationNamespaceReview(proxyConfig);
+     const listApiResources = this.dependencies.createListApiResources(this);
+
+     this.isAdmin = await canI({
+       namespace: "kube-system",
+       resource: "*",
+       verb: "create",
+     });
+     this.isGlobalWatchEnabled = await canI({
+       verb: "watch",
+       resource: "*",
+     });
+     this.allowedNamespaces = await this.getAllowedNamespaces(proxyConfig);
+     this.allowedResources = await this.getAllowedResources(listApiResources, requestNamespaceResources);
+     this.ready = true;
+   }
 
   /**
    * @internal
    */
-  private async refreshAccessibility(): Promise<void> {
-    const proxyConfig = await this.getProxyKubeconfig();
-    const canI = this.dependencies.createAuthorizationReview(proxyConfig);
-
-    this.isAdmin = await canI({
-      namespace: "kube-system",
-      resource: "*",
-      verb: "create",
-    });
-    this.isGlobalWatchEnabled = await canI({
-      verb: "watch",
-      resource: "*",
-    });
-    this.allowedNamespaces = await this.getAllowedNamespaces(proxyConfig);
-    this.allowedResources = await this.getAllowedResources(canI);
-    this.ready = true;
-  }
-
-  /**
-   * @internal
-   */
   @action
-  async refreshConnectionStatus() {
-    const connectionStatus = await this.getConnectionStatus();
+   async refreshConnectionStatus() {
+     const connectionStatus = await this.getConnectionStatus();
 
-    this.online = connectionStatus > ClusterStatus.Offline;
-    this.accessible = connectionStatus == ClusterStatus.AccessGranted;
-  }
+     this.online = connectionStatus > ClusterStatus.Offline;
+     this.accessible = connectionStatus == ClusterStatus.AccessGranted;
+   }
 
   async getKubeconfig(): Promise<KubeConfig> {
     const { config } = await this.dependencies.loadConfigfromFile(this.kubeConfigPath);
@@ -667,32 +673,48 @@ export class Cluster implements ClusterModel, ClusterState {
     }
   }
 
-  protected async getAllowedResources(canI: CanI) {
+  protected async getAllowedResources(listApiResources:RequestListApiResources, requestNamespaceResources: RequestNamespaceResources) {
     try {
       if (!this.allowedNamespaces.length) {
         return [];
       }
-      const resources = apiResources.filter((resource) => this.resourceAccessStatuses.get(resource) === undefined);
-      const apiLimit = plimit(5); // 5 concurrent api requests
-      const requests = [];
 
-      for (const apiResource of resources) {
-        requests.push(apiLimit(async () => {
-          for (const namespace of this.allowedNamespaces.slice(0, 10)) {
-            if (!this.resourceAccessStatuses.get(apiResource)) {
-              const result = await canI({
-                resource: apiResource.apiName,
-                group: apiResource.group,
-                verb: "list",
-                namespace,
-              });
+      const unknownResources = new Map<string, KubeApiResource>(apiResources.map(resource => ([resource.apiName, resource])));
 
-              this.resourceAccessStatuses.set(apiResource, result);
+      const availableResources =  await listApiResources();
+      const availableResourcesNames = new Set(availableResources.map(apiResource => apiResource.apiName));
+
+      [...unknownResources.values()].map(unknownResource => {
+        if (!availableResourcesNames.has(unknownResource.apiName)) {
+          this.resourceAccessStatuses.set(unknownResource, false);
+          unknownResources.delete(unknownResource.apiName);
+        }
+      });
+
+      if (unknownResources.size > 0) {
+        const apiLimit = plimit(5); // 5 concurrent api requests
+
+        await Promise.all(this.allowedNamespaces.map(namespace => apiLimit(async () => {
+          if (unknownResources.size === 0) {
+            return;
+          }
+
+          const namespaceResources = await requestNamespaceResources(namespace, availableResources);
+
+          for (const resourceName of namespaceResources) {
+            const unknownResource = unknownResources.get(resourceName);
+
+            if (unknownResource) {
+              this.resourceAccessStatuses.set(unknownResource, true);
+              unknownResources.delete(resourceName);
             }
           }
-        }));
+        })));
+
+        for (const forbiddenResource of unknownResources.values()) {
+          this.resourceAccessStatuses.set(forbiddenResource, false);
+        }
       }
-      await Promise.all(requests);
 
       return apiResources
         .filter((resource) => this.resourceAccessStatuses.get(resource))
