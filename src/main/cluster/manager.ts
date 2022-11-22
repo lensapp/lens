@@ -5,8 +5,8 @@
 
 import "../../common/ipc/cluster";
 import type http from "http";
-import type { ObservableSet } from "mobx";
-import { action, makeObservable, observable, observe, reaction, toJS } from "mobx";
+import type { IObservableValue, ObservableSet } from "mobx";
+import { action, makeObservable, observe, reaction, toJS } from "mobx";
 import type { Cluster } from "../../common/cluster/cluster";
 import logger from "../logger";
 import { apiKubePrefix } from "../../common/vars";
@@ -27,11 +27,10 @@ interface Dependencies {
   readonly store: ClusterStore;
   readonly catalogEntityRegistry: CatalogEntityRegistry;
   readonly clustersThatAreBeingDeleted: ObservableSet<ClusterId>;
+  readonly visibleCluster: IObservableValue<ClusterId | null>;
 }
 
 export class ClusterManager {
-  @observable visibleCluster: ClusterId | undefined = undefined;
-
   constructor(private readonly dependencies: Dependencies) {
     makeObservable(this);
   }
@@ -58,7 +57,7 @@ export class ClusterManager {
 
     reaction(() => [
       this.dependencies.catalogEntityRegistry.filterItemsByPredicate(isKubernetesCluster),
-      this.visibleCluster,
+      this.dependencies.visibleCluster.get(),
     ] as const, ([entities, visibleCluster]) => {
       for (const entity of entities) {
         if (entity.getId() === visibleCluster) {
