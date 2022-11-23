@@ -10,7 +10,7 @@ import fsInjectable from "./fs.injectable";
 export type WriteJson = (filePath: string, contents: JsonValue) => Promise<void>;
 
 const writeJsonFileInjectable = getInjectable({
-  id: "write-json-file",
+  id: "write-json-file-1",
 
   instantiate: (di): WriteJson => {
     const { writeJson, ensureDir } = di.inject(fsInjectable);

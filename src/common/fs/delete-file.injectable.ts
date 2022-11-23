@@ -8,7 +8,7 @@ import fsInjectable from "./fs.injectable";
 export type DeleteFile = (filePath: string) => Promise<void>;
 
 const deleteFileInjectable = getInjectable({
-  id: "delete-file",
+  id: "delete-file-1",
   instantiate: (di): DeleteFile => di.inject(fsInjectable).unlink,
 });
 

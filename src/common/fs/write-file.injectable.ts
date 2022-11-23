@@ -10,7 +10,7 @@ import fsInjectable from "./fs.injectable";
 export type WriteFile = (filePath: string, content: string | Buffer, opts?: WriteFileOptions) => Promise<void>;
 
 const writeFileInjectable = getInjectable({
-  id: "write-file",
+  id: "write-file-1",
 
   instantiate: (di): WriteFile => {
     const { writeFile, ensureDir } = di.inject(fsInjectable);

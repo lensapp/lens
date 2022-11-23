@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import fse from "fs-extra";
 
 const fsInjectable = getInjectable({
-  id: "fs",
+  id: "fs-1",
   instantiate: () => fse,
   causesSideEffects: true,
 });

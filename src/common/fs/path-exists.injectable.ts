@@ -8,7 +8,7 @@ import fsInjectable from "./fs.injectable";
 export type PathExists = (path: string) => Promise<boolean>;
 
 const pathExistsInjectable = getInjectable({
-  id: "path-exists",
+  id: "path-exists-1",
   instantiate: (di): PathExists => di.inject(fsInjectable).pathExists,
 });
 

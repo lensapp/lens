@@ -8,7 +8,7 @@ import fsInjectable from "./fs.injectable";
 export type ReadFile = (filePath: string) => Promise<string>;
 
 const readFileInjectable = getInjectable({
-  id: "read-file",
+  id: "read-file-1",
 
   instantiate: (di): ReadFile => {
     const { readFile } = di.inject(fsInjectable);

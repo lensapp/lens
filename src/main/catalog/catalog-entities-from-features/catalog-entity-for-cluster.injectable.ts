@@ -2,14 +2,17 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import type { Cluster } from "@lensapp/cluster";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import { KubernetesCluster, LensKubernetesClusterStatus } from "../../../common/catalog-entities";
-import type { ClusterDto } from "./clusters.injectable";
+import {
+  KubernetesCluster,
+  LensKubernetesClusterStatus,
+} from "../../../common/catalog-entities";
 
 const catalogEntityForClusterInjectable = getInjectable({
   id: "catalog-entity-for-cluster",
 
-  instantiate: (di, cluster: ClusterDto) =>
+  instantiate: (di, cluster: Cluster) =>
     new KubernetesCluster({
       metadata: {
         uid: cluster.id,
@@ -31,7 +34,7 @@ const catalogEntityForClusterInjectable = getInjectable({
     }),
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, cluster: ClusterDto) => cluster.id,
+    getInstanceKey: (di, cluster: Cluster) => cluster.id,
   }),
 });
 

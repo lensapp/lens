@@ -18,7 +18,10 @@ export const getDi = () => {
 
     autoRegister({
       di,
-      requireContexts: [
+
+      targetModule: module,
+
+      getRequireContexts: () => [
         require.context("./", true, /\.injectable\.(ts|tsx)$/),
         require.context("../extensions", true, /\.injectable\.(ts|tsx)$/),
         require.context("../common", true, /\.injectable\.(ts|tsx)$/),

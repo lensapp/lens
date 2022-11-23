@@ -9,7 +9,7 @@ import yaml from "js-yaml";
 export type ReadYamlFile = (filePath: string) => Promise<unknown>;
 
 const readYamlFileInjectable = getInjectable({
-  id: "read-yaml-file",
+  id: "read-yaml-file-1",
 
   instantiate: (di): ReadYamlFile => {
     const readFile = di.inject(readFileInjectable);

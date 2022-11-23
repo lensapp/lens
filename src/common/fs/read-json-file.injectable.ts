@@ -9,7 +9,7 @@ import fsInjectable from "./fs.injectable";
 export type ReadJson = (filePath: string) => Promise<JsonValue>;
 
 const readJsonFileInjectable = getInjectable({
-  id: "read-json-file",
+  id: "read-json-file-1",
   instantiate: (di): ReadJson => di.inject(fsInjectable).readJson,
 });
 

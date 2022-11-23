@@ -1101,6 +1101,36 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@lensapp/cluster@^0.1.5":
+  version "0.1.5"
+  resolved "http://localhost:53093/@lensapp%2fcluster/-/cluster-0.1.5.tgz#81b7a6cb1a32bf0ef5a388cee53bac40077adf51"
+  integrity sha512-PDM8NBgvugQTOqQEk2/9XRW98Yup9+eqhbAv9mrMetfDnYnadS2UJQXU9uOTo8bZDjgSNCJFyijqWH8KJBXQcw==
+
+"@lensapp/feature-core@^0.1.6":
+  version "0.1.6"
+  resolved "http://localhost:53093/@lensapp%2ffeature-core/-/feature-core-0.1.6.tgz#7f59954c7108c2357a3fccd675707702f0e1e28b"
+  integrity sha512-c7Iq9E/M0V9uTrJvwHXUWaWJs2ndNML3zzT51+hyTV5oBbKFYlS+82b9jiETVPTGy52r5ttJwLEKfvfVIzadag==
+
+"@lensapp/fs@^0.2.0":
+  version "0.2.0"
+  resolved "http://localhost:53093/@lensapp%2ffs/-/fs-0.2.0.tgz#b22f669d4dd6a20a9365cf7d75262801c6baefba"
+  integrity sha512-ToQc89BkYDF7Ca4yUl24frYYYfJ3BFRiVpmlvmIpLQvoGe1FbHesq3JcaAmuMMOv2DmxvNdJ/yN/5BBEwkOnPQ==
+
+"@lensapp/logging@^0.1.5":
+  version "0.1.5"
+  resolved "http://localhost:53093/@lensapp%2flogging/-/logging-0.1.5.tgz#51f24447252745f394a0f1230b7473ee3cb13d39"
+  integrity sha512-CIKEVaYMdwkYbPkJpaNwlgwq76t9XKJqAuSg7UDqzUEd4abnXu/vsojfeNWIRVc5ZlXsegZYBKKQQ4dlivb3/Q==
+
+"@lensapp/shell@^0.1.6":
+  version "0.1.6"
+  resolved "http://localhost:53093/@lensapp%2fshell/-/shell-0.1.6.tgz#574ae450c8e75c16d12a79e1ffcf0ef5733ad7e8"
+  integrity sha512-BrIvBrrOpAdaGLisI8kjet4ez9eq/b6dkOD5jV1ep+z1wIWjsJv8BDC1obIUQ1jb2V5N1ACofwt3SdlNyNVYMQ==
+
+"@lensapp/utils@^0.2.4":
+  version "0.2.4"
+  resolved "http://localhost:53093/@lensapp%2futils/-/utils-0.2.4.tgz#aab4ad66d0c0d467080b29ed4216a6b81ca27d67"
+  integrity sha512-vfYiLC98vFhbJD4kDMILebOapqOXaM35mR72MHkBdbP8nYeDej62fC6YW6sAO41G5mJpLELvVQy8Xix9XHxwQQ==
+
 "@malept/cross-spawn-promise@^1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@malept/cross-spawn-promise/-/cross-spawn-promise-1.1.1.tgz#504af200af6b98e198bce768bc1730c6936ae01d"
@@ -1409,30 +1439,35 @@
     read-package-json-fast "^2.0.3"
     which "^2.0.2"
 
-"@ogre-tools/fp@^12.0.1":
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-12.0.1.tgz#1f932c8c4cc04075f92ab5ca564db158ac1514d4"
-  integrity sha512-BzMhkI4wPnuI+hXJDbtHUXQn/uBjJLx3W0oDaIFV+lLpkneUU0oW9D5uZFHNOouzCgf67/tnmUC6Ohevbr7/VA==
+"@ogre-tools/fp@^14.0.3":
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/fp/-/fp-14.0.3.tgz#e8e1279b6f40685d0f4b1699dfd6e5c81e9f305b"
+  integrity sha512-6FwUnuw5n4/ICtXTcUadgNJlLJv+iCfUD4UE+8yrVyyXg+LXX3K2GdSxI9sivoA/3xIEoUyPkXcSOAEUIDXWsA==
 
-"@ogre-tools/injectable-extension-for-auto-registration@^12.0.1":
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-12.0.1.tgz#878f73b5408b12193664f4920289905eacb4c1cc"
-  integrity sha512-itKcxEJ/J8SKGD/Wwj0UYOA+/nqwnrwanhikY6qhlibj8guujX77Iip7vMBzJFc2nIrRaQRcpNV2eXe+tjQUdg==
+"@ogre-tools/injectable-extension-for-auto-registration@^14.0.3":
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-auto-registration/-/injectable-extension-for-auto-registration-14.0.3.tgz#492c43e01b7d1efcdcb10bd0c844ef636f8b5788"
+  integrity sha512-2wXDIxO//DOBw+N68JLumrK/3zaryYfS70AFkKCf/FI17qsgkfd2OrMh2TEdXhnGwoPiIelRRGaLYWiFcxl8nw==
 
-"@ogre-tools/injectable-extension-for-mobx@^12.0.1":
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-12.0.1.tgz#1e9de8caba076d7cebda4177a5ab763594b08b28"
-  integrity sha512-M1penOpZfO3/rJMb6WN4IL86p9Lx9tOMCipiNkAyitNLGWfeDPG279JlCs9E3Uw8R9nkFPiw8Je2SLnwnM9o+A==
+"@ogre-tools/injectable-extension-for-mobx@^14.0.3":
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-extension-for-mobx/-/injectable-extension-for-mobx-14.0.3.tgz#11f5becc6d5e15e75bbbac31e994501e0f683536"
+  integrity sha512-VOFXxC4ZH3+WfK5sizjT0SEmnmK48bai6VkKKj1BsHkywpLFaYLQrA4yr6DvvxtWuP8q/Zr7u8rb+JkW68cdyQ==
 
-"@ogre-tools/injectable-react@^12.0.1":
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-12.0.1.tgz#07a43f25bd78db37cb2c00bc0c06e0a69394f519"
-  integrity sha512-LAOh/EHKqk/pQcBRZUAz0VcJwgBeIPxHwlV/Apw0aEBBoMuYLsLZh47rES8sMYMV6N5x7oVfkjMscujY0DCgaQ==
+"@ogre-tools/injectable-react@^14.0.3":
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable-react/-/injectable-react-14.0.3.tgz#005679b9b727ee9249cc327272fe933329eda5d9"
+  integrity sha512-y0c8gb8uO9AUWKILXItE0ZqqMmJcXDh3+2j+fXJT5SDcnV7TIVgYuwXd+mh78i0SaoL74/YiX+HNujne/wnIUA==
 
-"@ogre-tools/injectable@^12.0.1":
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-12.0.1.tgz#53f9981f7f165da4277857b8338cc4097d357ad2"
-  integrity sha512-uOx8STN2wSc9hknDSTGqViyR89Vwg7rGacwrVNchgyo48/QJsmZZz6cd1Aw3nT4vr7ekjTc2lh0Rz6zGIv47hg==
+"@ogre-tools/injectable@^14.0.3":
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/injectable/-/injectable-14.0.3.tgz#3d2b188fce6d87e8195093d555b34d788a436c5e"
+  integrity sha512-qytN1CWITWW7qa6a4gWSTgAo1MV2M1nDSh+SX0xDE7w5lvDpKj6cT3zxNbGX4J1s++SdiCsAK7HHuX3IaeBaow==
+
+"@ogre-tools/mobx-utils@^14.0.3":
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/@ogre-tools/mobx-utils/-/mobx-utils-14.0.3.tgz#8a83f13c00df18d4bab4489029b3e0b519eb0634"
+  integrity sha512-7Mwqap03vfgHfxLTy2hRRoMi2uepuUOb+zbGqg6kSK7Mdpwu4UXkMEOgQnEQFsiTPhxvbUBdUPS8Uc6HFlP9NA==
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.8":
   version "0.5.8"

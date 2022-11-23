@@ -8,7 +8,7 @@ import path from "path";
 export type GetDirnameOfPath = (path: string) => string;
 
 const getDirnameOfPathInjectable = getInjectable({
-  id: "get-dirname-of-path",
+  id: "get-dirname-of-path-1",
   instantiate: (): GetDirnameOfPath => path.dirname,
   causesSideEffects: true,
 });
