@@ -16,3 +16,9 @@
 .settingsAvatar {
   margin: 0 10px;
 }
+
+.avatarAndName {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--margin);
+}
