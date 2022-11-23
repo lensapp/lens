@@ -33,20 +33,20 @@ interface Dependencies {
 export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps & Dependencies> {
   upgrade = async () => {
     const { model } = this.props;
-    const { completedSuccessfully } = await model.submit();
+    const result = await model.submit();
 
-    if (completedSuccessfully) {
+    if (result.callWasSuccessful) {
       return (
         <p>
           {"Release "}
           <b>{model.release.getName()}</b>
           {" successfully upgraded to version "}
-          <b>{model.version.value.get()}</b>
+          <b>{model.version.value.get()?.version}</b>
         </p>
       );
     }
 
-    return null;
+    throw result.error;
   };
 
   render() {

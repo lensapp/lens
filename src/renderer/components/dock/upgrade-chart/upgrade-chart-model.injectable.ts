@@ -13,6 +13,7 @@ import releasesInjectable from "../../+helm-releases/releases.injectable";
 import updateReleaseInjectable from "../../+helm-releases/update-release/update-release.injectable";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import requestHelmReleaseConfigurationInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
+import type { AsyncResult } from "../../../../common/utils/async-result";
 import { waitUntilDefined } from "../../../utils";
 import type { SelectOption } from "../../select";
 import type { DockTab } from "../dock/store";
@@ -31,11 +32,7 @@ export interface UpgradeChartModel {
     readonly value: IComputedValue<HelmChartVersion | undefined>;
     set: (value: SingleValue<SelectOption<HelmChartVersion>>) => void;
   };
-  submit: () => Promise<UpgradeChartSubmitResult>;
-}
-
-export interface UpgradeChartSubmitResult {
-  completedSuccessfully: boolean;
+  submit: () => Promise<AsyncResult<void, string>>;
 }
 
 const upgradeChartModelInjectable = getInjectable({
@@ -105,13 +102,23 @@ const upgradeChartModelInjectable = getInjectable({
       submit: async () => {
         const selectedVersion = version.value.get();
 
-        if (!selectedVersion || configrationEditError.get()) {
+        if (!selectedVersion) {
           return {
-            completedSuccessfully: false,
+            callWasSuccessful: false,
+            error: "No selected version",
           };
         }
 
-        await updateRelease(
+        const editError = configrationEditError.get();
+
+        if (editError) {
+          return {
+            callWasSuccessful: false,
+            error: editError,
+          };
+        }
+
+        const result = await updateRelease(
           release.getName(),
           release.getNs(),
           {
@@ -120,10 +127,16 @@ const upgradeChartModelInjectable = getInjectable({
             ...selectedVersion,
           },
         );
-        storedConfiguration.invalidate();
+
+        if (result.callWasSuccessful === true) {
+          storedConfiguration.invalidate();
+
+          return { callWasSuccessful: true };
+        }
 
         return {
-          completedSuccessfully: true,
+          callWasSuccessful: false,
+          error: String(result.error),
         };
       },
     };

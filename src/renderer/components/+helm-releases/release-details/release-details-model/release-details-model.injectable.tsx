@@ -128,7 +128,7 @@ export class ReleaseDetailsModel {
         this.configuration.isSaving.set(false);
       });
 
-      if (!result.updateWasSuccessful) {
+      if (!result.callWasSuccessful) {
         this.dependencies.showCheckedErrorNotification(
           result.error,
           "Unknown error occured while updating release",

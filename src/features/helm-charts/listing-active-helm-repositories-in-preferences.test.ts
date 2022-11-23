@@ -69,7 +69,10 @@ describe("listing active helm repositories in preferences", () => {
       expect(execFileMock).toHaveBeenCalledWith(
         "some-helm-binary-path",
         ["env"],
-        { "maxBuffer": 34359738368 },
+        {
+          maxBuffer: 34359738368,
+          env: {},
+        },
       );
     });
 
@@ -77,7 +80,10 @@ describe("listing active helm repositories in preferences", () => {
       expect(execFileMock).not.toHaveBeenCalledWith(
         "some-helm-binary-path",
         ["repo", "update"],
-        { "maxBuffer": 34359738368 },
+        {
+          maxBuffer: 34359738368,
+          env: {},
+        },
       );
     });
 
@@ -222,7 +228,10 @@ describe("listing active helm repositories in preferences", () => {
         expect(execFileMock).toHaveBeenCalledWith(
           "some-helm-binary-path",
           ["repo", "update"],
-          { "maxBuffer": 34359738368 },
+          {
+            maxBuffer: 34359738368,
+            env: {},
+          },
         );
       });
 
@@ -289,7 +298,10 @@ describe("listing active helm repositories in preferences", () => {
           expect(execFileMock).toHaveBeenCalledWith(
             "some-helm-binary-path",
             ["repo", "add", "bitnami", "https://charts.bitnami.com/bitnami"],
-            { "maxBuffer": 34359738368 },
+            {
+              maxBuffer: 34359738368,
+              env: {},
+            },
           );
         });
 
@@ -434,7 +446,10 @@ describe("listing active helm repositories in preferences", () => {
             expect(execFileMock).not.toHaveBeenCalledWith(
               "some-helm-binary-path",
               ["repo", "add", "bitnami", "https://charts.bitnami.com/bitnami"],
-              { "maxBuffer": 34359738368 },
+              {
+                maxBuffer: 34359738368,
+                env: {},
+              },
             );
           });
 
