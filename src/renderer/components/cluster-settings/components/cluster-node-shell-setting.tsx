@@ -11,6 +11,7 @@ import { Input } from "../../input/input";
 import { observer } from "mobx-react";
 import { Icon } from "../../icon/icon";
 import { initialNodeShellImage } from "../../../../common/cluster-types";
+import Gutter from "../../gutter/gutter";
 
 export interface ClusterNodeShellSettingProps {
   cluster: Cluster;
@@ -59,6 +60,7 @@ export class ClusterNodeShellSetting extends React.Component<ClusterNodeShellSet
             Node shell image. Used for creating node shell pod.
           </small>
         </section>
+        <Gutter />
         <section>
           <SubTitle title="Image pull secret" id="image-pull-secret"/>
           <Input
