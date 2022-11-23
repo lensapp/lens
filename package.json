@@ -298,7 +298,9 @@
     "@lensapp/fs": "^0.2.0",
     "@lensapp/logging": "^0.1.5",
     "@lensapp/shell": "^0.1.6",
-    "@lensapp/utils": "^0.2.4"
+    "@lensapp/utils": "^0.2.4",
+    "@lensapp/preferences": "^0.1.6",
+    "@lensapp/aws-clusters": "^0.1.0"
   },
   "devDependencies": {
     "@async-fn/jest": "1.6.4",

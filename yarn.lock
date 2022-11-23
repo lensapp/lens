@@ -1101,6 +1101,11 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@lensapp/aws-clusters@^0.1.0":
+  version "0.1.0"
+  resolved "http://localhost:53093/@lensapp%2faws-clusters/-/aws-clusters-0.1.0.tgz#4b10554d910f8909d793e15b7c6c605d8dd1ca4e"
+  integrity sha512-XHViezMhxuoQDL/l/2Wwj+tMNhzip2HRrs79TyGsE6XP0c63DJmFjaz+l3Y+VHv9qbutraU1xtdKZq/DRpHRgQ==
+
 "@lensapp/cluster@^0.1.5":
   version "0.1.5"
   resolved "http://localhost:53093/@lensapp%2fcluster/-/cluster-0.1.5.tgz#81b7a6cb1a32bf0ef5a388cee53bac40077adf51"
@@ -1120,6 +1125,11 @@
   version "0.1.5"
   resolved "http://localhost:53093/@lensapp%2flogging/-/logging-0.1.5.tgz#51f24447252745f394a0f1230b7473ee3cb13d39"
   integrity sha512-CIKEVaYMdwkYbPkJpaNwlgwq76t9XKJqAuSg7UDqzUEd4abnXu/vsojfeNWIRVc5ZlXsegZYBKKQQ4dlivb3/Q==
+
+"@lensapp/preferences@^0.1.6":
+  version "0.1.6"
+  resolved "http://localhost:53093/@lensapp%2fpreferences/-/preferences-0.1.6.tgz#e3ed9febc0e0c1c49202d20495838b90ee068bb5"
+  integrity sha512-xlR3QWNm3HpNIU564GoF8g2TCYOafSXUmNKSCEhyiaPBU/ks3/GYgrvgaJXwlwd3llHPnlzRd0OPCV2l37ZlhQ==
 
 "@lensapp/shell@^0.1.6":
   version "0.1.6"

@@ -8,6 +8,7 @@ import clusterFeature from "@lensapp/cluster";
 import fsFeature from "@lensapp/fs";
 import loggingFeature from "@lensapp/logging";
 import shellFeature from "@lensapp/shell";
+import awsClustersFeature from "@lensapp/aws-clusters";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { action } from "mobx";
 
@@ -16,5 +17,6 @@ export default action((di: DiContainer) => {
   registerFeature(di, fsFeature);
   registerFeature(di, loggingFeature);
   registerFeature(di, shellFeature);
+  registerFeature(di, awsClustersFeature);
 });
 
