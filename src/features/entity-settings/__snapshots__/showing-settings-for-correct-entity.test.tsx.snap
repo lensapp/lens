@@ -304,7 +304,7 @@ exports[`Showing correct entity settings when navigating to local cluster entity
               class="sidebar"
             >
               <div
-                class="flex items-center pb-8"
+                class="avatarAndName"
               >
                 <div
                   class="Avatar rounded settingsAvatar"
@@ -601,7 +601,7 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
               class="sidebar"
             >
               <div
-                class="flex items-center pb-8"
+                class="avatarAndName"
               >
                 <div
                   class="Avatar rounded settingsAvatar"
@@ -919,7 +919,7 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
               class="sidebar"
             >
               <div
-                class="flex items-center pb-8"
+                class="avatarAndName"
               >
                 <div
                   class="Avatar rounded settingsAvatar"
