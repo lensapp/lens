@@ -291,13 +291,7 @@
     "winston-console-format": "^1.0.8",
     "winston-transport-browserconsole": "^1.0.5",
     "ws": "^8.11.0",
-    "xterm-link-provider": "^1.3.1",
-    "@lensapp/composable-responsibilities": "0.0.1",
-    "@lensapp/utils": "0.0.1",
-    "@lensapp/composite": "0.0.1",
-    "@lensapp/preferences": "0.0.1",
-    "@lensapp/catalog": "0.0.1",
-    "@lensapp/feature-core": "0.0.1"
+    "xterm-link-provider": "^1.3.1"
   },
   "devDependencies": {
     "@async-fn/jest": "1.6.4",
