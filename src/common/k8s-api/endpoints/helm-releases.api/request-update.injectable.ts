@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import yaml from "js-yaml";
 import { apiBaseInjectionToken } from "../../api-base";
 import { urlBuilderFor } from "../../../utils/buildUrl";
+import type { AsyncResult } from "../../../utils/async-result";
 
 interface HelmReleaseUpdatePayload {
   repo: string;
@@ -18,7 +18,7 @@ export type RequestHelmReleaseUpdate = (
   name: string,
   namespace: string,
   payload: HelmReleaseUpdatePayload
-) => Promise<{ updateWasSuccessful: true } | { updateWasSuccessful: false; error: unknown }>;
+) => Promise<AsyncResult<void, unknown>>;
 
 const requestUpdateEndpoint = urlBuilderFor("/v2/releases/:namespace/:name");
 
@@ -28,20 +28,20 @@ const requestHelmReleaseUpdateInjectable = getInjectable({
   instantiate: (di): RequestHelmReleaseUpdate => {
     const apiBase = di.inject(apiBaseInjectionToken);
 
-    return async (name, namespace, { repo, chart, values, ...data }) => {
+    return async (name, namespace, { repo, chart, values, version }) => {
       try {
         await apiBase.put(requestUpdateEndpoint.compile({ name, namespace }), {
           data: {
             chart: `${repo}/${chart}`,
-            values: yaml.load(values),
-            ...data,
+            values,
+            version,
           },
         });
       } catch (e) {
-        return { updateWasSuccessful: false, error: e };
+        return { callWasSuccessful: false, error: e };
       }
 
-      return { updateWasSuccessful: true };
+      return { callWasSuccessful: true };
     };
   },
 });

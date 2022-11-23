@@ -12,14 +12,14 @@ const updateReleaseInjectable = getInjectable({
 
   instantiate: (di): RequestHelmReleaseUpdate => {
     const releases = di.inject(releasesInjectable);
-    const callForHelmReleaseUpdate = di.inject(requestHelmReleaseUpdateInjectable);
+    const requestHelmReleaseUpdate = di.inject(requestHelmReleaseUpdateInjectable);
 
     return async (
       name,
       namespace,
       payload,
     ) => {
-      const result = await callForHelmReleaseUpdate(name, namespace, payload);
+      const result = await requestHelmReleaseUpdate(name, namespace, payload);
 
       releases.invalidate();
 
