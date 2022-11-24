@@ -8,7 +8,7 @@ import type { Asyncify } from "type-fest";
 import type { RequestChannelHandler } from "../../main/utils/channel/channel-listeners/listener-tokens";
 import type { ClusterId } from "../cluster-types";
 import type { AsyncResult } from "../utils/async-result";
-import type { RequestChannel } from "../utils/channel/request-channel-listener-injection-token";
+import type { RequestChannel } from "../utils/channel/request-channel";
 
 export interface KubectlApplyAllArgs {
   clusterId: ClusterId;
