@@ -29,13 +29,15 @@ const checkForPlatformUpdatesInjectable = getInjectable({
       electronUpdater.autoDownload = false;
       electronUpdater.allowDowngrade = allowDowngrade;
 
-      let result: UpdateCheckResult;
+      let result: UpdateCheckResult | null = null;
 
       try {
         result = await electronUpdater.checkForUpdates();
       } catch (error) {
         logger.error("[UPDATE-APP/CHECK-FOR-UPDATES]", error);
-
+      }
+      
+      if (!result) {
         return {
           updateWasDiscovered: false,
         };
