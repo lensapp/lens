@@ -13,7 +13,7 @@ import type * as pty from "node-pty";
 import { getOrInsertWith } from "../../common/utils";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 import type { Logger } from "../../common/logger";
-import type { ComputeShellEnvironment } from "../utils/shell-env/compute-shell-environment.injectable";
+import type { ComputeShellEnvironment } from "../../features/shell-sync/main/compute-shell-environment.injectable";
 import type { SpawnPty } from "./spawn-pty.injectable";
 import type { InitializableState } from "../../common/initializable-state/create";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";

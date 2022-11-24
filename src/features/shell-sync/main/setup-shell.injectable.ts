@@ -4,11 +4,11 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../../../main/start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import { unionPATHs } from "../../../common/utils/union-env-path";
 import isSnapPackageInjectable from "../../../common/vars/is-snap-package.injectable";
-import electronAppInjectable from "../../electron-app/electron-app.injectable";
-import computeShellEnvironmentInjectable from "../../utils/shell-env/compute-shell-environment.injectable";
+import electronAppInjectable from "../../../main/electron-app/electron-app.injectable";
+import computeShellEnvironmentInjectable from "./compute-shell-environment.injectable";
 import userShellSettingInjectable from "../../../common/user-store/shell-setting.injectable";
 
 const setupShellInjectable = getInjectable({

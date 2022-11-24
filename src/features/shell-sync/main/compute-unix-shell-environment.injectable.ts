@@ -5,8 +5,8 @@
 import type { EnvironmentVariables } from "./compute-shell-environment.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
-import spawnInjectable from "../../child-process/spawn.injectable";
-import randomUUIDInjectable from "../../crypto/random-uuid.injectable";
+import spawnInjectable from "../../../main/child-process/spawn.injectable";
+import randomUUIDInjectable from "../../../main/crypto/random-uuid.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import processExecPathInjectable from "./execPath.injectable";
 import processEnvInjectable from "./env.injectable";
