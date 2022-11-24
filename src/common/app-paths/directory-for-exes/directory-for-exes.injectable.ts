@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { appPathsInjectionToken } from "../app-path-injection-token";
+import { appPathsInjectionToken } from "@lensapp/app-paths";
 
 const directoryForExesInjectable = getInjectable({
   id: "directory-for-exes",

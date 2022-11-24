@@ -3,9 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { fromPairs } from "lodash/fp";
-import type { PathName } from "../../common/app-paths/app-path-names";
-import { pathNames } from "../../common/app-paths/app-path-names";
-import type { AppPaths } from "../../common/app-paths/app-path-injection-token";
+import type { AppPaths, PathName } from "@lensapp/app-paths";
+import { pathNames } from "@lensapp/app-paths";
 
 interface Dependencies {
   getAppPath: (name: PathName) => string;

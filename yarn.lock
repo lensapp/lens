@@ -1101,6 +1101,11 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@lensapp/app-paths@^0.1.1":
+  version "0.1.1"
+  resolved "http://localhost:53093/@lensapp%2fapp-paths/-/app-paths-0.1.1.tgz#b70237b63ee50c24fede036852b421ecae0c9475"
+  integrity sha512-4/pK8MgXq1/ltFf9DjmC/PFjiJ9vKPx7d69RAjEApKB0+7SO9T0/Y4Hu8jfGOz8sUFdofjxlkmhMYGFWGuqihA==
+
 "@lensapp/aws-clusters@^0.1.0":
   version "0.1.0"
   resolved "http://localhost:53093/@lensapp%2faws-clusters/-/aws-clusters-0.1.0.tgz#4b10554d910f8909d793e15b7c6c605d8dd1ca4e"

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { PathName } from "../../../common/app-paths/app-path-names";
+import type { PathName } from "@lensapp/app-paths";
 import electronAppInjectable from "../../electron-app/electron-app.injectable";
 
 const setElectronAppPathInjectable = getInjectable({

@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { AppPaths } from "../../common/app-paths/app-path-injection-token";
+import type { AppPaths } from "@lensapp/app-paths";
 import getElectronAppPathInjectable from "./get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./set-electron-app-path/set-electron-app-path.injectable";
 import directoryForIntegrationTestingInjectable from "./directory-for-integration-testing/directory-for-integration-testing.injectable";
 import appPathsStateInjectable from "../../common/app-paths/app-paths-state.injectable";
-import { pathNames } from "../../common/app-paths/app-path-names";
+import { pathNames } from "@lensapp/app-paths";
 import { fromPairs, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";

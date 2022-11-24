@@ -2,10 +2,9 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { AppPaths } from "./app-path-injection-token";
-import { appPathsInjectionToken } from "./app-path-injection-token";
+import type { AppPaths, PathName } from "@lensapp/app-paths";
+import { appPathsInjectionToken } from "@lensapp/app-paths";
 import getElectronAppPathInjectable from "../../main/app-paths/get-electron-app-path/get-electron-app-path.injectable";
-import type { PathName } from "./app-path-names";
 import setElectronAppPathInjectable from "../../main/app-paths/set-electron-app-path/set-electron-app-path.injectable";
 import directoryForIntegrationTestingInjectable from "../../main/app-paths/directory-for-integration-testing/directory-for-integration-testing.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
