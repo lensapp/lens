@@ -29,11 +29,17 @@ const injectSystemCAsInjectable = getInjectable({
         return;
       }
 
-      const cas = Array.isArray(globalAgent.options.ca)
-        ? globalAgent.options.ca
-        : globalAgent.options.ca
-          ? [globalAgent.options.ca]
-          : [];
+      const cas = (() => {
+        if (Array.isArray(globalAgent.options.ca)) {
+          return globalAgent.options.ca;
+        }
+
+        if (globalAgent.options.ca) {
+          return [globalAgent.options.ca];
+        }
+
+        return [];
+      })();
 
       for (const cert of certs) {
         if (!isCertActive(cert)) {
