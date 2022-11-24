@@ -10,6 +10,12 @@ export interface SendMessageToChannel {
   <Message>(channel: MessageChannel<Message>, message: Message): void;
 }
 
+export type MessageChannelSender<Channel> = Channel extends MessageChannel<void | undefined>
+  ? () => void
+  : Channel extends MessageChannel<infer Message>
+    ? (message: Message) => void
+    : never;
+
 export const sendMessageToChannelInjectionToken = getInjectionToken<SendMessageToChannel>({
   id: "send-message-to-message-channel",
 });

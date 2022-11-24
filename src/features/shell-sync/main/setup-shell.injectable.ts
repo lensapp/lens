@@ -10,6 +10,7 @@ import isSnapPackageInjectable from "../../../common/vars/is-snap-package.inject
 import electronAppInjectable from "../../../main/electron-app/electron-app.injectable";
 import computeShellEnvironmentInjectable from "./compute-shell-environment.injectable";
 import userShellSettingInjectable from "../../../common/user-store/shell-setting.injectable";
+import emitShellSyncFailedInjectable from "./emit-failure.injectable";
 
 const setupShellInjectable = getInjectable({
   id: "setup-shell",
@@ -20,6 +21,7 @@ const setupShellInjectable = getInjectable({
     const electronApp = di.inject(electronAppInjectable);
     const resolvedUserShellSetting = di.inject(userShellSettingInjectable);
     const computeShellEnvironment = di.inject(computeShellEnvironmentInjectable);
+    const emitShellSyncFailed = di.inject(emitShellSyncFailedInjectable);
 
     return {
       id: "setup-shell",
@@ -29,7 +31,10 @@ const setupShellInjectable = getInjectable({
         const result = await computeShellEnvironment(resolvedUserShellSetting.get());
 
         if (!result.callWasSuccessful) {
-          return void logger.error(`[SHELL-SYNC]: ${result.error}`);
+          logger.error(`[SHELL-SYNC]: ${result.error}`);
+          emitShellSyncFailed(result.error);
+
+          return;
         }
 
         const env = result.response;
