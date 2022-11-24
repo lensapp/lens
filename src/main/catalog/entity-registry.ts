@@ -44,10 +44,10 @@ export class CatalogEntityRegistry {
 
     const catalogEntities = di.inject(catalogEntitiesInjectable);
 
-    const asd = [...this.sources.values()];
+    const sources = [...this.sources.values()];
 
     return pipeline(
-      asd,
+      sources,
       flatMap(source => source.get()),
       x => [...x, ...catalogEntities.get()],
       filter(entity => this.dependencies.hasCategoryForEntity(entity)),

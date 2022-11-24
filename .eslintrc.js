@@ -17,6 +17,15 @@ module.exports = {
     react: {
       version: packageJson.devDependencies.react || "detect",
     },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"],
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "./tsconfig.json",
+      },
+    },
   },
   overrides: [
     {
