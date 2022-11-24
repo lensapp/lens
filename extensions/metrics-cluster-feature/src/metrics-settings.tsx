@@ -190,7 +190,7 @@ export class MetricsSettings extends React.Component<MetricsSettingsProps> {
 
   render() {
     return (
-      <>
+      <section style={{ display: "flex", flexDirection: "column", rowGap: "1.5rem" }}>
         { this.props.cluster.status.phase !== "connected" && (
           <section>
             <p style={ { color: "var(--colorError)" } }>
@@ -270,7 +270,7 @@ export class MetricsSettings extends React.Component<MetricsSettingsProps> {
             )}
           </div>
         </section>
-      </>
+      </section>
     );
   }
 }

@@ -118,7 +118,10 @@ describe("add helm repository from list in preferences", () => {
             expect(execFileMock).toHaveBeenCalledWith(
               "some-helm-binary-path",
               ["repo", "add", "Some to be added repository", "some-other-url"],
-              { "maxBuffer": 34359738368 },
+              {
+                maxBuffer: 34359738368,
+                env: {},
+              },
             );
           });
 
@@ -232,7 +235,10 @@ describe("add helm repository from list in preferences", () => {
                     expect(execFileMock).toHaveBeenCalledWith(
                       "some-helm-binary-path",
                       ["repo", "remove", "Some already active repository"],
-                      { "maxBuffer": 34359738368 },
+                      {
+                        maxBuffer: 34359738368,
+                        env: {},
+                      },
                     );
                   });
 

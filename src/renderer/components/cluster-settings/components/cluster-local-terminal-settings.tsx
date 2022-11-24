@@ -18,6 +18,7 @@ import type { ValidateDirectory } from "../../../../common/fs/validate-directory
 import validateDirectoryInjectable from "../../../../common/fs/validate-directory.injectable";
 import type { ResolveTilde } from "../../../../common/path/resolve-tilde.injectable";
 import resolveTildeInjectable from "../../../../common/path/resolve-tilde.injectable";
+import Gutter from "../../gutter/gutter";
 
 export interface ClusterLocalTerminalSettingProps {
   cluster: Cluster;
@@ -139,6 +140,7 @@ const NonInjectedClusterLocalTerminalSetting = observer(({
           this is used as the current working directory (cwd) for the shell process.
         </small>
       </section>
+      <Gutter />
       <section className="default-namespace">
         <SubTitle title="Default Namespace"/>
         <Input
