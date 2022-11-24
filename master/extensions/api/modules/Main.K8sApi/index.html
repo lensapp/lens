@@ -727,6 +727,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    Classes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#interfaces" class="md-nav__link">
     Interfaces
   </a>
@@ -1111,13 +1118,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#resourcestack" class="md-nav__link">
-    ResourceStack
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#role" class="md-nav__link">
     Role
   </a>
@@ -1198,6 +1198,13 @@
   
     <nav class="md-nav" aria-label="Functions">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#createresourcestack" class="md-nav__link">
+    createResourceStack
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#forcluster" class="md-nav__link">
@@ -1294,7 +1301,6 @@
 <li><a href="./#priorityclass">PriorityClass</a></li>
 <li><a href="./#replicaset">ReplicaSet</a></li>
 <li><a href="./#resourcequota">ResourceQuota</a></li>
-<li><a href="./#resourcestack">ResourceStack</a></li>
 <li><a href="./#role">Role</a></li>
 <li><a href="./#rolebinding">RoleBinding</a></li>
 <li><a href="./#secret">Secret</a></li>
@@ -1302,6 +1308,10 @@
 <li><a href="./#serviceaccount">ServiceAccount</a></li>
 <li><a href="./#statefulset">StatefulSet</a></li>
 <li><a href="./#storageclass">StorageClass</a></li>
+</ul>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="../../classes/Main.K8sApi.ResourceStack/">ResourceStack</a></li>
 </ul>
 <h3 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">#</a></h3>
 <ul>
@@ -1313,6 +1323,7 @@
 </ul>
 <h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">#</a></h3>
 <ul>
+<li><a href="./#createresourcestack">createResourceStack</a></li>
 <li><a href="./#forcluster">forCluster</a></li>
 <li><a href="./#forremotecluster">forRemoteCluster</a></li>
 <li><a href="./#isallowedresource">isAllowedResource</a></li>
@@ -1468,9 +1479,6 @@
 <h3 id="resourcequota">ResourceQuota<a class="headerlink" href="#resourcequota" title="Permanent link">#</a></h3>
 <p>Re-exports <a href="../../classes/Renderer.K8sApi.ResourceQuota/">ResourceQuota</a></p>
 <hr />
-<h3 id="resourcestack">ResourceStack<a class="headerlink" href="#resourcestack" title="Permanent link">#</a></h3>
-<p>Re-exports <a href="../../classes/Renderer.K8sApi.ResourceStack/">ResourceStack</a></p>
-<hr />
 <h3 id="role">Role<a class="headerlink" href="#role" title="Permanent link">#</a></h3>
 <p>Re-exports <a href="../../classes/Renderer.K8sApi.Role/">Role</a></p>
 <hr />
@@ -1495,6 +1503,30 @@
 <h3 id="apimanager">apiManager<a class="headerlink" href="#apimanager" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>apiManager</strong>: <code>ApiManager</code></p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
+<h3 id="createresourcestack">createResourceStack<a class="headerlink" href="#createresourcestack" title="Permanent link">#</a></h3>
+<p>▸ <strong>createResourceStack</strong>(<code>cluster</code>, <code>name</code>): <code>ResourceApplyingStack</code></p>
+<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>cluster</code></td>
+<td align="left"><a href="../../classes/Common.Catalog.KubernetesCluster/"><code>KubernetesCluster</code></a>&lt;<a href="../../interfaces/Common.Catalog.KubernetesClusterMetadata/"><code>KubernetesClusterMetadata</code></a>, <a href="../../interfaces/Common.Catalog.KubernetesClusterStatus/"><code>KubernetesClusterStatus</code></a>, <a href="../../interfaces/Common.Catalog.KubernetesClusterSpec/"><code>KubernetesClusterSpec</code></a>></td>
+</tr>
+<tr>
+<td align="left"><code>name</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<p><code>ResourceApplyingStack</code></p>
+<hr />
 <h3 id="forcluster">forCluster<a class="headerlink" href="#forcluster" title="Permanent link">#</a></h3>
 <p>▸ <strong>forCluster</strong>&lt;<code>Object</code>, <code>Api</code>, <code>Data</code>>(<code>cluster</code>, <code>kubeClass</code>, <code>apiClass</code>): <code>Api</code></p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
@@ -1520,7 +1552,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1543,7 +1575,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
 <p><code>Api</code></p>
 <p>▸ <strong>forCluster</strong>&lt;<code>Object</code>, <code>Data</code>>(<code>cluster</code>, <code>kubeClass</code>, <code>apiClass?</code>): <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>></p>
 <h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
@@ -1565,7 +1597,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1588,7 +1620,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
 <p><a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>></p>
 <hr />
 <h3 id="forremotecluster">forRemoteCluster<a class="headerlink" href="#forremotecluster" title="Permanent link">#</a></h3>
@@ -1616,7 +1648,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1639,7 +1671,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>Api</code></p>
 <p>▸ <strong>forRemoteCluster</strong>&lt;<code>Object</code>, <code>Data</code>>(<code>config</code>, <code>kubeClass</code>, <code>apiClass?</code>): <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>></p>
 <h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
@@ -1661,7 +1693,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1684,14 +1716,14 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>></p>
 <hr />
 <h3 id="isallowedresource">isAllowedResource<a class="headerlink" href="#isallowedresource" title="Permanent link">#</a></h3>
 <p>▸ <strong>isAllowedResource</strong>(...<code>args</code>): <code>boolean</code></p>
 <p><strong><code>Deprecated</code></strong></p>
 <p>This function never works</p>
-<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
+<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1706,7 +1738,7 @@
 </tr>
 </tbody>
 </table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
 <p>false</p>
                 
