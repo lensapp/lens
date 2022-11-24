@@ -7,18 +7,41 @@
 //       It is here to consolidate the common parts which are exported to `Main`
 //       and to `Renderer`
 
-export { ResourceStack } from "../../common/k8s/resource-stack";
 import apiManagerInjectable from "../../common/k8s-api/api-manager/manager.injectable";
 import createKubeApiForClusterInjectable from "../../common/k8s-api/create-kube-api-for-cluster.injectable";
 import createKubeApiForRemoteClusterInjectable from "../../common/k8s-api/create-kube-api-for-remote-cluster.injectable";
+import createResourceStackInjectable from "../../common/k8s/create-resource-stack.injectable";
+import type { ResourceApplyingStack } from "../../common/k8s/resource-stack";
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import type { KubernetesCluster } from "./catalog";
 
 export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);
 export const forCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForClusterInjectable);
 export const forRemoteCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForRemoteClusterInjectable);
 
 export { KubeApi } from "../../common/k8s-api/kube-api";
+
+export const createResourceStack = asLegacyGlobalFunctionForExtensionApi(createResourceStackInjectable);
+
+/**
+ * @deprecated Switch to using `Common.createResourceStack` instead
+ */
+export class ResourceStack implements ResourceApplyingStack {
+  private readonly impl: ResourceApplyingStack;
+
+  constructor(cluster: KubernetesCluster, name: string) {
+    this.impl = createResourceStack(cluster, name);
+  }
+
+  kubectlApplyFolder(folderPath: string, templateContext?: any, extraArgs?: string[] | undefined): Promise<string> {
+    return this.impl.kubectlApplyFolder(folderPath, templateContext, extraArgs);
+  }
+
+  kubectlDeleteFolder(folderPath: string, templateContext?: any, extraArgs?: string[] | undefined): Promise<string> {
+    return this.impl.kubectlDeleteFolder(folderPath, templateContext, extraArgs);
+  }
+}
 
 /**
  * @deprecated This type is unused

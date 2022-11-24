@@ -4,7 +4,7 @@
  */
 
 import type { OpenDialogOptions } from "electron";
-import { clusterActivateHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
+import { clusterActivateHandler, clusterDisconnectHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
 import type { ClusterId, ClusterState } from "../../common/cluster-types";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel, type WindowAction } from "../../common/ipc/window";
 import { openFilePickingDialogChannel } from "../../common/ipc/dialog";
@@ -62,14 +62,6 @@ export function requestClusterDisconnection(clusterId: ClusterId, force?: boolea
 
 export function requestInitialClusterStates(): Promise<{ id: string; state: ClusterState }[]> {
   return requestMain(clusterStates);
-}
-
-export function requestKubectlApplyAll(clusterId: ClusterId, resources: string[], kubectlArgs: string[]): Promise<{ stderr?: string; stdout?: string }> {
-  return requestMain(clusterKubectlApplyAllHandler, clusterId, resources, kubectlArgs);
-}
-
-export function requestKubectlDeleteAll(clusterId: ClusterId, resources: string[], kubectlArgs: string[]): Promise<{ stderr?: string; stdout?: string }> {
-  return requestMain(clusterKubectlDeleteAllHandler, clusterId, resources, kubectlArgs);
 }
 
 export function requestInitialExtensionDiscovery(): Promise<{ isLoaded: boolean }> {
