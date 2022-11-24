@@ -24,10 +24,16 @@ const k8sRequestInjectable = getInjectable({
     return async (cluster, path, { timeout = 30_000, ...init } = {}) => {
       const controller = withTimeout(timeout);
 
-      return lensFetch(`/${cluster.id}${apiKubePrefix}${path}`, {
+      const response = await lensFetch(`/${cluster.id}${apiKubePrefix}${path}`, {
         ...init,
         signal: controller.signal,
       });
+
+      if (response.status >= 300 || response.status < 200) {
+        throw new Error(`Failed to retrieve ${path}: ${response.statusText}`);
+      }
+
+      return response.json();
     };
   },
 });
