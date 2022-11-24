@@ -14,7 +14,7 @@ import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-event";
 import type { KubeJsonApiData, KubeJsonApi } from "./kube-json-api";
 import type { Disposer } from "../utils";
-import { setTimeoutFor, isDefined, noop, WrappedAbortController } from "../utils";
+import { isDefined, noop, WrappedAbortController } from "../utils";
 import type { RequestInit, Response } from "node-fetch";
 import type { Patch } from "rfc6902";
 import assert from "assert";
@@ -639,7 +639,7 @@ export class KubeApi<
       namespace,
       callback = noop as KubeApiWatchCallback<Data>,
       retry = false,
-      timeout,
+      timeout = 600,
       watchId = `${this.kind.toLowerCase()}-${this.watchId++}`,
     } = opts ?? {};
 
@@ -650,8 +650,6 @@ export class KubeApi<
       this.dependencies.logger.info(`[KUBE-API] watch (${watchId}) aborted ${watchUrl}`);
       clearTimeout(timedRetry);
     });
-
-    setTimeoutFor(abortController, 600 * 1000);
 
     const requestParams = timeout ? { query: { timeoutSeconds: timeout }} : {};
     const watchUrl = this.getWatchUrl(namespace);
@@ -695,8 +693,10 @@ export class KubeApi<
           }, timeout * 1000 * 1.1);
         }
 
-        if (!response.body) {
-          this.dependencies.logger.error(`[KUBE-API]: watch (${watchId}) did not return a body`);
+        if (!response.body || !response.body.readable) {
+          if (!response.body) {
+            this.dependencies.logger.warn(`[KUBE-API]: watch (${watchId}) did not return a body`);
+          }
           requestRetried = true;
 
           clearTimeout(timedRetry);
