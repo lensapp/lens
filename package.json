@@ -294,7 +294,7 @@
     "ws": "^8.11.0",
     "xterm-link-provider": "^1.3.1",
     "@lensapp/app-paths": "^0.2.0",
-    "@lensapp/aws-clusters": "^0.2.0",
+    "@lensapp/aws-clusters": "^0.2.1",
     "@lensapp/cluster": "^0.2.0",
     "@lensapp/feature-core": "^0.1.8",
     "@lensapp/fs": "^0.2.1",

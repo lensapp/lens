@@ -1106,10 +1106,10 @@
   resolved "http://localhost:53093/@lensapp%2fapp-paths/-/app-paths-0.2.0.tgz#26a7c2665f00e177b688cd2fc63ff69af37a80ef"
   integrity sha512-yn67RTEbci11vsPhx4+VxLiNv7U4ebaSTZLdOcBLTro6YbI1Shyk3+C1c1TZ13uZ9uoCKoND6e/iCBeYaUAR8Q==
 
-"@lensapp/aws-clusters@^0.2.0":
-  version "0.2.0"
-  resolved "http://localhost:53093/@lensapp%2faws-clusters/-/aws-clusters-0.2.0.tgz#fa22fc50dd0765386c0fb69a8693c799225bd51d"
-  integrity sha512-/Du7FYFFiLU6PqIK5JVAIhwwqBaWeXcroeyo0XVd8OqfQTD8gOstGtZ8jchFgnaHXlM5dzriKfuOUGigUY1rYQ==
+"@lensapp/aws-clusters@^0.2.1":
+  version "0.2.1"
+  resolved "http://localhost:53093/@lensapp%2faws-clusters/-/aws-clusters-0.2.1.tgz#b11c7933351cb51d740b999eeaafa49cb4424f61"
+  integrity sha512-9pDnEU2aA5jAqtSloyRuHbJMHC6g6Lp7dPlYrZzVaYs8AsMbowSCaUvzIM7A5jQLVRKPzNLWD+Um4SLt7r0L6A==
 
 "@lensapp/cluster@^0.2.0":
   version "0.2.0"
