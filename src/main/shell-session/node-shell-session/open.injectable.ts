@@ -12,7 +12,7 @@ import isMacInjectable from "../../../common/vars/is-mac.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import createKubeJsonApiForClusterInjectable from "../../../common/k8s-api/create-kube-json-api-for-cluster.injectable";
-import computeShellEnvironmentInjectable from "../../utils/shell-env/compute-shell-environment.injectable";
+import computeShellEnvironmentInjectable from "../../../features/shell-sync/main/compute-shell-environment.injectable";
 import spawnPtyInjectable from "../spawn-pty.injectable";
 import userShellSettingInjectable from "../../../common/user-store/shell-setting.injectable";
 import appNameInjectable from "../../../common/vars/app-name.injectable";

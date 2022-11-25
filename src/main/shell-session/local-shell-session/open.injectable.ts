@@ -17,7 +17,7 @@ import type WebSocket from "ws";
 import getDirnameOfPathInjectable from "../../../common/path/get-dirname.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
-import computeShellEnvironmentInjectable from "../../utils/shell-env/compute-shell-environment.injectable";
+import computeShellEnvironmentInjectable from "../../../features/shell-sync/main/compute-shell-environment.injectable";
 import spawnPtyInjectable from "../spawn-pty.injectable";
 import userShellSettingInjectable from "../../../common/user-store/shell-setting.injectable";
 import appNameInjectable from "../../../common/vars/app-name.injectable";

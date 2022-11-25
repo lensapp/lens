@@ -5,8 +5,8 @@
 import type { EnvironmentVariables } from "./compute-shell-environment.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
-import spawnInjectable from "../../child-process/spawn.injectable";
-import randomUUIDInjectable from "../../crypto/random-uuid.injectable";
+import spawnInjectable from "../../../main/child-process/spawn.injectable";
+import randomUUIDInjectable from "../../../main/crypto/random-uuid.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import processExecPathInjectable from "./execPath.injectable";
 import processEnvInjectable from "./env.injectable";
@@ -149,11 +149,18 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
           try {
             const rawOutput = Buffer.concat(stdout).toString("utf-8");
 
-            logger.info(`[UNIX-SHELL-ENV]: got the following output`, { rawOutput });
+            logger.debug(`[UNIX-SHELL-ENV]: got the following output`, { rawOutput });
 
-            const match = regex.exec(rawOutput);
-            const strippedRawOutput = match ? match[1] : "{}";
-            const resolvedEnv = JSON.parse(strippedRawOutput) as Partial<Record<string, string>>;
+            const matchedOutput = regex.exec(rawOutput)?.[1];
+
+            if (!matchedOutput) {
+              return resolve({
+                callWasSuccessful: false,
+                error: "Something has blocked the shell from producing the environement variables",
+              });
+            }
+
+            const resolvedEnv = JSON.parse(matchedOutput) as Partial<Record<string, string>>;
 
             resetEnvPairs(resolvedEnv);
             resolve({

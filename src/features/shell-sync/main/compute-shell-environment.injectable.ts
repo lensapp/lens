@@ -26,10 +26,8 @@ const computeShellEnvironmentInjectable = getInjectable({
 
     return async (shell) => {
       const controller = new AbortController();
-      const shellEnv = computeUnixShellEnvironment(shell, { signal: controller.signal });
       const timeoutHandle = setTimeout(() => controller.abort(), 30_000);
-
-      const result = await shellEnv;
+      const result = await computeUnixShellEnvironment(shell, { signal: controller.signal });
 
       clearTimeout(timeoutHandle);
 
