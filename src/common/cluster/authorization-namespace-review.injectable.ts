@@ -16,14 +16,14 @@ import type { KubeApiResource } from "../rbac";
  * @param availableResources List of available resources in the cluster to resolve glob values fir api groups
  * @returns list of allowed resources names
  */
-export type RequestNamespaceResources = (namespace: string, availableResources: KubeApiResource[]) => Promise<string[]>; 
+export type RequestNamespaceResources = (namespace: string, availableResources: KubeApiResource[]) => Promise<string[]>;
 
 /**
  * @param proxyConfig This config's `currentContext` field must be set, and will be used as the target cluster
  */
-export type AuthorizationNamespaceReview = (proxyConfig: KubeConfig) => RequestNamespaceResources; 
+export type AuthorizationNamespaceReview = (proxyConfig: KubeConfig) => RequestNamespaceResources;
 
-interface Dependencies { 
+interface Dependencies {
   logger: Logger;
 }
 
@@ -42,7 +42,13 @@ const authorizationNamespaceReview = ({ logger }: Dependencies): AuthorizationNa
 
         const resources = new Set<string>();
 
-        body.status?.resourceRules.forEach(resourceRule => {
+        if (!body.status || body.status.incomplete) {
+          logger.warn(`[AUTHORIZATION-NAMESPACE-REVIEW]: allowing all resources in namespace="${namespace}" due to incomplete SelfSubjectRulesReview: ${body.status?.evaluationError}`);
+
+          return availableResources.map(r => r.apiName);
+        }
+
+        body.status.resourceRules.forEach(resourceRule => {
           if (!resourceRule.verbs.some(verb => ["*", "list"].includes(verb)) || !resourceRule.resources) {
             return;
           }
@@ -62,7 +68,6 @@ const authorizationNamespaceReview = ({ logger }: Dependencies): AuthorizationNa
           } else {
             resourceRule.resources.forEach(resource => resources.add(resource));
           }
-          
         });
 
         return [...resources];
