@@ -6,7 +6,6 @@
 import type { KubeConfig } from "@kubernetes/client-node";
 import { AuthorizationV1Api } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Logger } from "../logger";
 import loggerInjectable from "../logger.injectable";
 import type { KubeApiResource } from "../rbac";
 
@@ -23,69 +22,67 @@ export type RequestNamespaceResources = (namespace: string, availableResources: 
  */
 export type AuthorizationNamespaceReview = (proxyConfig: KubeConfig) => RequestNamespaceResources;
 
-interface Dependencies {
-  logger: Logger;
-}
-
-const authorizationNamespaceReview = ({ logger }: Dependencies): AuthorizationNamespaceReview => {
-  return (proxyConfig) => {
-
-    const api = proxyConfig.makeApiClient(AuthorizationV1Api);
-
-    return async (namespace, availableResources) => {
-      try {
-        const { body } = await api.createSelfSubjectRulesReview({
-          apiVersion: "authorization.k8s.io/v1",
-          kind: "SelfSubjectRulesReview",
-          spec: { namespace },
-        });
-
-        const resources = new Set<string>();
-
-        if (!body.status || body.status.incomplete) {
-          logger.warn(`[AUTHORIZATION-NAMESPACE-REVIEW]: allowing all resources in namespace="${namespace}" due to incomplete SelfSubjectRulesReview: ${body.status?.evaluationError}`);
-
-          return availableResources.map(r => r.apiName);
-        }
-
-        body.status.resourceRules.forEach(resourceRule => {
-          if (!resourceRule.verbs.some(verb => ["*", "list"].includes(verb)) || !resourceRule.resources) {
-            return;
-          }
-
-          const apiGroups = resourceRule.apiGroups;
-
-          if (resourceRule.resources.length === 1 && resourceRule.resources[0] === "*" && apiGroups) {
-            if (apiGroups[0] === "*") {
-              availableResources.forEach(resource => resources.add(resource.apiName));
-            } else {
-              availableResources.forEach((apiResource)=> {
-                if (apiGroups.includes(apiResource.group || "")) {
-                  resources.add(apiResource.apiName);
-                }
-              });
-            }
-          } else {
-            resourceRule.resources.forEach(resource => resources.add(resource));
-          }
-        });
-
-        return [...resources];
-      } catch (error) {
-        logger.error(`[AUTHORIZATION-NAMESPACE-REVIEW]: failed to create subject rules review: ${error}`, { namespace });
-
-        return [];
-      }
-    };
-  };
-};
-
 const authorizationNamespaceReviewInjectable = getInjectable({
   id: "authorization-namespace-review",
-  instantiate: (di) => {
+  instantiate: (di): AuthorizationNamespaceReview => {
     const logger = di.inject(loggerInjectable);
 
-    return authorizationNamespaceReview({ logger });
+    return (proxyConfig) => {
+      const api = proxyConfig.makeApiClient(AuthorizationV1Api);
+
+      return async (namespace, availableResources) => {
+        try {
+          const { body: { status }} = await api.createSelfSubjectRulesReview({
+            apiVersion: "authorization.k8s.io/v1",
+            kind: "SelfSubjectRulesReview",
+            spec: { namespace },
+          });
+
+          const allowedResources = new Set<string>();
+
+          if (!status || status.incomplete) {
+            logger.warn(`[AUTHORIZATION-NAMESPACE-REVIEW]: allowing all resources in namespace="${namespace}" due to incomplete SelfSubjectRulesReview: ${status?.evaluationError}`);
+
+            return availableResources.map(r => r.apiName);
+          }
+
+          for (const { verbs, resources, apiGroups } of status.resourceRules) {
+            if (
+              !resources
+            || (!verbs.includes("*") && !verbs.includes("list"))
+            ) {
+              continue;
+            }
+
+            if (resources[0] !== "*" || !apiGroups) {
+              for (const resource of resources) {
+                allowedResources.add(resource);
+              }
+              continue;
+            }
+
+            if (apiGroups[0] === "*") {
+              for (const resource of availableResources) {
+                allowedResources.add(resource.apiName);
+              }
+              continue;
+            }
+
+            for (const resource of availableResources) {
+              if (apiGroups.includes(resource.group || "")) {
+                allowedResources.add(resource.apiName);
+              }
+            }
+          }
+
+          return [...allowedResources];
+        } catch (error) {
+          logger.error(`[AUTHORIZATION-NAMESPACE-REVIEW]: failed to create subject rules review: ${error}`, { namespace });
+
+          return [];
+        }
+      };
+    };
   },
 });
 
