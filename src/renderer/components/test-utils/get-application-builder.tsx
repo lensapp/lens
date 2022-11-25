@@ -52,7 +52,6 @@ import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluste
 import activeKubernetesClusterInjectable from "../../cluster-frame-context/active-kubernetes-cluster.injectable";
 import { catalogEntityFromCluster } from "../../../main/cluster/manager";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
-import { isAllowedResource } from "../../../common/cluster/is-allowed-resource";
 import createApplicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-application-window.injectable";
 import type { CreateElectronWindow } from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import createElectronWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
@@ -214,7 +213,7 @@ export const getApplicationBuilder = () => {
     },
   }));
 
-  const allowedResourcesState = observable.array<KubeResource>();
+  const allowedResourcesState = observable.array<string>();
 
   const windowHelpers = new Map<string, { di: DiContainer; getRendered: () => RenderResult }>();
 
@@ -509,8 +508,8 @@ export const getApplicationBuilder = () => {
         const clusterStub = {
           id: "some-cluster-id",
           accessibleNamespaces: [],
-          isAllowedResource: isAllowedResource(allowedResourcesState),
-        } as unknown as Cluster;
+          isAllowedResource: (kind) => allowedResourcesState.includes(kind),
+        } as Partial<Cluster> as Cluster;
 
         windowDi.override(activeKubernetesClusterInjectable, () =>
           computed(() => catalogEntityFromCluster(clusterStub)),
