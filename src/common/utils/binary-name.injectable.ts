@@ -6,7 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import normalizedPlatformInjectable from "../vars/normalized-platform.injectable";
 
 const binaryNameInjectable = getInjectable({
-  id: "get-binary-name",
+  id: "binary-name",
   instantiate: (di, binaryName) => {
     const normalizedPlatform = di.inject(normalizedPlatformInjectable);
 

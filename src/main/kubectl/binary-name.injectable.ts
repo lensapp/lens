@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import binaryNameInjectable from "../../common/utils/get-binary-name.injectable";
+import binaryNameInjectable from "../../common/utils/binary-name.injectable";
 
 const kubectlBinaryNameInjectable = getInjectable({
   id: "kubectl-binary-name",
