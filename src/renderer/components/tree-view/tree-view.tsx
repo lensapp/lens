@@ -12,7 +12,7 @@ import TreeItem from "@material-ui/lab/TreeItem";
 import { cssNames } from "../../utils";
 
 import _ from "lodash";
-import getDeepDash from "deepdash";
+const getDeepDash = require("deepdash");
 
 const deepDash = getDeepDash(_);
 
@@ -33,6 +33,7 @@ function scrollToItem(id: string) {
 }
 
 function getSelectedNode(data: NavigationTree[]) {
+  // @ts-ignore
   return deepDash.findDeep(data, (value, key) => key === "selected" && value === true)?.parent;
 }
 

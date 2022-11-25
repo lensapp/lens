@@ -88,6 +88,7 @@ const toNavigationHierarchy = (composite: Composite<PreferenceItemTypes | Prefer
     }
 
     default: {
+      // @ts-ignore
       throw checkThatAllDiscriminablesAreExhausted(value);
     }
   }

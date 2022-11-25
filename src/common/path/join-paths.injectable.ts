@@ -8,7 +8,7 @@ import path from "path";
 export type JoinPaths = (...args: string[]) => string;
 
 const joinPathsInjectable = getInjectable({
-  id: "join-paths",
+  id: "join-paths-1",
   instantiate: (): JoinPaths => path.join,
 
   // This causes side effect e.g. Windows uses different separator than e.g. linux

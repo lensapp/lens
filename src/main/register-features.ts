@@ -4,6 +4,7 @@
  */
 
 import { registerFeature } from "@lensapp/feature-core";
+import appPathsFeature from "@lensapp/app-paths";
 import fsFeature from "@lensapp/fs";
 import loggingFeature from "@lensapp/logging";
 import shellFeature from "@lensapp/shell";
@@ -13,6 +14,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { action } from "mobx";
 
 export default action((di: DiContainer) => {
+  registerFeature(di, appPathsFeature);
   registerFeature(di, clusterFeature);
   registerFeature(di, fsFeature);
   registerFeature(di, loggingFeature);

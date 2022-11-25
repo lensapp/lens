@@ -95,6 +95,7 @@ const toPreferenceItemHierarchy = (composite: Composite<PreferenceItemTypes>) =>
     }
 
     default: {
+      // @ts-ignore
       throw checkThatAllDiscriminablesAreExhausted(value);
     }
   }

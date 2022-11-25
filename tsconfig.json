@@ -9,7 +9,7 @@
       "DOM",
       "DOM.Iterable"
     ],
-    "moduleResolution": "Node",
+    "moduleResolution": "node16",
     "sourceMap": true,
     "strict": true,
     "noImplicitAny": true,

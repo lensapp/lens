@@ -46,6 +46,8 @@ import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
 import initializeSentryReportingWithInjectable from "../common/error-reporting/initialize-sentry-reporting.injectable";
 import registerFeatures from "./register-features";
+import { RootFrame } from "./frames/root-frame/root-frame";
+import { ClusterFrame } from "./frames/cluster-frame/cluster-frame";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -157,10 +159,10 @@ export async function bootstrap(di: DiContainer) {
   // TODO: Introduce proper architectural boundaries between root and cluster iframes
   if (process.isMainFrame) {
     initializeApp = di.inject(initRootFrameInjectable);
-    App = (await import("./frames/root-frame/root-frame")).RootFrame;
+    App = RootFrame;
   } else {
     initializeApp = di.inject(initClusterFrameInjectable);
-    App = (await import("./frames/cluster-frame/cluster-frame")).ClusterFrame;
+    App = ClusterFrame;
   }
 
   try {
