@@ -5,7 +5,7 @@
 
 import { action, makeObservable, observable, when } from "mobx";
 import logger from "../../../main/logger";
-import { clusterVisibilityHandler } from "../../../common/ipc/cluster";
+import { clusterRefreshHandler } from "../../../common/ipc/cluster";
 import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import type { ClusterId } from "../../../common/cluster-types";
 import type { Disposer } from "../../utils";
@@ -91,7 +91,7 @@ export class ClusterFrameHandler {
     this.prevVisibleClusterChange?.();
 
     logger.info(`[LENS-VIEW]: refreshing iframe views, visible cluster id=${clusterId}`);
-    ipcRenderer.send(clusterVisibilityHandler);
+    ipcRenderer.send(clusterRefreshHandler);
 
     for (const { frame: view } of this.views.values()) {
       view.classList.add("hidden");
@@ -116,7 +116,7 @@ export class ClusterFrameHandler {
           logger.info(`[LENS-VIEW]: cluster id=${clusterId} should now be visible`);
           view.frame.classList.remove("hidden");
           view.frame.focus();
-          ipcRenderer.send(clusterVisibilityHandler, clusterId);
+          ipcRenderer.send(clusterRefreshHandler, clusterId);
         },
       );
     }

@@ -393,13 +393,19 @@ const scenarios = [
   {
     expectedSelector: "h5.title",
     parentSidebarItemTestId: "sidebar-item-link-for-user-management",
+    sidebarItemTestId: "sidebar-item-link-for-roles",
+  },
+
+  {
+    expectedSelector: "h5.title",
+    parentSidebarItemTestId: "sidebar-item-link-for-user-management",
     sidebarItemTestId: "sidebar-item-link-for-cluster-roles",
   },
 
   {
     expectedSelector: "h5.title",
     parentSidebarItemTestId: "sidebar-item-link-for-user-management",
-    sidebarItemTestId: "sidebar-item-link-for-roles",
+    sidebarItemTestId: "sidebar-item-link-for-role-bindings",
   },
 
   {
@@ -411,7 +417,7 @@ const scenarios = [
   {
     expectedSelector: "h5.title",
     parentSidebarItemTestId: "sidebar-item-link-for-user-management",
-    sidebarItemTestId: "sidebar-item-link-for-role-bindings",
+    sidebarItemTestId: "sidebar-item-link-for-pod-security-policies",
   },
 
   {
