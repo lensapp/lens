@@ -12,7 +12,8 @@ export type KubeResource =
   "roles" | "clusterroles" | "rolebindings" | "clusterrolebindings" | "serviceaccounts";
 
 export interface KubeApiResource extends KubeApiResourceData {
-  apiName: KubeResource; // valid api resource name (e.g. "namespaces")
+  apiName: string;
+  namespaced: boolean;
 }
 
 export interface KubeApiResourceData {
@@ -55,7 +56,3 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   "statefulsets": { kind: "StatefulSet", group: "apps" },
   "storageclasses": { kind: "StorageClass", group: "storage.k8s.io" },
 };
-
-// TODO: auto-populate all resources dynamically (see: kubectl api-resources -o=wide -v=7)
-export const apiResources: KubeApiResource[] = Object.entries(apiResourceRecord)
-  .map(([apiName, data]) => ({ apiName: apiName as KubeResource, ...data }));
