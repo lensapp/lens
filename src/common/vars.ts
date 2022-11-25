@@ -4,9 +4,7 @@
  */
 
 // App's common configuration for any process (main, renderer, build pipeline, etc.)
-import path from "path";
 import type { ThemeId } from "../renderer/themes/store";
-import { lazyInitialized } from "./utils/lazy-initialized";
 
 /**
  * @deprecated Switch to using isMacInjectable
@@ -48,73 +46,6 @@ export const defaultThemeId: ThemeId = "lens-dark";
 export const defaultFontSize = 12;
 export const defaultTerminalFontFamily = "RobotoMono";
 export const defaultEditorFontFamily = "RobotoMono";
-/**
- * @deprecated use `di.inject(normalizedPlatformInjectable)` instead
- */
-export const normalizedPlatform = (() => {
-  switch (process.platform) {
-    case "darwin":
-      return "darwin";
-    case "linux":
-      return "linux";
-    case "win32":
-      return "windows";
-    default:
-      throw new Error(`platform=${process.platform} is unsupported`);
-  }
-})();
-/**
- * @deprecated use `di.inject(bundledBinariesNormalizedArchInjectable)` instead
- */
-export const normalizedArch = (() => {
-  switch (process.arch) {
-    case "arm64":
-      return "arm64";
-    case "x64":
-    case "amd64":
-      return "x64";
-    case "386":
-    case "x32":
-    case "ia32":
-      return "ia32";
-    default:
-      throw new Error(`arch=${process.arch} is unsupported`);
-  }
-})();
-
-export function getBinaryName(name: string, { forPlatform = normalizedPlatform } = {}): string {
-  if (forPlatform === "windows") {
-    return `${name}.exe`;
-  }
-
-  return name;
-}
-
-const resourcesDir = lazyInitialized(() => (
-  isProduction
-    ? process.resourcesPath
-    : path.join(process.cwd(), "binaries", "client", normalizedPlatform)
-));
-
-/**
- * @deprecated for being explicit side effect.
- */
-export const baseBinariesDir = lazyInitialized(() => path.join(resourcesDir.get(), normalizedArch));
-
-/**
- * @deprecated for being explicit side effect.
- */
-export const kubeAuthProxyBinaryName = getBinaryName("lens-k8s-proxy");
-
-/**
- * @deprecated for being explicit side effect.
- */
-export const helmBinaryName = getBinaryName("helm");
-
-/**
- * @deprecated for being explicit side effect.
- */
-export const helmBinaryPath = lazyInitialized(() => path.join(baseBinariesDir.get(), helmBinaryName));
 
 // Apis
 export const apiPrefix = "/api"; // local router apis

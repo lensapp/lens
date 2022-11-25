@@ -68,7 +68,7 @@ const addMetricsRouteInjectable = getRouteInjectable({
     try {
       const { prometheusPath, provider } = await cluster.contextHandler.getPrometheusDetails();
 
-      prometheusMetadata.provider = provider?.id;
+      prometheusMetadata.provider = provider?.kind;
       prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type;
 
       if (!prometheusPath) {

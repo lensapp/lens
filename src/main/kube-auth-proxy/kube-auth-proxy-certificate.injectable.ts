@@ -3,15 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type * as selfsigned from "selfsigned";
-import { getOrInsertWith } from "../../common/utils";
+import { generate } from "selfsigned";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 
-type SelfSignedGenerate = typeof selfsigned.generate;
-
-const certCache = new Map<string, selfsigned.SelfSignedCert>();
-
-export function getKubeAuthProxyCertificate(hostname: string, generate: SelfSignedGenerate): selfsigned.SelfSignedCert {
-  return getOrInsertWith(certCache, hostname, () => generate(
+const kubeAuthProxyCertificateInjectable = getInjectable({
+  id: "kube-auth-proxy-certificate",
+  instantiate: (di, hostname) => generate(
     [
       { name: "commonName", value: "Lens Certificate Authority" },
       { name: "organizationName", value: "Lens" },
@@ -31,5 +28,11 @@ export function getKubeAuthProxyCertificate(hostname: string, generate: SelfSign
         },
       ],
     },
-  ));
-}
+  ),
+  lifecycle: lifecycleEnum.keyedSingleton({
+    getInstanceKey: (di, hostname: string) => hostname,
+  }),
+});
+
+export default kubeAuthProxyCertificateInjectable;
+

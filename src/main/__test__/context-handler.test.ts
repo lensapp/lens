@@ -3,68 +3,43 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { UserStore } from "../../common/user-store";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
-import type { PrometheusService, PrometheusProviderRegistry } from "../prometheus";
-import { PrometheusProvider } from "../prometheus";
-import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
-import prometheusProviderRegistryInjectable from "../prometheus/prometheus-provider-registry.injectable";
-
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
+import type { DiContainer } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
+import type { PrometheusProvider } from "../prometheus/provider";
+import { prometheusProviderInjectionToken } from "../prometheus/provider";
+import { runInAction } from "mobx";
 
 enum ServiceResult {
   Success,
   Failure,
-  Undefined,
 }
 
-class TestProvider extends PrometheusProvider {
-  name = "TestProvider1";
-  rateAccuracy = "1h";
-  isConfigurable = false;
-
-  constructor(public id: string, public alwaysFail: ServiceResult) {
-    super();
-  }
-
-  getQuery(): string {
+const createTestPrometheusProvider = (kind: string, alwaysFail: ServiceResult): PrometheusProvider => ({
+  kind,
+  name: "TestProvider1",
+  isConfigurable: false,
+  getQuery: () => {
     throw new Error("getQuery is not implemented.");
-  }
-
-  async getPrometheusService(): Promise<PrometheusService | undefined> {
-    switch (this.alwaysFail) {
+  },
+  getPrometheusService: async () => {
+    switch (alwaysFail) {
       case ServiceResult.Success:
         return {
-          id: this.id,
+          kind,
           namespace: "default",
           port: 7000,
           service: "",
         };
       case ServiceResult.Failure:
         throw new Error("does fail");
-      case ServiceResult.Undefined:
-        return undefined;
     }
-  }
-}
+  },
+});
 
 const clusterStub = {
   getProxyKubeconfig: () => ({
@@ -74,53 +49,34 @@ const clusterStub = {
 } as unknown as Cluster;
 
 describe("ContextHandler", () => {
-  let createContextHandler: (cluster: Cluster) => ClusterContextHandler | undefined;
-  let prometheusProviderRegistry: PrometheusProviderRegistry;
+  let createContextHandler: (cluster: Cluster) => ClusterContextHandler;
+  let di: DiContainer;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    mockFs({
-      "tmp": {},
-    });
-
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
     di.override(createKubeAuthProxyInjectable, () => ({} as any));
-
-    prometheusProviderRegistry = di.inject(prometheusProviderRegistryInjectable);
 
     createContextHandler = di.inject(createContextHandlerInjectable);
   });
 
-  afterEach(() => {
-    UserStore.resetInstance();
-    mockFs.restore();
-  });
-
   describe("getPrometheusService", () => {
     it.each([
-      [0, 0],
-      [0, 1],
-      [0, 2],
-      [0, 3],
-    ])("should throw from %d success(es) after %d failure(s)", async (successes, failures) => {
-      let count = 0;
+      [0],
+      [1],
+      [2],
+      [3],
+    ])("should throw after %d failure(s)", async (failures) => {
+      runInAction(() => {
+        for (let i = 0; i < failures; i += 1) {
+          di.register(getInjectable({
+            id: `test-prometheus-provider-failure-${i}`,
+            injectionToken: prometheusProviderInjectionToken,
+            instantiate: () => createTestPrometheusProvider(`id_failure_${i}`, ServiceResult.Failure),
+          }));
+        }
+      });
 
-      for (let i = 0; i < failures; i += 1) {
-        const serviceResult = i % 2 === 0 ? ServiceResult.Failure : ServiceResult.Undefined;
-
-        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
-      }
-
-      for (let i = 0; i < successes; i += 1) {
-        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
-      }
-
-      expect(() => {
-        // TODO: Unit test shouldn't access protected or private methods
-        const contextHandler = createContextHandler(clusterStub) as unknown as { getPrometheusService(): Promise<PrometheusService> };
-
-        return contextHandler.getPrometheusService();
-      }).rejects.toBeDefined();
+      expect(() => createContextHandler(clusterStub).getPrometheusDetails()).rejects.toThrowError();
     });
 
     it.each([
@@ -133,24 +89,27 @@ describe("ContextHandler", () => {
       [2, 2],
       [2, 3],
     ])("should pick the first provider of %d success(es) after %d failure(s)", async (successes, failures) => {
-      let count = 0;
+      runInAction(() => {
+        for (let i = 0; i < failures; i += 1) {
+          di.register(getInjectable({
+            id: `test-prometheus-provider-failure-${i}`,
+            injectionToken: prometheusProviderInjectionToken,
+            instantiate: () => createTestPrometheusProvider(`id_failure_${i}`, ServiceResult.Failure),
+          }));
+        }
 
-      for (let i = 0; i < failures; i += 1) {
-        const serviceResult = i % 2 === 0 ? ServiceResult.Failure : ServiceResult.Undefined;
+        for (let i = 0; i < successes; i += 1) {
+          di.register(getInjectable({
+            id: `test-prometheus-provider-success-${i}`,
+            injectionToken: prometheusProviderInjectionToken,
+            instantiate: () => createTestPrometheusProvider(`id_success_${i}`, ServiceResult.Success),
+          }));
+        }
+      });
 
-        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
-      }
+      const details = await createContextHandler(clusterStub).getPrometheusDetails();
 
-      for (let i = 0; i < successes; i += 1) {
-        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
-      }
-
-      // TODO: Unit test shouldn't access protected or private methods
-      const contextHandler = createContextHandler(clusterStub) as unknown as { getPrometheusService(): Promise<PrometheusService> };
-
-      const service = await contextHandler.getPrometheusService();
-
-      expect(service.id === `id_${failures}`);
+      expect(details.provider.kind === `id_failure_${failures}`);
     });
 
     it.each([
@@ -163,24 +122,27 @@ describe("ContextHandler", () => {
       [2, 2],
       [2, 3],
     ])("should pick the first provider of %d success(es) before %d failure(s)", async (successes, failures) => {
-      let count = 0;
+      runInAction(() => {
+        for (let i = 0; i < failures; i += 1) {
+          di.register(getInjectable({
+            id: `test-prometheus-provider-failure-${i}`,
+            injectionToken: prometheusProviderInjectionToken,
+            instantiate: () => createTestPrometheusProvider(`id_failure_${i}`, ServiceResult.Failure),
+          }));
+        }
 
-      for (let i = 0; i < successes; i += 1) {
-        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
-      }
+        for (let i = 0; i < successes; i += 1) {
+          di.register(getInjectable({
+            id: `test-prometheus-provider-success-${i}`,
+            injectionToken: prometheusProviderInjectionToken,
+            instantiate: () => createTestPrometheusProvider(`id_success_${i}`, ServiceResult.Success),
+          }));
+        }
+      });
 
-      for (let i = 0; i < failures; i += 1) {
-        const serviceResult = i % 2 === 0 ? ServiceResult.Failure : ServiceResult.Undefined;
+      const details = await createContextHandler(clusterStub).getPrometheusDetails();
 
-        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
-      }
-
-      // TODO: Unit test shouldn't access protected or private methods
-      const contextHandler = createContextHandler(clusterStub) as unknown as { getPrometheusService(): Promise<PrometheusService> };
-
-      const service = await contextHandler.getPrometheusService();
-
-      expect(service.id === "id_0");
+      expect(details.provider.kind === "id_failure_0");
     });
 
     it.each([
@@ -193,45 +155,37 @@ describe("ContextHandler", () => {
       [2, 2],
       [2, 3],
     ])("should pick the first provider of %d success(es) between %d failure(s)", async (successes, failures) => {
-      let count = 0;
       const beforeSuccesses = Math.floor(successes / 2);
-      const afterSuccesses = successes - beforeSuccesses;
 
-      for (let i = 0; i < beforeSuccesses; i += 1) {
-        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
-      }
+      runInAction(() => {
+        for (let i = 0; i < beforeSuccesses; i += 1) {
+          di.register(getInjectable({
+            id: `test-prometheus-provider-success-${i}`,
+            injectionToken: prometheusProviderInjectionToken,
+            instantiate: () => createTestPrometheusProvider(`id_success_${i}`, ServiceResult.Success),
+          }));
+        }
 
-      for (let i = 0; i < failures; i += 1) {
-        const serviceResult = i % 2 === 0 ? ServiceResult.Failure : ServiceResult.Undefined;
+        for (let i = 0; i < failures; i += 1) {
+          di.register(getInjectable({
+            id: `test-prometheus-provider-failure-${i}`,
+            injectionToken: prometheusProviderInjectionToken,
+            instantiate: () => createTestPrometheusProvider(`id_failure_${i}`, ServiceResult.Failure),
+          }));
+        }
 
-        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, serviceResult));
-      }
+        for (let i = beforeSuccesses; i < successes; i += 1) {
+          di.register(getInjectable({
+            id: `test-prometheus-provider-success-${i}`,
+            injectionToken: prometheusProviderInjectionToken,
+            instantiate: () => createTestPrometheusProvider(`id_success_${i}`, ServiceResult.Success),
+          }));
+        }
+      });
 
-      for (let i = 0; i < afterSuccesses; i += 1) {
-        prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
-      }
+      const details = await createContextHandler(clusterStub).getPrometheusDetails();
 
-      // TODO: Unit test shouldn't access protected or private methods
-      const contextHandler = createContextHandler(clusterStub) as unknown as { getPrometheusService(): Promise<PrometheusService> };
-
-      const service = await contextHandler.getPrometheusService();
-
-      expect(service.id === "id_0");
-    });
-
-    it("shouldn't pick the second provider of 2 success(es) after 1 failure(s)", async () => {
-      let count = 0;
-
-      prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Failure));
-      prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
-      prometheusProviderRegistry.registerProvider(new TestProvider(`id_${count++}`, ServiceResult.Success));
-
-      // TODO: Unit test shouldn't access protected or private methods
-      const contextHandler = createContextHandler(clusterStub) as unknown as { getPrometheusService(): Promise<PrometheusService> };
-
-      const service = await contextHandler.getPrometheusService();
-
-      expect(service.id).not.toBe("id_2");
+      expect(details.provider.kind === "id_success_0");
     });
   });
 });

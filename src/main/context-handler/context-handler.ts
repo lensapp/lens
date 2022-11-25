@@ -3,16 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { PrometheusProvider, PrometheusService, PrometheusProviderRegistry } from "../prometheus/provider-registry";
+import type { PrometheusProvider, PrometheusService } from "../prometheus/provider";
 import type { ClusterPrometheusPreferences } from "../../common/cluster-types";
 import type { Cluster } from "../../common/cluster/cluster";
 import type httpProxy from "http-proxy";
 import type { UrlWithStringQuery } from "url";
 import url from "url";
 import { CoreV1Api } from "@kubernetes/client-node";
-import logger from "../logger";
 import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
 import type { CreateKubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
+import type { GetPrometheusProviderByKind } from "../prometheus/get-by-kind.injectable";
+import type { IComputedValue } from "mobx";
+import type { Logger } from "../../common/logger";
 
 export interface PrometheusDetails {
   prometheusPath: string;
@@ -26,10 +28,12 @@ interface PrometheusServicePreferences {
   prefix: string;
 }
 
-interface Dependencies {
-  readonly createKubeAuthProxy: CreateKubeAuthProxy;
+export interface ContextHandlerDependencies {
+  createKubeAuthProxy: CreateKubeAuthProxy;
+  getPrometheusProviderByKind: GetPrometheusProviderByKind;
   readonly authProxyCa: string;
-  readonly prometheusProviderRegistry: PrometheusProviderRegistry;
+  readonly prometheusProviders: IComputedValue<PrometheusProvider[]>;
+  readonly logger: Logger;
 }
 
 export interface ClusterContextHandler {
@@ -51,7 +55,7 @@ export class ContextHandler implements ClusterContextHandler {
   protected prometheusProvider?: string;
   protected prometheus?: PrometheusServicePreferences;
 
-  constructor(private dependencies: Dependencies, protected cluster: Cluster) {
+  constructor(private readonly dependencies: ContextHandlerDependencies, protected readonly cluster: Cluster) {
     this.clusterUrl = url.parse(cluster.apiUrl);
     this.setupPrometheus(cluster.preferences);
   }
@@ -75,22 +79,21 @@ export class ContextHandler implements ClusterContextHandler {
 
   protected ensurePrometheusProvider(service: PrometheusService): PrometheusProvider {
     if (!this.prometheusProvider) {
-      logger.info(`[CONTEXT-HANDLER]: using ${service.id} as prometheus provider for clusterId=${this.cluster.id}`);
-      this.prometheusProvider = service.id;
+      this.dependencies.logger.info(`[CONTEXT-HANDLER]: using ${service.kind} as prometheus provider for clusterId=${this.cluster.id}`);
+      this.prometheusProvider = service.kind;
     }
 
-    return this.dependencies.prometheusProviderRegistry.getByKind(this.prometheusProvider);
+    return this.dependencies.getPrometheusProviderByKind(this.prometheusProvider);
   }
 
   protected listPotentialProviders(): PrometheusProvider[] {
-    const registry = this.dependencies.prometheusProviderRegistry;
-    const provider = this.prometheusProvider && registry.getByKind(this.prometheusProvider);
+    const provider = this.prometheusProvider && this.dependencies.getPrometheusProviderByKind(this.prometheusProvider);
 
     if (provider) {
       return [provider];
     }
 
-    return Array.from(registry.providers.values());
+    return this.dependencies.prometheusProviders.get();
   }
 
   protected async getPrometheusService(): Promise<PrometheusService> {
@@ -98,7 +101,7 @@ export class ContextHandler implements ClusterContextHandler {
 
     if (this.prometheus && this.prometheusProvider) {
       return {
-        id: this.prometheusProvider,
+        kind: this.prometheusProvider,
         namespace: this.prometheus.namespace,
         service: this.prometheus.service,
         port: this.prometheus.port,
