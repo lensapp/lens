@@ -5,7 +5,7 @@
 import type { IpcMainInvokeEvent } from "electron";
 import { BrowserWindow, Menu } from "electron";
 import { clusterFrameMap } from "../../../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterVisibilityHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../../../../common/ipc/cluster";
+import { clusterActivateHandler, clusterSetFrameIdHandler, clusterRefreshHandler, clusterDisconnectHandler, clusterKubectlApplyAllHandler, clusterKubectlDeleteAllHandler } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
 import { ClusterStore } from "../../../../common/cluster-store/cluster-store";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
@@ -39,7 +39,6 @@ interface Dependencies {
 
 export const setupIpcMainHandlers = ({
   applicationMenuItemComposite,
-  clusterManager,
   catalogEntityRegistry,
   clusterStore,
   operatingSystemTheme,
@@ -64,8 +63,10 @@ export const setupIpcMainHandlers = ({
     }
   });
 
-  ipcMainOn(clusterVisibilityHandler, (event, clusterId?: ClusterId) => {
-    clusterManager.visibleCluster = clusterId;
+  ipcMainHandle(clusterRefreshHandler, (event, clusterId: ClusterId) => {
+    return ClusterStore.getInstance()
+      .getById(clusterId)
+      ?.refresh({ refreshMetadata: true });
   });
 
   ipcMainHandle(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
