@@ -1101,50 +1101,50 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@lensapp/app-paths@^0.2.0":
-  version "0.2.0"
-  resolved "http://localhost:53093/@lensapp%2fapp-paths/-/app-paths-0.2.0.tgz#26a7c2665f00e177b688cd2fc63ff69af37a80ef"
-  integrity sha512-yn67RTEbci11vsPhx4+VxLiNv7U4ebaSTZLdOcBLTro6YbI1Shyk3+C1c1TZ13uZ9uoCKoND6e/iCBeYaUAR8Q==
+"@lensapp/app-paths@^0.2.2":
+  version "0.2.2"
+  resolved "https://npm.pkg.github.com/download/@lensapp/app-paths/0.2.2/93f003c8c99140df101620623c78ac5dfa9c43e0#93f003c8c99140df101620623c78ac5dfa9c43e0"
+  integrity sha512-5sO4zg60I+SZDAJ2N2SXWOiFMxf1Tyw8YHjWF0F2c+bVFe4/PbvPHkgaFrJ9UACr4biiKggz/3NUdECQRn6auA==
 
-"@lensapp/aws-clusters@^0.2.1":
-  version "0.2.1"
-  resolved "http://localhost:53093/@lensapp%2faws-clusters/-/aws-clusters-0.2.1.tgz#b11c7933351cb51d740b999eeaafa49cb4424f61"
-  integrity sha512-9pDnEU2aA5jAqtSloyRuHbJMHC6g6Lp7dPlYrZzVaYs8AsMbowSCaUvzIM7A5jQLVRKPzNLWD+Um4SLt7r0L6A==
+"@lensapp/aws-clusters@^0.2.2":
+  version "0.2.2"
+  resolved "https://npm.pkg.github.com/download/@lensapp/aws-clusters/0.2.2/ee85e6af0ccf4d75368a75096601e0124648e798#ee85e6af0ccf4d75368a75096601e0124648e798"
+  integrity sha512-FfG4HTo3kppLXBsFJeCewH2kZBe4ghFtUKGJ3dzJQZcAlTYDeUL+jF/1XJg1mHtQbp+n2aJF9bVk3np+qBlyKA==
 
-"@lensapp/cluster@^0.2.0":
-  version "0.2.0"
-  resolved "http://localhost:53093/@lensapp%2fcluster/-/cluster-0.2.0.tgz#afb884d5fced3620136832a0cdc9cd927a247aa6"
-  integrity sha512-XcSOOp2QBfxTdO4BOuctAdl1vClWf/JYUPlJraBEJ4nYrwTy+FX1uHqHL9hDAfd48jZ4qMq9qlhOw+LLQAjr4w==
+"@lensapp/cluster@^0.2.2":
+  version "0.2.2"
+  resolved "https://npm.pkg.github.com/download/@lensapp/cluster/0.2.2/bbde831c7f21bdf2c2100bc75ce2b5ca726d39e3#bbde831c7f21bdf2c2100bc75ce2b5ca726d39e3"
+  integrity sha512-JqjHnHABWQ/I3mN/Km7C/C0SGWJcFY3WoTBUkO05xFP0LBBf9Sr921gxHNCvu0nztn3c5jV4ZyTzKiNyAh6RPQ==
 
-"@lensapp/feature-core@^0.1.8":
+"@lensapp/feature-core@^0.1.10":
+  version "0.1.10"
+  resolved "https://npm.pkg.github.com/download/@lensapp/feature-core/0.1.10/c7075a70345d508f53b51438a066a1f0ce35d4ef#c7075a70345d508f53b51438a066a1f0ce35d4ef"
+  integrity sha512-L1cRk8O9Lby8ZlihcTeCk5UbEtzDk3HJsbOY/KEuXfRHgoxM0Sq6hPRaExX0Fa0MFH8Nv0405FPOFsdvIiRQ2w==
+
+"@lensapp/fs@^0.2.3":
+  version "0.2.3"
+  resolved "https://npm.pkg.github.com/download/@lensapp/fs/0.2.3/326717f363d0d40b3c9c2a06831b63417ccce270#326717f363d0d40b3c9c2a06831b63417ccce270"
+  integrity sha512-/PLs0deYEJ/u1jJ271FObvbQiumZ1JRtJaEK2j0wXINkPnuK9qb0CLdrmOHFSDf7JXcE66voLgg5Gv/kSVxEYg==
+
+"@lensapp/logging@^0.1.8":
   version "0.1.8"
-  resolved "http://localhost:53093/@lensapp%2ffeature-core/-/feature-core-0.1.8.tgz#3e55840444de39616f11484471e96eca37660a0b"
-  integrity sha512-g0uw0TFttCut/M31+AFp7lFIJKywzyyed8GkPF1hYTwRmz4TNP3pQLGMyXsT8OiwSgGVpUmwjMgcz9G9XdUW1g==
+  resolved "https://npm.pkg.github.com/download/@lensapp/logging/0.1.8/e47bea1dc7e44a7a5fdcf80bd34f65e6620d88f7#e47bea1dc7e44a7a5fdcf80bd34f65e6620d88f7"
+  integrity sha512-8JIqNZqZZA0QoBKMw+e3bbh/kJ25TIzgIKH57S/w9LXddfl3n9wHissGjAMs2L1UbM9IbhhwrqIr/9Yo0VVTzA==
 
-"@lensapp/fs@^0.2.1":
-  version "0.2.1"
-  resolved "http://localhost:53093/@lensapp%2ffs/-/fs-0.2.1.tgz#538e7abc09fa4aa4e834f2ae0edc34c21678b085"
-  integrity sha512-kf7GM7YlWKnXcpSnOSj75KcgFedzmF+H+lYB+PP7UiuB+i+RD7kGyBvoGDQaqnyF8n7SFevGDS1K3myOzLd7lQ==
+"@lensapp/preferences@^0.1.9":
+  version "0.1.9"
+  resolved "https://npm.pkg.github.com/download/@lensapp/preferences/0.1.9/aead3c33ac6acb85ca113c15e86e144d7ce9183e#aead3c33ac6acb85ca113c15e86e144d7ce9183e"
+  integrity sha512-pvDSznyT9BxURZHzirDelOo0I0jdtpNpzBqFwr2FkG/m7ip+vj/V98+5utJcjP3ymR84GeCCpOYcSLtDRWWdJQ==
 
-"@lensapp/logging@^0.1.6":
-  version "0.1.6"
-  resolved "http://localhost:53093/@lensapp%2flogging/-/logging-0.1.6.tgz#4f753f688f995aa392e04dc63213ac4e427611d1"
-  integrity sha512-ycY2tKWvB58mExr79I+oPL26WAfAnP0BMCCrfK7XUI+iJH4S8nGZeLWNK4gFIH2MrbArr08aDu+MD9LTvLst1g==
+"@lensapp/shell@^0.1.9":
+  version "0.1.9"
+  resolved "https://npm.pkg.github.com/download/@lensapp/shell/0.1.9/0b82e6b7a5c0aa2b317d05ea6d190438ac3af49d#0b82e6b7a5c0aa2b317d05ea6d190438ac3af49d"
+  integrity sha512-h7s77xr+gG7YsBjhjM8JdjNkFSbxBfxoE46lKPBFNv+oaVThpKwafyb9VNz0kzTfKl+Lj7OLnb+rQ42HWVAfvQ==
 
-"@lensapp/preferences@^0.1.7":
-  version "0.1.7"
-  resolved "http://localhost:53093/@lensapp%2fpreferences/-/preferences-0.1.7.tgz#318fcc9036d414762c77d267ab208107afacad37"
-  integrity sha512-KDvTm9bu97y5cmTP6GIG6XR7wKB80IWdmzKNEZI3g2H3C2T7KM6utKPKsZ9A8Nmeu/UGA94vtO4M6LmoaYY5FQ==
-
-"@lensapp/shell@^0.1.7":
-  version "0.1.7"
-  resolved "http://localhost:53093/@lensapp%2fshell/-/shell-0.1.7.tgz#778d2e4b8c8a4d54d4e34369320b46b01beca295"
-  integrity sha512-7O0gG00Rhb142mXdhAR9Ue8LJQUrdQRjHb27ckmDMbLCmbUzhJj71vwJiIgLNHfm0FFMpPOfBJeHFgbNuT9lEA==
-
-"@lensapp/utils@^0.2.5":
-  version "0.2.5"
-  resolved "http://localhost:53093/@lensapp%2futils/-/utils-0.2.5.tgz#401f51d09587c31ea1ddd7110c916a089df8190e"
-  integrity sha512-fLeOmQXNbPXniB0q/59UYZdLozZIEg1H94o7Rbd0sjHKItlEMGFbyw5j7wUeiojFp5l8RqmRY4FGksBuPTDSjw==
+"@lensapp/utils@^0.2.7":
+  version "0.2.7"
+  resolved "https://npm.pkg.github.com/download/@lensapp/utils/0.2.7/e851e3eb799f43fe176a112bfd25f729d4444ca7#e851e3eb799f43fe176a112bfd25f729d4444ca7"
+  integrity sha512-ZGOqr82WWAw7Izu872Wt0aVEbAIWhB4YZmqb5EC38w/MkOz/oWkbQ2QupUXVGTVWrLGlXzFgN2Ndra2mmr8Big==
 
 "@malept/cross-spawn-promise@^1.1.0":
   version "1.1.1"
