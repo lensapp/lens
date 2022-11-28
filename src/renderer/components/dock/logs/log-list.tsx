@@ -63,6 +63,7 @@ export const LogList = observer(({ model }: LogListProps) => {
       ref={parentRef}
       className={styles.LogList}
       onScroll={onScroll}
+      data-testid="pod-log-list"
     >
       <div
         style={{
