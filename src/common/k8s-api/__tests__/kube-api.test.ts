@@ -8,7 +8,6 @@ import type { KubeJsonApi, KubeJsonApiData } from "../kube-json-api";
 import { PassThrough } from "stream";
 import { Deployment, DeploymentApi, NamespaceApi, Pod, PodApi } from "../endpoints";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
-import autoRegistrationInjectable from "../api-manager/auto-registration.injectable";
 import type { Fetch } from "../../fetch/fetch.injectable";
 import fetchInjectable from "../../fetch/fetch.injectable";
 import type { CreateKubeApiForRemoteCluster } from "../create-kube-api-for-remote-cluster.injectable";
@@ -21,6 +20,7 @@ import type { IKubeWatchEvent } from "../kube-watch-event";
 import type { KubeJsonApiDataFor } from "../kube-object";
 import type { Response, Headers as NodeFetchHeaders } from "node-fetch";
 import AbortController from "abort-controller";
+import setupAutoRegistrationInjectable from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
 
 const createMockResponseFromString = (url: string, data: string, statusCode = 200) => {
   const res: jest.Mocked<Response> = {
@@ -184,7 +184,9 @@ describe("KubeApi", () => {
       apiBase: "/api-kube",
     });
 
-    di.inject(autoRegistrationInjectable);
+    const setupAutoRegistration = di.inject(setupAutoRegistrationInjectable);
+
+    setupAutoRegistration.run();
   });
 
   describe("patching deployments", () => {

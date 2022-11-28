@@ -8,7 +8,6 @@ import type { ApiManager } from "../api-manager";
 import { Ingress, IngressApi } from "../endpoints";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import apiManagerInjectable from "../api-manager/manager.injectable";
-import autoRegistrationInjectable from "../api-manager/auto-registration.injectable";
 import type { Fetch } from "../../fetch/fetch.injectable";
 import fetchInjectable from "../../fetch/fetch.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
@@ -16,6 +15,7 @@ import asyncFn from "@async-fn/jest";
 import { flushPromises } from "../../test-utils/flush-promises";
 import createKubeJsonApiInjectable from "../create-kube-json-api.injectable";
 import type { Response, Headers as NodeFetchHeaders } from "node-fetch";
+import setupAutoRegistrationInjectable from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
 
 const createMockResponseFromString = (url: string, data: string, statusCode = 200) => {
   const res: jest.Mocked<Response> = {
@@ -60,7 +60,9 @@ describe("KubeApi", () => {
     });
     registerApiSpy = jest.spyOn(di.inject(apiManagerInjectable), "registerApi");
 
-    di.inject(autoRegistrationInjectable);
+    const setupAutoRegistration = di.inject(setupAutoRegistrationInjectable);
+
+    setupAutoRegistration.run();
   });
 
   describe("on first call to IngressApi.get()", () => {
