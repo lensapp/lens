@@ -29,6 +29,17 @@ import showErrorNotificationInjectable from "../../renderer/components/notificat
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { Container } from "../../common/k8s-api/endpoints";
 
+const observe = jest.fn();
+
+Object.defineProperty(window, "IntersectionObserver", {
+  writable: true,
+  value: jest.fn().mockImplementation(() => ({
+    observe,
+    disconnect: jest.fn(),
+    unobserve: jest.fn(),
+  })),
+});
+
 describe("download logs options in logs dock tab", () => {
   let windowDi: DiContainer;
   let rendered: RenderResult;
