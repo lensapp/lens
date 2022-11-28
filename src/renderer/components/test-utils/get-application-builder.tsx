@@ -22,9 +22,7 @@ import navigateToPreferencesInjectable from "../../../features/preferences/commo
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
-import { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import type { Cluster } from "../../../common/cluster/cluster";
-import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
 import startFrameInjectable from "../../start-frame/start-frame.injectable";
 import type { NamespaceStore } from "../+namespaces/store";
@@ -532,17 +530,8 @@ export const getApplicationBuilder = () => {
           getTotalCount: () => namespaceItems.length,
         } as Partial<NamespaceStore> as NamespaceStore;
 
-        const clusterFrameContextFake = new ClusterFrameContext(
-          clusterStub,
-
-          {
-            namespaceStore: namespaceStoreStub,
-          },
-        );
-
         windowDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
         windowDi.override(hostedClusterInjectable, () => clusterStub);
-        windowDi.override(clusterFrameContextForNamespacedResourcesInjectable, () => clusterFrameContextFake);
       });
 
       return builder;

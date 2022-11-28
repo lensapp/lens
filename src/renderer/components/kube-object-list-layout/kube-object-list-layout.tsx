@@ -20,7 +20,6 @@ import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import type { SubscribableStore, SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import type { KubeApi } from "../../../common/k8s-api/kube-api";
@@ -29,6 +28,7 @@ import type { PageParam } from "../../navigation";
 import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
 import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
 import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";
+import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
 
 export interface KubeObjectListLayoutProps<
   K extends KubeObject,
@@ -43,7 +43,7 @@ export interface KubeObjectListLayoutProps<
 }
 
 interface Dependencies {
-  clusterFrameContext: ClusterFrameContext;
+  clusterFrameContext: ClusterContext;
   subscribeToStores: SubscribeStores;
   kubeSelectedUrlParam: PageParam<string>;
   toggleKubeDetailsPane: ToggleKubeDetailsPane;

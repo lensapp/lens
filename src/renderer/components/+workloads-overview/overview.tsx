@@ -18,7 +18,6 @@ import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
-import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import workloadOverviewDetailsInjectable from "./workload-overview-details/workload-overview-details.injectable";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
@@ -35,10 +34,11 @@ import jobStoreInjectable from "../+workloads-jobs/store.injectable";
 import statefulSetStoreInjectable from "../+workloads-statefulsets/store.injectable";
 import type { EventStore } from "../+events/store";
 import eventStoreInjectable from "../+events/store.injectable";
+import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
 
 interface Dependencies {
   detailComponents: IComputedValue<React.ElementType<{}>[]>;
-  clusterFrameContext: ClusterFrameContext;
+  clusterFrameContext: ClusterContext;
   subscribeStores: SubscribeStores;
   podStore: PodStore;
   daemonSetStore: DaemonSetStore;

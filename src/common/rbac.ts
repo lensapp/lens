@@ -11,7 +11,9 @@ export type KubeResource =
   "priorityclasses" | "runtimeclasses" |
   "roles" | "clusterroles" | "rolebindings" | "clusterrolebindings" | "serviceaccounts";
 
-export interface KubeApiResource extends KubeApiResourceData, KubeApiResourceDescriptor {
+export interface KubeApiResource {
+  kind: string;
+  group?: string;
   apiName: string;
   namespaced: boolean;
 }
@@ -29,41 +31,160 @@ export const formatKubeApiResource = (res: KubeApiResourceDescriptor) => (
 
 export interface KubeApiResourceData {
   kind: string; // resource type (e.g. "Namespace")
-  group?: string; // api-group
+  group?: string; // api-group, if empty then "core"
+  namespaced: boolean;
 }
 
 export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
-  "clusterroles": { kind: "ClusterRole", group: "rbac.authorization.k8s.io" },
-  "clusterrolebindings": { kind: "ClusterRoleBinding", group: "rbac.authorization.k8s.io" },
-  "configmaps": { kind: "ConfigMap" }, //empty group means "core"
-  "cronjobs": { kind: "CronJob", group: "batch" },
-  "customresourcedefinitions": { kind: "CustomResourceDefinition", group: "apiextensions.k8s.io" },
-  "daemonsets": { kind: "DaemonSet", group: "apps" },
-  "deployments": { kind: "Deployment", group: "apps" },
-  "endpoints": { kind: "Endpoint" },
-  "events": { kind: "Event" },
-  "horizontalpodautoscalers": { kind: "HorizontalPodAutoscaler", group: "autoscaling" },
-  "ingresses": { kind: "Ingress", group: "networking.k8s.io" },
-  "jobs": { kind: "Job", group: "batch" },
-  "namespaces": { kind: "Namespace" },
-  "limitranges": { kind: "LimitRange" },
-  "leases": { kind: "Lease" },
-  "networkpolicies": { kind: "NetworkPolicy", group: "networking.k8s.io" },
-  "nodes": { kind: "Node" },
-  "persistentvolumes": { kind: "PersistentVolume" },
-  "persistentvolumeclaims": { kind: "PersistentVolumeClaim" },
-  "pods": { kind: "Pod" },
-  "poddisruptionbudgets": { kind: "PodDisruptionBudget", group: "policy" },
-  "podsecuritypolicies": { kind: "PodSecurityPolicy", group: "policy" },
-  "priorityclasses": { kind: "PriorityClass", group: "scheduling.k8s.io" },
-  "runtimeclasses": { kind: "RuntimeClass", group: "node.k8s.io" },
-  "resourcequotas": { kind: "ResourceQuota" },
-  "replicasets": { kind: "ReplicaSet", group: "apps" },
-  "roles": { kind: "Role", group: "rbac.authorization.k8s.io" },
-  "rolebindings": { kind: "RoleBinding", group: "rbac.authorization.k8s.io" },
-  "secrets": { kind: "Secret" },
-  "serviceaccounts": { kind: "ServiceAccount" },
-  "services": { kind: "Service" },
-  "statefulsets": { kind: "StatefulSet", group: "apps" },
-  "storageclasses": { kind: "StorageClass", group: "storage.k8s.io" },
+  clusterroles: {
+    kind: "ClusterRole",
+    group: "rbac.authorization.k8s.io",
+    namespaced: false,
+  },
+  clusterrolebindings: {
+    kind: "ClusterRoleBinding",
+    group: "rbac.authorization.k8s.io",
+    namespaced: false,
+  },
+  configmaps: {
+    kind: "ConfigMap",
+    namespaced: true,
+  },
+  cronjobs: {
+    kind: "CronJob",
+    group: "batch",
+    namespaced: true,
+  },
+  customresourcedefinitions: {
+    kind: "CustomResourceDefinition",
+    group: "apiextensions.k8s.io",
+    namespaced: false,
+  },
+  daemonsets: {
+    kind: "DaemonSet",
+    group: "apps",
+    namespaced: true,
+  },
+  deployments: {
+    kind: "Deployment",
+    group: "apps",
+    namespaced: true,
+  },
+  endpoints: {
+    kind: "Endpoint",
+    namespaced: true,
+  },
+  events: {
+    kind: "Event",
+    namespaced: true,
+  },
+  horizontalpodautoscalers: {
+    kind: "HorizontalPodAutoscaler",
+    group: "autoscaling",
+    namespaced: true,
+  },
+  ingresses: {
+    kind: "Ingress",
+    group: "networking.k8s.io",
+    namespaced: true,
+  },
+  jobs: {
+    kind: "Job",
+    group: "batch",
+    namespaced: true,
+  },
+  namespaces: {
+    kind: "Namespace",
+    namespaced: false,
+  },
+  limitranges: {
+    kind: "LimitRange",
+    namespaced: true,
+  },
+  leases: {
+    kind: "Lease",
+    namespaced: true,
+  },
+  networkpolicies: {
+    kind: "NetworkPolicy",
+    group: "networking.k8s.io",
+    namespaced: true,
+  },
+  nodes: {
+    kind: "Node",
+    namespaced: false,
+  },
+  persistentvolumes: {
+    kind: "PersistentVolume",
+    namespaced: false,
+  },
+  persistentvolumeclaims: {
+    kind: "PersistentVolumeClaim",
+    namespaced: true,
+  },
+  pods: {
+    kind: "Pod",
+    namespaced: true,
+  },
+  poddisruptionbudgets: {
+    kind: "PodDisruptionBudget",
+    group: "policy",
+    namespaced: true,
+  },
+  podsecuritypolicies: {
+    kind: "PodSecurityPolicy",
+    group: "policy",
+    namespaced: false,
+  },
+  priorityclasses: {
+    kind: "PriorityClass",
+    group: "scheduling.k8s.io",
+    namespaced: false,
+  },
+  runtimeclasses: {
+    kind: "RuntimeClass",
+    group: "node.k8s.io",
+    namespaced: false,
+  },
+  resourcequotas: {
+    kind: "ResourceQuota",
+    namespaced: true,
+  },
+  replicasets: {
+    kind: "ReplicaSet",
+    group: "apps",
+    namespaced: true,
+  },
+  roles: {
+    kind: "Role",
+    group: "rbac.authorization.k8s.io",
+    namespaced: true,
+  },
+  rolebindings: {
+    kind: "RoleBinding",
+    group: "rbac.authorization.k8s.io",
+    namespaced: true,
+  },
+  secrets: {
+    kind: "Secret",
+    namespaced: true,
+  },
+  serviceaccounts: {
+    kind: "ServiceAccount",
+    namespaced: true,
+  },
+  services: {
+    kind: "Service",
+    namespaced: true,
+  },
+  statefulsets: {
+    kind: "StatefulSet",
+    group: "apps",
+    namespaced: true,
+  },
+  storageclasses: {
+    kind: "StorageClass",
+    group: "storage.k8s.io",
+    namespaced: false,
+  },
 };

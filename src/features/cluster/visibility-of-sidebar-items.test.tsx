@@ -50,7 +50,9 @@ describe("cluster - visibility of sidebar items", () => {
 
     describe("when kube resource becomes allowed", () => {
       beforeEach(() => {
-        builder.allowKubeResource("namespaces");
+        builder.allowKubeResource({
+          apiName: "namespaces",
+        });
       });
 
       it("renders", () => {

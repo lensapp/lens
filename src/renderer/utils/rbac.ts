@@ -5,6 +5,7 @@
 
 import type { KubeResource } from "../../common/rbac";
 import { apiResourceRecord } from "../../common/rbac";
+import { object } from "../../common/utils";
 
 export const ResourceNames: Record<KubeResource, string> = {
   "namespaces": "Namespaces",
@@ -42,7 +43,7 @@ export const ResourceNames: Record<KubeResource, string> = {
   "serviceaccounts": "Service Accounts",
 };
 
-export const ResourceKindMap: Record<string, KubeResource> = Object.fromEntries(
-  Object.entries(apiResourceRecord)
-    .map(([resource, { kind }]) => [kind, resource as KubeResource]),
+export const ResourceKindMap = object.fromEntries(
+  object.entries(apiResourceRecord)
+    .map(([resource, { kind }]) => [kind, resource]),
 );

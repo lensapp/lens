@@ -10,7 +10,7 @@ const kubeWatchApiInjectable = getInjectable({
   id: "kube-watch-api",
 
   instantiate: (di) => new KubeWatchApi({
-    clusterFrameContext: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+    clusterContext: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
   }),
 });
 

@@ -11,7 +11,6 @@ import createKubectlInjectable from "../kubectl/create-kubectl.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
-import createAuthorizationNamespaceReview from "../../common/cluster/request-namespace-list-permissions.injectable";
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import createListApiResourcesInjectable from "../../common/cluster/request-api-resources.injectable";
 import loggerInjectable from "../../common/logger.injectable";
@@ -19,6 +18,7 @@ import detectorRegistryInjectable from "../cluster-detectors/detector-registry.i
 import createVersionDetectorInjectable from "../cluster-detectors/create-version-detector.injectable";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 import loadConfigfromFileInjectable from "../../common/kube-helpers/load-config-from-file.injectable";
+import requestNamespaceListPermissionsForInjectable from "../../common/cluster/request-namespace-list-permissions.injectable";
 
 const createClusterInjectable = getInjectable({
   id: "create-cluster",
@@ -30,7 +30,7 @@ const createClusterInjectable = getInjectable({
       createKubectl: di.inject(createKubectlInjectable),
       createContextHandler: di.inject(createContextHandlerInjectable),
       createAuthorizationReview: di.inject(authorizationReviewInjectable),
-      createAuthorizationNamespaceReview: di.inject(createAuthorizationNamespaceReview),
+      requestNamespaceListPermissionsFor: di.inject(requestNamespaceListPermissionsForInjectable),
       requestApiResources: di.inject(createListApiResourcesInjectable),
       createListNamespaces: di.inject(listNamespacesInjectable),
       logger: di.inject(loggerInjectable),

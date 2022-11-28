@@ -98,7 +98,9 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
       });
     });
 
-    builder.allowKubeResource("namespaces");
+    builder.allowKubeResource({
+      apiName: "namespaces",
+    });
   });
 
   describe("when navigating to namespaces", () => {
