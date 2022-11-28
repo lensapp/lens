@@ -26,12 +26,6 @@ describe("<ToBottom/>", () => {
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  it("has 'To bottom' label", () => {
-    const { getByText } = render(<ToBottom onClick={noop}/>);
-
-    expect(getByText("To bottom")).toBeInTheDocument();
-  });
-
   it("has a arrow down icon", () => {
     const { getByText } = render(<ToBottom onClick={noop}/>);
 
@@ -42,7 +36,7 @@ describe("<ToBottom/>", () => {
     const callback = jest.fn();
     const { getByText } = render(<ToBottom onClick={callback}/>);
 
-    fireEvent.click(getByText("To bottom"));
+    fireEvent.click(getByText("expand_more"));
     expect(callback).toBeCalled();
   });
 });
