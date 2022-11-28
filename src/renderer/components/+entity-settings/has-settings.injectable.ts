@@ -9,7 +9,7 @@ import catalogEntitySettingItemsInjectable from "./settings.injectable";
 export type HasCatalogEntitySettingItems = (entity: CatalogEntity) => boolean;
 
 const hasCatalogEntitySettingItemsInjectable = getInjectable({
-  id: "has-catalog-entity-settings",
+  id: "has-catalog-entity-setting-items",
   instantiate: (di): HasCatalogEntitySettingItems => (entity) => {
     const items = di.inject(catalogEntitySettingItemsInjectable, entity);
 

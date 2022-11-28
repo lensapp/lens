@@ -10,7 +10,7 @@ import type { CatalogEntity } from "../../api/catalog-entity";
 import { entitySettingInjectionToken } from "./token";
 
 const catalogEntitySettingItemsInjectable = getInjectable({
-  id: "entity-settings",
+  id: "catalog-entity-setting-items",
   instantiate: (di, entity) => {
     const computedInjectMany = di.inject(computedInjectManyInjectable);
     const items = computedInjectMany(entitySettingInjectionToken);
