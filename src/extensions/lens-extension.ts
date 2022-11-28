@@ -6,10 +6,10 @@
 import type { InstalledExtension } from "./extension-discovery/extension-discovery";
 import { action, computed, makeObservable, observable } from "mobx";
 import logger from "../main/logger";
-import type { ProtocolHandlerRegistration } from "./registries";
 import type { PackageJson } from "type-fest";
 import { disposer } from "../common/utils";
 import type { LensExtensionDependencies } from "./lens-extension-set-dependencies";
+import type { ProtocolHandlerRegistration } from "./common-api/registrations";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;

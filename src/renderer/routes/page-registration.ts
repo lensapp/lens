@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { IComputedValue } from "mobx";
-import type { PageParamInit, PageParam } from "../../renderer/navigation";
+import type { PageParamInit, PageParam } from "../navigation";
 
 // Extensions-api -> Custom page registration
 

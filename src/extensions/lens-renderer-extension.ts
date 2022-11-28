@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type * as registries from "./registries";
 import { Disposers, LensExtension, lensExtensionDependencies } from "./lens-extension";
 import type { CatalogEntity } from "../common/catalog";
 import type { Disposer } from "../common/utils";
@@ -31,11 +30,12 @@ import type { KubeObjectDetailRegistration } from "../renderer/components/kube-o
 import type { ClusterFrameChildComponent } from "../renderer/frames/cluster-frame/cluster-frame-child-component-injection-token";
 import type { EntitySettingRegistration } from "../renderer/components/+entity-settings/extension-registrator.injectable";
 import type { CatalogEntityDetailRegistration } from "../renderer/components/+catalog/entity-details/token";
+import type { ClusterPageMenuRegistration, PageRegistration } from "./common-api/registrations";
 
 export class LensRendererExtension extends LensExtension<LensRendererExtensionDependencies> {
-  globalPages: registries.PageRegistration[] = [];
-  clusterPages: registries.PageRegistration[] = [];
-  clusterPageMenus: registries.ClusterPageMenuRegistration[] = [];
+  globalPages: PageRegistration[] = [];
+  clusterPages: PageRegistration[] = [];
+  clusterPageMenus: ClusterPageMenuRegistration[] = [];
   clusterFrameComponents: ClusterFrameChildComponent[] = [];
   kubeObjectStatusTexts: KubeObjectStatusRegistration[] = [];
   appPreferences: AppPreferenceRegistration[] = [];

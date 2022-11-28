@@ -13,7 +13,7 @@ import { RoutingError, RoutingErrorType } from "./error";
 import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
 import type { ExtensionLoader } from "../../extensions/extension-loader";
 import type { LensExtension } from "../../extensions/lens-extension";
-import type { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler";
+import type { RouteHandler, RouteParams } from "./registration";
 import { when } from "mobx";
 import { ipcRenderer } from "electron";
 import type { Logger } from "../logger";
