@@ -7,11 +7,6 @@
 import type { ThemeId } from "../renderer/themes/lens-theme";
 
 /**
- * @deprecated Switch to using isMacInjectable
- */
-export const isMac = process.platform === "darwin";
-
-/**
  * @deprecated Switch to using isWindowsInjectable
  */
 export const isWindows = process.platform === "win32";
