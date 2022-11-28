@@ -78,7 +78,8 @@ export const LogList = observer(({ model }: LogListProps) => {
         {rowVirtualizer.getVirtualItems().map((virtualRow) => (
           <div
             key={virtualRow.index + uniqRowKey}
-            ref={virtualRow.measureElement}
+            data-index={virtualRow.index}
+            ref={rowVirtualizer.measureElement}
             style={{
               transform: `translateY(${virtualRow.start}px)`,
             }}
