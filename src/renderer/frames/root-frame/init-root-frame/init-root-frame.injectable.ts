@@ -14,7 +14,7 @@ import registerIpcListenersInjectable from "../../../ipc/register-ipc-listeners.
 const initRootFrameInjectable = getInjectable({
   id: "init-root-frame",
   instantiate: (di) => initRootFrame({
-    loadExtensions: di.inject(extensionLoaderInjectable).loadOnClusterManagerRenderer,
+    loadExtensions: di.inject(extensionLoaderInjectable).autoInitExtensions,
     registerIpcListeners: di.inject(registerIpcListenersInjectable),
     ipcRenderer: di.inject(ipcRendererInjectable),
     bindProtocolAddRouteHandlers: di.inject(bindProtocolAddRouteHandlersInjectable),

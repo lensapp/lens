@@ -22,7 +22,7 @@ const initClusterFrameInjectable = getInjectable({
 
     return initClusterFrame({
       hostedCluster,
-      loadExtensions: di.inject(extensionLoaderInjectable).loadOnClusterRenderer,
+      loadExtensions: di.inject(extensionLoaderInjectable).autoInitExtensions,
       catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
       frameRoutingId: di.inject(frameRoutingIdInjectable),
       emitAppEvent: di.inject(emitAppEventInjectable),

@@ -8,7 +8,6 @@ import { action, computed, makeObservable, observable } from "mobx";
 import logger from "../main/logger";
 import type { ProtocolHandlerRegistration } from "./registries";
 import type { PackageJson } from "type-fest";
-import type { Disposer } from "../common/utils";
 import { disposer } from "../common/utils";
 import type { LensExtensionDependencies } from "./lens-extension-set-dependencies";
 
@@ -88,15 +87,13 @@ export class LensExtension<Dependencies extends LensExtensionDependencies = Lens
   }
 
   @action
-  async enable(register: (ext: this) => Promise<Disposer[]>) {
+  async enable() {
     if (this._isEnabled) {
       return;
     }
 
     try {
       this._isEnabled = true;
-
-      this[Disposers].push(...await register(this));
       logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
 
     } catch (error) {
