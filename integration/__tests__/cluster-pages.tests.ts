@@ -137,6 +137,76 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
   );
 
   it(
+    "should create a pod with logs and wrap log lines",
+    async () => {
+      await navigateToNamespaces(frame);
+      await frame.waitForSelector("div.TableCell >> text='default'");
+      
+      try {
+        await frame.click("li.MenuItem.create-resource-tab", {
+          // NOTE: the following shouldn't be required, but is because without it a TypeError is thrown
+          // see: https://github.com/microsoft/playwright/issues/8229
+          position: {
+            y: 0,
+            x: 0,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+        await frame.waitForTimeout(100_000);
+      }
+
+      const testPodName = "pod-with-long-logs";
+      const monacoEditor = await frame.waitForSelector(`.Dock.isOpen [data-test-id="monaco-editor"]`);
+
+      await monacoEditor.click();
+      await monacoEditor.type("apiVersion: v1", { delay: 10 });
+      await monacoEditor.press("Enter", { delay: 10 });
+      await monacoEditor.type("kind: Pod", { delay: 10 });
+      await monacoEditor.press("Enter", { delay: 10 });
+      await monacoEditor.type("metadata:", { delay: 10 });
+      await monacoEditor.press("Enter", { delay: 10 });
+      await monacoEditor.type(`  name: ${testPodName}`, { delay: 10 });
+      await monacoEditor.press("Enter", { delay: 10 });
+      await monacoEditor.type(`namespace: ${TEST_NAMESPACE}`, { delay: 10 });
+      await monacoEditor.press("Enter", { delay: 10 });
+      await monacoEditor.press("Backspace", { delay: 10 });
+      await monacoEditor.type("spec:", { delay: 10 });
+      await monacoEditor.press("Enter", { delay: 10 });
+      await monacoEditor.type("  containers:", { delay: 10 });
+      await monacoEditor.press("Enter", { delay: 10 });
+      await monacoEditor.type(`- name: ${testPodName}`, { delay: 10 });
+      await monacoEditor.press("Enter", { delay: 10 });
+      await monacoEditor.type("  image: busybox:1.28", { delay: 10 });
+      await monacoEditor.press("Enter", { delay: 10 });
+      await monacoEditor.type(`args: [/bin/sh, -c, 'echo "Short loin exercitation sint, shankle ea andouille consequat.  Lorem shoulder dolor ipsum sed quis ham venison ad ribeye filet mignon pancetta.  Ham pork loin filet mignon duis, voluptate ullamco minim ea.  Turducken minim excepteur, t-bone venison jowl capicola proident biltong pariatur filet mignon irure.  Burgdoggen tail irure drumstick fatback fugiat, qui venison duis prosciutto pork chop.","Short ribs pork rump landjaeger, brisket adipisicing non anim magna duis sunt venison pastrami.  Kevin consectetur deserunt lorem.  Sirloin nisi pig culpa chislic officia enim in.  Brisket prosciutto quis jerky chuck rump filet mignon, labore venison elit est.  In kevin drumstick, ut elit pig short loin.  Boudin labore ut id nisi.  Non quis ullamco biltong.","Leberkas cillum dolore ad chuck ball tip laboris pork chop picanha dolore sunt landjaeger.  Occaecat cow exercitation, lorem reprehenderit laboris excepteur venison salami tenderloin irure in ut eu ham.  Irure incididunt swine, cupim adipisicing drumstick cupidatat salami tail eiusmod.  Irure sausage commodo veniam strip steak do.  Ball tip shankle capicola deserunt swine, jowl pork loin bacon spare ribs.","Cow tongue pig meatball short ribs fugiat spare ribs labore kevin.  Tempor reprehenderit irure veniam, andouille deserunt kevin dolore magna ad.  Ham hock veniam alcatra ea ribeye aute commodo ground round.  Ut nisi sunt dolore, sirloin velit officia flank ad short ribs pancetta deserunt pastrami leberkas.  Turducken ham hock short ribs, tenderloin swine eiusmod consequat irure excepteur.","Veniam short ribs reprehenderit tempor ea velit doner lorem shankle exercitation do.  Mollit veniam shoulder fugiat dolore, duis nostrud tenderloin.  Ut exercitation quis, ex cupidatat shank dolore pastrami irure ut pork chop.  Nulla boudin tail irure deserunt, cupidatat flank cillum cow pork loin hamburger shoulder ut ipsum.  Turducken eu chicken in qui pig.  Sunt tongue esse, ut ex ut hamburger spare ribs culpa.";']`, { delay: 10 });
+      await monacoEditor.press("Enter", { delay: 10 });
+
+      await frame.click(".Dock .Button >> text='Create'");
+      await frame.waitForSelector(`.TableCell >> text=${testPodName}`);
+      await frame.click(".TableRow .TableCell.menu");
+      await frame.click(".MenuItem >> text=Logs");
+
+      await frame.waitForSelector(".Dock.isOpen");
+      const logLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index=0]");
+      let boundingBox = await logLine.boundingBox();
+
+      expect(boundingBox?.height).toBeLessThan(30);
+
+      const showWrapLogsCheckbox = await frame.waitForSelector(
+        "[data-testid='log-controls'] .wrap-logs",
+      );
+
+      await showWrapLogsCheckbox.click();
+
+      boundingBox = await logLine.boundingBox();
+
+      expect(boundingBox?.height).toBeGreaterThan(100);
+    },
+    10 * 60 * 1000,
+  );
+
+  it(
     "should show the default namespaces",
     async () => {
       await navigateToNamespaces(frame);

@@ -85,6 +85,7 @@ export const LogList = observer(({ model }: LogListProps) => {
               transform: `translateY(${virtualRow.start}px)`,
             }}
             className={cssNames(styles.rowWrapper, { [styles.wrap]: model.logTabData.get()?.wrap })}
+            data-size={virtualRow.size}
           >
             <div>
               <LogRow rowIndex={virtualRow.index} model={model} />
