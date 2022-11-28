@@ -141,6 +141,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     async () => {
       await navigateToNamespaces(frame);
       await frame.waitForSelector("div.TableCell >> text='default'");
+      await frame.click(".Icon.new-dock-tab");
       
       try {
         await frame.click("li.MenuItem.create-resource-tab", {
