@@ -15,7 +15,7 @@ import { ClusterFrame } from "./cluster-frame";
 import historyInjectable from "../../navigation/history.injectable";
 import { computed } from "mobx";
 import type { Cluster } from "../../../common/cluster/cluster";
-import createClusterInjectable from "../../create-cluster/create-cluster.injectable";
+import createClusterInjectable from "../../cluster/create-cluster.injectable";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";

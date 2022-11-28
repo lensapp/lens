@@ -208,7 +208,11 @@ export abstract class KubeObjectStore<
         }
       }
 
-      return await res ?? [];
+      const items = await res ?? [];
+
+      console.trace("loadItems", this.api, [...items]);
+
+      return items;
     }
 
     this.loadedNamespaces.set(namespaces);
@@ -249,6 +253,8 @@ export abstract class KubeObjectStore<
     try {
       const items = await this.loadItems({ namespaces, reqInit, onLoadFailure });
 
+      console.log("loadAll", this.api, [...items]);
+
       this.mergeItems(items, { merge, namespaces });
 
       this.isLoaded = true;
@@ -280,6 +286,8 @@ export abstract class KubeObjectStore<
   @action
   protected mergeItems(partialItems: K[], { merge = true, updateStore = true, sort = true, filter = true, namespaces }: MergeItemsOptions): K[] {
     let items = partialItems;
+
+    console.log("mergeItems", this.api, [...partialItems]);
 
     // update existing items
     if (merge && this.api.isNamespaced) {

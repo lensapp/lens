@@ -76,7 +76,7 @@ class NonInjectedSearchInput extends React.Component<SearchInputProps & Dependen
   }
 
   render() {
-    const { className, compact, onClear, showClearIcon, bindGlobalFocusHotkey, value, ...inputProps } = this.props;
+    const { className, compact, onClear, showClearIcon, bindGlobalFocusHotkey, value, isMac, ...inputProps } = this.props;
     let rightIcon = <Icon small material="search"/>;
 
     if (showClearIcon && value) {

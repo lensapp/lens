@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { IReactionDisposer } from "mobx";
+import type { IComputedValue, IReactionDisposer } from "mobx";
 import { action, comparer, computed, makeObservable, reaction } from "mobx";
 import type { StorageLayer } from "../../utils";
 import { autoBind, noop, toggle } from "../../utils";
@@ -14,6 +14,7 @@ import { Namespace } from "../../../common/k8s-api/endpoints/namespace.api";
 
 interface Dependencies extends KubeObjectStoreDependencies {
   readonly storage: StorageLayer<string[] | undefined>;
+  readonly clusterConfiguredAccessibleNamespaces: IComputedValue<string[]>;
 }
 
 export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
@@ -118,17 +119,13 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   protected async loadItems(params: KubeObjectStoreLoadingParams): Promise<Namespace[]> {
-    const { allowedNamespaces } = this;
+    const clusterConfiguredAccessibleNamespaces = this.dependencies.clusterConfiguredAccessibleNamespaces.get();
 
-    let namespaces = await super.loadItems(params).catch(() => []);
-
-    namespaces = namespaces.filter(namespace => allowedNamespaces.includes(namespace.getName()));
-
-    if (!namespaces.length && allowedNamespaces.length > 0) {
-      return allowedNamespaces.map(getDummyNamespace);
+    if (clusterConfiguredAccessibleNamespaces.length > 0) {
+      return clusterConfiguredAccessibleNamespaces.map(getDummyNamespace);
     }
 
-    return namespaces;
+    return super.loadItems(params);
   }
 
   @action selectNamespaces = (namespace: string | string[]) => {
