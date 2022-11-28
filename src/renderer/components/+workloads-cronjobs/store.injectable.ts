@@ -7,6 +7,7 @@ import assert from "assert";
 import getJobsByOwnerInjectable from "../+workloads-jobs/get-jobs-by-owner.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import cronJobApiInjectable from "../../../common/k8s-api/endpoints/cron-job.api.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { CronJobStore } from "./store";
 
@@ -19,6 +20,7 @@ const cronJobStoreInjectable = getInjectable({
 
     return new CronJobStore({
       getJobsByOwner: di.inject(getJobsByOwnerInjectable),
+      context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

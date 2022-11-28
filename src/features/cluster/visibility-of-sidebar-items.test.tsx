@@ -9,11 +9,11 @@ import { sidebarItemsInjectionToken } from "../../renderer/components/layout/sid
 import { computed, runInAction } from "mobx";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import React from "react";
-import isAllowedResourceInjectable from "../../common/utils/is-allowed-resource.injectable";
 import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
+import { shouldShowResourceInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
 
 describe("cluster - visibility of sidebar items", () => {
   let builder: ApplicationBuilder;
@@ -69,20 +69,13 @@ describe("cluster - visibility of sidebar items", () => {
 const testRouteInjectable = getInjectable({
   id: "some-route-injectable-id",
 
-  instantiate: (di) => {
-    const someKubeResourceName = "namespaces";
-
-    const kubeResourceIsAllowed = di.inject(
-      isAllowedResourceInjectable,
-      someKubeResourceName,
-    );
-
-    return {
-      path: "/some-child-page",
-      isEnabled: kubeResourceIsAllowed,
-      clusterFrame: true,
-    };
-  },
+  instantiate: (di) => ({
+    path: "/some-child-page",
+    clusterFrame: true,
+    isEnabled: di.inject(shouldShowResourceInjectionToken, {
+      apiName: "namespaces",
+    }),
+  }),
 
   injectionToken: frontEndRouteInjectionToken,
 });

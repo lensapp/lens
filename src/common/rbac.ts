@@ -11,10 +11,21 @@ export type KubeResource =
   "priorityclasses" | "runtimeclasses" |
   "roles" | "clusterroles" | "rolebindings" | "clusterrolebindings" | "serviceaccounts";
 
-export interface KubeApiResource extends KubeApiResourceData {
+export interface KubeApiResource extends KubeApiResourceData, KubeApiResourceDescriptor {
   apiName: string;
   namespaced: boolean;
 }
+
+export interface KubeApiResourceDescriptor {
+  apiName: string;
+  group?: string;
+}
+
+export const formatKubeApiResource = (res: KubeApiResourceDescriptor) => (
+  res.group
+    ? `${res.group}/${res.apiName}`
+    : res.apiName
+);
 
 export interface KubeApiResourceData {
   kind: string; // resource type (e.g. "Namespace")

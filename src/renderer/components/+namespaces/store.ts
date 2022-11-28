@@ -7,18 +7,18 @@ import type { IReactionDisposer } from "mobx";
 import { action, comparer, computed, makeObservable, reaction } from "mobx";
 import type { StorageLayer } from "../../utils";
 import { autoBind, noop, toggle } from "../../utils";
-import type { KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObjectStoreDependencies, KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { NamespaceApi } from "../../../common/k8s-api/endpoints/namespace.api";
 import { Namespace } from "../../../common/k8s-api/endpoints/namespace.api";
 
-interface Dependencies {
-  storage: StorageLayer<string[] | undefined>;
+interface Dependencies extends KubeObjectStoreDependencies {
+  readonly storage: StorageLayer<string[] | undefined>;
 }
 
 export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   constructor(protected readonly dependencies: Dependencies, api: NamespaceApi) {
-    super(api);
+    super(dependencies, api);
     makeObservable(this);
     autoBind(this);
 
@@ -26,7 +26,6 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   private async init() {
-    await this.contextReady;
     await this.dependencies.storage.whenReady;
 
     this.selectNamespaces(this.initialNamespaces);
@@ -75,10 +74,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   @computed get allowedNamespaces(): string[] {
-    return Array.from(new Set([
-      ...(this.context?.allNamespaces ?? []), // allowed namespaces from cluster (main), updating every 30s
-      ...this.items.map(item => item.getName()), // loaded namespaces from k8s api
-    ].flat()));
+    return this.items.map(item => item.getName());
   }
 
   /**
@@ -114,7 +110,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
      * if user has given static list of namespaces let's not start watches
      * because watch adds stuff that's not wanted or will just fail
      */
-    if ((this.context?.cluster.accessibleNamespaces.length ?? 0) > 0) {
+    if (this.dependencies.context.isNamespaceListStatic()) {
       return noop;
     }
 

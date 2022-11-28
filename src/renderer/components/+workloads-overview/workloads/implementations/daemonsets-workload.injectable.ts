@@ -19,7 +19,10 @@ const daemonsetsWorkloadInjectable = getInjectable({
     const store = di.inject(daemonsetsStoreInjectable);
 
     return {
-      resourceName: "daemonsets",
+      resource: {
+        apiName: "daemonsets",
+        group: "apps",
+      },
       open: navigate,
 
       amountOfItems: computed(

@@ -9,10 +9,10 @@ import type { IComputedValue, ObservableMap } from "mobx";
 import { action, computed, observable, runInAction } from "mobx";
 import React from "react";
 import { Router } from "react-router";
-import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent, queryByText } from "@testing-library/react";
-import type { KubeResource } from "../../../common/rbac";
+import type { KubeApiResourceDescriptor } from "../../../common/rbac";
+import { formatKubeApiResource } from "../../../common/rbac";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
@@ -24,8 +24,7 @@ import navigateToHelmChartsInjectable from "../../../common/front-end-routing/ro
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
 import startFrameInjectable from "../../start-frame/start-frame.injectable";
 import type { NamespaceStore } from "../+namespaces/store";
@@ -114,7 +113,7 @@ export interface ApplicationBuilder {
     create: (id: string) => LensWindowWithHelpers;
   };
 
-  allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
+  allowKubeResource: (resource: KubeApiResourceDescriptor) => ApplicationBuilder;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   afterApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeWindowStart: (callback: Callback) => ApplicationBuilder;
@@ -213,7 +212,7 @@ export const getApplicationBuilder = () => {
     },
   }));
 
-  const allowedResourcesState = observable.array<string>();
+  const allowedResourcesState = observable.set<string>();
 
   const windowHelpers = new Map<string, { di: DiContainer; getRendered: () => RenderResult }>();
 
@@ -501,14 +500,10 @@ export const getApplicationBuilder = () => {
       environment = environments.clusterFrame;
 
       builder.beforeWindowStart((windowDi) => {
-        windowDi.override(allowedResourcesInjectable, () =>
-          computed(() => new Set([...allowedResourcesState])),
-        );
-
         const clusterStub = {
           id: "some-cluster-id",
-          accessibleNamespaces: [],
-          isAllowedResource: (kind) => allowedResourcesState.includes(kind),
+          accessibleNamespaces: observable.array(),
+          shouldShowResource: (kind) => allowedResourcesState.has(formatKubeApiResource(kind)),
         } as Partial<Cluster> as Cluster;
 
         windowDi.override(activeKubernetesClusterInjectable, () =>
@@ -547,10 +542,7 @@ export const getApplicationBuilder = () => {
 
         windowDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
         windowDi.override(hostedClusterInjectable, () => clusterStub);
-        windowDi.override(clusterFrameContextInjectable, () => clusterFrameContextFake);
-
-        // Todo: get rid of global state.
-        KubeObjectStore.defaultContext.set(clusterFrameContextFake);
+        windowDi.override(clusterFrameContextForNamespacedResourcesInjectable, () => clusterFrameContextFake);
       });
 
       return builder;
@@ -634,11 +626,11 @@ export const getApplicationBuilder = () => {
       },
     },
 
-    allowKubeResource: (resourceName) => {
+    allowKubeResource: (resource) => {
       environment.onAllowKubeResource();
 
       runInAction(() => {
-        allowedResourcesState.push(resourceName);
+        allowedResourcesState.add(formatKubeApiResource(resource));
       });
 
       return builder;

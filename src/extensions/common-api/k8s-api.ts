@@ -15,6 +15,11 @@ import type { ResourceApplyingStack } from "../../common/k8s/resource-stack";
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import type { KubernetesCluster } from "./catalog";
+import type { KubeApiDataFrom, KubeObjectStoreOptions } from "../../common/k8s-api/kube-object.store";
+import { KubeObjectStore as InternalKubeObjectStore } from "../../common/k8s-api/kube-object.store";
+import type { KubeJsonApiDataFor, KubeObject } from "../../common/k8s-api/kube-object";
+import type { KubeApi } from "../../common/k8s-api/kube-api";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
 
 export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);
 export const forCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForClusterInjectable);
@@ -72,8 +77,33 @@ export {
   type KubeJsonApiData,
 } from "../../common/k8s-api/kube-json-api";
 
+export abstract class KubeObjectStore<
+  K extends KubeObject = KubeObject,
+  A extends KubeApi<K, D> = KubeApi<K, KubeJsonApiDataFor<K>>,
+  D extends KubeJsonApiDataFor<K> = KubeApiDataFrom<K, A>,
+> extends InternalKubeObjectStore<K, A, D> {
+  get context() {
+    return this.dependencies.context;
+  }
+
+  constructor(api: A, opts?: KubeObjectStoreOptions);
+  /**
+   * @deprecated Supply API instance through constructor
+   */
+  constructor();
+  constructor(api?: A, opts?: KubeObjectStoreOptions) {
+    super(
+      {
+        context: asLegacyGlobalForExtensionApi(clusterFrameContextForNamespacedResourcesInjectable),
+      },
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      api!,
+      opts,
+    );
+  }
+}
+
 export {
-  KubeObjectStore,
   type JsonPatch,
   type KubeObjectStoreLoadAllParams,
   type KubeObjectStoreLoadingParams,

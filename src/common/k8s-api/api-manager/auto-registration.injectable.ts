@@ -3,9 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
 import type { CustomResourceDefinition } from "../endpoints";
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
+import type { KubeObjectStoreDependencies } from "../kube-object.store";
 import autoRegistrationEmitterInjectable from "./auto-registration-emitter.injectable";
 import apiManagerInjectable from "./manager.injectable";
 import { CustomResourceStore } from "./resource.store";
@@ -16,6 +18,9 @@ const autoRegistrationInjectable = getInjectable({
     const autoRegistrationEmitter = di.inject(autoRegistrationEmitterInjectable);
     const beforeApiManagerInitializationCrds: CustomResourceDefinition[] = [];
     const beforeApiManagerInitializationApis: KubeApi[] = [];
+    const deps: KubeObjectStoreDependencies = {
+      context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+    };
     let initialized = false;
 
     const autoInitCustomResourceStore = (crd: CustomResourceDefinition) => {
@@ -40,7 +45,7 @@ const autoRegistrationInjectable = getInjectable({
       })();
 
       if (!apiManager.getStore(api)) {
-        apiManager.registerStore(new CustomResourceStore(api));
+        apiManager.registerStore(new CustomResourceStore(deps, api));
       }
     };
     const autoInitKubeApi = (api: KubeApi) => {

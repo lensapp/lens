@@ -19,7 +19,9 @@ const podsWorkloadInjectable = getInjectable({
     const store = di.inject(podStoreInjectable);
 
     return {
-      resourceName: "pods",
+      resource: {
+        apiName: "pods",
+      },
       open: navigate,
 
       amountOfItems: computed(

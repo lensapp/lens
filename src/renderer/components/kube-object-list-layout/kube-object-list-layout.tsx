@@ -21,7 +21,7 @@ import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
-import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import type { SubscribableStore, SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import type { KubeApi } from "../../../common/k8s-api/kube-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
@@ -177,7 +177,7 @@ export const KubeObjectListLayout = withInjectables<
 >(NonInjectedKubeObjectListLayout, {
   getProps: (di, props) => ({
     ...props,
-    clusterFrameContext: di.inject(clusterFrameContextInjectable),
+    clusterFrameContext: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
     subscribeToStores: di.inject(subscribeStoresInjectable),
     kubeSelectedUrlParam: di.inject(kubeSelectedUrlParamInjectable),
     toggleKubeDetailsPane: di.inject(toggleKubeDetailsPaneInjectable),

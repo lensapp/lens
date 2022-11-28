@@ -19,7 +19,10 @@ const statefulsetsWorkloadInjectable = getInjectable({
     const store = di.inject(statefulsetsStoreInjectable);
 
     return {
-      resourceName: "statefulsets",
+      resource: {
+        apiName: "statefulsets",
+        group: "apps",
+      },
       open: navigate,
 
       amountOfItems: computed(

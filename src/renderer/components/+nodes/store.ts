@@ -6,13 +6,13 @@ import { sum } from "lodash";
 import { computed, makeObservable } from "mobx";
 
 import type { Node, NodeApi } from "../../../common/k8s-api/endpoints";
-import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
 
 export class NodeStore extends KubeObjectStore<Node, NodeApi> {
-  constructor(api: NodeApi, opts?: KubeObjectStoreOptions) {
-    super(api, opts);
+  constructor(dependencies: KubeObjectStoreDependencies, api: NodeApi, opts?: KubeObjectStoreOptions) {
+    super(dependencies, api, opts);
 
     makeObservable(this);
     autoBind(this);

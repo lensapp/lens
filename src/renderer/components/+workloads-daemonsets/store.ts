@@ -6,16 +6,16 @@
 import type { GetPodsByOwnerId } from "../+workloads-pods/get-pods-by-owner-id.injectable";
 import type { DaemonSet, DaemonSetApi, Pod } from "../../../common/k8s-api/endpoints";
 import { PodStatusPhase } from "../../../common/k8s-api/endpoints";
-import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 
-export interface DaemonSetStoreDependencies {
+export interface DaemonSetStoreDependencies extends KubeObjectStoreDependencies {
   readonly getPodsByOwnerId: GetPodsByOwnerId;
 }
 
 export class DaemonSetStore extends KubeObjectStore<DaemonSet, DaemonSetApi> {
   constructor(protected readonly dependencies: DaemonSetStoreDependencies, api: DaemonSetApi, opts?: KubeObjectStoreOptions) {
-    super(api, opts);
+    super(dependencies, api, opts);
   }
 
   getChildPods(daemonSet: DaemonSet): Pod[] {

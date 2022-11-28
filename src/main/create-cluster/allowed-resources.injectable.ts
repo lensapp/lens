@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { allowedResourcesInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
+import { shouldShowResourceInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
 
 // TODO: Figure out implementation for this later.
 const allowedResourcesInjectable = getInjectable({
   id: "allowed-resources",
   instantiate: () => computed(() => new Set<string>()),
-  injectionToken: allowedResourcesInjectionToken,
+  injectionToken: shouldShowResourceInjectionToken,
 });
 
 export default allowedResourcesInjectable;

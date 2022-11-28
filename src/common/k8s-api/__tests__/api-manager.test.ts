@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { DiContainer } from "@ogre-tools/injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import type { ApiManager } from "../api-manager";
 import apiManagerInjectable from "../api-manager/manager.injectable";
@@ -22,10 +24,10 @@ class TestStore extends KubeObjectStore<KubeObject, TestApi> {
 
 describe("ApiManager", () => {
   let apiManager: ApiManager;
+  let di: DiContainer;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
-
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
     apiManager = di.inject(apiManagerInjectable);
   });
 
@@ -40,7 +42,9 @@ describe("ApiManager", () => {
         fallbackApiBases: [fallbackApiBase],
         checkPreferredVersion: true,
       });
-      const kubeStore = new TestStore(kubeApi);
+      const kubeStore = new TestStore({
+        context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+      }, kubeApi);
 
       apiManager.registerApi(apiBase, kubeApi);
 

@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import ingressApiInjectable from "../../../common/k8s-api/endpoints/ingress.api.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { IngressStore } from "./store";
 
@@ -16,7 +17,9 @@ const ingressStoreInjectable = getInjectable({
 
     const api = di.inject(ingressApiInjectable);
 
-    return new IngressStore(api);
+    return new IngressStore({
+      context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+    }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,
 });

@@ -13,6 +13,7 @@ import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-cre
 import assert from "assert";
 import nodeStoreInjectable from "../../+nodes/store.injectable";
 import requestClusterMetricsByNodeNamesInjectable from "../../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../../cluster-frame-context/for-namespaced-resources.injectable";
 
 const clusterOverviewStoreInjectable = getInjectable({
   id: "cluster-overview-store",
@@ -32,6 +33,7 @@ const clusterOverviewStoreInjectable = getInjectable({
       ),
       nodeStore: di.inject(nodeStoreInjectable),
       requestClusterMetricsByNodeNames: di.inject(requestClusterMetricsByNodeNamesInjectable),
+      context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
     }, clusterApi);
   },
   injectionToken: kubeObjectStoreInjectionToken,

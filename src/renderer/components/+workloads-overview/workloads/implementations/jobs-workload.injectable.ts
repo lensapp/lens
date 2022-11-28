@@ -19,7 +19,10 @@ const jobsWorkloadInjectable = getInjectable({
     const store = di.inject(jobStoreInjectable);
 
     return {
-      resourceName: "jobs",
+      resource: {
+        apiName: "jobs",
+        group: "batch",
+      },
       open: navigate,
 
       amountOfItems: computed(
