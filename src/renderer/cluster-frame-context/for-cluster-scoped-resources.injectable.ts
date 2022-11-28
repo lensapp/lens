@@ -18,7 +18,6 @@ const clusterFrameContextForClusterScopedResourcesInjectable = getInjectable({
       isGlobalWatchEnabled: () => cluster.isGlobalWatchEnabled,
       // This is always the case for cluster scoped resources
       isLoadingAll: () => true,
-      isNamespaceListStatic: () => cluster.accessibleNamespaces.length > 0,
       allNamespaces: [],
       contextNamespaces: [], // This value is used as a sentinal
       hasSelectedAll: true,

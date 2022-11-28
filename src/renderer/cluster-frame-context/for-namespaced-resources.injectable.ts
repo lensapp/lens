@@ -42,7 +42,6 @@ const clusterFrameContextForNamespacedResourcesInjectable = getInjectable({
     });
 
     return {
-      isNamespaceListStatic: () => cluster.accessibleNamespaces.length > 0,
       isLoadingAll: (namespaces) => (
         allNamespaces.get().length > 1
         && cluster.accessibleNamespaces.length === 0

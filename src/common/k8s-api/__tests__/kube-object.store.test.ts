@@ -17,7 +17,6 @@ class FakeKubeObjectStore extends KubeObjectStore<KubeObject> {
         hasSelectedAll: false,
         isGlobalWatchEnabled: () => true,
         isLoadingAll: () => true,
-        isNamespaceListStatic: () => false,
       },
     }, api as KubeApi<KubeObject>);
   }

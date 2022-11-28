@@ -11,7 +11,6 @@ export interface ClusterContext {
   readonly contextNamespaces: string[]; // selected by user (see: namespace-select.tsx)
   readonly hasSelectedAll: boolean;
 
-  isNamespaceListStatic(): boolean;
   isLoadingAll(namespaces: string[]): boolean;
   isGlobalWatchEnabled(): boolean;
 }

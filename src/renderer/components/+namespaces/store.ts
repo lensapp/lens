@@ -107,11 +107,13 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   subscribe() {
+    const clusterConfiguredAccessibleNamespaces = this.dependencies.clusterConfiguredAccessibleNamespaces.get();
+
     /**
      * if user has given static list of namespaces let's not start watches
      * because watch adds stuff that's not wanted or will just fail
      */
-    if (this.dependencies.context.isNamespaceListStatic()) {
+    if (clusterConfiguredAccessibleNamespaces.length > 0) {
       return noop;
     }
 
