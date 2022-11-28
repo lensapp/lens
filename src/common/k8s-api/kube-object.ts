@@ -9,11 +9,15 @@ import moment from "moment";
 import type { KubeJsonApiData, KubeJsonApiDataList, KubeJsonApiListMetadata } from "./kube-json-api";
 import { autoBind, formatDuration, hasOptionalTypedProperty, hasTypedProperty, isObject, isString, isNumber, bindPredicate, isTypedArray, isRecord, json } from "../utils";
 import type { ItemObject } from "../item.store";
-import { apiKube } from "./index";
-import * as resourceApplierApi from "./endpoints/resource-applier.api";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { JsonObject } from "type-fest";
+import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import requestKubeObjectPatchInjectable from "./endpoints/resource-applier.api/request-patch.injectable";
+import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import { apiKubeInjectionToken } from "./api-kube";
+import requestKubeObjectCreationInjectable from "./endpoints/resource-applier.api/request-update.injectable";
+import { dump } from "js-yaml";
 
 export type KubeJsonApiDataFor<K> = K extends KubeObject<infer Metadata, infer Status, infer Spec>
   ? KubeJsonApiData<Metadata, Status, Spec>
@@ -375,6 +379,12 @@ export type ScopedNamespace<Namespaced extends KubeObjectScope> = (
       : string | undefined
 );
 
+const resourceApplierAnnotationsForFiltering = [
+  "kubectl.kubernetes.io/last-applied-configuration",
+];
+
+const filterOutResourceApplierAnnotations = (label: string) => !resourceApplierAnnotationsForFiltering.some(key => label.startsWith(key));
+
 export class KubeObject<
   Metadata extends KubeObjectMetadata<KubeObjectScope> = KubeObjectMetadata<KubeObjectScope>,
   Status = unknown,
@@ -588,11 +598,11 @@ export class KubeObject<
   getAnnotations(filter = false): string[] {
     const labels = KubeObject.stringifyLabels(this.metadata.annotations);
 
-    return filter ? labels.filter(label => {
-      const skip = resourceApplierApi.annotations.some(key => label.startsWith(key));
+    if (!filter) {
+      return labels;
+    }
 
-      return !skip;
-    }) : labels;
+    return labels.filter(filterOutResourceApplierAnnotations);
   }
 
   getOwnerRefs() {
@@ -634,7 +644,9 @@ export class KubeObject<
       }
     }
 
-    return resourceApplierApi.patch(this.getName(), this.kind, this.getNs(), patch);
+    const requestKubeObjectPatch = asLegacyGlobalFunctionForExtensionApi(requestKubeObjectPatchInjectable);
+
+    return requestKubeObjectPatch(this.getName(), this.kind, this.getNs(), patch);
   }
 
   /**
@@ -647,11 +659,13 @@ export class KubeObject<
    * @deprecated use KubeApi.update instead
    */
   async update(data: Partial<this>): Promise<KubeJsonApiData | null> {
-    // use unified resource-applier api for updating all k8s objects
-    return resourceApplierApi.update({
+    const requestKubeObjectCreation = asLegacyGlobalFunctionForExtensionApi(requestKubeObjectCreationInjectable);
+    const descriptor = dump({
       ...this.toPlainObject(),
       ...data,
     });
+
+    return requestKubeObjectCreation(descriptor);
   }
 
   /**
@@ -659,6 +673,8 @@ export class KubeObject<
    */
   delete(params?: object) {
     assert(this.selfLink, "selfLink must be present to delete self");
+
+    const apiKube = asLegacyGlobalForExtensionApi(apiKubeInjectionToken);
 
     return apiKube.del(this.selfLink, params);
   }

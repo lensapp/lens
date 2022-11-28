@@ -1,0 +1,114 @@
+//-- Flexbox
+.flex {
+  display: flex;
+
+  &.inline {
+    display: inline-flex;
+  }
+
+  &.fullsize {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  &.column {
+    flex-direction: column;
+    &.reverse {
+      flex-direction: column-reverse;
+    }
+  }
+
+  &.reverse {
+    flex-direction: row-reverse;
+  }
+
+  &.wrap {
+    flex-wrap: wrap;
+    &-reverse {
+      flex-wrap: wrap-reverse;
+    }
+  }
+
+  &.auto {
+    > * {
+      flex: 1 1 0%;
+    }
+  }
+
+  &.center {
+    > * {
+      margin: auto;
+    }
+  }
+
+  $flex: flex-start flex-end center;
+  $justifyContent: join($flex, space-around space-between);
+  $alignContent: join($justifyContent, stretch);
+  $alignItems: join($flex, stretch baseline);
+
+  // align items in x-axis for flex=row (default) and in y-axis when flex=column mode
+  @each $mod in $justifyContent {
+    &.justify-#{$mod} {
+      justify-content: $mod;
+    }
+  }
+
+  @each $mod in $alignItems {
+    &.align-#{$mod} {
+      align-items: $mod;
+    }
+  }
+  @each $mod in $alignContent {
+    &.content-#{$mod} {
+      align-content: $mod;
+    }
+  }
+
+  // gaps
+  &.gaps {
+    $gap: var(--flex-gap, 1em);
+    &.column {
+      &:not(.reverse) > :not(:last-child) {
+        margin-bottom: $gap;
+      }
+      &.reverse > :not(:last-child) {
+        margin-top: $gap;
+      }
+    }
+    &:not(.column) {
+      &:not(.reverse) > :not(:last-child) {
+        margin-right: $gap;
+      }
+      &.reverse > :not(:last-child) {
+        margin-left: $gap;
+      }
+    }
+  }
+
+  // children
+  > .box {
+    &.grow {
+      flex: 1 0;
+      &-fixed {
+        flex: 1 0 0;
+      }
+    }
+    &.center {
+      margin: auto;
+    }
+    &.left {
+      margin-left: 0;
+      margin-right: auto;
+    }
+    &.right {
+      margin-right: 0;
+      margin-left: auto;
+    }
+
+    @each $mod in $alignItems {
+      &.self-#{$mod} {
+        align-self: $mod;
+      }
+    }
+  }
+}

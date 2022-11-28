@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { requestOpenFilePickingDialog } from "../../ipc";
 import { supportedExtensionFormats } from "./supported-extension-formats";
-import attemptInstallsInjectable from "./attempt-installs/attempt-installs.injectable";
+import attemptInstallsInjectable from "./attempt-installs.injectable";
 import directoryForDownloadsInjectable from "../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
 
 interface Dependencies {

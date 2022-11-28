@@ -6,7 +6,8 @@
 // Convert object's keys to camelCase format
 import { camelCase } from "lodash";
 import type { SingleOrMany } from "./types";
-import { isObject } from "./type-narrowing";
+import { isObject, isString } from "./type-narrowing";
+import * as object from "./objects";
 
 export function toCamelCase<T extends Record<string, unknown>[]>(obj: T): T;
 export function toCamelCase<T extends Record<string, unknown>>(obj: T): T;
@@ -17,11 +18,10 @@ export function toCamelCase(obj: SingleOrMany<Record<string, unknown> | unknown>
   }
 
   if (isObject(obj)) {
-    return Object.fromEntries(
-      Object.entries(obj)
-        .map(([key, value]) => {
-          return [camelCase(key), toCamelCase(value)];
-        }),
+    return object.fromEntries(
+      object.entries(obj)
+        .filter((pair): pair is [string, unknown] => isString(pair[0]))
+        .map(([key, value]) => [camelCase(key), isObject(value) ? toCamelCase(value) : value]),
     );
   }
 

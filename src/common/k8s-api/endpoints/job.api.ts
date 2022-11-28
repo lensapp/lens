@@ -5,8 +5,7 @@
 
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { metricsApi } from "./metrics.api";
-import type { PodMetricData, PodSpec } from "./pod.api";
+import type { PodSpec } from "./pod.api";
 import type { Container } from "./types/container";
 import type { KubeObjectStatus, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
@@ -102,21 +101,4 @@ export class JobApi extends KubeApi<Job> {
       objectConstructor: Job,
     });
   }
-}
-
-export function getMetricsForJobs(jobs: Job[], namespace: string, selector = ""): Promise<PodMetricData> {
-  const podSelector = jobs.map(job => `${job.getName()}-[[:alnum:]]{5}`).join("|");
-  const opts = { category: "pods", pods: podSelector, namespace, selector };
-
-  return metricsApi.getMetrics({
-    cpuUsage: opts,
-    memoryUsage: opts,
-    fsUsage: opts,
-    fsWrites: opts,
-    fsReads: opts,
-    networkReceive: opts,
-    networkTransmit: opts,
-  }, {
-    namespace,
-  });
 }

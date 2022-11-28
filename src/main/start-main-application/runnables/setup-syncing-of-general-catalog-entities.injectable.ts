@@ -15,6 +15,7 @@ const setupSyncingOfGeneralCatalogEntitiesInjectable = getInjectable({
     );
 
     return {
+      id: "setup-syncing-of-general-catalog-entities",
       run: () => {
         syncGeneralCatalogEntities();
       },

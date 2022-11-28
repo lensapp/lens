@@ -10,18 +10,18 @@ import readYamlFileInjectable from "../../common/fs/read-yaml-file.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { HelmRepositoriesFromYaml } from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
-import execFileInjectable from "../../common/fs/exec-file.injectable";
+import execFileInjectable, { type ExecFile } from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
-import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import callForPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 
 describe("listing active helm repositories in preferences", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let readYamlFileMock: AsyncFnMock<ReadYamlFile>;
-  let execFileMock: AsyncFnMock<ReturnType<typeof execFileInjectable["instantiate"]>>;
+  let execFileMock: AsyncFnMock<ExecFile>;
   let loggerStub: Logger;
   let showErrorNotificationMock: jest.Mock;
 
@@ -69,7 +69,10 @@ describe("listing active helm repositories in preferences", () => {
       expect(execFileMock).toHaveBeenCalledWith(
         "some-helm-binary-path",
         ["env"],
-        { "maxBuffer": 34359738368 },
+        {
+          maxBuffer: 34359738368,
+          env: {},
+        },
       );
     });
 
@@ -77,13 +80,21 @@ describe("listing active helm repositories in preferences", () => {
       expect(execFileMock).not.toHaveBeenCalledWith(
         "some-helm-binary-path",
         ["repo", "update"],
-        { "maxBuffer": 34359738368 },
+        {
+          maxBuffer: 34359738368,
+          env: {},
+        },
       );
     });
 
     describe("when getting configuration rejects", () => {
       beforeEach(async () => {
-        await execFileMock.reject("some-error");
+        await execFileMock.resolve({
+          callWasSuccessful: false,
+          error: Object.assign(new Error("Some error"), {
+            stderr: "some-error",
+          }),
+        });
       });
 
       it("shows error notification", () => {
@@ -115,7 +126,10 @@ describe("listing active helm repositories in preferences", () => {
 
         await execFileMock.resolveSpecific(
           ["some-helm-binary-path", ["env"]],
-          "HELM_REPOSITORY_CACHE=some-helm-repository-cache-path",
+          {
+            callWasSuccessful: true,
+            response: "HELM_REPOSITORY_CACHE=some-helm-repository-cache-path",
+          },
         );
       });
 
@@ -154,7 +168,10 @@ describe("listing active helm repositories in preferences", () => {
 
         await execFileMock.resolveSpecific(
           ["some-helm-binary-path", ["env"]],
-          "HELM_REPOSITORY_CONFIG=some-helm-repository-config-file.yaml",
+          {
+            callWasSuccessful: true,
+            response: "HELM_REPOSITORY_CONFIG=some-helm-repository-config-file.yaml",
+          },
         );
       });
 
@@ -193,11 +210,13 @@ describe("listing active helm repositories in preferences", () => {
 
         await execFileMock.resolveSpecific(
           ["some-helm-binary-path", ["env"]],
-
-          [
-            "HELM_REPOSITORY_CONFIG=some-helm-repository-config-file.yaml",
-            "HELM_REPOSITORY_CACHE=some-helm-repository-cache-path",
-          ].join("\n"),
+          {
+            callWasSuccessful: true,
+            response: [
+              "HELM_REPOSITORY_CONFIG=some-helm-repository-config-file.yaml",
+              "HELM_REPOSITORY_CACHE=some-helm-repository-cache-path",
+            ].join("\n"),
+          },
         );
       });
 
@@ -209,7 +228,10 @@ describe("listing active helm repositories in preferences", () => {
         expect(execFileMock).toHaveBeenCalledWith(
           "some-helm-binary-path",
           ["repo", "update"],
-          { "maxBuffer": 34359738368 },
+          {
+            maxBuffer: 34359738368,
+            env: {},
+          },
         );
       });
 
@@ -219,7 +241,12 @@ describe("listing active helm repositories in preferences", () => {
 
       describe("when updating repositories reject with any other error", () => {
         beforeEach(async () => {
-          await execFileMock.reject("Some error");
+          await execFileMock.resolve({
+            callWasSuccessful: false,
+            error: Object.assign(new Error("Some error"), {
+              stderr: "Some error",
+            }),
+          });
         });
 
         it("shows error notification", () => {
@@ -249,9 +276,12 @@ describe("listing active helm repositories in preferences", () => {
         beforeEach(async () => {
           execFileMock.mockClear();
 
-          await execFileMock.reject(
-            "Error: no repositories found. You must add one before updating",
-          );
+          await execFileMock.resolve({
+            callWasSuccessful: false,
+            error: Object.assign(new Error("no repositories found. You must add one before updating"), {
+              stderr: "no repositories found. You must add one before updating",
+            }),
+          });
         });
 
         it("renders", () => {
@@ -268,13 +298,21 @@ describe("listing active helm repositories in preferences", () => {
           expect(execFileMock).toHaveBeenCalledWith(
             "some-helm-binary-path",
             ["repo", "add", "bitnami", "https://charts.bitnami.com/bitnami"],
-            { "maxBuffer": 34359738368 },
+            {
+              maxBuffer: 34359738368,
+              env: {},
+            },
           );
         });
 
         describe("when adding default repository reject", () => {
           beforeEach(async () => {
-            await execFileMock.reject("Some error");
+            await execFileMock.resolve({
+              callWasSuccessful: false,
+              error: Object.assign(new Error("Some error"), {
+                stderr: "Some error",
+              }),
+            });
           });
 
           it("shows error notification", () => {
@@ -307,7 +345,6 @@ describe("listing active helm repositories in preferences", () => {
             await execFileMock.resolveSpecific(
               [
                 "some-helm-binary-path",
-
                 [
                   "repo",
                   "add",
@@ -315,8 +352,10 @@ describe("listing active helm repositories in preferences", () => {
                   "https://charts.bitnami.com/bitnami",
                 ],
               ],
-
-              "",
+              {
+                callWasSuccessful: true,
+                response: "",
+              },
             );
           });
 
@@ -380,7 +419,10 @@ describe("listing active helm repositories in preferences", () => {
 
           await execFileMock.resolveSpecific(
             ["some-helm-binary-path", ["repo", "update"]],
-            "",
+            {
+              callWasSuccessful: true,
+              response: "",
+            },
           );
         });
 
@@ -404,7 +446,10 @@ describe("listing active helm repositories in preferences", () => {
             expect(execFileMock).not.toHaveBeenCalledWith(
               "some-helm-binary-path",
               ["repo", "add", "bitnami", "https://charts.bitnami.com/bitnami"],
-              { "maxBuffer": 34359738368 },
+              {
+                maxBuffer: 34359738368,
+                env: {},
+              },
             );
           });
 

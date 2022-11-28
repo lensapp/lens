@@ -5,6 +5,8 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to proxy preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -15,6 +17,7 @@ describe("preferences - navigation to proxy preferences", () => {
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
+    let discover: Discover;
 
     beforeEach(async () => {
       applicationBuilder.beforeWindowStart(() => {
@@ -22,6 +25,7 @@ describe("preferences - navigation to proxy preferences", () => {
       });
 
       rendered = await applicationBuilder.render();
+      discover = discoverFor(() => rendered);
     });
 
     it("renders", () => {
@@ -29,9 +33,12 @@ describe("preferences - navigation to proxy preferences", () => {
     });
 
     it("does not show proxy preferences yet", () => {
-      const page = rendered.queryByTestId("proxy-preferences-page");
+      const { discovered } = discover.querySingleElement(
+        "preference-page",
+        "proxy-page",
+      );
 
-      expect(page).toBeNull();
+      expect(discovered).toBeNull();
     });
 
     describe("when navigating to proxy preferences using navigation", () => {
@@ -44,9 +51,12 @@ describe("preferences - navigation to proxy preferences", () => {
       });
 
       it("shows proxy preferences", () => {
-        const page = rendered.getByTestId("proxy-preferences-page");
+        const { discovered } = discover.getSingleElement(
+          "preference-page",
+          "proxy-page",
+        );
 
-        expect(page).not.toBeNull();
+        expect(discovered).not.toBeNull();
       });
     });
   });

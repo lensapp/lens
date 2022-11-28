@@ -13,6 +13,7 @@ const startTrayInjectable = getInjectable({
     const electronTray = di.inject(electronTrayInjectable);
 
     return {
+      id: "start-tray",
       run: () => {
         electronTray.start();
       },

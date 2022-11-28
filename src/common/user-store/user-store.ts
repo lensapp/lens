@@ -4,19 +4,18 @@
  */
 
 import { app } from "electron";
-import semver from "semver";
-import { action, computed, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
+import { action, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
 import { BaseStore } from "../base-store";
 import migrations from "../../migrations/user-store";
-import { getAppVersion } from "../utils/app-version";
-import { kubeConfigDefaultPath } from "../kube-helpers";
-import { appEventBus } from "../app-event-bus/event-bus";
 import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
 import { DESCRIPTORS } from "./preferences-helpers";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import logger from "../../main/logger";
-import type { SelectedUpdateChannel } from "../application-update/selected-update-channel/selected-update-channel.injectable";
-import type { UpdateChannelId } from "../application-update/update-channels";
+import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
+
+// TODO: Remove coupling with Feature
+import type { SelectedUpdateChannel } from "../../features/application-update/common/selected-update-channel/selected-update-channel.injectable";
+import type { ReleaseChannel } from "../../features/application-update/common/update-channels";
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -24,7 +23,8 @@ export interface UserStoreModel {
 }
 
 interface Dependencies {
-  selectedUpdateChannel: SelectedUpdateChannel;
+  readonly selectedUpdateChannel: SelectedUpdateChannel;
+  emitAppEvent: EmitAppEvent;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> /* implements UserStoreFlatModel (when strict null is enabled) */ {
@@ -37,16 +37,9 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     });
 
     makeObservable(this);
-    this.load();
   }
 
   @observable lastSeenAppVersion = "0.0.0";
-
-  /**
-   * used in add-cluster page for providing context
-   * @deprecated No longer used
-   */
-  @observable kubeConfigPath = kubeConfigDefaultPath;
 
   /**
    * @deprecated No longer used
@@ -98,14 +91,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    */
   @observable syncKubeconfigEntries!: StoreType<typeof DESCRIPTORS["syncKubeconfigEntries"]>;
 
-  @computed get isNewVersion() {
-    return semver.gt(getAppVersion(), this.lastSeenAppVersion);
-  }
-
-  @computed get resolvedShell(): string | undefined {
-    return this.shell || process.env.SHELL || process.env.PTYSHELL;
-  }
-
   startMainReactions() {
     // open at system start-up
     reaction(() => this.openAtLogin, openAtLogin => {
@@ -152,12 +137,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   @action
-  saveLastSeenAppVersion() {
-    appEventBus.emit({ name: "app", action: "whats-new-seen" });
-    this.lastSeenAppVersion = getAppVersion();
-  }
-
-  @action
   protected fromStore({ lastSeenAppVersion, preferences }: Partial<UserStoreModel> = {}) {
     logger.debug("UserStore.fromStore()", { lastSeenAppVersion, preferences });
 
@@ -180,7 +159,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
     // TODO: Switch to action-based saving instead saving stores by reaction
     if (preferences?.updateChannel) {
-      this.dependencies.selectedUpdateChannel.setValue(preferences?.updateChannel as UpdateChannelId);
+      this.dependencies.selectedUpdateChannel.setValue(preferences?.updateChannel as ReleaseChannel);
     }
   }
 

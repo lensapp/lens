@@ -7,7 +7,7 @@ import type { ClusterContext } from "./cluster-context";
 
 import { action, computed, makeObservable, observable, reaction, when } from "mobx";
 import type { Disposer } from "../utils";
-import { waitUntilDefined, autoBind, includes, isRequestError, noop, rejectPromiseBy } from "../utils";
+import { waitUntilDefined, autoBind, includes, noop, rejectPromiseBy } from "../utils";
 import type { KubeJsonApiDataFor, KubeObject } from "./kube-object";
 import { KubeStatus } from "./kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-event";
@@ -221,11 +221,7 @@ export abstract class KubeObjectStore<
         try {
           return await res ?? [];
         } catch (error) {
-          onLoadFailure((
-            isRequestError(error)
-              ? error.message || error.toString()
-              : "Unknown error"
-          ));
+          onLoadFailure(new Error(`Failed to load ${this.api.apiBase}`, { cause: error }));
 
           // reset the store because we are loading all, so that nothing is displayed
           this.items.clear();
@@ -253,7 +249,7 @@ export abstract class KubeObjectStore<
 
         case "rejected":
           if (onLoadFailure) {
-            onLoadFailure(result.reason.message || result.reason);
+            onLoadFailure(new Error(`Failed to load ${this.api.apiBase}`, { cause: result.reason }));
           } else {
             // if onLoadFailure is not provided then preserve old behaviour
             throw result.reason;
@@ -432,7 +428,7 @@ export abstract class KubeObjectStore<
   protected eventsBuffer = observable.array<IKubeWatchEvent<D>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {
-    reaction(() => this.eventsBuffer.length, this.updateFromEventsBuffer, {
+    reaction(() => [...this.eventsBuffer], this.updateFromEventsBuffer, {
       delay,
     });
   }
@@ -477,7 +473,6 @@ export abstract class KubeObjectStore<
       callback,
     });
 
-    // TODO: upgrade node-fetch once we are starting to use ES modules
     const signal = abortController.signal;
 
     const callback: KubeApiWatchCallback<D> = (data, error) => {

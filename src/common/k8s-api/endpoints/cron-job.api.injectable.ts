@@ -13,7 +13,9 @@ const cronJobApiInjectable = getInjectable({
   instantiate: (di) => {
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "cronJobApi is only available in certain environments");
 
-    return new CronJobApi();
+    return new CronJobApi({
+      checkPreferredVersion: true,
+    });
   },
 
   injectionToken: kubeApiInjectionToken,

@@ -13,9 +13,8 @@ const stopReactiveTrayMenuIconInjectable = getInjectable({
     const reactiveTrayMenuIcon = di.inject(reactiveTrayMenuIconInjectable);
 
     return {
-      run: async () => {
-        await reactiveTrayMenuIcon.stop();
-      },
+      id: "stop-reactive-tray-menu-icon",
+      run: () => void reactiveTrayMenuIcon.stop(),
     };
   },
 

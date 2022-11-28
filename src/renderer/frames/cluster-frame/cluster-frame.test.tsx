@@ -24,6 +24,7 @@ import currentRouteComponentInjectable from "../../routes/current-route-componen
 import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
+import { useFakeTime } from "../../../common/test-utils/use-fake-time";
 
 describe("<ClusterFrame />", () => {
   let render: () => RenderResult;
@@ -44,6 +45,8 @@ describe("<ClusterFrame />", () => {
     di.override(legacyOnChannelListenInjectable, () => jest.fn().mockImplementation(() => jest.fn()));
     di.override(directoryForUserDataInjectable, () => "/some/irrelavent/path");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+
+    useFakeTime("2000-01-01 12:00:00am");
 
     const createCluster = di.inject(createClusterInjectable);
 

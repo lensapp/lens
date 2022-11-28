@@ -7,6 +7,9 @@ import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import React from "react";
 
 describe("preferences: extension adding preference tabs", () => {
   let builder: ApplicationBuilder;
@@ -18,9 +21,12 @@ describe("preferences: extension adding preference tabs", () => {
   describe("given in preferences, when extension with preference tabs is enabled", () => {
     let rendered: RenderResult;
     let someObservable: IObservableValue<boolean>;
+    let discover: Discover;
 
     beforeEach(async () => {
       rendered = await builder.render();
+
+      discover = discoverFor(() => rendered);
 
       builder.preferences.navigate();
 
@@ -49,11 +55,43 @@ describe("preferences: extension adding preference tabs", () => {
               visible: computed(() => someObservable.get()),
             },
           ],
+
+          appPreferences: [
+            {
+              title: "some-title",
+              id: "some-preference-item-id",
+              showInPreferencesTab: "some-preference-tab-id",
+
+              components: {
+                Hint: () => <div />,
+                Input: () => <div />,
+              },
+            },
+            {
+              title: "some-other-title",
+              id: "some-other-preference-item-id",
+              showInPreferencesTab: "some-other-preference-tab-id",
+
+              components: {
+                Hint: () => <div />,
+                Input: () => <div />,
+              },
+            },
+            {
+              title: "some-another-title",
+              id: "some-another-preference-item-id",
+              showInPreferencesTab: "some-preference-tab-id-with-controlled-visibility",
+
+              components: {
+                Hint: () => <div />,
+                Input: () => <div />,
+              },
+            },
+          ],
         },
       };
 
       builder.extensions.enable(testExtension);
-
     });
 
     it("renders", () => {
@@ -61,20 +99,25 @@ describe("preferences: extension adding preference tabs", () => {
     });
 
     it("shows tabs in order", () => {
-      const actual = rendered.queryAllByTestId(/tab-link-for-extension-some-extension-nav-item-(.*)/).map(x => x.dataset.testid);
+      const actual = discover
+        .queryAllElements("preference-tab-link")
+        .attributeValues.filter((value) =>
+          value?.startsWith("extension-some-extension"),
+        );
 
       expect(actual).toEqual([
-        "tab-link-for-extension-some-extension-nav-item-some-other-preference-tab-id",
-        "tab-link-for-extension-some-extension-nav-item-some-preference-tab-id",
+        "extension-some-extension-some-other-preference-tab-id",
+        "extension-some-extension-some-preference-tab-id",
       ]);
     });
 
     it("does not show hidden tab", () => {
-      const actual = rendered.queryByTestId(
-        "tab-link-for-extension-some-extension-nav-item-some-preference-tab-id-with-controlled-visibility",
+      const { discovered } = discover.querySingleElement(
+        "preference-tab-link",
+        "extension-some-extension-some-preference-tab-id-with-controlled-visibility",
       );
 
-      expect(actual).not.toBeInTheDocument();
+      expect(discovered).toBeNull();
     });
 
     it("when item becomes visible, shows the tab", () => {
@@ -82,11 +125,12 @@ describe("preferences: extension adding preference tabs", () => {
         someObservable.set(true);
       });
 
-      const actual = rendered.queryByTestId(
-        "tab-link-for-extension-some-extension-nav-item-some-preference-tab-id-with-controlled-visibility",
+      const { discovered } = discover.getSingleElement(
+        "preference-tab-link",
+        "extension-some-extension-some-preference-tab-id-with-controlled-visibility",
       );
 
-      expect(actual).toBeInTheDocument();
+      expect(discovered).not.toBeNull();
     });
   });
 });

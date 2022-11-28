@@ -1,0 +1,25 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.HorizontalLine {
+  height: 1px;
+  border-top: thin solid var(--hrColor);
+}
+
+@mixin horizontalLineSize(
+  $sizeName,
+  $size
+) {
+  .size-#{$sizeName} {
+  margin-top: $size;
+  margin-bottom: $size;
+  }
+}
+
+$baseline: 8px;
+
+@include horizontalLineSize('sm', 2 * $baseline);
+@include horizontalLineSize('md', 3 * $baseline);
+@include horizontalLineSize('xl', 5 * $baseline);

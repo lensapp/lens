@@ -13,6 +13,7 @@ const setupProxyEnvInjectable = getInjectable({
     const getCommandLineSwitch = di.inject(getCommandLineSwitchInjectable);
 
     return {
+      id: "setup-proxy-env",
       run: () => {
         const switchValue = getCommandLineSwitch("proxy-server");
 
@@ -33,6 +34,8 @@ const setupProxyEnvInjectable = getInjectable({
         if (getCommandLineSwitch("proxy-server") !== "") {
           process.env.HTTPS_PROXY = getCommandLineSwitch("proxy-server");
         }
+
+        return undefined;
       },
     };
   },

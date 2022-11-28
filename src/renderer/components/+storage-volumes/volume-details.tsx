@@ -11,11 +11,12 @@ import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { PersistentVolume, persistentVolumeClaimApi } from "../../../common/k8s-api/endpoints";
+import { PersistentVolume, persistentVolumeClaimApi, storageClassApi } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectMeta } from "../kube-object-meta";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
+import { stopPropagation } from "../../../renderer/utils";
 
 export interface PersistentVolumeDetailsProps extends KubeObjectDetailsProps<PersistentVolume> {
 }
@@ -37,9 +38,13 @@ export class PersistentVolumeDetails extends React.Component<PersistentVolumeDet
 
     const { accessModes, capacity, persistentVolumeReclaimPolicy, storageClassName, claimRef, flexVolume, mountOptions, nfs } = volume.spec;
 
+    const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
+      name: storageClassName,
+    }));
+
     return (
       <div className="PersistentVolumeDetails">
-        <KubeObjectMeta object={volume}/>
+        <KubeObjectMeta object={volume} />
         <DrawerItem name="Capacity">
           {capacity?.storage}
         </DrawerItem>
@@ -57,10 +62,16 @@ export class PersistentVolumeDetails extends React.Component<PersistentVolumeDet
           {persistentVolumeReclaimPolicy}
         </DrawerItem>
         <DrawerItem name="Storage Class Name">
-          {storageClassName}
+          <Link
+            key="link"
+            to={storageClassDetailsUrl}
+            onClick={stopPropagation}
+          >
+            {storageClassName}
+          </Link>
         </DrawerItem>
         <DrawerItem name="Status" labelsOnly>
-          <Badge label={volume.getStatus()}/>
+          <Badge label={volume.getStatus()} />
         </DrawerItem>
 
         {nfs && (

@@ -3,42 +3,58 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React from "react";
-import { makeObservable, observable } from "mobx";
-import { observer } from "mobx-react";
+import React, { useEffect, useState } from "react";
 import type { SingleOrMany } from "../../utils";
+import type { RequestIdleCallback } from "./request-idle-callback.injectable";
+import type { CancelIdleCallback } from "./cancel-idle-callback.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import cancelIdleCallbackInjectable from "./cancel-idle-callback.injectable";
+import requestIdleCallbackInjectable from "./request-idle-callback.injectable";
+import idleCallbackTimeoutInjectable from "./idle-callback-timeout.injectable";
 
 export interface RenderDelayProps {
   placeholder?: React.ReactNode;
   children: SingleOrMany<React.ReactNode>;
 }
 
-@observer
-export class RenderDelay extends React.Component<RenderDelayProps> {
-  @observable isVisible = false;
-
-  constructor(props: RenderDelayProps) {
-    super(props);
-    makeObservable(this);
-  }
-
-  componentDidMount() {
-    const guaranteedFireTime = 1000;
-
-    window.requestIdleCallback(this.showContents, { timeout: guaranteedFireTime });
-  }
-
-  componentWillUnmount() {
-    window.cancelIdleCallback(this.showContents);
-  }
-
-  showContents = () => this.isVisible = true;
-
-  render() {
-    if (!this.isVisible) {
-      return this.props.placeholder || null;
-    }
-
-    return this.props.children;
-  }
+interface Dependencies {
+  requestIdleCallback: RequestIdleCallback;
+  cancelIdleCallback: CancelIdleCallback;
+  idleCallbackTimeout: number;
 }
+
+const NonInjectedRenderDelay = (props: RenderDelayProps & Dependencies) => {
+  const {
+    cancelIdleCallback,
+    requestIdleCallback,
+    children,
+    placeholder,
+    idleCallbackTimeout,
+  } = props;
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handle = requestIdleCallback(() => setIsVisible(true), { timeout: idleCallbackTimeout });
+
+    return () => cancelIdleCallback(handle);
+  }, []);
+
+  return (
+    <>
+      {
+        isVisible
+          ? children
+          : placeholder
+      }
+    </>
+  );
+};
+
+export const RenderDelay = withInjectables<Dependencies, RenderDelayProps>(NonInjectedRenderDelay, {
+  getProps: (di, props) => ({
+    ...props,
+    cancelIdleCallback: di.inject(cancelIdleCallbackInjectable),
+    requestIdleCallback: di.inject(requestIdleCallbackInjectable),
+    idleCallbackTimeout: di.inject(idleCallbackTimeoutInjectable),
+  }),
+});

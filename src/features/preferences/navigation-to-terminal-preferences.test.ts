@@ -5,6 +5,8 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
 describe("preferences - navigation to terminal preferences", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -15,6 +17,7 @@ describe("preferences - navigation to terminal preferences", () => {
 
   describe("given in preferences, when rendered", () => {
     let rendered: RenderResult;
+    let discover: Discover;
 
     beforeEach(async () => {
       applicationBuilder.beforeWindowStart(() => {
@@ -22,6 +25,8 @@ describe("preferences - navigation to terminal preferences", () => {
       });
 
       rendered = await applicationBuilder.render();
+
+      discover = discoverFor(() => rendered);
     });
 
     it("renders", () => {
@@ -29,9 +34,12 @@ describe("preferences - navigation to terminal preferences", () => {
     });
 
     it("does not show terminal preferences yet", () => {
-      const page = rendered.queryByTestId("terminal-preferences-page");
+      const { discovered } = discover.querySingleElement(
+        "preference-page",
+        "terminal-page",
+      );
 
-      expect(page).toBeNull();
+      expect(discovered).toBeNull();
     });
 
     describe("when navigating to terminal preferences using navigation", () => {
@@ -43,10 +51,14 @@ describe("preferences - navigation to terminal preferences", () => {
         expect(rendered.container).toMatchSnapshot();
       });
 
-      it("shows terminal preferences", () => {
-        const page = rendered.getByTestId("terminal-preferences-page");
 
-        expect(page).not.toBeNull();
+      it("shows terminal preferences", () => {
+        const { discovered } = discover.getSingleElement(
+          "preference-page",
+          "terminal-page",
+        );
+
+        expect(discovered).not.toBeNull();
       });
     });
   });

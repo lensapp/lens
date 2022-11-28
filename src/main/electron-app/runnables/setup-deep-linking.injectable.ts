@@ -26,6 +26,7 @@ const setupDeepLinkingInjectable = getInjectable({
     );
 
     return {
+      id: "setup-deep-linking",
       run: async () => {
         logger.info(`📟 Setting protocol client for lens://`);
 

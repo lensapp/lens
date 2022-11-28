@@ -7,11 +7,12 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
+import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { HelmRepo } from "../../common/helm/helm-repo";
-import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import callForPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
@@ -21,9 +22,7 @@ describe("add helm repository from list in preferences", () => {
   let showSuccessNotificationMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
   let rendered: RenderResult;
-  let execFileMock: AsyncFnMock<
-    ReturnType<typeof execFileInjectable["instantiate"]>
-  >;
+  let execFileMock: AsyncFnMock<ExecFile>;
   let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
   let callForPublicHelmRepositoriesMock: AsyncFnMock<() => Promise<HelmRepo[]>>;
 
@@ -119,7 +118,10 @@ describe("add helm repository from list in preferences", () => {
             expect(execFileMock).toHaveBeenCalledWith(
               "some-helm-binary-path",
               ["repo", "add", "Some to be added repository", "some-other-url"],
-              { "maxBuffer": 34359738368 },
+              {
+                maxBuffer: 34359738368,
+                env: {},
+              },
             );
           });
 
@@ -129,9 +131,12 @@ describe("add helm repository from list in preferences", () => {
 
           describe("when adding rejects", () => {
             beforeEach(async () => {
-              await execFileMock.reject(
-                "Some error",
-              );
+              await execFileMock.resolve({
+                callWasSuccessful: false,
+                error: Object.assign(new Error("Some error"), {
+                  stderr: "",
+                }),
+              });
             });
 
             it("renders", () => {
@@ -164,8 +169,10 @@ describe("add helm repository from list in preferences", () => {
                   "some-helm-binary-path",
                   ["repo", "add", "Some to be added repository", "some-other-url"],
                 ],
-
-                "",
+                {
+                  callWasSuccessful: true,
+                  response: "",
+                },
               );
             });
 
@@ -228,7 +235,10 @@ describe("add helm repository from list in preferences", () => {
                     expect(execFileMock).toHaveBeenCalledWith(
                       "some-helm-binary-path",
                       ["repo", "remove", "Some already active repository"],
-                      { "maxBuffer": 34359738368 },
+                      {
+                        maxBuffer: 34359738368,
+                        env: {},
+                      },
                     );
                   });
 
@@ -243,8 +253,10 @@ describe("add helm repository from list in preferences", () => {
                           "some-helm-binary-path",
                           ["repo", "remove", "Some already active repository"],
                         ],
-
-                        "",
+                        {
+                          callWasSuccessful: true,
+                          response: "",
+                        },
                       );
                     });
 

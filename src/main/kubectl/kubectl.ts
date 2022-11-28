@@ -3,45 +3,27 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import path from "path";
 import fs from "fs";
 import { promiseExecFile } from "../../common/utils/promise-exec";
 import logger from "../logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
-import { getBundledKubectlVersion } from "../../common/utils/app-version";
-import { SemVer } from "semver";
+import { SemVer, coerce } from "semver";
 import { defaultPackageMirror, packageMirrors } from "../../common/user-store/preferences-helpers";
 import got from "got/dist/source";
 import { promisify } from "util";
 import stream from "stream";
 import { noop } from "lodash/fp";
+import type { JoinPaths } from "../../common/path/join-paths.injectable";
+import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
+import type { GetBasenameOfPath } from "../../common/path/get-basename.injectable";
+import type { NormalizedPlatform } from "../../common/vars/normalized-platform.injectable";
 
-const bundledVersion = getBundledKubectlVersion();
-const kubectlMap: Map<string, string> = new Map([
-  ["1.7", "1.8.15"],
-  ["1.8", "1.9.10"],
-  ["1.9", "1.10.13"],
-  ["1.10", "1.11.10"],
-  ["1.11", "1.12.10"],
-  ["1.12", "1.13.12"],
-  ["1.13", "1.13.12"],
-  ["1.14", "1.14.10"],
-  ["1.15", "1.15.11"],
-  ["1.16", "1.16.15"],
-  ["1.17", "1.17.17"],
-  ["1.18", "1.18.20"],
-  ["1.19", "1.19.12"],
-  ["1.20", "1.20.8"],
-  ["1.21", "1.21.9"],
-  ["1.22", "1.22.6"],
-  ["1.23", bundledVersion],
-]);
 const initScriptVersionString = "# lens-initscript v3";
 
 export interface KubectlDependencies {
   readonly directoryForKubectlBinaries: string;
-  readonly normalizedDownloadPlatform: "darwin" | "linux" | "windows";
+  readonly normalizedDownloadPlatform: NormalizedPlatform;
   readonly normalizedDownloadArch: "amd64" | "arm64" | "386";
   readonly kubectlBinaryName: string;
   readonly bundledKubectlBinaryPath: string;
@@ -52,6 +34,11 @@ export interface KubectlDependencies {
     readonly downloadKubectlBinaries: boolean;
     readonly downloadMirror: string;
   };
+  readonly bundledKubectlVersion: string;
+  readonly kubectlVersionMap: Map<string, string>;
+  joinPaths: JoinPaths;
+  getDirnameOfPath: GetDirnameOfPath;
+  getBasenameOfPath: GetBasenameOfPath;
 }
 
 export class Kubectl {
@@ -60,19 +47,19 @@ export class Kubectl {
   protected readonly path: string;
   protected readonly dirname: string;
 
-  public static readonly bundledKubectlVersion = bundledVersion;
   public static invalidBundle = false;
 
   constructor(protected readonly dependencies: KubectlDependencies, clusterVersion: string) {
     let version: SemVer;
+    const bundledVersion = new SemVer(this.dependencies.bundledKubectlVersion);
 
     try {
       version = new SemVer(clusterVersion);
     } catch {
-      version = new SemVer(Kubectl.bundledKubectlVersion);
+      version = bundledVersion;
     }
 
-    const fromMajorMinor = kubectlMap.get(`${version.major}.${version.minor}`);
+    const fromMajorMinor = this.dependencies.kubectlVersionMap.get(`${version.major}.${version.minor}`);
 
     /**
      * minorVersion is the first two digits of kube server version if the version map includes that,
@@ -82,13 +69,16 @@ export class Kubectl {
       this.kubectlVersion = fromMajorMinor;
       logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using version map`);
     } else {
-      this.kubectlVersion = version.format();
+      /* this is the version (without possible prelease tag) to get from the download mirror */
+      const ver = coerce(version.format()) ?? bundledVersion;
+
+      this.kubectlVersion = ver.format();
       logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using fallback`);
     }
 
     this.url = `${this.getDownloadMirror()}/v${this.kubectlVersion}/bin/${this.dependencies.normalizedDownloadPlatform}/${this.dependencies.normalizedDownloadArch}/${this.dependencies.kubectlBinaryName}`;
-    this.dirname = path.normalize(path.join(this.getDownloadDir(), this.kubectlVersion));
-    this.path = path.join(this.dirname, this.dependencies.kubectlBinaryName);
+    this.dirname = this.dependencies.joinPaths(this.getDownloadDir(), this.kubectlVersion);
+    this.path = this.dependencies.joinPaths(this.dirname, this.dependencies.kubectlBinaryName);
   }
 
   public getBundledPath() {
@@ -101,7 +91,7 @@ export class Kubectl {
 
   protected getDownloadDir() {
     if (this.dependencies.userStore.downloadBinariesPath) {
-      return path.join(this.dependencies.userStore.downloadBinariesPath, "kubectl");
+      return this.dependencies.joinPaths(this.dependencies.userStore.downloadBinariesPath, "kubectl");
     }
 
     return this.dependencies.directoryForKubectlBinaries;
@@ -120,7 +110,7 @@ export class Kubectl {
     if (!await this.checkBinary(this.getBundledPath(), false)) {
       Kubectl.invalidBundle = true;
 
-      return path.basename(this.getBundledPath());
+      return this.dependencies.getBasenameOfPath(this.getBundledPath());
     }
 
     try {
@@ -189,7 +179,7 @@ export class Kubectl {
   }
 
   protected async checkBundled(): Promise<boolean> {
-    if (this.kubectlVersion === Kubectl.bundledKubectlVersion) {
+    if (this.kubectlVersion === this.dependencies.bundledKubectlVersion) {
       try {
         const exist = await pathExists(this.path);
 
@@ -262,7 +252,7 @@ export class Kubectl {
   }
 
   public async downloadKubectl() {
-    await ensureDir(path.dirname(this.path), 0o755);
+    await ensureDir(this.dependencies.getDirnameOfPath(this.path), 0o755);
 
     logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
 
@@ -284,9 +274,9 @@ export class Kubectl {
     const binariesDir = this.dependencies.baseBundeledBinariesDirectory;
     const kubectlPath = this.dependencies.userStore.downloadKubectlBinaries
       ? this.dirname
-      : path.dirname(this.getPathFromPreferences());
+      : this.dependencies.getDirnameOfPath(this.getPathFromPreferences());
 
-    const bashScriptPath = path.join(this.dirname, ".bash_set_path");
+    const bashScriptPath = this.dependencies.joinPaths(this.dirname, ".bash_set_path");
     const bashScript = [
       initScriptVersionString,
       "tempkubeconfig=\"$KUBECONFIG\"",
@@ -308,7 +298,7 @@ export class Kubectl {
       "unset tempkubeconfig",
     ].join("\n");
 
-    const zshScriptPath = path.join(this.dirname, ".zlogin");
+    const zshScriptPath = this.dependencies.joinPaths(this.dirname, ".zlogin");
     const zshScript = [
       initScriptVersionString,
       "tempkubeconfig=\"$KUBECONFIG\"",

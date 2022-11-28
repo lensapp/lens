@@ -6,19 +6,19 @@
 import type { Cluster } from "../../common/cluster/cluster";
 import type { Kubectl } from "../kubectl/kubectl";
 import type WebSocket from "ws";
-import { shellEnv } from "../utils/shell-env";
-import { app } from "electron";
 import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
 import os from "os";
-import { isMac, isWindows } from "../../common/vars";
-import { UserStore } from "../../common/user-store";
-import * as pty from "node-pty";
-import { appEventBus } from "../../common/app-event-bus/event-bus";
-import logger from "../logger";
-import { stat } from "fs/promises";
+import type * as pty from "node-pty";
 import { getOrInsertWith } from "../../common/utils";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
+import type { Logger } from "../../common/logger";
+import type { ComputeShellEnvironment } from "../../features/shell-sync/main/compute-shell-environment.injectable";
+import type { SpawnPty } from "./spawn-pty.injectable";
+import type { InitializableState } from "../../common/initializable-state/create";
+import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
+import type { Stat } from "../../common/fs/stat/stat.injectable";
+import type { IComputedValue } from "mobx";
 
 export class ShellOpenError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -104,6 +104,26 @@ export enum WebSocketCloseEvent {
   TlsHandshake = 1015,
 }
 
+export interface ShellSessionDependencies {
+  readonly isWindows: boolean;
+  readonly isMac: boolean;
+  readonly logger: Logger;
+  readonly userShellSetting: IComputedValue<string>;
+  readonly appName: string;
+  readonly buildVersion: InitializableState<string>;
+  computeShellEnvironment: ComputeShellEnvironment;
+  spawnPty: SpawnPty;
+  emitAppEvent: EmitAppEvent;
+  stat: Stat;
+}
+
+export interface ShellSessionArgs {
+  kubectl: Kubectl;
+  websocket: WebSocket;
+  cluster: Cluster;
+  tabId: string;
+}
+
 export abstract class ShellSession {
   abstract readonly ShellType: string;
 
@@ -130,29 +150,35 @@ export abstract class ShellSession {
   protected readonly kubectlBinDirP: Promise<string>;
   protected readonly kubeconfigPathP: Promise<string>;
   protected readonly terminalId: string;
+  protected readonly kubectl: Kubectl;
+  protected readonly websocket: WebSocket;
+  protected readonly cluster: Cluster;
 
   protected abstract get cwd(): string | undefined;
 
-  protected ensureShellProcess(shell: string, args: string[], env: Record<string, string | undefined>, cwd: string): { shellProcess: pty.IPty; resume: boolean } {
+  protected ensureShellProcess(shell: string, args: string[], env: Partial<Record<string, string>>, cwd: string): { shellProcess: pty.IPty; resume: boolean } {
     const resume = ShellSession.processes.has(this.terminalId);
     const shellProcess = getOrInsertWith(ShellSession.processes, this.terminalId, () => (
-      pty.spawn(shell, args, {
+      this.dependencies.spawnPty(shell, args, {
         rows: 30,
         cols: 80,
         cwd,
-        env: env as Record<string, string>,
+        env,
         name: "xterm-256color",
         // TODO: Something else is broken here so we need to force the use of winPty on windows
         useConpty: false,
       })
     ));
 
-    logger.info(`[SHELL-SESSION]: PTY for ${this.terminalId} is ${resume ? "resumed" : "started"} with PID=${shellProcess.pid}`);
+    this.dependencies.logger.info(`[SHELL-SESSION]: PTY for ${this.terminalId} is ${resume ? "resumed" : "started"} with PID=${shellProcess.pid}`);
 
     return { shellProcess, resume };
   }
 
-  constructor(protected readonly kubectl: Kubectl, protected readonly websocket: WebSocket, protected readonly cluster: Cluster, terminalId: string) {
+  constructor(protected readonly dependencies: ShellSessionDependencies, { kubectl, websocket, cluster, tabId: terminalId }: ShellSessionArgs) {
+    this.kubectl = kubectl;
+    this.websocket = websocket;
+    this.cluster = cluster;
     this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
     this.kubectlBinDirP = this.kubectl.binDir();
     this.terminalId = `${cluster.id}:${terminalId}`;
@@ -165,7 +191,7 @@ export abstract class ShellSession {
   protected async getCwd(env: Record<string, string | undefined>): Promise<string> {
     const cwdOptions = [this.cwd];
 
-    if (isWindows) {
+    if (this.dependencies.isWindows) {
       cwdOptions.push(
         env.USERPROFILE,
         os.homedir(),
@@ -177,7 +203,7 @@ export abstract class ShellSession {
         os.homedir(),
       );
 
-      if (isMac) {
+      if (this.dependencies.isMac) {
         cwdOptions.push("/Users");
       } else {
         cwdOptions.push("/home");
@@ -190,7 +216,7 @@ export abstract class ShellSession {
       }
 
       try {
-        const stats = await stat(potentialCwd);
+        const stats = await this.dependencies.stat(potentialCwd);
 
         if (stats.isDirectory()) {
           return potentialCwd;
@@ -214,7 +240,7 @@ export abstract class ShellSession {
     this.running = true;
     shellProcess.onData(data => this.send({ type: TerminalChannels.STDOUT, data }));
     shellProcess.onExit(({ exitCode }) => {
-      logger.info(`[SHELL-SESSION]: shell has exited for ${this.terminalId} closed with exitcode=${exitCode}`);
+      this.dependencies.logger.info(`[SHELL-SESSION]: shell has exited for ${this.terminalId} closed with exitcode=${exitCode}`);
 
       // This might already be false because of the kill() within the websocket.on("close") handler
       if (this.running) {
@@ -232,11 +258,11 @@ export abstract class ShellSession {
     this.websocket
       .on("message", (rawData: unknown): void => {
         if (!this.running) {
-          return void logger.debug(`[SHELL-SESSION]: received message from ${this.terminalId}, but shellProcess isn't running`);
+          return void this.dependencies.logger.debug(`[SHELL-SESSION]: received message from ${this.terminalId}, but shellProcess isn't running`);
         }
 
         if (!(rawData instanceof Buffer)) {
-          return void logger.error(`[SHELL-SESSION]: Received message non-buffer message.`, { rawData });
+          return void this.dependencies.logger.error(`[SHELL-SESSION]: Received message non-buffer message.`, { rawData });
         }
 
         const data = rawData.toString();
@@ -252,18 +278,18 @@ export abstract class ShellSession {
               shellProcess.resize(message.data.width, message.data.height);
               break;
             case TerminalChannels.PING:
-              logger.silly(`[SHELL-SESSION]: ${this.terminalId} ping!`);
+              this.dependencies.logger.silly(`[SHELL-SESSION]: ${this.terminalId} ping!`);
               break;
             default:
-              logger.warn(`[SHELL-SESSION]: unknown or unhandleable message type for ${this.terminalId}`, message);
+              this.dependencies.logger.warn(`[SHELL-SESSION]: unknown or unhandleable message type for ${this.terminalId}`, message);
               break;
           }
         } catch (error) {
-          logger.error(`[SHELL-SESSION]: failed to handle message for ${this.terminalId}`, error);
+          this.dependencies.logger.error(`[SHELL-SESSION]: failed to handle message for ${this.terminalId}`, error);
         }
       })
       .once("close", code => {
-        logger.info(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${WebSocketCloseEvent[code]}(${code})`, { cluster: this.cluster.getMeta() });
+        this.dependencies.logger.info(`[SHELL-SESSION]: websocket for ${this.terminalId} closed with code=${WebSocketCloseEvent[code]}(${code})`, { cluster: this.cluster.getMeta() });
 
         const stopShellSession = this.running
           && (
@@ -278,16 +304,16 @@ export abstract class ShellSession {
           this.running = false;
 
           try {
-            logger.info(`[SHELL-SESSION]: Killing shell process (pid=${shellProcess.pid}) for ${this.terminalId}`);
+            this.dependencies.logger.info(`[SHELL-SESSION]: Killing shell process (pid=${shellProcess.pid}) for ${this.terminalId}`);
             shellProcess.kill();
             ShellSession.processes.delete(this.terminalId);
           } catch (error) {
-            logger.warn(`[SHELL-SESSION]: failed to kill shell process (pid=${shellProcess.pid}) for ${this.terminalId}`, error);
+            this.dependencies.logger.warn(`[SHELL-SESSION]: failed to kill shell process (pid=${shellProcess.pid}) for ${this.terminalId}`, error);
           }
         }
       });
 
-    appEventBus.emit({ name: this.ShellType, action: "open" });
+    this.dependencies.emitAppEvent({ name: this.ShellType, action: "open" });
   }
 
   protected getPathEntries(): string[] {
@@ -313,19 +339,27 @@ export abstract class ShellSession {
   }
 
   protected async getShellEnv() {
-    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(await shellEnv())));
-    const pathStr = [await this.kubectlBinDirP, ...this.getPathEntries(), process.env.PATH].join(path.delimiter);
-    const shell = UserStore.getInstance().resolvedShell;
+    const shell = this.dependencies.userShellSetting.get();
+    const result = await this.dependencies.computeShellEnvironment(shell);
+    const rawEnv = (() => {
+      if (result.callWasSuccessful) {
+        return result.response ?? process.env;
+      }
+
+      return process.env;
+    })();
+
+    const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(rawEnv)));
+    const pathStr = [await this.kubectlBinDirP, ...this.getPathEntries(), env.PATH].join(path.delimiter);
 
     delete env.DEBUG; // don't pass DEBUG into shells
 
-    if (isWindows) {
-      env.SystemRoot = process.env.SystemRoot;
+    if (this.dependencies.isWindows) {
       env.PTYSHELL = shell || "powershell.exe";
       env.PATH = pathStr;
       env.LENS_SESSION = "true";
       env.WSLENV = [
-        process.env.WSLENV,
+        env.WSLENV,
         "KUBECONFIG/up:LENS_SESSION/u",
       ]
         .filter(Boolean)
@@ -345,8 +379,8 @@ export abstract class ShellSession {
 
     env.PTYPID = process.pid.toString();
     env.KUBECONFIG = await this.kubeconfigPathP;
-    env.TERM_PROGRAM = app.getName();
-    env.TERM_PROGRAM_VERSION = app.getVersion();
+    env.TERM_PROGRAM = this.dependencies.appName;
+    env.TERM_PROGRAM_VERSION = this.dependencies.buildVersion.get();
 
     if (this.cluster.preferences.httpsProxy) {
       env.HTTPS_PROXY = this.cluster.preferences.httpsProxy;

@@ -12,44 +12,61 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
         <div
           class="items"
         >
-          <i
-            class="Icon material interactive focusable"
-            data-testid="home-button"
-            tabindex="0"
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="home"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="home-button"
             >
-              home
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
+              <span
+                class="icon"
+                data-icon-name="home"
+              >
+                home
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-back"
             >
-              arrow_back
-            </span>
-          </i>
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
+              <span
+                class="icon"
+                data-icon-name="arrow_back"
+              >
+                arrow_back
+              </span>
+            </i>
+          </div>
+          <div
+            class="size-sm"
+          />
+          <div
+            class="preventedDragging"
           >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
+            <i
+              class="Icon material interactive disabled focusable"
+              data-testid="history-forward"
             >
-              arrow_forward
-            </span>
-          </i>
+              <span
+                class="icon"
+                data-icon-name="arrow_forward"
+              >
+                arrow_forward
+              </span>
+            </i>
+          </div>
+          <div
+            class="separator"
+          />
         </div>
-        <div
-          class="items"
-        />
       </div>
       <main>
         <div
@@ -78,7 +95,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
                 style="width: 320px;"
               >
                 <h2>
-                  Welcome to OpenLens!
+                  Welcome to some-product-name!
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
@@ -184,6 +201,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
       </div>
       <div
         class="StatusBar"
+        data-testid="status-bar"
       >
         <div
           class="leftSide"
@@ -191,6 +209,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
         >
           <div
             class="item"
+            data-origin="some-name"
           >
             <div
               data-testid="some-testId"
@@ -200,6 +219,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
           </div>
           <div
             class="item"
+            data-origin="some-name"
           >
             <div
               data-testid="some-testId"
@@ -214,6 +234,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
         >
           <div
             class="item"
+            data-origin="some-name"
           >
             <div
               data-testid="some-testId"
@@ -223,6 +244,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
           </div>
           <div
             class="item"
+            data-origin="some-name"
           >
             <span
               data-testid="some-testId"
@@ -232,6 +254,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
           </div>
           <div
             class="item"
+            data-origin="some-name"
           >
             <span
               data-testid="some-testId"

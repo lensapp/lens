@@ -9,6 +9,7 @@ import directoryForKubeConfigsInjectable from "../../common/app-paths/directory-
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import loggerInjectable from "../../common/logger.injectable";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
+import loadConfigfromFileInjectable from "../../common/kube-helpers/load-config-from-file.injectable";
 
 const createClusterInjectable = getInjectable({
   id: "create-cluster",
@@ -18,6 +19,7 @@ const createClusterInjectable = getInjectable({
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
       logger: di.inject(loggerInjectable),
       broadcastMessage: di.inject(broadcastMessageInjectable),
+      loadConfigfromFile: di.inject(loadConfigfromFileInjectable),
 
       // TODO: Dismantle wrong abstraction
       // Note: "as never" to get around strictness in unnatural scenario
@@ -25,7 +27,9 @@ const createClusterInjectable = getInjectable({
       createKubectl: () => { throw new Error("Tried to access back-end feature in front-end.");},
       createContextHandler: () => undefined as never,
       createAuthorizationReview: () => { throw new Error("Tried to access back-end feature in front-end."); },
+      createAuthorizationNamespaceReview: () => { throw new Error("Tried to access back-end feature in front-end."); },
       createListNamespaces: () => { throw new Error("Tried to access back-end feature in front-end."); },
+      createListApiResources: ()=> { throw new Error("Tried to access back-end feature in front-end."); },
       detectorRegistry: undefined as never,
       createVersionDetector: () => { throw new Error("Tried to access back-end feature in front-end."); },
     };

@@ -4,10 +4,9 @@
  */
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import loggerInjectable from "../../common/logger.injectable";
-import type { Logger } from "../../common/logger";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 import getRandomIdInjectable from "../../common/utils/get-random-id.injectable";
+import logErrorInjectable from "../../common/log-error.injectable";
 
 describe("clicking tray menu item originating from extension", () => {
   let builder: ApplicationBuilder;
@@ -19,7 +18,7 @@ describe("clicking tray menu item originating from extension", () => {
     builder.beforeApplicationStart((mainDi) => {
       logErrorMock = jest.fn();
 
-      mainDi.override(loggerInjectable, () => ({ error: logErrorMock }) as unknown as Logger);
+      mainDi.override(logErrorInjectable, () => logErrorMock);
       mainDi.override(getRandomIdInjectable, () => () => "some-random-id");
     });
 

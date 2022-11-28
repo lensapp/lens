@@ -4,11 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import appEventBusInjectable from "./app-event-bus.injectable";
+import type { AppEvent } from "./event-bus";
 
-const emitEventInjectable = getInjectable({
-  id: "emit-event",
-  instantiate: (di) => di.inject(appEventBusInjectable).emit,
+export type EmitAppEvent = (event: AppEvent) => void;
+
+const emitAppEventInjectable = getInjectable({
+  id: "emit-app-event",
+  instantiate: (di): EmitAppEvent => {
+    const bus = di.inject(appEventBusInjectable);
+
+    return (event) => bus.emit(event);
+  },
   decorable: false,
 });
 
-export default emitEventInjectable;
+export default emitAppEventInjectable;

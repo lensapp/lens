@@ -14,10 +14,8 @@ const stopTrayInjectable = getInjectable({
     const electronTray = di.inject(electronTrayInjectable);
 
     return {
-      run: () => {
-        electronTray.stop();
-      },
-
+      id: "stop-tray",
+      run: () => void electronTray.stop(),
       runAfter: di.inject(stopReactiveTrayMenuItemsInjectable),
     };
   },

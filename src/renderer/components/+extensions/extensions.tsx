@@ -28,23 +28,24 @@ import enableExtensionInjectable from "./enable-extension/enable-extension.injec
 import disableExtensionInjectable from "./disable-extension/disable-extension.injectable";
 import type { ConfirmUninstallExtension } from "./confirm-uninstall-extension.injectable";
 import confirmUninstallExtensionInjectable from "./confirm-uninstall-extension.injectable";
-import installFromInputInjectable from "./install-from-input/install-from-input.injectable";
+import type { InstallExtensionFromInput } from "./install-extension-from-input.injectable";
+import installExtensionFromInputInjectable from "./install-extension-from-input.injectable";
 import installFromSelectFileDialogInjectable from "./install-from-select-file-dialog.injectable";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
-import installOnDropInjectable from "./install-on-drop/install-on-drop.injectable";
+import type { InstallOnDrop } from "./install-on-drop.injectable";
+import installOnDropInjectable from "./install-on-drop.injectable";
 import { supportedExtensionFormats } from "./supported-extension-formats";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
-import type { InstallFromInput } from "./install-from-input/install-from-input";
 
 interface Dependencies {
   userExtensions: IComputedValue<InstalledExtension[]>;
   enableExtension: (id: LensExtensionId) => void;
   disableExtension: (id: LensExtensionId) => void;
   confirmUninstallExtension: ConfirmUninstallExtension;
-  installFromInput: InstallFromInput;
+  installExtensionFromInput: InstallExtensionFromInput;
   installFromSelectFileDialog: () => Promise<void>;
-  installOnDrop: (files: File[]) => Promise<void>;
+  installOnDrop: InstallOnDrop;
   extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
@@ -107,7 +108,7 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
             <Install
               supportedFormats={supportedExtensionFormats}
               onChange={value => (this.installPath = value)}
-              installFromInput={() => this.props.installFromInput(this.installPath)}
+              installFromInput={() => this.props.installExtensionFromInput(this.installPath)}
               installFromSelectFileDialog={this.props.installFromSelectFileDialog}
               installPath={this.installPath}
             />
@@ -131,7 +132,7 @@ export const Extensions = withInjectables<Dependencies>(NonInjectedExtensions, {
     enableExtension: di.inject(enableExtensionInjectable),
     disableExtension: di.inject(disableExtensionInjectable),
     confirmUninstallExtension: di.inject(confirmUninstallExtensionInjectable),
-    installFromInput: di.inject(installFromInputInjectable),
+    installExtensionFromInput: di.inject(installExtensionFromInputInjectable),
     installOnDrop: di.inject(installOnDropInjectable),
     installFromSelectFileDialog: di.inject(installFromSelectFileDialogInjectable),
     extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),

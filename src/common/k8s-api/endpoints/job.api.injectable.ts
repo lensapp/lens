@@ -13,7 +13,9 @@ const jobApiInjectable = getInjectable({
   instantiate: (di) => {
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "jobApi is only available in certain environments");
 
-    return new JobApi();
+    return new JobApi({
+      checkPreferredVersion: true,
+    });
   },
 
   injectionToken: kubeApiInjectionToken,

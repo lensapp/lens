@@ -15,10 +15,13 @@ const setupHardwareAccelerationInjectable = getInjectable({
     const disableHardwareAcceleration = di.inject(disableHardwareAccelerationInjectable);
 
     return {
+      id: "setup-hardware-acceleration",
       run: () => {
         if (hardwareAccelerationShouldBeDisabled) {
           disableHardwareAcceleration();
         }
+
+        return undefined;
       },
     };
   },

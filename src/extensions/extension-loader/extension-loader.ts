@@ -7,11 +7,9 @@ import { ipcMain, ipcRenderer } from "electron";
 import { isEqual } from "lodash";
 import type { ObservableMap } from "mobx";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
-import path from "path";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
 import type { Disposer } from "../../common/utils";
 import { isDefined, toJS } from "../../common/utils";
-import logger from "../../main/logger";
 import type { InstalledExtension } from "../extension-discovery/extension-discovery";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
 import type { LensRendererExtension } from "../lens-renderer-extension";
@@ -23,14 +21,20 @@ import assert from "assert";
 import { EventEmitter } from "../../common/event-emitter";
 import type { CreateExtensionInstance } from "./create-extension-instance.token";
 import type { Extension } from "./extension/extension.injectable";
+import type { Logger } from "../../common/logger";
+import type { JoinPaths } from "../../common/path/join-paths.injectable";
+import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 
 const logModule = "[EXTENSIONS-LOADER]";
 
 interface Dependencies {
+  readonly extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
+  readonly logger: Logger;
   updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void;
   createExtensionInstance: CreateExtensionInstance;
-  readonly extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
   getExtension: (instance: LensExtension) => Extension;
+  joinPaths: JoinPaths;
+  getDirnameOfPath: GetDirnameOfPath;
 }
 
 export interface ExtensionLoading {
@@ -159,7 +163,7 @@ export class ExtensionLoader {
 
   @action
   removeInstance(lensExtensionId: LensExtensionId) {
-    logger.info(`${logModule} deleting extension instance ${lensExtensionId}`);
+    this.dependencies.logger.info(`${logModule} deleting extension instance ${lensExtensionId}`);
     const instance = this.dependencies.extensionInstances.get(lensExtensionId);
 
     if (!instance) {
@@ -177,7 +181,7 @@ export class ExtensionLoader {
       this.dependencies.extensionInstances.delete(lensExtensionId);
       this.nonInstancesByName.delete(instance.name);
     } catch (error) {
-      logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
+      this.dependencies.logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
     }
   }
 
@@ -252,7 +256,7 @@ export class ExtensionLoader {
   }
 
   loadOnClusterManagerRenderer = () => {
-    logger.debug(`${logModule}: load on main renderer (cluster manager)`);
+    this.dependencies.logger.debug(`${logModule}: load on main renderer (cluster manager)`);
 
     return this.autoInitExtensions(async (ext) => {
       const extension = ext as LensRendererExtension;
@@ -274,7 +278,7 @@ export class ExtensionLoader {
   };
 
   loadOnClusterRenderer = () => {
-    logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
+    this.dependencies.logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
 
     this.autoInitExtensions(async () => []);
   };
@@ -313,7 +317,7 @@ export class ExtensionLoader {
               activated: instance.activate(),
             };
           } catch (err) {
-            logger.error(`${logModule}: error loading extension`, { ext: extension, err });
+            this.dependencies.logger.error(`${logModule}: error loading extension`, { ext: extension, err });
           }
         } else if (!extension.isEnabled && alreadyInit) {
           this.removeInstance(extId);
@@ -330,7 +334,7 @@ export class ExtensionLoader {
       extensions.map(extension =>
         // If extension activation fails, log error
         extension.activated.catch((error) => {
-          logger.error(`${logModule}: activation extension error`, { ext: extension.installedExtension, error });
+          this.dependencies.logger.error(`${logModule}: activation extension error`, { ext: extension.installedExtension, error });
         }),
       ),
     );
@@ -344,7 +348,7 @@ export class ExtensionLoader {
     // Return ExtensionLoading[]
     return extensions.map(extension => {
       const loaded = extension.instance.enable(register).catch((err) => {
-        logger.error(`${logModule}: failed to enable`, { ext: extension, err });
+        this.dependencies.logger.error(`${logModule}: failed to enable`, { ext: extension, err });
       });
 
       return {
@@ -370,14 +374,14 @@ export class ExtensionLoader {
       return null;
     }
 
-    const extAbsolutePath = path.resolve(path.join(path.dirname(extension.manifestPath), extRelativePath));
+    const extAbsolutePath = this.dependencies.joinPaths(this.dependencies.getDirnameOfPath(extension.manifestPath), extRelativePath);
 
     try {
       return __non_webpack_require__(extAbsolutePath).default;
     } catch (error) {
       const message = (error instanceof Error ? error.stack : undefined) || error;
 
-      logger.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${message}`, { extension });
+      this.dependencies.logger.error(`${logModule}: can't load ${entryPointName} for "${extension.manifest.name}": ${message}`, { extension });
     }
 
     return null;

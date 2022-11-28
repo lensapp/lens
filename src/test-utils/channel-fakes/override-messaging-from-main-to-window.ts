@@ -3,18 +3,22 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type {  MessageChannelListener } from "../../common/utils/channel/message-channel-listener-injection-token";
-import sendToChannelInElectronBrowserWindowInjectable from "../../main/start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
-import type { SendToViewArgs } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import enlistMessageChannelListenerInjectableInRenderer from "../../renderer/utils/channel/channel-listeners/enlist-message-channel-listener.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import { tentativeParseJson } from "../../common/utils/tentative-parse-json";
-import { getOrInsert } from "../../common/utils";
+import { getOrInsert, getOrInsertSet } from "../../common/utils";
+import type { SendToViewArgs } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
+import { deserialize, serialize } from "v8";
 
 type ListenerSet = Set<MessageChannelListener<any>>;
 type WindowListenerMap = Map<string, ListenerSet>;
 type ListenerFakeMap = Map<string, WindowListenerMap>;
 
-export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
+export interface OverriddenWindowMessaging {
+  sendToWindow(windowId: string, args: SendToViewArgs): void;
+  overrideEnlistForWindow(windowDi: DiContainer, windowId: string): void;
+}
+
+export const overrideMessagingFromMainToWindow = (): OverriddenWindowMessaging => {
   const messageChannelListenerFakesForRenderer: ListenerFakeMap = new Map();
 
   const getWindowListeners = (channelId: string, windowId: string) => {
@@ -24,68 +28,52 @@ export const overrideMessagingFromMainToWindow = (mainDi: DiContainer) => {
       new Map(),
     );
 
-    return getOrInsert<string, ListenerSet>(
-      channelListeners,
-      windowId,
-      new Set(),
-    );
+    return getOrInsertSet(channelListeners, windowId);
   };
 
-  mainDi.override(
-    sendToChannelInElectronBrowserWindowInjectable,
+  return {
+    overrideEnlistForWindow: (windowDi, windowId) => {
+      windowDi.override(
+        enlistMessageChannelListenerInjectableInRenderer,
 
-    () =>
-      (
-        windowId: string,
-        browserWindow,
-        { channel: channelId, frameInfo, data = [] }: SendToViewArgs,
-      ) => {
-        const windowListeners = getWindowListeners(channelId, windowId);
-
-        if (frameInfo) {
-          throw new Error(
-            `Tried to send message to frame "${frameInfo.frameId}" in process "${frameInfo.processId}" using channel "${channelId}" which isn't supported yet.`,
+        () => (listener) => {
+          const windowListeners = getWindowListeners(
+            listener.channel.id,
+            windowId,
           );
-        }
 
-        if (data.length > 1) {
-          throw new Error(
-            `Tried to send message to channel "${channelId}" with more than one argument which is not supported in MessageChannelListener yet.`,
-          );
-        }
+          windowListeners.add(listener);
 
-        if (windowListeners.size === 0) {
-          throw new Error(
-            `Tried to send message to channel "${channelId}" but there where no listeners. Current channels with listeners: "${[
-              ...messageChannelListenerFakesForRenderer.keys(),
-            ].join('", "')}"`,
-          );
-        }
+          return () => {
+            windowListeners.delete(listener);
+          };
+        },
+      );
+    },
+    sendToWindow: (windowId, { channel, data, frameInfo }) => {
+      try {
+        data = deserialize(serialize(data));
+      } catch (error) {
+        throw new Error(`Tried to send a message to channel "${channel}" that is not compatible with StructuredClone: ${error}`);
+      }
 
-        const message = tentativeParseJson(data[0]);
+      const windowListeners = getWindowListeners(channel, windowId);
 
-        windowListeners.forEach((listener) =>
-          listener.handler(message),
+      if (frameInfo) {
+        throw new Error(
+          `Tried to send message to frame "${frameInfo.frameId}" in process "${frameInfo.processId}" using channel "${channel}" which isn't supported yet.`,
         );
-      },
-  );
+      }
 
-  return (windowDi: DiContainer, windowId: string) => {
-    windowDi.override(
-      enlistMessageChannelListenerInjectableInRenderer,
-
-      () => (listener) => {
-        const windowListeners = getWindowListeners(
-          listener.channel.id,
-          windowId,
+      if (windowListeners.size === 0) {
+        throw new Error(
+          `Tried to send message to channel "${channel}" but there where no listeners. Current channels with listeners: "${[
+            ...messageChannelListenerFakesForRenderer.keys(),
+          ].join('", "')}"`,
         );
+      }
 
-        windowListeners.add(listener);
-
-        return () => {
-          windowListeners.delete(listener);
-        };
-      },
-    );
+      windowListeners.forEach((listener) => listener.handler(data));
+    },
   };
 };

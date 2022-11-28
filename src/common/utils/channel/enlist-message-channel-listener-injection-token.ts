@@ -3,14 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { MessageChannel } from "./message-channel-injection-token";
-import type { MessageChannelListener } from "./message-channel-listener-injection-token";
+import type { Disposer } from "../disposer";
+import type { MessageChannel, MessageChannelListener } from "./message-channel-listener-injection-token";
 
-export type EnlistMessageChannelListener = <
-  TChannel extends MessageChannel<any>,
->(listener: MessageChannelListener<TChannel>) => () => void;
+export type EnlistMessageChannelListener = (listener: MessageChannelListener<MessageChannel<unknown>>) => Disposer;
 
-export const enlistMessageChannelListenerInjectionToken =
-  getInjectionToken<EnlistMessageChannelListener>({
-    id: "enlist-message-channel-listener",
-  });
+export const enlistMessageChannelListenerInjectionToken = getInjectionToken<EnlistMessageChannelListener>({
+  id: "enlist-message-channel-listener",
+});

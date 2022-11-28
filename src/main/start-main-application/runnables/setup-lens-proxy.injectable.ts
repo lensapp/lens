@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { getAppVersion, getAppVersionFromProxyServer } from "../../../common/utils";
+import { getAppVersionFromProxyServer } from "../../../common/utils";
 import exitAppInjectable from "../../electron-app/features/exit-app.injectable";
 import lensProxyInjectable from "../../lens-proxy/lens-proxy.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
@@ -11,6 +11,8 @@ import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "../runnable-tokens/before-application-is-loading-injection-token";
+import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
+import initializeBuildVersionInjectable from "../../vars/build-version/init.injectable";
 
 const setupLensProxyInjectable = getInjectable({
   id: "setup-lens-proxy",
@@ -22,8 +24,10 @@ const setupLensProxyInjectable = getInjectable({
     const lensProxyPort = di.inject(lensProxyPortInjectable);
     const isWindows = di.inject(isWindowsInjectable);
     const showErrorPopup = di.inject(showErrorPopupInjectable);
+    const buildVersion = di.inject(buildVersionInjectable);
 
     return {
+      id: "setup-lens-proxy",
       run: async () => {
         try {
           logger.info("🔌 Starting LensProxy");
@@ -41,7 +45,7 @@ const setupLensProxyInjectable = getInjectable({
             lensProxyPort.get(),
           );
 
-          if (getAppVersion() !== versionFromProxy) {
+          if (buildVersion.get() !== versionFromProxy) {
             logger.error("Proxy server responded with invalid response");
 
             return exitApp();
@@ -66,6 +70,7 @@ const setupLensProxyInjectable = getInjectable({
           return exitApp();
         }
       },
+      runAfter: di.inject(initializeBuildVersionInjectable),
     };
   },
 

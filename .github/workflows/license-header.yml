@@ -11,18 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Golang
-      uses: actions/setup-go@v2
-      with:
-        go-version: '^1.18.0'
-    - name: Install addlicense
-      run: |
-        export PATH=${PATH}:`go env GOPATH`/bin
-        go install github.com/google/addlicense@v1.0.0
-    - name: Check license headers
-      run: |
-        set -e
-        export PATH=${PATH}:`go env GOPATH`/bin
+      - uses: actions/checkout@v3
+      - name: Set up Golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: "^1.18.0"
+      - name: Install addlicense
+        run: |
+          export PATH=${PATH}:`go env GOPATH`/bin
+          go install github.com/google/addlicense@v1.0.0
+      - name: Check license headers
+        run: |
+          set -e
+          export PATH=${PATH}:`go env GOPATH`/bin
 
-        addlicense -check -l mit -c "OpenLens Authors" src/**/*.?css
+          addlicense -check -l mit -c "OpenLens Authors" src/**/*.?css

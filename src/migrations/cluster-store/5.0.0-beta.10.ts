@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import path from "path";
 import fse from "fs-extra";
 import type { ClusterModel } from "../../common/cluster-types";
 import type { MigrationDeclaration } from "../helpers";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { isErrnoException } from "../../common/utils";
+import joinPathsInjectable from "../../common/path/join-paths.injectable";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
@@ -24,9 +24,10 @@ export default {
     const di = getLegacyGlobalDiForExtensionApi();
 
     const userDataPath = di.inject(directoryForUserDataInjectable);
+    const joinPaths = di.inject(joinPathsInjectable);
 
     try {
-      const workspaceData: Pre500WorkspaceStoreModel = fse.readJsonSync(path.join(userDataPath, "lens-workspace-store.json"));
+      const workspaceData: Pre500WorkspaceStoreModel = fse.readJsonSync(joinPaths(userDataPath, "lens-workspace-store.json"));
       const workspaces = new Map<string, string>(); // mapping from WorkspaceId to name
 
       for (const { id, name } of workspaceData.workspaces) {

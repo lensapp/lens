@@ -11,9 +11,9 @@ const lensResourcesDirInjectable = getInjectable({
   instantiate: (di) => {
     const isProduction = di.inject(isProductionInjectable);
 
-    return !isProduction
-      ? process.cwd()
-      : process.resourcesPath;
+    return isProduction
+      ? process.resourcesPath
+      : process.cwd();
   },
 
   causesSideEffects: true,

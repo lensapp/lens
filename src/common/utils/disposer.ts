@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { SingleOrMany } from "./types";
+
 
 
 export interface Disposer {
@@ -17,9 +19,9 @@ export interface ExtendableDisposer extends Disposer {
   push(...vals: (Disposer | ExtendableDisposer | Disposable)[]): void;
 }
 
-export function disposer(...items: (Disposer | Disposable | undefined | null)[]): ExtendableDisposer {
+export function disposer(...items: SingleOrMany<Disposer | Disposable | undefined | null>[]): ExtendableDisposer {
   return Object.assign(() => {
-    for (const item of items) {
+    for (const item of items.flat()) {
       if (!item) {
         continue;
       }

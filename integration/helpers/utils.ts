@@ -10,6 +10,7 @@ import * as uuid from "uuid";
 import type { ElectronApplication, Frame, Page } from "playwright";
 import { _electron as electron } from "playwright";
 import { noop } from "lodash";
+import { disposer } from "../../src/common/utils";
 
 export const appPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/OpenLens.exe",
@@ -17,28 +18,47 @@ export const appPaths: Partial<Record<NodeJS.Platform, string>> = {
   "darwin": "./dist/mac/OpenLens.app/Contents/MacOS/OpenLens",
 };
 
-export function itIf(condition: boolean) {
-  return condition ? it : it.skip;
-}
-
-export function describeIf(condition: boolean) {
-  return condition ? describe : describe.skip;
-}
-
 async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promise<Page> {
-  const deadline = Date.now() + timeout;
+  return new Promise((resolve, reject) => {
+    const cleanup = disposer();
+    let stdoutBuf = "";
 
-  for (; Date.now() < deadline;) {
-    for (const page of app.windows()) {
+    const onWindow = (page: Page) => {
+      console.log(`Page opened: ${page.url()}`);
+
       if (page.url().startsWith("http://localhost")) {
-        return page;
+        cleanup();
+        console.log(stdoutBuf);
+        resolve(page);
       }
-    }
+    };
 
-    await new Promise(resolve => setTimeout(resolve, 2_000));
-  }
+    app.on("window", onWindow);
+    cleanup.push(() => app.off("window", onWindow));
 
-  throw new Error(`Lens did not open the main window within ${timeout}ms`);
+    const onClose = () => {
+      cleanup();
+      reject(new Error("App has unnexpectedly closed"));
+    };
+
+    app.on("close", onClose);
+    cleanup.push(() => app.off("close", onClose));
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const stdout = app.process().stdout!;
+    const onData = (chunk: any) => stdoutBuf += chunk.toString();
+
+    stdout.on("data", onData);
+    cleanup.push(() => stdout.off("data", onData));
+
+    const timeoutId = setTimeout(() => {
+      cleanup();
+      console.log(stdoutBuf);
+      reject(new Error(`Lens did not open the main window within ${timeout}ms`));
+    }, timeout);
+
+    cleanup.push(() => clearTimeout(timeoutId));
+  });
 }
 
 async function attemptStart() {
@@ -57,7 +77,7 @@ async function attemptStart() {
       ...process.env,
     },
     timeout: 100_000,
-  } as Parameters<typeof electron["launch"]>[0]);
+  });
 
   try {
     const window = await getMainWindow(app);

@@ -7,8 +7,6 @@ import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { ClusterScopedMetadata, KubeObjectStatus } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import { metricsApi } from "./metrics.api";
-import type { PodMetricData } from "./pod.api";
 
 export enum NamespaceStatusKind {
   ACTIVE = "Active",
@@ -44,20 +42,4 @@ export class NamespaceApi extends KubeApi<Namespace> {
       objectConstructor: Namespace,
     });
   }
-}
-
-export function getMetricsForNamespace(namespace: string, selector = ""): Promise<PodMetricData> {
-  const opts = { category: "pods", pods: ".*", namespace, selector };
-
-  return metricsApi.getMetrics({
-    cpuUsage: opts,
-    memoryUsage: opts,
-    fsUsage: opts,
-    fsWrites: opts,
-    fsReads: opts,
-    networkReceive: opts,
-    networkTransmit: opts,
-  }, {
-    namespace,
-  });
 }

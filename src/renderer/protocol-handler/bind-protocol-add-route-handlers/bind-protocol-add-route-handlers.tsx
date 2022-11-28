@@ -28,7 +28,7 @@ interface Dependencies {
   navigateToExtensions: () => void;
   navigateToEntitySettings: NavigateToEntitySettings;
   navigateToClusterView: NavigateToClusterView;
-  navigateToPreferenceTabId: (tabId: string) => void;
+  navigateToPreferences: (tabId: string) => void;
   entityRegistry: CatalogEntityRegistry;
 }
 
@@ -40,13 +40,13 @@ export const bindProtocolAddRouteHandlers = ({
   navigateToExtensions,
   navigateToEntitySettings,
   navigateToClusterView,
-  navigateToPreferenceTabId,
+  navigateToPreferences,
   entityRegistry,
 }: Dependencies) => () => {
   lensProtocolRouterRenderer
     .addInternalHandler("/preferences", ({ search: { highlight: tabId }}) => {
       if (tabId) {
-        navigateToPreferenceTabId(tabId);
+        navigateToPreferences(tabId);
       }
     })
     .addInternalHandler("/", ({ tail }) => {

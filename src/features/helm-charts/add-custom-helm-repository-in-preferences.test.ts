@@ -8,30 +8,32 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
+import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { HelmRepo } from "../../common/helm/helm-repo";
-import callForPublicHelmRepositoriesInjectable from "../../renderer/components/+preferences/kubernetes/helm-charts/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import callForPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
 import isPathInjectable from "../../renderer/components/input/validators/is-path.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
+import { useFakeTime } from "../../common/test-utils/use-fake-time";
 
 describe("add custom helm repository in preferences", () => {
   let builder: ApplicationBuilder;
   let showSuccessNotificationMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
   let rendered: RenderResult;
-  let execFileMock: AsyncFnMock<
-    ReturnType<typeof execFileInjectable["instantiate"]>
-  >;
+  let execFileMock: AsyncFnMock<ExecFile>;
   let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
 
   beforeEach(async () => {
     jest.useFakeTimers();
 
     builder = getApplicationBuilder();
+
+    useFakeTime("2021-01-01 12:00:00");
 
     execFileMock = asyncFn();
     getActiveHelmRepositoriesMock = asyncFn();
@@ -167,7 +169,10 @@ describe("add custom helm repository in preferences", () => {
               expect(execFileMock).toHaveBeenCalledWith(
                 "some-helm-binary-path",
                 ["repo", "add", "some-custom-repository", "http://some.url"],
-                { "maxBuffer": 34359738368 },
+                {
+                  maxBuffer: 34359738368,
+                  env: {},
+                },
               );
             });
 
@@ -181,9 +186,12 @@ describe("add custom helm repository in preferences", () => {
 
             describe("when activation rejects", () => {
               beforeEach(async () => {
-                await execFileMock.reject(
-                  "Some error",
-                );
+                await execFileMock.resolve({
+                  callWasSuccessful: false,
+                  error: Object.assign(new Error("Some error"), {
+                    stderr: "",
+                  }),
+                });
               });
 
               it("renders", () => {
@@ -216,8 +224,10 @@ describe("add custom helm repository in preferences", () => {
                     "some-helm-binary-path",
                     ["repo", "add", "some-custom-repository", "http://some.url"],
                   ],
-
-                  "",
+                  {
+                    callWasSuccessful: true,
+                    response: "",
+                  },
                 );
               });
 
@@ -366,7 +376,10 @@ describe("add custom helm repository in preferences", () => {
                     "--cert-file",
                     "some-cert-file",
                   ],
-                  { "maxBuffer": 34359738368 },
+                  {
+                    maxBuffer: 34359738368,
+                    env: {},
+                  },
                 );
               });
             });

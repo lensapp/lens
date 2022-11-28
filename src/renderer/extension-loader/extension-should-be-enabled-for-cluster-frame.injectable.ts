@@ -22,22 +22,19 @@ const extensionShouldBeEnabledForClusterFrameInjectable = getInjectable({
     ) =>
       untracked(() => di.inject(extensionIsEnabledForClusterInjectable, { extension, cluster }));
 
-    return asyncComputed(
-      async () => {
+    return asyncComputed({
+      getValueFromObservedPromise: async () => {
         const cluster = activeKubernetesCluster.get();
 
         if (!cluster) {
           return false;
         }
 
-        return getExtensionIsEnabledForCluster(
-          extension,
-          cluster,
-        );
+        return getExtensionIsEnabledForCluster(extension, cluster);
       },
 
-      false,
-    );
+      valueWhenPending: false,
+    });
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({

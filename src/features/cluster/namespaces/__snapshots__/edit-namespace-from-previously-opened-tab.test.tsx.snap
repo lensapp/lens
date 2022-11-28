@@ -455,6 +455,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -464,7 +465,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -997,6 +1000,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-first-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -1006,7 +1010,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-first-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>

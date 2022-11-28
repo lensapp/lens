@@ -19,7 +19,7 @@ import { kebabCase } from "lodash";
 import { getLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "./app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "./get-configuration-file-model/get-configuration-file-model.injectable";
-import appVersionInjectable from "./vars/app-version.injectable";
+import storeMigrationVersionInjectable from "./vars/store-migration-version.injectable";
 
 export interface BaseStoreParams<T> extends ConfOptions<T> {
   syncOptions?: {
@@ -60,7 +60,7 @@ export abstract class BaseStore<T extends object> extends Singleton {
 
     this.storeConfig = getConfigurationFileModel({
       projectName: "lens",
-      projectVersion: di.inject(appVersionInjectable),
+      projectVersion: di.inject(storeMigrationVersionInjectable),
       cwd: this.cwd(),
       ...this.params,
     });

@@ -14,11 +14,14 @@ const flagRendererAsNotLoadedInjectable = getInjectable({
     const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
 
     return {
+      id: "stop-deep-linking",
       run: () => {
         runInAction(() => {
           // Todo: remove this kludge which enables out-of-place temporal dependency.
           lensProtocolRouterMain.rendererLoaded = false;
         });
+
+        return undefined;
       },
     };
   },

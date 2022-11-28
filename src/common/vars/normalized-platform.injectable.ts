@@ -5,10 +5,12 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import platformInjectable from "./platform.injectable";
 
+export type NormalizedPlatform = "darwin" | "linux" | "windows";
+
 const normalizedPlatformInjectable = getInjectable({
   id: "normalized-platform",
 
-  instantiate: (di) => {
+  instantiate: (di): NormalizedPlatform => {
     const platform = di.inject(platformInjectable);
 
     switch (platform) {

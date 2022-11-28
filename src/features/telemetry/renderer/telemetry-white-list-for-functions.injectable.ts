@@ -100,15 +100,6 @@ const terminal = [
   "create-terminal-tab",
 ];
 
-const logs = [
-  "get-logs",
-];
-
-const resourceEditor = [
-  "create-edit-resource-tab",
-  "clear-edit-resource-tab",
-];
-
 const telemetryWhiteListForFunctionsInjectable = getInjectable({
   id: "telemetry-white-list-for-functions",
   instantiate: () => [
@@ -119,8 +110,6 @@ const telemetryWhiteListForFunctionsInjectable = getInjectable({
     ...externalActions,
     ...uiInteraction,
     ...terminal,
-    ...logs,
-    ...resourceEditor,
   ],
   decorable: false,
 });

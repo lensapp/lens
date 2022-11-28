@@ -6,14 +6,14 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { AppPaths } from "../../common/app-paths/app-path-injection-token";
 import getElectronAppPathInjectable from "./get-electron-app-path/get-electron-app-path.injectable";
 import setElectronAppPathInjectable from "./set-electron-app-path/set-electron-app-path.injectable";
-import appNameInjectable from "./app-name/app-name.injectable";
 import directoryForIntegrationTestingInjectable from "./directory-for-integration-testing/directory-for-integration-testing.injectable";
 import appPathsStateInjectable from "../../common/app-paths/app-paths-state.injectable";
 import { pathNames } from "../../common/app-paths/app-path-names";
 import { fromPairs, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
-import { beforeElectronIsReadyInjectionToken } from "../start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
+import appNameInjectable from "../../common/vars/app-name.injectable";
+import { appPathsRunnablePhaseInjectionToken } from "../start-main-application/runnable-tokens/phases";
 
 const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",
@@ -27,6 +27,7 @@ const setupAppPathsInjectable = getInjectable({
     const joinPaths = di.inject(joinPathsInjectable);
 
     return {
+      id: "setup-app-paths",
       run: () => {
         if (directoryForIntegrationTesting) {
           setElectronAppPath("appData", directoryForIntegrationTesting);
@@ -43,11 +44,14 @@ const setupAppPathsInjectable = getInjectable({
         ) as AppPaths;
 
         appPathsState.set(appPaths);
+
+        // NOTE: this is the worse of two evils. This makes sure that `RunnableSync` always is sync
+        return undefined;
       },
     };
   },
 
-  injectionToken: beforeElectronIsReadyInjectionToken,
+  injectionToken: appPathsRunnablePhaseInjectionToken,
 });
 
 export default setupAppPathsInjectable;

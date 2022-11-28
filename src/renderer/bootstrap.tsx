@@ -20,7 +20,6 @@ import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
 import logger from "../common/logger";
 import { WeblinkStore } from "../common/weblink-store";
-import { initializeSentryReporting } from "../common/sentry";
 import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
@@ -29,7 +28,6 @@ import extensionLoaderInjectable from "../extensions/extension-loader/extension-
 import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
 import extensionInstallationStateStoreInjectable from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
-import userStoreInjectable from "../common/user-store/user-store.injectable";
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame/init-root-frame.injectable";
 import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
 import commandOverlayInjectable from "./components/command-palette/command-overlay.injectable";
@@ -46,6 +44,7 @@ import kubernetesClusterCategoryInjectable from "../common/catalog/categories/ku
 import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-registration.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
+import initializeSentryReportingWithInjectable from "../common/error-reporting/initialize-sentry-reporting.injectable";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -62,8 +61,10 @@ async function attachChromeDebugger() {
 }
 
 export async function bootstrap(di: DiContainer) {
+  const initializeSentryReportingWith = di.inject(initializeSentryReportingWithInjectable);
+
   if (process.isMainFrame) {
-    initializeSentryReporting(init);
+    initializeSentryReportingWith(init);
   }
 
   const startFrame = di.inject(startFrameInjectable);
@@ -89,9 +90,6 @@ export async function bootstrap(di: DiContainer) {
    * auto initialization.
    */
   di.inject(autoRegistrationInjectable);
-
-  // TODO: Remove temporal dependencies to make timing of initialization not important
-  di.inject(userStoreInjectable);
 
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);

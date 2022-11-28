@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import createLensWindowInjectable from "../application-window/create-lens-window.injectable";
 import staticFilesDirectoryInjectable from "../../../../common/vars/static-files-directory.injectable";
-import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
+import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 
 const splashWindowInjectable = getInjectable({
   id: "splash-window",
@@ -13,8 +13,8 @@ const splashWindowInjectable = getInjectable({
   instantiate: (di) => {
     const createLensWindow = di.inject(createLensWindowInjectable);
     const staticFilesDirectory = di.inject(staticFilesDirectoryInjectable);
-    const getAbsolutePath = di.inject(getAbsolutePathInjectable);
-    const splashWindowFile = getAbsolutePath(staticFilesDirectory, "splash.html");
+    const joinPaths = di.inject(joinPathsInjectable);
+    const splashWindowFile = joinPaths(staticFilesDirectory, "splash.html");
 
     return createLensWindow({
       id: "splash",

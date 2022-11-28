@@ -2,16 +2,15 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import semver, { type SemVer } from "semver";
+import semver from "semver";
 import type { LensExtensionManifest } from "../../lens-extension";
 
 interface Dependencies {
-  appSemVer: SemVer;
+  extensionApiVersion: string;
 }
 
-export const isCompatibleExtension = ({ appSemVer }: Dependencies): ((manifest: LensExtensionManifest) => boolean) => {
+export const isCompatibleExtension = ({ extensionApiVersion }: Dependencies): ((manifest: LensExtensionManifest) => boolean) => {
   return (manifest: LensExtensionManifest): boolean => {
-    const appVersion = appSemVer.raw.split("-")[0]; // drop prerelease version if any, e.g. "-alpha.0"
     const manifestLensEngine = manifest.engines.lens;
     const validVersion = manifestLensEngine.match(/^[\^0-9]\d*\.\d+\b/); // must start from ^ or number
 
@@ -30,7 +29,7 @@ export const isCompatibleExtension = ({ appSemVer }: Dependencies): ((manifest: 
     }) as semver.SemVer;
     const supportedVersionsByExtension = semver.validRange(`^${extMajor}.${extMinor}`) as string;
 
-    return semver.satisfies(appVersion, supportedVersionsByExtension, {
+    return semver.satisfies(extensionApiVersion, supportedVersionsByExtension, {
       loose: true,
       includePrerelease: false,
     });

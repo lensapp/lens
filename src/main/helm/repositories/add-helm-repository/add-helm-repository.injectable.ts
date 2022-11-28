@@ -4,17 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
-import type { HelmRepo } from "../../../../common/helm/helm-repo";
 import loggerInjectable from "../../../../common/logger.injectable";
+import type { AddHelmRepositoryChannel } from "../../../../common/helm/add-helm-repository-channel";
+import type { RequestChannelHandler } from "../../../utils/channel/channel-listeners/listener-tokens";
 
 const addHelmRepositoryInjectable = getInjectable({
   id: "add-helm-repository",
 
-  instantiate: (di) => {
+  instantiate: (di): RequestChannelHandler<AddHelmRepositoryChannel> => {
     const execHelm = di.inject(execHelmInjectable);
     const logger = di.inject(loggerInjectable);
 
-    return async (repo: HelmRepo) => {
+    return async (repo) => {
       const {
         name,
         url,
@@ -54,7 +55,18 @@ const addHelmRepositoryInjectable = getInjectable({
         args.push("--cert-file", certFile);
       }
 
-      return await execHelm(args);
+      const result = await execHelm(args);
+
+      if (result.callWasSuccessful) {
+        return {
+          callWasSuccessful: true,
+        };
+      }
+
+      return {
+        callWasSuccessful: false,
+        error: result.error.stderr || result.error.message,
+      };
     };
   },
 });

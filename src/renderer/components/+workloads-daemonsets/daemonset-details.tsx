@@ -15,7 +15,7 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import type { DaemonSetStore } from "./store";
 import type { PodStore } from "../+workloads-pods/store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { DaemonSet, getMetricsForDaemonSets, type PodMetricData } from "../../../common/k8s-api/endpoints";
+import { DaemonSet } from "../../../common/k8s-api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { makeObservable, observable, reaction } from "mobx";
@@ -30,6 +30,8 @@ import daemonSetStoreInjectable from "./store.injectable";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import type { DaemonSetPodMetricData, RequestPodMetricsForDaemonSets } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-daemon-sets.injectable";
+import requestPodMetricsForDaemonSetsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-daemon-sets.injectable";
 
 export interface DaemonSetDetailsProps extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -39,11 +41,12 @@ interface Dependencies {
   daemonSetStore: DaemonSetStore;
   podStore: PodStore;
   getActiveClusterEntity: GetActiveClusterEntity;
+  requestPodMetricsForDaemonSets: RequestPodMetricsForDaemonSets;
 }
 
 @observer
 class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps & Dependencies> {
-  @observable metrics: PodMetricData | null = null;
+  @observable metrics: DaemonSetPodMetricData | null = null;
 
   constructor(props: DaemonSetDetailsProps & Dependencies) {
     super(props);
@@ -62,9 +65,9 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
   }
 
   loadMetrics = async () => {
-    const { object: daemonSet } = this.props;
+    const { object: daemonSet, requestPodMetricsForDaemonSets } = this.props;
 
-    this.metrics = await getMetricsForDaemonSets([daemonSet], daemonSet.getNs(), "");
+    this.metrics = await requestPodMetricsForDaemonSets([daemonSet], daemonSet.getNs());
   };
 
   render() {
@@ -143,5 +146,6 @@ export const DaemonSetDetails = withInjectables<Dependencies, DaemonSetDetailsPr
     daemonSetStore: di.inject(daemonSetStoreInjectable),
     podStore: di.inject(podStoreInjectable),
     getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+    requestPodMetricsForDaemonSets: di.inject(requestPodMetricsForDaemonSetsInjectable),
   }),
 });

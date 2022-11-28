@@ -4,10 +4,12 @@
  */
 import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectionToken } from "@ogre-tools/injectable";
+import type { IComputedValue } from "mobx";
 import type { LensExtension } from "../lens-extension";
 
-export const extensionRegistratorInjectionToken = getInjectionToken<
-  (extension: LensExtension) => Injectable<any, any, any>[]
-    >({
-      id: "extension-registrator-token",
-    });
+export type ExtensionRegistrator = (extension: LensExtension) =>
+  Injectable<any, any, any>[] | IComputedValue<Injectable<any, any, any>[]>;
+
+export const extensionRegistratorInjectionToken = getInjectionToken<ExtensionRegistrator>({
+  id: "extension-registrator-token",
+});

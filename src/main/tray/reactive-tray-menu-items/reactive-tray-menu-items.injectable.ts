@@ -19,10 +19,8 @@ const reactiveTrayMenuItemsInjectable = getInjectable({
 
     return getStartableStoppable("reactive-tray-menu-items", () =>
       reaction(
-        (): MinimalTrayMenuItem[] => reactiveItems.get().map(toNonReactiveItem),
-
+        () => reactiveItems.get().map(toNonReactiveItem),
         (nonReactiveItems) => electronTray.setMenuItems(nonReactiveItems),
-
         {
           fireImmediately: true,
         },

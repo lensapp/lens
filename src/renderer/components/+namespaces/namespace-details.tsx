@@ -10,7 +10,7 @@ import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
-import { getMetricsForNamespace, type PodMetricData, Namespace } from "../../../common/k8s-api/endpoints";
+import { Namespace } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Link } from "react-router-dom";
 import { Spinner } from "../spinner";
@@ -31,6 +31,8 @@ import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-activ
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import limitRangeStoreInjectable from "../+config-limit-ranges/store.injectable";
 import resourceQuotaStoreInjectable from "../+config-resource-quotas/store.injectable";
+import type { PodMetricInNamespaceData, RequestPodMetricsInNamespace } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-in-namespace.injectable";
+import requestPodMetricsInNamespaceInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-in-namespace.injectable";
 
 export interface NamespaceDetailsProps extends KubeObjectDetailsProps<Namespace> {
 }
@@ -41,11 +43,12 @@ interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
   resourceQuotaStore: ResourceQuotaStore;
   limitRangeStore: LimitRangeStore;
+  requestPodMetricsInNamespace: RequestPodMetricsInNamespace;
 }
 
 @observer
 class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps & Dependencies> {
-  @observable metrics: PodMetricData | null = null;
+  @observable metrics: PodMetricInNamespaceData | null = null;
 
   constructor(props: NamespaceDetailsProps & Dependencies) {
     super(props);
@@ -78,7 +81,7 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
   }
 
   loadMetrics = async () => {
-    this.metrics = await getMetricsForNamespace(this.props.object.getName(), "");
+    this.metrics = await this.props.requestPodMetricsInNamespace(this.props.object.getName());
   };
 
   render() {
@@ -144,6 +147,7 @@ export const NamespaceDetails = withInjectables<Dependencies, NamespaceDetailsPr
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     limitRangeStore: di.inject(limitRangeStoreInjectable),
     resourceQuotaStore: di.inject(resourceQuotaStoreInjectable),
+    requestPodMetricsInNamespace: di.inject(requestPodMetricsInNamespaceInjectable),
   }),
 });
 

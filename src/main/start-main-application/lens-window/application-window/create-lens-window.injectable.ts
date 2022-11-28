@@ -20,7 +20,7 @@ export interface ElectronWindow {
 export interface SendToViewArgs {
   channel: string;
   frameInfo?: ClusterFrameInfo;
-  data?: unknown[];
+  data?: unknown;
 }
 
 export interface LensWindow {

@@ -14,6 +14,7 @@ const setupListenerForCurrentClusterFrameInjectable = getInjectable({
   id: "setup-listener-for-current-cluster-frame",
 
   instantiate: (di) => ({
+    id: "setup-listener-for-current-cluster-frame",
     run: () => {
       const currentClusterFrameState = di.inject(currentClusterFrameClusterIdStateInjectable);
 

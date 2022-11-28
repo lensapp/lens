@@ -5,8 +5,6 @@
 
 import type { LabelSelector, NamespaceScopedMetadata, TypedLocalObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { MetricData } from "./metrics.api";
-import { metricsApi } from "./metrics.api";
 import type { Pod } from "./pod.api";
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
@@ -20,22 +18,6 @@ export class PersistentVolumeClaimApi extends KubeApi<PersistentVolumeClaim> {
       objectConstructor: PersistentVolumeClaim,
     });
   }
-}
-
-export function getMetricsForPvc(pvc: PersistentVolumeClaim): Promise<PersistentVolumeClaimMetricData> {
-  const opts = { category: "pvc", pvc: pvc.getName(), namespace: pvc.getNs() };
-
-  return metricsApi.getMetrics({
-    diskUsage: opts,
-    diskCapacity: opts,
-  }, {
-    namespace: opts.namespace,
-  });
-}
-
-export interface PersistentVolumeClaimMetricData extends Partial<Record<string, MetricData>> {
-  diskUsage: MetricData;
-  diskCapacity: MetricData;
 }
 
 export interface PersistentVolumeClaimSpec {

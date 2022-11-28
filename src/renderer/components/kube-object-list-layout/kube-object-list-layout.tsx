@@ -49,6 +49,18 @@ interface Dependencies {
   toggleKubeDetailsPane: ToggleKubeDetailsPane;
 }
 
+const getLoadErrorMessage = (error: unknown): string => {
+  if (error instanceof Error) {
+    if (error.cause) {
+      return `${error.message}: ${getLoadErrorMessage(error.cause)}`;
+    }
+
+    return error.message;
+  }
+
+  return `${error}`;
+};
+
 @observer
 class NonInjectedKubeObjectListLayout<
   K extends KubeObject,
@@ -59,7 +71,7 @@ class NonInjectedKubeObjectListLayout<
     subscribeStores: true,
   };
 
-  private loadErrors = observable.array<string>();
+  private readonly loadErrors = observable.array<string>();
 
   @computed get selectedItem() {
     return this.props.store.getByPath(this.props.kubeSelectedUrlParam.get());
@@ -78,7 +90,9 @@ class NonInjectedKubeObjectListLayout<
     if (subscribeStores) {
       reactions.push(
         this.props.subscribeToStores(stores, {
-          onLoadFailure: error => this.loadErrors.push(String(error)),
+          onLoadFailure: error => {
+            this.loadErrors.push(getLoadErrorMessage(error));
+          },
         }),
       );
     }

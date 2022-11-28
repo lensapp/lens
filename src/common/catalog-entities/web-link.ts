@@ -3,9 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import type { CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog/catalog-entity";
-import { productName } from "../vars";
+import productNameInjectable from "../vars/product-name.injectable";
 import { WeblinkStore } from "../weblink-store";
 
 export type WebLinkStatusPhase = "available" | "unavailable";
@@ -30,6 +31,9 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
   }
 
   onContextMenuOpen(context: CatalogEntityContextMenuContext) {
+    const di = getLegacyGlobalDiForExtensionApi();
+    const productName = di.inject(productNameInjectable);
+
     if (this.metadata.source === "local") {
       context.menuItems.push({
         title: "Delete",

@@ -18,7 +18,7 @@ import getMetricsInjectable from "../../get-metrics.injectable";
 // This is used for backoff retry tracking.
 const ATTEMPTS = [false, false, false, false, true];
 
-const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[], cluster: Cluster, prometheusPath: string, queryParams: Record<string, string>): Promise<any[]> => {
+const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[], cluster: Cluster, prometheusPath: string, queryParams: Partial<Record<string, string>>): Promise<any[]> => {
   const queries = promQueries.map(p => p.trim());
   const loaders = new Map<string, Promise<any>>();
 
@@ -28,14 +28,17 @@ const loadMetricsFor = (getMetrics: GetMetrics) => async (promQueries: string[],
         try {
           return await getMetrics(cluster, prometheusPath, { query, ...queryParams });
         } catch (error) {
-          if (isRequestError(error)) {
-            if (lastAttempt || (error.statusCode && error.statusCode >= 400 && error.statusCode < 500)) {
-              throw new Error("Metrics not available", { cause: error });
-            }
-          } else if (error instanceof Error) {
+          if (
+            !isRequestError(error)
+            || lastAttempt
+            || (
+              !lastAttempt && (
+                typeof error.statusCode === "number" &&
+                400 <= error.statusCode && error.statusCode < 500
+              )
+            )
+          ) {
             throw new Error("Metrics not available", { cause: error });
-          } else {
-            throw new Error("Metrics not available");
           }
 
           await new Promise(resolve => setTimeout(resolve, (attempt + 1) * 1000)); // add delay before repeating request
@@ -59,13 +62,13 @@ const addMetricsRouteInjectable = getRouteInjectable({
     const getMetrics = di.inject(getMetricsInjectable);
     const loadMetrics = loadMetricsFor(getMetrics);
 
-    const queryParams = Object.fromEntries(query.entries());
+    const queryParams: Partial<Record<string, string>> = Object.fromEntries(query.entries());
     const prometheusMetadata: ClusterPrometheusMetadata = {};
 
     try {
       const { prometheusPath, provider } = await cluster.contextHandler.getPrometheusDetails();
 
-      prometheusMetadata.provider = provider?.id;
+      prometheusMetadata.provider = provider?.kind;
       prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type;
 
       if (!prometheusPath) {

@@ -14,11 +14,13 @@ import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.inj
 import type { ClusterFrameChildComponent } from "./cluster-frame-child-component-injection-token";
 import { clusterFrameChildComponentInjectionToken } from "./cluster-frame-child-component-injection-token";
 import watchHistoryStateInjectable from "../../remote-helpers/watch-history-state.injectable";
+import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
+import type { IComputedValue } from "mobx";
 
 interface Dependencies {
   namespaceStore: NamespaceStore;
   subscribeStores: SubscribeStores;
-  childComponents: ClusterFrameChildComponent[];
+  childComponents: IComputedValue<ClusterFrameChildComponent[]>;
   watchHistoryState: () => () => void;
 }
 
@@ -37,7 +39,7 @@ export const NonInjectedClusterFrame = observer(({
 
   return (
     <ErrorBoundary>
-      {childComponents
+      {childComponents.get()
         .map((child) => (
           <Observer key={child.id}>
             {() => (child.shouldRender.get() ? <child.Component /> : null) }
@@ -48,12 +50,16 @@ export const NonInjectedClusterFrame = observer(({
 });
 
 export const ClusterFrame = withInjectables<Dependencies>(NonInjectedClusterFrame, {
-  getProps: di => ({
-    namespaceStore: di.inject(namespaceStoreInjectable),
-    subscribeStores: di.inject(subscribeStoresInjectable),
-    childComponents: di.injectMany(clusterFrameChildComponentInjectionToken),
-    watchHistoryState: di.inject(watchHistoryStateInjectable),
-  }),
+  getProps: di => {
+    const computedInjectMany = di.inject(computedInjectManyInjectable);
+
+    return {
+      namespaceStore: di.inject(namespaceStoreInjectable),
+      subscribeStores: di.inject(subscribeStoresInjectable),
+      childComponents: computedInjectMany(clusterFrameChildComponentInjectionToken),
+      watchHistoryState: di.inject(watchHistoryStateInjectable),
+    };
+  },
 });
 
 ClusterFrame.displayName = "ClusterFrame";

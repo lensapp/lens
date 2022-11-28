@@ -4,200 +4,76 @@
  */
 
 import styles from "./top-bar.module.scss";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
-import { Icon } from "../../icon";
-import { cssNames } from "../../../utils";
-import topBarItemsInjectable from "./top-bar-items/top-bar-items.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { TopBarRegistration } from "./top-bar-registration";
-import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
-import isWindowsInjectable from "../../../../common/vars/is-windows.injectable";
-import type { NavigateToCatalog } from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import navigateToCatalogInjectable from "../../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import catalogRouteInjectable from "../../../../common/front-end-routing/routes/catalog/catalog-route.injectable";
-import routeIsActiveInjectable from "../../../routes/route-is-active.injectable";
-import { UpdateButton } from "../../update-button";
-import topBarPrevEnabledInjectable from "./prev-enabled.injectable";
-import topBarNextEnabledInjectable from "./next-enabled.injectable";
-import openAppContextMenuInjectable from "./open-app-context-menu.injectable";
-import goBackInjectable from "./go-back.injectable";
-import goForwardInjectable from "./go-forward.injectable";
-import closeWindowInjectable from "./close-window.injectable";
-import maximizeWindowInjectable from "./maximize-window.injectable";
-import toggleMaximizeWindowInjectable from "./toggle-maximize-window.injectable";
+import toggleMaximizeWindowInjectable from "./toggle-maximize-window/toggle-maximize-window.injectable";
 import watchHistoryStateInjectable from "../../../remote-helpers/watch-history-state.injectable";
+import topBarItemsOnRightSideInjectable from "./top-bar-items/top-bar-items-on-right-side.injectable";
+import type { TopBarItem } from "./top-bar-items/top-bar-item-injection-token";
+import { Map } from "../../map/map";
+import Gutter from "../../gutter/gutter";
+import topBarItemsOnLeftSideInjectable from "./top-bar-items/top-bar-items-on-left-side.injectable";
 
 interface Dependencies {
-  navigateToCatalog: NavigateToCatalog;
-  catalogRouteIsActive: IComputedValue<boolean>;
-  items: IComputedValue<TopBarRegistration[]>;
-  isWindows: boolean;
-  isLinux: boolean;
-  prevEnabled: IComputedValue<Boolean>;
-  nextEnabled: IComputedValue<Boolean>;
-  openAppContextMenu: () => void;
-  goBack: () => void;
-  goForward: () => void;
-  minimizeWindow: () => void;
+  itemsOnLeft: IComputedValue<TopBarItem[]>;
+  itemsOnRight: IComputedValue<TopBarItem[]>;
   toggleMaximizeWindow: () => void;
-  closeWindow: () => void;
   watchHistoryState: () => () => void;
 }
 
-const NonInjectedTopBar = observer(({
-  items,
-  navigateToCatalog,
-  catalogRouteIsActive,
-  isWindows,
-  isLinux,
-  prevEnabled,
-  nextEnabled,
-  openAppContextMenu,
-  goBack,
-  goForward,
-  closeWindow,
-  minimizeWindow,
-  toggleMaximizeWindow,
-  watchHistoryState,
-}: Dependencies) => {
-  const elem = useRef<HTMLDivElement | null>(null);
+const NonInjectedTopBar = observer(
+  ({
+    itemsOnLeft,
+    itemsOnRight,
+    toggleMaximizeWindow,
+    watchHistoryState,
+  }: Dependencies) => {
+    useEffect(() => watchHistoryState(), []);
 
-  const goHome = () => {
-    navigateToCatalog();
-  };
+    return (
+      <div className={styles.topBar} onDoubleClick={toggleMaximizeWindow}>
+        <div className={styles.items}>
+          <Map
+            items={itemsOnLeft.get()}
+            getSeparator={() => <Gutter size="sm" />}
+          >
+            {toItemWhichWorksWithWindowDraggingAndDoubleClicking}
+          </Map>
 
-  const windowSizeToggle = (evt: React.MouseEvent) => {
-    if (elem.current === evt.target) {
-      toggleMaximizeWindow();
-    }
-  };
+          <div className={styles.separator} />
 
-  useEffect(() => watchHistoryState(), []);
-
-  return (
-    <div
-      className={styles.topBar}
-      onDoubleClick={windowSizeToggle}
-      ref={elem}
-    >
-      <div className={styles.items}>
-        {(isWindows || isLinux) && (
-          <div className={styles.winMenu}>
-            <div onClick={openAppContextMenu} data-testid="window-menu">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                shapeRendering="crispEdges"
-              >
-                <path fill="currentColor" d="M0,8.5h12v1H0V8.5z" />
-                <path fill="currentColor" d="M0,5.5h12v1H0V5.5z" />
-                <path fill="currentColor" d="M0,2.5h12v1H0V2.5z" />
-              </svg>
-            </div>
-          </div>
-        )}
-        <Icon
-          data-testid="home-button"
-          material="home"
-          onClick={goHome}
-          disabled={catalogRouteIsActive.get()}
-        />
-        <Icon
-          data-testid="history-back"
-          material="arrow_back"
-          onClick={goBack}
-          disabled={!prevEnabled.get()}
-        />
-        <Icon
-          data-testid="history-forward"
-          material="arrow_forward"
-          onClick={goForward}
-          disabled={!nextEnabled.get()}
-        />
-        <UpdateButton />
+          <Map
+            items={itemsOnRight.get()}
+            getSeparator={() => <Gutter size="sm" />}
+          >
+            {toItemWhichWorksWithWindowDraggingAndDoubleClicking}
+          </Map>
+        </div>
       </div>
-      <div className={styles.items}>
-        {renderRegisteredItems(items.get())}
-        {(isWindows || isLinux) && (
-          <div className={cssNames(styles.windowButtons, { [styles.linuxButtons]: isLinux })}>
-            <div
-              className={styles.minimize}
-              data-testid="window-minimize"
-              onClick={minimizeWindow}
-            >
-              <svg shapeRendering="crispEdges" viewBox="0 0 12 12">
-                <rect
-                  fill="currentColor"
-                  width="10"
-                  height="1"
-                  x="1"
-                  y="9"
-                />
-              </svg>
-            </div>
-            <div
-              className={styles.maximize}
-              data-testid="window-maximize"
-              onClick={toggleMaximizeWindow}
-            >
-              <svg shapeRendering="crispEdges" viewBox="0 0 12 12">
-                <rect
-                  width="9"
-                  height="9"
-                  x="1.5"
-                  y="1.5"
-                  fill="none"
-                  stroke="currentColor"
-                />
-              </svg>
-            </div>
-            <div
-              className={styles.close}
-              data-testid="window-close"
-              onClick={closeWindow}
-            >
-              <svg shapeRendering="crispEdges" viewBox="0 0 12 12">
-                <polygon fill="currentColor" points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1" />
-              </svg>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-});
-
-const renderRegisteredItems = (items: TopBarRegistration[]) => (
-  items.map((registration, index) => {
-    if (!registration?.components?.Item) {
-      return null;
-    }
-
-    return <registration.components.Item key={index} />;
-  })
+    );
+  },
 );
 
 export const TopBar = withInjectables<Dependencies>(NonInjectedTopBar, {
   getProps: (di) => ({
-    navigateToCatalog: di.inject(navigateToCatalogInjectable),
-    items: di.inject(topBarItemsInjectable),
-    isLinux: di.inject(isLinuxInjectable),
-    isWindows: di.inject(isWindowsInjectable),
-    prevEnabled: di.inject(topBarPrevEnabledInjectable),
-    nextEnabled: di.inject(topBarNextEnabledInjectable),
-    catalogRouteIsActive: di.inject(
-      routeIsActiveInjectable,
-      di.inject(catalogRouteInjectable),
-    ),
-    openAppContextMenu: di.inject(openAppContextMenuInjectable),
-    goBack: di.inject(goBackInjectable),
-    goForward: di.inject(goForwardInjectable),
-    closeWindow: di.inject(closeWindowInjectable),
-    minimizeWindow: di.inject(maximizeWindowInjectable),
+    itemsOnLeft: di.inject(topBarItemsOnLeftSideInjectable),
+    itemsOnRight: di.inject(topBarItemsOnRightSideInjectable),
     toggleMaximizeWindow: di.inject(toggleMaximizeWindowInjectable),
     watchHistoryState: di.inject(watchHistoryStateInjectable),
   }),
 });
+
+const toItemWhichWorksWithWindowDraggingAndDoubleClicking = (
+  item: TopBarItem,
+) => (
+  <div
+    className={styles.preventedDragging}
+    onDoubleClick={(event) => {
+      return event.stopPropagation();
+    }}
+  >
+    <item.Component />
+  </div>
+);

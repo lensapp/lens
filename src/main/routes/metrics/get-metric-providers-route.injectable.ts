@@ -6,23 +6,22 @@
 import { apiPrefix } from "../../../common/vars";
 import { getRouteInjectable } from "../../router/router.injectable";
 import { route } from "../../router/route";
-import prometheusProviderRegistryInjectable from "../../prometheus/prometheus-provider-registry.injectable";
+import prometheusProvidersInjectable from "../../prometheus/providers.injectable";
 
 const getMetricProvidersRouteInjectable = getRouteInjectable({
   id: "get-metric-providers-route",
 
   instantiate: (di) => {
-    const prometheusProviderRegistry = di.inject(prometheusProviderRegistryInjectable);
+    const prometheusProviders = di.inject(prometheusProvidersInjectable);
 
     return route({
       method: "get",
       path: `${apiPrefix}/metrics/providers`,
     })(() => ({
-      response: Array.from(
-        prometheusProviderRegistry
-          .providers
-          .values(),
-        ({ name, id, isConfigurable }) => ({ name, id, isConfigurable }),
+      response: (
+        prometheusProviders
+          .get()
+          .map(({ name, kind: id, isConfigurable }) => ({ name, id, isConfigurable }))
       ),
     }));
   },

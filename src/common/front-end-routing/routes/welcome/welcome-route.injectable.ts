@@ -4,16 +4,21 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
+import welcomeRouteConfigInjectable from "./welcome-route-config.injectable";
 import { frontEndRouteInjectionToken } from "../../front-end-route-injection-token";
 
 const welcomeRouteInjectable = getInjectable({
   id: "welcome-route",
 
-  instantiate: () => ({
-    path: "/welcome",
-    clusterFrame: false,
-    isEnabled: computed(() => true),
-  }),
+  instantiate: (di) => {
+    const welcomeRoute = di.inject(welcomeRouteConfigInjectable);
+
+    return {
+      path: welcomeRoute,
+      clusterFrame: false,
+      isEnabled: computed(() => true),
+    };
+  },
 
   injectionToken: frontEndRouteInjectionToken,
 });

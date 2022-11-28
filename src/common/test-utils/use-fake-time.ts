@@ -16,7 +16,7 @@ export const advanceFakeTime = (milliseconds: number) => {
   });
 };
 
-export const useFakeTime = (dateTime: string) => {
+export const useFakeTime = (dateTime = "2015-10-21T07:28:00Z") => {
   usingFakeTime = true;
 
   jest.useFakeTimers();

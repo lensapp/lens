@@ -86,7 +86,7 @@ class NonInjectedEntitySettings extends React.Component<Dependencies> {
 
     return (
       <>
-        <div className="flex items-center pb-8">
+        <div className={styles.avatarAndName}>
           <Avatar
             title={entity.getName()}
             colorHash={`${entity.getName()}-${entity.metadata.source}`}

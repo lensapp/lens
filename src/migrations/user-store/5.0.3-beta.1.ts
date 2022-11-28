@@ -4,18 +4,18 @@
  */
 
 import { existsSync, readFileSync } from "fs";
-import path from "path";
 import os from "os";
 import type { ClusterStoreModel } from "../../common/cluster-store/cluster-store";
 import type { KubeconfigSyncEntry, UserPreferencesModel } from "../../common/user-store";
 import type { MigrationDeclaration } from "../helpers";
 import { migrationLog } from "../helpers";
-import { isErrnoException, isLogicalChildPath } from "../../common/utils";
+import { isErrnoException } from "../../common/utils";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import directoryForKubeConfigsInjectable
-  from "../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForKubeConfigsInjectable from "../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import joinPathsInjectable from "../../common/path/join-paths.injectable";
+import isLogicalChildPathInjectable from "../../common/path/is-logical-child-path.injectable";
+import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
 
 export default {
   version: "5.0.3-beta.1",
@@ -27,18 +27,21 @@ export default {
 
       const userDataPath = di.inject(directoryForUserDataInjectable);
       const kubeConfigsPath = di.inject(directoryForKubeConfigsInjectable);
+      const joinPaths = di.inject(joinPathsInjectable);
+      const isLogicalChildPath = di.inject(isLogicalChildPathInjectable);
+      const getDirnameOfPath = di.inject(getDirnameOfPathInjectable);
 
-      const { clusters = [] }: ClusterStoreModel = JSON.parse(readFileSync(path.resolve(userDataPath, "lens-cluster-store.json"), "utf-8")) ?? {};
-      const extensionDataDir = path.resolve(userDataPath, "extension_data");
+      const { clusters = [] }: ClusterStoreModel = JSON.parse(readFileSync(joinPaths(userDataPath, "lens-cluster-store.json"), "utf-8")) ?? {};
+      const extensionDataDir = joinPaths(userDataPath, "extension_data");
       const syncPaths = new Set(syncKubeconfigEntries.map(s => s.filePath));
 
-      syncPaths.add(path.join(os.homedir(), ".kube"));
+      syncPaths.add(joinPaths(os.homedir(), ".kube"));
 
       for (const cluster of clusters) {
         if (!cluster.kubeConfigPath) {
           continue;
         }
-        const dirOfKubeconfig = path.dirname(cluster.kubeConfigPath);
+        const dirOfKubeconfig = getDirnameOfPath(cluster.kubeConfigPath);
 
         if (dirOfKubeconfig === kubeConfigsPath) {
           migrationLog(`Skipping ${cluster.id} because kubeConfigPath is under the stored KubeConfig folder`);

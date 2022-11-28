@@ -8,10 +8,9 @@ import React from "react";
 import { observer } from "mobx-react";
 import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout-2";
-import { nodeStore } from "./legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { NodeMetricData, Node } from "../../../common/k8s-api/endpoints/node.api";
-import { formatNodeTaint, getMetricsForAllNodes } from "../../../common/k8s-api/endpoints/node.api";
+import type { Node } from "../../../common/k8s-api/endpoints/node.api";
+import { formatNodeTaint } from "../../../common/k8s-api/endpoints/node.api";
 import { LineProgress } from "../line-progress";
 import { bytesToUnits } from "../../../common/utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
@@ -19,10 +18,15 @@ import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
-import { eventStore } from "../+events/legacy-store";
 import { makeObservable, observable } from "mobx";
-import isEmpty from "lodash/isEmpty";
 import { KubeObjectAge } from "../kube-object/age";
+import type { NodeMetricData, RequestAllNodeMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-metrics-for-all-nodes.injectable";
+import type { NodeStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import nodeStoreInjectable from "./store.injectable";
+import requestAllNodeMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-metrics-for-all-nodes.injectable";
+import eventStoreInjectable from "../+events/store.injectable";
+import type { EventStore } from "../+events/store";
 
 enum columnId {
   name = "name",
@@ -42,16 +46,23 @@ type MetricsTooltipFormatter = (metrics: [number, number]) => string;
 interface UsageArgs {
   node: Node;
   title: string;
-  metricNames: [string, string];
+  metricNames: [keyof NodeMetricData, keyof NodeMetricData];
   formatters: MetricsTooltipFormatter[];
 }
 
-@observer
-export class NodesRoute extends React.Component {
-  @observable.ref metrics: Partial<NodeMetricData> = {};
-  private metricsWatcher = interval(30, async () => this.metrics = await getMetricsForAllNodes());
+interface Dependencies {
+  requestAllNodeMetrics: RequestAllNodeMetrics;
+  nodeStore: NodeStore;
+  eventStore: EventStore;
+}
 
-  constructor(props: any) {
+@observer
+class NonInjectedNodesRoute extends React.Component<Dependencies> {
+  @observable metrics: NodeMetricData | null = null;
+
+  private metricsWatcher = interval(30, async () => this.metrics = await this.props.requestAllNodeMetrics());
+
+  constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -64,8 +75,8 @@ export class NodesRoute extends React.Component {
     this.metricsWatcher.stop();
   }
 
-  getLastMetricValues(node: Node, metricNames: string[]): number[] {
-    if (isEmpty(this.metrics)) {
+  getLastMetricValues(node: Node, metricNames: (keyof NodeMetricData)[]): number[] {
+    if (!this.metrics) {
       return [];
     }
 
@@ -73,7 +84,7 @@ export class NodesRoute extends React.Component {
 
     return metricNames.map(metricName => {
       try {
-        const metric = this.metrics[metricName];
+        const metric = this.metrics?.[metricName];
         const result = metric?.data.result.find(({ metric: { node, instance, kubernetes_node }}) => (
           nodeName === node
           || nodeName === instance
@@ -175,6 +186,8 @@ export class NodesRoute extends React.Component {
   }
 
   render() {
+    const { nodeStore, eventStore } = this.props;
+
     return (
       <TabLayout>
         <KubeObjectListLayout
@@ -251,3 +264,12 @@ export class NodesRoute extends React.Component {
     );
   }
 }
+
+export const NodesRoute = withInjectables<Dependencies>(NonInjectedNodesRoute, {
+  getProps: (di, props) => ({
+    ...props,
+    nodeStore: di.inject(nodeStoreInjectable),
+    eventStore: di.inject(eventStoreInjectable),
+    requestAllNodeMetrics: di.inject(requestAllNodeMetricsInjectable),
+  }),
+});

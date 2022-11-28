@@ -13,9 +13,8 @@ const stopBroadcastingThemeChangeInjectable = getInjectable({
     const broadcastThemeChange = di.inject(broadcastThemeChangeInjectable);
 
     return {
-      run: async () => {
-        await broadcastThemeChange.stop();
-      },
+      id: "stop-broadcasting-theme-change",
+      run: () => void broadcastThemeChange.stop(),
     };
   },
 

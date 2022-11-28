@@ -3,17 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
+import binaryNameInjectable from "../../common/utils/binary-name.injectable";
 
 const kubectlBinaryNameInjectable = getInjectable({
   id: "kubectl-binary-name",
-  instantiate: (di) => {
-    const platform = di.inject(normalizedPlatformInjectable);
-
-    return platform === "windows"
-      ? "kubectl.exe"
-      : "kubectl";
-  },
+  instantiate: (di) => di.inject(binaryNameInjectable, "kubectl"),
 });
 
 export default kubectlBinaryNameInjectable;

@@ -5,16 +5,16 @@
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "../../main/application-update/publish-is-configured.injectable";
+import publishIsConfiguredInjectable from "./main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { CheckForPlatformUpdates } from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
-import checkForPlatformUpdatesInjectable from "../../main/application-update/check-for-platform-updates/check-for-platform-updates.injectable";
-import processCheckingForUpdatesInjectable from "../../main/application-update/check-for-updates/process-checking-for-updates.injectable";
-import selectedUpdateChannelInjectable from "../../common/application-update/selected-update-channel/selected-update-channel.injectable";
+import type { CheckForPlatformUpdates } from "./main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
+import checkForPlatformUpdatesInjectable from "./main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
+import processCheckingForUpdatesInjectable from "./main/process-checking-for-updates.injectable";
+import selectedUpdateChannelInjectable from "./common/selected-update-channel/selected-update-channel.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import appVersionInjectable from "../../common/vars/app-version.injectable";
-import { updateChannels } from "../../common/application-update/update-channels";
+import { updateChannels } from "./common/update-channels";
+import getBuildVersionInjectable from "../../main/vars/build-version/get-build-version.injectable";
 
 describe("downgrading version update", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -42,23 +42,58 @@ describe("downgrading version update", () => {
   [
     {
       updateChannel: updateChannels.latest,
+      appVersion: "4.0.0",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.beta,
+      appVersion: "4.0.0",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.alpha,
+      appVersion: "4.0.0",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.latest,
+      appVersion: "4.0.0-latest",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.beta,
+      appVersion: "4.0.0-latest",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.alpha,
+      appVersion: "4.0.0-latest",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.latest,
       appVersion: "4.0.0-beta",
       downgradeIsAllowed: true,
     },
     {
       updateChannel: updateChannels.beta,
       appVersion: "4.0.0-beta",
-      downgradeIsAllowed: false,
-    },
-    {
-      updateChannel: updateChannels.beta,
-      appVersion: "4.0.0-beta.1",
       downgradeIsAllowed: false,
     },
     {
       updateChannel: updateChannels.alpha,
       appVersion: "4.0.0-beta",
+      downgradeIsAllowed: false,
+    },
+    {
+      updateChannel: updateChannels.latest,
+      appVersion: "4.0.0-alpha",
       downgradeIsAllowed: true,
+    },
+    {
+      updateChannel: updateChannels.beta,
+      appVersion: "4.0.0-alpha",
+      downgradeIsAllowed: false,
     },
     {
       updateChannel: updateChannels.alpha,
@@ -67,7 +102,7 @@ describe("downgrading version update", () => {
     },
   ].forEach(({ appVersion, updateChannel, downgradeIsAllowed }) => {
     it(`given application version "${appVersion}" and update channel "${updateChannel.id}", when checking for updates, can${downgradeIsAllowed ? "": "not"} downgrade`, async () => {
-      mainDi.override(appVersionInjectable, () => appVersion);
+      mainDi.override(getBuildVersionInjectable, () => () => appVersion);
 
       await applicationBuilder.render();
 

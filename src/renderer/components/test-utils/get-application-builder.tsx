@@ -6,7 +6,7 @@ import type { LensRendererExtension } from "../../../extensions/lens-renderer-ex
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
 import type { IComputedValue, ObservableMap } from "mobx";
-import { computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import React from "react";
 import { Router } from "react-router";
 import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
@@ -17,12 +17,8 @@ import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { compact, filter, first, flatMap, get, join, last, map, matches } from "lodash/fp";
-import preferenceNavigationItemsInjectable from "../+preferences/preferences-navigation/preference-navigation-items.injectable";
-import navigateToPreferencesInjectable from "../../../common/front-end-routing/routes/preferences/navigate-to-preferences.injectable";
-import type { MenuItemOpts } from "../../../main/menu/application-menu-items.injectable";
-import applicationMenuItemsInjectable from "../../../main/menu/application-menu-items.injectable";
-import type { MenuItem, MenuItemConstructorOptions } from "electron";
+import { filter, first, join, last, map, matches } from "lodash/fp";
+import navigateToPreferencesInjectable from "../../../features/preferences/common/navigate-to-preferences.injectable";
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
@@ -54,22 +50,42 @@ import { RootFrame } from "../../frames/root-frame/root-frame";
 import { ClusterFrame } from "../../frames/cluster-frame/cluster-frame";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import activeKubernetesClusterInjectable from "../../cluster-frame-context/active-kubernetes-cluster.injectable";
-import { catalogEntityFromCluster } from "../../../main/cluster-manager";
+import { catalogEntityFromCluster } from "../../../main/cluster/manager";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import { isAllowedResource } from "../../../common/cluster/is-allowed-resource";
 import createApplicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-application-window.injectable";
 import type { CreateElectronWindow } from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import createElectronWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import { applicationWindowInjectionToken } from "../../../main/start-main-application/lens-window/application-window/application-window-injection-token";
-import sendToChannelInElectronBrowserWindowInjectable from "../../../main/start-main-application/lens-window/application-window/send-to-channel-in-electron-browser-window.injectable";
 import closeAllWindowsInjectable from "../../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
 import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { FakeExtensionOptions } from "./get-extension-fake";
 import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
+import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
+import { Namespace } from "../../../common/k8s-api/endpoints";
+import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
+import applicationMenuItemCompositeInjectable from "../../../features/application-menu/main/application-menu-item-composite.injectable";
+import { getCompositePaths } from "../../../common/utils/composite/get-composite-paths/get-composite-paths";
+import { discoverFor } from "./discovery-of-html-elements";
+import { findComposite } from "../../../common/utils/composite/find-composite/find-composite";
+import shouldStartHiddenInjectable from "../../../main/electron-app/features/should-start-hidden.injectable";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
 type LensWindowWithHelpers = LensWindow & { rendered: RenderResult; di: DiContainer };
+
+const createNamespacesFor = (namespaces: Set<string>): Namespace[] => (
+  Array.from(namespaces, (namespace) => new Namespace({
+    apiVersion: "v1",
+    kind: "Namespace",
+    metadata: {
+      name: namespace,
+      resourceVersion: "1",
+      selfLink: `/api/v1/namespaces/${namespace}`,
+      uid: `namespace-${namespace}`,
+    },
+  }))
+);
 
 export interface ApplicationBuilder {
   mainDi: DiContainer;
@@ -99,6 +115,7 @@ export interface ApplicationBuilder {
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeWindowStart: (callback: Callback) => ApplicationBuilder;
+  afterWindowStart: (callback: Callback) => ApplicationBuilder;
 
   startHidden: () => Promise<void>;
   render: () => Promise<RenderResult>;
@@ -110,9 +127,9 @@ export interface ApplicationBuilder {
   };
 
   applicationMenu: {
-    click: (path: string) => void;
+    click: (...path: string[]) => void;
+    items: string[][];
   };
-
   preferences: {
     close: () => void;
     navigate: () => void;
@@ -121,7 +138,10 @@ export interface ApplicationBuilder {
       click: (id: string) => void;
     };
   };
-
+  namespaces: {
+    add: (namespace: string) => void;
+    select: (namespace: string) => void;
+  };
   helmCharts: {
     navigate: NavigateToHelmCharts;
   };
@@ -147,10 +167,15 @@ export const getApplicationBuilder = () => {
     mainDi.register(mainExtensionsStateInjectable);
   });
 
-  const overrideChannelsForWindow = overrideChannels(mainDi);
+  const { overrideForWindow, sendToWindow } = overrideChannels(mainDi);
 
   const beforeApplicationStartCallbacks: Callback[] = [];
   const beforeWindowStartCallbacks: Callback[] = [];
+  const afterWindowStartCallbacks: Callback[] = [];
+
+  const fsState = new Map();
+
+  overrideFsWithFakes(mainDi, fsState);
 
   let environment = environments.application;
 
@@ -184,7 +209,8 @@ export const getApplicationBuilder = () => {
 
     const windowDi = getRendererDi({ doGeneralOverrides: true });
 
-    overrideChannelsForWindow(windowDi, windowId);
+    overrideForWindow(windowDi, windowId);
+    overrideFsWithFakes(windowDi, fsState);
 
     runInAction(() => {
       windowDi.register(rendererExtensionsStateInjectable);
@@ -218,6 +244,10 @@ export const getApplicationBuilder = () => {
 
         await startFrame();
 
+        for (const callback of afterWindowStartCallbacks) {
+          await callback(windowDi);
+        }
+
         const history = windowDi.inject(historyInjectable);
 
         const render = renderFor(windowDi);
@@ -230,9 +260,7 @@ export const getApplicationBuilder = () => {
       },
 
       send: (arg) => {
-        const sendFake = mainDi.inject(sendToChannelInElectronBrowserWindowInjectable) as any;
-
-        sendFake(windowId, null, arg);
+        sendToWindow(windowId, arg);
       },
 
       reload: () => {
@@ -245,9 +273,12 @@ export const getApplicationBuilder = () => {
 
   let applicationHasStarted = false;
 
+  const namespaces = observable.set<string>();
+  const namespaceItems = observable.array<Namespace>();
+  const selectedNamespaces = observable.set<string>();
+
   const builder: ApplicationBuilder = {
     mainDi,
-
     applicationWindow: {
       closeAll: () => {
         const closeAll = mainDi.inject(closeAllWindowsInjectable);
@@ -283,11 +314,9 @@ export const getApplicationBuilder = () => {
           .map(toWindowWithHelpersFor(windowHelpers)),
 
       get: (id) => {
-        const applicationWindows = builder.applicationWindow.getAll();
-
-        const applicationWindow = applicationWindows.find(
-          (window) => window.id === id,
-        );
+        const applicationWindow = builder.applicationWindow
+          .getAll()
+          .find((window) => window.id === id);
 
         if (!applicationWindow) {
           throw new Error(`Tried to get application window with ID "${id}" but it was not found.`);
@@ -297,48 +326,42 @@ export const getApplicationBuilder = () => {
       },
 
       create: (id) => {
-        const createApplicationWindow = mainDi.inject(
-          createApplicationWindowInjectable,
-        );
+        const createApplicationWindow = mainDi.inject(createApplicationWindowInjectable);
 
         createApplicationWindow(id);
 
         return builder.applicationWindow.get(id);
       },
     },
-
+    namespaces: {
+      add: action((namespace) => {
+        namespaces.add(namespace);
+        namespaceItems.replace(createNamespacesFor(namespaces));
+      }),
+      select: action((namespace) => selectedNamespaces.add(namespace)),
+    },
     applicationMenu: {
-      click: (path: string) => {
-        const applicationMenuItems = mainDi.inject(
-          applicationMenuItemsInjectable,
-        );
+      get items() {
+        const composite = mainDi.inject(
+          applicationMenuItemCompositeInjectable,
+        ).get();
 
-        const menuItems = pipeline(
-          applicationMenuItems.get(),
-          flatMap(toFlatChildren(null)),
-          filter((menuItem) => !!menuItem.click),
-        );
+        return getCompositePaths(composite);
+      },
 
-        const menuItem = menuItems.find((menuItem) => menuItem.path === path);
+      click: (...path: string[]) => {
+        const composite = mainDi.inject(
+          applicationMenuItemCompositeInjectable,
+        ).get();
 
-        if (!menuItem) {
-          const availableIds = menuItems.map(get("path")).join('", "');
+        const clickableMenuItem = findComposite(...path)(composite).value;
 
-          throw new Error(
-            `Tried to click application menu item with ID "${path}" which does not exist. Available IDs are: "${availableIds}"`,
-          );
+        if(clickableMenuItem.kind === "clickable-menu-item") {
+          // Todo: prevent leaking of Electron
+          (clickableMenuItem.onClick as any)();
+        } else {
+          throw new Error(`Tried to trigger clicking of an application menu item, but item at path '${path.join(" -> ")}' isn't clickable.`);
         }
-
-        menuItem.click?.(
-          {
-            menu: null as never,
-            commandId: 0,
-            userAccelerator: null,
-            ...menuItem,
-          } as MenuItem,
-          undefined,
-          {},
-        );
       },
     },
 
@@ -409,24 +432,15 @@ export const getApplicationBuilder = () => {
       },
 
       navigation: {
-        click: (id: string) => {
-          const { di: windowDi, rendered } = builder.applicationWindow.only;
+        click: (pathId: string) => {
+          const { rendered } = builder.applicationWindow.only;
 
-          const link = rendered.queryByTestId(`tab-link-for-${id}`);
+          const discover = discoverFor(() => rendered);
 
-          if (!link) {
-            const preferencesNavigationItems = windowDi.inject(
-              preferenceNavigationItemsInjectable,
-            );
-
-            const availableIds = preferencesNavigationItems
-              .get()
-              .map(get("id"));
-
-            throw new Error(
-              `Tried to click navigation item "${id}" which does not exist in preferences. Available IDs are "${availableIds.join('", "')}"`,
-            );
-          }
+          const { discovered: link } = discover.getSingleElement(
+            "preference-tab-link",
+            pathId,
+          );
 
           fireEvent.click(link);
         },
@@ -461,6 +475,7 @@ export const getApplicationBuilder = () => {
         );
 
         const clusterStub = {
+          id: "some-cluster-id",
           accessibleNamespaces: [],
           isAllowedResource: isAllowedResource(allowedResourcesState),
         } as unknown as Cluster;
@@ -469,21 +484,26 @@ export const getApplicationBuilder = () => {
           computed(() => catalogEntityFromCluster(clusterStub)),
         );
 
+        windowDi.override(hostedClusterIdInjectable, () => clusterStub.id);
+
         // TODO: Figure out a way to remove this stub.
         const namespaceStoreStub = {
           isLoaded: true,
-          contextNamespaces: [],
-          contextItems: [],
-          api: {
-            kind: "Namespace",
+          get contextNamespaces() {
+            return Array.from(selectedNamespaces);
           },
-          items: [],
+          get allowedNamespaces() {
+            return Array.from(namespaces);
+          },
+          contextItems: namespaceItems,
+          api: windowDi.inject(namespaceApiInjectable),
+          items: namespaceItems,
           selectNamespaces: () => {},
           getByPath: () => undefined,
           pickOnlySelected: () => [],
           isSelectedAll: () => false,
-          getTotalCount: () => 0,
-        } as unknown as NamespaceStore;
+          getTotalCount: () => namespaceItems.length,
+        } as Partial<NamespaceStore> as NamespaceStore;
 
         const clusterFrameContextFake = new ClusterFrameContext(
           clusterStub,
@@ -495,7 +515,6 @@ export const getApplicationBuilder = () => {
 
         windowDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
         windowDi.override(hostedClusterInjectable, () => clusterStub);
-        windowDi.override(hostedClusterIdInjectable, () => "irrelevant-hosted-cluster-id");
         windowDi.override(clusterFrameContextInjectable, () => clusterFrameContextFake);
 
         // Todo: get rid of global state.
@@ -615,6 +634,18 @@ export const getApplicationBuilder = () => {
       return builder;
     },
 
+    afterWindowStart(callback) {
+      const alreadyRenderedWindows = builder.applicationWindow.getAll();
+
+      alreadyRenderedWindows.forEach((window) => {
+        callback(window.di);
+      });
+
+      afterWindowStartCallbacks.push(callback);
+
+      return builder;
+    },
+
     startHidden: async () => {
       mainDi.inject(lensProxyPortInjectable).set(42);
 
@@ -622,11 +653,8 @@ export const getApplicationBuilder = () => {
         await callback(mainDi);
       }
 
-      const startMainApplication = mainDi.inject(
-        startMainApplicationInjectable,
-      );
-
-      await startMainApplication(false);
+      mainDi.override(shouldStartHiddenInjectable, () => true);
+      await mainDi.inject(startMainApplicationInjectable);
 
       applicationHasStarted = true;
     },
@@ -638,21 +666,15 @@ export const getApplicationBuilder = () => {
         await callback(mainDi);
       }
 
-      const startMainApplication = mainDi.inject(
-        startMainApplicationInjectable,
-      );
-
-      await startMainApplication(true);
+      mainDi.override(shouldStartHiddenInjectable, () => false);
+      await mainDi.inject(startMainApplicationInjectable);
 
       applicationHasStarted = true;
 
-      const applicationWindow = builder.applicationWindow.get(
-        "first-application-window",
-      );
-
-      assert(applicationWindow);
-
-      return applicationWindow.rendered;
+      return builder
+        .applicationWindow
+        .get("first-application-window")
+        .rendered;
     },
 
     select: {
@@ -694,25 +716,6 @@ export const getApplicationBuilder = () => {
 
   return builder;
 };
-
-export type ToFlatChildren = (opts: MenuItemConstructorOptions) => (MenuItemOpts & { path: string })[];
-
-function toFlatChildren(parentId: string | null | undefined): ToFlatChildren {
-  return ({ submenu = [], ...menuItem }) => [
-    {
-      ...menuItem,
-      path: pipeline([parentId, menuItem.id], compact, join(".")),
-    },
-    ...(
-      Array.isArray(submenu)
-        ? submenu.flatMap(toFlatChildren(menuItem.id))
-        : [{
-          ...submenu,
-          path: pipeline([parentId, menuItem.id], compact, join(".")),
-        }]
-    ),
-  ];
-}
 
 export const rendererExtensionsStateInjectable = getInjectable({
   id: "renderer-extensions-state",
@@ -844,4 +847,3 @@ const disableExtensionFor =
         extensionsState.delete(id);
       });
     };
-

@@ -13,6 +13,7 @@ const setupReactionsInUserStoreInjectable = getInjectable({
     const userStore = di.inject(userStoreInjectable);
 
     return {
+      id: "setup-reactions-in-user-store",
       run: () => {
         userStore.startMainReactions();
       },

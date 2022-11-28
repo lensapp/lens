@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import Joi from "joi";
+
 /**
  * JSON serializable metadata type
  */
@@ -26,6 +28,37 @@ export type ClusterId = string;
  * The fields that are used for updating a cluster instance
  */
 export type UpdateClusterModel = Omit<ClusterModel, "id">;
+
+/**
+ * A type validator for `UpdateClusterModel` so that only expected types are present
+ */
+export const updateClusterModelChecker = Joi.object<UpdateClusterModel>({
+  kubeConfigPath: Joi.string()
+    .required()
+    .min(1),
+  contextName: Joi.string()
+    .required()
+    .min(1),
+  workspace: Joi.string()
+    .optional(),
+  workspaces: Joi.array()
+    .items(Joi.string()),
+  preferences: Joi.object(),
+  metadata: Joi.object(),
+  accessibleNamespaces: Joi.array()
+    .items(Joi.string()),
+  labels: Joi.object().pattern(Joi.string(), Joi.string()),
+});
+
+/**
+ * A type validator for just the `id` fields of `ClusterModel`. The rest is
+ * covered by `updateClusterModelChecker`
+ */
+export const clusterModelIdChecker = Joi.object<Pick<ClusterModel, "id">>({
+  id: Joi.string()
+    .required()
+    .min(1),
+});
 
 /**
  * The model for passing cluster data around, including to disk
@@ -161,13 +194,6 @@ export enum ClusterMetricsResourceType {
  * The default node shell image
  */
 export const initialNodeShellImage = "docker.io/alpine:3.13";
-
-/**
- * The arguments for requesting to refresh a cluster's metadata
- */
-export interface ClusterRefreshOptions {
-  refreshMetadata?: boolean;
-}
 
 /**
  * The data representing a cluster's state, for passing between main and renderer

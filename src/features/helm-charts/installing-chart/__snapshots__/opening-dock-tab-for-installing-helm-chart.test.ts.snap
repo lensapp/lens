@@ -434,14 +434,8 @@ exports[`opening dock tab for installing helm chart given application is started
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
-                  >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
-                    </div>
-                  </div>
+                    class="Spinner singleColor center"
+                  />
                 </div>
                 <div
                   class="AddRemoveButtons flex gaps"
@@ -2779,7 +2773,11 @@ exports[`opening dock tab for installing helm chart given application is started
                 </span>
                 <span
                   class="value"
-                />
+                >
+                  <li>
+                    Some Foo&lt;some@foo.com&gt;
+                  </li>
+                </span>
               </div>
             </div>
           </div>
@@ -3682,7 +3680,11 @@ exports[`opening dock tab for installing helm chart given application is started
                 </span>
                 <span
                   class="value"
-                />
+                >
+                  <li>
+                    Some Foo&lt;some@foo.com&gt;
+                  </li>
+                </span>
               </div>
             </div>
           </div>
@@ -4595,7 +4597,11 @@ exports[`opening dock tab for installing helm chart given application is started
                 </span>
                 <span
                   class="value"
-                />
+                >
+                  <li>
+                    Some Foo&lt;some@foo.com&gt;
+                  </li>
+                </span>
               </div>
             </div>
           </div>
@@ -5498,7 +5504,11 @@ exports[`opening dock tab for installing helm chart given application is started
                 </span>
                 <span
                   class="value"
-                />
+                >
+                  <li>
+                    Some Foo&lt;some@foo.com&gt;
+                  </li>
+                </span>
               </div>
             </div>
           </div>
@@ -6194,6 +6204,7 @@ exports[`opening dock tab for installing helm chart given application is started
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-some-tab-id"
                           tabindex="0"
                         >
                           <span
@@ -6203,7 +6214,9 @@ exports[`opening dock tab for installing helm chart given application is started
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-some-tab-id"
+                        >
                           Close ⌘+W
                         </div>
                       </div>

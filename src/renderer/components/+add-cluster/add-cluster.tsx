@@ -10,10 +10,8 @@ import fse from "fs-extra";
 import { debounce } from "lodash";
 import { action, computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
-import path from "path";
 import React from "react";
 import * as uuid from "uuid";
-import { appEventBus } from "../../../common/app-event-bus/event-bus";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
 import { docsUrl } from "../../../common/vars";
 import { isDefined, iter } from "../../utils";
@@ -25,6 +23,10 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import getCustomKubeConfigDirectoryInjectable from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
+import type { EmitAppEvent } from "../../../common/app-event-bus/emit-event.injectable";
+import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
+import type { GetDirnameOfPath } from "../../../common/path/get-dirname.injectable";
+import getDirnameOfPathInjectable from "../../../common/path/get-dirname.injectable";
 
 interface Option {
   config: KubeConfig;
@@ -34,6 +36,8 @@ interface Option {
 interface Dependencies {
   getCustomKubeConfigDirectory: (directoryName: string) => string;
   navigateToCatalog: NavigateToCatalog;
+  getDirnameOfPath: GetDirnameOfPath;
+  emitAppEvent: EmitAppEvent;
 }
 
 function getContexts(config: KubeConfig): Map<string, Option> {
@@ -53,13 +57,13 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
   @observable isWaiting = false;
   @observable errors: string[] = [];
 
-  constructor(dependencies: Dependencies) {
-    super(dependencies);
+  constructor(props: Dependencies) {
+    super(props);
     makeObservable(this);
   }
 
   componentDidMount() {
-    appEventBus.emit({ name: "cluster-add", action: "start" });
+    this.props.emitAppEvent({ name: "cluster-add", action: "start" });
   }
 
   @computed get allErrors(): string[] {
@@ -85,12 +89,12 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
 
   addClusters = action(async () => {
     this.isWaiting = true;
-    appEventBus.emit({ name: "cluster-add", action: "click" });
+    this.props.emitAppEvent({ name: "cluster-add", action: "click" });
 
     try {
       const absPath = this.props.getCustomKubeConfigDirectory(uuid.v4());
 
-      await fse.ensureDir(path.dirname(absPath));
+      await fse.ensureDir(this.props.getDirnameOfPath(absPath));
       await fse.writeFile(absPath, this.customConfig.trim(), { encoding: "utf-8", mode: 0o600 });
 
       Notifications.ok(`Successfully added ${this.kubeContexts.size} new cluster(s)`);
@@ -112,7 +116,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
           <code>~/.kube/config</code>
           {" file. "}
           <a
-            href={`${docsUrl}/catalog/add-cluster/`}
+            href={`${docsUrl}/getting-started/add-cluster/`}
             rel="noreferrer"
             target="_blank"
           >
@@ -155,10 +159,9 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
 
 export const AddCluster = withInjectables<Dependencies>(NonInjectedAddCluster, {
   getProps: (di) => ({
-    getCustomKubeConfigDirectory: di.inject(
-      getCustomKubeConfigDirectoryInjectable,
-    ),
-
+    getCustomKubeConfigDirectory: di.inject(getCustomKubeConfigDirectoryInjectable),
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
+    getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
+    emitAppEvent: di.inject(emitAppEventInjectable),
   }),
 });

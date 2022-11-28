@@ -4,11 +4,22 @@
  */
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent } from "@testing-library/react";
 import { ToBottom } from "../to-bottom";
 import { noop } from "../../../../utils";
+import type { DiRender } from "../../../test-utils/renderFor";
+import { renderFor } from "../../../test-utils/renderFor";
+import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 
 describe("<ToBottom/>", () => {
+  let render: DiRender;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    render = renderFor(di);
+  });
+
   it("renders w/o errors", () => {
     const { container } = render(<ToBottom onClick={noop}/>);
 

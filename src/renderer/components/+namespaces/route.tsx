@@ -6,7 +6,6 @@
 import "./namespaces.scss";
 
 import React from "react";
-import { NamespaceStatusKind } from "../../../common/k8s-api/endpoints";
 import { AddNamespaceDialog } from "./add-dialog/dialog";
 import { TabLayout } from "../layout/tab-layout-2";
 import { Badge } from "../badge";
@@ -72,9 +71,6 @@ export const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDia
         addTooltip: "Add Namespace",
         onAdd: openAddNamespaceDialog,
       }}
-      customizeTableRowProps={item => ({
-        disabled: item.getStatus() === NamespaceStatusKind.TERMINATING,
-      })}
     />
     <AddNamespaceDialog/>
   </TabLayout>
