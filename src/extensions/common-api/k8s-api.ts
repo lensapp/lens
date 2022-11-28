@@ -20,6 +20,7 @@ import { KubeObjectStore as InternalKubeObjectStore } from "../../common/k8s-api
 import type { KubeJsonApiDataFor, KubeObject } from "../../common/k8s-api/kube-object";
 import type { KubeApi } from "../../common/k8s-api/kube-api";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
+import type { ClusterContext } from "../../renderer/cluster-frame-context/cluster-frame-context";
 
 export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);
 export const forCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForClusterInjectable);
@@ -82,6 +83,17 @@ export abstract class KubeObjectStore<
   A extends KubeApi<K, D> = KubeApi<K, KubeJsonApiDataFor<K>>,
   D extends KubeJsonApiDataFor<K> = KubeApiDataFrom<K, A>,
 > extends InternalKubeObjectStore<K, A, D> {
+  /**
+   * @deprecated This is no longer used and shouldn't have been every really used
+   */
+  static readonly context = {
+    set: (ctx: ClusterContext) => {
+      console.warn("Setting KubeObjectStore.context is no longer supported");
+      void ctx;
+    },
+    get: () => asLegacyGlobalForExtensionApi(clusterFrameContextForNamespacedResourcesInjectable),
+  };
+
   get context() {
     return this.dependencies.context;
   }
