@@ -5,5 +5,4 @@
 
 export * from "./catalog";
 export * from "./ipc";
-export * from "./registries";
 export * from "./catalog-category-registry";
