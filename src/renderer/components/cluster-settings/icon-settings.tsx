@@ -4,14 +4,14 @@
  */
 
 import React from "react";
-import type { Cluster } from "../../../../common/cluster/cluster";
-import { autoBind } from "../../../utils";
+import type { Cluster } from "../../../common/cluster/cluster";
+import { autoBind } from "../../utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import type { KubernetesCluster } from "../../../../common/catalog-entities";
-import { FilePicker, OverSizeLimitStyle } from "../../file-picker";
-import { MenuActions, MenuItem } from "../../menu";
-import { Avatar } from "../../avatar";
+import type { KubernetesCluster } from "../../../common/catalog-entities";
+import { FilePicker, OverSizeLimitStyle } from "../file-picker";
+import { MenuActions, MenuItem } from "../menu";
+import { Avatar } from "../avatar";
 
 enum GeneralInputStatus {
   CLEAN = "clean",

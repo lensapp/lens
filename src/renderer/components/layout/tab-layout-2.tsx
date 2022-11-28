@@ -43,6 +43,7 @@ export const TabLayout = observer(
                   active={active}
                   data-is-active-test={active}
                   data-testid={`tab-link-for-${registration.id}`}
+                  value={undefined}
                 />
               );
             })}

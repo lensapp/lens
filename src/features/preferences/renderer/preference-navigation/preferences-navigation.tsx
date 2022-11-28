@@ -16,26 +16,33 @@ import { compositeHasDescendant } from "../../../../common/utils/composite/compo
 import type { PreferenceTabsRoot } from "../preference-items/preference-tab-root";
 import { Icon } from "../../../../renderer/components/icon";
 import { checkThatAllDiscriminablesAreExhausted } from "../../../../common/utils/composable-responsibilities/discriminable/discriminable";
+import type { NavigateToPreferenceTab } from "./navigate-to-preference-tab/navigate-to-preference-tab.injectable";
+import navigateToPreferenceTabInjectable from "./navigate-to-preference-tab/navigate-to-preference-tab.injectable";
 
 interface Dependencies {
   composite: IComputedValue<Composite<PreferenceItemTypes | PreferenceTabsRoot>>;
+  navigateToPreferenceTab: NavigateToPreferenceTab;
 }
 
-const NonInjectedPreferencesNavigation = observer(({ composite }: Dependencies) => (
-  <Tabs className="flex column" scrollable={false}>
+const NonInjectedPreferencesNavigation = observer(({
+  composite,
+  navigateToPreferenceTab,
+}: Dependencies) => (
+  <Tabs<string>
+    className="flex column"
+    scrollable={false}
+    onChange={navigateToPreferenceTab}
+  >
     {toNavigationHierarchy(composite.get())}
   </Tabs>
 ));
 
-export const PreferencesNavigation = withInjectables<Dependencies>(
-  NonInjectedPreferencesNavigation,
-
-  {
-    getProps: (di) => ({
-      composite: di.inject(preferencesCompositeInjectable),
-    }),
-  },
-);
+export const PreferencesNavigation = withInjectables<Dependencies>(NonInjectedPreferencesNavigation, {
+  getProps: (di) => ({
+    composite: di.inject(preferencesCompositeInjectable),
+    navigateToPreferenceTab: di.inject(navigateToPreferenceTabInjectable),
+  }),
+});
 
 const toNavigationHierarchy = (composite: Composite<PreferenceItemTypes | PreferenceTabsRoot>) => {
   const value = composite.value;

@@ -9,23 +9,23 @@ import React from "react";
 import { autoBind, cssNames } from "../../utils";
 import { Icon } from "../icon";
 
-const TabsContext = React.createContext<TabsContextValue>({});
+const TabsContext = React.createContext<TabsContextValue<unknown>>({});
 
-interface TabsContextValue<D = any> {
+interface TabsContextValue<D> {
   autoFocus?: boolean;
   withBorder?: boolean;
   value?: D;
   onChange?(value: D): void;
 }
 
-export interface TabsProps<D = any> extends TabsContextValue<D>, Omit<DOMAttributes<HTMLElement>, "onChange"> {
+export interface TabsProps<D> extends TabsContextValue<D>, Omit<DOMAttributes<HTMLElement>, "onChange"> {
   className?: string;
   center?: boolean;
   wrap?: boolean;
   scrollable?: boolean;
 }
 
-export class Tabs extends React.PureComponent<TabsProps> {
+export class Tabs<D> extends React.PureComponent<TabsProps<D>> {
   public elem: HTMLDivElement | null = null;
 
   render() {
@@ -49,22 +49,22 @@ export class Tabs extends React.PureComponent<TabsProps> {
   }
 }
 
-export interface TabProps<D = any> extends DOMAttributes<HTMLElement> {
+export interface TabProps<D> extends DOMAttributes<HTMLElement> {
   id?: string;
   className?: string;
   active?: boolean;
   disabled?: boolean;
   icon?: React.ReactNode | string; // material-ui name or custom icon
   label?: React.ReactNode;
-  value?: D;
+  value: D;
 }
 
-export class Tab extends React.PureComponent<TabProps> {
+export class Tab<D> extends React.PureComponent<TabProps<D>> {
   static contextType = TabsContext;
-  declare context: TabsContextValue;
+  declare context: TabsContextValue<D>;
   public ref = React.createRef<HTMLDivElement>();
 
-  constructor(props: TabProps) {
+  constructor(props: TabProps<D>) {
     super(props);
     autoBind(this);
   }

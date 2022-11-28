@@ -3,6 +3,4 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "../cluster-settings";
-
 export * from "./entity-settings";

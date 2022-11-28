@@ -47,7 +47,6 @@ import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injecta
 import extensionShouldBeEnabledForClusterFrameInjectable from "./extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
-import getEntitySettingCommandsInjectable from "./components/command-palette/registered-commands/get-entity-setting-commands.injectable";
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
@@ -112,9 +111,6 @@ export const getDiForUnitTesting = (
 
     di.override(requestAnimationFrameInjectable, () => (callback) => callback());
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
-
-    // TODO: remove when entity settings registry is refactored
-    di.override(getEntitySettingCommandsInjectable, () => () => []);
 
     // TODO: Remove after "LensRendererExtension.isEnabledForCluster" is removed
     di.override(extensionShouldBeEnabledForClusterFrameInjectable, () =>

@@ -19,3 +19,7 @@ export const orderByOrderNumber = <T extends MaybeOrderable>(maybeOrderables: T[
         : Number.MAX_SAFE_INTEGER,
     maybeOrderables,
   );
+
+export const byOrderNumber = <T extends Orderable>(left: T, right: T) => (
+  left.orderNumber - right.orderNumber
+);

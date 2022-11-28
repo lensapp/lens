@@ -7,155 +7,129 @@ import styles from "./entity-settings.module.scss";
 
 import React from "react";
 import type { IComputedValue } from "mobx";
-import { observable, makeObservable, computed } from "mobx";
 import { observer } from "mobx-react";
 import { Tabs, Tab } from "../tabs";
 import type { CatalogEntity } from "../../api/catalog-entity";
-import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
-import { EntitySettingRegistry } from "../../../extensions/registries";
-import { groupBy } from "lodash";
 import { SettingLayout } from "../layout/setting-layout";
-import logger from "../../../common/logger";
 import { Avatar } from "../avatar";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import entitySettingsRouteParametersInjectable from "./entity-settings-route-parameters.injectable";
-import type { ObservableHistory } from "mobx-observable-history";
-import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
-import observableHistoryInjectable from "../../navigation/observable-history.injectable";
+import currentCatalogEntityForSettingsInjectable from "./current-entity.injectable";
+import type { ActiveEntitySettings } from "./active-tabs.injectable";
+import activeEntitySettingsTabInjectable from "./active-tabs.injectable";
 
 interface Dependencies {
-  entityId: IComputedValue<string>;
-  entityRegistry: CatalogEntityRegistry;
-  observableHistory: ObservableHistory<unknown>;
+  entity: IComputedValue<CatalogEntity | undefined>;
 }
 
-@observer
-class NonInjectedEntitySettings extends React.Component<Dependencies> {
-  @observable activeTab?: string;
+const NonInjectedEntitySettings = observer((props: Dependencies) => {
+  const entity = props.entity.get();
 
-  constructor(props: Dependencies) {
-    super(props);
-    makeObservable(this);
-
-    const { hash } = this.props.observableHistory.location;
-
-    if (hash) {
-      const menuId = hash.slice(1);
-      const item = this.menuItems.find((item) => item.id === menuId);
-
-      if (item) {
-        this.activeTab = item.id;
-      }
-    }
+  if (!entity) {
+    return null;
   }
 
-  @computed
-  get entityId() {
-    return this.props.entityId.get();
-  }
+  return <CatalogEntitySettings entity={entity} />;
+});
 
-  get entity() {
-    return this.props.entityRegistry.getById(this.entityId);
-  }
+export const EntitySettingsRouteComponent = withInjectables<Dependencies>(NonInjectedEntitySettings, {
+  getProps: (di) => ({
+    entity: di.inject(currentCatalogEntityForSettingsInjectable),
+  }),
+});
 
-  get menuItems() {
-    if (!this.entity) return [];
+interface CatalogEntitySettingsProps {
+  entity: CatalogEntity;
+}
 
-    return EntitySettingRegistry.getInstance().getItemsForKind(this.entity.kind, this.entity.apiVersion, this.entity.metadata.source);
-  }
+interface CatalogEntitySettingsDeps {
+  activeEntitySettingsTab: ActiveEntitySettings;
+}
 
-  get activeSetting() {
-    this.activeTab ||= this.menuItems[0]?.id;
+const NonInjectedCatalogEntitySettings = observer((props: CatalogEntitySettingsProps & CatalogEntitySettingsDeps) => {
+  const {
+    activeEntitySettingsTab,
+    entity,
+  } = props;
+  const { tabId, setting, groups } = activeEntitySettingsTab.get();
 
-    return this.menuItems.find((setting) => setting.id === this.activeTab);
-  }
-
-  onTabChange = (tabId: string) => {
-    this.activeTab = tabId;
-  };
-
-  renderNavigation(entity: CatalogEntity) {
-    const groups = Object.entries(groupBy(this.menuItems, (item) => item.group || "Extensions"));
-
-    groups.sort((a, b) => {
-      if (a[0] === "Settings") return -1;
-      if (a[0] === "Extensions") return 1;
-
-      return a[0] <= b[0] ? -1 : 1;
-    });
-
-    return (
-      <>
-        <div className={styles.avatarAndName}>
-          <Avatar
-            title={entity.getName()}
-            colorHash={`${entity.getName()}-${entity.metadata.source}`}
-            src={entity.spec.icon?.src}
-            className={styles.settingsAvatar}
-            size={40}
-          />
-          <div className={styles.entityName}>
-            {entity.getName()}
-          </div>
+  const renderNavigation = () => (
+    <>
+      <div className={styles.avatarAndName}>
+        <Avatar
+          title={entity.getName()}
+          colorHash={`${entity.getName()}-${entity.metadata.source}`}
+          src={entity.spec.icon?.src}
+          className={styles.settingsAvatar}
+          size={40}
+        />
+        <div className={styles.entityName}>
+          {entity.getName()}
         </div>
-        <Tabs
-          className="flex column"
-          scrollable={false}
-          onChange={this.onTabChange}
-          value={this.activeTab}
-        >
-          { groups.map((group, groupIndex) => (
-            <React.Fragment key={`group-${groupIndex}`}>
-              <hr/>
-              <div className="header">{group[0]}</div>
-              { group[1].map((setting, index) => (
-                <Tab
-                  key={index}
-                  value={setting.id}
-                  label={setting.title}
-                  data-testid={`${setting.id}-tab`}
-                />
-              ))}
-            </React.Fragment>
-          ))}
-        </Tabs>
-      </>
-    );
-  }
-
-  render() {
-    const { activeSetting, entity } = this;
-
-    if (!entity) {
-      logger.error("[ENTITY-SETTINGS]: entity not found", this.entityId);
-
-      return null;
-    }
-
-    return (
-      <SettingLayout
-        navigation={this.renderNavigation(entity)}
-        contentGaps={false}
+      </div>
+      <Tabs
+        className="flex column"
+        scrollable={ false }
+        onChange={activeEntitySettingsTab.set}
+        value={tabId}
       >
         {
-          activeSetting && (
+          groups.map(({ tabs, title }) => (
+            <React.Fragment key={title}>
+              <hr />
+              <div className="header">{title}</div>
+              {
+                tabs.map((setting) => (
+                  <Tab
+                    key={setting.id}
+                    value={setting.id}
+                    label={setting.title}
+                    data-testid={`${setting.id}-tab`}
+                  />
+                ))
+              }
+            </React.Fragment>
+          ))
+        }
+      </Tabs>
+    </>
+  );
+
+  return (
+    <SettingLayout
+      navigation={renderNavigation()}
+      contentGaps={false}
+      data-testid="entity-settings"
+    >
+      {
+        tabId && setting
+          ? (
             <section>
-              <h2 data-testid={`${activeSetting.id}-header`}>{activeSetting.title}</h2>
+              <h2 data-testid={`${tabId}-header`}>{setting.title}</h2>
               <section>
-                <activeSetting.components.View entity={entity} key={activeSetting.title} />
+                <setting.components.View entity={entity} />
               </section>
             </section>
           )
-        }
-      </SettingLayout>
-    );
-  }
-}
+          : (
+            <div
+              className="flex items-center"
+              data-preference-page-does-not-exist-test={true}
+            >
+              No settings found for
+              {" "}
+              {entity.apiVersion}
+              /
+              {entity.kind}
+            </div>
+          )
+      }
+    </SettingLayout>
+  );
+});
 
-export const EntitySettings = withInjectables<Dependencies>(NonInjectedEntitySettings, {
-  getProps: (di) => ({
-    ...di.inject(entitySettingsRouteParametersInjectable),
-    entityRegistry: di.inject(catalogEntityRegistryInjectable),
-    observableHistory: di.inject(observableHistoryInjectable),
+const CatalogEntitySettings = withInjectables<CatalogEntitySettingsDeps, CatalogEntitySettingsProps>(NonInjectedCatalogEntitySettings, {
+  getProps: (di, props) => ({
+    ...props,
+    activeEntitySettingsTab: di.inject(activeEntitySettingsTabInjectable, props.entity),
   }),
 });

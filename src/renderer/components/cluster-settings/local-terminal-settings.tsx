@@ -5,20 +5,20 @@
 
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import type { Cluster } from "../../../../common/cluster/cluster";
-import { Input } from "../../input";
-import { SubTitle } from "../../layout/sub-title";
-import type { ShowNotification } from "../../notifications";
-import { Icon } from "../../icon";
-import { PathPicker } from "../../path-picker";
-import { isWindows } from "../../../../common/vars";
+import type { Cluster } from "../../../common/cluster/cluster";
+import { Input } from "../input";
+import { SubTitle } from "../layout/sub-title";
+import type { ShowNotification } from "../notifications";
+import { Icon } from "../icon";
+import { PathPicker } from "../path-picker";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
-import type { ValidateDirectory } from "../../../../common/fs/validate-directory.injectable";
-import validateDirectoryInjectable from "../../../../common/fs/validate-directory.injectable";
-import type { ResolveTilde } from "../../../../common/path/resolve-tilde.injectable";
-import resolveTildeInjectable from "../../../../common/path/resolve-tilde.injectable";
-import Gutter from "../../gutter/gutter";
+import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import type { ValidateDirectory } from "../../../common/fs/validate-directory.injectable";
+import validateDirectoryInjectable from "../../../common/fs/validate-directory.injectable";
+import type { ResolveTilde } from "../../../common/path/resolve-tilde.injectable";
+import resolveTildeInjectable from "../../../common/path/resolve-tilde.injectable";
+import Gutter from "../gutter/gutter";
+import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 
 export interface ClusterLocalTerminalSettingProps {
   cluster: Cluster;
@@ -27,6 +27,7 @@ interface Dependencies {
   showErrorNotification: ShowNotification;
   validateDirectory: ValidateDirectory;
   resolveTilde: ResolveTilde;
+  isWindows: boolean;
 }
 
 const NonInjectedClusterLocalTerminalSetting = observer(({
@@ -34,6 +35,7 @@ const NonInjectedClusterLocalTerminalSetting = observer(({
   showErrorNotification,
   validateDirectory,
   resolveTilde,
+  isWindows,
 }: Dependencies & ClusterLocalTerminalSettingProps) => {
   if (!cluster) {
     return null;
@@ -165,5 +167,6 @@ export const ClusterLocalTerminalSetting = withInjectables<Dependencies, Cluster
     showErrorNotification: di.inject(showErrorNotificationInjectable),
     validateDirectory: di.inject(validateDirectoryInjectable),
     resolveTilde: di.inject(resolveTildeInjectable),
+    isWindows: di.inject(isWindowsInjectable),
   }),
 });
