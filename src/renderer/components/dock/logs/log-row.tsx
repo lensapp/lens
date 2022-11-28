@@ -35,6 +35,7 @@ export function LogRow({ rowIndex, model }: { rowIndex: number; model: LogTabVie
         ? (
           <span
             className={cssNames(styles.overlay, { [styles.active]: active })}
+            data-testid={active ? "search-overlay-active" : "search-overlay"}
             dangerouslySetInnerHTML={{ __html: ansiToHtml(overlayValue) }}
           />
         )

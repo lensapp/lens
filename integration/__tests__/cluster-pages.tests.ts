@@ -113,7 +113,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       );
 
       await logSearchInput.type(":");
-      await frame.waitForSelector(".LogList .list span.active");
+      await frame.waitForSelector("[data-testid=search-overlay-active]");
 
       const showTimestampsCheckbox = await frame.waitForSelector(
         "[data-testid='log-controls'] .show-timestamps",
