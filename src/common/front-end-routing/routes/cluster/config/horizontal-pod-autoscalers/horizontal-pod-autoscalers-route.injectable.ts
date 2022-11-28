@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import shouldShowResourceInjectable from "../../../../../../renderer/cluster-frame-context/should-show-resource.injectable";
+import { shouldShowResourceInjectionToken } from "../../../../../cluster-store/allowed-resources-injection-token";
 import { frontEndRouteInjectionToken } from "../../../../front-end-route-injection-token";
 
 const horizontalPodAutoscalersRouteInjectable = getInjectable({
@@ -12,7 +12,7 @@ const horizontalPodAutoscalersRouteInjectable = getInjectable({
   instantiate: (di) => ({
     path: "/hpa",
     clusterFrame: true,
-    isEnabled: di.inject(shouldShowResourceInjectable, {
+    isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "horizontalpodautoscalers",
       group: "autoscaling",
     }),

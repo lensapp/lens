@@ -14,6 +14,7 @@ const leasesRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "leases",
+      group: "coordination.k8s.io",
     }),
   }),
 

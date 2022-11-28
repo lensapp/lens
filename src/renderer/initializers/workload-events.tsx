@@ -7,7 +7,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import shouldShowResourceInjectable from "../cluster-frame-context/should-show-resource.injectable";
+import { shouldShowResourceInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
 import { Events } from "../components/+events/events";
 
 export interface WorkloadEventsProps {}
@@ -32,8 +32,9 @@ const NonInjectedWorkloadEvents = observer(({ workloadEventsAreAllowed }: Depend
 
 export const WorkloadEvents = withInjectables<Dependencies, WorkloadEventsProps>(NonInjectedWorkloadEvents, {
   getProps: (di, props) => ({
-    workloadEventsAreAllowed: di.inject(shouldShowResourceInjectable, {
+    workloadEventsAreAllowed: di.inject(shouldShowResourceInjectionToken, {
       apiName: "events",
+      group: "v1",
     }),
     ...props,
   }),

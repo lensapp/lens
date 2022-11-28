@@ -14,6 +14,7 @@ const persistentVolumesRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "persistentvolumes",
+      group: "v1",
     }),
   }),
 

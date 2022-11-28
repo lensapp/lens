@@ -14,6 +14,7 @@ const endpointsRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "endpoints",
+      group: "v1",
     }),
   }),
 

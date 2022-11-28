@@ -14,6 +14,7 @@ const clusterOverviewRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "nodes",
+      group: "v1",
     }),
   }),
 

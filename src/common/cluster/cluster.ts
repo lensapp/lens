@@ -175,15 +175,6 @@ export class Cluster implements ClusterModel {
 
   private readonly knownResources = observable.array<KubeApiResource>();
 
-  private readonly knownNamespacedResources = computed(() => (
-    this.knownResources
-      .filter(r => r.namespaced === true)
-  ));
-  private readonly knownClusterscopedResources = computed(() => (
-    this.knownResources
-      .filter(r => r.namespaced === false)
-  ));
-
   // The formatting of this is `group.name` or `name` (if in core)
   private readonly allowedResources = observable.set<string>();
 
@@ -677,21 +668,14 @@ export class Cluster implements ClusterModel {
     }
 
     try {
-      const canListClusterScopedResource = await requestNamespaceListPermissions("");
       const apiLimit = plimit(5); // 5 concurrent api requests
-      const canListNamespacedResourceCheckers = await Promise.all((
+      const canListResourceCheckers = await Promise.all((
         this.allowedNamespaces.map(namespace => apiLimit(() => requestNamespaceListPermissions(namespace)))
       ));
-      const canListNamespacedResource: CanListResource = (resource) => canListNamespacedResourceCheckers.some(fn => fn(resource));
+      const canListNamespacedResource: CanListResource = (resource) => canListResourceCheckers.some(fn => fn(resource));
 
-      const allowedClusterScopedResources = this.knownClusterscopedResources
-        .get()
-        .filter(canListClusterScopedResource);
-      const allowedNamespaceScopedResources = this.knownNamespacedResources
-        .get()
-        .filter(canListNamespacedResource);
-
-      return [...allowedClusterScopedResources, ...allowedNamespaceScopedResources]
+      return this.knownResources
+        .filter(canListNamespacedResource)
         .map(formatKubeApiResource);
     } catch (error) {
       return [];

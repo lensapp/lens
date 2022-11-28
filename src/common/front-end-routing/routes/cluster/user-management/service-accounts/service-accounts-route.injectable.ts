@@ -14,6 +14,7 @@ const serviceAccountsRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "serviceaccounts",
+      group: "v1",
     }),
   }),
 

@@ -47,11 +47,14 @@ const requestNamespaceListPermissionsForInjectable = getInjectable({
           const { resourceRules } = status;
 
           return (resource) => {
-            const resourceRule = resourceRules.find(rule => {
-              console.log(rule);
-              void resource;
+            const resourceRule = resourceRules.find(({
+              apiGroups = [],
+              resources = [],
+            }) => {
+              const isAboutRelevantApiGroup = apiGroups.includes("*") || apiGroups.includes(resource.group);
+              const isAboutResource = resources.includes("*") || resources.includes(resource.apiName);
 
-              return true;
+              return isAboutRelevantApiGroup && isAboutResource;
             });
 
             if (!resourceRule) {
@@ -63,7 +66,7 @@ const requestNamespaceListPermissionsForInjectable = getInjectable({
             return verbs.includes("*") || verbs.includes("list");
           };
         } catch (error) {
-          logger.error(`[AUTHORIZATION-NAMESPACE-REVIEW]: failed to create subject rules review: ${error}`, { namespace });
+          logger.error(`[AUTHORIZATION-NAMESPACE-REVIEW]: failed to create subject rules review`, { namespace, error });
 
           return () => true;
         }

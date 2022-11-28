@@ -52,6 +52,7 @@ describe("cluster - visibility of sidebar items", () => {
       beforeEach(() => {
         builder.allowKubeResource({
           apiName: "namespaces",
+          group: "v1",
         });
       });
 
@@ -76,6 +77,7 @@ const testRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "namespaces",
+      group: "v1",
     }),
   }),
 

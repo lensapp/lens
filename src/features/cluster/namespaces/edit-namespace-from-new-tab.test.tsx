@@ -100,6 +100,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
 
     builder.allowKubeResource({
       apiName: "namespaces",
+      group: "v1",
     });
   });
 

@@ -15,6 +15,7 @@ describe("workload overview", () => {
     applicationBuilder = getApplicationBuilder().setEnvironmentToClusterFrame();
     applicationBuilder.allowKubeResource({
       apiName: "pods",
+      group: "v1",
     });
     rendered = await applicationBuilder.render();
   });
