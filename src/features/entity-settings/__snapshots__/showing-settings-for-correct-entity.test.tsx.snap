@@ -4,6 +4,9 @@ exports[`Showing correct entity settings renders 1`] = `
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -288,6 +291,9 @@ exports[`Showing correct entity settings renders 1`] = `
 exports[`Showing correct entity settings when navigating to local cluster entity settings renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -651,6 +657,9 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -1000,6 +1009,9 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
 exports[`Showing correct entity settings when navigating to weblink entity settings renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >

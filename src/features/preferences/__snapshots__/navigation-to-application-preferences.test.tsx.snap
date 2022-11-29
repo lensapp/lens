@@ -3,6 +3,9 @@
 exports[`preferences - navigation to application preferences given in preferences, when rendered renders 1`] = `
 <div>
   <div
+    id="terminal-init"
+  />
+  <div
     class="ClusterManager"
   >
     <div
@@ -752,6 +755,9 @@ exports[`preferences - navigation to application preferences given in preference
 
 exports[`preferences - navigation to application preferences given in preferences, when rendered when extension with application preference items gets enabled renders 1`] = `
 <div>
+  <div
+    id="terminal-init"
+  />
   <div
     class="ClusterManager"
   >
