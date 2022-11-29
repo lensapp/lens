@@ -10,6 +10,7 @@ import statefulSetStoreInjectable from "../+workloads-statefulsets/store.injecta
 import { StatefulSet, Pod } from "../../../common/k8s-api/endpoints";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 const runningStatefulSet = new StatefulSet({
   apiVersion: "foo",
@@ -137,6 +138,7 @@ describe("StatefulSet Store tests", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
 
     statefulSetStore = di.inject(statefulSetStoreInjectable);
 

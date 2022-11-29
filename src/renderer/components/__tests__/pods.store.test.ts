@@ -8,6 +8,7 @@ import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 const runningPod = new Pod({
   apiVersion: "foo",
@@ -120,6 +121,7 @@ describe("Pod Store tests", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
 
     podStore = di.inject(podStoreInjectable);
   });

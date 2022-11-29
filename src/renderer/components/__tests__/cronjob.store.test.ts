@@ -7,6 +7,7 @@ import cronJobStoreInjectable from "../+workloads-cronjobs/store.injectable";
 import { CronJob } from "../../../common/k8s-api/endpoints";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 const scheduledCronJob = new CronJob({
   apiVersion: "foo",
@@ -120,6 +121,7 @@ describe("CronJob Store tests", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
 
     cronJobStore = di.inject(cronJobStoreInjectable);
   });
