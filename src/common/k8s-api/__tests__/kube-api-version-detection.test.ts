@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { KubeJsonApi } from "../kube-json-api";
-import { PassThrough } from "stream";
 import type { ApiManager } from "../api-manager";
 import { Ingress, IngressApi } from "../endpoints";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
@@ -14,32 +13,10 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { flushPromises } from "../../test-utils/flush-promises";
 import createKubeJsonApiInjectable from "../create-kube-json-api.injectable";
-import type { Response, Headers as NodeFetchHeaders } from "node-fetch";
 import setupAutoRegistrationInjectable from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
-
-const createMockResponseFromString = (url: string, data: string, statusCode = 200) => {
-  const res: jest.Mocked<Response> = {
-    buffer: jest.fn(async () => { throw new Error("buffer() is not supported"); }),
-    clone: jest.fn(() => res),
-    arrayBuffer: jest.fn(async () => { throw new Error("arrayBuffer() is not supported"); }),
-    blob: jest.fn(async () => { throw new Error("blob() is not supported"); }),
-    body: new PassThrough(),
-    bodyUsed: false,
-    headers: new Headers() as NodeFetchHeaders,
-    json: jest.fn(async () => JSON.parse(await res.text())),
-    ok: 200 <= statusCode && statusCode < 300,
-    redirected: 300 <= statusCode && statusCode < 400,
-    size: data.length,
-    status: statusCode,
-    statusText: "some-text",
-    text: jest.fn(async () => data),
-    type: "basic",
-    url,
-    formData: jest.fn(async () => { throw new Error("formData() is not supported"); }),
-  };
-
-  return res;
-};
+import { createMockResponseFromString } from "../../../test-utils/mock-responses";
+import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
+import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 describe("KubeApi", () => {
   let request: KubeJsonApi;
@@ -51,6 +28,9 @@ describe("KubeApi", () => {
 
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
+
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
 
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 

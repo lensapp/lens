@@ -21,6 +21,8 @@ import type { KubeJsonApiDataFor } from "../kube-object";
 import AbortController from "abort-controller";
 import setupAutoRegistrationInjectable from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
 import { createMockResponseFromStream, createMockResponseFromString } from "../../../test-utils/mock-responses";
+import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
+import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 describe("createKubeApiForRemoteCluster", () => {
   let createKubeApiForRemoteCluster: CreateKubeApiForRemoteCluster;
@@ -31,6 +33,9 @@ describe("createKubeApiForRemoteCluster", () => {
 
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
+
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
 
     createKubeApiForRemoteCluster = di.inject(createKubeApiForRemoteClusterInjectable);
   });
@@ -120,6 +125,9 @@ describe("KubeApi", () => {
 
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
+
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
 
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 

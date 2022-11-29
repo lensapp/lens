@@ -6,6 +6,8 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
+import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
+import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { ApiManager } from "../api-manager";
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import { KubeApi } from "../kube-api";
@@ -28,6 +30,10 @@ describe("ApiManager", () => {
 
   beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
+
     apiManager = di.inject(apiManagerInjectable);
   });
 
