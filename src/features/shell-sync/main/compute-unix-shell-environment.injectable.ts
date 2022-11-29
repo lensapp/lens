@@ -84,6 +84,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
       } else if (!cshLikeShellName.test(shellName)) {
         // zsh (at least, maybe others) don't load RC files when in non-interactive mode, even when using -l (login) option
         shellArgs.push("-i");
+        command = ` ${command}`; // This prevents the command from being added to the history
       } else {
         // Some shells don't support any other options when providing the -l (login) shell option
       }
