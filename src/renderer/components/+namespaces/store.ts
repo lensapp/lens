@@ -29,8 +29,19 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   private async init() {
     await this.dependencies.storage.whenReady;
 
-    this.selectNamespaces(this.initialNamespaces);
-    this.autoLoadAllowedNamespaces();
+    const { allowedNamespaces } = this;
+    const selectedNamespaces = this.dependencies.storage.get(); // raw namespaces, undefined on first load
+
+    // return previously saved namespaces from local-storage (if any)
+    if (Array.isArray(selectedNamespaces)) {
+      this.selectNamespaces(selectedNamespaces.filter(namespace => allowedNamespaces.includes(namespace)));
+    } else if (allowedNamespaces.includes("default")) {
+      this.selectNamespaces(["default"]);
+    } else if (allowedNamespaces.length) {
+      this.selectNamespaces([allowedNamespaces[0]]);
+    } else {
+      this.selectNamespaces([]);
+    }
   }
 
   public onContextChange(callback: (namespaces: string[]) => void, opts: { fireImmediately?: boolean } = {}): IReactionDisposer {
@@ -38,32 +49,6 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
       fireImmediately: opts.fireImmediately,
       equals: comparer.shallow,
     });
-  }
-
-  private autoLoadAllowedNamespaces(): IReactionDisposer {
-    return reaction(() => this.allowedNamespaces, namespaces => this.loadAll({ namespaces }), {
-      fireImmediately: true,
-      equals: comparer.shallow,
-    });
-  }
-
-  private get initialNamespaces(): string[] {
-    const { allowedNamespaces } = this;
-    const selectedNamespaces = this.dependencies.storage.get(); // raw namespaces, undefined on first load
-
-    // return previously saved namespaces from local-storage (if any)
-    if (Array.isArray(selectedNamespaces)) {
-      return selectedNamespaces.filter(namespace => allowedNamespaces.includes(namespace));
-    }
-
-    // otherwise select "default" or first allowed namespace
-    if (allowedNamespaces.includes("default")) {
-      return ["default"];
-    } else if (allowedNamespaces.length) {
-      return [allowedNamespaces[0]];
-    }
-
-    return [];
   }
 
   /**
