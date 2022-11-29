@@ -5,15 +5,16 @@
 import { getRouteInjectable } from "../../router/router.injectable";
 import { apiPrefix } from "../../../common/vars";
 import { PortForward } from "./functionality/port-forward";
-import logger from "../../logger";
 import createPortForwardInjectable from "./functionality/create-port-forward.injectable";
 import { clusterRoute } from "../../router/route";
+import loggerInjectable from "../../../common/logger.injectable";
 
 const startPortForwardRouteInjectable = getRouteInjectable({
   id: "start-current-port-forward-route",
 
   instantiate: (di) => {
     const createPortForward = di.inject(createPortForwardInjectable);
+    const logger = di.inject(loggerInjectable);
 
     return clusterRoute({
       method: "post",
