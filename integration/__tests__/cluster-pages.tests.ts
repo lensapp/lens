@@ -140,7 +140,6 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     "should create a pod with logs and wrap log lines",
     async () => {
       await navigateToPods(frame);
-      await frame.waitForSelector("div.TableCell >> text='default'");
       await frame.click(".Icon.new-dock-tab");
       
       try {
