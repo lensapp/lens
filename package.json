@@ -333,7 +333,7 @@
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^16.18.2",
     "@types/proper-lockfile": "^4.1.2",
-    "@types/randomcolor": "^0.5.6",
+    "@types/randomcolor": "^0.5.7",
     "@types/react": "^17.0.45",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^17.0.16",
