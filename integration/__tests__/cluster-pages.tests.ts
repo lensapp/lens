@@ -180,7 +180,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await monacoEditor.press("Enter", { delay: 10 });
       await monacoEditor.type("  image: busybox:1.28", { delay: 10 });
       await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type(`args: [/bin/sh, -c, 'echo "Short loin exercitation sint, shankle ea andouille consequat.  Lorem shoulder dolor ipsum sed quis ham venison ad ribeye filet mignon pancetta.  Ham pork loin filet mignon duis, voluptate ullamco minim ea.  Turducken minim excepteur, t-bone venison jowl capicola proident biltong pariatur filet mignon irure.  Burgdoggen tail irure drumstick fatback fugiat, qui venison duis prosciutto pork chop.","Short ribs pork rump landjaeger, brisket adipisicing non anim magna duis sunt venison pastrami.  Kevin consectetur deserunt lorem.  Sirloin nisi pig culpa chislic officia enim in.  Brisket prosciutto quis jerky chuck rump filet mignon, labore venison elit est.  In kevin drumstick, ut elit pig short loin.  Boudin labore ut id nisi.  Non quis ullamco biltong.","Leberkas cillum dolore ad chuck ball tip laboris pork chop picanha dolore sunt landjaeger.  Occaecat cow exercitation, lorem reprehenderit laboris excepteur venison salami tenderloin irure in ut eu ham.  Irure incididunt swine, cupim adipisicing drumstick cupidatat salami tail eiusmod.  Irure sausage commodo veniam strip steak do.  Ball tip shankle capicola deserunt swine, jowl pork loin bacon spare ribs.","Cow tongue pig meatball short ribs fugiat spare ribs labore kevin.  Tempor reprehenderit irure veniam, andouille deserunt kevin dolore magna ad.  Ham hock veniam alcatra ea ribeye aute commodo ground round.  Ut nisi sunt dolore, sirloin velit officia flank ad short ribs pancetta deserunt pastrami leberkas.  Turducken ham hock short ribs, tenderloin swine eiusmod consequat irure excepteur.","Veniam short ribs reprehenderit tempor ea velit doner lorem shankle exercitation do.  Mollit veniam shoulder fugiat dolore, duis nostrud tenderloin.  Ut exercitation quis, ex cupidatat shank dolore pastrami irure ut pork chop.  Nulla boudin tail irure deserunt, cupidatat flank cillum cow pork loin hamburger shoulder ut ipsum.  Turducken eu chicken in qui pig.  Sunt tongue esse, ut ex ut hamburger spare ribs culpa.";']`, { delay: 10 });
+      await monacoEditor.type(`args: [/bin/sh, -c, 'echo "Short loin exercitation sint, shankle ea andouille consequat.  Lorem shoulder dolor ipsum sed quis ham venison ad ribeye filet mignon pancetta.  Ham pork loin filet mignon duis, voluptate ullamco minim ea.";']`, { delay: 10, timeout: 60000 });
       await monacoEditor.press("Enter", { delay: 10 });
 
       await frame.click(".Dock .Button >> text='Create'");
@@ -202,7 +202,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       boundingBox = await logLine.boundingBox();
 
-      expect(boundingBox?.height).toBeGreaterThan(100);
+      expect(boundingBox?.height).toBeGreaterThan(50);
     },
     10 * 60 * 1000,
   );
