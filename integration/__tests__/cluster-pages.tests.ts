@@ -139,7 +139,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
   it(
     "should create a pod with logs and wrap log lines",
     async () => {
-      await navigateToNamespaces(frame);
+      await navigateToPods(frame);
       await frame.waitForSelector("div.TableCell >> text='default'");
       await frame.click(".Icon.new-dock-tab");
       
@@ -184,9 +184,6 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await monacoEditor.press("Enter", { delay: 10 });
 
       await frame.click(".Dock .Button >> text='Create'");
-
-      await navigateToPods(frame);
-      
       await frame.waitForSelector(`.TableCell >> text=${testPodName}`);
       await frame.click(".TableRow .TableCell.menu");
       await frame.click(".MenuItem >> text=Logs");
