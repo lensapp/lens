@@ -188,7 +188,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await frame.click(".MenuItem >> text=Logs");
 
       await frame.waitForSelector(".Dock.isOpen");
-      const logLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index=0]");
+      const logLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index='0']");
       let boundingBox = await logLine.boundingBox();
 
       expect(boundingBox?.height).toBeLessThan(30);
