@@ -412,7 +412,7 @@ export abstract class KubeObjectStore<
     if (this.api.isNamespaced) {
       void (async () => {
         try {
-          const [loadedNamespaces] = await Promise.race([
+          const loadedNamespaces = await Promise.race([
             rejectPromiseBy(abortController.signal),
             waitUntilDefined(() => this.loadedNamespaces.get()),
           ]);
@@ -424,8 +424,8 @@ export abstract class KubeObjectStore<
               this.watchNamespace(namespace, abortController, { onLoadFailure });
             }
           }
-        } catch {
-          // ignore
+        } catch (error) {
+          console.error(`[KUBE-OBJECT-STORE]: failed to subscribe to ${this.api.apiBase}`, error);
         }
       })();
     } else {
@@ -441,7 +441,7 @@ export abstract class KubeObjectStore<
     }
 
     let timedRetry: NodeJS.Timeout;
-    const watch = () => this.api.watch({
+    const startNewWatch = () => this.api.watch({
       namespace,
       abortController,
       callback,
@@ -460,7 +460,7 @@ export abstract class KubeObjectStore<
 
         // not sure what to do, best to retry
         clearTimeout(timedRetry);
-        timedRetry = setTimeout(watch, 5000);
+        timedRetry = setTimeout(startNewWatch, 5000);
       } else if (error instanceof KubeStatus && error.code === 410) {
         clearTimeout(timedRetry);
         // resourceVersion has gone, let's try to reload
@@ -469,11 +469,11 @@ export abstract class KubeObjectStore<
             namespace
               ? this.loadAll({ namespaces: [namespace], reqInit: { signal }, ...opts })
               : this.loadAll({ merge: false, reqInit: { signal }, ...opts })
-          ).then(watch);
+          ).then(startNewWatch);
         }, 1000);
       } else if (error) { // not sure what to do, best to retry
         clearTimeout(timedRetry);
-        timedRetry = setTimeout(watch, 5000);
+        timedRetry = setTimeout(startNewWatch, 5000);
       }
 
       if (data) {
@@ -482,7 +482,7 @@ export abstract class KubeObjectStore<
     };
 
     signal.addEventListener("abort", () => clearTimeout(timedRetry));
-    watch();
+    startNewWatch();
   }
 
   @action

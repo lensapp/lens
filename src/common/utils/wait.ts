@@ -8,26 +8,23 @@ import type { Disposer } from "./disposer";
 
 export async function waitUntilDefined<T>(getter: (() => T | null | undefined) | IComputedValue<T | null | undefined>, opts?: { timeout?: number }): Promise<T> {
   return new Promise<T>((resolve, reject) => {
-    let res: T | null | undefined;
-
     when(
       () => {
-        res = typeof getter === "function"
+        const res = typeof getter === "function"
           ? getter()
           : getter.get();
+        const isDefined = res != null;
 
-        if (res != null) {
+        if (isDefined) {
           resolve(res);
-
-          return true;
         }
 
-        return false;
+        return isDefined;
       },
       () => {},
       {
         onError: reject,
-        ...opts,
+        ...(opts ?? {}),
       },
     );
   });

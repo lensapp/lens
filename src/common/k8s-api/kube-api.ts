@@ -403,10 +403,11 @@ export class KubeApi<
 
   /**
    * This method differs from {@link formatUrlForNotListing} because this treats `""` as "all namespaces"
+   * NOTE: This is also useful for watching
    * @param namespace The namespace to list in or `""` for all namespaces
    */
-  formatUrlForListing(namespace: string) {
-    return createKubeApiURL({
+  formatUrlForListing(namespace: string | undefined, query?: Partial<KubeApiQueryParams>) {
+    const resourcePath = createKubeApiURL({
       apiPrefix: this.apiPrefix,
       apiVersion: this.apiVersionWithGroup,
       resource: this.apiResource,
@@ -414,15 +415,15 @@ export class KubeApi<
         ? namespace ?? "default"
         : undefined,
     });
+
+    return resourcePath + (query ? `?${stringify(this.normalizeQuery(query))}` : "");
   }
 
   /**
    * Format a URL pathname and query for acting upon a specific resource.
    */
-  formatUrlForNotListing(resource?: Partial<ResourceDescriptor>, query?: Partial<KubeApiQueryParams>): string;
-
-  formatUrlForNotListing({ name, namespace }: Partial<ResourceDescriptor> = {}, query?: Partial<KubeApiQueryParams>) {
-    const resourcePath = createKubeApiURL({
+  formatUrlForNotListing({ name, namespace }: Partial<ResourceDescriptor> = {}) {
+    return createKubeApiURL({
       apiPrefix: this.apiPrefix,
       apiVersion: this.apiVersionWithGroup,
       resource: this.apiResource,
@@ -431,15 +432,17 @@ export class KubeApi<
         : undefined,
       name,
     });
-
-    return resourcePath + (query ? `?${stringify(this.normalizeQuery(query))}` : "");
   }
 
   /**
-   * @deprecated use {@link formatUrlForNotListing} instead
+   * @deprecated use {@link formatUrlForNotListing} or {@link formatUrlForListing} instead
    */
   getUrl(resource?: Partial<ResourceDescriptor>, query?: Partial<KubeApiQueryParams>) {
-    return this.formatUrlForNotListing(resource, query);
+    if (query) {
+      return this.formatUrlForListing(resource?.namespace, query);
+    }
+
+    return this.formatUrlForNotListing(resource);
   }
 
   protected normalizeQuery(query: Partial<KubeApiQueryParams> = {}) {
@@ -625,14 +628,14 @@ export class KubeApi<
   }
 
   getWatchUrl(namespace?: string, query: KubeApiQueryParams = {}) {
-    return this.formatUrlForNotListing({ namespace }, {
+    return this.formatUrlForListing(namespace, {
       watch: 1,
       resourceVersion: this.getResourceVersion(namespace),
       ...query,
     });
   }
 
-  watch(opts?: KubeApiWatchOptions<Object, Data>): () => void {
+  watch(opts?: KubeApiWatchOptions<Object, Data>): Disposer {
     let errorReceived = false;
     let timedRetry: NodeJS.Timeout;
     const {
