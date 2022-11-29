@@ -120,10 +120,10 @@ const registratorForPreferenceItemsInjectable = getInjectable({
           kind: "block" as const,
           id: itemId,
 
-          // Note: Legacy extensions considered telemetry as magic string, and so does this code
+          // Note: Legacy extensions considered telemetry and application as magic strings, and so does this code
           parentId: registration.showInPreferencesTab
-            ? registration.showInPreferencesTab === "telemetry"
-              ? "telemetry-page"
+            ? ["telemetry", "application"].includes(registration.showInPreferencesTab)
+              ? `${registration.showInPreferencesTab}-page`
               : `${commonId}-additional-page-${registration.showInPreferencesTab}`
             : primaryPageId,
 
