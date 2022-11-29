@@ -168,7 +168,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await monacoEditor.press("Enter", { delay: 10 });
       await monacoEditor.type(`  name: ${testPodName}`, { delay: 10 });
       await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type(`namespace: ${TEST_NAMESPACE}`, { delay: 10 });
+      await monacoEditor.type(`namespace: default`, { delay: 10 });
       await monacoEditor.press("Enter", { delay: 10 });
       await monacoEditor.press("Backspace", { delay: 10 });
       await monacoEditor.type("spec:", { delay: 10 });
@@ -201,7 +201,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       boundingBox = await logLine.boundingBox();
 
-      expect(boundingBox?.height).toBeGreaterThan(50);
+      expect(boundingBox?.height).toBeGreaterThan(30);
     },
     10 * 60 * 1000,
   );
