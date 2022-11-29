@@ -218,7 +218,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
     });
 
     it("should send the command via stdin", () => {
-      expect(stdinValue).toBe(`'/some/process/exec/path' -p '"deadbeef" + JSON.stringify(process.env) + "deadbeef"'`);
+      expect(stdinValue).toBe(` '/some/process/exec/path' -p '"deadbeef" + JSON.stringify(process.env) + "deadbeef"'`);
     });
 
     it("should close stdin", () => {
