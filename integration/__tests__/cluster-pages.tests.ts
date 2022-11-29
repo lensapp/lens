@@ -184,6 +184,9 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await monacoEditor.press("Enter", { delay: 10 });
 
       await frame.click(".Dock .Button >> text='Create'");
+
+      await navigateToPods(frame);
+      
       await frame.waitForSelector(`.TableCell >> text=${testPodName}`);
       await frame.click(".TableRow .TableCell.menu");
       await frame.click(".MenuItem >> text=Logs");
