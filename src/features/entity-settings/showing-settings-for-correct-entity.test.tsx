@@ -10,8 +10,9 @@ import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injec
 import type { Cluster } from "../../common/cluster/cluster";
 import navigateToEntitySettingsInjectable from "../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
-import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import createClusterInjectable from "../../renderer/cluster/create-cluster.injectable";
+import createClusterInjectable from "../../renderer/create-cluster/create-cluster.injectable";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 
 describe("Showing correct entity settings", () => {
   let builder: ApplicationBuilder;
@@ -22,9 +23,9 @@ describe("Showing correct entity settings", () => {
   let otherEntity: WebLink;
   let cluster: Cluster;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     builder.afterWindowStart((windowDi) => {
       const createCluster = windowDi.inject(createClusterInjectable);
 
