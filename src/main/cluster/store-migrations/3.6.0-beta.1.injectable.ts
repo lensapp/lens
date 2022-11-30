@@ -13,7 +13,6 @@ import type { ClusterModel } from "../../../common/cluster-types";
 import readFileSyncInjectable from "../../../common/fs/read-file-sync.injectable";
 import { loadConfigFromString } from "../../../common/kube-helpers";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
-import { migrationLog } from "../../../migrations/helpers";
 
 interface Pre360ClusterModel extends ClusterModel {
   kubeConfig?: string;
@@ -23,6 +22,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-store/migration-token";
 import fsInjectable from "../../../common/fs/fs.injectable";
 import readFileBufferSyncInjectable from "../../../common/fs/read-file-buffer-sync.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
   id: "v3.6.0-beta.1-cluster-store-migration",
@@ -33,6 +33,7 @@ const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
     const readFileSync = di.inject(readFileSyncInjectable);
     const readFileBufferSync = di.inject(readFileBufferSyncInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
+    const logger = di.inject(loggerInjectable);
     const {
       ensureDirSync,
       writeFileSync,
@@ -46,7 +47,7 @@ const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
 
         ensureDirSync(kubeConfigsPath);
 
-        migrationLog("Number of clusters to migrate: ", storedClusters.length);
+        logger.info("Number of clusters to migrate: ", storedClusters.length);
 
         for (const clusterModel of storedClusters) {
           /**
@@ -67,7 +68,7 @@ const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
             delete clusterModel.kubeConfig;
 
           } catch (error) {
-            migrationLog(`Failed to migrate Kubeconfig for cluster "${clusterModel.id}", removing clusterModel...`, error);
+            logger.info(`Failed to migrate Kubeconfig for cluster "${clusterModel.id}", removing clusterModel...`, error);
 
             continue;
           }
@@ -77,7 +78,7 @@ const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
            */
           try {
             if (clusterModel.preferences?.icon) {
-              migrationLog(`migrating ${clusterModel.preferences.icon} for ${clusterModel.preferences.clusterName}`);
+              logger.info(`migrating ${clusterModel.preferences.icon} for ${clusterModel.preferences.clusterName}`);
               const iconPath = clusterModel.preferences.icon.replace("store://", "");
               const fileData = readFileBufferSync(joinPaths(userDataPath, iconPath));
 
@@ -86,7 +87,7 @@ const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
               delete clusterModel.preferences?.icon;
             }
           } catch (error) {
-            migrationLog(`Failed to migrate cluster icon for cluster "${clusterModel.id}"`, error);
+            logger.info(`Failed to migrate cluster icon for cluster "${clusterModel.id}"`, error);
             delete clusterModel.preferences?.icon;
           }
 
