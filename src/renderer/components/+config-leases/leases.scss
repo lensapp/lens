@@ -20,5 +20,9 @@
     &.age {
       flex: .5;
     }
+
+    a.filterNamespace {
+      border-bottom: unset;
+    }
   }
 }
