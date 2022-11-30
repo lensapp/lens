@@ -10,10 +10,15 @@ import { observer } from "mobx-react";
 import { AddSecretDialog } from "./add-secret-dialog";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
-import { secretStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import { prevDefault } from "../../utils";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import type { SecretStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import secretStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -24,8 +29,13 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  filterByNamespace: FilterByNamespace;
+  secretStore: SecretStore;
+}
+
 @observer
-export class Secrets extends React.Component {
+class NonInjectedSecrets extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
@@ -33,7 +43,7 @@ export class Secrets extends React.Component {
           isConfigurable
           tableId="configuration_secrets"
           className="Secrets"
-          store={secretStore}
+          store={this.props.secretStore}
           sortingCallbacks={{
             [columnId.name]: secret => secret.getName(),
             [columnId.namespace]: secret => secret.getNs(),
@@ -59,7 +69,13 @@ export class Secrets extends React.Component {
           renderTableContents={secret => [
             secret.getName(),
             <KubeObjectStatusIcon key="icon" object={secret} />,
-            secret.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => this.props.filterByNamespace(secret.getNs()))}
+            >
+              {secret.getNs()}
+            </a>,
             secret.getLabels().map(label => (
               <Badge
                 scrollable
@@ -82,3 +98,11 @@ export class Secrets extends React.Component {
     );
   }
 }
+
+export const Secrets = withInjectables<Dependencies>(NonInjectedSecrets, {
+  getProps: (di, props) => ({
+    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    secretStore: di.inject(secretStoreInjectable),
+  }),
+});
