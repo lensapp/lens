@@ -6,10 +6,9 @@
 
 import { ipcMain, ipcRenderer, webFrame } from "electron";
 import { action, comparer, computed, makeObservable, observable, reaction } from "mobx";
-import type { BaseStoreDependencies } from "../base-store";
-import { BaseStore } from "../base-store";
+import type { BaseStoreDependencies } from "../base-store/base-store";
+import { BaseStore } from "../base-store/base-store";
 import { Cluster } from "../cluster/cluster";
-import migrations from "../../migrations/cluster-store";
 import { disposer, toJS } from "../utils";
 import type { ClusterModel, ClusterId, ClusterState } from "../cluster-types";
 import { requestInitialClusterStates } from "../../renderer/ipc";
@@ -31,7 +30,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   readonly displayName = "ClusterStore";
   readonly clusters = observable.map<ClusterId, Cluster>();
 
-  protected disposer = disposer();
+  protected readonly disposer = disposer();
 
   constructor(protected readonly dependencies: Dependencies) {
     super(dependencies, {
@@ -40,7 +39,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       syncOptions: {
         equals: comparer.structural,
       },
-      migrations,
     });
 
     makeObservable(this);

@@ -4,8 +4,8 @@
  */
 
 import { action, comparer, observable, makeObservable, computed } from "mobx";
-import type { BaseStoreDependencies } from "../base-store";
-import { BaseStore } from "../base-store";
+import type { BaseStoreDependencies } from "../base-store/base-store";
+import { BaseStore } from "../base-store/base-store";
 import migrations from "../../migrations/hotbar-store";
 import { toJS } from "../utils";
 import type { CatalogEntity } from "../catalog";

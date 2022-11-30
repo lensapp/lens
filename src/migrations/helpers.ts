@@ -16,7 +16,7 @@ export function migrationLog(...args: any[]) {
 
 export interface MigrationDeclaration {
   version: string;
-  run(store: Conf<any>): void;
+  run(store: Conf<Partial<Record<string, unknown>>>): void;
 }
 
 export function joinMigrations(...declarations: MigrationDeclaration[]): Migrations<any> {

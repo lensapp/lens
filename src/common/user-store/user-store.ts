@@ -5,8 +5,8 @@
 
 import { app } from "electron";
 import { action, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
-import type { BaseStoreDependencies } from "../base-store";
-import { BaseStore } from "../base-store";
+import type { BaseStoreDependencies } from "../base-store/base-store";
+import { BaseStore } from "../base-store/base-store";
 import migrations from "../../migrations/user-store";
 import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
 import { DESCRIPTORS } from "./preferences-helpers";

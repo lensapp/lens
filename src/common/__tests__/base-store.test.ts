@@ -4,8 +4,8 @@
  */
 
 import mockFs from "mock-fs";
-import type { BaseStoreDependencies } from "../base-store";
-import { BaseStore } from "../base-store";
+import type { BaseStoreDependencies } from "../base-store/base-store";
+import { BaseStore } from "../base-store/base-store";
 import { action, comparer, makeObservable, observable, toJS } from "mobx";
 import { readFileSync } from "fs";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";

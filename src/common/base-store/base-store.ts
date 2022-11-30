@@ -5,19 +5,19 @@
 
 import path from "path";
 import type Config from "conf";
-import type { Options as ConfOptions } from "conf/dist/source/types";
+import type { Migrations, Options as ConfOptions } from "conf/dist/source/types";
 import { ipcMain, ipcRenderer } from "electron";
 import type { IEqualsComparer } from "mobx";
 import { makeObservable, reaction, runInAction } from "mobx";
-import type { Disposer } from "./utils";
-import { isPromiseLike, toJS } from "./utils";
-import { broadcastMessage, ipcMainOn, ipcRendererOn } from "./ipc";
+import type { Disposer } from "../utils";
+import { isPromiseLike, toJS } from "../utils";
+import { broadcastMessage, ipcMainOn, ipcRendererOn } from "../ipc";
 import isEqual from "lodash/isEqual";
 import { kebabCase } from "lodash";
-import type { GetConfigurationFileModel } from "./get-configuration-file-model/get-configuration-file-model.injectable";
-import type { Logger } from "./logger";
+import type { GetConfigurationFileModel } from "../get-configuration-file-model/get-configuration-file-model.injectable";
+import type { Logger } from "../logger";
 
-export interface BaseStoreParams<T> extends ConfOptions<T> {
+export interface BaseStoreParams<T> extends Omit<ConfOptions<T>, "migrations"> {
   syncOptions?: {
     fireImmediately?: boolean;
     equals?: IEqualsComparer<T>;
@@ -29,6 +29,7 @@ export interface BaseStoreDependencies {
   readonly logger: Logger;
   readonly storeMigrationVersion: string;
   readonly directoryForUserData: string;
+  readonly migrations: Migrations<Record<string, unknown>>;
   getConfigurationFileModel: GetConfigurationFileModel;
 }
 
@@ -39,7 +40,7 @@ export abstract class BaseStore<T extends object> {
   protected storeConfig?: Config<T>;
   protected syncDisposers: Disposer[] = [];
 
-  readonly displayName: string;
+  readonly displayName = this.params.configName;
 
   protected constructor(
     protected readonly dependencies: BaseStoreDependencies,
@@ -48,10 +49,6 @@ export abstract class BaseStore<T extends object> {
     makeObservable(this);
 
     this.displayName = this.params.configName;
-
-    if (ipcRenderer) {
-      this.params.migrations = undefined; // don't run migrations on renderer
-    }
   }
 
   /**
@@ -64,6 +61,7 @@ export abstract class BaseStore<T extends object> {
       projectVersion: this.dependencies.storeMigrationVersion,
       cwd: this.cwd(),
       ...this.params,
+      migrations: this.dependencies.migrations as Migrations<T>,
     });
 
     const res = this.fromStore(this.storeConfig.store);

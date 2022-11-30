@@ -5,8 +5,8 @@
 
 import { SHA256 } from "crypto-js";
 import { action, makeObservable, observable } from "mobx";
-import type { BaseStoreDependencies } from "../../../common/base-store";
-import { BaseStore } from "../../../common/base-store";
+import type { BaseStoreDependencies } from "../../../common/base-store/base-store";
+import { BaseStore } from "../../../common/base-store/base-store";
 import type { LensExtensionId } from "../../lens-extension";
 import { getOrInsertWithAsync, toJS } from "../../../common/utils";
 import type { EnsureDirectory } from "../../../common/fs/ensure-dir.injectable";

@@ -3,15 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../../common/cluster-types";
-import type { MigrationDeclaration } from "../helpers";
-import { migrationLog } from "../helpers";
-import { generateNewIdFor } from "../utils";
+import type { ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../../../common/cluster-types";
 import { moveSync, removeSync } from "fs-extra";
-import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import { isDefined } from "../../common/utils";
-import joinPathsInjectable from "../../common/path/join-paths.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { isDefined } from "../../../common/utils";
+import joinPathsInjectable from "../../../common/path/join-paths.injectable";
+import { generateNewIdFor } from "../../../migrations/utils";
 
 function mergePrometheusPreferences(left: ClusterPrometheusPreferences, right: ClusterPrometheusPreferences): ClusterPrometheusPreferences {
   if (left.prometheus && left.prometheusProvider) {
@@ -78,13 +75,16 @@ function mergeClusterModel(prev: ClusterModel, right: Omit<ClusterModel, "id">):
   };
 }
 
-export default {
-  version: "5.0.0-beta.13",
-  run(store) {
-    const di = getLegacyGlobalDiForExtensionApi();
+import { getInjectable } from "@ogre-tools/injectable";
+import loggerInjectable from "../../../common/logger.injectable";
+import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-store/migration-token";
 
+const v500Beta13ClusterStoreMigrationInjectable = getInjectable({
+  id: "v5.0.0-beta.13-cluster-store-migration",
+  instantiate: (di) => {
     const userDataPath = di.inject(directoryForUserDataInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
+    const logger = di.inject(loggerInjectable);
 
     const moveStorageFolder = ({ folder, newId, oldId }: { folder: string; newId: string; oldId: string }): void => {
       const oldPath = joinPaths(folder, `${oldId}.json`);
@@ -94,34 +94,42 @@ export default {
         moveSync(oldPath, newPath);
       } catch (error) {
         if (String(error).includes("dest already exists")) {
-          migrationLog(`Multiple old lens-local-storage files for newId=${newId}. Removing ${oldId}.json`);
+          logger.info(`Multiple old lens-local-storage files for newId=${newId}. Removing ${oldId}.json`);
           removeSync(oldPath);
         }
       }
     };
 
-    const folder = joinPaths(userDataPath, "lens-local-storage");
-    const oldClusters: ClusterModel[] = store.get("clusters") ?? [];
-    const clusters = new Map<string, ClusterModel>();
+    return {
+      version: "5.0.0-beta.13",
+      run(store) {
+        const folder = joinPaths(userDataPath, "lens-local-storage");
+        const oldClusters = (store.get("clusters") ?? []) as ClusterModel[];
+        const clusters = new Map<string, ClusterModel>();
 
-    for (const { id: oldId, ...cluster } of oldClusters) {
-      const newId = generateNewIdFor(cluster);
-      const newCluster = clusters.get(newId);
+        for (const { id: oldId, ...cluster } of oldClusters) {
+          const newId = generateNewIdFor(cluster);
+          const newCluster = clusters.get(newId);
 
-      if (newCluster) {
-        migrationLog(`Duplicate entries for ${newId}`, { oldId });
-        clusters.set(newId, mergeClusterModel(newCluster, cluster));
-      } else {
-        migrationLog(`First entry for ${newId}`, { oldId });
-        clusters.set(newId, {
-          ...cluster,
-          id: newId,
-          workspaces: [cluster.workspace].filter(isDefined),
-        });
-        moveStorageFolder({ folder, newId, oldId });
-      }
-    }
+          if (newCluster) {
+            logger.info(`Duplicate entries for ${newId}`, { oldId });
+            clusters.set(newId, mergeClusterModel(newCluster, cluster));
+          } else {
+            logger.info(`First entry for ${newId}`, { oldId });
+            clusters.set(newId, {
+              ...cluster,
+              id: newId,
+              workspaces: [cluster.workspace].filter(isDefined),
+            });
+            moveStorageFolder({ folder, newId, oldId });
+          }
+        }
 
-    store.set("clusters", [...clusters.values()]);
+        store.set("clusters", [...clusters.values()]);
+      },
+    };
   },
-} as MigrationDeclaration;
+  injectionToken: clusterStoreMigrationInjectionToken,
+});
+
+export default v500Beta13ClusterStoreMigrationInjectable;

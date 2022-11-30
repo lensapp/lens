@@ -4,8 +4,8 @@
  */
 
 import { action, comparer, observable, makeObservable } from "mobx";
-import type { BaseStoreDependencies } from "./base-store";
-import { BaseStore } from "./base-store";
+import type { BaseStoreDependencies } from "./base-store/base-store";
+import { BaseStore } from "./base-store/base-store";
 import migrations from "../migrations/weblinks-store";
 import * as uuid from "uuid";
 import { toJS } from "./utils";
