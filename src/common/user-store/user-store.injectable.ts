@@ -10,6 +10,8 @@ import directoryForUserDataInjectable from "../app-paths/directory-for-user-data
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import loggerInjectable from "../logger.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
+import storeMigrationsInjectable from "../base-store/migrations.injectable";
+import { userStoreMigrationInjectionToken } from "./migrations-token";
 
 const userStoreInjectable = getInjectable({
   id: "user-store",
@@ -21,6 +23,7 @@ const userStoreInjectable = getInjectable({
     getConfigurationFileModel: di.inject(getConfigurationFileModelInjectable),
     logger: di.inject(loggerInjectable),
     storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
+    migrations: di.inject(storeMigrationsInjectable, userStoreMigrationInjectionToken),
   }),
 });
 

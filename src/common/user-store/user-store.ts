@@ -7,7 +7,6 @@ import { app } from "electron";
 import { action, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
 import type { BaseStoreDependencies } from "../base-store/base-store";
 import { BaseStore } from "../base-store/base-store";
-import migrations from "../../migrations/user-store";
 import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
 import { DESCRIPTORS } from "./preferences-helpers";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
@@ -18,7 +17,6 @@ import type { SelectedUpdateChannel } from "../../features/application-update/co
 import type { ReleaseChannel } from "../../features/application-update/common/update-channels";
 
 export interface UserStoreModel {
-  lastSeenAppVersion: string;
   preferences: UserPreferencesModel;
 }
 
@@ -33,13 +31,10 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   constructor(protected readonly dependencies: Dependencies) {
     super(dependencies, {
       configName: "lens-user-store",
-      migrations,
     });
 
     makeObservable(this);
   }
-
-  @observable lastSeenAppVersion = "0.0.0";
 
   /**
    * @deprecated No longer used
@@ -137,12 +132,8 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
   }
 
   @action
-  protected fromStore({ lastSeenAppVersion, preferences }: Partial<UserStoreModel> = {}) {
-    this.dependencies.logger.debug("UserStore.fromStore()", { lastSeenAppVersion, preferences });
-
-    if (lastSeenAppVersion) {
-      this.lastSeenAppVersion = lastSeenAppVersion;
-    }
+  protected fromStore({ preferences }: Partial<UserStoreModel> = {}) {
+    this.dependencies.logger.debug("UserStore.fromStore()", { preferences });
 
     for (const [key, { fromStore }] of object.entries(DESCRIPTORS)) {
       const curVal = this[key];
@@ -170,11 +161,8 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     ) as UserPreferencesModel;
 
     return toJS({
-      lastSeenAppVersion: this.lastSeenAppVersion,
-
       preferences: {
         ...preferences,
-
         updateChannel: this.dependencies.selectedUpdateChannel.value.get().id,
       },
     });
