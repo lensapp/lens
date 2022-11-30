@@ -19,7 +19,7 @@ import { DefaultProps } from "./mui-base-theme";
 import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
 import logger from "../common/logger";
-import { registerCustomThemes } from "./components/monaco-editor";
+import { registerCustomThemes ../common/weblinks-store/weblink-storenaco-editor";
 import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DiContainer } from "@ogre-tools/injectable";

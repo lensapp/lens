@@ -7,11 +7,11 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Input } from "../input";
 import { isUrl } from "../input/input_validators";
-import type { WeblinkStore } from "../../../common/weblink-store";
+import type { WeblinkStore } from "../../../common/weblinks-store/weblink-store";
 import { computed, makeObservable, observable } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
-import weblinkStoreInjectable from "../../../common/weblink-store.injectable";
+import weblinkStoreInjectable from "../../../common/weblinks-store/weblink-store.injectable";
 
 interface Dependencies {
   closeCommandOverlay: () => void;

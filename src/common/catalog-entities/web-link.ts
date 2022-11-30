@@ -7,7 +7,7 @@ import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } fro
 import type { CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog/catalog-entity";
 import productNameInjectable from "../vars/product-name.injectable";
-import weblinkStoreInjectable from "../weblink-store.injectable";
+import weblinkStoreInjectable from "../weblinks-store/weblink-store.injectable";
 
 export type WebLinkStatusPhase = "available" | "unavailable";
 
