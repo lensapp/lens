@@ -29,6 +29,12 @@ function createLabels(rawLabelData: [string, number | undefined][]): string[] {
   return rawLabelData.map(([key, value]) => `${key}: ${value?.toFixed(2) || "N/A"}`);
 }
 
+const checkedBytesToUnits = (value: number | undefined) => (
+  typeof value === "number"
+    ? bytesToUnits(value)
+    : "N/A"
+);
+
 interface Dependencies {
   clusterOverviewStore: ClusterOverviewStore;
   nodeStore: NodeStore;
@@ -59,20 +65,16 @@ const NonInjectedClusterPieCharts = observer(({
     if (
       typeof cpuCapacity !== "number" ||
       typeof cpuAllocatableCapacity !== "number" ||
-      typeof cpuLimits !== "number" ||
       typeof podCapacity !== "number" ||
       typeof podAllocatableCapacity !== "number" ||
       typeof memoryAllocatableCapacity !== "number" ||
       typeof memoryCapacity !== "number" ||
-      typeof memoryLimits !== "number" ||
       typeof memoryUsage !== "number" ||
       typeof memoryRequests !== "number"
     ) {
       return null;
     }
 
-    const cpuLimitsOverload = cpuLimits > cpuAllocatableCapacity;
-    const memoryLimitsOverload = memoryLimits > memoryAllocatableCapacity;
     const defaultColor = activeTheme.get().colors.pieChartDefaultColor;
 
     const cpuData: PieChartData = {
@@ -104,7 +106,7 @@ const NonInjectedClusterPieCharts = observer(({
         {
           data: [
             cpuLimits,
-            cpuLimitsOverload ? 0 : cpuAllocatableCapacity - cpuLimits,
+            Math.max(0, cpuAllocatableCapacity - (cpuLimits ?? cpuAllocatableCapacity)),
           ],
           backgroundColor: [
             "#3d90ce",
@@ -151,7 +153,7 @@ const NonInjectedClusterPieCharts = observer(({
         {
           data: [
             memoryLimits,
-            memoryLimitsOverload ? 0 : memoryAllocatableCapacity - memoryLimits,
+            Math.max(0, memoryAllocatableCapacity - (memoryLimits ?? memoryAllocatableCapacity)),
           ],
           backgroundColor: [
             "#3d90ce",
@@ -164,7 +166,7 @@ const NonInjectedClusterPieCharts = observer(({
       labels: [
         `Usage: ${bytesToUnits(memoryUsage)}`,
         `Requests: ${bytesToUnits(memoryRequests)}`,
-        `Limits: ${bytesToUnits(memoryLimits)}`,
+        `Limits: ${checkedBytesToUnits(memoryLimits)}`,
         `Allocatable Capacity: ${bytesToUnits(memoryAllocatableCapacity)}`,
         `Capacity: ${bytesToUnits(memoryCapacity)}`,
       ],
@@ -208,7 +210,7 @@ const NonInjectedClusterPieCharts = observer(({
               defaultColor,
             ]}
           />
-          {cpuLimitsOverload && renderLimitWarning()}
+          {((cpuLimits ?? cpuAllocatableCapacity) > cpuAllocatableCapacity) && renderLimitWarning()}
         </div>
         <div className={cssNames(styles.chart, "flex column align-center box grow")}>
           <PieChart
@@ -222,7 +224,7 @@ const NonInjectedClusterPieCharts = observer(({
               defaultColor,
             ]}
           />
-          {memoryLimitsOverload && renderLimitWarning()}
+          {((memoryLimits ?? memoryAllocatableCapacity) > memoryAllocatableCapacity) && renderLimitWarning()}
         </div>
         <div className={cssNames(styles.chart, "flex column align-center box grow")}>
           <PieChart
