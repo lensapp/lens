@@ -4,6 +4,7 @@
  */
 
 import { action, comparer, observable, makeObservable } from "mobx";
+import type { BaseStoreDependencies } from "./base-store";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/weblinks-store";
 import * as uuid from "uuid";
@@ -30,8 +31,8 @@ export class WeblinkStore extends BaseStore<WeblinkStoreModel> {
   readonly displayName = "WeblinkStore";
   @observable weblinks: WeblinkData[] = [];
 
-  constructor() {
-    super({
+  constructor(deps: BaseStoreDependencies) {
+    super(deps, {
       configName: "lens-weblink-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {

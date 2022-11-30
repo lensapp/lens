@@ -5,12 +5,12 @@
 
 import { app } from "electron";
 import { action, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
+import type { BaseStoreDependencies } from "../base-store";
 import { BaseStore } from "../base-store";
 import migrations from "../../migrations/user-store";
 import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
 import { DESCRIPTORS } from "./preferences-helpers";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
-import logger from "../../main/logger";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
 
 // TODO: Remove coupling with Feature
@@ -22,7 +22,7 @@ export interface UserStoreModel {
   preferences: UserPreferencesModel;
 }
 
-interface Dependencies {
+interface Dependencies extends BaseStoreDependencies {
   readonly selectedUpdateChannel: SelectedUpdateChannel;
   emitAppEvent: EmitAppEvent;
 }
@@ -30,8 +30,8 @@ interface Dependencies {
 export class UserStore extends BaseStore<UserStoreModel> /* implements UserStoreFlatModel (when strict null is enabled) */ {
   readonly displayName = "UserStore";
 
-  constructor(private readonly dependencies: Dependencies) {
-    super({
+  constructor(protected readonly dependencies: Dependencies) {
+    super(dependencies, {
       configName: "lens-user-store",
       migrations,
     });
@@ -138,7 +138,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
   @action
   protected fromStore({ lastSeenAppVersion, preferences }: Partial<UserStoreModel> = {}) {
-    logger.debug("UserStore.fromStore()", { lastSeenAppVersion, preferences });
+    this.dependencies.logger.debug("UserStore.fromStore()", { lastSeenAppVersion, preferences });
 
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;

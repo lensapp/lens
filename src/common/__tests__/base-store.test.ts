@@ -4,12 +4,15 @@
  */
 
 import mockFs from "mock-fs";
+import type { BaseStoreDependencies } from "../base-store";
 import { BaseStore } from "../base-store";
 import { action, comparer, makeObservable, observable, toJS } from "mobx";
 import { readFileSync } from "fs";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
+import loggerInjectable from "../logger.injectable";
+import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 
 jest.mock("electron", () => ({
   ipcMain: {
@@ -29,8 +32,8 @@ class TestStore extends BaseStore<TestStoreModel> {
   @observable b = "";
   @observable c = "";
 
-  constructor() {
-    super({
+  constructor(deps: BaseStoreDependencies) {
+    super(deps, {
       configName: "test-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {
@@ -90,7 +93,12 @@ describe("BaseStore", () => {
 
     mockFs(mockOpts);
 
-    store = new TestStore();
+    store = new TestStore({
+      directoryForUserData: mainDi.inject(directoryForUserDataInjectable),
+      getConfigurationFileModel: mainDi.inject(getConfigurationFileModelInjectable),
+      logger: mainDi.inject(loggerInjectable),
+      storeMigrationVersion: mainDi.inject(storeMigrationVersionInjectable),
+    });
   });
 
   afterEach(() => {

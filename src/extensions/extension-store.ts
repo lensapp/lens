@@ -3,12 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { BaseStoreParams } from "../common/base-store";
 import { BaseStore } from "../common/base-store";
 import * as path from "path";
 import type { LensExtension } from "./lens-extension";
 import assert from "assert";
 import type { StaticThis } from "../common/utils";
 import { getOrInsertWith } from "../common/utils";
+import { getLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import directoryForUserDataInjectable from "../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import getConfigurationFileModelInjectable from "../common/get-configuration-file-model/get-configuration-file-model.injectable";
+import loggerInjectable from "../common/logger.injectable";
+import storeMigrationVersionInjectable from "../common/vars/store-migration-version.injectable";
 
 export abstract class ExtensionStore<T extends object> extends BaseStore<T> {
   private static readonly instances = new WeakMap<object, ExtensionStore<object>>();
@@ -31,6 +37,17 @@ export abstract class ExtensionStore<T extends object> extends BaseStore<T> {
     }
 
     return ExtensionStore.instances.get(this) as (T | undefined);
+  }
+
+  constructor(params: BaseStoreParams<T>) {
+    const di = getLegacyGlobalDiForExtensionApi();
+
+    super({
+      directoryForUserData: di.inject(directoryForUserDataInjectable),
+      getConfigurationFileModel: di.inject(getConfigurationFileModelInjectable),
+      logger: di.inject(loggerInjectable),
+      storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
+    }, params);
   }
 
   /**
