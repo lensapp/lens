@@ -7,7 +7,6 @@ import * as uuid from "uuid";
 import type { ClusterStoreModel } from "../../../common/cluster-store/cluster-store";
 import type { Hotbar, HotbarItem } from "../../../common/hotbars/types";
 import { defaultHotbarCells, getEmptyHotbar } from "../../../common/hotbars/types";
-import { generateNewIdFor } from "../../../migrations/utils";
 import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import catalogCatalogEntityInjectable from "../../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
@@ -17,6 +16,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { hotbarStoreMigrationInjectionToken } from "../../../common/hotbars/migrations-token";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import { generateNewIdFor } from "../../../common/utils/generate-new-id-for";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {

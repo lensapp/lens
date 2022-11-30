@@ -8,7 +8,6 @@ import { moveSync, removeSync } from "fs-extra";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { isDefined } from "../../../common/utils";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
-import { generateNewIdFor } from "../../../migrations/utils";
 
 function mergePrometheusPreferences(left: ClusterPrometheusPreferences, right: ClusterPrometheusPreferences): ClusterPrometheusPreferences {
   if (left.prometheus && left.prometheusProvider) {
@@ -78,6 +77,7 @@ function mergeClusterModel(prev: ClusterModel, right: Omit<ClusterModel, "id">):
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-store/migration-token";
+import { generateNewIdFor } from "../../../common/utils/generate-new-id-for";
 
 const v500Beta13ClusterStoreMigrationInjectable = getInjectable({
   id: "v5.0.0-beta.13-cluster-store-migration",
