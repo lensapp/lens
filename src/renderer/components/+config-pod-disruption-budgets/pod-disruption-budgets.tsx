@@ -7,13 +7,18 @@ import "./pod-disruption-budgets.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
-import { podDisruptionBudgetStore } from "./legacy-store";
 import type { PodDisruptionBudget } from "../../../common/k8s-api/endpoints/pod-disruption-budget.api";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import { prevDefault } from "../../utils";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import type { PodDisruptionBudgetStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import podDisruptionBudgetStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -28,8 +33,13 @@ enum columnId {
 export interface PodDisruptionBudgetsProps extends KubeObjectDetailsProps<PodDisruptionBudget> {
 }
 
+interface Dependencies {
+  filterByNamespace: FilterByNamespace;
+  podDisruptionBudgetStore: PodDisruptionBudgetStore;
+}
+
 @observer
-export class PodDisruptionBudgets extends React.Component<PodDisruptionBudgetsProps> {
+class NonInjectedPodDisruptionBudgets extends React.Component<PodDisruptionBudgetsProps & Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
@@ -37,7 +47,7 @@ export class PodDisruptionBudgets extends React.Component<PodDisruptionBudgetsPr
           isConfigurable
           tableId="configuration_distribution_budgets"
           className="PodDisruptionBudgets"
-          store={podDisruptionBudgetStore}
+          store={this.props.podDisruptionBudgetStore}
           sortingCallbacks={{
             [columnId.name]: pdb => pdb.getName(),
             [columnId.namespace]: pdb => pdb.getNs(),
@@ -64,7 +74,13 @@ export class PodDisruptionBudgets extends React.Component<PodDisruptionBudgetsPr
           renderTableContents={pdb => [
             pdb.getName(),
             <KubeObjectStatusIcon key="icon" object={pdb} />,
-            pdb.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => this.props.filterByNamespace(pdb.getNs()))}
+            >
+              {pdb.getNs()}
+            </a>,
             pdb.getMinAvailable(),
             pdb.getMaxUnavailable(),
             pdb.getCurrentHealthy(),
@@ -76,3 +92,11 @@ export class PodDisruptionBudgets extends React.Component<PodDisruptionBudgetsPr
     );
   }
 }
+
+export const PodDisruptionBudgets = withInjectables<Dependencies, PodDisruptionBudgetsProps>(NonInjectedPodDisruptionBudgets, {
+  getProps: (di, props) => ({
+    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    podDisruptionBudgetStore: di.inject(podDisruptionBudgetStoreInjectable),
+  }),
+});
