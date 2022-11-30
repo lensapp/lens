@@ -98,6 +98,7 @@ describe("BaseStore", () => {
       getConfigurationFileModel: mainDi.inject(getConfigurationFileModelInjectable),
       logger: mainDi.inject(loggerInjectable),
       storeMigrationVersion: mainDi.inject(storeMigrationVersionInjectable),
+      migrations: {},
     });
   });
 
