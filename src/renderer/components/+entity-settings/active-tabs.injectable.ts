@@ -67,7 +67,7 @@ const activeEntitySettingsTabInjectable = getInjectable({
         return { tabId, setting, groups };
       },
       set: action((tabId) => {
-        observableHistory.location.hash = tabId;
+        observableHistory.merge({ hash: tabId }, true);
       }),
     };
   },
