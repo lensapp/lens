@@ -10,9 +10,14 @@ import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { AddRoleDialog } from "./add-dialog";
-import { roleStore } from "./legacy-store";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
+import type { RoleStore } from "./store";
+import { prevDefault } from "../../../utils";
+import type { FilterByNamespace } from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import filterByNamespaceInjectable from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import roleStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -20,9 +25,19 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  roleStore: RoleStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class Roles extends React.Component {
+class NonInjectedRoles extends React.Component<Dependencies> {
   render() {
+    const {
+      filterByNamespace,
+      roleStore,
+    } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
@@ -48,7 +63,13 @@ export class Roles extends React.Component {
           renderTableContents={role => [
             role.getName(),
             <KubeObjectStatusIcon key="icon" object={role} />,
-            role.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => filterByNamespace(role.getNs()))}
+            >
+              {role.getNs()}
+            </a>,
             <KubeObjectAge key="age" object={role} />,
           ]}
           addRemoveButtons={{
@@ -61,3 +82,11 @@ export class Roles extends React.Component {
     );
   }
 }
+
+export const Roles = withInjectables<Dependencies>(NonInjectedRoles, {
+  getProps: (di, props) => ({
+    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    roleStore: di.inject(roleStoreInjectable),
+  }),
+});
