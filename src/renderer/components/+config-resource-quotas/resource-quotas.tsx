@@ -9,10 +9,15 @@ import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { AddQuotaDialog } from "./add-quota-dialog";
-import { resourceQuotaStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import { prevDefault } from "../../utils";
+import type { ResourceQuotaStore } from "./store";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import resourceQuotaStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -20,8 +25,13 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  resourceQuotaStore: ResourceQuotaStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class ResourceQuotas extends React.Component {
+class NonInjectedResourceQuotas extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
@@ -29,7 +39,7 @@ export class ResourceQuotas extends React.Component {
           isConfigurable
           tableId="configuration_quotas"
           className="ResourceQuotas"
-          store={resourceQuotaStore}
+          store={this.props.resourceQuotaStore}
           sortingCallbacks={{
             [columnId.name]: resourceQuota => resourceQuota.getName(),
             [columnId.namespace]: resourceQuota => resourceQuota.getNs(),
@@ -49,7 +59,13 @@ export class ResourceQuotas extends React.Component {
           renderTableContents={resourceQuota => [
             resourceQuota.getName(),
             <KubeObjectStatusIcon key="icon" object={resourceQuota}/>,
-            resourceQuota.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => this.props.filterByNamespace(resourceQuota.getNs()))}
+            >
+              {resourceQuota.getNs()}
+            </a>,
             <KubeObjectAge key="age" object={resourceQuota} />,
           ]}
           addRemoveButtons={{
@@ -62,3 +78,11 @@ export class ResourceQuotas extends React.Component {
     );
   }
 }
+
+export const ResourceQuotas = withInjectables<Dependencies>(NonInjectedResourceQuotas, {
+  getProps: (di, props) => ({
+    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    resourceQuotaStore: di.inject(resourceQuotaStoreInjectable),
+  }),
+});
