@@ -6,7 +6,6 @@
 import { action, comparer, observable, makeObservable, computed } from "mobx";
 import type { BaseStoreDependencies } from "../base-store/base-store";
 import { BaseStore } from "../base-store/base-store";
-import migrations from "../../migrations/hotbar-store";
 import { toJS } from "../utils";
 import type { CatalogEntity } from "../catalog";
 import { broadcastMessage } from "../ipc";
@@ -39,7 +38,6 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       syncOptions: {
         equals: comparer.structural,
       },
-      migrations,
     });
 
     makeObservable(this);
