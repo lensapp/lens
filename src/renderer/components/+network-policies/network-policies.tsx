@@ -8,10 +8,15 @@ import "./network-policies.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { networkPolicyStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import type { NetworkPolicyStore } from "./store";
+import { prevDefault } from "../../utils";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import networkPolicyStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -20,8 +25,13 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  networkPolicyStore: NetworkPolicyStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class NetworkPolicies extends React.Component {
+class NonInjectedNetworkPolicies extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
@@ -29,7 +39,7 @@ export class NetworkPolicies extends React.Component {
           isConfigurable
           tableId="network_policies"
           className="NetworkPolicies"
-          store={networkPolicyStore}
+          store={this.props.networkPolicyStore}
           sortingCallbacks={{
             [columnId.name]: networkPolicy => networkPolicy.getName(),
             [columnId.namespace]: networkPolicy => networkPolicy.getNs(),
@@ -49,7 +59,13 @@ export class NetworkPolicies extends React.Component {
           renderTableContents={networkPolicy => [
             networkPolicy.getName(),
             <KubeObjectStatusIcon key="icon" object={networkPolicy} />,
-            networkPolicy.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => this.props.filterByNamespace(networkPolicy.getNs()))}
+            >
+              {networkPolicy.getNs()}
+            </a>,
             networkPolicy.getTypes().join(", "),
             <KubeObjectAge key="age" object={networkPolicy} />,
           ]}
@@ -58,3 +74,11 @@ export class NetworkPolicies extends React.Component {
     );
   }
 }
+
+export const NetworkPolicies = withInjectables<Dependencies>(NonInjectedNetworkPolicies, {
+  getProps: (di, props) => ({
+    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    networkPolicyStore: di.inject(networkPolicyStoreInjectable),
+  }),
+});
