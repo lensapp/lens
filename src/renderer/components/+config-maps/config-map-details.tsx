@@ -9,24 +9,36 @@ import React from "react";
 import { autorun, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
-import { Notifications } from "../notifications";
+import type { ShowNotification } from "../notifications";
 import { Input } from "../input";
 import { Button } from "../button";
-import { configMapStore } from "./legacy-store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ConfigMap } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
+import type { ConfigMapStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import configMapStoreInjectable from "./store.injectable";
+import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
+import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface ConfigMapDetailsProps extends KubeObjectDetailsProps<ConfigMap> {
 }
 
+interface Dependencies {
+  configMapStore: ConfigMapStore;
+  logger: Logger;
+  showSuccessNotification: ShowNotification;
+  showErrorNotification: ShowNotification;
+}
+
 @observer
-export class ConfigMapDetails extends React.Component<ConfigMapDetailsProps> {
+class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps & Dependencies> {
   @observable isSaving = false;
   @observable data = observable.map<string, string | undefined>();
 
-  constructor(props: ConfigMapDetailsProps) {
+  constructor(props: ConfigMapDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -44,7 +56,7 @@ export class ConfigMapDetails extends React.Component<ConfigMapDetailsProps> {
   }
 
   save = async () => {
-    const { object: configMap } = this.props;
+    const { object: configMap, configMapStore } = this.props;
 
     try {
       this.isSaving = true;
@@ -52,7 +64,7 @@ export class ConfigMapDetails extends React.Component<ConfigMapDetailsProps> {
         ...configMap,
         data: Object.fromEntries(this.data),
       });
-      Notifications.ok((
+      this.props.showSuccessNotification((
         <p>
           {"ConfigMap "}
           <b>{configMap.getName()}</b>
@@ -60,14 +72,14 @@ export class ConfigMapDetails extends React.Component<ConfigMapDetailsProps> {
         </p>
       ));
     } catch (error) {
-      Notifications.error(`Failed to save config map: ${error}`);
+      this.props.showErrorNotification(`Failed to save config map: ${error}`);
     } finally {
       this.isSaving = false;
     }
   };
 
   render() {
-    const { object: configMap } = this.props;
+    const { object: configMap, logger } = this.props;
 
     if (!configMap) {
       return null;
@@ -118,3 +130,13 @@ export class ConfigMapDetails extends React.Component<ConfigMapDetailsProps> {
     );
   }
 }
+
+export const ConfigMapDetails = withInjectables<Dependencies, ConfigMapDetailsProps>(NonInjectedConfigMapDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    configMapStore: di.inject(configMapStoreInjectable),
+    showSuccessNotification: di.inject(showSuccessNotificationInjectable),
+    showErrorNotification: di.inject(showErrorNotificationInjectable),
+    logger: di.inject(loggerInjectable),
+  }),
+});
