@@ -73,11 +73,6 @@ describe("user store tests", () => {
       userStore.load();
     });
 
-    it("allows setting and retrieving lastSeenAppVersion", () => {
-      userStore.lastSeenAppVersion = "1.2.3";
-      expect(userStore.lastSeenAppVersion).toBe("1.2.3");
-    });
-
     it("allows setting and getting preferences", () => {
       userStore.httpsProxy = "abcd://defg";
 
@@ -129,10 +124,6 @@ describe("user store tests", () => {
 
       userStore = di.inject(userStoreInjectable);
       userStore.load();
-    });
-
-    it("sets last seen app version to 0.0.0", () => {
-      expect(userStore.lastSeenAppVersion).toBe("0.0.0");
     });
 
     it.only("skips clusters for adding to kube-sync with files under extension_data/", () => {
