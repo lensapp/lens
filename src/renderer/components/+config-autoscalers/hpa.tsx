@@ -9,12 +9,16 @@ import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { HorizontalPodAutoscaler } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
-import { horizontalPodAutoscalerStore } from "./legacy-store";
 import { Badge } from "../badge";
-import { cssNames } from "../../utils";
+import { cssNames, prevDefault } from "../../utils";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import type { HorizontalPodAutoscalerStore } from "./store";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import horizontalPodAutoscalerStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -27,8 +31,13 @@ enum columnId {
   status = "status",
 }
 
+interface Dependencies {
+  horizontalPodAutoscalerStore: HorizontalPodAutoscalerStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class HorizontalPodAutoscalers extends React.Component {
+class NonInjectedHorizontalPodAutoscalers extends React.Component<Dependencies> {
   getTargets(hpa: HorizontalPodAutoscaler) {
     const metrics = hpa.getMetrics();
 
@@ -54,7 +63,7 @@ export class HorizontalPodAutoscalers extends React.Component {
           isConfigurable
           tableId="configuration_hpa"
           className="HorizontalPodAutoscalers"
-          store={horizontalPodAutoscalerStore}
+          store={this.props.horizontalPodAutoscalerStore}
           sortingCallbacks={{
             [columnId.name]: hpa => hpa.getName(),
             [columnId.namespace]: hpa => hpa.getNs(),
@@ -81,7 +90,13 @@ export class HorizontalPodAutoscalers extends React.Component {
           renderTableContents={hpa => [
             hpa.getName(),
             <KubeObjectStatusIcon key="icon" object={hpa} />,
-            hpa.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => this.props.filterByNamespace(hpa.getNs()))}
+            >
+              {hpa.getNs()}
+            </a>,
             this.getTargets(hpa),
             hpa.getMinPods(),
             hpa.getMaxPods(),
@@ -105,3 +120,11 @@ export class HorizontalPodAutoscalers extends React.Component {
     );
   }
 }
+
+export const HorizontalPodAutoscalers = withInjectables<Dependencies>(NonInjectedHorizontalPodAutoscalers, {
+  getProps: (di, props) => ({
+    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    horizontalPodAutoscalerStore: di.inject(horizontalPodAutoscalerStoreInjectable),
+  }),
+});
