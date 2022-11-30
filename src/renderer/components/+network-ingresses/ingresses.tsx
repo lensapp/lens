@@ -7,12 +7,17 @@ import "./ingresses.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { ingressStore } from "./legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import { computeRouteDeclarations } from "../../../common/k8s-api/endpoints";
+import { prevDefault } from "../../utils";
+import type { IngressStore } from "./store";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import ingressStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -22,8 +27,13 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  ingressStore: IngressStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class Ingresses extends React.Component {
+class NonInjectedIngresses extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
@@ -31,7 +41,7 @@ export class Ingresses extends React.Component {
           isConfigurable
           tableId="network_ingresses"
           className="Ingresses"
-          store={ingressStore}
+          store={this.props.ingressStore}
           sortingCallbacks={{
             [columnId.name]: ingress => ingress.getName(),
             [columnId.namespace]: ingress => ingress.getNs(),
@@ -53,7 +63,13 @@ export class Ingresses extends React.Component {
           renderTableContents={ingress => [
             ingress.getName(),
             <KubeObjectStatusIcon key="icon" object={ingress} />,
-            ingress.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => this.props.filterByNamespace(ingress.getNs()))}
+            >
+              {ingress.getNs()}
+            </a>,
             ingress.getLoadBalancers().map(lb => <p key={lb}>{lb}</p>),
             computeRouteDeclarations(ingress).map(decl => (
               decl.displayAsLink
@@ -90,3 +106,11 @@ export class Ingresses extends React.Component {
     );
   }
 }
+
+export const Ingresses = withInjectables<Dependencies>(NonInjectedIngresses, {
+  getProps: (di, props) => ({
+    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    ingressStore: di.inject(ingressStoreInjectable),
+  }),
+});
