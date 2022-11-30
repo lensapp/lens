@@ -8,5 +8,9 @@
     &.warning {
       @include table-cell-warning;
     }
+
+    a.filterNamespace {
+      border-bottom: unset;
+    }
   }
 }

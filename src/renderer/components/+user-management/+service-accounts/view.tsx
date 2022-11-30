@@ -10,9 +10,14 @@ import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { CreateServiceAccountDialog } from "./create-dialog";
-import { serviceAccountStore } from "./legacy-store";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
+import { prevDefault } from "../../../utils";
+import type { ServiceAccountStore } from "./store";
+import type { FilterByNamespace } from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import filterByNamespaceInjectable from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import serviceAccountStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -20,9 +25,19 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  serviceAccountStore: ServiceAccountStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class ServiceAccounts extends React.Component {
+class NonInjectedServiceAccounts extends React.Component<Dependencies> {
   render() {
+    const {
+      filterByNamespace,
+      serviceAccountStore,
+    } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
@@ -48,7 +63,13 @@ export class ServiceAccounts extends React.Component {
           renderTableContents={account => [
             account.getName(),
             <KubeObjectStatusIcon key="icon" object={account} />,
-            account.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => filterByNamespace(account.getNs()))}
+            >
+              {account.getNs()}
+            </a>,
             <KubeObjectAge key="age" object={account} />,
           ]}
           addRemoveButtons={{
@@ -62,3 +83,10 @@ export class ServiceAccounts extends React.Component {
   }
 }
 
+export const ServiceAccounts = withInjectables<Dependencies>(NonInjectedServiceAccounts, {
+  getProps: (di, props) => ({
+    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    serviceAccountStore: di.inject(serviceAccountStoreInjectable),
+  }),
+});
