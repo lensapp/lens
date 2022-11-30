@@ -7,12 +7,18 @@ import "./replicasets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { replicaSetStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { eventStore } from "../+events/legacy-store";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import type { ReplicaSetStore } from "./store";
+import type { EventStore } from "../+events/store";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { prevDefault } from "../../utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import eventStoreInjectable from "../+events/store.injectable";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import replicaSetStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -23,9 +29,21 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  replicaSetStore: ReplicaSetStore;
+  eventStore: EventStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class ReplicaSets extends React.Component {
+class NonInjectedReplicaSets extends React.Component<Dependencies> {
   render() {
+    const {
+      eventStore,
+      filterByNamespace,
+      replicaSetStore,
+    } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
@@ -58,7 +76,13 @@ export class ReplicaSets extends React.Component {
           renderTableContents={replicaSet => [
             replicaSet.getName(),
             <KubeObjectStatusIcon key="icon" object={replicaSet} />,
-            replicaSet.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => filterByNamespace(replicaSet.getNs()))}
+            >
+              {replicaSet.getNs()}
+            </a>,
             replicaSet.getDesired(),
             replicaSet.getCurrent(),
             replicaSet.getReady(),
@@ -70,3 +94,11 @@ export class ReplicaSets extends React.Component {
   }
 }
 
+export const ReplicaSets = withInjectables<Dependencies>(NonInjectedReplicaSets, {
+  getProps: (di, props) => ({
+    ...props,
+    eventStore: di.inject(eventStoreInjectable),
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    replicaSetStore: di.inject(replicaSetStoreInjectable),
+  }),
+});
