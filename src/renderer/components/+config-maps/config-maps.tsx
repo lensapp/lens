@@ -7,11 +7,16 @@ import "./config-maps.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { configMapStore } from "./legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import { prevDefault } from "../../utils";
+import type { ConfigMapStore } from "./store";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import configMapStoreInjectable from "./store.injectable";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 
 enum columnId {
   name = "name",
@@ -20,8 +25,13 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  configMapStore: ConfigMapStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class ConfigMaps extends React.Component {
+class NonInjectedConfigMaps extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
@@ -29,7 +39,7 @@ export class ConfigMaps extends React.Component {
           isConfigurable
           tableId="configuration_configmaps"
           className="ConfigMaps"
-          store={configMapStore}
+          store={this.props.configMapStore}
           sortingCallbacks={{
             [columnId.name]: configMap => configMap.getName(),
             [columnId.namespace]: configMap => configMap.getNs(),
@@ -51,7 +61,13 @@ export class ConfigMaps extends React.Component {
           renderTableContents={configMap => [
             configMap.getName(),
             <KubeObjectStatusIcon key="icon" object={configMap} />,
-            configMap.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => this.props.filterByNamespace(configMap.getNs()))}
+            >
+              {configMap.getNs()}
+            </a>,
             configMap.getKeys().join(", "),
             <KubeObjectAge key="age" object={configMap} />,
           ]}
@@ -60,3 +76,11 @@ export class ConfigMaps extends React.Component {
     );
   }
 }
+
+export const ConfigMaps = withInjectables<Dependencies>(NonInjectedConfigMaps, {
+  getProps: (di, props) => ({
+    ...props,
+    configMapStore: di.inject(configMapStoreInjectable),
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+  }),
+});
