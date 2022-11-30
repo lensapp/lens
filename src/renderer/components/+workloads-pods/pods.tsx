@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { NodeApi, Pod } from "../../../common/k8s-api/endpoints";
 import { StatusBrick } from "../status-brick";
-import { cssNames, getConvertedParts, object, stopPropagation } from "../../utils";
+import { cssNames, getConvertedParts, object, prevDefault, stopPropagation } from "../../utils";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
@@ -28,6 +28,8 @@ import type { PodStore } from "./store";
 import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
 import podStoreInjectable from "./store.injectable";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 
 enum columnId {
   name = "name",
@@ -43,6 +45,7 @@ enum columnId {
 
 interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
+  filterByNamespace: FilterByNamespace;
   apiManager: ApiManager;
   eventStore: EventStore;
   podStore: PodStore;
@@ -149,7 +152,13 @@ class NonInjectedPods extends React.Component<Dependencies> {
               expandable={false}
             />,
             <KubeObjectStatusIcon key="icon" object={pod} />,
-            pod.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => this.props.filterByNamespace(pod.getNs()))}
+            >
+              {pod.getNs()}
+            </a>,
             this.renderContainersStatus(pod),
             pod.getRestartsCount(),
             pod.getOwnerRefs().map(ref => {
@@ -201,5 +210,6 @@ export const Pods = withInjectables<Dependencies>(NonInjectedPods, {
     nodeApi: di.inject(nodeApiInjectable),
     eventStore: di.inject(eventStoreInjectable),
     podStore: di.inject(podStoreInjectable),
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });
