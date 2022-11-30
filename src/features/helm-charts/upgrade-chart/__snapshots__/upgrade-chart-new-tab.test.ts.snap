@@ -1295,7 +1295,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                my-second-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  my-second-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -2048,7 +2052,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                my-second-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  my-second-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -2855,7 +2863,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                my-second-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  my-second-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -3698,7 +3710,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                my-second-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  my-second-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -4681,7 +4697,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                my-second-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  my-second-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -5666,7 +5686,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                my-second-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  my-second-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
