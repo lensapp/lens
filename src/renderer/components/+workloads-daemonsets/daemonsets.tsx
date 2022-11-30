@@ -8,14 +8,21 @@ import "./daemonsets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { DaemonSet } from "../../../common/k8s-api/endpoints";
-import { eventStore } from "../+events/legacy-store";
-import { daemonSetStore } from "./legacy-store";
-import { podStore } from "../+workloads-pods/legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import type { DaemonSetStore } from "./store";
+import type { PodStore } from "../+workloads-pods/store";
+import type { EventStore } from "../+events/store";
+import { prevDefault } from "../../utils";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import daemonSetStoreInjectable from "./store.injectable";
+import eventStoreInjectable from "../+events/store.injectable";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
 
 enum columnId {
   name = "name",
@@ -25,13 +32,27 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  daemonSetStore: DaemonSetStore;
+  podStore: PodStore;
+  eventStore: EventStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class DaemonSets extends React.Component {
+class NonInjectedDaemonSets extends React.Component<Dependencies> {
   getPodsLength(daemonSet: DaemonSet) {
-    return daemonSetStore.getChildPods(daemonSet).length;
+    return this.props.daemonSetStore.getChildPods(daemonSet).length;
   }
 
   render() {
+    const {
+      daemonSetStore,
+      eventStore,
+      filterByNamespace,
+      podStore,
+    } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
@@ -61,7 +82,13 @@ export class DaemonSets extends React.Component {
           ]}
           renderTableContents={daemonSet => [
             daemonSet.getName(),
-            daemonSet.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => filterByNamespace(daemonSet.getNs()))}
+            >
+              {daemonSet.getNs()}
+            </a>,
             this.getPodsLength(daemonSet),
             <KubeObjectStatusIcon key="icon" object={daemonSet} />,
             daemonSet.getNodeSelectors().map(selector => (
@@ -78,3 +105,13 @@ export class DaemonSets extends React.Component {
     );
   }
 }
+
+export const DaemonSets = withInjectables<Dependencies>(NonInjectedDaemonSets, {
+  getProps: (di, props) => ({
+    ...props,
+    daemonSetStore: di.inject(daemonSetStoreInjectable),
+    eventStore: di.inject(eventStoreInjectable),
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    podStore: di.inject(podStoreInjectable),
+  }),
+});

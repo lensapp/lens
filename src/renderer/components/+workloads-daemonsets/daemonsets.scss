@@ -21,5 +21,9 @@
       flex-grow: 1.5;
       @include table-cell-labels-offsets;
     }
+
+    a.filterNamespace {
+      border-bottom: unset;
+    }
   }
 }
