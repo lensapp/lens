@@ -7,13 +7,19 @@ import "./jobs.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { jobStore } from "./legacy-store";
-import { eventStore } from "../+events/legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import kebabCase from "lodash/kebabCase";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import type { JobStore } from "./store";
+import type { EventStore } from "../+events/store";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { prevDefault } from "../../utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import eventStoreInjectable from "../+events/store.injectable";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import jobStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -23,9 +29,21 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  jobStore: JobStore;
+  eventStore: EventStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class Jobs extends React.Component {
+class NonInjectedJobs extends React.Component<Dependencies> {
   render() {
+    const {
+      eventStore,
+      filterByNamespace,
+      jobStore,
+    } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
@@ -57,7 +75,13 @@ export class Jobs extends React.Component {
 
             return [
               job.getName(),
-              job.getNs(),
+              <a
+                key="namespace"
+                className="filterNamespace"
+                onClick={prevDefault(() => filterByNamespace(job.getNs()))}
+              >
+                {job.getNs()}
+              </a>,
               `${job.getCompletions()} / ${job.getDesiredCompletions()}`,
               <KubeObjectStatusIcon key="icon" object={job} />,
               <KubeObjectAge key="age" object={job} />,
@@ -72,3 +96,12 @@ export class Jobs extends React.Component {
     );
   }
 }
+
+export const Jobs = withInjectables<Dependencies>(NonInjectedJobs, {
+  getProps: (di, props) => ({
+    ...props,
+    eventStore: di.inject(eventStoreInjectable),
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    jobStore: di.inject(jobStoreInjectable),
+  }),
+});
