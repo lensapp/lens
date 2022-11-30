@@ -7,31 +7,33 @@ import { observer } from "mobx-react";
 import React from "react";
 import { Table, TableHead, TableCell, TableRow } from "../table";
 import { prevDefault } from "../../utils";
-import { endpointsStore } from "../+network-endpoints/legacy-store";
-import { Spinner } from "../spinner";
-import { showDetails } from "../kube-detail-params";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import { Endpoints } from "../../../common/k8s-api/endpoints";
+import type { ShowDetails } from "../kube-detail-params/show-details.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
+import showDetailsInjectable from "../kube-detail-params/show-details.injectable";
 
 export interface ServiceDetailsEndpointProps {
   endpoints: Endpoints;
 }
 
+interface Dependencies {
+  logger: Logger;
+  showDetails: ShowDetails;
+}
+
 @observer
-export class ServiceDetailsEndpoint extends React.Component<ServiceDetailsEndpointProps> {
+class NonInjectedServiceDetailsEndpoint extends React.Component<ServiceDetailsEndpointProps & Dependencies> {
   render() {
     const { endpoints } = this.props;
-
-    if (!endpoints && !endpointsStore.isLoaded) return (
-      <div className="PodDetailsList flex justify-center"><Spinner/></div>
-    );
 
     if (!endpoints) {
       return null;
     }
 
     if (!(endpoints instanceof Endpoints)) {
-      logger.error("[ServiceDetailsEndpoint]: passed object that is not an instanceof Endpoints", endpoints);
+      this.props.logger.error("[ServiceDetailsEndpoint]: passed object that is not an instanceof Endpoints", endpoints);
 
       return null;
     }
@@ -51,7 +53,7 @@ export class ServiceDetailsEndpoint extends React.Component<ServiceDetailsEndpoi
           <TableRow
             key={endpoints.getId()}
             nowrap
-            onClick={prevDefault(() => showDetails(endpoints.selfLink, false))}
+            onClick={prevDefault(() => this.props.showDetails(endpoints.selfLink, false))}
           >
             <TableCell className="name">{endpoints.getName()}</TableCell>
             <TableCell className="endpoints">{ endpoints.toString()}</TableCell>
@@ -61,3 +63,11 @@ export class ServiceDetailsEndpoint extends React.Component<ServiceDetailsEndpoi
     );
   }
 }
+
+export const ServiceDetailsEndpoint = withInjectables<Dependencies, ServiceDetailsEndpointProps>(NonInjectedServiceDetailsEndpoint, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+    showDetails: di.inject(showDetailsInjectable),
+  }),
+});
