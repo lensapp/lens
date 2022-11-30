@@ -113,6 +113,12 @@ const registratorForPreferenceItemsInjectable = getInjectable({
     const items = extension.appPreferences.map((registration, i) => {
       const itemId = `${commonId}-item-${registration.id ?? i}`;
 
+      const itemIsInSpecialTab =
+        registration.showInPreferencesTab &&
+        ["telemetry", "application"].includes(
+          registration.showInPreferencesTab,
+        );
+
       return getInjectable({
         id: itemId,
 
@@ -122,12 +128,12 @@ const registratorForPreferenceItemsInjectable = getInjectable({
 
           // Note: Legacy extensions considered telemetry and application as magic strings, and so does this code
           parentId: registration.showInPreferencesTab
-            ? ["telemetry", "application"].includes(registration.showInPreferencesTab)
+            ? itemIsInSpecialTab
               ? `${registration.showInPreferencesTab}-page`
               : `${commonId}-additional-page-${registration.showInPreferencesTab}`
             : primaryPageId,
 
-          orderNumber: i * 10,
+          orderNumber: i * 10 + (itemIsInSpecialTab ? 1000 : 0),
 
           Component: () => (
             <ExtensionPreferenceBlock registration={registration} />

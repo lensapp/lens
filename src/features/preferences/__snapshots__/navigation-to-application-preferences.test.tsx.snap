@@ -862,37 +862,6 @@ exports[`preferences - navigation to application preferences given in preference
                 Application
               </h2>
               <div
-                data-preference-item-test="preference-item-for-extension-some-test-extension-name-item-some-application-preference-item-id"
-              >
-                <section
-                  class="small"
-                  id="some-application-preference-item-id"
-                >
-                  <div
-                    class="SubTitle"
-                  >
-                    Some application-preference item
-                     
-                  </div>
-                  <div
-                    data-testid="some-preference-item-input"
-                  />
-                  <div
-                    class="hint"
-                  >
-                    <div
-                      data-testid="some-preference-item-hint"
-                    />
-                  </div>
-                </section>
-                <hr
-                  class="small"
-                />
-              </div>
-              <div
-                class="HorizontalLine size-xl"
-              />
-              <div
                 data-preference-item-test="theme"
               >
                 <section
@@ -1306,6 +1275,37 @@ exports[`preferences - navigation to application preferences given in preference
                     </div>
                   </div>
                 </section>
+              </div>
+              <div
+                class="HorizontalLine size-xl"
+              />
+              <div
+                data-preference-item-test="preference-item-for-extension-some-test-extension-name-item-some-application-preference-item-id"
+              >
+                <section
+                  class="small"
+                  id="some-application-preference-item-id"
+                >
+                  <div
+                    class="SubTitle"
+                  >
+                    Some application-preference item
+                     
+                  </div>
+                  <div
+                    data-testid="some-preference-item-input"
+                  />
+                  <div
+                    class="hint"
+                  >
+                    <div
+                      data-testid="some-preference-item-hint"
+                    />
+                  </div>
+                </section>
+                <hr
+                  class="small"
+                />
               </div>
             </section>
           </div>

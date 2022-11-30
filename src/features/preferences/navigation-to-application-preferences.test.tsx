@@ -56,11 +56,11 @@ describe("preferences - navigation to application preferences", () => {
         expect(rendered.container).toMatchSnapshot();
       });
 
-      it("shows preference items of the extension", () => {
+      it("shows preference items of the extension as last", () => {
         const { attributeValues } =
             discover.queryAllElements("preference-item");
 
-        expect(attributeValues).toContain("preference-item-for-extension-some-test-extension-name-item-some-application-preference-item-id");
+        expect(attributeValues.at(-1)).toBe("preference-item-for-extension-some-test-extension-name-item-some-application-preference-item-id");
       });
     });
   });
