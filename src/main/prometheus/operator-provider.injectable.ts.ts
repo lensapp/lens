@@ -71,23 +71,23 @@ export const getOperatorLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string
       case "pods":
         switch (queryName) {
           case "cpuUsage":
-            return `sum(rate(container_cpu_usage_seconds_total{container!="", image!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
+            return `sum(rate(container_cpu_usage_seconds_total{pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
           case "cpuRequests":
             return `sum(kube_pod_container_resource_requests{pod=~"${opts.pods}", resource="cpu", namespace="${opts.namespace}"}) by (${opts.selector})`;
           case "cpuLimits":
             return `sum(kube_pod_container_resource_limits{pod=~"${opts.pods}", resource="cpu", namespace="${opts.namespace}"}) by (${opts.selector})`;
           case "memoryUsage":
-            return `sum(container_memory_working_set_bytes{container!="", image!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}) by (${opts.selector})`;
+            return `sum(container_memory_working_set_bytes{pod=~"${opts.pods}", namespace="${opts.namespace}"}) by (${opts.selector})`;
           case "memoryRequests":
             return `sum(kube_pod_container_resource_requests{pod=~"${opts.pods}", resource="memory", namespace="${opts.namespace}"}) by (${opts.selector})`;
           case "memoryLimits":
             return `sum(kube_pod_container_resource_limits{pod=~"${opts.pods}", resource="memory", namespace="${opts.namespace}"}) by (${opts.selector})`;
           case "fsUsage":
-            return `sum(container_fs_usage_bytes{container!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}) by (${opts.selector})`;
+            return `sum(container_fs_usage_bytes{pod=~"${opts.pods}", namespace="${opts.namespace}"}) by (${opts.selector})`;
           case "fsWrites":
-            return `sum(rate(container_fs_writes_bytes_total{container!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
+            return `sum(rate(container_fs_writes_bytes_total{pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
           case "fsReads":
-            return `sum(rate(container_fs_reads_bytes_total{container!="", pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
+            return `sum(rate(container_fs_reads_bytes_total{pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
           case "networkReceive":
             return `sum(rate(container_network_receive_bytes_total{pod=~"${opts.pods}", namespace="${opts.namespace}"}[${rateAccuracy}])) by (${opts.selector})`;
           case "networkTransmit":
