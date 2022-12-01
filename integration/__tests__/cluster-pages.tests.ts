@@ -194,6 +194,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       expect(lineBoundingBox?.height).toBeLessThan(30);
 
       await frame.click("[data-testid='log-controls'] .wrap-logs");
+      await frame.waitForTimeout(1000);
       const wrappedLogLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index='0']");
       const wrappedLineBoundingBox = await wrappedLogLine.boundingBox();
 
