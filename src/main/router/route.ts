@@ -35,6 +35,7 @@ export interface LensApiRequest<Path extends string> {
   params: InferParamFromPath<Path>;
   cluster: Cluster | undefined;
   query: URLSearchParams;
+  getHeader: (key: string) => string | string[] | undefined;
   raw: {
     req: http.IncomingMessage;
     res: http.ServerResponse;
@@ -65,6 +66,7 @@ export interface RouteHandler<TResponse, Path extends string>{
 export interface BaseRoutePaths<Path extends string> {
   path: Path;
   method: "get" | "post" | "put" | "patch" | "delete";
+  requireAuthentication?: boolean;
 }
 
 export interface PayloadValidator<Payload> {
@@ -77,15 +79,20 @@ export interface ValidatorBaseRoutePaths<Path extends string, Payload> extends B
 
 export interface Route<TResponse, Path extends string> extends BaseRoutePaths<Path> {
   handler: RouteHandler<TResponse, Path>;
+  requireAuthentication: boolean;
 }
 
 export interface BindHandler<Path extends string> {
   <TResponse>(handler: RouteHandler<TResponse, Path>): Route<TResponse, Path>;
 }
 
-export function route<Path extends string>(parts: BaseRoutePaths<Path>): BindHandler<Path> {
+export function route<Path extends string>({
+  requireAuthentication = true,
+  ...parts
+}: BaseRoutePaths<Path>): BindHandler<Path> {
   return (handler) => ({
     ...parts,
+    requireAuthentication,
     handler,
   });
 }
@@ -98,8 +105,12 @@ export interface BindClusterHandler<Path extends string> {
   <TResponse>(handler: ClusterRouteHandler<TResponse, Path>): Route<TResponse, Path>;
 }
 
-export function clusterRoute<Path extends string>(parts: BaseRoutePaths<Path>): BindClusterHandler<Path> {
+export function clusterRoute<Path extends string>({
+  requireAuthentication = true,
+  ...parts
+}: BaseRoutePaths<Path>): BindClusterHandler<Path> {
   return (handler) => ({
+    requireAuthentication,
     ...parts,
     handler: ({ cluster, ...rest }) => {
       if (!cluster) {

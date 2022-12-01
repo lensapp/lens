@@ -7,7 +7,6 @@ import net from "net";
 import http from "http";
 import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
-import type { Router } from "../router/router";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
@@ -16,6 +15,10 @@ import assert from "assert";
 import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
+import type { RouteRequest } from "../router/router.injectable";
+import { lensAuthenticationHeader } from "../../common/vars/auth-header";
+import { contentTypes } from "../router/router-content-types";
+import { writeServerResponseFor } from "../router/write-server-response";
 
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 
@@ -26,11 +29,12 @@ interface Dependencies {
   shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
   kubeApiUpgradeRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
   emitAppEvent: EmitAppEvent;
-  readonly router: Router;
+  routeRequest: RouteRequest;
   readonly proxy: httpProxy;
   readonly lensProxyPort: { set: (portNumber: number) => void };
   readonly contentSecurityPolicy: string;
   readonly logger: Logger;
+  readonly authHeaderValue: string;
 }
 
 const watchParam = "watch";
@@ -61,9 +65,9 @@ const disallowedPorts = new Set([
 ]);
 
 export class LensProxy {
-  protected proxyServer: http.Server;
+  protected readonly proxyServer: http.Server;
   protected closed = false;
-  protected retryCounters = new Map<string, number>();
+  protected readonly retryCounters = new Map<string, number>();
 
   constructor(private readonly dependencies: Dependencies) {
     this.configureProxy(dependencies.proxy);
@@ -75,6 +79,13 @@ export class LensProxy {
     this.proxyServer
       .on("upgrade", (req: ServerIncomingMessage, socket: net.Socket, head: Buffer) => {
         const cluster = dependencies.getClusterForRequest(req);
+        const authHeader = req.headers[lensAuthenticationHeader.toLowerCase()];
+
+        if (authHeader !== this.dependencies.authHeaderValue) {
+          socket.destroy(new Error("Missing authorization"));
+
+          return;
+        }
 
         if (!cluster) {
           this.dependencies.logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
@@ -210,13 +221,15 @@ export class LensProxy {
     return proxy;
   }
 
-  protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ClusterContextHandler): Promise<httpProxy.ServerOptions | void> {
+  protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ClusterContextHandler): Promise<httpProxy.ServerOptions | undefined> {
     if (req.url?.startsWith(apiKubePrefix)) {
       delete req.headers.authorization;
       req.url = req.url.replace(apiKubePrefix, "");
 
       return contextHandler.getApiTarget(isLongRunningRequest(req.url));
     }
+
+    return undefined;
   }
 
   protected getRequestId(req: http.IncomingMessage): string {
@@ -227,16 +240,28 @@ export class LensProxy {
 
   protected async handleRequest(req: ServerIncomingMessage, res: http.ServerResponse) {
     const cluster = this.dependencies.getClusterForRequest(req);
+    const writeServerResponse = writeServerResponseFor(res);
 
     if (cluster) {
       const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler);
 
       if (proxyTarget) {
+        const authHeader = req.headers[lensAuthenticationHeader.toLowerCase()];
+
+        if (authHeader !== this.dependencies.authHeaderValue) {
+          writeServerResponse(contentTypes.txt.resultMapper({
+            statusCode: 401,
+            response: "Missing authorization",
+          }));
+
+          return;
+        }
+
         return this.dependencies.proxy.web(req, res, proxyTarget);
       }
     }
 
     res.setHeader("Content-Security-Policy", this.dependencies.contentSecurityPolicy);
-    await this.dependencies.router.route(cluster, req, res);
+    await this.dependencies.routeRequest(cluster, req, res);
   }
 }

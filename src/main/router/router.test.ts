@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import routerInjectable, { routeInjectionToken } from "./router.injectable";
+import type { RouteRequest } from "./router.injectable";
+import routeRequestInjectable, { routeInjectionToken } from "./router.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import type { Router } from "./router";
 import type { Cluster } from "../../common/cluster/cluster";
 import { Request } from "mock-http";
 import { getInjectable } from "@ogre-tools/injectable";
@@ -24,7 +24,7 @@ import fsInjectable from "../../common/fs/fs.injectable";
 import { runInAction } from "mobx";
 
 describe("router", () => {
-  let router: Router;
+  let routeRequest: RouteRequest;
   let routeHandlerMock: AsyncFnMock<() => any>;
 
   beforeEach(async () => {
@@ -51,6 +51,7 @@ describe("router", () => {
         method: "get",
         path: "/some-path",
         handler: routeHandlerMock,
+        requireAuthentication: false,
       } as Route<any, string>),
 
       injectionToken: routeInjectionToken,
@@ -60,7 +61,7 @@ describe("router", () => {
       di.register(injectable);
     });
 
-    router = di.inject(routerInjectable);
+    routeRequest = di.inject(routeRequestInjectable);
   });
 
   afterEach(() => {
@@ -86,7 +87,7 @@ describe("router", () => {
 
       clusterStub = {} as Cluster;
 
-      actualPromise = router.route(clusterStub, requestStub, responseStub);
+      actualPromise = routeRequest(clusterStub, requestStub, responseStub);
     });
 
     it("calls handler with the request", () => {

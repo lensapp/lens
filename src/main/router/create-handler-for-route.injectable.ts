@@ -5,73 +5,56 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ServerResponse } from "http";
 import loggerInjectable from "../../common/logger.injectable";
-import { object } from "../../common/utils";
+import { lensAuthenticationHeader } from "../../common/vars/auth-header";
+import authHeaderValueInjectable from "../lens-proxy/auth-header-value.injectable";
 import type { LensApiRequest, Route } from "./route";
 import { contentTypes } from "./router-content-types";
+import { writeServerResponseFor } from "./write-server-response";
 
 export type RouteHandler = (request: LensApiRequest<string>, response: ServerResponse) => Promise<void>;
 export type CreateHandlerForRoute = (route: Route<unknown, string>) => RouteHandler;
-
-interface LensServerResponse {
-  statusCode: number;
-  content: any;
-  headers: {
-    [name: string]: string;
-  };
-}
-
-const writeServerResponseFor = (serverResponse: ServerResponse) => ({
-  statusCode,
-  content,
-  headers,
-}: LensServerResponse) => {
-  serverResponse.statusCode = statusCode;
-
-  for (const [name, value] of object.entries(headers)) {
-    serverResponse.setHeader(name, value);
-  }
-
-  if (content instanceof Buffer) {
-    serverResponse.write(content);
-    serverResponse.end();
-  } else if (content) {
-    serverResponse.end(content);
-  } else {
-    serverResponse.end();
-  }
-};
 
 const createHandlerForRouteInjectable = getInjectable({
   id: "create-handler-for-route",
   instantiate: (di): CreateHandlerForRoute => {
     const logger = di.inject(loggerInjectable);
+    const authHeaderValue = di.inject(authHeaderValueInjectable);
 
     return (route) => async (request, response) => {
       const writeServerResponse = writeServerResponseFor(response);
+
+      if (route.requireAuthentication) {
+        const authHeader = request.getHeader(lensAuthenticationHeader);
+
+        if (authHeader !== authHeaderValue) {
+          writeServerResponse(contentTypes.txt.resultMapper({
+            statusCode: 401,
+            response: "Missing authorization",
+          }));
+
+          return;
+        }
+      }
 
       try {
         const result = await route.handler(request);
 
         if (!result) {
-          const mappedResult = contentTypes.txt.resultMapper({
+          writeServerResponse(contentTypes.txt.resultMapper({
             statusCode: 204,
             response: undefined,
-          });
-
-          writeServerResponse(mappedResult);
+          }));
         } else if (!result.proxy) {
           const contentType = result.contentType || contentTypes.json;
 
           writeServerResponse(contentType.resultMapper(result));
         }
       } catch(error) {
-        const mappedResult = contentTypes.txt.resultMapper({
+        logger.error(`[ROUTER]: route ${route.path}, called with ${request.path}, threw an error`, error);
+        writeServerResponse(contentTypes.txt.resultMapper({
           statusCode: 500,
           error: error ? String(error) : "unknown error",
-        });
-
-        logger.error(`[ROUTER]: route ${route.path}, called with ${request.path}, threw an error`, error);
-        writeServerResponse(mappedResult);
+        }));
       }
     };
   },
