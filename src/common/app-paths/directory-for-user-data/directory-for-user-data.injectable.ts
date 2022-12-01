@@ -3,11 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { appPathsInjectionToken } from "../app-path-injection-token";
+import appPathsInjectable from "../app-paths.injectable";
 
 const directoryForUserDataInjectable = getInjectable({
   id: "directory-for-user-data",
-  instantiate: (di) => di.inject(appPathsInjectionToken).userData,
+  instantiate: (di) => {
+    console.trace("whereamI?");
+
+    return di.inject(appPathsInjectable).userData;
+  },
 });
 
 export default directoryForUserDataInjectable;

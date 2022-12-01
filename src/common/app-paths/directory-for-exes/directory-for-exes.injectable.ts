@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { appPathsInjectionToken } from "../app-path-injection-token";
+import appPathsInjectable from "../app-paths.injectable";
 
 const directoryForExesInjectable = getInjectable({
   id: "directory-for-exes",
-  instantiate: (di) => di.inject(appPathsInjectionToken).exe,
+  instantiate: (di) => di.inject(appPathsInjectable).exe,
 });
 
 export default directoryForExesInjectable;

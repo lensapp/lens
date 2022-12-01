@@ -21,6 +21,8 @@ const appPathsStateInjectable = getInjectable({
       },
 
       set: (newState: AppPaths) => {
+        console.trace("whereamI?");
+
         if (state) {
           throw new Error("Tried to overwrite existing state of app paths.");
         }
