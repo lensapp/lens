@@ -20,6 +20,7 @@ export interface TabLayoutProps {
   contentClass?: IClassName;
   tabs?: TabLayoutRoute[];
   children?: ReactNode;
+  scrollable?: boolean;
 }
 
 export interface TabLayoutRoute {
@@ -31,7 +32,7 @@ export interface TabLayoutRoute {
   default?: boolean; // initial tab to open with provided `url, by default tabs[0] is used
 }
 
-export const TabLayout = observer(({ className, contentClass, tabs = [], children }: TabLayoutProps) => {
+export const TabLayout = observer(({ className, contentClass, tabs = [], scrollable, children }: TabLayoutProps) => {
   const currentLocation = navigation.location.pathname;
   const hasTabs = tabs.length > 0;
   const startTabUrl = hasTabs ? (tabs.find(tab => tab.default) || tabs[0])?.url : null;
@@ -50,7 +51,7 @@ export const TabLayout = observer(({ className, contentClass, tabs = [], childre
           ))}
         </Tabs>
       )}
-      <main className={cssNames(contentClass)}>
+      <main className={cssNames(contentClass, { scrollable })}>
         <ErrorBoundary>
           {hasTabs && (
             <Switch>
