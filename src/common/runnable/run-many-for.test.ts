@@ -223,7 +223,7 @@ describe("runManyFor", () => {
     );
 
     return expect(() => runMany()).rejects.toThrow(
-      /Tried to get a composite but encountered missing parent ids: "some-runnable-2".\n\nAvailable parent ids are:\n"[0-9a-z-]+",\n"some-runnable-1"/,
+      /Unreachable runnable="some-runnable-1". The specified runAfters; all of "some-runnable-2"; are not part of this injection token/,
     );
   });
 

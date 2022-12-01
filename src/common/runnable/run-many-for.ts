@@ -19,7 +19,8 @@ type Run<Param> = (parameter: Param) => Promise<void> | void;
 
 export type RunMany = <Param>(injectionToken: InjectionToken<Runnable<Param>, void>) => Run<Param>;
 
-const computedNextEdge = (traversed: string[], graph: Map<string, Set<string>>, currentId: string) => {
+const computedNextEdge = (traversed: string[], graph: Map<string, Set<string>>, currentId: string, seenIds: Set<string>) => {
+  seenIds.add(currentId);
   const currentNode = graph.get(currentId);
 
   assert(currentNode, `Runnable graph does not contain node with id="${currentId}"`);
@@ -29,13 +30,14 @@ const computedNextEdge = (traversed: string[], graph: Map<string, Set<string>>, 
       throw new Error(`Cycle in runnable graph: "${traversed.join(`" -> "`)}" -> "${nextId}"`);
     }
 
-    computedNextEdge([...traversed, nextId], graph, nextId);
+    computedNextEdge([...traversed, nextId], graph, nextId, seenIds);
   }
 };
 
 const verifyRunnablesAreDAG = <Param>(runnables: Runnable<Param>[]) => {
   const rootId = uuid.v4();
   const runnableGraph = new Map<string, Set<string>>();
+  const seenIds = new Set<string>();
 
   // Build the Directed graph
   for (const runnable of runnables) {
@@ -52,8 +54,26 @@ const verifyRunnablesAreDAG = <Param>(runnables: Runnable<Param>[]) => {
     }
   }
 
+  getOrInsertSet(runnableGraph, rootId);
+
   // Do a DFS to find any cycles
-  computedNextEdge([], runnableGraph, rootId);
+  computedNextEdge([], runnableGraph, rootId, seenIds);
+
+  for (const id of runnableGraph.keys()) {
+    if (!seenIds.has(id)) {
+      const runnable = runnables.find(runnable => runnable.id === id);
+
+      assert(runnable, `Unknown runnable id="${id}", logic error`);
+
+      const runAfters = [runnable.runAfter]
+        .flat()
+        .filter(isDefined)
+        .map(runnable => runnable.id)
+        .join('", "');
+
+      throw new Error(`Unreachable runnable="${id}". The specified runAfters; all of "${runAfters}"; are not part of this injection token`);
+    }
+  }
 };
 
 const executeRunnableWith = <Param>(param: Param) => {
