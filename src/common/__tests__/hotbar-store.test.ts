@@ -19,6 +19,7 @@ import loggerInjectable from "../logger.injectable";
 import type { Logger } from "../logger";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
+import fsInjectable from "../fs/fs.injectable";
 
 function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
   return {
@@ -46,7 +47,7 @@ describe("HotbarStore", () => {
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    (di as any).unoverride(hotbarStoreInjectable);
+    di.unoverride(hotbarStoreInjectable);
 
     testCluster = getMockCatalogEntity({
       apiVersion: "v1",
@@ -112,8 +113,8 @@ describe("HotbarStore", () => {
       catalogCatalogEntity,
     ]));
 
+    di.permitSideEffects(fsInjectable);
     di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.permitSideEffects(hotbarStoreInjectable);
   });
 
   afterEach(() => {
