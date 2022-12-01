@@ -32,7 +32,12 @@ interface Dependencies {
   maximalOptionsAreShown: IObservableValue<boolean>;
 }
 
-const NonInjectedActivationOfCustomHelmRepositoryDialogContent = observer(({ helmRepo, submitCustomRepository, maximalOptionsAreShown, hideDialog } : Dependencies) => (
+const NonInjectedActivationOfCustomHelmRepositoryDialogContent = observer(({
+  helmRepo,
+  submitCustomRepository,
+  maximalOptionsAreShown,
+  hideDialog,
+} : Dependencies) => (
   <Wizard header={<h5>Add custom Helm Repo</h5>} done={hideDialog}>
     <WizardStep
       contentClass="flow column"
@@ -135,18 +140,14 @@ const NonInjectedActivationOfCustomHelmRepositoryDialogContent = observer(({ hel
 
 
 
-export const AddingOfCustomHelmRepositoryDialogContent = withInjectables<Dependencies>(
-  NonInjectedActivationOfCustomHelmRepositoryDialogContent,
-
-  {
-    getProps: (di) => ({
-      helmRepo: di.inject(customHelmRepoInjectable),
-      hideDialog: di.inject(hideDialogForAddingCustomHelmRepositoryInjectable),
-      submitCustomRepository: di.inject(submitCustomHelmRepositoryInjectable),
-      maximalOptionsAreShown: di.inject(maximalCustomHelmRepoOptionsAreShownInjectable),
-    }),
-  },
-);
+export const AddingOfCustomHelmRepositoryDialogContent = withInjectables<Dependencies>(NonInjectedActivationOfCustomHelmRepositoryDialogContent, {
+  getProps: (di) => ({
+    helmRepo: di.inject(customHelmRepoInjectable),
+    hideDialog: di.inject(hideDialogForAddingCustomHelmRepositoryInjectable),
+    submitCustomRepository: di.inject(submitCustomHelmRepositoryInjectable),
+    maximalOptionsAreShown: di.inject(maximalCustomHelmRepoOptionsAreShownInjectable),
+  }),
+});
 
 const keyExtensions = ["key", "keystore", "jks", "p12", "pfx", "pem"];
 const certExtensions = ["crt", "cer", "ca-bundle", "p7b", "p7c", "p7s", "p12", "pfx", "pem"];
