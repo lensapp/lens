@@ -14,7 +14,7 @@ import execFileInjectable, { type ExecFile } from "../../common/fs/exec-file.inj
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
-import callForPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import requestPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 
 describe("listing active helm repositories in preferences", () => {
@@ -43,7 +43,7 @@ describe("listing active helm repositories in preferences", () => {
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
-      windowDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
+      windowDi.override(requestPublicHelmRepositoriesInjectable, () => async () => []);
     });
 
     rendered = await builder.render();
