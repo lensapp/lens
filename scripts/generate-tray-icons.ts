@@ -7,8 +7,12 @@ import fsExtra from "fs-extra";
 import { JSDOM } from "jsdom";
 import path from "path";
 import sharp from "sharp";
+import { fileURLToPath } from "url";
 
 const { ensureDir, readFile } = fsExtra;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const size = Number(process.env.OUTPUT_SIZE || "16");
 const outputFolder = process.env.OUTPUT_DIR || "./static/build/tray";
