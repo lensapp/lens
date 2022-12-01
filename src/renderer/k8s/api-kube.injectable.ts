@@ -11,6 +11,8 @@ import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-a
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import showErrorNotificationInjectable from "../components/notifications/show-error-notification.injectable";
 import windowLocationInjectable from "../../common/k8s-api/window-location.injectable";
+import { lensAuthenticationHeaderValueInjectionToken } from "../../common/auth/header-value";
+import { lensAuthenticationHeader } from "../../common/vars/auth-header";
 
 const apiKubeInjectable = getInjectable({
   id: "api-kube",
@@ -20,6 +22,7 @@ const apiKubeInjectable = getInjectable({
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const { port, host } = di.inject(windowLocationInjectable);
+    const lensAuthenticationHeaderValue = di.inject(lensAuthenticationHeaderValueInjectionToken);
 
     const apiKube = createKubeJsonApi({
       serverAddress: `http://127.0.0.1:${port}`,
@@ -28,6 +31,7 @@ const apiKubeInjectable = getInjectable({
     }, {
       headers: {
         "Host": host,
+        [lensAuthenticationHeader]: lensAuthenticationHeaderValue,
       },
     });
 

@@ -82,7 +82,8 @@ export class LensProxy {
         const authHeader = req.headers[lensAuthenticationHeader.toLowerCase()];
 
         if (authHeader !== this.dependencies.authHeaderValue) {
-          socket.destroy(new Error("Missing authorization"));
+          this.dependencies.logger.warn(`[LENS-PROXY]: Request from url=${req.url} missing authentication`);
+          socket.destroy();
 
           return;
         }
