@@ -25,6 +25,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
   beforeEach(async () => {
     ({ window, cleanup } = await utils.start());
+    window.setViewportSize({ width: 1200, height: 850 });
     await utils.clickWelcomeButton(window);
 
     frame = await utils.lauchMinikubeClusterFromCatalog(window);
@@ -136,7 +137,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     10 * 60 * 1000,
   );
 
-  it(
+  it.only(
     "should create a pod with logs and wrap log lines",
     async () => {
       await navigateToPods(frame);
