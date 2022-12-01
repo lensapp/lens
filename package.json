@@ -325,7 +325,7 @@
     "@types/jest": "^28.1.6",
     "@types/js-yaml": "^4.0.5",
     "@types/jsdom": "^16.2.14",
-    "@types/lodash": "^4.14.190",
+    "@types/lodash": "^4.14.191",
     "@types/marked": "^4.0.7",
     "@types/md5-file": "^4.0.2",
     "@types/memorystream": "^0.3.0",
