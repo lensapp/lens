@@ -16,6 +16,7 @@ const extensionsStoreInjectable = getInjectable({
     getConfigurationFileModel: di.inject(getConfigurationFileModelInjectable),
     logger: di.inject(loggerInjectable),
     storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
+    migrations: {},
   }),
 });
 
