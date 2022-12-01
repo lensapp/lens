@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
+import { deserialize, serialize } from "v8";
 import type { RequestChannel } from "../../common/utils/channel/request-channel-listener-injection-token";
 import type { RequestFromChannel } from "../../common/utils/channel/request-from-channel-injection-token";
 import enlistRequestChannelListenerInjectableInMain from "../../main/utils/channel/channel-listeners/enlist-request-channel-listener.injectable";
@@ -44,6 +45,12 @@ export const overrideRequestingFromWindowToMain = (mainDi: DiContainer) => {
           throw new Error(
             `Tried to get value from channel "${channel.id}", but no listeners were registered`,
           );
+        }
+
+        try {
+          request = deserialize(serialize(request));
+        } catch (error) {
+          throw new Error(`Tried to request from channel "${channel.id}" with data that is not compatible with StructuredClone: ${error}`);
         }
 
         return requestListener.handler(request);

@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
+import { deserialize, serialize } from "v8";
 import type { MessageChannel, MessageChannelListener } from "../../common/utils/channel/message-channel-listener-injection-token";
 import enlistMessageChannelListenerInjectableInMain from "../../main/utils/channel/channel-listeners/enlist-message-channel-listener.injectable";
 import { getOrInsertSet } from "../../renderer/utils";
@@ -38,6 +39,12 @@ export const overrideMessagingFromWindowToMain = (mainDi: DiContainer) => {
             ...messageChannelListenerFakesForMain.keys(),
           ].join('", "')}"`,
         );
+      }
+
+      try {
+        message = deserialize(serialize(message));
+      } catch (error) {
+        throw new Error(`Tried to send a message to channel "${channelId}" that is not compatible with StructuredClone: ${error}`);
       }
 
       listeners.forEach((listener) => listener.handler(message));
