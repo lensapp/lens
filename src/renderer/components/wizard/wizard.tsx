@@ -10,7 +10,6 @@ import { Button } from "../button";
 import { Stepper } from "../stepper";
 import { SubTitle } from "../layout/sub-title";
 import { Spinner } from "../spinner";
-import { debounce } from "lodash";
 
 export interface WizardCommonProps<D> {
   data?: Partial<D>;
@@ -79,10 +78,18 @@ export class Wizard<D> extends React.Component<WizardProps<D>, State> {
 
   isFirstStep = () => this.step === 1;
   isLastStep = () => this.step === this.steps.length;
-  firstStep = (): any => this.step = 1;
-  nextStep = (): any => this.step++;
-  prevStep = (): any => this.step--;
-  lastStep = (): any => this.step = this.steps.length;
+  firstStep = () => {
+    this.step = 1;
+  };
+  nextStep = () => {
+    this.step++;
+  };
+  prevStep = () => {
+    this.step--;
+  };
+  lastStep = () => {
+    this.step = this.steps.length;
+  };
 
   render() {
     const { className, title, header, hideSteps } = this.props;
@@ -180,9 +187,7 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
     }
   };
 
-  //because submit MIGHT be called through pressing enter, it might be fired twice.
-  //we'll debounce it to ensure it isn't
-  submit = debounce(() => {
+  submit = () => {
     if (!this.form) {
       return;
     }
@@ -190,9 +195,7 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
     if (this.form.noValidate || this.form.checkValidity()) {
       this.next();
     }
-  }, 100, {
-    leading: true,
-  });
+  };
 
   renderLoading() {
     return (
@@ -200,17 +203,6 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
         <Spinner />
       </div>
     );
-  }
-
-  //make sure we call submit if the "enter" keypress doesn't trigger the events
-  keyDown(evt: React.KeyboardEvent<HTMLElement>) {
-    if (evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey || evt.repeat) {
-      return;
-    }
-
-    if(evt.key === "Enter"){
-      this.submit();
-    }
   }
 
   render() {
@@ -230,7 +222,6 @@ export class WizardStep<D> extends React.Component<WizardStepProps<D>, WizardSte
         className={cssNames(`WizardStep step${step}`, className)}
         onSubmit={prevDefault(this.submit)}
         noValidate={noValidate}
-        onKeyDown={(evt) => this.keyDown(evt)}
         ref={e => this.form = e}
       >
         {beforeContent}
