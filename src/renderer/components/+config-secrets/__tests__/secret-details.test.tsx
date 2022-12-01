@@ -9,6 +9,7 @@ import { Secret, SecretType } from "../../../../common/k8s-api/endpoints";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { renderFor } from "../../test-utils/renderFor";
 import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
+import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 jest.mock("../../kube-object-meta/kube-object-meta", () => ({
   KubeObjectMeta: () => null,
@@ -20,6 +21,7 @@ describe("SecretDetails tests", () => {
     const render = renderFor(di);
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(directoryForUserDataInjectable, () => "/some-user-data");
 
     const secret = new Secret({
       apiVersion: "v1",
