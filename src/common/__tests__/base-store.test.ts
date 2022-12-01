@@ -115,7 +115,7 @@ describe("BaseStore", () => {
 
       const data = JSON.parse(readFileSync("some-user-data-directory/test-store.json").toString());
 
-      expect(data).toEqual({ a: "foo", b: "bar", c: "hello" });
+      expect(data).toMatchObject({ a: "foo", b: "bar", c: "hello" });
     });
 
     it("persists transaction only once", () => {
@@ -138,7 +138,7 @@ describe("BaseStore", () => {
 
       const data = JSON.parse(readFileSync("some-user-data-directory/test-store.json").toString());
 
-      expect(data).toEqual({ a: "a", b: "b", c: "" });
+      expect(data).toMatchObject({ a: "a", b: "b", c: "" });
     });
 
     it("persists changes coming via onSync (sync from different process)", () => {
@@ -146,7 +146,7 @@ describe("BaseStore", () => {
 
       store.onSync({ a: "foo", b: "", c: "bar" });
 
-      expect(store.toJSON()).toEqual({ a: "foo", b: "", c: "bar" });
+      expect(store.toJSON()).toMatchObject({ a: "foo", b: "", c: "bar" });
 
       expect(fileSpy).toHaveBeenCalledTimes(1);
     });
