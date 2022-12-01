@@ -300,7 +300,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"
@@ -836,7 +838,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"
@@ -1408,7 +1412,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"
@@ -1994,7 +2000,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class=""
+        >
           <div
             data-testid="some-child-page"
           >
@@ -2485,7 +2493,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class=""
+        >
           <div
             data-testid="some-other-child-page"
           >
@@ -2939,7 +2949,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class=""
+        >
           <div
             data-testid="some-child-page"
           >
@@ -3416,7 +3428,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"
@@ -3952,7 +3966,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"

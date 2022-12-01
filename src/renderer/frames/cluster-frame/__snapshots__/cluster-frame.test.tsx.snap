@@ -786,7 +786,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
         class="TabLayout"
       >
         <main
-          class=""
+          class="scrollable"
         >
           <div
             class="ClusterOverview"
@@ -1228,7 +1228,9 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"

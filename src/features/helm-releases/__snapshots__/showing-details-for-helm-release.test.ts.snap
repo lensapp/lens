@@ -286,7 +286,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -1027,7 +1029,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -1773,7 +1777,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -2689,7 +2695,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -3666,7 +3674,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -4643,7 +4653,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -5865,7 +5877,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -7087,7 +7101,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -8309,7 +8325,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -9356,7 +9374,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -10405,7 +10425,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -11627,7 +11649,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -12604,7 +12628,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -13584,7 +13610,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -14500,7 +14528,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -15477,7 +15507,9 @@ exports[`showing details for helm release given application is started when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
