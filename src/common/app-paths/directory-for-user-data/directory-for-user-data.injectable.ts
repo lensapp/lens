@@ -7,11 +7,7 @@ import appPathsInjectable from "../app-paths.injectable";
 
 const directoryForUserDataInjectable = getInjectable({
   id: "directory-for-user-data",
-  instantiate: (di) => {
-    console.trace("whereamI?");
-
-    return di.inject(appPathsInjectable).userData;
-  },
+  instantiate: (di) => di.inject(appPathsInjectable).userData,
 });
 
 export default directoryForUserDataInjectable;
