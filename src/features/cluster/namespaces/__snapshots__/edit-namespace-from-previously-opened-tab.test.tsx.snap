@@ -298,7 +298,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class="scrollable"
+          >
             <div
               class="WorkloadsOverview flex column gaps"
               data-testid="page-for-workloads-overview"
@@ -843,7 +845,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class="scrollable"
+          >
             <div
               class="WorkloadsOverview flex column gaps"
               data-testid="page-for-workloads-overview"

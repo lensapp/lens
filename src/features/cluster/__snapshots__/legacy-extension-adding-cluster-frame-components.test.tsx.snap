@@ -272,7 +272,9 @@ exports[`legacy extension adding cluster frame components given custom component
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"

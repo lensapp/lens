@@ -286,7 +286,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -946,7 +948,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -1699,7 +1703,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -2506,7 +2512,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -3349,7 +3357,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -4332,7 +4342,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -5317,7 +5329,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >

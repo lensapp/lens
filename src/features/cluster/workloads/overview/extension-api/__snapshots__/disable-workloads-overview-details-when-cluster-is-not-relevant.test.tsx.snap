@@ -273,7 +273,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class="scrollable"
+          >
             <div
               class="WorkloadsOverview flex column gaps"
               data-testid="page-for-workloads-overview"
@@ -788,7 +790,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class="scrollable"
+          >
             <div
               class="WorkloadsOverview flex column gaps"
               data-testid="page-for-workloads-overview"
@@ -1298,7 +1302,9 @@ exports[`disable workloads overview details when cluster is not relevant given n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class="scrollable"
+          >
             <div
               class="WorkloadsOverview flex column gaps"
               data-testid="page-for-workloads-overview"

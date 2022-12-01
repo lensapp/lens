@@ -300,7 +300,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"
@@ -836,7 +838,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"
@@ -1392,7 +1396,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"
@@ -2799,7 +2805,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"
@@ -3335,7 +3343,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"

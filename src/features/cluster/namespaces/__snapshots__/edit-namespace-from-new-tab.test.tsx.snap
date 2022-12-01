@@ -281,7 +281,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -919,7 +921,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -1562,7 +1566,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -2274,7 +2280,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -2964,7 +2972,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -3726,7 +3736,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -4490,7 +4502,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -5216,7 +5230,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -5937,7 +5953,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -6649,7 +6667,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -7361,7 +7381,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -8073,7 +8095,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -8620,7 +8644,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -9341,7 +9367,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -9888,7 +9916,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
@@ -10435,7 +10465,9 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           class="TabLayout"
           data-testid="tab-layout"
         >
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Namespaces"
             >
