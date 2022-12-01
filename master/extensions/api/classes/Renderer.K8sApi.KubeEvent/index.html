@@ -1207,7 +1207,7 @@
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.K8sApi/">K8sApi</a>.KubeEvent</p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a></li>
+<li><a href="../Renderer.K8sApi.KubeObject/"><code>KubeObject</code></a>&lt;<a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope.Namespace</code>>, <code>void</code>, <code>void</code>></li>
 </ul>
 <p>↳ <strong><code>KubeEvent</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
@@ -1330,7 +1330,7 @@
 <p>• <code>Optional</code> <strong>message</strong>: <code>string</code></p>
 <hr />
 <h3 id="metadata">metadata<a class="headerlink" href="#metadata" title="Permanent link">#</a></h3>
-<p>• <strong>metadata</strong>: <a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>></p>
+<p>• <strong>metadata</strong>: <a href="../../modules/Renderer.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>Namespace</code>></p>
 <h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#metadata">metadata</a></p>
 <hr />
@@ -1353,12 +1353,12 @@
 <p>• <code>Optional</code> <strong>source</strong>: <code>EventSource</code></p>
 <hr />
 <h3 id="spec">spec<a class="headerlink" href="#spec" title="Permanent link">#</a></h3>
-<p>• <strong>spec</strong>: <code>unknown</code></p>
+<p>• <strong>spec</strong>: <code>void</code></p>
 <h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#spec">spec</a></p>
 <hr />
 <h3 id="status">status<a class="headerlink" href="#status" title="Permanent link">#</a></h3>
-<p>• <code>Optional</code> <strong>status</strong>: <code>unknown</code></p>
+<p>• <code>Optional</code> <strong>status</strong>: <code>void</code></p>
 <h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#status">status</a></p>
 <hr />
@@ -1527,16 +1527,16 @@ creation timestamp of this object.</p>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getname">getName</a></p>
 <hr />
 <h3 id="getns">getNs<a class="headerlink" href="#getns" title="Permanent link">#</a></h3>
-<p>▸ <strong>getNs</strong>(): <code>undefined</code> | <code>string</code></p>
+<p>▸ <strong>getNs</strong>(): <code>string</code></p>
 <h4 id="returns_11">Returns<a class="headerlink" href="#returns_11" title="Permanent link">#</a></h4>
-<p><code>undefined</code> | <code>string</code></p>
+<p><code>string</code></p>
 <h4 id="inherited-from_14">Inherited from<a class="headerlink" href="#inherited-from_14" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getns">getNs</a></p>
 <hr />
 <h3 id="getownerrefs">getOwnerRefs<a class="headerlink" href="#getownerrefs" title="Permanent link">#</a></h3>
-<p>▸ <strong>getOwnerRefs</strong>(): { <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion?</code>: <code>boolean</code> ; <code>controller?</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>undefined</code> | <code>string</code> ; <code>uid</code>: <code>string</code>  }[]</p>
+<p>▸ <strong>getOwnerRefs</strong>(): { <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion?</code>: <code>boolean</code> ; <code>controller?</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>string</code> ; <code>uid</code>: <code>string</code>  }[]</p>
 <h4 id="returns_12">Returns<a class="headerlink" href="#returns_12" title="Permanent link">#</a></h4>
-<p>{ <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion?</code>: <code>boolean</code> ; <code>controller?</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>undefined</code> | <code>string</code> ; <code>uid</code>: <code>string</code>  }[]</p>
+<p>{ <code>apiVersion</code>: <code>string</code> ; <code>blockOwnerDeletion?</code>: <code>boolean</code> ; <code>controller?</code>: <code>boolean</code> ; <code>kind</code>: <code>string</code> ; <code>name</code>: <code>string</code> ; <code>namespace</code>: <code>string</code> ; <code>uid</code>: <code>string</code>  }[]</p>
 <h4 id="inherited-from_15">Inherited from<a class="headerlink" href="#inherited-from_15" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getownerrefs">getOwnerRefs</a></p>
 <hr />
@@ -1555,9 +1555,9 @@ creation timestamp of this object.</p>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getscopedname">getScopedName</a></p>
 <hr />
 <h3 id="getsearchfields">getSearchFields<a class="headerlink" href="#getsearchfields" title="Permanent link">#</a></h3>
-<p>▸ <strong>getSearchFields</strong>(): (<code>undefined</code> | <code>string</code>)[]</p>
+<p>▸ <strong>getSearchFields</strong>(): <code>string</code>[]</p>
 <h4 id="returns_15">Returns<a class="headerlink" href="#returns_15" title="Permanent link">#</a></h4>
-<p>(<code>undefined</code> | <code>string</code>)[]</p>
+<p><code>string</code>[]</p>
 <h4 id="inherited-from_18">Inherited from<a class="headerlink" href="#inherited-from_18" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeObject/">KubeObject</a>.<a href="../Renderer.K8sApi.KubeObject/#getsearchfields">getSearchFields</a></p>
 <hr />
