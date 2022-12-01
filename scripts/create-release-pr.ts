@@ -297,6 +297,7 @@ const createPrArgs = [
   "--title", `Release ${newVersion.format()}`,
   "--label", "skip-changelog",
   "--label", "release",
+  "--milestone", `${newVersion.major}.${newVersion.minor}.${newVersion.patch}`,
   "--body-file", "-",
 ];
 
