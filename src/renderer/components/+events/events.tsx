@@ -19,9 +19,8 @@ import type { HeaderCustomizer } from "../item-object-list";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import type { IClassName } from "../../utils";
-import { cssNames, stopPropagation } from "../../utils";
+import { prevDefault, cssNames, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
-import { getDetailsUrl } from "../kube-detail-params";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import navigateToEventsInjectable  from "../../../common/front-end-routing/routes/cluster/events/navigate-to-events.injectable";
@@ -29,6 +28,10 @@ import { KubeObjectAge } from "../kube-object/age";
 import { ReactiveDuration } from "../duration/reactive-duration";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import eventStoreInjectable from "./store.injectable";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 
 enum columnId {
   message = "message",
@@ -55,6 +58,8 @@ interface Dependencies {
   navigateToEvents: () => void;
   eventStore: EventStore;
   apiManager: ApiManager;
+  filterByNamespace: FilterByNamespace;
+  getDetailsUrl: GetDetailsUrl;
 }
 
 @observer
@@ -196,10 +201,20 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
                 </>
               ),
             },
-            event.getNs(),
+            compact
+              ? (
+                <a
+                  key="namespace"
+                  className="filterNamespace"
+                  onClick={prevDefault(() => this.props.filterByNamespace(event.getNs()))}
+                >
+                  {event.getNs()}
+                </a>
+              )
+              : event.getNs(),
             <Link
               key="link"
-              to={getDetailsUrl(apiManager.lookupApiLink(involvedObject, event))}
+              to={this.props.getDetailsUrl(apiManager.lookupApiLink(involvedObject, event))}
               onClick={stopPropagation}
             >
               {`${involvedObject.kind}: ${involvedObject.name}`}
@@ -231,5 +246,7 @@ export const Events = withInjectables<Dependencies, EventsProps>(NonInjectedEven
     navigateToEvents: di.inject(navigateToEventsInjectable),
     apiManager: di.inject(apiManagerInjectable),
     eventStore: di.inject(eventStoreInjectable),
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
   }),
 });

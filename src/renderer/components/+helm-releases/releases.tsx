@@ -9,7 +9,6 @@ import "./releases.scss";
 import React, { Component } from "react";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import type { ItemListStore } from "../item-object-list";
 import { ItemListLayout } from "../item-object-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
@@ -24,6 +23,9 @@ import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import helmReleasesRouteParametersInjectable from "./helm-releases-route-parameters.injectable";
 import type { NavigateToHelmReleases } from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToHelmReleasesInjectable from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
+import { prevDefault } from "../../utils";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 
 enum columnId {
   name = "name",
@@ -39,9 +41,9 @@ enum columnId {
 interface Dependencies {
   releases: IComputedValue<RemovableHelmRelease[]>;
   releasesArePending: IComputedValue<boolean>;
-  selectNamespace: (namespace: string) => void;
   namespace: IComputedValue<string>;
   navigateToHelmReleases: NavigateToHelmReleases;
+  filterByNamespace: FilterByNamespace;
 }
 
 class NonInjectedHelmReleases extends Component<Dependencies> {
@@ -50,7 +52,7 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
     const namespace = this.props.namespace.get();
 
     if (namespace) {
-      this.props.selectNamespace(namespace);
+      this.props.filterByNamespace(namespace);
     }
   }
 
@@ -186,7 +188,13 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
           ]}
           renderTableContents={release => [
             release.getName(),
-            release.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => this.props.filterByNamespace(release.getNs()))}
+            >
+              {release.getNs()}
+            </a>,
             release.getChart(),
             release.getRevision(),
             release.getVersion(),
@@ -213,20 +221,12 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
   }
 }
 
-export const HelmReleases = withInjectables<Dependencies>(
-  NonInjectedHelmReleases,
-
-  {
-    getProps: (di) => {
-      const routeParameters = di.inject(helmReleasesRouteParametersInjectable);
-
-      return {
-        releases: di.inject(removableReleasesInjectable),
-        releasesArePending: di.inject(releasesInjectable).pending,
-        selectNamespace: di.inject(namespaceStoreInjectable).selectNamespaces,
-        navigateToHelmReleases: di.inject(navigateToHelmReleasesInjectable),
-        namespace: routeParameters.namespace,
-      };
-    },
-  },
-);
+export const HelmReleases = withInjectables<Dependencies>(NonInjectedHelmReleases, {
+  getProps: (di) => ({
+    releases: di.inject(removableReleasesInjectable),
+    releasesArePending: di.inject(releasesInjectable).pending,
+    navigateToHelmReleases: di.inject(navigateToHelmReleasesInjectable),
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    ...di.inject(helmReleasesRouteParametersInjectable),
+  }),
+});

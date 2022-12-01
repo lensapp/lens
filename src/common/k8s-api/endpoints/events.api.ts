@@ -4,7 +4,7 @@
  */
 
 import moment from "moment";
-import type { KubeObjectMetadata, ObjectReference } from "../kube-object";
+import type { KubeObjectMetadata, KubeObjectScope, ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
 import type { DerivedKubeApiOptions } from "../kube-api";
@@ -21,7 +21,7 @@ export interface EventSource {
   host?: string;
 }
 
-export interface KubeEventData extends KubeJsonApiData<KubeObjectMetadata, void, void> {
+export interface KubeEventData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Namespace>, void, void> {
   action?: string;
   count?: number;
   eventTime?: string;
@@ -38,7 +38,7 @@ export interface KubeEventData extends KubeJsonApiData<KubeObjectMetadata, void,
   type?: string;
 }
 
-export class KubeEvent extends KubeObject {
+export class KubeEvent extends KubeObject<KubeObjectMetadata<KubeObjectScope.Namespace>, void, void> {
   static kind = "Event";
   static namespaced = true;
   static apiBase = "/api/v1/events";

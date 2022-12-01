@@ -13,5 +13,9 @@
       @include port-forward-status-colors;
       flex: 0.6;
     }
+
+    a.filterNamespace {
+      border-bottom: unset;
+    }
   }
 }

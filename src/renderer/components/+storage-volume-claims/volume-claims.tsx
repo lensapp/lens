@@ -8,16 +8,23 @@ import "./volume-claims.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { persistentVolumeClaimStore } from "./legacy-store";
-import { podStore } from "../+workloads-pods/legacy-store";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { unitsToBytes } from "../../../common/utils/convertMemory";
-import { stopPropagation } from "../../utils";
-import { storageClassApi } from "../../../common/k8s-api/endpoints";
+import { prevDefault, stopPropagation } from "../../utils";
+import type { StorageClassApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { getDetailsUrl } from "../kube-detail-params";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import type { PersistentVolumeClaimStore } from "./store";
+import type { PodStore } from "../+workloads-pods/store";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import persistentVolumeClaimStoreInjectable from "./store.injectable";
+import podStoreInjectable from "../+workloads-pods/store.injectable";
+import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
 
 enum columnId {
   name = "name",
@@ -29,9 +36,25 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  persistentVolumeClaimStore: PersistentVolumeClaimStore;
+  storageClassApi: StorageClassApi;
+  podStore: PodStore;
+  getDetailsUrl: GetDetailsUrl;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class PersistentVolumeClaims extends React.Component {
+class NonInjectedPersistentVolumeClaims extends React.Component<Dependencies> {
   render() {
+    const {
+      persistentVolumeClaimStore,
+      filterByNamespace,
+      getDetailsUrl,
+      podStore,
+      storageClassApi,
+    } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
@@ -67,14 +90,20 @@ export class PersistentVolumeClaims extends React.Component {
           renderTableContents={pvc => {
             const pods = pvc.getPods(podStore.items);
             const { storageClassName } = pvc.spec;
-            const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
+            const storageClassDetailsUrl = getDetailsUrl(storageClassApi.formatUrlForNotListing({
               name: storageClassName,
             }));
 
             return [
               pvc.getName(),
               <KubeObjectStatusIcon key="icon" object={pvc} />,
-              pvc.getNs(),
+              <a
+                key="namespace"
+                className="filterNamespace"
+                onClick={prevDefault(() => filterByNamespace(pvc.getNs()))}
+              >
+                {pvc.getNs()}
+              </a>,
               <Link
                 key="link"
                 to={storageClassDetailsUrl}
@@ -101,3 +130,14 @@ export class PersistentVolumeClaims extends React.Component {
     );
   }
 }
+
+export const PersistentVolumeClaims = withInjectables<Dependencies>(NonInjectedPersistentVolumeClaims, {
+  getProps: (di, props) => ({
+    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    persistentVolumeClaimStore: di.inject(persistentVolumeClaimStoreInjectable),
+    podStore: di.inject(podStoreInjectable),
+    storageClassApi: di.inject(storageClassApiInjectable),
+  }),
+});

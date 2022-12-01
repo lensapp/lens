@@ -11,25 +11,38 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Input } from "../input";
 import { Button } from "../button";
-import { Notifications } from "../notifications";
+import type { ShowNotification } from "../notifications";
 import { base64, toggle } from "../../utils";
 import { Icon } from "../icon";
-import { secretStore } from "./legacy-store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Secret } from "../../../common/k8s-api/endpoints";
 import { KubeObjectMeta } from "../kube-object-meta";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
+import type { SecretStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
+import secretStoreInjectable from "./store.injectable";
+import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
+import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 
 export interface SecretDetailsProps extends KubeObjectDetailsProps<Secret> {
 }
 
+interface Dependencies {
+  secretStore: SecretStore;
+  logger: Logger;
+  showSuccessNotification: ShowNotification;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
+}
+
 @observer
-export class SecretDetails extends React.Component<SecretDetailsProps> {
+class NonInjectedSecretDetails extends React.Component<SecretDetailsProps & Dependencies> {
   @observable isSaving = false;
   @observable data: Partial<Record<string, string>> = {};
   @observable revealSecret = observable.set<string>();
 
-  constructor(props: SecretDetailsProps) {
+  constructor(props: SecretDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
@@ -53,10 +66,10 @@ export class SecretDetails extends React.Component<SecretDetailsProps> {
     this.isSaving = true;
 
     try {
-      await secretStore.update(secret, { ...secret, data: this.data });
-      Notifications.ok("Secret successfully updated.");
+      await this.props.secretStore.update(secret, { ...secret, data: this.data });
+      this.props.showSuccessNotification("Secret successfully updated.");
     } catch (err) {
-      Notifications.checkedError(err, "Unknown error occured while updating the secret");
+      this.props.showCheckedErrorNotification(err, "Unknown error occured while updating the secret");
     }
     this.isSaving = false;
   };
@@ -134,7 +147,7 @@ export class SecretDetails extends React.Component<SecretDetailsProps> {
   }
 
   render() {
-    const { object: secret } = this.props;
+    const { object: secret, logger } = this.props;
 
     if (!secret) {
       return null;
@@ -157,3 +170,13 @@ export class SecretDetails extends React.Component<SecretDetailsProps> {
     );
   }
 }
+
+export const SecretDetails = withInjectables<Dependencies, SecretDetailsProps>(NonInjectedSecretDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+    secretStore: di.inject(secretStoreInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
+    showSuccessNotification: di.inject(showSuccessNotificationInjectable),
+  }),
+});

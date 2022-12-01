@@ -13,10 +13,12 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
-import { autoBind } from "../../../common/utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import leaseStoreInjectable from "./store.injectable";
 import type { LeaseStore } from "./store";
+import { prevDefault } from "../../utils";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 
 enum columnId {
   name = "name",
@@ -30,15 +32,11 @@ export interface LeaseProps extends KubeObjectDetailsProps<Lease> {
 
 interface Dependencies {
   leaseStore: LeaseStore;
+  filterByNamespace: FilterByNamespace;
 }
 
 @observer
 class NonInjectedLease extends React.Component<LeaseProps & Dependencies> {
-  constructor(props: LeaseProps & Dependencies) {
-    super(props);
-    autoBind(this);
-  }
-
   render() {
     const { leaseStore } = this.props;
 
@@ -69,7 +67,13 @@ class NonInjectedLease extends React.Component<LeaseProps & Dependencies> {
           renderTableContents={lease => [
             lease.getName(),
             <KubeObjectStatusIcon key="icon" object={lease} />,
-            lease.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => this.props.filterByNamespace(lease.getNs()))}
+            >
+              {lease.getNs()}
+            </a>,
             lease.getHolderIdentity(),
             <KubeObjectAge key="age" object={lease} />,
           ]}
@@ -83,5 +87,6 @@ export const Leases = withInjectables<Dependencies, LeaseProps>(NonInjectedLease
   getProps: (di, props) => ({
     ...props,
     leaseStore: di.inject(leaseStoreInjectable),
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });

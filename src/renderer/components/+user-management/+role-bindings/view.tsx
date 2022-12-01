@@ -9,12 +9,20 @@ import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { RoleBindingDialog } from "./dialog";
-import { roleBindingStore } from "./legacy-store";
-import { roleStore } from "../+roles/legacy-store";
-import { clusterRoleStore } from "../+cluster-roles/legacy-store";
-import { serviceAccountStore } from "../+service-accounts/legacy-store";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
+import type { RoleStore } from "../+roles/store";
+import type { ServiceAccountStore } from "../+service-accounts/store";
+import type { RoleBindingStore } from "./store";
+import { prevDefault } from "../../../utils";
+import type { ClusterRoleStore } from "../+cluster-roles/store";
+import type { FilterByNamespace } from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import clusterRoleStoreInjectable from "../+cluster-roles/store.injectable";
+import filterByNamespaceInjectable from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import roleBindingStoreInjectable from "./store.injectable";
+import roleStoreInjectable from "../+roles/store.injectable";
+import serviceAccountStoreInjectable from "../+service-accounts/store.injectable";
 
 enum columnId {
   name = "name",
@@ -23,9 +31,25 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  roleBindingStore: RoleBindingStore;
+  roleStore: RoleStore;
+  clusterRoleStore: ClusterRoleStore;
+  serviceAccountStore: ServiceAccountStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class RoleBindings extends React.Component {
+class NonInjectedRoleBindings extends React.Component<Dependencies> {
   render() {
+    const {
+      clusterRoleStore,
+      roleBindingStore,
+      roleStore,
+      serviceAccountStore,
+      filterByNamespace,
+    } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
@@ -55,7 +79,13 @@ export class RoleBindings extends React.Component {
           renderTableContents={binding => [
             binding.getName(),
             <KubeObjectStatusIcon key="icon" object={binding} />,
-            binding.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => filterByNamespace(binding.getNs()))}
+            >
+              {binding.getNs()}
+            </a>,
             binding.getSubjectNames(),
             <KubeObjectAge key="age" object={binding} />,
           ]}
@@ -69,3 +99,14 @@ export class RoleBindings extends React.Component {
     );
   }
 }
+
+export const RoleBindings = withInjectables<Dependencies>(NonInjectedRoleBindings, {
+  getProps: (di, props) => ({
+    ...props,
+    clusterRoleStore: di.inject(clusterRoleStoreInjectable),
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    roleBindingStore: di.inject(roleBindingStoreInjectable),
+    roleStore: di.inject(roleStoreInjectable),
+    serviceAccountStore: di.inject(serviceAccountStoreInjectable),
+  }),
+});

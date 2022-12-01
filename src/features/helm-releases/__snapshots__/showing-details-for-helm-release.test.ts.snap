@@ -2122,7 +2122,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -2204,7 +2208,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -3038,7 +3046,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -3120,7 +3132,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -4015,7 +4031,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -4097,7 +4117,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -4992,7 +5016,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -5074,7 +5102,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -6214,7 +6246,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -6296,7 +6332,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -7436,7 +7476,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -7518,7 +7562,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -10754,7 +10802,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -10836,7 +10888,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -11976,7 +12032,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -12058,7 +12118,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -12953,7 +13017,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -13035,7 +13103,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -13933,7 +14005,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -14015,7 +14091,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -14849,7 +14929,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -14931,7 +15015,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -15826,7 +15914,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -15908,7 +16000,11 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                some-other-namespace
+                                <a
+                                  class="filterNamespace"
+                                >
+                                  some-other-namespace
+                                </a>
                               </div>
                               <div
                                 class="TableCell chart"

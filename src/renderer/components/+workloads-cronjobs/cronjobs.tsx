@@ -19,6 +19,9 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import cronJobStoreInjectable from "./store.injectable";
 import jobStoreInjectable from "../+workloads-jobs/store.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
+import { prevDefault } from "../../utils";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 
 enum columnId {
   name = "name",
@@ -34,6 +37,7 @@ interface Dependencies {
   cronJobStore: CronJobStore;
   jobStore: JobStore;
   eventStore: EventStore;
+  filterByNamespace: FilterByNamespace;
 }
 
 @observer
@@ -43,6 +47,7 @@ class NonInjectedCronJobs extends React.Component<Dependencies>{
       cronJobStore,
       eventStore,
       jobStore,
+      filterByNamespace,
     } = this.props;
 
     return (
@@ -83,7 +88,13 @@ class NonInjectedCronJobs extends React.Component<Dependencies>{
           renderTableContents={cronJob => [
             cronJob.getName(),
             <KubeObjectStatusIcon key="icon" object={cronJob} />,
-            cronJob.getNs(),
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={prevDefault(() => filterByNamespace(cronJob.getNs()))}
+            >
+              {cronJob.getNs()}
+            </a>,
             cronJob.isNeverRun() ? "never"  : cronJob.getSchedule(),
             cronJob.getSuspendFlag(),
             cronJobStore.getActiveJobsNum(cronJob),
@@ -98,9 +109,10 @@ class NonInjectedCronJobs extends React.Component<Dependencies>{
 
 export const CronJobs = withInjectables<Dependencies>(NonInjectedCronJobs, {
   getProps: (di, props) => ({
+    ...props,
     cronJobStore: di.inject(cronJobStoreInjectable),
     eventStore: di.inject(eventStoreInjectable),
     jobStore: di.inject(jobStoreInjectable),
-    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });

@@ -499,6 +499,7 @@ export const getApplicationBuilder = () => {
           api: windowDi.inject(namespaceApiInjectable),
           items: namespaceItems,
           selectNamespaces: () => {},
+          selectSingle: () => {},
           getByPath: () => undefined,
           pickOnlySelected: () => [],
           isSelectedAll: () => false,

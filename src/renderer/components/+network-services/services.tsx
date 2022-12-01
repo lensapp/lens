@@ -9,10 +9,16 @@ import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
-import { serviceStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import { prevDefault } from "../../utils";
+import type { ServiceStore } from "./store";
+import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import type { Service } from "../../../common/k8s-api/endpoints";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import serviceStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -26,8 +32,27 @@ enum columnId {
   status = "status",
 }
 
+const formatExternalIps = (service: Service) => {
+  const externalIps = service.getExternalIps();
+
+  if (externalIps.length > 0) {
+    return externalIps.join(", ");
+  }
+
+  if (service.spec?.externalName) {
+    return service.spec.externalName;
+  }
+
+  return "-";
+};
+
+interface Dependencies {
+  serviceStore: ServiceStore;
+  filterByNamespace: FilterByNamespace;
+}
+
 @observer
-export class Services extends React.Component {
+class NonInjectedServices extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
@@ -35,7 +60,7 @@ export class Services extends React.Component {
           isConfigurable
           tableId="network_services"
           className="Services"
-          store={serviceStore}
+          store={this.props.serviceStore}
           sortingCallbacks={{
             [columnId.name]: service => service.getName(),
             [columnId.namespace]: service => service.getNs(),
@@ -64,28 +89,34 @@ export class Services extends React.Component {
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
             { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
           ]}
-          renderTableContents={service => {
-            const externalIps = service.getExternalIps();
-
-            if (externalIps.length === 0 && service.spec?.externalName) {
-              externalIps.push(service.spec.externalName);
-            }
-
-            return [
-              service.getName(),
-              <KubeObjectStatusIcon key="icon" object={service} />,
-              service.getNs(),
-              service.getType(),
-              service.getClusterIp(),
-              service.getPorts().join(", "),
-              externalIps.join(", ") || "-",
-              service.getSelector().map(label => <Badge key={label} label={label} />),
-              <KubeObjectAge key="age" object={service} />,
-              { title: service.getStatus(), className: service.getStatus().toLowerCase() },
-            ];
-          }}
+          renderTableContents={service => [
+            service.getName(),
+            <KubeObjectStatusIcon key="icon" object={ service } />,
+            <a
+              key="namespace"
+              className="filterNamespace"
+              onClick={ prevDefault(() => this.props.filterByNamespace(service.getNs())) }
+            >
+              { service.getNs() }
+            </a>,
+            service.getType(),
+            service.getClusterIp(),
+            service.getPorts().join(", "),
+            formatExternalIps(service),
+            service.getSelector().map(label => <Badge key={ label } label={ label } />),
+            <KubeObjectAge key="age" object={ service } />,
+            { title: service.getStatus(), className: service.getStatus().toLowerCase() },
+          ]}
         />
       </SiblingsInTabLayout>
     );
   }
 }
+
+export const Services = withInjectables<Dependencies>(NonInjectedServices, {
+  getProps: (di, props) => ({
+    ...props,
+    filterByNamespace: di.inject(filterByNamespaceInjectable),
+    serviceStore: di.inject(serviceStoreInjectable),
+  }),
+});
