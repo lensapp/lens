@@ -4,10 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import * as uuid from "uuid";
+import { lensAuthenticationHeaderValueInjectionToken } from "../../common/auth/header-value";
 
 const authHeaderValueInjectable = getInjectable({
   id: "auth-header-value",
   instantiate: () => uuid.v4(),
+  injectionToken: lensAuthenticationHeaderValueInjectionToken,
 });
 
 export default authHeaderValueInjectable;

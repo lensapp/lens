@@ -15,6 +15,7 @@ import type { CreateKubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-pr
 import type { GetPrometheusProviderByKind } from "../prometheus/get-by-kind.injectable";
 import type { IComputedValue } from "mobx";
 import type { Logger } from "../../common/logger";
+import type { MakeApiClient } from "../../common/cluster/make-api-client.injectable";
 
 export interface PrometheusDetails {
   prometheusPath: string;
@@ -31,6 +32,7 @@ interface PrometheusServicePreferences {
 export interface ContextHandlerDependencies {
   createKubeAuthProxy: CreateKubeAuthProxy;
   getPrometheusProviderByKind: GetPrometheusProviderByKind;
+  makeApiClient: MakeApiClient;
   readonly authProxyCa: string;
   readonly prometheusProviders: IComputedValue<PrometheusProvider[]>;
   readonly logger: Logger;
@@ -110,7 +112,7 @@ export class ContextHandler implements ClusterContextHandler {
 
     const providers = this.listPotentialProviders();
     const proxyConfig = await this.cluster.getProxyKubeconfig();
-    const apiClient = proxyConfig.makeApiClient(CoreV1Api);
+    const apiClient = this.dependencies.makeApiClient(proxyConfig, CoreV1Api);
     const potentialServices = await Promise.allSettled(
       providers.map(provider => provider.getPrometheusService(apiClient)),
     );

@@ -12,6 +12,7 @@ import { get, once } from "lodash";
 import { Node, NodeApi } from "../../../common/k8s-api/endpoints";
 import { TerminalChannels } from "../../../common/terminal/channels";
 import type { CreateKubeJsonApiForCluster } from "../../../common/k8s-api/create-kube-json-api-for-cluster.injectable";
+import type { MakeApiClient } from "../../../common/cluster/make-api-client.injectable";
 
 export interface NodeShellSessionArgs extends ShellSessionArgs {
   nodeName: string;
@@ -19,6 +20,7 @@ export interface NodeShellSessionArgs extends ShellSessionArgs {
 
 export interface NodeShellSessionDependencies extends ShellSessionDependencies {
   createKubeJsonApiForCluster: CreateKubeJsonApiForCluster;
+  makeApiClient: MakeApiClient;
 }
 
 export class NodeShellSession extends ShellSession {
@@ -34,8 +36,8 @@ export class NodeShellSession extends ShellSession {
   }
 
   public async open() {
-    const kc = await this.cluster.getProxyKubeconfig();
-    const coreApi = kc.makeApiClient(CoreV1Api);
+    const proxyConfig = await this.cluster.getProxyKubeconfig();
+    const coreApi = this.dependencies.makeApiClient(proxyConfig, CoreV1Api);
     const shell = await this.kubectl.getPath();
 
     const cleanup = once(() => {
@@ -48,7 +50,7 @@ export class NodeShellSession extends ShellSession {
 
     try {
       await this.createNodeShellPod(coreApi);
-      await this.waitForRunningPod(kc);
+      await this.waitForRunningPod(proxyConfig);
     } catch (error) {
       cleanup();
 

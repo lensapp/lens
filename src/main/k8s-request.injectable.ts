@@ -8,6 +8,8 @@ import { apiKubePrefix } from "../common/vars";
 import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";
 import lensProxyPortInjectable from "./lens-proxy/lens-proxy-port.injectable";
+import { lensAuthenticationHeaderValueInjectionToken } from "../common/auth/header-value";
+import { lensAuthenticationHeader } from "../common/vars/auth-header";
 
 export type K8sRequest = (cluster: Cluster, path: string, options?: RequestPromiseOptions) => Promise<any>;
 
@@ -16,6 +18,7 @@ const k8sRequestInjectable = getInjectable({
 
   instantiate: (di) => {
     const lensProxyPort = di.inject(lensProxyPortInjectable);
+    const lensAuthenticationHeaderValue = di.inject(lensAuthenticationHeaderValueInjectionToken);
 
     return async (
       cluster: Cluster,
@@ -28,6 +31,7 @@ const k8sRequestInjectable = getInjectable({
       options.json ??= true;
       options.timeout ??= 30000;
       options.headers.Host = `${cluster.id}.${new URL(kubeProxyUrl).host}`; // required in ClusterManager.getClusterForRequest()
+      options.headers[lensAuthenticationHeader] = lensAuthenticationHeaderValue;
 
       return request(kubeProxyUrl + path, options);
     };

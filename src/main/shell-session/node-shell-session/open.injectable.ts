@@ -19,6 +19,7 @@ import appNameInjectable from "../../../common/vars/app-name.injectable";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import statInjectable from "../../../common/fs/stat.injectable";
+import makeApiClientInjectable from "../../../common/cluster/make-api-client.injectable";
 
 export interface NodeShellSessionArgs {
   websocket: WebSocket;
@@ -45,6 +46,7 @@ const openNodeShellSessionInjectable = getInjectable({
       spawnPty: di.inject(spawnPtyInjectable),
       emitAppEvent: di.inject(emitAppEventInjectable),
       stat: di.inject(statInjectable),
+      makeApiClient: di.inject(makeApiClientInjectable),
     };
 
     return async (args) => {

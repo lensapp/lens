@@ -4,7 +4,6 @@
  */
 
 export * from "./abort-controller";
-export * from "./app-version";
 export * from "./autobind";
 export * from "./camelCase";
 export * from "./cluster-id-url-parsing";
