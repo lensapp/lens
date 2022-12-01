@@ -25,7 +25,6 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
   beforeEach(async () => {
     ({ window, cleanup } = await utils.start());
-    window.setViewportSize({ width: 1200, height: 850 });
     await utils.clickWelcomeButton(window);
 
     frame = await utils.lauchMinikubeClusterFromCatalog(window);
@@ -137,7 +136,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     10 * 60 * 1000,
   );
 
-  it.only(
+  it(
     "should create a pod with logs and wrap log lines",
     async () => {
       await navigateToPods(frame);
@@ -194,12 +193,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       expect(lineBoundingBox?.height).toBeLessThan(30);
 
-      const showWrapLogsCheckbox = await frame.waitForSelector(
-        "[data-testid='log-controls'] .wrap-logs",
-      );
-
-      await showWrapLogsCheckbox.click();
-
+      await frame.click("[data-testid='log-controls'] .wrap-logs");
       const wrappedLogLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index='0']");
       const wrappedLineBoundingBox = await wrappedLogLine.boundingBox();
 
