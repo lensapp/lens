@@ -55,9 +55,11 @@ describe("remove helm repository from list of active repositories in preferences
       beforeEach(async () => {
         getActiveHelmRepositoriesMock.resolve({
           callWasSuccessful: true,
-          response: [
-            { name: "some-active-repository", url: "some-url" },
-          ],
+          response: [{
+            name: "some-active-repository",
+            url: "some-url",
+            cacheFilePath: "/some-cache-file",
+          }],
         });
       });
 

@@ -72,15 +72,25 @@ describe("add helm repository from list in preferences", () => {
       beforeEach(async () => {
         await Promise.all([
           callForPublicHelmRepositoriesMock.resolve([
-            { name: "Some already active repository", url: "some-url" },
-            { name: "Some to be added repository", url: "some-other-url" },
+            {
+              name: "Some already active repository",
+              url: "some-url",
+              cacheFilePath: "/some-cache-file-for-active",
+            },
+            {
+              name: "Some to be added repository",
+              url: "some-other-url",
+              cacheFilePath: "/some-cache-file-for-non-active",
+            },
           ]),
 
           getActiveHelmRepositoriesMock.resolve({
             callWasSuccessful: true,
-            response: [
-              { name: "Some already active repository", url: "some-url" },
-            ],
+            response: [{
+              name: "Some already active repository",
+              url: "some-url",
+              cacheFilePath: "/some-cache-file-for-active",
+            }],
           }),
         ]);
       });
@@ -195,8 +205,16 @@ describe("add helm repository from list in preferences", () => {
                 await getActiveHelmRepositoriesMock.resolve({
                   callWasSuccessful: true,
                   response: [
-                    { name: "Some already active repository", url: "some-url" },
-                    { name: "Some to be added repository", url: "some-other-url" },
+                    {
+                      name: "Some already active repository",
+                      url: "some-url",
+                      cacheFilePath: "/some-cache-file-for-active",
+                    },
+                    {
+                      name: "Some to be added repository",
+                      url: "some-other-url",
+                      cacheFilePath: "/some-cache-file-for-non-active",
+                    },
                   ],
                 });
               });

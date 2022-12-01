@@ -73,9 +73,11 @@ describe("add custom helm repository in preferences", () => {
         await Promise.all([
           getActiveHelmRepositoriesMock.resolve({
             callWasSuccessful: true,
-            response: [
-              { name: "Some active repository", url: "some-url" },
-            ],
+            response: [{
+              name: "Some active repository",
+              url: "some-url",
+              cacheFilePath: "/some-cache-file-for-active",
+            }],
           }),
         ]);
       });
