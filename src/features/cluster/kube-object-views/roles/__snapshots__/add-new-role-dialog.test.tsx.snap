@@ -39,7 +39,7 @@ exports[`Roles view/add new role dialog renders 1`] = `
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -50,13 +50,11 @@ exports[`Roles view/add new role dialog renders 1`] = `
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -73,7 +71,7 @@ exports[`Roles view/add new role dialog renders 1`] = `
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -87,9 +85,7 @@ exports[`Roles view/add new role dialog renders 1`] = `
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -100,7 +96,7 @@ exports[`Roles view/add new role dialog renders 1`] = `
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -114,13 +110,11 @@ exports[`Roles view/add new role dialog renders 1`] = `
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -137,7 +131,7 @@ exports[`Roles view/add new role dialog renders 1`] = `
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -151,9 +145,7 @@ exports[`Roles view/add new role dialog renders 1`] = `
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -164,7 +156,7 @@ exports[`Roles view/add new role dialog renders 1`] = `
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -175,13 +167,11 @@ exports[`Roles view/add new role dialog renders 1`] = `
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -199,7 +189,7 @@ exports[`Roles view/add new role dialog renders 1`] = `
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -213,13 +203,11 @@ exports[`Roles view/add new role dialog renders 1`] = `
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -236,7 +224,7 @@ exports[`Roles view/add new role dialog renders 1`] = `
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -250,13 +238,11 @@ exports[`Roles view/add new role dialog renders 1`] = `
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -297,7 +283,9 @@ exports[`Roles view/add new role dialog renders 1`] = `
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Roles"
             >
@@ -620,6 +608,7 @@ exports[`Roles view/add new role dialog renders 1`] = `
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -629,7 +618,9 @@ exports[`Roles view/add new role dialog renders 1`] = `
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -736,7 +727,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -747,13 +738,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -770,7 +759,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -784,9 +773,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -797,7 +784,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -811,13 +798,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -834,7 +819,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -848,9 +833,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -861,7 +844,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -872,13 +855,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -896,7 +877,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -910,13 +891,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -933,7 +912,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -947,13 +926,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -994,7 +971,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Roles"
             >
@@ -1317,6 +1296,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -1326,7 +1306,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked rend
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -1596,7 +1578,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -1607,13 +1589,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1630,7 +1610,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -1644,9 +1624,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -1657,7 +1635,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -1671,13 +1649,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1694,7 +1670,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -1708,9 +1684,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -1721,7 +1695,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -1732,13 +1706,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1756,7 +1728,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -1770,13 +1742,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1793,7 +1763,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -1807,13 +1777,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -1854,7 +1822,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Roles"
             >
@@ -2177,6 +2147,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -2186,7 +2157,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -2456,7 +2429,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -2467,13 +2440,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -2490,7 +2461,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -2504,9 +2475,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -2517,7 +2486,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -2531,13 +2500,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -2554,7 +2521,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -2568,9 +2535,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -2581,7 +2546,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -2592,13 +2557,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -2616,7 +2579,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -2630,13 +2593,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -2653,7 +2614,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -2667,13 +2628,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -2714,7 +2673,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Roles"
             >
@@ -3037,6 +2998,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -3046,7 +3008,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -3313,7 +3277,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -3324,13 +3288,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -3347,7 +3309,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -3361,9 +3323,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -3374,7 +3334,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -3388,13 +3348,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -3411,7 +3369,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -3425,9 +3383,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -3438,7 +3394,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -3449,13 +3405,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -3473,7 +3427,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -3487,13 +3441,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -3510,7 +3462,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -3524,13 +3476,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -3571,7 +3521,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Roles"
             >
@@ -3894,6 +3846,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -3903,7 +3856,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -4171,7 +4126,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -4182,13 +4137,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -4205,7 +4158,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -4219,9 +4172,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -4232,7 +4183,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -4246,13 +4197,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -4269,7 +4218,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -4283,9 +4232,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -4296,7 +4243,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -4307,13 +4254,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -4331,7 +4276,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -4345,13 +4290,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -4368,7 +4311,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -4382,13 +4325,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -4429,7 +4370,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Roles"
             >
@@ -4752,6 +4695,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -4761,7 +4705,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -5029,7 +4975,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -5040,13 +4986,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Workloads
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -5063,7 +5007,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-config"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-config"
                 href="/"
               >
@@ -5077,9 +5021,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     list
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Config
                 </span>
               </a>
@@ -5090,7 +5032,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-network"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-network"
                 href="/"
               >
@@ -5104,13 +5046,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     device_hub
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Network
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -5127,7 +5067,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-storage"
             >
               <a
-                class="nav-item flex gaps align-center"
+                class="navItem"
                 data-testid="sidebar-item-link-for-storage"
                 href="/"
               >
@@ -5141,9 +5081,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     storage
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Storage
                 </span>
               </a>
@@ -5154,7 +5092,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-helm"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-helm"
                 href="/"
               >
@@ -5165,13 +5103,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     class="icon"
                   />
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Helm
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -5189,7 +5125,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
             >
               <a
                 aria-current="page"
-                class="nav-item flex gaps align-center expandable active"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-user-management"
                 href="/"
               >
@@ -5203,13 +5139,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     security
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Access Control
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -5226,7 +5160,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               data-testid="sidebar-item-custom-resources"
             >
               <a
-                class="nav-item flex gaps align-center expandable"
+                class="navItem"
                 data-testid="sidebar-item-link-for-custom-resources"
                 href="/"
               >
@@ -5240,13 +5174,11 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                     extension
                   </span>
                 </i>
-                <span
-                  class="link-text box grow"
-                >
+                <span>
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expand-icon box right material focusable"
+                  class="Icon expandIcon material focusable"
                 >
                   <span
                     class="icon"
@@ -5287,7 +5219,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column KubeObjectListLayout Roles"
             >
@@ -5610,6 +5544,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                       >
                         <i
                           class="Icon material interactive focusable small"
+                          data-testid="dock-tab-close-for-terminal"
                           tabindex="0"
                         >
                           <span
@@ -5619,7 +5554,9 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
                             close
                           </span>
                         </i>
-                        <div>
+                        <div
+                          data-testid="tooltip-content-for-dock-tab-close-for-terminal"
+                        >
                           Close ⌘+W
                         </div>
                       </div>
@@ -5685,7 +5622,7 @@ exports[`Roles view/add new role dialog when add new role button is clicked with
     </div>
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center AddRoleDialog modal enter leave"
+    class="Animate opacity-scale Dialog flex center AddRoleDialog modal enter"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
