@@ -15,11 +15,13 @@ import type { HierarchicalSidebarItem } from "./sidebar-items.injectable";
 export interface TabLayoutProps {
   tabs?: HierarchicalSidebarItem[];
   children?: React.ReactNode;
+  scrollable?: boolean;
 }
 
 export const TabLayout = observer(
   ({
     tabs = [],
+    scrollable,
     children,
   }: TabLayoutProps) => {
     const hasTabs = tabs.length > 0;
@@ -50,7 +52,7 @@ export const TabLayout = observer(
           </Tabs>
         )}
 
-        <main>
+        <main className={cssNames({ scrollable })}>
           <ErrorBoundary>
             {children}
           </ErrorBoundary>

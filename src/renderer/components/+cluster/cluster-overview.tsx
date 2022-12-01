@@ -102,7 +102,7 @@ class NonInjectedClusterOverview extends React.Component<Dependencies> {
     const isMetricHidden = hostedCluster.isMetricHidden(ClusterMetricsResourceType.Cluster);
 
     return (
-      <TabLayout>
+      <TabLayout scrollable>
         <div className={styles.ClusterOverview} data-testid="cluster-overview-page">
           {this.renderClusterOverview(isLoaded, isMetricHidden)}
         </div>

@@ -273,7 +273,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class="scrollable"
+          >
             <div
               class="WorkloadsOverview flex column gaps"
               data-testid="page-for-workloads-overview"
@@ -793,7 +795,9 @@ exports[`installing helm chart from previously opened tab given tab for installi
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class="scrollable"
+          >
             <div
               class="WorkloadsOverview flex column gaps"
               data-testid="page-for-workloads-overview"

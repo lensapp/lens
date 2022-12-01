@@ -286,7 +286,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -783,7 +785,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -1450,7 +1454,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -2174,7 +2180,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -3081,7 +3089,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -3998,7 +4008,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -4905,7 +4917,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -5822,7 +5836,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"

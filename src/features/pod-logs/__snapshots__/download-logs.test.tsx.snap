@@ -273,7 +273,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class="scrollable"
+          >
             <div
               class="WorkloadsOverview flex column gaps"
               data-testid="page-for-workloads-overview"
@@ -1126,7 +1128,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class="scrollable"
+          >
             <div
               class="WorkloadsOverview flex column gaps"
               data-testid="page-for-workloads-overview"
