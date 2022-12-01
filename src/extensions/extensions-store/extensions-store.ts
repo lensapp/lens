@@ -24,7 +24,6 @@ export interface IsEnabledExtensionDescriptor {
 }
 
 export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
-  readonly displayName = "ExtensionsStore";
   constructor(deps: BaseStoreDependencies) {
     super(deps, {
       configName: "lens-extensions",

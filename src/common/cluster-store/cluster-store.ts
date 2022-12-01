@@ -27,7 +27,6 @@ interface Dependencies extends BaseStoreDependencies {
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
-  readonly displayName = "ClusterStore";
   readonly clusters = observable.map<ClusterId, Cluster>();
 
   protected readonly disposer = disposer();

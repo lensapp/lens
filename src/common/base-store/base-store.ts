@@ -40,22 +40,20 @@ export abstract class BaseStore<T extends object> {
   protected storeConfig?: Config<T>;
   protected syncDisposers: Disposer[] = [];
 
-  readonly displayName = this.params.configName;
+  readonly displayName = kebabCase(this.params.configName).toUpperCase();
 
   protected constructor(
     protected readonly dependencies: BaseStoreDependencies,
     protected readonly params: BaseStoreParams<T>,
   ) {
     makeObservable(this);
-
-    this.displayName = this.params.configName;
   }
 
   /**
    * This must be called after the last child's constructor is finished (or just before it finishes)
    */
   load() {
-    this.dependencies.logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADING ...`);
+    this.dependencies.logger.info(`[${this.displayName}]: LOADING ...`);
     this.storeConfig = this.dependencies.getConfigurationFileModel({
       projectName: "lens",
       projectVersion: this.dependencies.storeMigrationVersion,
@@ -71,7 +69,7 @@ export abstract class BaseStore<T extends object> {
     }
 
     this.enableSync();
-    this.dependencies.logger.info(`[${kebabCase(this.displayName).toUpperCase()}]: LOADED from ${this.path}`);
+    this.dependencies.logger.info(`[${this.displayName}]: LOADED from ${this.path}`);
   }
 
   get name() {
@@ -95,7 +93,7 @@ export abstract class BaseStore<T extends object> {
   }
 
   protected saveToFile(model: T) {
-    this.dependencies.logger.info(`[STORE]: SAVING ${this.path}`);
+    this.dependencies.logger.info(`[${this.displayName}]: SAVING ${this.path}`);
 
     // todo: update when fixed https://github.com/sindresorhus/conf/issues/114
     if (this.storeConfig) {
@@ -116,14 +114,14 @@ export abstract class BaseStore<T extends object> {
 
     if (ipcMain) {
       this.syncDisposers.push(ipcMainOn(this.syncMainChannel, (event, model: T) => {
-        this.dependencies.logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
+        this.dependencies.logger.silly(`[${this.displayName}]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
       }));
     }
 
     if (ipcRenderer) {
       this.syncDisposers.push(ipcRendererOn(this.syncRendererChannel, (event, model: T) => {
-        this.dependencies.logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
+        this.dependencies.logger.silly(`[${this.displayName}]: SYNC ${this.name} from main`, { model });
         this.onSyncFromMain(model);
       }));
     }

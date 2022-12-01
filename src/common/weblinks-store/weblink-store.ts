@@ -27,7 +27,6 @@ export interface WeblinkStoreModel {
 }
 
 export class WeblinkStore extends BaseStore<WeblinkStoreModel> {
-  readonly displayName = "WeblinkStore";
   @observable weblinks: WeblinkData[] = [];
 
   constructor(deps: BaseStoreDependencies) {

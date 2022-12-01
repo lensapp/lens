@@ -63,7 +63,6 @@ export abstract class ExtensionStore<T extends object> extends BaseStore<T> {
     ExtensionStore.instances.delete(this);
   }
 
-  readonly displayName = "ExtensionStore<T>";
   protected extension?: LensExtension;
 
   loadExtension(extension: LensExtension) {

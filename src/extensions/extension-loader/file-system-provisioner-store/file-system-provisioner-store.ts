@@ -25,7 +25,6 @@ interface Dependencies extends BaseStoreDependencies {
 }
 
 export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
-  readonly displayName = "FilesystemProvisionerStore";
   readonly registeredExtensions = observable.map<LensExtensionId, string>();
 
   constructor(protected readonly dependencies: Dependencies) {
