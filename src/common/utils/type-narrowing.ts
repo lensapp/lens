@@ -150,7 +150,7 @@ export function hasDefiniteField<Field extends keyof T, T>(field: Field): (val: 
   return (val): val is T & { [f in Field]-?: NonNullable<T[Field]> } => val[field] != null;
 }
 
-export function isPromiseLike(res: unknown): res is (Promise<unknown> | { then: () => unknown }) {
+export function isPromiseLike(res: unknown): res is (Promise<unknown> | { then: (fn: (val: unknown) => any) => Promise<unknown> }) {
   if (res instanceof Promise) {
     return true;
   }
