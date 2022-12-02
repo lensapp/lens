@@ -29,6 +29,7 @@ const fsInjectable = getInjectable({
       writeJsonSync,
       pathExistsSync,
       pathExists,
+      copy,
     } = fse;
 
     return {
@@ -46,6 +47,7 @@ const fsInjectable = getInjectable({
       lstat,
       rm,
       access,
+      copy: copy as (src: string, dest: string, options?: fse.CopyOptions) => Promise<void>,
     };
   },
   causesSideEffects: true,

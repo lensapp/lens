@@ -5,7 +5,10 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import fsInjectable from "../common/fs/fs.injectable";
 import { createFsFromVolume, Volume } from "memfs";
-import type { readJsonSync as readJsonSyncImpl, writeJsonSync as writeJsonSyncImpl } from "fs-extra";
+import type {
+  readJsonSync as readJsonSyncImpl,
+  writeJsonSync as writeJsonSyncImpl,
+} from "fs-extra";
 
 export const getOverrideFsWithFakes = () => {
   const root = createFsFromVolume(Volume.fromJSON({}));
@@ -46,6 +49,7 @@ export const getOverrideFsWithFakes = () => {
       lstat: root.promises.lstat as any,
       rm: root.promises.rm,
       access: root.promises.access,
+      copy: async (src, dest) => { throw new Error(`Tried to copy '${src}' to '${dest}'. Copying is not yet supported`); },
     }));
   };
 };
