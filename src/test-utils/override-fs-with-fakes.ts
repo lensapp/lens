@@ -8,21 +8,29 @@ import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../common/fs/path-exists.injectable";
 import deleteFileInjectable from "../common/fs/delete-file.injectable";
+import writeJsonSyncInjectable from "../common/fs/write-json-sync.injectable";
+import readJsonSyncInjectable from "../common/fs/read-json-sync.injectable";
 
 export const overrideFsWithFakes = (di: DiContainer, state = new Map()) => {
   const readFile = readFileFor(state);
 
-  di.override(readFileInjectable, () => readFile);
+  di.override(readFileInjectable, () => async (filePath) => readFile(filePath));
   di.override(writeJsonFileInjectable, () => (
     async (filePath, contents) => {
       state.set(filePath, JSON.stringify(contents));
     }
   ));
   di.override(readJsonFileInjectable, () => (
-    async (filePath: string) => JSON.parse(await readFile(filePath))
+    async (filePath: string) => JSON.parse(readFile(filePath))
+  ));
+  di.override(writeJsonSyncInjectable, () => (
+    (filePath, data) => state.set(filePath, JSON.stringify(data))
+  ));
+  di.override(readJsonSyncInjectable, () => (
+    (filePath) => JSON.parse(readFile(filePath))
   ));
   di.override(pathExistsInjectable, () => (
-    (filePath: string) => Promise.resolve(state.has(filePath))
+    async (filePath: string) => state.has(filePath)
   ));
   di.override(deleteFileInjectable, () => async (filePath: string) => {
     state.delete(filePath);
@@ -40,5 +48,5 @@ const readFileFor = (state: Map<string, string>) => (filePath: string) => {
     );
   }
 
-  return Promise.resolve(fileContent);
+  return fileContent;
 };
