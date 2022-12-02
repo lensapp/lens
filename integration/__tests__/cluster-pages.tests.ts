@@ -127,11 +127,11 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       await showPreviousCheckbox.click();
 
-      const showWrapLogsCheckbox = await frame.waitForSelector(
+      await frame.waitForSelector(
         "[data-testid='log-controls'] .wrap-logs",
       );
 
-      await showWrapLogsCheckbox.click();
+      // await showWrapLogsCheckbox.click();
     },
     10 * 60 * 1000,
   );
@@ -193,7 +193,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       expect(lineBoundingBox?.height).toBeLessThan(30);
 
-      await frame.check(".wrap-logs input")
+      await frame.click(".wrap-logs")
       await frame.waitForTimeout(5000);
 
       const wrappedLogLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index='0'] > div");
