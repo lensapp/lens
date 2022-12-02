@@ -6,7 +6,6 @@
 // Move embedded kubeconfig into separate file and add reference to it to cluster settings
 // convert file path cluster icons to their base64 encoded versions
 
-import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getCustomKubeConfigDirectoryInjectable from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import type { ClusterModel } from "../../../common/cluster-types";
@@ -20,32 +19,26 @@ interface Pre360ClusterModel extends ClusterModel {
 
 import { getInjectable } from "@ogre-tools/injectable";
 import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-store/migration-token";
-import fsInjectable from "../../../common/fs/fs.injectable";
 import readFileBufferSyncInjectable from "../../../common/fs/read-file-buffer-sync.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import writeFileSyncInjectable from "../../../common/fs/write-file-sync.injectable";
 
 const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
   id: "v3.6.0-beta.1-cluster-store-migration",
   instantiate: (di) => {
     const userDataPath = di.inject(directoryForUserDataInjectable);
-    const kubeConfigsPath = di.inject(directoryForKubeConfigsInjectable);
     const getCustomKubeConfigDirectory = di.inject(getCustomKubeConfigDirectoryInjectable);
     const readFileSync = di.inject(readFileSyncInjectable);
     const readFileBufferSync = di.inject(readFileBufferSyncInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
     const logger = di.inject(loggerInjectable);
-    const {
-      ensureDirSync,
-      writeFileSync,
-    } = di.inject(fsInjectable);
+    const writeFileSync = di.inject(writeFileSyncInjectable);
 
     return {
       version: "3.6.0-beta.1",
       run: (store) => {
         const storedClusters = (store.get("clusters") ?? []) as Pre360ClusterModel[];
         const migratedClusters: ClusterModel[] = [];
-
-        ensureDirSync(kubeConfigsPath);
 
         logger.info("Number of clusters to migrate: ", storedClusters.length);
 
@@ -61,7 +54,7 @@ const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
             }
 
             // take the embedded kubeconfig and dump it into a file
-            writeFileSync(absPath, clusterModel.kubeConfig, { encoding: "utf-8", mode: 0o600 });
+            writeFileSync(absPath, clusterModel.kubeConfig);
 
             clusterModel.kubeConfigPath = absPath;
             clusterModel.contextName = loadConfigFromString(readFileSync(absPath)).config.getCurrentContext();

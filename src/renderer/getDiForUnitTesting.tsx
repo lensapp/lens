@@ -9,7 +9,7 @@ import { createContainer, isInjectable } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
-import { overrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
+import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import { createMemoryHistory } from "history";
 import focusWindowInjectable from "./navigation/focus-window.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
@@ -140,7 +140,7 @@ export const getDiForUnitTesting = (
 
     di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));
 
-    overrideFsWithFakes(di);
+    getOverrideFsWithFakes()(di);
 
     di.override(focusWindowInjectable, () => () => {});
 

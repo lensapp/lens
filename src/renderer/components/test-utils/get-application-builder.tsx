@@ -63,7 +63,7 @@ import type { FakeExtensionOptions } from "./get-extension-fake";
 import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
-import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
+import { getOverrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
 import applicationMenuItemCompositeInjectable from "../../../features/application-menu/main/application-menu-item-composite.injectable";
 import { getCompositePaths } from "../../../common/utils/composite/get-composite-paths/get-composite-paths";
 import { discoverFor } from "./discovery-of-html-elements";
@@ -173,9 +173,9 @@ export const getApplicationBuilder = () => {
   const beforeWindowStartCallbacks: Callback[] = [];
   const afterWindowStartCallbacks: Callback[] = [];
 
-  const fsState = new Map();
+  const overrideFsWithFakes = getOverrideFsWithFakes();
 
-  overrideFsWithFakes(mainDi, fsState);
+  overrideFsWithFakes(mainDi);
 
   let environment = environments.application;
 
@@ -210,7 +210,7 @@ export const getApplicationBuilder = () => {
     const windowDi = getRendererDi({ doGeneralOverrides: true });
 
     overrideForWindow(windowDi, windowId);
-    overrideFsWithFakes(windowDi, fsState);
+    overrideFsWithFakes(windowDi);
 
     runInAction(() => {
       windowDi.register(rendererExtensionsStateInjectable);

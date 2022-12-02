@@ -25,8 +25,8 @@ import type { WriteFile } from "../../common/fs/write-file.injectable";
 import writeFileInjectable from "../../common/fs/write-file.injectable";
 import type { PathExists } from "../../common/fs/path-exists.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
-import type { DeleteFile } from "../../common/fs/delete-file.injectable";
-import deleteFileInjectable from "../../common/fs/delete-file.injectable";
+import type { RemovePath } from "../../common/fs/remove.injectable";
+import removePathInjectable from "../../common/fs/remove.injectable";
 
 const clusterServerUrl = "https://192.168.64.3:8443";
 
@@ -36,7 +36,7 @@ describe("kubeconfig manager tests", () => {
   let di: DiContainer;
   let loggerMock: jest.Mocked<Logger>;
   let readFileMock: AsyncFnMock<ReadFile>;
-  let deleteFileMock: AsyncFnMock<DeleteFile>;
+  let deleteFileMock: AsyncFnMock<RemovePath>;
   let writeFileMock: AsyncFnMock<WriteFile>;
   let pathExistsMock: AsyncFnMock<PathExists>;
   let kubeConfManager: KubeconfigManager;
@@ -58,7 +58,7 @@ describe("kubeconfig manager tests", () => {
     pathExistsMock = asyncFn();
     di.override(pathExistsInjectable, () => pathExistsMock);
     deleteFileMock = asyncFn();
-    di.override(deleteFileInjectable, () => deleteFileMock);
+    di.override(removePathInjectable, () => deleteFileMock);
 
     loggerMock = {
       warn: jest.fn(),

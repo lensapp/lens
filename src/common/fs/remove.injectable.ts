@@ -5,11 +5,11 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import fsInjectable from "./fs.injectable";
 
-export type DeleteFile = (filePath: string) => Promise<void>;
+export type RemovePath = (filePath: string) => Promise<void>;
 
-const deleteFileInjectable = getInjectable({
-  id: "delete-file",
-  instantiate: (di): DeleteFile => di.inject(fsInjectable).unlink,
+const removePathInjectable = getInjectable({
+  id: "remove-path",
+  instantiate: (di): RemovePath => di.inject(fsInjectable).rm,
 });
 
-export default deleteFileInjectable;
+export default removePathInjectable;

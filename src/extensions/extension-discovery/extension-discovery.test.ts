@@ -15,7 +15,7 @@ import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import watchInjectable from "../../common/fs/watch/watch.injectable";
 import extensionApiVersionInjectable from "../../common/vars/extension-api-version.injectable";
-import removePathInjectable from "../../common/fs/remove-path.injectable";
+import removePathInjectable from "../../common/fs/remove.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";

@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
-import deleteFileInjectable from "../../common/fs/delete-file.injectable";
+import removePathInjectable from "../../common/fs/remove.injectable";
 import execFileInjectable from "../../common/fs/exec-file.injectable";
 import writeFileInjectable from "../../common/fs/write-file.injectable";
 import loggerInjectable from "../../common/logger.injectable";
@@ -19,7 +19,7 @@ const createResourceApplierInjectable = getInjectable({
   id: "create-resource-applier",
   instantiate: (di): CreateResourceApplier => {
     const deps: ResourceApplierDependencies = {
-      deleteFile: di.inject(deleteFileInjectable),
+      deleteFile: di.inject(removePathInjectable),
       emitAppEvent: di.inject(emitAppEventInjectable),
       execFile: di.inject(execFileInjectable),
       joinPaths: di.inject(joinPathsInjectable),

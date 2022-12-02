@@ -4,8 +4,8 @@
  */
 
 import { getGlobalOverride } from "../test-utils/get-global-override";
-import removePathInjectable from "./remove-path.injectable";
+import removePathInjectable from "./remove.injectable";
 
 export default getGlobalOverride(removePathInjectable, () => async () => {
-  throw new Error("tried to remove a path without override");
+  throw new Error("tried to remove path without override");
 });

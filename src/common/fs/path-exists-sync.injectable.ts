@@ -5,11 +5,9 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import fsInjectable from "./fs.injectable";
 
-export type RemovePath = (path: string) => Promise<void>;
-
-const removePathInjectable = getInjectable({
-  id: "remove-path",
-  instantiate: (di): RemovePath => di.inject(fsInjectable).remove,
+const pathExistsSyncInjectable = getInjectable({
+  id: "path-exists-sync",
+  instantiate: (di) => di.inject(fsInjectable).pathExistsSync,
 });
 
-export default removePathInjectable;
+export default pathExistsSyncInjectable;

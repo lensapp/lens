@@ -6,7 +6,7 @@ import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.
 import clusterFramesInjectable from "../../../../common/cluster-frames.injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
-import deleteFileInjectable from "../../../../common/fs/delete-file.injectable";
+import removePathInjectable from "../../../../common/fs/remove.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import { noop } from "../../../../common/utils";
 import { getRequestChannelListenerInjectable } from "../../../../main/utils/channel/channel-listeners/listener-tokens";
@@ -20,7 +20,7 @@ const deleteClusterChannelListenerInjectable = getRequestChannelListenerInjectab
     const clusterFrames = di.inject(clusterFramesInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
     const directoryForLensLocalStorage = di.inject(directoryForLensLocalStorageInjectable);
-    const deleteFile = di.inject(deleteFileInjectable);
+    const deleteFile = di.inject(removePathInjectable);
 
     return async (clusterId) => {
       emitAppEvent({ name: "cluster", action: "remove" });

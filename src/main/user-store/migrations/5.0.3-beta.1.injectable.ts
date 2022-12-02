@@ -15,8 +15,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { userStoreMigrationInjectionToken } from "../../../common/user-store/migrations-token";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
-import fsInjectable from "../../../common/fs/fs.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
 
 const v503Beta1UserStoreMigrationInjectable = getInjectable({
   id: "v5.0.3-beta.1-user-store-migration",
@@ -29,7 +29,7 @@ const v503Beta1UserStoreMigrationInjectable = getInjectable({
     const getDirnameOfPath = di.inject(getDirnameOfPathInjectable);
     const readJsonSync = di.inject(readJsonSyncInjectable);
     const homeDirectoryPath = di.inject(homeDirectoryPathInjectable);
-    const { existsSync } = di.inject(fsInjectable);
+    const pathExistsSync = di.inject(pathExistsSyncInjectable);
 
     return {
       version: "5.0.3-beta.1",
@@ -63,7 +63,7 @@ const v503Beta1UserStoreMigrationInjectable = getInjectable({
               continue;
             }
 
-            if (!existsSync(cluster.kubeConfigPath)) {
+            if (!pathExistsSync(cluster.kubeConfigPath)) {
               logger.info(`Skipping ${cluster.id} because kubeConfigPath no longer exists`);
               continue;
             }

@@ -10,8 +10,8 @@ import applicationInformationInjectable from "../../../common/vars/application-i
 import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-store/migration-token";
 import loggerInjectable from "../../../common/logger.injectable";
 import isSnapPackageInjectable from "../../../common/vars/is-snap-package.injectable";
-import fsInjectable from "../../../common/fs/fs.injectable";
 import type { ClusterModel } from "../../../common/cluster-types";
+import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
 
 const clusterStoreSnapMigrationInjectable = getInjectable({
   id: "cluster-store-snap-migration",
@@ -19,7 +19,7 @@ const clusterStoreSnapMigrationInjectable = getInjectable({
     const { version } = di.inject(applicationInformationInjectable);
     const logger = di.inject(loggerInjectable);
     const isSnapPackage = di.inject(isSnapPackageInjectable);
-    const { existsSync } = di.inject(fsInjectable);
+    const pathExistsSync = di.inject(pathExistsSyncInjectable);
 
     return {
       version, // Run always after upgrade
@@ -39,7 +39,7 @@ const clusterStoreSnapMigrationInjectable = getInjectable({
             /**
              * replace snap version with 'current' in kubeconfig path
              */
-            if (!existsSync(cluster.kubeConfigPath)) {
+            if (!pathExistsSync(cluster.kubeConfigPath)) {
               const kubeconfigPath = cluster.kubeConfigPath.replace(/\/snap\/kontena-lens\/[0-9]*\//, "/snap/kontena-lens/current/");
 
               cluster.kubeConfigPath = kubeconfigPath;
