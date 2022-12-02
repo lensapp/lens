@@ -188,19 +188,15 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await frame.click(".MenuItem >> text=Logs");
 
       await frame.waitForSelector(".Dock.isOpen");
-      const logLine = await frame.getByTestId("log-row-0");
-
-      expect(logLine).toHaveStyle({
-        "white-space": "nowrap",
-      });
+      const logLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index='0']");
+      
+      expect(logLine.asElement()).toHaveStyle({ "white-space": "nowrap" });
 
       await frame.click("[data-testid='log-controls'] .wrap-logs");
 
-      const wrappedLogLine = await frame.getByTestId("log-row-0");
-      
-      expect(wrappedLogLine).toHaveStyle({
-        "white-space": "normal",
-      });
+      const wrappedLogLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index='0']");
+
+      expect(wrappedLogLine.asElement()).toHaveStyle({ "white-space": "normal" });
     },
     10 * 60 * 1000,
   );

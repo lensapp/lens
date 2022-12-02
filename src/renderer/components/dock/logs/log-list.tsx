@@ -80,7 +80,6 @@ export const LogList = observer(({ model }: LogListProps) => {
           <div
             key={virtualRow.index + uniqRowKey}
             data-index={virtualRow.index}
-            data-testid={`log-row-${virtualRow.index}`}
             ref={rowVirtualizer.measureElement}
             style={{
               transform: `translateY(${virtualRow.start}px)`,
