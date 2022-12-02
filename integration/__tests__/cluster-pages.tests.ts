@@ -189,8 +189,10 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       await frame.waitForSelector(".Dock.isOpen");
       const logLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index='0']");
+      // @ts-ignore
+      const lineContents = logLine.getByText("text");
       
-      expect(logLine.asElement()).toHaveStyle({ "white-space": "nowrap" });
+      expect(lineContents).toHaveStyle({ "white-space": "nowrap" });
 
       await frame.click("[data-testid='log-controls'] .wrap-logs");
 
