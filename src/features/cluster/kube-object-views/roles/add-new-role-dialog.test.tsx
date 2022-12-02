@@ -11,6 +11,7 @@ import { computed } from "mobx";
 import type { PartialDeep } from "type-fest";
 import { Role } from "../../../../common/k8s-api/endpoints";
 import type { ResourceDescriptor } from "../../../../common/k8s-api/kube-api";
+import { useFakeTime } from "../../../../common/test-utils/use-fake-time";
 import namespacesInjectable from "../../../../renderer/components/+namespaces/namespaces.injectable";
 import navigateToRolesViewInjectable from "../../../../renderer/components/+user-management/+roles/navigate-to.injectable";
 import roleStoreInjectable from "../../../../renderer/components/+user-management/+roles/store.injectable";
@@ -32,6 +33,8 @@ describe("Roles view/add new role dialog", () => {
     applicationBuilder = getApplicationBuilder();
     applicationBuilder.setEnvironmentToClusterFrame();
     applicationBuilder.allowKubeResource("roles");
+
+    useFakeTime();
 
     applicationBuilder.beforeWindowStart((windowDi) => {
       windowDi.override(namespacesInjectable, () => computed(() => (
