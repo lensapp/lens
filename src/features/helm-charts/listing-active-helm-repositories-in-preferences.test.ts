@@ -16,6 +16,7 @@ import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
 import requestPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
+import { noop } from "../../common/utils";
 
 describe("listing active helm repositories in preferences", () => {
   let builder: ApplicationBuilder;
@@ -32,7 +33,13 @@ describe("listing active helm repositories in preferences", () => {
     execFileMock = asyncFn();
     showErrorNotificationMock = jest.fn();
 
-    loggerStub = { error: jest.fn() } as unknown as Logger;
+    loggerStub = {
+      error: jest.fn(),
+      debug: noop,
+      info: noop,
+      silly: noop,
+      warn: noop,
+    };
 
     builder.beforeApplicationStart((mainDi) => {
       mainDi.override(readYamlFileInjectable, () => readYamlFileMock);
