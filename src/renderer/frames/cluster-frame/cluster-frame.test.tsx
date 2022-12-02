@@ -25,6 +25,7 @@ import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluste
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { useFakeTime } from "../../../common/test-utils/use-fake-time";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
+import authHeaderValueInjectable from "../../auth/auth-header.injectable";
 
 describe("<ClusterFrame />", () => {
   let render: () => RenderResult;
@@ -44,6 +45,7 @@ describe("<ClusterFrame />", () => {
     di.override(subscribeStoresInjectable, () => jest.fn().mockImplementation(() => jest.fn()));
     di.override(legacyOnChannelListenInjectable, () => jest.fn().mockImplementation(() => jest.fn()));
     di.override(directoryForUserDataInjectable, () => "/some/irrelavent/path");
+    di.override(authHeaderValueInjectable, () => "some-auth-header-value");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.override(currentlyInClusterFrameInjectable, () => true);
 
