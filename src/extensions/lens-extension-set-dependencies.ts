@@ -12,9 +12,11 @@ import type { CatalogEntityRegistry as RendererCatalogEntityRegistry } from "../
 import type { GetExtensionPageParameters } from "../renderer/routes/get-extension-page-parameters.injectable";
 import type { FileSystemProvisionerStore } from "./extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import type { NavigateForExtension } from "../main/start-main-application/lens-window/navigate-for-extension.injectable";
+import type { Logger } from "../common/logger";
 
 export interface LensExtensionDependencies {
   readonly fileSystemProvisionerStore: FileSystemProvisionerStore;
+  readonly logger: Logger;
 }
 
 export interface LensMainExtensionDependencies extends LensExtensionDependencies {

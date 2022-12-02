@@ -5,7 +5,6 @@
 
 import type { InstalledExtension } from "./extension-discovery/extension-discovery";
 import { action, computed, makeObservable, observable } from "mobx";
-import logger from "../main/logger";
 import type { PackageJson } from "type-fest";
 import { disposer } from "../common/utils";
 import type { LensExtensionDependencies } from "./lens-extension-set-dependencies";
@@ -92,13 +91,8 @@ export class LensExtension<Dependencies extends LensExtensionDependencies = Lens
       return;
     }
 
-    try {
-      this._isEnabled = true;
-      logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
-
-    } catch (error) {
-      logger.error(`[EXTENSION]: failed to activate ${this.name}@${this.version}: ${error}`);
-    }
+    this._isEnabled = true;
+    this[lensExtensionDependencies].logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
   }
 
   @action
@@ -112,9 +106,9 @@ export class LensExtension<Dependencies extends LensExtensionDependencies = Lens
     try {
       await this.onDeactivate();
       this[Disposers]();
-      logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
+      this[lensExtensionDependencies].logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
     } catch (error) {
-      logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
+      this[lensExtensionDependencies].logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
     }
   }
 
