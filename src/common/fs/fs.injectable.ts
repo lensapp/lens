@@ -32,6 +32,7 @@ const fsInjectable = getInjectable({
       pathExistsSync,
       pathExists,
       copy,
+      createReadStream,
     } = fse;
 
     return {
@@ -52,6 +53,7 @@ const fsInjectable = getInjectable({
       copy: copy as (src: string, dest: string, options?: fse.CopyOptions) => Promise<void>,
       ensureDir: ensureDir as (path: string, options?: number | fse.EnsureOptions ) => Promise<void>,
       ensureDirSync,
+      createReadStream,
     };
   },
   causesSideEffects: true,

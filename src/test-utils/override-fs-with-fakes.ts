@@ -60,6 +60,7 @@ export const getOverrideFsWithFakes = () => {
       copy: async (src, dest) => { throw new Error(`Tried to copy '${src}' to '${dest}'. Copying is not yet supported`); },
       ensureDir: async (path, opts) => ensureDirSync(path, opts),
       ensureDirSync,
+      createReadStream: root.createReadStream as any,
     }));
   };
 };
