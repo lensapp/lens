@@ -136,7 +136,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     10 * 60 * 1000,
   );
 
-  it(
+  it.only(
     "should create a pod with logs and wrap log lines",
     async () => {
       await navigateToPods(frame);
@@ -189,16 +189,18 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       await frame.waitForSelector(".Dock.isOpen");
       const logLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index='0']");
-      // @ts-ignore
-      const lineContents = logLine.getByText("text");
-      
-      expect(lineContents).toHaveStyle({ "white-space": "nowrap" });
+      const lineBoundingBox = await logLine.boundingBox();
+
+      expect(lineBoundingBox?.height).toBeLessThan(20);
+      expect(lineBoundingBox?.width).toBeLessThan(30);
 
       await frame.click("[data-testid='log-controls'] .wrap-logs");
-
+      await frame.waitForTimeout(3000);
       const wrappedLogLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index='0']");
+      const wrappedLineBoundingBox = await wrappedLogLine.boundingBox();
 
-      expect(wrappedLogLine.asElement()).toHaveStyle({ "white-space": "normal" });
+      expect(wrappedLineBoundingBox?.height).toBeGreaterThan(30);
+      expect(wrappedLineBoundingBox?.width).toBeLessThan(30);
     },
     10 * 60 * 1000,
   );
