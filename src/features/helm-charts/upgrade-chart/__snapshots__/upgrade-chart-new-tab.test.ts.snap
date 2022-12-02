@@ -323,19 +323,19 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespace: my-second-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -361,11 +361,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -985,19 +985,19 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespace: my-second-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -1023,11 +1023,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -1744,19 +1744,19 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespace: my-second-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -1782,11 +1782,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -2557,19 +2557,19 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespace: my-second-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -2595,11 +2595,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -3406,19 +3406,19 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespace: my-second-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -3444,11 +3444,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -3978,18 +3978,18 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="css-1f43avz-a11yText-A11yText"
                       />
                       <div
-                        class="Select__control css-1s2u09g-control"
+                        class="Select__control css-13cymwt-control"
                       >
                         <div
-                          class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
+                          class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                         >
                           <div
-                            class="Select__single-value css-qc6sy-singleValue"
+                            class="Select__single-value css-1dimb5e-singleValue"
                           >
                             some-repo/some-chart-1.0.1
                           </div>
                           <div
-                            class="Select__input-container css-6j8wv5-Input"
+                            class="Select__input-container css-qbdosj-Input"
                             data-value=""
                           >
                             <input
@@ -4014,11 +4014,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                           class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                         >
                           <span
-                            class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                            class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                           />
                           <div
                             aria-hidden="true"
-                            class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                            class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                           >
                             <svg
                               aria-hidden="true"
@@ -4395,19 +4395,19 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespace: my-second-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -4433,11 +4433,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -4967,18 +4967,18 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="css-1f43avz-a11yText-A11yText"
                       />
                       <div
-                        class="Select__control css-1s2u09g-control"
+                        class="Select__control css-13cymwt-control"
                       >
                         <div
-                          class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
+                          class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                         >
                           <div
-                            class="Select__single-value css-qc6sy-singleValue"
+                            class="Select__single-value css-1dimb5e-singleValue"
                           >
                             some-repo/some-chart-1.0.1
                           </div>
                           <div
-                            class="Select__input-container css-6j8wv5-Input"
+                            class="Select__input-container css-qbdosj-Input"
                             data-value=""
                           >
                             <input
@@ -5003,11 +5003,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                           class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                         >
                           <span
-                            class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                            class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                           />
                           <div
                             aria-hidden="true"
-                            class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                            class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                           >
                             <svg
                               aria-hidden="true"
@@ -5386,19 +5386,19 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespace: my-second-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -5424,11 +5424,11 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"

@@ -21,19 +21,19 @@ exports[`<NamespaceSelectFilter /> renders 1`] = `
           class="css-1f43avz-a11yText-A11yText"
         />
         <div
-          class="Select__control css-1s2u09g-control"
+          class="Select__control css-13cymwt-control"
         >
           <div
-            class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+            class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
           >
             <div
-              class="Select__placeholder css-14el2xx-placeholder"
+              class="Select__placeholder css-1jqq78o-placeholder"
               id="react-select-namespace-select-filter-placeholder"
             >
               All namespaces
             </div>
             <div
-              class="Select__input-container css-6j8wv5-Input"
+              class="Select__input-container css-qbdosj-Input"
               data-value=""
             >
               <input
@@ -59,11 +59,11 @@ exports[`<NamespaceSelectFilter /> renders 1`] = `
             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
           >
             <span
-              class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+              class="Select__indicator-separator css-1u9des2-indicatorSeparator"
             />
             <div
               aria-hidden="true"
-              class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+              class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
             >
               <svg
                 aria-hidden="true"
@@ -107,19 +107,19 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
           class="css-1f43avz-a11yText-A11yText"
         />
         <div
-          class="Select__control Select__control--menu-is-open css-1s2u09g-control"
+          class="Select__control Select__control--menu-is-open css-13cymwt-control"
         >
           <div
-            class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+            class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
           >
             <div
-              class="Select__placeholder css-14el2xx-placeholder"
+              class="Select__placeholder css-1jqq78o-placeholder"
               id="react-select-namespace-select-filter-placeholder"
             >
               All namespaces
             </div>
             <div
-              class="Select__input-container css-6j8wv5-Input"
+              class="Select__input-container css-qbdosj-Input"
               data-value=""
             >
               <input
@@ -147,11 +147,11 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
           >
             <span
-              class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+              class="Select__indicator-separator css-1u9des2-indicatorSeparator"
             />
             <div
               aria-hidden="true"
-              class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+              class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
             >
               <svg
                 aria-hidden="true"
@@ -175,15 +175,15 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
     class="Select__menu-portal css-1no2yl0-MenuPortal"
   >
     <div
-      class="NamespaceSelectFilterMenu theme-dark namespace-select-filter-options Select__menu css-26l3qy-menu"
+      class="NamespaceSelectFilterMenu theme-dark namespace-select-filter-options Select__menu css-1nmdiq5-menu"
       id="react-select-namespace-select-filter-listbox"
     >
       <div
-        class="Select__menu-list Select__menu-list--is-multi css-4ljt47-MenuList"
+        class="Select__menu-list Select__menu-list--is-multi css-1n6sfyn-MenuList"
       >
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-focused css-1n7v3ny-option"
+          class="Select__option Select__option--is-focused css-d7l1ni-option"
           id="react-select-namespace-select-filter-option-0"
           tabindex="-1"
         >
@@ -191,7 +191,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-1"
           tabindex="-1"
         >
@@ -226,7 +226,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-2"
           tabindex="-1"
         >
@@ -261,7 +261,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-3"
           tabindex="-1"
         >
@@ -296,7 +296,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-4"
           tabindex="-1"
         >
@@ -331,7 +331,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-5"
           tabindex="-1"
         >
@@ -366,7 +366,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-6"
           tabindex="-1"
         >
@@ -401,7 +401,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-7"
           tabindex="-1"
         >
@@ -436,7 +436,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-8"
           tabindex="-1"
         >
@@ -471,7 +471,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-9"
           tabindex="-1"
         >
@@ -506,7 +506,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-10"
           tabindex="-1"
         >
@@ -541,7 +541,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-11"
           tabindex="-1"
         >
@@ -576,7 +576,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-12"
           tabindex="-1"
         >
@@ -611,7 +611,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-13"
           tabindex="-1"
         >
@@ -671,19 +671,19 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked renders
           class="css-1f43avz-a11yText-A11yText"
         />
         <div
-          class="Select__control css-1s2u09g-control"
+          class="Select__control css-13cymwt-control"
         >
           <div
-            class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+            class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
           >
             <div
-              class="Select__placeholder css-14el2xx-placeholder"
+              class="Select__placeholder css-1jqq78o-placeholder"
               id="react-select-namespace-select-filter-placeholder"
             >
               Namespace: test-2
             </div>
             <div
-              class="Select__input-container css-6j8wv5-Input"
+              class="Select__input-container css-qbdosj-Input"
               data-value=""
             >
               <input
@@ -709,11 +709,11 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked renders
             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
           >
             <span
-              class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+              class="Select__indicator-separator css-1u9des2-indicatorSeparator"
             />
             <div
               aria-hidden="true"
-              class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+              class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
             >
               <svg
                 aria-hidden="true"
@@ -757,19 +757,19 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
           class="css-1f43avz-a11yText-A11yText"
         />
         <div
-          class="Select__control Select__control--menu-is-open css-1s2u09g-control"
+          class="Select__control Select__control--menu-is-open css-13cymwt-control"
         >
           <div
-            class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+            class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
           >
             <div
-              class="Select__placeholder css-14el2xx-placeholder"
+              class="Select__placeholder css-1jqq78o-placeholder"
               id="react-select-namespace-select-filter-placeholder"
             >
               Namespace: test-2
             </div>
             <div
-              class="Select__input-container css-6j8wv5-Input"
+              class="Select__input-container css-qbdosj-Input"
               data-value=""
             >
               <input
@@ -797,11 +797,11 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
           >
             <span
-              class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+              class="Select__indicator-separator css-1u9des2-indicatorSeparator"
             />
             <div
               aria-hidden="true"
-              class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+              class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
             >
               <svg
                 aria-hidden="true"
@@ -825,15 +825,15 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
     class="Select__menu-portal css-1no2yl0-MenuPortal"
   >
     <div
-      class="NamespaceSelectFilterMenu theme-dark namespace-select-filter-options Select__menu css-26l3qy-menu"
+      class="NamespaceSelectFilterMenu theme-dark namespace-select-filter-options Select__menu css-1nmdiq5-menu"
       id="react-select-namespace-select-filter-listbox"
     >
       <div
-        class="Select__menu-list Select__menu-list--is-multi css-4ljt47-MenuList"
+        class="Select__menu-list Select__menu-list--is-multi css-1n6sfyn-MenuList"
       >
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-focused css-1n7v3ny-option"
+          class="Select__option Select__option--is-focused css-d7l1ni-option"
           id="react-select-namespace-select-filter-option-0"
           tabindex="-1"
         >
@@ -841,7 +841,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-1"
           tabindex="-1"
         >
@@ -876,7 +876,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-2"
           tabindex="-1"
         >
@@ -900,7 +900,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-3"
           tabindex="-1"
         >
@@ -924,7 +924,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-4"
           tabindex="-1"
         >
@@ -948,7 +948,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-5"
           tabindex="-1"
         >
@@ -972,7 +972,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-6"
           tabindex="-1"
         >
@@ -996,7 +996,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-7"
           tabindex="-1"
         >
@@ -1020,7 +1020,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-8"
           tabindex="-1"
         >
@@ -1044,7 +1044,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-9"
           tabindex="-1"
         >
@@ -1068,7 +1068,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-10"
           tabindex="-1"
         >
@@ -1092,7 +1092,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-11"
           tabindex="-1"
         >
@@ -1116,7 +1116,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-12"
           tabindex="-1"
         >
@@ -1140,7 +1140,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-13"
           tabindex="-1"
         >
@@ -1189,19 +1189,19 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
           class="css-1f43avz-a11yText-A11yText"
         />
         <div
-          class="Select__control css-1s2u09g-control"
+          class="Select__control css-13cymwt-control"
         >
           <div
-            class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+            class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
           >
             <div
-              class="Select__placeholder css-14el2xx-placeholder"
+              class="Select__placeholder css-1jqq78o-placeholder"
               id="react-select-namespace-select-filter-placeholder"
             >
               Namespace: test-1
             </div>
             <div
-              class="Select__input-container css-6j8wv5-Input"
+              class="Select__input-container css-qbdosj-Input"
               data-value=""
             >
               <input
@@ -1227,11 +1227,11 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
           >
             <span
-              class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+              class="Select__indicator-separator css-1u9des2-indicatorSeparator"
             />
             <div
               aria-hidden="true"
-              class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+              class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
             >
               <svg
                 aria-hidden="true"
@@ -1275,19 +1275,19 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
           class="css-1f43avz-a11yText-A11yText"
         />
         <div
-          class="Select__control Select__control--menu-is-open css-1s2u09g-control"
+          class="Select__control Select__control--menu-is-open css-13cymwt-control"
         >
           <div
-            class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+            class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
           >
             <div
-              class="Select__placeholder css-14el2xx-placeholder"
+              class="Select__placeholder css-1jqq78o-placeholder"
               id="react-select-namespace-select-filter-placeholder"
             >
               Namespaces: test-1, test-3
             </div>
             <div
-              class="Select__input-container css-6j8wv5-Input"
+              class="Select__input-container css-qbdosj-Input"
               data-value=""
             >
               <input
@@ -1315,11 +1315,11 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
           >
             <span
-              class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+              class="Select__indicator-separator css-1u9des2-indicatorSeparator"
             />
             <div
               aria-hidden="true"
-              class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+              class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
             >
               <svg
                 aria-hidden="true"
@@ -1343,15 +1343,15 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
     class="Select__menu-portal css-1no2yl0-MenuPortal"
   >
     <div
-      class="NamespaceSelectFilterMenu theme-dark namespace-select-filter-options Select__menu css-26l3qy-menu"
+      class="NamespaceSelectFilterMenu theme-dark namespace-select-filter-options Select__menu css-1nmdiq5-menu"
       id="react-select-namespace-select-filter-listbox"
     >
       <div
-        class="Select__menu-list Select__menu-list--is-multi css-4ljt47-MenuList"
+        class="Select__menu-list Select__menu-list--is-multi css-1n6sfyn-MenuList"
       >
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-focused css-1n7v3ny-option"
+          class="Select__option Select__option--is-focused css-d7l1ni-option"
           id="react-select-namespace-select-filter-option-0"
           tabindex="-1"
         >
@@ -1359,7 +1359,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-1"
           tabindex="-1"
         >
@@ -1394,7 +1394,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-2"
           tabindex="-1"
         >
@@ -1418,7 +1418,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option Select__option--is-selected css-9gakcf-option"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
           id="react-select-namespace-select-filter-option-3"
           tabindex="-1"
         >
@@ -1453,7 +1453,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-4"
           tabindex="-1"
         >
@@ -1477,7 +1477,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-5"
           tabindex="-1"
         >
@@ -1501,7 +1501,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-6"
           tabindex="-1"
         >
@@ -1525,7 +1525,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-7"
           tabindex="-1"
         >
@@ -1549,7 +1549,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-8"
           tabindex="-1"
         >
@@ -1573,7 +1573,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-9"
           tabindex="-1"
         >
@@ -1597,7 +1597,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-10"
           tabindex="-1"
         >
@@ -1621,7 +1621,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-11"
           tabindex="-1"
         >
@@ -1645,7 +1645,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-12"
           tabindex="-1"
         >
@@ -1669,7 +1669,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         </div>
         <div
           aria-disabled="false"
-          class="Select__option css-yt9ioa-option"
+          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-13"
           tabindex="-1"
         >
