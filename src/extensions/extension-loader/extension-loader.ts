@@ -8,12 +8,9 @@ import { isEqual } from "lodash";
 import type { ObservableMap } from "mobx";
 import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
-import type { Disposer } from "../../common/utils";
 import { isDefined, toJS } from "../../common/utils";
 import type { InstalledExtension } from "../extension-discovery/extension-discovery";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
-import type { LensRendererExtension } from "../lens-renderer-extension";
-import * as registries from "../registries";
 import type { LensExtensionState } from "../extensions-store/extensions-store";
 import { extensionLoaderFromMainChannel, extensionLoaderFromRendererChannel } from "../../common/ipc/extension-handling";
 import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
@@ -203,7 +200,7 @@ export class ExtensionLoader {
 
   protected async initMain() {
     this.isLoaded = true;
-    this.loadOnMain();
+    await this.autoInitExtensions();
 
     ipcMainHandle(extensionLoaderFromMainChannel, () => {
       return Array.from(this.toJSON());
@@ -251,38 +248,7 @@ export class ExtensionLoader {
     });
   }
 
-  loadOnMain() {
-    this.autoInitExtensions(() => Promise.resolve([]));
-  }
-
-  loadOnClusterManagerRenderer = () => {
-    this.dependencies.logger.debug(`${logModule}: load on main renderer (cluster manager)`);
-
-    return this.autoInitExtensions(async (ext) => {
-      const extension = ext as LensRendererExtension;
-      const removeItems = [
-        registries.CatalogEntityDetailRegistry.getInstance().add(extension.catalogEntityDetailItems),
-      ];
-
-      this.onRemoveExtensionId.addListener((removedExtensionId) => {
-        if (removedExtensionId === extension.id) {
-          removeItems.forEach(remove => {
-            remove();
-          });
-        }
-      });
-
-      return removeItems;
-    });
-  };
-
-  loadOnClusterRenderer = () => {
-    this.dependencies.logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
-
-    this.autoInitExtensions(async () => []);
-  };
-
-  protected async loadExtensions(installedExtensions: Map<string, InstalledExtension>, register: (ext: LensExtension) => Promise<Disposer[]>) {
+  protected async loadExtensions(installedExtensions: Map<string, InstalledExtension>) {
     // Steps of the function:
     // 1. require and call .activate for each Extension
     // 2. Wait until every extension's onActivate has been resolved
@@ -346,7 +312,7 @@ export class ExtensionLoader {
 
     // Return ExtensionLoading[]
     return extensions.map(extension => {
-      const loaded = extension.instance.enable(register).catch((err) => {
+      const loaded = extension.instance.enable().catch((err) => {
         this.dependencies.logger.error(`${logModule}: failed to enable`, { ext: extension, err });
       });
 
@@ -357,12 +323,14 @@ export class ExtensionLoader {
     });
   }
 
-  protected autoInitExtensions(register: (ext: LensExtension) => Promise<Disposer[]>) {
+  autoInitExtensions() {
+    this.dependencies.logger.info(`${logModule}: auto initializing extensions`);
+
     // Setup reaction to load extensions on JSON changes
-    reaction(() => this.toJSON(), installedExtensions => this.loadExtensions(installedExtensions, register));
+    reaction(() => this.toJSON(), installedExtensions => this.loadExtensions(installedExtensions));
 
     // Load initial extensions
-    return this.loadExtensions(this.toJSON(), register);
+    return this.loadExtensions(this.toJSON());
   }
 
   protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {

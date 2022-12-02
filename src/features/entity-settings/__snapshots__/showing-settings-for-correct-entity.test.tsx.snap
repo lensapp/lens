@@ -161,7 +161,56 @@ exports[`Showing correct entity settings renders 1`] = `
       >
         <div
           class="HotbarItems flex column gaps"
-        />
+        >
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="0"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="1"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="2"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="3"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="4"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="5"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="6"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="7"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="8"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="9"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="10"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="11"
+          />
+        </div>
         <div
           class="HotbarSelector"
         >
@@ -458,7 +507,56 @@ exports[`Showing correct entity settings when navigating to local cluster entity
       >
         <div
           class="HotbarItems flex column gaps"
-        />
+        >
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="0"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="1"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="2"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="3"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="4"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="5"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="6"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="7"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="8"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="9"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="10"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="11"
+          />
+        </div>
         <div
           class="HotbarSelector"
         >
@@ -776,7 +874,56 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
       >
         <div
           class="HotbarItems flex column gaps"
-        />
+        >
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="0"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="1"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="2"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="3"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="4"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="5"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="6"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="7"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="8"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="9"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="10"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="11"
+          />
+        </div>
         <div
           class="HotbarSelector"
         >
@@ -996,7 +1143,56 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
       >
         <div
           class="HotbarItems flex column gaps"
-        />
+        >
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="0"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="1"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="2"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="3"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="4"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="5"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="6"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="7"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="8"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="9"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="10"
+          />
+          <div
+            class="HotbarCell isDraggingOwner animateDown"
+            index="11"
+          />
+        </div>
         <div
           class="HotbarSelector"
         >

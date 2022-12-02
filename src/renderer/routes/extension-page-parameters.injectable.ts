@@ -6,10 +6,10 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { pipeline } from "@ogre-tools/fp";
 import type { PageParamInit } from "../navigation";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
-import type { PageRegistration } from "../../extensions/registries";
 import { map } from "lodash/fp";
 import createPageParamInjectable from "../navigation/create-page-param.injectable";
 import { object } from "../utils";
+import type { PageRegistration } from "./page-registration";
 
 export interface ExtensionPageParametersInstantiationParam {
   extension: LensRendererExtension;

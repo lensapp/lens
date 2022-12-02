@@ -50,6 +50,7 @@ export interface MenuProps {
   children?: ReactNode;
   animated?: boolean;
   toggleEvent?: "click" | "contextmenu";
+  "data-testid"?: string;
 }
 
 interface State {
@@ -325,10 +326,8 @@ class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
   }
 
   render() {
-    const { position, id, animated } = this.props;
-    let { className, usePortal } = this.props;
-
-    className = cssNames("Menu", className, this.state.position || position, {
+    const { position, id, animated, "data-testid": dataTestId, usePortal, className } = this.props;
+    const classNames = cssNames("Menu", className, this.state.position || position, {
       portal: usePortal,
     });
 
@@ -351,12 +350,13 @@ class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
       <ul
         id={id}
         ref={this.bindRef}
-        className={className}
+        className={classNames}
         style={{
           left: this.state?.menuStyle?.left,
           top: this.state?.menuStyle?.top,
         }}
         onKeyDown={this.onKeyDown}
+        data-testid={dataTestId}
       >
         {menuItems}
       </ul>
@@ -376,11 +376,13 @@ class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
       </MenuContext.Provider>
     );
 
-    if (usePortal === true) usePortal = document.body;
+    if (!usePortal) {
+      return menu;
+    }
 
-    return usePortal instanceof HTMLElement
-      ? createPortal(menu, usePortal)
-      : menu;
+    const portal = usePortal === true ? document.body : usePortal;
+
+    return createPortal(menu, portal);
   }
 }
 

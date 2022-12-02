@@ -5,12 +5,10 @@
 
 import type { InstalledExtension } from "./extension-discovery/extension-discovery";
 import { action, computed, makeObservable, observable } from "mobx";
-import logger from "../main/logger";
-import type { ProtocolHandlerRegistration } from "./registries";
 import type { PackageJson } from "type-fest";
-import type { Disposer } from "../common/utils";
 import { disposer } from "../common/utils";
 import type { LensExtensionDependencies } from "./lens-extension-set-dependencies";
+import type { ProtocolHandlerRegistration } from "./common-api/registrations";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -88,20 +86,13 @@ export class LensExtension<Dependencies extends LensExtensionDependencies = Lens
   }
 
   @action
-  async enable(register: (ext: this) => Promise<Disposer[]>) {
+  async enable() {
     if (this._isEnabled) {
       return;
     }
 
-    try {
-      this._isEnabled = true;
-
-      this[Disposers].push(...await register(this));
-      logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
-
-    } catch (error) {
-      logger.error(`[EXTENSION]: failed to activate ${this.name}@${this.version}: ${error}`);
-    }
+    this._isEnabled = true;
+    this[lensExtensionDependencies].logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
   }
 
   @action
@@ -115,9 +106,9 @@ export class LensExtension<Dependencies extends LensExtensionDependencies = Lens
     try {
       await this.onDeactivate();
       this[Disposers]();
-      logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
+      this[lensExtensionDependencies].logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
     } catch (error) {
-      logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
+      this[lensExtensionDependencies].logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
     }
   }
 

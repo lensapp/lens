@@ -10,7 +10,6 @@ import { Catalog } from "./catalog";
 import type { CatalogEntityActionContext, CatalogEntityData } from "../../../common/catalog";
 import { CatalogEntity } from "../../../common/catalog";
 import type { CatalogEntityOnBeforeRun, CatalogEntityRegistry } from "../../api/catalog/entity/registry";
-import { CatalogEntityDetailRegistry } from "../../../extensions/registries";
 import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -71,8 +70,6 @@ describe("<Catalog />", () => {
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
 
-    CatalogEntityDetailRegistry.createInstance();
-
     render = renderFor(di);
     onRun = jest.fn();
     catalogEntityItem = createMockCatalogEntity(onRun);
@@ -85,10 +82,6 @@ describe("<Catalog />", () => {
     Object.assign(catalogEntityStore, {
       selectedItem: computed(() => catalogEntityItem),
     });
-  });
-
-  afterEach(() => {
-    CatalogEntityDetailRegistry.resetInstance();
   });
 
   describe("can use catalogEntityRegistry.addOnBeforeRun to add hooks for catalog entities", () => {

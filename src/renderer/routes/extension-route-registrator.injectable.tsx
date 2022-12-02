@@ -9,7 +9,6 @@ import type { LensRendererExtension } from "../../extensions/lens-renderer-exten
 import { observer } from "mobx-react";
 import React from "react";
 import { isEmpty, matches } from "lodash/fp";
-import type { PageRegistration } from "../../extensions/registries";
 import { extensionRegistratorInjectionToken } from "../../extensions/extension-loader/extension-registrator-injection-token";
 import { SiblingsInTabLayout } from "../components/layout/siblings-in-tab-layout";
 import extensionPageParametersInjectable from "./extension-page-parameters.injectable";
@@ -19,6 +18,7 @@ import { computed } from "mobx";
 import { frontEndRouteInjectionToken } from "../../common/front-end-routing/front-end-route-injection-token";
 import { getExtensionRoutePath } from "./for-extension";
 import extensionShouldBeEnabledForClusterFrameInjectable from "../extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
+import type { PageRegistration } from "./page-registration";
 
 const extensionRouteRegistratorInjectable = getInjectable({
   id: "extension-route-registrator",

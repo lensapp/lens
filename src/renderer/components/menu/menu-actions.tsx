@@ -91,15 +91,22 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
   }
 
   renderTriggerIcon() {
-    if (this.props.toolbar) return null;
-    const { triggerIcon = "more_vert" } = this.props;
-    let className: string;
+    const {
+      triggerIcon = "more_vert",
+      toolbar,
+      "data-testid": dataTestId,
+    } = this.props;
+
+    if (toolbar) {
+      return null;
+    }
 
     if (isValidElement<HTMLElement>(triggerIcon)) {
-      className = cssNames(triggerIcon.props.className, { active: this.isOpen });
+      const className = cssNames(triggerIcon.props.className, { active: this.isOpen });
 
       return React.cloneElement(triggerIcon, { id: this.props.id, className });
     }
+
     const iconProps: IconProps & TooltipDecoratorProps = {
       id: this.props.id,
       interactive: true,
@@ -107,6 +114,10 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
       active: this.isOpen,
       ...(typeof triggerIcon === "object" ? triggerIcon : {}),
     };
+
+    if (dataTestId) {
+      iconProps["data-testid"] = `icon-for-${dataTestId}`;
+    }
 
     if (iconProps.tooltip && this.isOpen) {
       delete iconProps.tooltip; // don't show tooltip for icon when menu is open

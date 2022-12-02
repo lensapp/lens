@@ -5,9 +5,7 @@
 import type { Cluster } from "../../../../common/cluster/cluster";
 import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry";
 import logger from "../../../../main/logger";
-import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { Notifications } from "../../../components/notifications";
-import type { CatalogEntity } from "../../../../common/catalog";
 import { when } from "mobx";
 import type { ClusterFrameContext } from "../../../cluster-frame-context/cluster-frame-context";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
@@ -16,7 +14,7 @@ import type { EmitAppEvent } from "../../../../common/app-event-bus/emit-event.i
 
 interface Dependencies {
   hostedCluster: Cluster;
-  loadExtensions: (getCluster: () => CatalogEntity) => void;
+  loadExtensions: () => void;
   catalogEntityRegistry: CatalogEntityRegistry;
   frameRoutingId: number;
   emitAppEvent: EmitAppEvent;
@@ -53,7 +51,7 @@ export const initClusterFrame = ({
     when(
       () => catalogEntityRegistry.items.get().length > 0,
       () =>
-        loadExtensions(() => catalogEntityRegistry.activeEntity as KubernetesCluster),
+        loadExtensions(),
       {
         timeout: 15_000,
         onError: (error) => {

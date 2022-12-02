@@ -11,5 +11,5 @@ import type {
 } from "react-beautiful-dnd";
 
 export const DragDropContext = ({ children }: DragDropContextProps) => <>{ children }</>;
-export const Draggable = ({ children }: DraggableProps) => <>{ children }</>;
-export const Droppable = ({ children }: DroppableProps) => <>{ children }</>;
+export const Draggable = ({ children }: DraggableProps) => <>{ children({} as any, {} as any, {} as any) }</>;
+export const Droppable = ({ children }: DroppableProps) => <>{ children({} as any, {} as any) }</>;

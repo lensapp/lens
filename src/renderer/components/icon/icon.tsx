@@ -153,6 +153,7 @@ export interface BaseIconProps {
   focusable?: boolean;
   sticker?: boolean;
   disabled?: boolean;
+  "data-testid"?: string;
 }
 
 export interface IconProps extends React.HTMLAttributes<any>, BaseIconProps {}

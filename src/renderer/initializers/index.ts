@@ -3,8 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export * from "./catalog-entity-detail-registry";
 export * from "./catalog";
 export * from "./ipc";
-export * from "./registries";
 export * from "./catalog-category-registry";
