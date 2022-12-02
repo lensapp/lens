@@ -323,19 +323,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -361,11 +361,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -1066,19 +1066,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -1104,11 +1104,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -1814,19 +1814,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -1852,11 +1852,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -2740,19 +2740,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -2778,11 +2778,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -3727,19 +3727,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -3765,11 +3765,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -4714,19 +4714,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -4752,11 +4752,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -5946,19 +5946,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -5984,11 +5984,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -7178,19 +7178,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -7216,11 +7216,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -8410,19 +8410,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -8448,11 +8448,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -9459,19 +9459,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -9497,11 +9497,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -10510,19 +10510,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -10548,11 +10548,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -11742,19 +11742,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -11780,11 +11780,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -12729,19 +12729,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -12767,11 +12767,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -13719,19 +13719,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -13757,11 +13757,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -14645,19 +14645,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -14683,11 +14683,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -15632,19 +15632,19 @@ exports[`showing details for helm release given application is started when navi
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-namespace-select-filter-placeholder"
                         >
                           Namespaces: some-namespace, some-other-namespace
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -15670,11 +15670,11 @@ exports[`showing details for helm release given application is started when navi
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"

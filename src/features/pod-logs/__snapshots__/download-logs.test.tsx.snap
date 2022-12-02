@@ -306,19 +306,19 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-overview-namespace-select-filter-input-placeholder"
                         >
                           All namespaces
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -344,11 +344,11 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -552,18 +552,18 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                           class="css-1f43avz-a11yText-A11yText"
                         />
                         <div
-                          class="Select__control css-1s2u09g-control"
+                          class="Select__control css-13cymwt-control"
                         >
                           <div
-                            class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
+                            class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                           >
                             <div
-                              class="Select__single-value css-qc6sy-singleValue"
+                              class="Select__single-value css-1dimb5e-singleValue"
                             >
                               dockerExporter
                             </div>
                             <div
-                              class="Select__input-container css-6j8wv5-Input"
+                              class="Select__input-container css-qbdosj-Input"
                               data-value=""
                             >
                               <input
@@ -588,11 +588,11 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                           >
                             <span
-                              class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                              class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                             />
                             <div
                               aria-hidden="true"
-                              class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                              class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                             >
                               <svg
                                 aria-hidden="true"
@@ -627,18 +627,18 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                           class="css-1f43avz-a11yText-A11yText"
                         />
                         <div
-                          class="Select__control css-1s2u09g-control"
+                          class="Select__control css-13cymwt-control"
                         >
                           <div
-                            class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
+                            class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                           >
                             <div
-                              class="Select__single-value css-qc6sy-singleValue"
+                              class="Select__single-value css-1dimb5e-singleValue"
                             >
                               docker-exporter
                             </div>
                             <div
-                              class="Select__input-container css-6j8wv5-Input"
+                              class="Select__input-container css-qbdosj-Input"
                               data-value=""
                             >
                               <input
@@ -663,11 +663,11 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                           >
                             <span
-                              class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                              class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                             />
                             <div
                               aria-hidden="true"
-                              class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                              class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                             >
                               <svg
                                 aria-hidden="true"
@@ -1161,19 +1161,19 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--is-multi css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-overview-namespace-select-filter-input-placeholder"
                         >
                           All namespaces
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -1199,11 +1199,11 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -1407,18 +1407,18 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                           class="css-1f43avz-a11yText-A11yText"
                         />
                         <div
-                          class="Select__control css-1s2u09g-control"
+                          class="Select__control css-13cymwt-control"
                         >
                           <div
-                            class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
+                            class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                           >
                             <div
-                              class="Select__single-value css-qc6sy-singleValue"
+                              class="Select__single-value css-1dimb5e-singleValue"
                             >
                               dockerExporter
                             </div>
                             <div
-                              class="Select__input-container css-6j8wv5-Input"
+                              class="Select__input-container css-qbdosj-Input"
                               data-value=""
                             >
                               <input
@@ -1443,11 +1443,11 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                           >
                             <span
-                              class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                              class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                             />
                             <div
                               aria-hidden="true"
-                              class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                              class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                             >
                               <svg
                                 aria-hidden="true"
@@ -1482,18 +1482,18 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                           class="css-1f43avz-a11yText-A11yText"
                         />
                         <div
-                          class="Select__control css-1s2u09g-control"
+                          class="Select__control css-13cymwt-control"
                         >
                           <div
-                            class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
+                            class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                           >
                             <div
-                              class="Select__single-value css-qc6sy-singleValue"
+                              class="Select__single-value css-1dimb5e-singleValue"
                             >
                               docker-exporter
                             </div>
                             <div
-                              class="Select__input-container css-6j8wv5-Input"
+                              class="Select__input-container css-qbdosj-Input"
                               data-value=""
                             >
                               <input
@@ -1518,11 +1518,11 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                           >
                             <span
-                              class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                              class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                             />
                             <div
                               aria-hidden="true"
-                              class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                              class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                             >
                               <svg
                                 aria-hidden="true"

@@ -198,19 +198,19 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container css-319lph-ValueContainer"
+                        class="Select__value-container css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-theme-input-placeholder"
                         >
                           Select...
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -236,11 +236,11 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -289,19 +289,19 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container css-319lph-ValueContainer"
+                        class="Select__value-container css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-extension-install-registry-input-placeholder"
                         >
                           Select...
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -327,11 +327,11 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -436,18 +436,18 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container Select__value-container--has-value css-319lph-ValueContainer"
+                        class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__single-value css-qc6sy-singleValue"
+                          class="Select__single-value css-1dimb5e-singleValue"
                         >
                           Stable
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -472,11 +472,11 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -525,19 +525,19 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       class="css-1f43avz-a11yText-A11yText"
                     />
                     <div
-                      class="Select__control css-1s2u09g-control"
+                      class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container css-319lph-ValueContainer"
+                        class="Select__value-container css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-14el2xx-placeholder"
+                          class="Select__placeholder css-1jqq78o-placeholder"
                           id="react-select-timezone-input-placeholder"
                         >
                           Select...
                         </div>
                         <div
-                          class="Select__input-container css-6j8wv5-Input"
+                          class="Select__input-container css-qbdosj-Input"
                           data-value=""
                         >
                           <input
@@ -563,11 +563,11 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                         class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                       >
                         <span
-                          class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                         />
                         <div
                           aria-hidden="true"
-                          class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                         >
                           <svg
                             aria-hidden="true"
@@ -916,19 +916,19 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                           class="css-1f43avz-a11yText-A11yText"
                         />
                         <div
-                          class="Select__control Select__control--is-disabled css-1insrsq-control"
+                          class="Select__control Select__control--is-disabled css-16xfy0z-control"
                         >
                           <div
-                            class="Select__value-container css-319lph-ValueContainer"
+                            class="Select__value-container css-1fdsijx-ValueContainer"
                           >
                             <div
-                              class="Select__placeholder css-14el2xx-placeholder"
+                              class="Select__placeholder css-1jqq78o-placeholder"
                               id="react-select-download-mirror-input-placeholder"
                             >
                               Download mirror for kubectl
                             </div>
                             <div
-                              class="Select__input-container css-jzldcf-Input"
+                              class="Select__input-container css-1h01tm3-Input"
                               data-value=""
                             >
                               <input
@@ -955,11 +955,11 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                           >
                             <span
-                              class="Select__indicator-separator css-109onse-indicatorSeparator"
+                              class="Select__indicator-separator css-894a34-indicatorSeparator"
                             />
                             <div
                               aria-hidden="true"
-                              class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                              class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                             >
                               <svg
                                 aria-hidden="true"
@@ -1127,19 +1127,19 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control css-1s2u09g-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-319lph-ValueContainer"
+                              class="Select__value-container css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-14el2xx-placeholder"
+                                class="Select__placeholder css-1jqq78o-placeholder"
                                 id="react-select-selection-of-active-public-helm-repository-placeholder"
                               >
                                 Repositories
                               </div>
                               <div
-                                class="Select__input-container css-6j8wv5-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
@@ -1165,11 +1165,11 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-1okebmr-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
-                                class="Select__indicator Select__dropdown-indicator css-tlfecz-indicatorContainer"
+                                class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
                               >
                                 <svg
                                   aria-hidden="true"
