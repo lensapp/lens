@@ -93,6 +93,7 @@ describe("router", () => {
     it("calls handler with the request", () => {
       expect(routeHandlerMock).toHaveBeenCalledWith({
         cluster: clusterStub,
+        getHeader: expect.any(Function),
         params: {},
         path: "/some-path",
         payload: "some-payload",
