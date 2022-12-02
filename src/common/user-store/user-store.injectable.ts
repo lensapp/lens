@@ -12,6 +12,11 @@ import loggerInjectable from "../logger.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import storeMigrationsInjectable from "../base-store/migrations.injectable";
 import { userStoreMigrationInjectionToken } from "./migrations-token";
+import { baseStoreIpcChannelPrefixInjectionToken } from "../base-store/channel-prefix";
+import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../base-store/disable-sync";
+import { persistStateToConfigInjectionToken } from "../base-store/save-to-file";
+import getBasenameOfPathInjectable from "../path/get-basename.injectable";
+import { enlistMessageChannelListenerInjectionToken } from "../utils/channel/enlist-message-channel-listener-injection-token";
 
 const userStoreInjectable = getInjectable({
   id: "user-store",
@@ -24,6 +29,11 @@ const userStoreInjectable = getInjectable({
     logger: di.inject(loggerInjectable),
     storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
     migrations: di.inject(storeMigrationsInjectable, userStoreMigrationInjectionToken),
+    getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
+    ipcChannelPrefix: di.inject(baseStoreIpcChannelPrefixInjectionToken),
+    persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
+    enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
+    shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
   }),
 });
 

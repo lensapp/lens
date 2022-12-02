@@ -11,6 +11,11 @@ import getConfigurationFileModelInjectable from "../get-configuration-file-model
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import storeMigrationsInjectable from "../base-store/migrations.injectable";
 import { hotbarStoreMigrationInjectionToken } from "./migrations-token";
+import getBasenameOfPathInjectable from "../path/get-basename.injectable";
+import { baseStoreIpcChannelPrefixInjectionToken } from "../base-store/channel-prefix";
+import { persistStateToConfigInjectionToken } from "../base-store/save-to-file";
+import { enlistMessageChannelListenerInjectionToken } from "../utils/channel/enlist-message-channel-listener-injection-token";
+import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../base-store/disable-sync";
 
 const hotbarStoreInjectable = getInjectable({
   id: "hotbar-store",
@@ -22,6 +27,11 @@ const hotbarStoreInjectable = getInjectable({
     getConfigurationFileModel: di.inject(getConfigurationFileModelInjectable),
     storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
     migrations: di.inject(storeMigrationsInjectable, hotbarStoreMigrationInjectionToken),
+    getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
+    ipcChannelPrefix: di.inject(baseStoreIpcChannelPrefixInjectionToken),
+    persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
+    enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
+    shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
   }),
 });
 

@@ -122,8 +122,6 @@ describe("cluster-store", () => {
       createCluster = mainDi.inject(createClusterInjectionToken);
 
       clusterStore = mainDi.inject(clusterStoreInjectable);
-
-      clusterStore.unregisterIpcListener();
     });
 
     afterEach(() => {

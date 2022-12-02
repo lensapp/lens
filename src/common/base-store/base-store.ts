@@ -3,19 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import path from "path";
 import type Config from "conf";
 import type { Migrations, Options as ConfOptions } from "conf/dist/source/types";
-import { ipcMain, ipcRenderer } from "electron";
 import type { IEqualsComparer } from "mobx";
-import { makeObservable, reaction, runInAction } from "mobx";
-import type { Disposer } from "../utils";
-import { isPromiseLike, toJS } from "../utils";
-import { broadcastMessage, ipcMainOn, ipcRendererOn } from "../ipc";
+import { makeObservable, reaction } from "mobx";
+import { disposer, isPromiseLike, toJS } from "../utils";
+import { broadcastMessage } from "../ipc";
 import isEqual from "lodash/isEqual";
 import { kebabCase } from "lodash";
 import type { GetConfigurationFileModel } from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import type { Logger } from "../logger";
+import type { PersistStateToConfig } from "./save-to-file";
+import type { GetBasenameOfPath } from "../path/get-basename.injectable";
+import type { EnlistMessageChannelListener } from "../utils/channel/enlist-message-channel-listener-injection-token";
 
 export interface BaseStoreParams<T> extends Omit<ConfOptions<T>, "migrations"> {
   syncOptions?: {
@@ -30,15 +30,19 @@ export interface BaseStoreDependencies {
   readonly storeMigrationVersion: string;
   readonly directoryForUserData: string;
   readonly migrations: Migrations<Record<string, unknown>>;
+  readonly ipcChannelPrefix: string;
+  readonly shouldDisableSyncInListener: boolean;
   getConfigurationFileModel: GetConfigurationFileModel;
+  persistStateToConfig: PersistStateToConfig;
+  getBasenameOfPath: GetBasenameOfPath;
+  enlistMessageChannelListener: EnlistMessageChannelListener;
 }
 
 /**
  * Note: T should only contain base JSON serializable types.
  */
 export abstract class BaseStore<T extends object> {
-  protected storeConfig?: Config<T>;
-  protected syncDisposers: Disposer[] = [];
+  private readonly syncDisposers = disposer();
 
   readonly displayName = kebabCase(this.params.configName).toUpperCase();
 
@@ -54,7 +58,8 @@ export abstract class BaseStore<T extends object> {
    */
   load() {
     this.dependencies.logger.info(`[${this.displayName}]: LOADING ...`);
-    this.storeConfig = this.dependencies.getConfigurationFileModel({
+
+    const config = this.dependencies.getConfigurationFileModel({
       projectName: "lens",
       projectVersion: this.dependencies.storeMigrationVersion,
       cwd: this.cwd(),
@@ -62,107 +67,60 @@ export abstract class BaseStore<T extends object> {
       migrations: this.dependencies.migrations as Migrations<T>,
     });
 
-    const res = this.fromStore(this.storeConfig.store);
+    const res = this.fromStore(config.store);
 
     if (isPromiseLike(res)) {
       this.dependencies.logger.error(`${this.displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
     }
 
-    this.enableSync();
-    this.dependencies.logger.info(`[${this.displayName}]: LOADED from ${this.path}`);
-  }
-
-  get name() {
-    return path.basename(this.path);
-  }
-
-  protected get syncRendererChannel() {
-    return `store-sync-renderer:${this.path}`;
-  }
-
-  protected get syncMainChannel() {
-    return `store-sync-main:${this.path}`;
-  }
-
-  get path() {
-    return this.storeConfig?.path || "";
+    this.startSyncing(config);
+    this.dependencies.logger.info(`[${this.displayName}]: LOADED from ${config.path}`);
   }
 
   protected cwd() {
     return this.dependencies.directoryForUserData;
   }
 
-  protected saveToFile(model: T) {
-    this.dependencies.logger.info(`[${this.displayName}]: SAVING ${this.path}`);
+  private startSyncing(config: Config<T>) {
+    const name = this.dependencies.getBasenameOfPath(config.path);
+    const channelName = `${this.dependencies.ipcChannelPrefix}:${config.path}`;
 
-    // todo: update when fixed https://github.com/sindresorhus/conf/issues/114
-    if (this.storeConfig) {
-      for (const [key, value] of Object.entries(model)) {
-        this.storeConfig.set(key, value);
-      }
-    }
-  }
+    const disableSync = () => this.syncDisposers();
+    const enableSync = () => {
+      this.syncDisposers.push(
+        reaction(
+          () => toJS(this.toJSON()), // unwrap possible observables and react to everything
+          model => {
+            this.dependencies.persistStateToConfig(config, model);
+            broadcastMessage(channelName, model);
+          },
+          this.params.syncOptions,
+        ),
+        this.dependencies.enlistMessageChannelListener({
+          channel: {
+            id: channelName,
+          },
+          handler: (model) => {
+            this.dependencies.logger.silly(`[${this.displayName}]: syncing ${name}`, { model });
 
-  enableSync() {
-    this.syncDisposers.push(
-      reaction(
-        () => toJS(this.toJSON()), // unwrap possible observables and react to everything
-        model => this.onModelChange(model),
-        this.params.syncOptions,
-      ),
-    );
+            if (this.dependencies.shouldDisableSyncInListener) {
+              disableSync();
+            }
 
-    if (ipcMain) {
-      this.syncDisposers.push(ipcMainOn(this.syncMainChannel, (event, model: T) => {
-        this.dependencies.logger.silly(`[${this.displayName}]: SYNC ${this.name} from renderer`, { model });
-        this.onSync(model);
-      }));
-    }
+            // todo: use "resourceVersion" if merge required (to avoid equality checks => better performance)
+            if (!isEqual(this.toJSON(), model)) {
+              this.fromStore(model as T);
+            }
 
-    if (ipcRenderer) {
-      this.syncDisposers.push(ipcRendererOn(this.syncRendererChannel, (event, model: T) => {
-        this.dependencies.logger.silly(`[${this.displayName}]: SYNC ${this.name} from main`, { model });
-        this.onSyncFromMain(model);
-      }));
-    }
-  }
+            if (this.dependencies.shouldDisableSyncInListener) {
+              enableSync();
+            }
+          },
+        }),
+      );
+    };
 
-  protected onSyncFromMain(model: T) {
-    this.applyWithoutSync(() => {
-      this.onSync(model);
-    });
-  }
-
-  unregisterIpcListener() {
-    ipcRenderer?.removeAllListeners(this.syncMainChannel);
-    ipcRenderer?.removeAllListeners(this.syncRendererChannel);
-  }
-
-  disableSync() {
-    this.syncDisposers.forEach(dispose => dispose());
-    this.syncDisposers.length = 0;
-  }
-
-  protected applyWithoutSync(callback: () => void) {
-    this.disableSync();
-    runInAction(callback);
-    this.enableSync();
-  }
-
-  protected onSync(model: T) {
-    // todo: use "resourceVersion" if merge required (to avoid equality checks => better performance)
-    if (!isEqual(this.toJSON(), model)) {
-      this.fromStore(model);
-    }
-  }
-
-  protected onModelChange(model: T) {
-    if (ipcMain) {
-      this.saveToFile(model); // save config file
-      broadcastMessage(this.syncRendererChannel, model);
-    } else {
-      broadcastMessage(this.syncMainChannel, model);
-    }
+    enableSync();
   }
 
   /**

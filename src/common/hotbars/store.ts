@@ -38,7 +38,6 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
         equals: comparer.structural,
       },
     });
-
     makeObservable(this);
   }
 
@@ -54,6 +53,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     if (typeof hotbar === "number") {
       if (hotbar >= 0 && hotbar < this.hotbars.length) {
         this._activeHotbarId = this.hotbars[hotbar].id;
+        console.log("in _activeHotbarId", this._activeHotbarId);
       }
     } else if (typeof hotbar === "string") {
       if (this.findById(hotbar)) {
@@ -97,21 +97,19 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     this.hotbars.forEach(ensureExactHotbarItemLength);
 
     if (data.activeHotbarId) {
-      this.setActiveHotbar(data.activeHotbarId);
+      this._activeHotbarId = data.activeHotbarId;
     }
 
     if (!this.activeHotbarId) {
-      this.setActiveHotbar(0);
+      this._activeHotbarId = this.hotbars[0].id;
     }
   }
 
   toJSON(): HotbarStoreModel {
-    const model: HotbarStoreModel = {
+    return toJS({
       hotbars: this.hotbars,
       activeHotbarId: this.activeHotbarId,
-    };
-
-    return toJS(model);
+    });
   }
 
   getActive(): Hotbar {

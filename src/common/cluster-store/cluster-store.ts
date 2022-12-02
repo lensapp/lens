@@ -70,11 +70,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
   }
 
-  unregisterIpcListener() {
-    super.unregisterIpcListener();
-    this.disposer();
-  }
-
   pushState() {
     this.clusters.forEach((c) => {
       c.pushState();
