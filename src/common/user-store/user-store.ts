@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { app } from "electron";
-import { action, observable, reaction, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
+import { action, observable, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
 import type { BaseStoreDependencies } from "../base-store/base-store";
 import { BaseStore } from "../base-store/base-store";
 import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
@@ -83,19 +82,6 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    * The set of file/folder paths to be synced
    */
   @observable syncKubeconfigEntries!: StoreType<typeof DESCRIPTORS["syncKubeconfigEntries"]>;
-
-  startMainReactions() {
-    // open at system start-up
-    reaction(() => this.openAtLogin, openAtLogin => {
-      app.setLoginItemSettings({
-        openAtLogin,
-        openAsHidden: true,
-        args: ["--hidden"],
-      });
-    }, {
-      fireImmediately: true,
-    });
-  }
 
   /**
    * Checks if a column (by ID) for a table (by ID) is configured to be hidden
