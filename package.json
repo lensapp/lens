@@ -404,7 +404,7 @@
     "playwright": "^1.28.1",
     "postcss": "^8.4.19",
     "postcss-loader": "^6.2.1",
-    "query-string": "^7.1.1",
+    "query-string": "^7.1.2",
     "randomcolor": "^0.6.2",
     "react-beautiful-dnd": "^13.1.1",
     "react-refresh": "^0.14.0",
