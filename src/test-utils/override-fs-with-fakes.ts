@@ -61,6 +61,7 @@ export const getOverrideFsWithFakes = () => {
       ensureDir: async (path, opts) => ensureDirSync(path, opts),
       ensureDirSync,
       createReadStream: root.createReadStream as any,
+      stat: root.promises.stat as any,
     }));
   };
 };

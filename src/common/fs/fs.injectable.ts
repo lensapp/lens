@@ -20,6 +20,7 @@ const fsInjectable = getInjectable({
         lstat,
         rm,
         access,
+        stat,
       },
       ensureDir,
       ensureDirSync,
@@ -54,6 +55,7 @@ const fsInjectable = getInjectable({
       ensureDir: ensureDir as (path: string, options?: number | fse.EnsureOptions ) => Promise<void>,
       ensureDirSync,
       createReadStream,
+      stat,
     };
   },
   causesSideEffects: true,
