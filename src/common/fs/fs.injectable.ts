@@ -19,6 +19,7 @@ const fsInjectable = getInjectable({
         readdir,
         lstat,
         rm,
+        access,
       },
       readFileSync,
       readJson,
@@ -44,6 +45,7 @@ const fsInjectable = getInjectable({
       pathExistsSync,
       lstat,
       rm,
+      access,
     };
   },
   causesSideEffects: true,

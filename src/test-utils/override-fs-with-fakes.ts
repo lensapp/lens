@@ -45,6 +45,7 @@ export const getOverrideFsWithFakes = () => {
       readdir: root.promises.readdir as any,
       lstat: root.promises.lstat as any,
       rm: root.promises.rm,
+      access: root.promises.access,
     }));
   };
 };
