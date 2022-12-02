@@ -6,6 +6,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import fsInjectable from "../common/fs/fs.injectable";
 import { createFsFromVolume, Volume } from "memfs";
 import type {
+  ensureDirSync as ensureDirSyncImpl,
   readJsonSync as readJsonSyncImpl,
   writeJsonSync as writeJsonSyncImpl,
 } from "fs-extra";
@@ -32,6 +33,13 @@ export const getOverrideFsWithFakes = () => {
 
     root.writeFileSync(file, JSON.stringify(object, options?.replacer, options?.spaces), options as any);
   }) as typeof writeJsonSyncImpl;
+  const ensureDirSync = ((path, opts) => {
+    const mode = typeof opts === "number"
+      ? opts
+      : opts?.mode;
+
+    root.mkdirpSync(path, mode);
+  }) as typeof ensureDirSyncImpl;
 
   return (di: DiContainer) => {
     di.override(fsInjectable, () => ({
@@ -50,6 +58,8 @@ export const getOverrideFsWithFakes = () => {
       rm: root.promises.rm,
       access: root.promises.access,
       copy: async (src, dest) => { throw new Error(`Tried to copy '${src}' to '${dest}'. Copying is not yet supported`); },
+      ensureDir: async (path, opts) => ensureDirSync(path, opts),
+      ensureDirSync,
     }));
   };
 };

@@ -21,6 +21,8 @@ const fsInjectable = getInjectable({
         rm,
         access,
       },
+      ensureDir,
+      ensureDirSync,
       readFileSync,
       readJson,
       writeJson,
@@ -48,6 +50,8 @@ const fsInjectable = getInjectable({
       rm,
       access,
       copy: copy as (src: string, dest: string, options?: fse.CopyOptions) => Promise<void>,
+      ensureDir: ensureDir as (path: string, options?: number | fse.EnsureOptions ) => Promise<void>,
+      ensureDirSync,
     };
   },
   causesSideEffects: true,
