@@ -330,7 +330,6 @@ class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
     const classNames = cssNames("Menu", className, this.state.position || position, {
       portal: usePortal,
     });
-    // const menuChildren =
 
     let children = this.props.children as ReactElement<any>;
 
