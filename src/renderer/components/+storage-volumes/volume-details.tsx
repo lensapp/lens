@@ -94,7 +94,7 @@ export class PersistentVolumeDetails extends React.Component<PersistentVolumeDet
               {flexVolume.driver}
             </DrawerItem>
             {
-              Object.entries(flexVolume.options).map(([name, value]) => (
+              Object.entries(flexVolume.options ?? {}).map(([name, value]) => (
                 <DrawerItem key={name} name={startCase(name)}>
                   {value}
                 </DrawerItem>

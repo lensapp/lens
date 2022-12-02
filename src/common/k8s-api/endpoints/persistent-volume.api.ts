@@ -43,7 +43,7 @@ export interface PersistentVolumeSpec {
   capacity?: Partial<Record<string, string>>;
   flexVolume?: {
     driver: string; // ceph.rook.io/rook-ceph-system,
-    options: {
+    options?: {
       clusterNamespace: string; // rook-ceph,
       image: string; // pvc-c5d7c485-9f1b-11e8-b0ea-9600000e54fb,
       pool: string; // replicapool,
