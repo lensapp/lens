@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    branches-ignore:
+      - '**'
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ macos-latest ]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Build Lens
+        run: |
+          env ELECTRON_BUILDER_EXTRA_ARGS="--arm64 --x64 --mac --config.dmg.sign=false" make build
+          ls -la dist/
+        shell: bash
+        working-directory: lens
