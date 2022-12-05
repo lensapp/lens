@@ -25,7 +25,6 @@ import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-fram
 import { Router } from "react-router";
 import historyInjectable from "./navigation/history.injectable";
 import themeStoreInjectable from "./themes/store.injectable";
-import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
 
@@ -45,9 +44,6 @@ export async function bootstrap(di: DiContainer) {
   const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
 
   extensionDiscovery.init();
-
-  // HotbarStore depends on: ClusterStore
-  di.inject(hotbarStoreInjectable).load();
 
   // ThemeStore depends on: UserStore
   // TODO: Remove temporal dependencies
