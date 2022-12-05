@@ -20,7 +20,6 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
 import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
 import extensionInstallationStateStoreInjectable from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
-import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame/init-root-frame.injectable";
 import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
 import { Router } from "react-router";
@@ -47,11 +46,6 @@ export async function bootstrap(di: DiContainer) {
 
   extensionDiscovery.init();
 
-  // ClusterStore depends on: UserStore
-  const clusterStore = di.inject(clusterStoreInjectable);
-
-  await clusterStore.loadInitialOnRenderer();
-
   // HotbarStore depends on: ClusterStore
   di.inject(hotbarStoreInjectable).load();
 
@@ -62,9 +56,6 @@ export async function bootstrap(di: DiContainer) {
   const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
 
   extensionInstallationStateStore.bindIpcListeners();
-
-  // Register additional store listeners
-  clusterStore.registerIpcListener();
 
   let App;
   let initializeApp;

@@ -4,14 +4,12 @@
  */
 
 
-import { ipcMain, ipcRenderer, webFrame } from "electron";
-import { action, comparer, computed, makeObservable, observable, reaction } from "mobx";
+import { action, comparer, computed, makeObservable, observable } from "mobx";
 import type { BaseStoreDependencies } from "../base-store/base-store";
 import { BaseStore } from "../base-store/base-store";
 import { Cluster } from "../cluster/cluster";
-import { disposer, toJS } from "../utils";
-import type { ClusterModel, ClusterId, ClusterState } from "../cluster-types";
-import { requestInitialClusterStates } from "../../renderer/ipc";
+import { toJS } from "../utils";
+import type { ClusterModel, ClusterId } from "../cluster-types";
 import type { CreateCluster } from "../cluster/create-cluster-injection-token";
 import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
@@ -29,8 +27,6 @@ interface Dependencies extends BaseStoreDependencies {
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
   readonly clusters = observable.map<ClusterId, Cluster>();
 
-  protected readonly disposer = disposer();
-
   constructor(protected readonly dependencies: Dependencies) {
     super(dependencies, {
       configName: "lens-cluster-store",
@@ -41,39 +37,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
 
     makeObservable(this);
-    this.load();
-    this.pushStateToViewsAutomatically();
-  }
-
-  async loadInitialOnRenderer() {
-    this.dependencies.logger.info("[CLUSTER-STORE] requesting initial state sync");
-
-    for (const { id, state } of await requestInitialClusterStates()) {
-      this.getById(id)?.setState(state);
-    }
-  }
-
-  protected pushStateToViewsAutomatically() {
-    if (ipcMain) {
-      this.disposer.push(
-        reaction(() => this.connectedClustersList, () => this.pushState()),
-      );
-    }
-  }
-
-  registerIpcListener() {
-    this.dependencies.logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`);
-    const ipc = ipcMain ?? ipcRenderer;
-
-    ipc?.on("cluster:state", (event, clusterId: ClusterId, state: ClusterState) => {
-      this.getById(clusterId)?.setState(state);
-    });
-  }
-
-  pushState() {
-    this.clusters.forEach((c) => {
-      c.pushState();
-    });
   }
 
   @computed get clustersList(): Cluster[] {

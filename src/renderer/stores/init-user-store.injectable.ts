@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import setupAppPathsInjectable from "../app-paths/setup-app-paths.injectable";
-import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
+import { beforeFrameStartsInjectionToken } from "../before-frame-starts/tokens";
 import initDefaultUpdateChannelInjectable from "../vars/default-update-channel/init.injectable";
 
 const initUserStoreInjectable = getInjectable({
