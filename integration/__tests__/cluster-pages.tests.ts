@@ -127,79 +127,11 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       await showPreviousCheckbox.click();
 
-      await frame.waitForSelector(
+      const showWrapLogsCheckbox = await frame.waitForSelector(
         "[data-testid='log-controls'] .wrap-logs",
       );
 
-      // await showWrapLogsCheckbox.click();
-    },
-    10 * 60 * 1000,
-  );
-
-  it.only(
-    "should create a pod with logs and wrap log lines",
-    async () => {
-      await navigateToPods(frame);
-      await frame.click(".Icon.new-dock-tab");
-      
-      try {
-        await frame.click("li.MenuItem.create-resource-tab", {
-          // NOTE: the following shouldn't be required, but is because without it a TypeError is thrown
-          // see: https://github.com/microsoft/playwright/issues/8229
-          position: {
-            y: 0,
-            x: 0,
-          },
-        });
-      } catch (error) {
-        console.log(error);
-        await frame.waitForTimeout(100_000);
-      }
-
-      const testPodName = "pod-with-long-logs";
-      const monacoEditor = await frame.waitForSelector(`.Dock.isOpen [data-test-id="monaco-editor"]`);
-
-      await monacoEditor.click();
-      await monacoEditor.type("apiVersion: v1", { delay: 10 });
-      await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type("kind: Pod", { delay: 10 });
-      await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type("metadata:", { delay: 10 });
-      await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type(`  name: ${testPodName}`, { delay: 10 });
-      await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type(`namespace: default`, { delay: 10 });
-      await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.press("Backspace", { delay: 10 });
-      await monacoEditor.type("spec:", { delay: 10 });
-      await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type("  containers:", { delay: 10 });
-      await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type(`- name: ${testPodName}`, { delay: 10 });
-      await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type("  image: busybox:1.28", { delay: 10 });
-      await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type(`args: [/bin/sh, -c, 'echo "Dolore cillum meatball shoulder.  Chicken magna lorem irure ad consectetur.  Ball tip duis prosciutto tempor nostrud beef ribs shankle sausage tri-tip tenderloin quis pig brisket.  Turducken doner fatback frankfurter.","Capicola jowl incididunt pork loin magna doner consectetur ullamco shoulder rump pariatur tenderloin pork.  Tenderloin aliquip lorem turkey, magna tail velit bresaola est t-bone chuck alcatra nulla.  Exercitation consectetur pork fatback mollit laborum, magna pork chop swine incididunt chuck.  Mollit chislic boudin aute nostrud.","Jowl landjaeger pancetta fatback ipsum, occaecat picanha hamburger pastrami chislic salami.  Laboris filet mignon eu excepteur.  Sunt anim cupim sed dolore tri-tip tongue frankfurter chislic ullamco ipsum non aliqua reprehenderit biltong.  Nulla enim ball tip meatloaf alcatra sint swine pork chop velit reprehenderit commodo hamburger in.  Quis est ut drumstick in.  Esse cupim beef bacon fugiat duis.","Tenderloin lorem fatback aliquip prosciutto turkey voluptate enim pork loin sunt kielbasa sirloin.  Consectetur landjaeger buffalo esse.  Corned beef porchetta eiusmod, strip steak biltong tempor ut shank ut tenderloin jerky in excepteur.  Beef ribs nostrud cupim turkey porchetta, corned beef veniam burgdoggen salami.  Rump et short loin, aliqua do ea drumstick bresaola velit ribeye doner fugiat nisi picanha.","Cow sausage cupidatat, buffalo nostrud laboris kevin pork chop non pariatur shoulder.  Kielbasa sirloin in, pastrami fatback chuck officia in chislic venison frankfurter duis.  Cupim ut sunt, biltong consectetur incididunt sausage esse flank fatback porchetta shank chuck.  Kevin consectetur meatball pancetta beef labore, tail mollit veniam boudin consequat proident incididunt pig.  Sint exercitation pork chop, adipisicing rump ex nisi filet mignon.";']`, { delay: 5, timeout: 70000 });
-      await monacoEditor.press("Enter", { delay: 10 });
-
-      await frame.click(".Dock .Button >> text='Create'");
-      await frame.waitForSelector(`.TableCell >> text=${testPodName}`);
-      await frame.click(".TableRow .TableCell.menu");
-      await frame.click(".MenuItem >> text=Logs");
-
-      await frame.waitForSelector(".Dock.isOpen");
-      const logLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index='0']");
-      const lineBoundingBox = await logLine.boundingBox();
-
-      expect(lineBoundingBox?.height).toBeLessThan(30);
-
-      await frame.click(".wrap-logs")
-      await frame.waitForTimeout(5000);
-
-      const wrappedLogLine = await frame.waitForSelector("[data-testid=pod-log-list] [data-index='0'] > div");
-      const wrappedLineBoundingBox = await wrappedLogLine.boundingBox();
-
-      expect(wrappedLineBoundingBox?.height).toBeGreaterThan(30);
+      await showWrapLogsCheckbox.click();
     },
     10 * 60 * 1000,
   );
