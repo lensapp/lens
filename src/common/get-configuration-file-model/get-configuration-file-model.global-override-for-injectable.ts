@@ -19,7 +19,7 @@ export default getGlobalOverride(getConfigurationFileModelInjectable, (di) => {
     assert(options.cwd, "Missing options.cwd");
     assert(options.configName, "Missing options.configName");
 
-    const configFilePath = path.posix.join(options.cwd, options.configName);
+    const configFilePath = path.posix.join(options.cwd, `${options.configName}.json`);
     let store: object = {};
 
     try {
