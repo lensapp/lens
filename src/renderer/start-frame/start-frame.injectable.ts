@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { runManyFor } from "../../common/runnable/run-many-for";
-import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
+import { beforeFrameStartsInjectionToken } from "../before-frame-starts/tokens";
 
 const startFrameInjectable = getInjectable({
   id: "start-frame",

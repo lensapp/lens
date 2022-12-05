@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import initializeSentryReportingWithInjectable from "../../common/error-reporting/initialize-sentry-reporting.injectable";
 import setupAppPathsInjectable from "../app-paths/setup-app-paths.injectable";
-import { beforeFrameStartsInjectionToken } from "../before-frame-starts/before-frame-starts-injection-token";
+import { beforeFrameStartsInjectionToken } from "../before-frame-starts/tokens";
 import { init } from "@sentry/electron/renderer";
 
 const initializeSentryReportingInjectable = getInjectable({

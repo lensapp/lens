@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/before-frame-starts-injection-token";
+import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/tokens";
 import { syncBoxInitialValueChannel } from "../../../common/utils/sync-box/channels";
 import createSyncBoxStateInjectable from "../../../common/utils/sync-box/sync-box-state.injectable";
 import { requestFromChannelInjectionToken } from "../../../common/utils/channel/request-from-channel-injection-token";
