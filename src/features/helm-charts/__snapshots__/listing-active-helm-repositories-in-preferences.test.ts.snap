@@ -582,13 +582,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         >
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="0"
           >
             <div
-              data-rbd-draggable-context-id="some-mock-rbd-draggable-context-id"
-              data-rbd-draggable-id="some-mock-rbd-draggable-id"
               style="z-index: 12; position: absolute;"
             >
               <div
@@ -606,68 +602,46 @@ exports[`listing active helm repositories in preferences when navigating to pref
           </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="1"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="2"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="3"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="4"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="5"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="6"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="7"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="8"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="9"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="10"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="11"
           />
         </div>
@@ -1339,13 +1313,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         >
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="0"
           >
             <div
-              data-rbd-draggable-context-id="some-mock-rbd-draggable-context-id"
-              data-rbd-draggable-id="some-mock-rbd-draggable-id"
               style="z-index: 12; position: absolute;"
             >
               <div
@@ -1363,68 +1333,46 @@ exports[`listing active helm repositories in preferences when navigating to pref
           </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="1"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="2"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="3"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="4"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="5"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="6"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="7"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="8"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="9"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="10"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="11"
           />
         </div>
@@ -1988,13 +1936,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         >
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="0"
           >
             <div
-              data-rbd-draggable-context-id="some-mock-rbd-draggable-context-id"
-              data-rbd-draggable-id="some-mock-rbd-draggable-id"
               style="z-index: 12; position: absolute;"
             >
               <div
@@ -2012,68 +1956,46 @@ exports[`listing active helm repositories in preferences when navigating to pref
           </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="1"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="2"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="3"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="4"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="5"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="6"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="7"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="8"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="9"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="10"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="11"
           />
         </div>
@@ -2745,13 +2667,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         >
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="0"
           >
             <div
-              data-rbd-draggable-context-id="some-mock-rbd-draggable-context-id"
-              data-rbd-draggable-id="some-mock-rbd-draggable-id"
               style="z-index: 12; position: absolute;"
             >
               <div
@@ -2769,68 +2687,46 @@ exports[`listing active helm repositories in preferences when navigating to pref
           </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="1"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="2"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="3"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="4"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="5"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="6"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="7"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="8"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="9"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="10"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="11"
           />
         </div>
@@ -3394,13 +3290,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         >
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="0"
           >
             <div
-              data-rbd-draggable-context-id="some-mock-rbd-draggable-context-id"
-              data-rbd-draggable-id="some-mock-rbd-draggable-id"
               style="z-index: 12; position: absolute;"
             >
               <div
@@ -3418,68 +3310,46 @@ exports[`listing active helm repositories in preferences when navigating to pref
           </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="1"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="2"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="3"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="4"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="5"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="6"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="7"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="8"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="9"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="10"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="11"
           />
         </div>
@@ -4151,13 +4021,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         >
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="0"
           >
             <div
-              data-rbd-draggable-context-id="some-mock-rbd-draggable-context-id"
-              data-rbd-draggable-id="some-mock-rbd-draggable-id"
               style="z-index: 12; position: absolute;"
             >
               <div
@@ -4175,68 +4041,46 @@ exports[`listing active helm repositories in preferences when navigating to pref
           </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="1"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="2"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="3"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="4"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="5"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="6"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="7"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="8"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="9"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="10"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="11"
           />
         </div>
@@ -4953,13 +4797,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         >
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="0"
           >
             <div
-              data-rbd-draggable-context-id="some-mock-rbd-draggable-context-id"
-              data-rbd-draggable-id="some-mock-rbd-draggable-id"
               style="z-index: 12; position: absolute;"
             >
               <div
@@ -4977,68 +4817,46 @@ exports[`listing active helm repositories in preferences when navigating to pref
           </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="1"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="2"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="3"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="4"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="5"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="6"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="7"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="8"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="9"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="10"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="11"
           />
         </div>
@@ -5602,13 +5420,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         >
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="0"
           >
             <div
-              data-rbd-draggable-context-id="some-mock-rbd-draggable-context-id"
-              data-rbd-draggable-id="some-mock-rbd-draggable-id"
               style="z-index: 12; position: absolute;"
             >
               <div
@@ -5626,68 +5440,46 @@ exports[`listing active helm repositories in preferences when navigating to pref
           </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="1"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="2"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="3"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="4"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="5"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="6"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="7"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="8"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="9"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="10"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="11"
           />
         </div>
@@ -6251,13 +6043,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         >
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="0"
           >
             <div
-              data-rbd-draggable-context-id="some-mock-rbd-draggable-context-id"
-              data-rbd-draggable-id="some-mock-rbd-draggable-id"
               style="z-index: 12; position: absolute;"
             >
               <div
@@ -6275,68 +6063,46 @@ exports[`listing active helm repositories in preferences when navigating to pref
           </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="1"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="2"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="3"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="4"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="5"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="6"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="7"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="8"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="9"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="10"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="11"
           />
         </div>
@@ -6900,13 +6666,9 @@ exports[`listing active helm repositories in preferences when navigating to pref
         >
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="0"
           >
             <div
-              data-rbd-draggable-context-id="some-mock-rbd-draggable-context-id"
-              data-rbd-draggable-id="some-mock-rbd-draggable-id"
               style="z-index: 12; position: absolute;"
             >
               <div
@@ -6924,68 +6686,46 @@ exports[`listing active helm repositories in preferences when navigating to pref
           </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="1"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="2"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="3"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="4"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="5"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="6"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="7"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="8"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="9"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="10"
           />
           <div
             class="HotbarCell isDraggingOwner animateDown"
-            data-rbd-droppable-context-id="some-mock-rbd-droppable-context-id"
-            data-rbd-droppable-id="some-mock-rbd-droppable-id"
             index="11"
           />
         </div>

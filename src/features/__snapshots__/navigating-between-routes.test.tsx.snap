@@ -88,7 +88,23 @@ exports[`navigating between routes given route with optional path parameters whe
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -155,7 +171,7 @@ exports[`navigating between routes given route with optional path parameters whe
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i
@@ -276,7 +292,23 @@ exports[`navigating between routes given route without path parameters when navi
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -343,7 +375,7 @@ exports[`navigating between routes given route without path parameters when navi
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i

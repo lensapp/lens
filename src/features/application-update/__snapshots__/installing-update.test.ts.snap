@@ -165,7 +165,23 @@ exports[`installing update when started renders 1`] = `
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -232,7 +248,7 @@ exports[`installing update when started renders 1`] = `
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -434,7 +450,23 @@ exports[`installing update when started when user checks for updates renders 1`]
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -501,7 +533,7 @@ exports[`installing update when started when user checks for updates renders 1`]
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -703,7 +735,23 @@ exports[`installing update when started when user checks for updates when new up
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -770,7 +818,7 @@ exports[`installing update when started when user checks for updates when new up
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -997,7 +1045,23 @@ exports[`installing update when started when user checks for updates when new up
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -1064,7 +1128,7 @@ exports[`installing update when started when user checks for updates when new up
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -1291,7 +1355,23 @@ exports[`installing update when started when user checks for updates when new up
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -1358,7 +1438,7 @@ exports[`installing update when started when user checks for updates when new up
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -1560,7 +1640,23 @@ exports[`installing update when started when user checks for updates when no new
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -1627,7 +1723,7 @@ exports[`installing update when started when user checks for updates when no new
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
