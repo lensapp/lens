@@ -52,6 +52,7 @@ describe("user store tests", () => {
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
+    di.unoverride(getConfigurationFileModelInjectable);
     di.permitSideEffects(fsInjectable);
 
     di.override(releaseChannelInjectable, () => ({
@@ -60,7 +61,6 @@ describe("user store tests", () => {
     }));
     await di.inject(defaultUpdateChannelInjectable).init();
 
-    di.unoverride(userStoreInjectable);
     userStore = di.inject(userStoreInjectable);
   });
 
