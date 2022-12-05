@@ -4,19 +4,22 @@
  */
 
 import type { KubernetesClusterCategory } from "../../common/catalog-entities";
-import { isLinux, isWindows } from "../../common/vars";
 import { PathPicker } from "../components/path-picker";
 
 interface Dependencies {
   navigateToAddCluster: () => void;
   addSyncEntries: (filePaths: string[]) => void;
   kubernetesClusterCategory: KubernetesClusterCategory;
+  isWindows: boolean;
+  isLinux: boolean;
 }
 
 export function initCatalogCategoryRegistryEntries({
   navigateToAddCluster,
   addSyncEntries,
   kubernetesClusterCategory,
+  isWindows,
+  isLinux,
 } : Dependencies) {
   kubernetesClusterCategory.on("catalogAddMenu", ctx => {
     ctx.menuItems.push(

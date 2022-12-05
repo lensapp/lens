@@ -13,13 +13,8 @@ import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
-import { delay } from "../common/utils";
-import { isMac, isDevelopment } from "../common/vars";
 import { DefaultProps } from "./mui-base-theme";
-import configurePackages from "../common/configure-packages";
 import * as initializers from "./initializers";
-import logger from "../common/logger";
-import { registerCustomThemes } from "./components/monaco-editor";
 import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -36,60 +31,32 @@ import themeStoreInjectable from "./themes/store.injectable";
 import navigateToAddClusterInjectable  from "../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
 import addSyncEntriesInjectable from "./initializers/add-sync-entries.injectable";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
-import { bindEvents } from "./navigation/events";
 import openDeleteClusterDialogInjectable from "./components/delete-cluster-dialog/open.injectable";
 import kubernetesClusterCategoryInjectable from "../common/catalog/categories/kubernetes-cluster.injectable";
-import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-registration.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
-
-configurePackages(); // global packages
-registerCustomThemes(); // monaco editor themes
-
-/**
- * If this is a development build, wait a second to attach
- * Chrome Debugger to renderer process
- * https://stackoverflow.com/questions/52844870/debugging-electron-renderer-process-with-vscode
- */
-async function attachChromeDebugger() {
-  if (isDevelopment) {
-    await delay(1000);
-  }
-}
+import loggerInjectable from "../common/logger.injectable";
+import isLinuxInjectable from "../common/vars/is-linux.injectable";
+import isWindowsInjectable from "../common/vars/is-windows.injectable";
 
 export async function bootstrap(di: DiContainer) {
   const startFrame = di.inject(startFrameInjectable);
+  const logger = di.inject(loggerInjectable);
 
   await startFrame();
-
-  // TODO: Consolidate import time side-effect to setup time
-  bindEvents();
 
   const rootElem = document.getElementById("app");
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
   assert(rootElem, "#app MUST exist");
 
-
-  /**
-   * This is injected here to initialize it for the side effect.
-   *
-   * The side effect CANNOT be within `apiManagerInjectable` itself since that causes circular
-   * dependencies with the current need for legacy di use.
-   *
-   * This also MUST be done before anything else so that it can start listening for the events for
-   * auto initialization.
-   */
-  di.inject(autoRegistrationInjectable);
-
-  await attachChromeDebugger();
-  rootElem.classList.toggle("is-mac", isMac);
-
   logger.info(`${logPrefix} initializing CatalogCategoryRegistryEntries`);
   initializers.initCatalogCategoryRegistryEntries({
     navigateToAddCluster: di.inject(navigateToAddClusterInjectable),
     addSyncEntries: di.inject(addSyncEntriesInjectable),
     kubernetesClusterCategory: di.inject(kubernetesClusterCategoryInjectable),
+    isLinux: di.inject(isLinuxInjectable),
+    isWindows: di.inject(isWindowsInjectable),
   });
 
   logger.info(`${logPrefix} initializing Catalog`);
