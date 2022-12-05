@@ -80,9 +80,10 @@ describe("<LogList />", () => {
   });
 
   it("renders empty list", () => {
-    const { container } = render(<LogList model={getOnePodViewModel("tabId", {
-      getVisibleLogs: () => [],
-    })} />);
+    const { container } = render(<LogList
+      model={getOnePodViewModel("tabId", {
+        getVisibleLogs: () => [],
+      })} />);
 
     expect(container.getElementsByClassName(".LogRow")).toHaveLength(0);
   });
@@ -105,7 +106,7 @@ describe("<LogList />", () => {
       getVisibleLogs: () => [
         "hello",
         "world",
-      ]
+      ],
     }, {
       wrap: true,
     });
