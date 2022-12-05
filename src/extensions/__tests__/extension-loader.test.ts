@@ -14,6 +14,7 @@ import { delay } from "../../renderer/utils";
 import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -27,6 +28,8 @@ describe("ExtensionLoader", () => {
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 
     di.override(ipcRendererInjectable, () => ({
       invoke: jest.fn(async (channel: string) => {
