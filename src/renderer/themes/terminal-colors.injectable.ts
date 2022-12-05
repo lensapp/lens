@@ -3,14 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { camelCase } from "lodash";
 import { computed } from "mobx";
 import terminalThemePreferenceInjectable from "../../common/user-store/terminal-theme.injectable";
-import { object } from "../utils";
 import activeThemeInjectable from "./active.injectable";
 import lensThemesInjectable from "./themes.injectable";
-
-const terminalColorPrefix = "terminal";
 
 const xtermColorThemeInjectable = getInjectable({
   id: "terminal-colors",
@@ -29,14 +25,7 @@ const xtermColorThemeInjectable = getInjectable({
       return themes.get(themePref.themeId) ?? activeTheme.get();
     });
 
-    return computed(() => object.fromEntries(
-      object.entries(terminalTheme.get().colors)
-        .filter(([name]) => name.startsWith(terminalColorPrefix))
-        .map(([name, color]) => [
-          camelCase(name.replace(terminalColorPrefix, "")),
-          color,
-        ]),
-    ));
+    return computed(() => terminalTheme.get().terminalColors);
   },
 });
 
