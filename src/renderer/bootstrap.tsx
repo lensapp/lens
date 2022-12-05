@@ -24,12 +24,10 @@ import extensionInstallationStateStoreInjectable from "../extensions/extension-i
 import clusterStoreInjectable from "../common/cluster-store/cluster-store.injectable";
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame/init-root-frame.injectable";
 import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
-import commandOverlayInjectable from "./components/command-palette/command-overlay.injectable";
 import { Router } from "react-router";
 import historyInjectable from "./navigation/history.injectable";
 import themeStoreInjectable from "./themes/store.injectable";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
-import openDeleteClusterDialogInjectable from "./components/delete-cluster-dialog/open.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
 import loggerInjectable from "../common/logger.injectable";
@@ -44,12 +42,6 @@ export async function bootstrap(di: DiContainer) {
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
   assert(rootElem, "#app MUST exist");
-
-  logger.info(`${logPrefix} initializing Catalog`);
-  initializers.initCatalog({
-    openCommandDialog: di.inject(commandOverlayInjectable).open,
-    openDeleteClusterDialog: di.inject(openDeleteClusterDialogInjectable),
-  });
 
   const extensionLoader = di.inject(extensionLoaderInjectable);
 
