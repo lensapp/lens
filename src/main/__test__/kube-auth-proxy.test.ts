@@ -28,6 +28,10 @@ import normalizedPlatformInjectable from "../../common/vars/normalized-platform.
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
+import pathExistsInjectable from "../../common/fs/path-exists.injectable";
+import readJsonSyncInjectable from "../../common/fs/read-json-sync.injectable";
+import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
+import pathExistsSyncInjectable from "../../common/fs/path-exists-sync.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -73,6 +77,10 @@ describe("kube auth proxy tests", () => {
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
+    di.override(pathExistsInjectable, () => () => { throw new Error("tried call pathExists without override"); });
+    di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
+    di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
+    di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
 
     spawnMock = jest.fn();
     di.override(spawnInjectable, () => spawnMock);

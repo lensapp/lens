@@ -27,6 +27,9 @@ import type { PathExists } from "../../common/fs/path-exists.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import removePathInjectable from "../../common/fs/remove.injectable";
+import pathExistsSyncInjectable from "../../common/fs/path-exists-sync.injectable";
+import readJsonSyncInjectable from "../../common/fs/read-json-sync.injectable";
+import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
 
 const clusterServerUrl = "https://192.168.64.3:8443";
 
@@ -50,6 +53,9 @@ describe("kubeconfig manager tests", () => {
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
+    di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
+    di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
+    di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
 
     readFileMock = asyncFn();
     di.override(readFileInjectable, () => readFileMock);

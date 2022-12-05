@@ -19,6 +19,10 @@ import type { ObservableMap } from "mobx";
 import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
+import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
+import pathExistsInjectable from "../../../common/fs/path-exists.injectable";
+import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
+import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
 
 function throwIfDefined(val: any): void {
   if (val != null) {
@@ -34,6 +38,11 @@ describe("protocol router tests", () => {
 
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(pathExistsInjectable, () => () => { throw new Error("tried call pathExists without override"); });
+    di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
+    di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
+    di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
 
     enabledExtensions = new Set();
 

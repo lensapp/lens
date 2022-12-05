@@ -22,6 +22,10 @@ import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 import { apiResourceRecord, apiResources } from "../../common/rbac";
 import listApiResourcesInjectable from "../../common/cluster/list-api-resources.injectable";
+import pathExistsSyncInjectable from "../../common/fs/path-exists-sync.injectable";
+import pathExistsInjectable from "../../common/fs/path-exists.injectable";
+import readJsonSyncInjectable from "../../common/fs/read-json-sync.injectable";
+import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -56,6 +60,10 @@ describe("create clusters", () => {
       setupPrometheus: jest.fn(),
       ensureServer: jest.fn(),
     } as ClusterContextHandler));
+    di.override(pathExistsInjectable, () => () => { throw new Error("tried call pathExists without override"); });
+    di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
+    di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
+    di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
 
     createCluster = di.inject(createClusterInjectionToken);
 
