@@ -16,7 +16,7 @@ import type { PieChartData } from "../chart";
 import { PieChart } from "../chart";
 import { ClusterNoMetrics } from "./cluster-no-metrics";
 import { bytesToUnits, cssNames } from "../../utils";
-import type { LensTheme } from "../../themes/store";
+import type { LensTheme } from "../../themes/lens-theme";
 import { getMetricLastPoints } from "../../../common/k8s-api/endpoints/metrics.api";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterOverviewStoreInjectable from "./cluster-overview-store/cluster-overview-store.injectable";

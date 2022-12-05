@@ -12,7 +12,7 @@ import { ResourceMetricsContext } from "../resource-metrics";
 import { observer } from "mobx-react";
 import { mapValues } from "lodash";
 import { type MetricsTab, metricTabOptions } from "../chart/options";
-import type { LensTheme } from "../../themes/store";
+import type { LensTheme } from "../../themes/lens-theme";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import activeThemeInjectable from "../../themes/active.injectable";

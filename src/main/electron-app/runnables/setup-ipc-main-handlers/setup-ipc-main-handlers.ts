@@ -14,8 +14,6 @@ import { pushCatalogToRenderer } from "../../../catalog-pusher";
 import type { IComputedValue } from "mobx";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
 import { handleWindowAction, onLocationChange } from "../../../ipc/window";
-import { getNativeThemeChannel } from "../../../../common/ipc/native-theme";
-import type { Theme } from "../../../theme/operating-system-theme-state.injectable";
 import type { ApplicationMenuItemTypes } from "../../../../features/application-menu/main/menu-items/application-menu-item-injection-token";
 import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
 import { getApplicationMenuTemplate } from "../../../../features/application-menu/main/populate-application-menu.injectable";
@@ -26,7 +24,6 @@ interface Dependencies {
   applicationMenuItemComposite: IComputedValue<Composite<ApplicationMenuItemTypes | MenuItemRoot>>;
   catalogEntityRegistry: CatalogEntityRegistry;
   clusterStore: ClusterStore;
-  operatingSystemTheme: IComputedValue<Theme>;
   emitAppEvent: EmitAppEvent;
   getClusterById: GetClusterById;
 }
@@ -35,7 +32,6 @@ export const setupIpcMainHandlers = ({
   applicationMenuItemComposite,
   catalogEntityRegistry,
   clusterStore,
-  operatingSystemTheme,
   emitAppEvent,
   getClusterById,
 }: Dependencies) => {
@@ -81,10 +77,6 @@ export const setupIpcMainHandlers = ({
       x: 20,
       y: 20,
     });
-  });
-
-  ipcMainHandle(getNativeThemeChannel, () => {
-    return operatingSystemTheme.get();
   });
 
   ipcMainHandle(clusterStates, () => (

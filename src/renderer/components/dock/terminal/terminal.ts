@@ -10,7 +10,6 @@ import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import type { TabId } from "../dock/store";
 import type { TerminalApi } from "../../../api/terminal-api";
-import type { ThemeStore } from "../../../themes/store";
 import { disposer } from "../../../utils";
 import { once } from "lodash";
 import { clipboard } from "electron";
@@ -25,8 +24,8 @@ export interface TerminalDependencies {
   readonly spawningPool: HTMLElement;
   readonly terminalConfig: IComputedValue<TerminalConfig>;
   readonly terminalCopyOnSelect: IComputedValue<boolean>;
-  readonly themeStore: ThemeStore;
   readonly isMac: boolean;
+  readonly xtermColorTheme: IComputedValue<Record<string, string>>;
   openLinkInBrowser: OpenLinkInBrowser;
 }
 
@@ -75,10 +74,6 @@ export class Terminal {
     return this.dependencies.terminalConfig.get().fontSize;
   }
 
-  get theme(): Record<string/*paramName*/, string/*color*/> {
-    return this.dependencies.themeStore.xtermColors;
-  }
-
   constructor(protected readonly dependencies: TerminalDependencies, {
     tabId,
     api,
@@ -120,9 +115,12 @@ export class Terminal {
 
     this.disposer.push(
       this.xterm.registerLinkProvider(linkProvider),
-      reaction(() => this.theme, colors => this.xterm.setOption("theme", colors), {
-        fireImmediately: true,
-      }),
+      reaction(() => this.dependencies.xtermColorTheme.get(),
+        colors => this.xterm.options.theme = colors,
+        {
+          fireImmediately: true,
+        },
+      ),
       reaction(() => this.fontSize, this.setFontSize, { fireImmediately: true }),
       reaction(() => this.fontFamily, this.setFontFamily, { fireImmediately: true }),
       () => onDataHandler.dispose(),

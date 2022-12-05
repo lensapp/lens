@@ -24,7 +24,6 @@ import initRootFrameInjectable from "./frames/root-frame/init-root-frame/init-ro
 import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
 import { Router } from "react-router";
 import historyInjectable from "./navigation/history.injectable";
-import themeStoreInjectable from "./themes/store.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
 
@@ -44,10 +43,6 @@ export async function bootstrap(di: DiContainer) {
   const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
 
   extensionDiscovery.init();
-
-  // ThemeStore depends on: UserStore
-  // TODO: Remove temporal dependencies
-  di.inject(themeStoreInjectable);
 
   const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
 

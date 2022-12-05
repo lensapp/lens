@@ -5,8 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
-import type { LensThemeType } from "./store";
-import themeStoreInjectable from "./store.injectable";
+import activeThemeInjectable from "./active.injectable";
+import type { LensThemeType } from "./lens-theme";
 
 export type ActiveThemeType = IComputedValue<LensThemeType>;
 
@@ -14,9 +14,9 @@ const activeThemeTypeInjectable = getInjectable({
   id: "active-theme-type",
 
   instantiate: (di) => {
-    const store = di.inject(themeStoreInjectable);
+    const activeTheme = di.inject(activeThemeInjectable);
 
-    return computed(() => store.activeTheme.type);
+    return computed(() => activeTheme.get().type);
   },
 });
 

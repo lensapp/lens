@@ -8,7 +8,7 @@ import { runInAction, action, observable, computed } from "mobx";
 import type { TargetHelmRelease } from "../target-helm-release.injectable";
 import type { RequestDetailedHelmRelease, DetailedHelmRelease } from "./request-detailed-helm-release.injectable";
 import requestDetailedHelmReleaseInjectable from "./request-detailed-helm-release.injectable";
-import type { LensTheme } from "../../../../themes/store";
+import type { LensTheme } from "../../../../themes/lens-theme";
 import type { RequestHelmReleaseConfiguration } from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import requestHelmReleaseConfigurationInjectable from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import { pipeline } from "@ogre-tools/fp";

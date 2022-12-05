@@ -10,7 +10,7 @@ import { BarChart, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { ResourceMetricsContext } from "../resource-metrics";
-import type { LensTheme } from "../../themes/store";
+import type { LensTheme } from "../../themes/lens-theme";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import activeThemeInjectable from "../../themes/active.injectable";

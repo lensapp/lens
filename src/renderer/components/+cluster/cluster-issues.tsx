@@ -27,7 +27,7 @@ import type { PageParam } from "../../navigation";
 import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
 import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
 import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";
-import type { LensTheme } from "../../themes/store";
+import type { LensTheme } from "../../themes/lens-theme";
 import activeThemeInjectable from "../../themes/active.injectable";
 
 export interface ClusterIssuesProps {
