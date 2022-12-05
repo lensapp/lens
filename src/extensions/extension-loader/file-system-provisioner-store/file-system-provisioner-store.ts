@@ -34,7 +34,6 @@ export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
     });
 
     makeObservable(this);
-    this.load();
   }
 
   /**

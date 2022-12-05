@@ -114,6 +114,7 @@ export interface ApplicationBuilder {
 
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
+  afterApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeWindowStart: (callback: Callback) => ApplicationBuilder;
   afterWindowStart: (callback: Callback) => ApplicationBuilder;
 
@@ -170,6 +171,7 @@ export const getApplicationBuilder = () => {
   const { overrideForWindow, sendToWindow } = overrideChannels(mainDi);
 
   const beforeApplicationStartCallbacks: Callback[] = [];
+  const afterApplicationStartCallbacks: Callback[] = [];
   const beforeWindowStartCallbacks: Callback[] = [];
   const afterWindowStartCallbacks: Callback[] = [];
 
@@ -556,7 +558,7 @@ export const getApplicationBuilder = () => {
       },
 
       enable: (...extensions) => {
-        builder.beforeWindowStart((windowDi) => {
+        builder.afterWindowStart((windowDi) => {
           const rendererExtensionInstances = extensions.map((options) =>
             getExtensionFakeForRenderer(
               windowDi,
@@ -571,7 +573,7 @@ export const getApplicationBuilder = () => {
           );
         });
 
-        builder.beforeApplicationStart((mainDi) => {
+        builder.afterApplicationStart((mainDi) => {
           const mainExtensionInstances = extensions.map((extension) =>
             getExtensionFakeForMain(mainDi, extension.id, extension.name, extension.mainOptions || {}),
           );
@@ -585,7 +587,7 @@ export const getApplicationBuilder = () => {
       },
 
       disable: (...extensions) => {
-        builder.beforeWindowStart(windowDi => {
+        builder.afterWindowStart(windowDi => {
           extensions
             .map((ext) => ext.id)
             .forEach(
@@ -593,7 +595,7 @@ export const getApplicationBuilder = () => {
             );
         });
 
-        builder.beforeApplicationStart(mainDi => {
+        builder.afterApplicationStart(mainDi => {
           extensions
             .map((ext) => ext.id)
             .forEach(
@@ -619,6 +621,16 @@ export const getApplicationBuilder = () => {
       }
 
       beforeApplicationStartCallbacks.push(callback);
+
+      return builder;
+    },
+
+    afterApplicationStart(callback) {
+      if (applicationHasStarted) {
+        callback(mainDi);
+      }
+
+      afterApplicationStartCallbacks.push(callback);
 
       return builder;
     },
@@ -657,6 +669,10 @@ export const getApplicationBuilder = () => {
       mainDi.override(shouldStartHiddenInjectable, () => true);
       await mainDi.inject(startMainApplicationInjectable);
 
+      for (const callback of afterApplicationStartCallbacks) {
+        await callback(mainDi);
+      }
+
       applicationHasStarted = true;
     },
 
@@ -669,6 +685,10 @@ export const getApplicationBuilder = () => {
 
       mainDi.override(shouldStartHiddenInjectable, () => false);
       await mainDi.inject(startMainApplicationInjectable);
+
+      for (const callback of afterApplicationStartCallbacks) {
+        await callback(mainDi);
+      }
 
       applicationHasStarted = true;
 
