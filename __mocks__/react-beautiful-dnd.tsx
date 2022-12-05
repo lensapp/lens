@@ -7,7 +7,9 @@ import React from "react";
 import type {
   DragDropContextProps,
   DraggableProps,
+  DraggableProvidedDraggableProps,
   DroppableProps,
+  DroppableProvidedProps,
 } from "react-beautiful-dnd";
 
 export const DragDropContext = ({ children }: DragDropContextProps) => <>{ children }</>;
@@ -16,10 +18,7 @@ export const Draggable = ({ children }: DraggableProps) => (
     {
       children(
         {
-          draggableProps: {
-            "data-rbd-draggable-context-id": "some-mock-rbd-draggable-context-id",
-            "data-rbd-draggable-id": "some-mock-rbd-draggable-id",
-          },
+          draggableProps: {} as DraggableProvidedDraggableProps,
           innerRef: () => {},
         },
         {
@@ -43,10 +42,7 @@ export const Droppable = ({ children }: DroppableProps) => (
     {
       children(
         {
-          droppableProps: {
-            "data-rbd-droppable-context-id": "some-mock-rbd-droppable-context-id",
-            "data-rbd-droppable-id": "some-mock-rbd-droppable-id",
-          },
+          droppableProps: {} as DroppableProvidedProps,
           innerRef: () => {},
         },
         {
