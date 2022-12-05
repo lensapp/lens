@@ -12,6 +12,7 @@ import type { DiRender } from "../../../test-utils/renderFor";
 import { renderFor } from "../../../test-utils/renderFor";
 import clusterRoleStoreInjectable from "../../+cluster-roles/store.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../../../stores-apis-can-be-created.injectable";
+import directoryForUserDataInjectable from "../../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 describe("ClusterRoleBindingDialog tests", () => {
   let render: DiRender;
@@ -20,6 +21,7 @@ describe("ClusterRoleBindingDialog tests", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(directoryForUserDataInjectable, () => "/some-path-for-user-data");
 
     render = renderFor(di);
 
