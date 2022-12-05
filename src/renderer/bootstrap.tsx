@@ -14,7 +14,6 @@ import * as ReactRouterDom from "react-router-dom";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsRendererApi from "../extensions/renderer-api";
 import { DefaultProps } from "./mui-base-theme";
-import * as initializers from "./initializers";
 import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -30,23 +29,17 @@ import themeStoreInjectable from "./themes/store.injectable";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
-import loggerInjectable from "../common/logger.injectable";
 
 export async function bootstrap(di: DiContainer) {
   const startFrame = di.inject(startFrameInjectable);
-  const logger = di.inject(loggerInjectable);
 
   await startFrame();
 
   const rootElem = document.getElementById("app");
-  const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
   assert(rootElem, "#app MUST exist");
 
   const extensionLoader = di.inject(extensionLoaderInjectable);
-
-  logger.info(`${logPrefix} initializing IpcRendererListeners`);
-  initializers.initIpcRendererListeners(extensionLoader);
 
   extensionLoader.init();
 
