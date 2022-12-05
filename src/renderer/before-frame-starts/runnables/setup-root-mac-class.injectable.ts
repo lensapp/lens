@@ -8,18 +8,15 @@ import { beforeFrameStartsInjectionToken } from "../tokens";
 
 const setupRootMacClassnameInjectable = getInjectable({
   id: "setup-root-mac-classname",
-  instantiate: (di) => {
-    const isMac = di.inject(isMacInjectable);
+  instantiate: (di) => ({
+    id: "setup-root-mac-classname",
+    run: () => {
+      const isMac = di.inject(isMacInjectable);
+      const rootElem = document.getElementById("app");
 
-    return {
-      id: "setup-root-mac-classname",
-      run: () => {
-        const rootElem = document.getElementById("app");
-
-        rootElem?.classList.toggle("is-mac", isMac);
-      },
-    };
-  },
+      rootElem?.classList.toggle("is-mac", isMac);
+    },
+  }),
   injectionToken: beforeFrameStartsInjectionToken,
 });
 

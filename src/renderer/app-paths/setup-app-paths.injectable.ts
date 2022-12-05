@@ -11,19 +11,16 @@ import { requestFromChannelInjectionToken } from "../../common/utils/channel/req
 const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",
 
-  instantiate: (di) => {
-    const requestFromChannel = di.inject(requestFromChannelInjectionToken);
-    const appPathsState = di.inject(appPathsStateInjectable);
+  instantiate: (di) => ({
+    id: "setup-app-paths",
+    run: async () => {
+      const requestFromChannel = di.inject(requestFromChannelInjectionToken);
+      const appPathsState = di.inject(appPathsStateInjectable);
+      const appPaths = await requestFromChannel(appPathsChannel);
 
-    return {
-      id: "setup-app-paths",
-      run: async () => {
-        const appPaths = await requestFromChannel(appPathsChannel);
-
-        appPathsState.set(appPaths);
-      },
-    };
-  },
+      appPathsState.set(appPaths);
+    },
+  }),
 
   injectionToken: beforeFrameStartsInjectionToken,
 });

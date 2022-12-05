@@ -11,23 +11,21 @@ import topBarStateInjectable from "./state.injectable";
 // TODO: replace with a SyncBox
 const startTopbarStateSyncInjectable = getInjectable({
   id: "start-topbar-state-sync",
-  instantiate: (di) => {
-    const state = di.inject(topBarStateInjectable);
-    const ipcRenderer = di.inject(ipcRendererInjectable);
+  instantiate: (di) => ({
+    id: "start-topbar-state-sync",
+    run: () => {
+      const state = di.inject(topBarStateInjectable);
+      const ipcRenderer = di.inject(ipcRendererInjectable);
 
-    return {
-      id: "start-topbar-state-sync",
-      run: () => {
-        ipcRenderer.on("history:can-go-back", action((event, canGoBack: boolean) => {
-          state.prevEnabled = canGoBack;
-        }));
+      ipcRenderer.on("history:can-go-back", action((event, canGoBack: boolean) => {
+        state.prevEnabled = canGoBack;
+      }));
 
-        ipcRenderer.on("history:can-go-forward", action((event, canGoForward: boolean) => {
-          state.nextEnabled = canGoForward;
-        }));
-      },
-    };
-  },
+      ipcRenderer.on("history:can-go-forward", action((event, canGoForward: boolean) => {
+        state.nextEnabled = canGoForward;
+      }));
+    },
+  }),
   injectionToken: beforeFrameStartsInjectionToken,
   causesSideEffects: true,
 });

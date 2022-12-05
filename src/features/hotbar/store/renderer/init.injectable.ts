@@ -9,17 +9,15 @@ import initClusterStoreInjectable from "../../../cluster/store/renderer/init.inj
 
 const initHotbarStoreInjectable = getInjectable({
   id: "init-hotbar-store",
-  instantiate: (di) => {
-    const hotbarStore = di.inject(hotbarStoreInjectable);
+  instantiate: (di) => ({
+    id: "init-hotbar-store",
+    run: () => {
+      const hotbarStore = di.inject(hotbarStoreInjectable);
 
-    return {
-      id: "init-hotbar-store",
-      run: () => {
-        hotbarStore.load();
-      },
-      runAfter: di.inject(initClusterStoreInjectable),
-    };
-  },
+      hotbarStore.load();
+    },
+    runAfter: di.inject(initClusterStoreInjectable),
+  }),
   injectionToken: beforeFrameStartsInjectionToken,
 });
 

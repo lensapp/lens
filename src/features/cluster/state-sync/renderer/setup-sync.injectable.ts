@@ -10,22 +10,19 @@ import requestInitialClusterStatesInjectable from "./request-initial.injectable"
 
 const setupClusterStateSyncInjectable = getInjectable({
   id: "setup-cluster-state-sync",
-  instantiate: (di) => {
-    const requestInitialClusterStates = di.inject(requestInitialClusterStatesInjectable);
-    const getClusterById = di.inject(getClusterByIdInjectable);
+  instantiate: (di) => ({
+    id: "setup-cluster-state-sync",
+    run: async () => {
+      const requestInitialClusterStates = di.inject(requestInitialClusterStatesInjectable);
+      const getClusterById = di.inject(getClusterByIdInjectable);
+      const initalStates = await requestInitialClusterStates();
 
-    return {
-      id: "setup-cluster-state-sync",
-      run: async () => {
-        const initalStates = await requestInitialClusterStates();
-
-        for (const { clusterId, state } of initalStates) {
-          getClusterById(clusterId)?.setState(state);
-        }
-      },
-      runAfter: di.inject(initClusterStoreInjectable),
-    };
-  },
+      for (const { clusterId, state } of initalStates) {
+        getClusterById(clusterId)?.setState(state);
+      }
+    },
+    runAfter: di.inject(initClusterStoreInjectable),
+  }),
   injectionToken: beforeFrameStartsInjectionToken,
 });
 

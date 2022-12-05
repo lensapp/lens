@@ -10,18 +10,16 @@ import requestInitialSystemThemeTypeInjectable from "./request-initial.injectabl
 
 const initializeSystemThemeTypeInjectable = getInjectable({
   id: "initialize-system-theme-type",
-  instantiate: (di) => {
-    const systemThemeConfiguration = di.inject(systemThemeConfigurationInjectable);
-    const requestInitialSystemThemeType = di.inject(requestInitialSystemThemeTypeInjectable);
+  instantiate: (di) => ({
+    id: "initialize-system-theme-type",
+    run: async () => {
+      const systemThemeConfiguration = di.inject(systemThemeConfigurationInjectable);
+      const requestInitialSystemThemeType = di.inject(requestInitialSystemThemeTypeInjectable);
 
-    return {
-      id: "initialize-system-theme-type",
-      run: async () => {
-        systemThemeConfiguration.set(await requestInitialSystemThemeType());
-      },
-      runAfter: di.inject(initUserStoreInjectable),
-    };
-  },
+      systemThemeConfiguration.set(await requestInitialSystemThemeType());
+    },
+    runAfter: di.inject(initUserStoreInjectable),
+  }),
   injectionToken: beforeFrameStartsInjectionToken,
 });
 

@@ -11,23 +11,21 @@ import { evenBeforeMainFrameStartsInjectionToken } from "../tokens";
 
 const setupCurrentClusterBroadcastInjectable = getInjectable({
   id: "setup-current-cluster-broadcast",
-  instantiate: (di) => {
-    const matchedClusterId = di.inject(matchedClusterIdInjectable);
-    const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
+  instantiate: (di) => ({
+    id: "setup-current-cluster-broadcast",
+    run: () => {
+      const matchedClusterId = di.inject(matchedClusterIdInjectable);
+      const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
 
-    return {
-      id: "setup-current-cluster-broadcast",
-      run: () => {
-        reaction(
-          () => matchedClusterId.get(),
-          clusterId => sendMessageToChannel(currentClusterMessageChannel, clusterId),
-          {
-            fireImmediately: true,
-          },
-        );
-      },
-    };
-  },
+      reaction(
+        () => matchedClusterId.get(),
+        clusterId => sendMessageToChannel(currentClusterMessageChannel, clusterId),
+        {
+          fireImmediately: true,
+        },
+      );
+    },
+  }),
   injectionToken: evenBeforeMainFrameStartsInjectionToken,
 });
 

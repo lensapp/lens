@@ -9,17 +9,15 @@ import { evenBeforeFrameStartsInjectionToken } from "../tokens";
 
 const loadMonacoThemesInjectable = getInjectable({
   id: "load-monaco-themes",
-  instantiate: (di) => {
-    const customThemes = di.injectMany(customMonacoThemeInjectionToken);
-    const addNewMonacoTheme = di.inject(addNewMonacoThemeInjectable);
+  instantiate: (di) => ({
+    id: "load-monaco-themes",
+    run: () => {
+      const customThemes = di.injectMany(customMonacoThemeInjectionToken);
+      const addNewMonacoTheme = di.inject(addNewMonacoThemeInjectable);
 
-    return {
-      id: "load-monaco-themes",
-      run: () => {
-        customThemes.forEach(addNewMonacoTheme);
-      },
-    };
-  },
+      customThemes.forEach(addNewMonacoTheme);
+    },
+  }),
   injectionToken: evenBeforeFrameStartsInjectionToken,
 });
 

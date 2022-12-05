@@ -11,25 +11,23 @@ import { beforeFrameStartsInjectionToken } from "../tokens";
 
 const setupWeblickContextMenuOpenInjectable = getInjectable({
   id: "setup-weblick-context-menu-open",
-  instantiate: (di) => {
-    const catalogCategoryRegistry = di.inject(catalogCategoryRegistryInjectable);
-    const commandOverlay = di.inject(commandOverlayInjectable);
+  instantiate: (di) => ({
+    id: "setup-weblick-context-menu-open",
+    run: () => {
+      const catalogCategoryRegistry = di.inject(catalogCategoryRegistryInjectable);
+      const commandOverlay = di.inject(commandOverlayInjectable);
 
-    return {
-      id: "setup-weblick-context-menu-open",
-      run: () => {
-        catalogCategoryRegistry
-          .getForGroupKind("entity.k8slens.dev", "WebLink")
-          ?.on("catalogAddMenu", ctx => {
-            ctx.menuItems.push({
-              title: "Add web link",
-              icon: "public",
-              onClick: () => commandOverlay.open(<WeblinkAddCommand />),
-            });
+      catalogCategoryRegistry
+        .getForGroupKind("entity.k8slens.dev", "WebLink")
+        ?.on("catalogAddMenu", ctx => {
+          ctx.menuItems.push({
+            title: "Add web link",
+            icon: "public",
+            onClick: () => commandOverlay.open(<WeblinkAddCommand />),
           });
-      },
-    };
-  },
+        });
+    },
+  }),
   injectionToken: beforeFrameStartsInjectionToken,
 });
 
