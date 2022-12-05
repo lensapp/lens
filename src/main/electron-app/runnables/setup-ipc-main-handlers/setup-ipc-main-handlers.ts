@@ -45,7 +45,6 @@ export const setupIpcMainHandlers = ({
 
     if (cluster) {
       clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
-      cluster.pushState();
 
       pushCatalogToRenderer(catalogEntityRegistry);
     }
