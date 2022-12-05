@@ -377,7 +377,7 @@
     "electron-notarize": "^0.3.0",
     "esbuild": "^0.15.16",
     "esbuild-loader": "^2.20.0",
-    "eslint": "^8.28.0",
+    "eslint": "^8.29.0",
     "eslint-plugin-header": "^3.1.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-react": "7.31.11",
