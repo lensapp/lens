@@ -115,6 +115,7 @@ describe("HotbarStore", () => {
 
     di.permitSideEffects(fsInjectable);
     di.permitSideEffects(getConfigurationFileModelInjectable);
+    di.unoverride(getConfigurationFileModelInjectable);
   });
 
   afterEach(() => {
@@ -256,22 +257,12 @@ describe("HotbarStore", () => {
       });
 
       it("throws if invalid arguments provided", () => {
-        // Prevent writing to stderr during this render.
-        const { error, warn } = console;
-
-        console.error = jest.fn();
-        console.warn = jest.fn();
-
         hotbarStore.addToHotbar(testCluster);
 
         expect(() => hotbarStore.restackItems(-5, 0)).toThrow();
         expect(() => hotbarStore.restackItems(2, -1)).toThrow();
         expect(() => hotbarStore.restackItems(14, 1)).toThrow();
         expect(() => hotbarStore.restackItems(11, 112)).toThrow();
-
-        // Restore writing to stderr.
-        console.error = error;
-        console.warn = warn;
       });
 
       it("checks if entity already pinned to hotbar", () => {
@@ -285,7 +276,7 @@ describe("HotbarStore", () => {
 
   describe("given data from 5.0.0-beta.3 and version being 5.0.0-beta.10", () => {
     beforeEach(() => {
-      const configurationToBeMigrated = {
+      mockFs({
         "some-directory-for-user-data": {
           "lens-hotbar-store.json": JSON.stringify({
             __internal__: {
@@ -345,9 +336,7 @@ describe("HotbarStore", () => {
             ],
           }),
         },
-      };
-
-      mockFs(configurationToBeMigrated);
+      });
 
       di.override(storeMigrationVersionInjectable, () => "5.0.0-beta.10");
 

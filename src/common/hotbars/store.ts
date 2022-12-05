@@ -53,7 +53,6 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     if (typeof hotbar === "number") {
       if (hotbar >= 0 && hotbar < this.hotbars.length) {
         this._activeHotbarId = this.hotbars[hotbar].id;
-        console.log("in _activeHotbarId", this._activeHotbarId);
       }
     } else if (typeof hotbar === "string") {
       if (this.findById(hotbar)) {
