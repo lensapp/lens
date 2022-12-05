@@ -100,7 +100,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       this._activeHotbarId = data.activeHotbarId;
     }
 
-    if (!this.activeHotbarId) {
+    if (!this._activeHotbarId) {
       this._activeHotbarId = this.hotbars[0].id;
     }
   }
