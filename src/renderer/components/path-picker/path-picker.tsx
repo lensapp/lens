@@ -3,12 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { withInjectables } from "@ogre-tools/injectable-react";
 import type { FileFilter, OpenDialogOptions } from "electron";
 import { observer } from "mobx-react";
 import React from "react";
+import type { OpenPathPickingDialog } from "../../../features/path-picking-dialog/renderer/pick-paths.injectable";
+import openPathPickingDialogInjectable from "../../../features/path-picking-dialog/renderer/pick-paths.injectable";
 import { cssNames } from "../../utils";
 import { Button } from "../button";
-import { requestOpenFilePickingDialog } from "../../ipc";
 
 export interface PathPickOpts {
   label: string;
@@ -26,40 +28,36 @@ export interface PathPickerProps extends PathPickOpts {
   disabled?: boolean;
 }
 
-@observer
-export class PathPicker extends React.Component<PathPickerProps> {
-  static async pick(opts: PathPickOpts) {
-    const { onPick, onCancel, label, ...dialogOptions } = opts;
-
-    const { canceled, filePaths } = await requestOpenFilePickingDialog({
-      message: label,
-      ...dialogOptions,
-    });
-
-    if (canceled) {
-      await onCancel?.();
-    } else {
-      await onPick?.(filePaths);
-    }
-  }
-
-  async onClick() {
-    const { className, disabled, ...pickOpts } = this.props;
-
-    return PathPicker.pick(pickOpts);
-  }
-
-  render() {
-    const { className, label, disabled } = this.props;
-
-    return (
-      <Button
-        primary
-        label={label}
-        disabled={disabled}
-        className={cssNames("PathPicker", className)}
-        onClick={() => void this.onClick()}
-      />
-    );
-  }
+interface Dependencies {
+  openPathPickingDialog: OpenPathPickingDialog;
 }
+
+const NonInjectedPathPicker = observer((props: PathPickerProps & Dependencies) => {
+  const {
+    className,
+    label,
+    disabled,
+    openPathPickingDialog,
+    ...pickOpts
+  } = props;
+
+  return (
+    <Button
+      primary
+      label={label}
+      disabled={disabled}
+      className={cssNames("PathPicker", className)}
+      onClick={() => void openPathPickingDialog({
+        label,
+        ...pickOpts,
+      })}
+    />
+  );
+});
+
+export const PathPicker = withInjectables<Dependencies, PathPickerProps>(NonInjectedPathPicker, {
+  getProps: (di, props) => ({
+    ...props,
+    openPathPickingDialog: di.inject(openPathPickingDialogInjectable),
+  }),
+});

@@ -14,10 +14,8 @@ import { pushCatalogToRenderer } from "../../../catalog-pusher";
 import type { IComputedValue } from "mobx";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
 import { handleWindowAction, onLocationChange } from "../../../ipc/window";
-import { openFilePickingDialogChannel } from "../../../../common/ipc/dialog";
 import { getNativeThemeChannel } from "../../../../common/ipc/native-theme";
 import type { Theme } from "../../../theme/operating-system-theme-state.injectable";
-import type { AskUserForFilePaths } from "../../../ipc/ask-user-for-file-paths.injectable";
 import type { ApplicationMenuItemTypes } from "../../../../features/application-menu/main/menu-items/application-menu-item-injection-token";
 import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
 import { getApplicationMenuTemplate } from "../../../../features/application-menu/main/populate-application-menu.injectable";
@@ -29,7 +27,6 @@ interface Dependencies {
   catalogEntityRegistry: CatalogEntityRegistry;
   clusterStore: ClusterStore;
   operatingSystemTheme: IComputedValue<Theme>;
-  askUserForFilePaths: AskUserForFilePaths;
   emitAppEvent: EmitAppEvent;
   getClusterById: GetClusterById;
 }
@@ -39,7 +36,6 @@ export const setupIpcMainHandlers = ({
   catalogEntityRegistry,
   clusterStore,
   operatingSystemTheme,
-  askUserForFilePaths,
   emitAppEvent,
   getClusterById,
 }: Dependencies) => {
@@ -72,8 +68,6 @@ export const setupIpcMainHandlers = ({
   ipcMainHandle(windowActionHandleChannel, (event, action) => handleWindowAction(action));
 
   ipcMainOn(windowLocationChangedChannel, () => onLocationChange());
-
-  ipcMainHandle(openFilePickingDialogChannel, (event, opts) => askUserForFilePaths(opts));
 
   ipcMainHandle(broadcastMainChannel, (event, channel, ...args) => broadcastMessage(channel, ...args));
 

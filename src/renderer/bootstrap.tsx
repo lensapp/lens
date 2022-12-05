@@ -28,16 +28,11 @@ import commandOverlayInjectable from "./components/command-palette/command-overl
 import { Router } from "react-router";
 import historyInjectable from "./navigation/history.injectable";
 import themeStoreInjectable from "./themes/store.injectable";
-import navigateToAddClusterInjectable  from "../common/front-end-routing/routes/add-cluster/navigate-to-add-cluster.injectable";
-import addSyncEntriesInjectable from "./initializers/add-sync-entries.injectable";
 import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import openDeleteClusterDialogInjectable from "./components/delete-cluster-dialog/open.injectable";
-import kubernetesClusterCategoryInjectable from "../common/catalog/categories/kubernetes-cluster.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
 import loggerInjectable from "../common/logger.injectable";
-import isLinuxInjectable from "../common/vars/is-linux.injectable";
-import isWindowsInjectable from "../common/vars/is-windows.injectable";
 
 export async function bootstrap(di: DiContainer) {
   const startFrame = di.inject(startFrameInjectable);
@@ -49,15 +44,6 @@ export async function bootstrap(di: DiContainer) {
   const logPrefix = `[BOOTSTRAP-${process.isMainFrame ? "ROOT" : "CLUSTER"}-FRAME]:`;
 
   assert(rootElem, "#app MUST exist");
-
-  logger.info(`${logPrefix} initializing CatalogCategoryRegistryEntries`);
-  initializers.initCatalogCategoryRegistryEntries({
-    navigateToAddCluster: di.inject(navigateToAddClusterInjectable),
-    addSyncEntries: di.inject(addSyncEntriesInjectable),
-    kubernetesClusterCategory: di.inject(kubernetesClusterCategoryInjectable),
-    isLinux: di.inject(isLinuxInjectable),
-    isWindows: di.inject(isWindowsInjectable),
-  });
 
   logger.info(`${logPrefix} initializing Catalog`);
   initializers.initCatalog({
