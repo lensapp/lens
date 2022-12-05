@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<LogList /> renders logs 1`] = `
+<div>
+  <div
+    class="LogList"
+    data-testid="pod-log-list"
+  >
+    <div
+      class="virtualizer"
+      style="height: 0px;"
+    >
+      <div
+        class="anchorLine"
+        style="top: 0px;"
+      />
+      <div
+        class="rowWrapper"
+        data-index="0"
+        style="transform: translateY(0px);"
+      >
+        <div>
+          <div
+            class="LogRow"
+          >
+            <span>
+              hello
+            </span>
+            <br />
+          </div>
+        </div>
+      </div>
+      <div
+        class="rowWrapper"
+        data-index="1"
+        style="transform: translateY(0px);"
+      >
+        <div>
+          <div
+            class="LogRow"
+          >
+            <span>
+              world
+            </span>
+            <br />
+          </div>
+        </div>
+      </div>
+      <div
+        class="anchorLine"
+        style="bottom: 0px;"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<LogList /> when user selected to wrap log lines renders logs with wrapping 1`] = `
+<div>
+  <div
+    class="LogList"
+    data-testid="pod-log-list"
+  >
+    <div
+      class="virtualizer"
+      style="height: 0px;"
+    >
+      <div
+        class="anchorLine"
+        style="top: 0px;"
+      />
+      <div
+        class="rowWrapper wrap"
+        data-index="0"
+        style="transform: translateY(0px);"
+      >
+        <div>
+          <div
+            class="LogRow"
+          >
+            <span>
+              hello
+            </span>
+            <br />
+          </div>
+        </div>
+      </div>
+      <div
+        class="rowWrapper wrap"
+        data-index="1"
+        style="transform: translateY(0px);"
+      >
+        <div>
+          <div
+            class="LogRow"
+          >
+            <span>
+              world
+            </span>
+            <br />
+          </div>
+        </div>
+      </div>
+      <div
+        class="anchorLine"
+        style="bottom: 0px;"
+      />
+    </div>
+  </div>
+</div>
+`;
