@@ -3,11 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { JsonValue } from "type-fest";
 import getDirnameOfPathInjectable from "../path/get-dirname.injectable";
 import fsInjectable from "./fs.injectable";
 
-export type WriteJson = (filePath: string, contents: JsonValue) => Promise<void>;
+export type WriteJson = (filePath: string, contents: unknown) => Promise<void>;
 
 const writeJsonFileInjectable = getInjectable({
   id: "write-json-file",
