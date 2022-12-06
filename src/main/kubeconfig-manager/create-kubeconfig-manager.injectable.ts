@@ -14,6 +14,7 @@ import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import writeFileInjectable from "../../common/fs/write-file.injectable";
 import removePathInjectable from "../../common/fs/remove.injectable";
+import authHeaderValueInjectable from "../lens-proxy/auth-header-value.injectable";
 
 export interface KubeConfigManagerInstantiationParameter {
   cluster: Cluster;
@@ -29,6 +30,7 @@ const createKubeconfigManagerInjectable = getInjectable({
       directoryForTemp: di.inject(directoryForTempInjectable),
       logger: di.inject(loggerInjectable),
       lensProxyPort: di.inject(lensProxyPortInjectable),
+      authHeaderValue: di.inject(authHeaderValueInjectable),
       joinPaths: di.inject(joinPathsInjectable),
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
       removePath: di.inject(removePathInjectable),

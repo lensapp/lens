@@ -16,7 +16,15 @@ describe("WebsocketApi tests", () => {
   let api: TestWebSocketApi;
 
   beforeEach(() => {
-    api = new TestWebSocketApi({});
+    api = new TestWebSocketApi({
+      authHeaderValue: "some-value",
+      defaultParams: {
+        flushOnOpen: true,
+        logging: false,
+        pingMessage: "{}",
+        reconnectDelay: 10,
+      },
+    }, {});
   });
 
   describe("before connection", () => {

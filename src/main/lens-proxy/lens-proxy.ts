@@ -19,6 +19,7 @@ import type { RouteRequest } from "../router/route-request.injectable";
 import { lensAuthenticationHeader } from "../../common/vars/auth-header";
 import { contentTypes } from "../router/router-content-types";
 import { writeServerResponseFor } from "../router/write-server-response";
+import { URL } from "url";
 
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 
@@ -78,10 +79,10 @@ export class LensProxy {
 
     this.proxyServer
       .on("upgrade", (req: ServerIncomingMessage, socket: net.Socket, head: Buffer) => {
-        const cluster = dependencies.getClusterForRequest(req);
-        const authHeader = req.headers[lensAuthenticationHeader.toLowerCase()];
+        const cluster = this.dependencies.getClusterForRequest(req);
+        const url = new URL(req.url, "http://localhost");
 
-        if (authHeader !== this.dependencies.authHeaderValue) {
+        if (url.searchParams.get(lensAuthenticationHeader) !== this.dependencies.authHeaderValue) {
           this.dependencies.logger.warn(`[LENS-PROXY]: Request from url=${req.url} missing authentication`);
           socket.destroy();
 
@@ -92,11 +93,21 @@ export class LensProxy {
           this.dependencies.logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
           socket.destroy();
         } else {
-          const isInternal = req.url.startsWith(`${apiPrefix}?`);
-          const reqHandler = isInternal ? dependencies.shellApiRequest : dependencies.kubeApiUpgradeRequest;
+          void (async () => {
+            try {
+              if (url.pathname === apiPrefix) {
+                await dependencies.shellApiRequest({ req, socket, head, cluster });
+              } else if (url.pathname.startsWith(`${apiKubePrefix}/`)) {
+                req.url = req.url.slice(apiKubePrefix.length);
 
-          (async () => reqHandler({ req, socket, head, cluster }))()
-            .catch(error => this.dependencies.logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
+                await dependencies.kubeApiUpgradeRequest({ req, socket, head, cluster });
+              } else {
+                this.dependencies.logger.warn(`[LENS-PROXY]: unknown upgrade request, url=${req.url}`);
+              }
+            } catch (error) {
+              this.dependencies.logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error);
+            }
+          })();
         }
       });
   }
@@ -224,7 +235,6 @@ export class LensProxy {
 
   protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ClusterContextHandler): Promise<httpProxy.ServerOptions | undefined> {
     if (req.url?.startsWith(apiKubePrefix)) {
-      delete req.headers.authorization;
       req.url = req.url.replace(apiKubePrefix, "");
 
       return contextHandler.getApiTarget(isLongRunningRequest(req.url));

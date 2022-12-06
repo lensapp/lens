@@ -7,11 +7,10 @@ import { observable, makeObservable } from "mobx";
 import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
 import type { Arguments } from "typed-emitter";
-import { isDevelopment } from "../../common/vars";
 import type { Defaulted } from "../utils";
-import { TerminalChannels, type TerminalMessage } from "../../common/terminal/channels";
+import { lensAuthenticationHeader } from "../../common/vars/auth-header";
 
-interface WebsocketApiParams {
+export interface WebsocketApiParams {
   /**
    * Flush pending commands on open socket
    *
@@ -64,28 +63,32 @@ export interface WebSocketEvents {
   close: () => void;
 }
 
+export interface WebSocketApiDependencies {
+  readonly authHeaderValue: string;
+  readonly defaultParams: DefaultWebsocketApiParams;
+}
+
+export type DefaultWebsocketApiParamNames = "logging" | "reconnectDelay" | "flushOnOpen" | "pingMessage";
+export type DefaultWebsocketApiParams = Pick<Defaulted<WebsocketApiParams, DefaultWebsocketApiParamNames>, DefaultWebsocketApiParamNames>;
+
 export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter as { new<T>(): TypedEventEmitter<T> })<Events> {
   protected socket: WebSocket | null = null;
-  protected pendingCommands: string[] = [];
+  protected readonly pendingCommands: string[] = [];
   protected reconnectTimer?: number;
   protected pingTimer?: number;
-  protected params: Defaulted<WebsocketApiParams, keyof typeof WebSocketApi["defaultParams"]>;
+  protected readonly params: Defaulted<WebsocketApiParams, "logging" | "reconnectDelay" | "flushOnOpen" | "pingMessage">;
 
   @observable readyState = WebSocketApiState.PENDING;
 
-  private static readonly defaultParams = {
-    logging: isDevelopment,
-    reconnectDelay: 10,
-    flushOnOpen: true,
-    pingMessage: JSON.stringify({ type: TerminalChannels.PING } as TerminalMessage),
-  };
-
-  constructor(params: WebsocketApiParams) {
+  constructor(
+    protected readonly dependencies: WebSocketApiDependencies,
+    rawParams: WebsocketApiParams,
+  ) {
     super();
     makeObservable(this);
     this.params = {
-      ...WebSocketApi.defaultParams,
-      ...params,
+      ...this.dependencies.defaultParams,
+      ...rawParams,
     };
     const { pingInterval } = this.params;
 
@@ -101,6 +104,11 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   connect(url: string) {
     // close previous connection first
     this.socket?.close();
+
+    const authParam = new URLSearchParams({ [lensAuthenticationHeader]: this.dependencies.authHeaderValue });
+    const addingParam = url.includes("?") ? "&" : "?";
+
+    url += `${addingParam}${authParam}`;
 
     // start new connection
     this.socket = new WebSocket(url);
@@ -129,7 +137,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     if (!this.socket) return;
     this.socket.close();
     this.socket = null;
-    this.pendingCommands = [];
+    this.pendingCommands.length = 0;
     this.clearAllListeners();
     clearTimeout(this.reconnectTimer);
     clearInterval(this.pingTimer);
@@ -153,7 +161,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   protected flush() {
     const commands = this.pendingCommands;
 
-    this.pendingCommands = [];
+    this.pendingCommands.length = 0;
 
     for (const command of commands) {
       this.send(command);
@@ -168,7 +176,7 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
   }
 
   protected _onMessage({ data }: MessageEvent): void {
-    this.emit("data", ...[data] as Arguments<Events["data"]>);
+    this.emit("data", ...[data] as string[] as Arguments<Events["data"]>);
     this.writeLog("%cMESSAGE", "color:black;font-weight:bold;", data);
   }
 

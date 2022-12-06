@@ -8,7 +8,7 @@ import { lensAuthenticationHeaderValueInjectionToken } from "../../common/auth/h
 
 const authHeaderValueInjectable = getInjectable({
   id: "auth-header-value",
-  instantiate: () => uuid.v4(),
+  instantiate: () => `Bearer ${uuid.v4()}`,
   injectionToken: lensAuthenticationHeaderValueInjectionToken,
 });
 

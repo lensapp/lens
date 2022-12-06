@@ -15,11 +15,13 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { PathExists } from "../../common/fs/path-exists.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { WriteFile } from "../../common/fs/write-file.injectable";
+import { lensAuthenticationHeader } from "../../common/vars/auth-header";
 
 export interface KubeconfigManagerDependencies {
   readonly directoryForTemp: string;
   readonly logger: Logger;
   readonly lensProxyPort: { get: () => number };
+  readonly authHeaderValue: string;
   joinPaths: JoinPaths;
   getDirnameOfPath: GetDirnameOfPath;
   pathExists: PathExists;
@@ -47,7 +49,7 @@ export class KubeconfigManager {
    * @returns The path to the temporary kubeconfig
    */
   async getPath(): Promise<string> {
-    if (this.tempFilePath === null || !(await this.dependencies.pathExists(this.tempFilePath))) {
+    if (this.tempFilePath === null) {
       return await this.ensureFile();
     }
 
@@ -85,10 +87,6 @@ export class KubeconfigManager {
     }
   }
 
-  get resolveProxyUrl() {
-    return `http://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`;
-  }
-
   /**
    * Creates new "temporary" kubeconfig that point to the kubectl-proxy.
    * This way any user of the config does not need to know anything about the auth etc. details.
@@ -101,16 +99,23 @@ export class KubeconfigManager {
       `kubeconfig-${id}`,
     );
     const kubeConfig = await cluster.getKubeconfig();
+    const searchParams = new URLSearchParams({
+      [lensAuthenticationHeader]: this.dependencies.authHeaderValue,
+    });
+
     const proxyConfig: PartialDeep<KubeConfig> = {
       currentContext: contextName,
       clusters: [
         {
           name: contextName,
-          server: this.resolveProxyUrl,
+          server: `http://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}?${searchParams}`,
         },
       ],
       users: [
-        { name: "proxy" },
+        {
+          name: "proxy",
+          token: this.dependencies.authHeaderValue,
+        },
       ],
       contexts: [
         {

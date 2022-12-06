@@ -3,15 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { WebSocketEvents } from "./websocket-api";
+import type { WebSocketApiDependencies, WebSocketEvents } from "./websocket-api";
 import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
-import url from "url";
+import { URLSearchParams } from "url";
 import { makeObservable, observable } from "mobx";
 import { ipcRenderer } from "electron";
 import logger from "../../common/logger";
 import { once } from "lodash";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
+import { object } from "../utils";
 
 enum TerminalColor {
   RED = "\u001b[31m",
@@ -25,7 +26,7 @@ enum TerminalColor {
   NO_COLOR = "\u001b[0m",
 }
 
-export interface TerminalApiQuery extends Record<string, string | undefined> {
+export interface TerminalApiQuery extends Partial<Record<string, string>> {
   id: string;
   node?: string;
   type?: string;
@@ -36,7 +37,7 @@ export interface TerminalEvents extends WebSocketEvents {
   connected: () => void;
 }
 
-export interface TerminalApiDependencies {
+export interface TerminalApiDependencies extends WebSocketApiDependencies {
   readonly hostedClusterId: string;
 }
 
@@ -46,7 +47,7 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
   @observable public isReady = false;
 
   constructor(protected readonly dependencies: TerminalApiDependencies, protected readonly query: TerminalApiQuery) {
-    super({
+    super(dependencies, {
       flushOnOpen: false,
       pingInterval: 30,
     });
@@ -73,17 +74,12 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     }
 
     const { hostname, protocol, port } = location;
-    const socketUrl = url.format({
-      protocol: protocol.includes("https") ? "wss" : "ws",
-      hostname,
-      port,
-      pathname: "/api",
-      query: {
-        ...this.query,
-        shellToken: Buffer.from(authTokenArray).toString("base64"),
-      },
-      slashes: true,
-    });
+    const wsProtocol = protocol.includes("https") ? "wss" : "ws";
+    const searchParams = new URLSearchParams([
+      ...object.entries(this.query),
+      ["shellToken", Buffer.from(authTokenArray).toString("base64")],
+    ]);
+    const socketUrl = `${wsProtocol}://${hostname}:${port}/api?${searchParams}`;
 
     const onReady = once((data?: string) => {
       this.isReady = true;
@@ -128,9 +124,9 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     }
   }
 
-  protected _onMessage({ data, ...evt }: MessageEvent<string>): void {
+  protected _onMessage({ data, ...evt }: MessageEvent): void {
     try {
-      const message = JSON.parse(data) as TerminalMessage;
+      const message = JSON.parse(data as string) as TerminalMessage;
 
       switch (message.type) {
         case TerminalChannels.STDOUT:
