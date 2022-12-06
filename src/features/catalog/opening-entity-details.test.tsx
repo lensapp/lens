@@ -11,7 +11,8 @@ import type { Cluster } from "../../common/cluster/cluster";
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
 import createClusterInjectable from "../../renderer/cluster/create-cluster.injectable";
-import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../test-utils/application-builder";
+import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 
 describe("opening catalog entity details panel", () => {
   let builder: ApplicationBuilder;
@@ -22,9 +23,9 @@ describe("opening catalog entity details panel", () => {
   let otherEntity: WebLink;
   let cluster: Cluster;
 
-  beforeEach(async () => {
-    builder = getApplicationBuilder();
+  setupInitializingApplicationBuilder(b => builder = b);
 
+  beforeEach(async () => {
     builder.afterWindowStart((windowDi) => {
       const createCluster = windowDi.inject(createClusterInjectable);
 
