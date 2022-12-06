@@ -165,14 +165,14 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
       return (
         <div className="flex gaps align-center mb-5">
           <PathPicker
-            label="Sync file(s)"
+            message="Sync file(s)"
             onPick={this.onPick}
             buttonLabel="Sync"
             properties={["showHiddenFiles", "multiSelections", "openFile"]}
           />
           <span>or</span>
           <PathPicker
-            label="Sync folder(s)"
+            message="Sync folder(s)"
             onPick={this.onPick}
             buttonLabel="Sync"
             properties={["showHiddenFiles", "multiSelections", "openDirectory"]}
@@ -184,7 +184,7 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
     return (
       <div className="self-start mb-5">
         <PathPicker
-          label="Sync Files and Folders"
+          message="Sync Files and Folders"
           onPick={this.onPick}
           buttonLabel="Sync"
           properties={["showHiddenFiles", "multiSelections", "openFile", "openDirectory"]}
