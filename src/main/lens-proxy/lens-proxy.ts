@@ -15,7 +15,7 @@ import assert from "assert";
 import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
-import type { RouteRequest } from "../router/router.injectable";
+import type { RouteRequest } from "../router/route-request.injectable";
 import { lensAuthenticationHeader } from "../../common/vars/auth-header";
 import { contentTypes } from "../router/router-content-types";
 import { writeServerResponseFor } from "../router/write-server-response";

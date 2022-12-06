@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import { getRouteInjectable } from "../../../router/router.injectable";
+import { getRouteInjectable } from "../../../router/route-request.injectable";
 import { getBoolean } from "../../../utils/parse-query";
 import { contentTypes } from "../../../router/router-content-types";
 import { clusterRoute } from "../../../router/route";

@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { RouteRequest } from "./router.injectable";
-import routeRequestInjectable, { routeInjectionToken } from "./router.injectable";
+import type { RouteRequest } from "./route-request.injectable";
+import routeRequestInjectable, { routeInjectionToken } from "./route-request.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import type { Cluster } from "../../common/cluster/cluster";
 import { Request } from "mock-http";

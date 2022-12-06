@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import { getRouteInjectable } from "../../../router/router.injectable";
+import { getRouteInjectable } from "../../../router/route-request.injectable";
 import Joi from "joi";
 import { payloadValidatedClusterRoute } from "../../../router/route";
 import rollbackHelmReleaseInjectable from "../../../helm/helm-service/rollback-helm-release.injectable";

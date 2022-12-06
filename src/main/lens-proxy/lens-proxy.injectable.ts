@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { LensProxy } from "./lens-proxy";
 import { kubeApiUpgradeRequest } from "./proxy-functions";
-import routeRequestInjectable from "../router/router.injectable";
+import routeRequestInjectable from "../router/route-request.injectable";
 import httpProxy from "http-proxy";
 import clusterManagerInjectable from "../cluster/manager.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
