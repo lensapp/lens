@@ -10,7 +10,7 @@ import createKubeconfigManagerInjectable from "../kubeconfig-manager/create-kube
 import createKubectlInjectable from "../kubectl/create-kubectl.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
-import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
+import createAuthorizationReviewInjectable from "../../common/cluster/create-authorization-review.injectable";
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import createListApiResourcesInjectable from "../cluster/request-api-resources.injectable";
 import loggerInjectable from "../../common/logger.injectable";
@@ -29,7 +29,7 @@ const createClusterInjectable = getInjectable({
       createKubeconfigManager: di.inject(createKubeconfigManagerInjectable),
       createKubectl: di.inject(createKubectlInjectable),
       createContextHandler: di.inject(createContextHandlerInjectable),
-      createAuthorizationReview: di.inject(authorizationReviewInjectable),
+      createAuthorizationReview: di.inject(createAuthorizationReviewInjectable),
       requestNamespaceListPermissionsFor: di.inject(requestNamespaceListPermissionsForInjectable),
       requestApiResources: di.inject(createListApiResourcesInjectable),
       createListNamespaces: di.inject(listNamespacesInjectable),

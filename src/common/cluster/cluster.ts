@@ -19,7 +19,7 @@ import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus, clusterModelI
 import { disposer, isDefined, isRequestError, toJS } from "../utils";
 import type { Response } from "request";
 import { clusterListNamespaceForbiddenChannel } from "../ipc/cluster";
-import type { CanI } from "./authorization-review.injectable";
+import type { CreateAuthorizationReview } from "./create-authorization-review.injectable";
 import type { ListNamespaces } from "./list-namespaces.injectable";
 import assert from "assert";
 import type { Logger } from "../logger";
@@ -35,7 +35,7 @@ export interface ClusterDependencies {
   createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
   createContextHandler: (cluster: Cluster) => ClusterContextHandler;
   createKubectl: (clusterVersion: string) => Kubectl;
-  createAuthorizationReview: (config: KubeConfig) => CanI;
+  createAuthorizationReview: CreateAuthorizationReview;
   requestApiResources: RequestApiResources;
   requestNamespaceListPermissionsFor: RequestNamespaceListPermissionsFor;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
@@ -475,6 +475,7 @@ export class Cluster implements ClusterModel {
        resource: "*",
        verb: "create",
      });
+     console.log("finished this.isAdmin");
      this.isGlobalWatchEnabled = await canI({
        verb: "watch",
        resource: "*",
