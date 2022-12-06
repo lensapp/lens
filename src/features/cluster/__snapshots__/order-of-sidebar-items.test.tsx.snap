@@ -327,7 +327,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"
@@ -942,7 +944,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </div>
           </div>
         </div>
-        <main>
+        <main
+          class="scrollable"
+        >
           <div
             class="WorkloadsOverview flex column gaps"
             data-testid="page-for-workloads-overview"

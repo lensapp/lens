@@ -286,7 +286,9 @@ exports[`workload overview when navigating to workload overview renders 1`] = `
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class="scrollable"
+          >
             <div
               class="WorkloadsOverview flex column gaps"
               data-testid="page-for-workloads-overview"

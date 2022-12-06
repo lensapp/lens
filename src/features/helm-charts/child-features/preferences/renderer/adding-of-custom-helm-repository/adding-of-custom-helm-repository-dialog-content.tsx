@@ -23,6 +23,7 @@ import maximalCustomHelmRepoOptionsAreShownInjectable from "./maximal-custom-hel
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { Checkbox } from "../../../../../../renderer/components/checkbox";
 import { HelmFileInput } from "./helm-file-input/helm-file-input";
+import { toJS } from "../../../../../../common/utils";
 
 interface Dependencies {
   helmRepo: HelmRepo;
@@ -36,7 +37,7 @@ const NonInjectedActivationOfCustomHelmRepositoryDialogContent = observer(({ hel
     <WizardStep
       contentClass="flow column"
       nextLabel="Add"
-      next={() => submitCustomRepository(helmRepo)}
+      next={() => submitCustomRepository(toJS(helmRepo))}
       testIdForNext="custom-helm-repository-submit-button"
       testIdForPrev="custom-helm-repository-cancel-button"
     >

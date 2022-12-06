@@ -44,6 +44,11 @@ export interface LensWindowConfiguration {
   windowFrameUtilitiesAreShown: boolean;
   centered: boolean;
   titleBarStyle?: ElectronWindowTitleBarStyle;
+
+  /**
+   * This function is called before the ContentSource is used and then awaited after
+   * the open call resolves
+   */
   beforeOpen?: () => Promise<void>;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -93,8 +98,12 @@ const createLensWindowInjectable = getInjectable({
               },
             });
 
-            const { file: filePathForContent, url: urlForContent } =
-              configuration.getContentSource();
+            const {
+              file: filePathForContent,
+              url: urlForContent,
+            } = configuration.getContentSource();
+
+            const beforeOpen = configuration.beforeOpen?.();
 
             if (filePathForContent) {
               await browserWindow.loadFile(filePathForContent);
@@ -102,7 +111,7 @@ const createLensWindowInjectable = getInjectable({
               await browserWindow.loadUrl(urlForContent);
             }
 
-            await configuration.beforeOpen?.();
+            await beforeOpen;
           }
 
           showWindow();

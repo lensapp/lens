@@ -273,7 +273,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class="scrollable"
+          >
             <div
               class="WorkloadsOverview flex column gaps"
               data-testid="page-for-workloads-overview"
@@ -715,7 +717,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -1628,7 +1632,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -2386,7 +2392,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -3388,7 +3396,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -4364,7 +4374,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -5335,7 +5347,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -6306,7 +6320,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -7299,7 +7315,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -8301,7 +8319,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -9272,7 +9292,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -10298,7 +10320,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -11136,7 +11160,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               class="ItemListLayout flex column HelmReleases"
             >
@@ -11909,7 +11935,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -12760,7 +12788,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -13977,7 +14007,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -14787,7 +14819,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -15812,7 +15846,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -16835,7 +16871,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -17806,7 +17844,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"
@@ -18777,7 +18817,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </div>
             </div>
           </div>
-          <main>
+          <main
+            class=""
+          >
             <div
               data-testid="page-for-helm-charts"
               style="display: none;"

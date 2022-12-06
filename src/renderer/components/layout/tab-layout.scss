@@ -11,16 +11,20 @@
 
   > .Tabs {
     background: var(--layoutTabsBackground);
-    min-height: 32px;
+    min-height: 36px;
   }
 
   main {
     $spacing: $margin * 2;
 
     flex-grow: 1;
-    overflow-y: scroll; // always reserve space for scrollbar (17px)
+    overflow-y: hidden;
     overflow-x: auto;
     margin: $spacing;
-    margin-right: 0;
+
+    &.scrollable {
+      overflow-y: scroll;
+      margin-right: 0;
+    }
   }
 }

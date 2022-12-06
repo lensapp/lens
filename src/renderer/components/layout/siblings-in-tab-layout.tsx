@@ -12,6 +12,7 @@ import type { HierarchicalSidebarItem } from "./sidebar-items.injectable";
 
 interface SiblingTabLayoutProps {
   children: React.ReactNode;
+  scrollable?: boolean;
 }
 
 interface Dependencies {
@@ -19,13 +20,14 @@ interface Dependencies {
 }
 
 const NonInjectedSiblingsInTabLayout = observer(
-  ({ tabs, children }: Dependencies & SiblingTabLayoutProps) => {
+  ({ tabs, children, ...other }: Dependencies & SiblingTabLayoutProps) => {
     const dereferencedTabs = tabs.get();
 
     if (dereferencedTabs.length) {
       return (
         <TabLayout
           tabs={dereferencedTabs}
+          {...other}
         >
           {children}
         </TabLayout>
