@@ -41,7 +41,7 @@ const setupKubernetesClusterCatalogAddMenuListenerInjectable = getInjectable({
               title: "Sync kubeconfig folder(s)",
               defaultAction: true,
               onClick: () => openPathPickingDialog({
-                label: "Sync folder(s)",
+                message: "Sync folder(s)",
                 buttonLabel: "Sync",
                 properties: ["showHiddenFiles", "multiSelections", "openDirectory"],
                 onPick: addSyncEntries,
@@ -51,7 +51,7 @@ const setupKubernetesClusterCatalogAddMenuListenerInjectable = getInjectable({
               icon: "note_add",
               title: "Sync kubeconfig file(s)",
               onClick: () => openPathPickingDialog({
-                label: "Sync file(s)",
+                message: "Sync file(s)",
                 buttonLabel: "Sync",
                 properties: ["showHiddenFiles", "multiSelections", "openFile"],
                 onPick: addSyncEntries,
@@ -65,7 +65,7 @@ const setupKubernetesClusterCatalogAddMenuListenerInjectable = getInjectable({
               title: "Sync kubeconfig(s)",
               defaultAction: true,
               onClick: () => openPathPickingDialog({
-                label: "Sync file(s)",
+                message: "Sync file(s)",
                 buttonLabel: "Sync",
                 properties: ["showHiddenFiles", "multiSelections", "openFile", "openDirectory"],
                 onPick: addSyncEntries,

@@ -22,7 +22,6 @@ import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectab
 import { computed, runInAction } from "mobx";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
-import getFilePathsInjectable from "../features/helm-charts/child-features/preferences/renderer/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
 import requestPublicHelmRepositoriesInjectable from "../features/helm-charts/child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
@@ -132,7 +131,6 @@ export const getDiForUnitTesting = (
 
     overrideFunctionalInjectables(di, [
       broadcastMessageInjectable,
-      getFilePathsInjectable,
       requestPublicHelmRepositoriesInjectable,
     ]);
 
