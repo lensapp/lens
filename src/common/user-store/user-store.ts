@@ -7,13 +7,13 @@ import { action, observable, makeObservable, isObservableArray, isObservableSet,
 import type { BaseStoreDependencies } from "../base-store/base-store";
 import { BaseStore } from "../base-store/base-store";
 import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
-import { DESCRIPTORS } from "./preferences-helpers";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
 
 // TODO: Remove coupling with Feature
 import type { SelectedUpdateChannel } from "../../features/application-update/common/selected-update-channel/selected-update-channel.injectable";
 import type { ReleaseChannel } from "../../features/application-update/common/update-channels";
+import type { PreferenceDescriptors } from "./preference-descriptors.injectable";
 
 export interface UserStoreModel {
   preferences: UserPreferencesModel;
@@ -21,6 +21,7 @@ export interface UserStoreModel {
 
 interface Dependencies extends BaseStoreDependencies {
   readonly selectedUpdateChannel: SelectedUpdateChannel;
+  readonly preferenceDescriptors: PreferenceDescriptors;
   emitAppEvent: EmitAppEvent;
 }
 
@@ -43,45 +44,45 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
    */
   @observable newContexts = observable.set<string>();
 
-  @observable allowErrorReporting!: StoreType<typeof DESCRIPTORS["allowErrorReporting"]>;
-  @observable allowUntrustedCAs!: StoreType<typeof DESCRIPTORS["allowUntrustedCAs"]>;
-  @observable colorTheme!: StoreType<typeof DESCRIPTORS["colorTheme"]>;
-  @observable terminalTheme!: StoreType<typeof DESCRIPTORS["terminalTheme"]>;
-  @observable localeTimezone!: StoreType<typeof DESCRIPTORS["localeTimezone"]>;
-  @observable downloadMirror!: StoreType<typeof DESCRIPTORS["downloadMirror"]>;
-  @observable httpsProxy!: StoreType<typeof DESCRIPTORS["httpsProxy"]>;
-  @observable shell!: StoreType<typeof DESCRIPTORS["shell"]>;
-  @observable downloadBinariesPath!: StoreType<typeof DESCRIPTORS["downloadBinariesPath"]>;
-  @observable kubectlBinariesPath!: StoreType<typeof DESCRIPTORS["kubectlBinariesPath"]>;
-  @observable terminalCopyOnSelect!: StoreType<typeof DESCRIPTORS["terminalCopyOnSelect"]>;
-  @observable terminalConfig!: StoreType<typeof DESCRIPTORS["terminalConfig"]>;
-  @observable extensionRegistryUrl!: StoreType<typeof DESCRIPTORS["extensionRegistryUrl"]>;
+  @observable allowErrorReporting!: StoreType<PreferenceDescriptors["allowErrorReporting"]>;
+  @observable allowUntrustedCAs!: StoreType<PreferenceDescriptors["allowUntrustedCAs"]>;
+  @observable colorTheme!: StoreType<PreferenceDescriptors["colorTheme"]>;
+  @observable terminalTheme!: StoreType<PreferenceDescriptors["terminalTheme"]>;
+  @observable localeTimezone!: StoreType<PreferenceDescriptors["localeTimezone"]>;
+  @observable downloadMirror!: StoreType<PreferenceDescriptors["downloadMirror"]>;
+  @observable httpsProxy!: StoreType<PreferenceDescriptors["httpsProxy"]>;
+  @observable shell!: StoreType<PreferenceDescriptors["shell"]>;
+  @observable downloadBinariesPath!: StoreType<PreferenceDescriptors["downloadBinariesPath"]>;
+  @observable kubectlBinariesPath!: StoreType<PreferenceDescriptors["kubectlBinariesPath"]>;
+  @observable terminalCopyOnSelect!: StoreType<PreferenceDescriptors["terminalCopyOnSelect"]>;
+  @observable terminalConfig!: StoreType<PreferenceDescriptors["terminalConfig"]>;
+  @observable extensionRegistryUrl!: StoreType<PreferenceDescriptors["extensionRegistryUrl"]>;
 
   /**
    * Download kubectl binaries matching cluster version
    */
-  @observable downloadKubectlBinaries!: StoreType<typeof DESCRIPTORS["downloadKubectlBinaries"]>;
+  @observable downloadKubectlBinaries!: StoreType<PreferenceDescriptors["downloadKubectlBinaries"]>;
 
   /**
    * Whether the application should open itself at login.
    */
-  @observable openAtLogin!: StoreType<typeof DESCRIPTORS["openAtLogin"]>;
+  @observable openAtLogin!: StoreType<PreferenceDescriptors["openAtLogin"]>;
 
   /**
    * The column IDs under each configurable table ID that have been configured
    * to not be shown
    */
-  @observable hiddenTableColumns!: StoreType<typeof DESCRIPTORS["hiddenTableColumns"]>;
+  @observable hiddenTableColumns!: StoreType<PreferenceDescriptors["hiddenTableColumns"]>;
 
   /**
    * Monaco editor configs
    */
-  @observable editorConfiguration!: StoreType<typeof DESCRIPTORS["editorConfiguration"]>;
+  @observable editorConfiguration!: StoreType<PreferenceDescriptors["editorConfiguration"]>;
 
   /**
    * The set of file/folder paths to be synced
    */
-  @observable syncKubeconfigEntries!: StoreType<typeof DESCRIPTORS["syncKubeconfigEntries"]>;
+  @observable syncKubeconfigEntries!: StoreType<PreferenceDescriptors["syncKubeconfigEntries"]>;
 
   /**
    * Checks if a column (by ID) for a table (by ID) is configured to be hidden
@@ -112,14 +113,14 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
   @action
   resetTheme() {
-    this.colorTheme = DESCRIPTORS.colorTheme.fromStore(undefined);
+    this.colorTheme = this.dependencies.preferenceDescriptors.colorTheme.fromStore(undefined);
   }
 
   @action
   protected fromStore({ preferences }: Partial<UserStoreModel> = {}) {
     this.dependencies.logger.debug("UserStore.fromStore()", { preferences });
 
-    for (const [key, { fromStore }] of object.entries(DESCRIPTORS)) {
+    for (const [key, { fromStore }] of object.entries(this.dependencies.preferenceDescriptors)) {
       const curVal = this[key];
       const newVal = fromStore((preferences)?.[key] as never) as never;
 
@@ -140,7 +141,7 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
 
   toJSON(): UserStoreModel {
     const preferences = object.fromEntries(
-      object.entries(DESCRIPTORS)
+      object.entries(this.dependencies.preferenceDescriptors)
         .map(([key, { toStore }]) => [key, toStore(this[key] as never)]),
     ) as UserPreferencesModel;
 

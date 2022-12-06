@@ -69,6 +69,9 @@ import { getCompositePaths } from "../../../common/utils/composite/get-composite
 import { discoverFor } from "./discovery-of-html-elements";
 import { findComposite } from "../../../common/utils/composite/find-composite/find-composite";
 import shouldStartHiddenInjectable from "../../../main/electron-app/features/should-start-hidden.injectable";
+import fsInjectable from "../../../common/fs/fs.injectable";
+import joinPathsInjectable from "../../../common/path/join-paths.injectable";
+import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -178,6 +181,15 @@ export const getApplicationBuilder = () => {
   const overrideFsWithFakes = getOverrideFsWithFakes();
 
   overrideFsWithFakes(mainDi);
+
+  // Set up ~/.kube as existing as a folder
+  {
+    const { ensureDirSync } = mainDi.inject(fsInjectable);
+    const joinPaths = mainDi.inject(joinPathsInjectable);
+    const homeDirectoryPath = mainDi.inject(homeDirectoryPathInjectable);
+
+    ensureDirSync(joinPaths(homeDirectoryPath, ".kube"));
+  }
 
   let environment = environments.application;
 

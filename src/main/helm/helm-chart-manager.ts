@@ -11,7 +11,7 @@ import type { Logger } from "../../common/logger";
 import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api/request-charts.injectable";
 import type { ExecHelm } from "./exec-helm/exec-helm.injectable";
 import type { ReadFile } from "../../common/fs/read-file.injectable";
-import type { Stat } from "../../common/fs/stat/stat.injectable";
+import type { Stat } from "../../common/fs/stat.injectable";
 
 export interface HelmCacheFile {
   apiVersion: string;

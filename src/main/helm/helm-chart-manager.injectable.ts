@@ -9,7 +9,7 @@ import helmChartManagerCacheInjectable from "./helm-chart-manager-cache.injectab
 import loggerInjectable from "../../common/logger.injectable";
 import execHelmInjectable from "./exec-helm/exec-helm.injectable";
 import readFileInjectable from "../../common/fs/read-file.injectable";
-import statInjectable from "../../common/fs/stat/stat.injectable";
+import statInjectable from "../../common/fs/stat.injectable";
 
 const helmChartManagerInjectable = getInjectable({
   id: "helm-chart-manager",

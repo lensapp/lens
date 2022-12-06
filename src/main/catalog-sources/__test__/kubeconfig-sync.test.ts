@@ -22,9 +22,9 @@ import kubeconfigSyncsInjectable from "../../../common/user-store/kubeconfig-syn
 import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
-import type { Stat } from "../../../common/fs/stat/stat.injectable";
+import type { Stat } from "../../../common/fs/stat.injectable";
 import asyncFn from "@async-fn/jest";
-import statInjectable from "../../../common/fs/stat/stat.injectable";
+import statInjectable from "../../../common/fs/stat.injectable";
 import type { Watcher } from "../../../common/fs/watch/watch.injectable";
 import watchInjectable from "../../../common/fs/watch/watch.injectable";
 import EventEmitter from "events";

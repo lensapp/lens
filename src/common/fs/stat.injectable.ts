@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Stats } from "fs";
-import fsInjectable from "../fs.injectable";
+import fsInjectable from "./fs.injectable";
 
 export type Stat = (path: string) => Promise<Stats>;
 

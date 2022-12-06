@@ -17,7 +17,7 @@ import type { ComputeShellEnvironment } from "../../features/shell-sync/main/com
 import type { SpawnPty } from "./spawn-pty.injectable";
 import type { InitializableState } from "../../common/initializable-state/create";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
-import type { Stat } from "../../common/fs/stat/stat.injectable";
+import type { Stat } from "../../common/fs/stat.injectable";
 import type { IComputedValue } from "mobx";
 
 export class ShellOpenError extends Error {
