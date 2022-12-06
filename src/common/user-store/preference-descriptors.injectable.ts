@@ -4,6 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { merge } from "lodash";
+import type { ObservableMap } from "mobx";
+import { observable } from "mobx";
 import homeDirectoryPathInjectable from "../os/home-directory-path.injectable";
 import joinPathsInjectable from "../path/join-paths.injectable";
 import { defaultThemeId } from "../vars";
@@ -109,8 +111,8 @@ const userStorePreferenceDescriptorsInjectable = getInjectable({
           return res.length ? res : undefined;
         },
       }),
-      syncKubeconfigEntries: getPreferenceDescriptor<KubeconfigSyncEntry[], Map<string, KubeconfigSyncValue>>({
-        fromStore: val => new Map(
+      syncKubeconfigEntries: getPreferenceDescriptor<KubeconfigSyncEntry[], ObservableMap<string, KubeconfigSyncValue>>({
+        fromStore: val => observable.map(
           val?.map(({ filePath, ...rest }) => [filePath, rest])
           ?? [[mainKubeFolderPath, {}]],
         ),
