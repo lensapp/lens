@@ -4,6 +4,9 @@ exports[`opening catalog entity details panel renders 1`] = `
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -288,6 +291,9 @@ exports[`opening catalog entity details panel renders 1`] = `
 exports[`opening catalog entity details panel when navigated to the catalog renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -1109,6 +1115,9 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
 exports[`opening catalog entity details panel when navigated to the catalog when opening the menu 'some-kubernetes-cluster' renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -1963,6 +1972,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -2815,6 +2827,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
 exports[`opening catalog entity details panel when navigated to the catalog when opening the menu 'some-kubernetes-cluster' when clicking the 'View Details' menu item when the panel opens renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
@@ -3920,6 +3935,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -4761,6 +4779,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
 <body>
   <div>
     <div
+      id="terminal-init"
+    />
+    <div
       class="ClusterManager"
     >
       <div
@@ -5601,6 +5622,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
 exports[`opening catalog entity details panel when navigated to the catalog when opening the menu 'some-weblink' when clicking the 'View Details' menu item when the panel opens renders 1`] = `
 <body>
   <div>
+    <div
+      id="terminal-init"
+    />
     <div
       class="ClusterManager"
     >
