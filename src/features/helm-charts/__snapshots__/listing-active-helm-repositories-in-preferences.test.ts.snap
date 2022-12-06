@@ -1113,7 +1113,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         <div
                           class="flex-grow break-all"
                         >
-                          /Users/sebastianmalton/.kube
+                          /some-home-dir/.kube
                         </div>
                         <i
                           class="Icon material interactive focusable"
@@ -1844,7 +1844,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         <div
                           class="flex-grow break-all"
                         >
-                          /Users/sebastianmalton/.kube
+                          /some-home-dir/.kube
                         </div>
                         <i
                           class="Icon material interactive focusable"
@@ -2467,7 +2467,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         <div
                           class="flex-grow break-all"
                         >
-                          /Users/sebastianmalton/.kube
+                          /some-home-dir/.kube
                         </div>
                         <i
                           class="Icon material interactive focusable"
@@ -3198,7 +3198,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         <div
                           class="flex-grow break-all"
                         >
-                          /Users/sebastianmalton/.kube
+                          /some-home-dir/.kube
                         </div>
                         <i
                           class="Icon material interactive focusable"
@@ -3821,7 +3821,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         <div
                           class="flex-grow break-all"
                         >
-                          /Users/sebastianmalton/.kube
+                          /some-home-dir/.kube
                         </div>
                         <i
                           class="Icon material interactive focusable"
@@ -4552,7 +4552,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         <div
                           class="flex-grow break-all"
                         >
-                          /Users/sebastianmalton/.kube
+                          /some-home-dir/.kube
                         </div>
                         <i
                           class="Icon material interactive focusable"
@@ -5328,7 +5328,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         <div
                           class="flex-grow break-all"
                         >
-                          /Users/sebastianmalton/.kube
+                          /some-home-dir/.kube
                         </div>
                         <i
                           class="Icon material interactive focusable"
@@ -5951,7 +5951,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         <div
                           class="flex-grow break-all"
                         >
-                          /Users/sebastianmalton/.kube
+                          /some-home-dir/.kube
                         </div>
                         <i
                           class="Icon material interactive focusable"
@@ -6574,7 +6574,7 @@ exports[`listing active helm repositories in preferences when navigating to pref
                         <div
                           class="flex-grow break-all"
                         >
-                          /Users/sebastianmalton/.kube
+                          /some-home-dir/.kube
                         </div>
                         <i
                           class="Icon material interactive focusable"
