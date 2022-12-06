@@ -30,9 +30,8 @@ import navigateInjectable from "../../../navigation/navigate.injectable";
 import type { RequestKubeObjectCreation } from "../../../../common/k8s-api/endpoints/resource-applier.api/request-update.injectable";
 import requestKubeObjectCreationInjectable from "../../../../common/k8s-api/endpoints/resource-applier.api/request-update.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
-import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showSuccessNotificationInjectable from "../../notifications/show-success-notification.injectable";
-import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
+import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
 
 export interface CreateResourceProps {
   tabId: string;
@@ -47,7 +46,7 @@ interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
   requestKubeObjectCreation: RequestKubeObjectCreation;
   showSuccessNotification: ShowNotification;
-  showCheckedErrorNotification: ShowCheckedErrorNotification;
+  showErrorNotification: ShowNotification;
 }
 
 @observer
@@ -96,7 +95,7 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
 
       if (!result.callWasSuccessful) {
         this.props.logger.warn("Failed to create resource", { resource }, result.error);
-        this.props.showCheckedErrorNotification(result.error, "Unknown error occured while creating resources");
+        this.props.showErrorNotification(result.error);
 
         return;
       }
@@ -184,6 +183,6 @@ export const CreateResource = withInjectables<Dependencies, CreateResourceProps>
     navigate: di.inject(navigateInjectable),
     requestKubeObjectCreation: di.inject(requestKubeObjectCreationInjectable),
     showSuccessNotification: di.inject(showSuccessNotificationInjectable),
-    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
+    showErrorNotification: di.inject(showErrorNotificationInjectable),
   }),
 });
