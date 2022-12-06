@@ -4,16 +4,32 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { runManyFor } from "../../common/runnable/run-many-for";
-import { beforeFrameStartsInjectionToken } from "../before-frame-starts/tokens";
+import { beforeFrameStartsInjectionToken, evenBeforeClusterFrameStartsInjectionToken, evenBeforeFrameStartsInjectionToken, evenBeforeMainFrameStartsInjectionToken } from "../before-frame-starts/tokens";
+import currentlyInClusterFrameInjectable from "../routes/currently-in-cluster-frame.injectable";
 
 const startFrameInjectable = getInjectable({
   id: "start-frame",
 
   // TODO: Consolidate contents of bootstrap.tsx here
-  instantiate: (di) => async () => {
-    const beforeFrameStarts = runManyFor(di)(beforeFrameStartsInjectionToken);
+  instantiate: (di) => {
+    const runMany = runManyFor(di);
+    const evenBeforeFrameStarts = runMany(evenBeforeFrameStartsInjectionToken);
+    const evenBeforeMainFrameStarts = runMany(evenBeforeMainFrameStartsInjectionToken);
+    const evenBeforeClusterFrameStarts = runMany(evenBeforeClusterFrameStartsInjectionToken);
+    const beforeFrameStarts = runMany(beforeFrameStartsInjectionToken);
+    const currentlyInClusterFrame = di.inject(currentlyInClusterFrameInjectable);
 
-    await beforeFrameStarts();
+    return async () => {
+      await evenBeforeFrameStarts();
+
+      if (currentlyInClusterFrame) {
+        await evenBeforeClusterFrameStarts();
+      } else {
+        await evenBeforeMainFrameStarts();
+      }
+
+      await beforeFrameStarts();
+    };
   },
 });
 
