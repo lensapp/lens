@@ -26,6 +26,9 @@ import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.in
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { flushPromises } from "../../../common/test-utils/flush-promises";
+import userStoreInjectable from "../../../common/user-store/user-store.injectable";
+import releaseChannelInjectable from "../../../common/vars/release-channel.injectable";
+import defaultUpdateChannelInjectable from "../../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 
 class MockCatalogEntity extends CatalogEntity {
   public apiVersion = "api";
@@ -61,7 +64,7 @@ describe("<Catalog />", () => {
   let catalogEntityItem: MockCatalogEntity;
   let render: DiRender;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
@@ -82,6 +85,13 @@ describe("<Catalog />", () => {
     Object.assign(catalogEntityStore, {
       selectedItem: computed(() => catalogEntityItem),
     });
+
+    di.override(releaseChannelInjectable, () => ({
+      get: () => "latest" as const,
+      init: async () => {},
+    }));
+    await di.inject(defaultUpdateChannelInjectable).init();
+    di.inject(userStoreInjectable).load();
   });
 
   describe("can use catalogEntityRegistry.addOnBeforeRun to add hooks for catalog entities", () => {
