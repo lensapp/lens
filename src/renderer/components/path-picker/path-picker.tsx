@@ -13,7 +13,7 @@ import { cssNames } from "../../utils";
 import { Button } from "../button";
 
 export interface PathPickOpts {
-  label: string;
+  message: string;
   onPick?: (paths: string[]) => any;
   onCancel?: () => any;
   defaultPath?: string;
@@ -35,7 +35,6 @@ interface Dependencies {
 const NonInjectedPathPicker = observer((props: PathPickerProps & Dependencies) => {
   const {
     className,
-    label,
     disabled,
     openPathPickingDialog,
     ...pickOpts
@@ -44,13 +43,10 @@ const NonInjectedPathPicker = observer((props: PathPickerProps & Dependencies) =
   return (
     <Button
       primary
-      label={label}
+      label={pickOpts.message}
       disabled={disabled}
       className={cssNames("PathPicker", className)}
-      onClick={() => void openPathPickingDialog({
-        label,
-        ...pickOpts,
-      })}
+      onClick={() => void openPathPickingDialog(pickOpts)}
     />
   );
 });

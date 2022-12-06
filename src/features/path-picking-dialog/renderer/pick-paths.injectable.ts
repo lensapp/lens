@@ -15,11 +15,8 @@ const openPathPickingDialogInjectable = getInjectable({
     const requestFromChannel = di.inject(requestFromChannelInjectable);
 
     return async (options) => {
-      const { onPick, onCancel, label, ...dialogOptions } = options;
-      const response = await requestFromChannel(openPathPickingDialogChannel, {
-        message: label,
-        ...dialogOptions,
-      });
+      const { onPick, onCancel, ...dialogOptions } = options;
+      const response = await requestFromChannel(openPathPickingDialogChannel, dialogOptions);
 
       if (response.canceled) {
         await onCancel?.();
