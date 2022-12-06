@@ -6,6 +6,7 @@
 import type { PrometheusProvider } from "./provider";
 import { bytesSent, createPrometheusProvider, findFirstNamespacedService, prometheusProviderInjectionToken } from "./provider";
 import { getInjectable } from "@ogre-tools/injectable";
+import assert from "assert";
 
 export const getStacklightLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: string }): PrometheusProvider["getQuery"] => (
   (opts, queryName) => {
@@ -105,6 +106,9 @@ export const getStacklightLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: stri
       case "ingress":
         switch (queryName) {
           case "bytesSentSuccess":
+            assert(opts.ingress, "Missing option 'ingress' for query='bytesSentSuccess' for category='ingress'");
+            assert(opts.namespace, "Missing option 'namespace' for query='bytesSentSuccess' for category='ingress'");
+
             return bytesSent({
               rateAccuracy,
               ingress: opts.ingress,
@@ -112,6 +116,9 @@ export const getStacklightLikeQueryFor = ({ rateAccuracy }: { rateAccuracy: stri
               statuses: "^2\\\\d*",
             });
           case "bytesSentFailure":
+            assert(opts.ingress, "Missing option 'ingress' for query='bytesSentFailure'");
+            assert(opts.namespace, "Missing option 'namespace' for query='bytesSentFailure'");
+
             return bytesSent({
               rateAccuracy,
               ingress: opts.ingress,

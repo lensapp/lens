@@ -7,7 +7,7 @@ import type { Cluster } from "../common/cluster/cluster";
 import type { RequestMetricsParams } from "../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 import k8sRequestInjectable from "./k8s-request.injectable";
 
-export type GetMetrics = (cluster: Cluster, prometheusPath: string, queryParams: RequestMetricsParams & { query: string }) => Promise<any>;
+export type GetMetrics = (cluster: Cluster, prometheusPath: string, queryParams: RequestMetricsParams & { query: string }) => Promise<unknown>;
 
 const getMetricsInjectable = getInjectable({
   id: "get-metrics",

@@ -22,7 +22,7 @@ export interface PrometheusProvider {
   readonly name: string;
   readonly isConfigurable: boolean;
 
-  getQuery(opts: Record<string, string>, queryName: string): string;
+  getQuery(opts: Partial<Record<string, string>>, queryName: string): string;
   getPrometheusService(client: CoreV1Api): Promise<PrometheusService>;
 }
 
@@ -31,7 +31,7 @@ export interface CreatePrometheusProviderOpts {
   readonly name: string;
   readonly isConfigurable: boolean;
 
-  getQuery(opts: Record<string, string>, queryName: string): string;
+  getQuery(opts: Partial<Record<string, string>>, queryName: string): string;
   getService(client: CoreV1Api): Promise<PrometheusServiceInfo>;
 }
 
