@@ -14,8 +14,8 @@ import { Button } from "../button";
 
 export interface PathPickOpts {
   message: string;
-  onPick?: (paths: string[]) => any;
-  onCancel?: () => any;
+  onPick?: (paths: string[]) => void | Promise<void>;
+  onCancel?: () => void | Promise<void>;
   defaultPath?: string;
   buttonLabel?: string;
   filters?: FileFilter[];
