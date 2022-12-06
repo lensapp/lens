@@ -297,7 +297,7 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
                   <div
                     class="info-panel box grow"
                   >
-                    0 items
+                    1 item
                   </div>
                   <div
                     class="Input SearchInput"
@@ -449,12 +449,91 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
                       </div>
                     </div>
                     <div
-                      class="NoItems flex box grow"
+                      class="VirtualList Catalog box grow dark"
                     >
-                      <div
-                        class="box center"
-                      >
-                        Item list is empty
+                      <div>
+                        <div
+                          class="list"
+                          style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                        >
+                          <div
+                            style="height: 33px; width: 100%;"
+                          >
+                            <div
+                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background: rgb(18, 10, 107);"
+                                  >
+                                    scn
+                                  </div>
+                                  <span>
+                                    some-context-name
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  KubernetesCluster
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  unknown
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="disconnected"
+                                  >
+                                    disconnected
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-some-cluster-id"
+                                      id="menu-actions-for-catalog-for-some-cluster-id"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -952,7 +1031,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                   <div
                     class="info-panel box grow"
                   >
-                    0 items
+                    1 item
                   </div>
                   <div
                     class="Input SearchInput"
@@ -1104,12 +1183,91 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                       </div>
                     </div>
                     <div
-                      class="NoItems flex box grow"
+                      class="VirtualList Catalog box grow dark"
                     >
-                      <div
-                        class="box center"
-                      >
-                        Item list is empty
+                      <div>
+                        <div
+                          class="list"
+                          style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                        >
+                          <div
+                            style="height: 33px; width: 100%;"
+                          >
+                            <div
+                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background: rgb(18, 10, 107);"
+                                  >
+                                    scn
+                                  </div>
+                                  <span>
+                                    some-context-name
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  KubernetesCluster
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  unknown
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="disconnected"
+                                  >
+                                    disconnected
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-some-cluster-id"
+                                      id="menu-actions-for-catalog-for-some-cluster-id"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1640,7 +1798,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                   <div
                     class="info-panel box grow"
                   >
-                    0 items
+                    1 item
                   </div>
                   <div
                     class="Input SearchInput"
@@ -1792,12 +1950,91 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                       </div>
                     </div>
                     <div
-                      class="NoItems flex box grow"
+                      class="VirtualList Catalog box grow dark"
                     >
-                      <div
-                        class="box center"
-                      >
-                        Item list is empty
+                      <div>
+                        <div
+                          class="list"
+                          style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                        >
+                          <div
+                            style="height: 33px; width: 100%;"
+                          >
+                            <div
+                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background: rgb(18, 10, 107);"
+                                  >
+                                    scn
+                                  </div>
+                                  <span>
+                                    some-context-name
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  KubernetesCluster
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  unknown
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="disconnected"
+                                  >
+                                    disconnected
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-some-cluster-id"
+                                      id="menu-actions-for-catalog-for-some-cluster-id"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2407,7 +2644,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                   <div
                     class="info-panel box grow"
                   >
-                    0 items
+                    1 item
                   </div>
                   <div
                     class="Input SearchInput focused"
@@ -2559,12 +2796,91 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                       </div>
                     </div>
                     <div
-                      class="NoItems flex box grow"
+                      class="VirtualList Catalog box grow dark"
                     >
-                      <div
-                        class="box center"
-                      >
-                        Item list is empty
+                      <div>
+                        <div
+                          class="list"
+                          style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                        >
+                          <div
+                            style="height: 33px; width: 100%;"
+                          >
+                            <div
+                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background: rgb(18, 10, 107);"
+                                  >
+                                    scn
+                                  </div>
+                                  <span>
+                                    some-context-name
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  KubernetesCluster
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  unknown
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="disconnected"
+                                  >
+                                    disconnected
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-some-cluster-id"
+                                      id="menu-actions-for-catalog-for-some-cluster-id"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -3174,7 +3490,7 @@ exports[`Deleting a cluster when the kubeconfig has only one cluster when the di
                   <div
                     class="info-panel box grow"
                   >
-                    0 items
+                    1 item
                   </div>
                   <div
                     class="Input SearchInput"
@@ -3326,12 +3642,91 @@ exports[`Deleting a cluster when the kubeconfig has only one cluster when the di
                       </div>
                     </div>
                     <div
-                      class="NoItems flex box grow"
+                      class="VirtualList Catalog box grow dark"
                     >
-                      <div
-                        class="box center"
-                      >
-                        Item list is empty
+                      <div>
+                        <div
+                          class="list"
+                          style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                        >
+                          <div
+                            style="height: 33px; width: 100%;"
+                          >
+                            <div
+                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background: rgb(18, 10, 107);"
+                                  >
+                                    scn
+                                  </div>
+                                  <span>
+                                    some-context-name
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  KubernetesCluster
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  unknown
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="disconnected"
+                                  >
+                                    disconnected
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-some-cluster-id"
+                                      id="menu-actions-for-catalog-for-some-cluster-id"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
