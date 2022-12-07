@@ -10,7 +10,6 @@ import extensionsStoreInjectable from "../extensions-store/extensions-store.inje
 import extensionInstallationStateStoreInjectable from "../extension-installation-state-store/extension-installation-state-store.injectable";
 import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
 import extensionPackageRootDirectoryInjectable from "../extension-installer/extension-package-root-directory/extension-package-root-directory.injectable";
-import installExtensionsInjectable from "../extension-installer/install-extensions/install-extensions.injectable";
 import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import loggerInjectable from "../../common/logger.injectable";
@@ -29,6 +28,7 @@ import getRelativePathInjectable from "../../common/path/get-relative-path.injec
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import removePathInjectable from "../../common/fs/remove-path.injectable";
 import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
+import applicationInformationInjectable from "../../common/vars/application-information.injectable";
 
 const extensionDiscoveryInjectable = getInjectable({
   id: "extension-discovery",
@@ -39,7 +39,6 @@ const extensionDiscoveryInjectable = getInjectable({
     extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
     isCompatibleExtension: di.inject(isCompatibleExtensionInjectable),
     installExtension: di.inject(installExtensionInjectable),
-    installExtensions: di.inject(installExtensionsInjectable),
     extensionPackageRootDirectory: di.inject(extensionPackageRootDirectoryInjectable),
     staticFilesDirectory: di.inject(staticFilesDirectoryInjectable),
     readJsonFile: di.inject(readJsonFileInjectable),
@@ -59,6 +58,7 @@ const extensionDiscoveryInjectable = getInjectable({
     getRelativePath: di.inject(getRelativePathInjectable),
     joinPaths: di.inject(joinPathsInjectable),
     homeDirectoryPath: di.inject(homeDirectoryPathInjectable),
+    applicationInformation: di.inject(applicationInformationInjectable),
   }),
 });
 

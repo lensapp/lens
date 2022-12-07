@@ -58,7 +58,13 @@
     "bundledHelmVersion": "3.7.2",
     "sentryDsn": "",
     "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
-    "welcomeRoute": "/welcome"
+    "welcomeRoute": "/welcome",
+    "extensions": [
+      "kube-object-event-status",
+      "metrics-cluster-feature",
+      "node-menu", 
+      "pod-menu"
+    ]
   },
   "engines": {
     "node": ">=16 <17"
@@ -112,15 +118,6 @@
         "from": "build/tray",
         "to": "static/icons",
         "filter": "*.png"
-      },
-      {
-        "from": "extensions/",
-        "to": "./extensions/",
-        "filter": [
-          "**/*.tgz",
-          "**/package.json",
-          "!**/node_modules"
-        ]
       },
       {
         "from": "templates/",
@@ -290,7 +287,11 @@
     "winston": "^3.8.2",
     "winston-transport-browserconsole": "^1.0.5",
     "ws": "^8.11.0",
-    "xterm-link-provider": "^1.3.1"
+    "xterm-link-provider": "^1.3.1",
+    "kube-object-event-status": "file:./extensions/kube-object-event-status",
+    "metrics-cluster-feature": "file:./extensions/metrics-cluster-feature",
+    "node-menu": "file:./extensions/node-menu",
+    "pod-menu": "file:./extensions/pod-menu"
   },
   "devDependencies": {
     "@async-fn/jest": "1.6.4",

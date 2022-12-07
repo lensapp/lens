@@ -5,10 +5,7 @@
 
 import AwaitLock from "await-lock";
 import child_process from "child_process";
-import fs from "fs-extra";
-import path from "path";
 import logger from "../../main/logger";
-import type { PackageJson } from "type-fest";
 
 const logModule = "[EXTENSION-INSTALLER]";
 
@@ -37,27 +34,6 @@ export class ExtensionInstaller {
   get npmPath() {
     return __non_webpack_require__.resolve("npm");
   }
-
-  /**
-   * Write package.json to the file system and execute npm install for it.
-   */
-  installPackages = async (packageJsonPath: string, packagesJson: PackageJson): Promise<void> => {
-    // Mutual exclusion to install packages in sequence
-    await this.installLock.acquireAsync();
-
-    try {
-      // Write the package.json which will be installed in .installDependencies()
-      await fs.writeFile(path.join(packageJsonPath), JSON.stringify(packagesJson, null, 2), {
-        mode: 0o600,
-      });
-
-      logger.info(`${logModule} installing dependencies at ${this.dependencies.extensionPackageRootDirectory}`);
-      await this.npm(...baseNpmInstallArgs);
-      logger.info(`${logModule} dependencies installed at ${this.dependencies.extensionPackageRootDirectory}`);
-    } finally {
-      this.installLock.release();
-    }
-  };
 
   /**
    * Install single package using npm
