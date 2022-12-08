@@ -1,0 +1,17 @@
+name: show stuff
+
+on:
+  push:
+    branches: [main]
+  pull_request
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: print stuff
+      run: |
+        echo "hello"
