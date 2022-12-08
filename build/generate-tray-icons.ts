@@ -9,7 +9,7 @@ import path from "path";
 import sharp from "sharp";
 
 const size = Number(process.env.OUTPUT_SIZE || "16");
-const outputFolder = process.env.OUTPUT_DIR || "./build/tray";
+const outputFolder = process.env.OUTPUT_DIR || "./static/build/tray";
 const inputFile = process.env.INPUT_SVG_PATH || "./src/renderer/components/icon/logo-lens.svg";
 const noticeFile = process.env.NOTICE_SVG_PATH || "./src/renderer/components/icon/notice.svg";
 const spinnerFile = process.env.SPINNER_SVG_PATH || "./src/renderer/components/icon/arrow-spinner.svg";

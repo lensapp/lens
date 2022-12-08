@@ -94,25 +94,10 @@
   "build": {
     "generateUpdatesFilesForAllChannels": true,
     "files": [
-      "static/build/main.js"
+      "static/**/*"
     ],
     "afterSign": "build/notarize.js",
     "extraResources": [
-      {
-        "from": "locales/",
-        "to": "locales/",
-        "filter": "**/*.js"
-      },
-      {
-        "from": "static/",
-        "to": "static/",
-        "filter": "!**/main.js"
-      },
-      {
-        "from": "build/tray",
-        "to": "static/icons",
-        "filter": "*.png"
-      },
       {
         "from": "extensions/",
         "to": "./extensions/",

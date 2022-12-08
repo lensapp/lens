@@ -4,16 +4,14 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import joinPathsInjectable from "../path/join-paths.injectable";
-import lensResourcesDirInjectable from "./lens-resources-dir.injectable";
 
 const staticFilesDirectoryInjectable = getInjectable({
   id: "static-files-directory",
 
   instantiate: (di) => {
     const joinPaths = di.inject(joinPathsInjectable);
-    const lensResourcesDir = di.inject(lensResourcesDirInjectable);
 
-    return joinPaths(lensResourcesDir, "static");
+    return joinPaths(__dirname, "..");
   },
 });
 

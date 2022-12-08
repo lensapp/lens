@@ -11,7 +11,6 @@ import extensionInstallationStateStoreInjectable from "../extension-installation
 import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
 import extensionPackageRootDirectoryInjectable from "../extension-installer/extension-package-root-directory/extension-package-root-directory.injectable";
 import installExtensionsInjectable from "../extension-installer/install-extensions/install-extensions.injectable";
-import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
@@ -29,6 +28,7 @@ import getRelativePathInjectable from "../../common/path/get-relative-path.injec
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import removePathInjectable from "../../common/fs/remove-path.injectable";
 import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
+import lensResourcesDirInjectable from "../../common/vars/lens-resources-dir.injectable";
 
 const extensionDiscoveryInjectable = getInjectable({
   id: "extension-discovery",
@@ -41,7 +41,7 @@ const extensionDiscoveryInjectable = getInjectable({
     installExtension: di.inject(installExtensionInjectable),
     installExtensions: di.inject(installExtensionsInjectable),
     extensionPackageRootDirectory: di.inject(extensionPackageRootDirectoryInjectable),
-    staticFilesDirectory: di.inject(staticFilesDirectoryInjectable),
+    resourcesDirectory: di.inject(lensResourcesDirInjectable),
     readJsonFile: di.inject(readJsonFileInjectable),
     pathExists: di.inject(pathExistsInjectable),
     watch: di.inject(watchInjectable),
