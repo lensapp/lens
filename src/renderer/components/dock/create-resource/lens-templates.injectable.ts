@@ -19,7 +19,7 @@ const lensCreateResourceTemplatesInjectable = getInjectable({
     const readDir = di.inject(readDirectoryInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
     const parsePath = di.inject(parsePathInjectable);
-    const resourcesDirectory = di.inject(lensResourcesDirInjectable)
+    const resourcesDirectory = di.inject(lensResourcesDirInjectable);
 
     /**
      * Mapping between file names and their contents
