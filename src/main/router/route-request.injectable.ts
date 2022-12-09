@@ -79,7 +79,7 @@ const routeRequestInjectable = getInjectable({
     const getRequest = getRequestWith(di);
 
     return async (cluster, req, res) => {
-      const url = new URL(req.url, "http://localhost");
+      const url = new URL(req.url, "https://localhost");
       const path = url.pathname;
       const method = req.method.toLowerCase();
       const matchingRoute = router.route(method, path);

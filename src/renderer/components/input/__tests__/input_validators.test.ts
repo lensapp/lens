@@ -27,7 +27,7 @@ describe("input validation tests", () => {
 
     it.each([
       "https://github-production-registry-package-file-4f11e5.s3.amazonaws.com/307985088/68bbbf00-309f-11eb-8457-a15e4efe9e77?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20201127%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201127T123754Z&X-Amz-Expires=300&X-Amz-Signature=9b8167f00685a20d980224d397892195abc187cdb2934cefb79edcd7ec600f78&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=0&response-content-disposition=filename%3Dstarboard-lens-extension-0.0.1-alpha.1-npm.tgz&response-content-type=application%2Foctet-stream",
-      "http://www.google.com",
+      "https://www.google.com",
     ])("Given '%s' is a valid url, emailOrUrl matches", (input) => {
       expect(emailOrUrl.validate(input)).toBe(true);
     });
@@ -62,7 +62,7 @@ describe("input validation tests", () => {
 
     it.each([
       "https://github-production-registry-package-file-4f11e5.s3.amazonaws.com/307985088/68bbbf00-309f-11eb-8457-a15e4efe9e77?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20201127%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20201127T123754Z&X-Amz-Expires=300&X-Amz-Signature=9b8167f00685a20d980224d397892195abc187cdb2934cefb79edcd7ec600f78&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=0&response-content-disposition=filename%3Dstarboard-lens-extension-0.0.1-alpha.1-npm.tgz&response-content-type=application%2Foctet-stream",
-      "http://www.google.com",
+      "https://www.google.com",
     ])("Given '%s' is a valid url, emailOrUrl matches", async (input) => {
       try {
         await emailOrUrl.validate(input);

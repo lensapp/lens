@@ -35,14 +35,14 @@ describe("<Icon> href technical tests", () => {
     const result = render((
       <Icon
         data-testid="my-icon"
-        href="http://localhost"
+        href="https://localhost"
       />
     ));
 
     const icon = result.queryByTestId("my-icon");
 
     expect(icon).toBeInTheDocument();
-    expect(icon).toHaveAttribute("href", "http://localhost");
+    expect(icon).toHaveAttribute("href", "https://localhost");
     expect(logger.warn).not.toBeCalled();
   });
 

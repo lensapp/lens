@@ -25,7 +25,7 @@ const k8sRequestInjectable = getInjectable({
       path: string,
       options: RequestPromiseOptions = {},
     ) => {
-      const kubeProxyUrl = `http://localhost:${lensProxyPort.get()}${apiKubePrefix}`;
+      const kubeProxyUrl = `https://localhost:${lensProxyPort.get()}${apiKubePrefix}`;
 
       options.headers ??= {};
       options.json ??= true;

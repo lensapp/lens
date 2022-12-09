@@ -20,7 +20,7 @@ import directoryForKubeConfigsInjectable from "../../../common/app-paths/directo
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 
 const currentClusterServerUrl = "https://localhost";
-const nonCurrentClusterServerUrl = "http://localhost";
+const nonCurrentClusterServerUrl = "https://localhost";
 const multiClusterConfig = `
 apiVersion: v1
 clusters:
@@ -48,7 +48,7 @@ users:
     token: kubeconfig-user-q4lm4:xxxyyyy
 `;
 
-const singleClusterServerUrl = "http://localhost";
+const singleClusterServerUrl = "https://localhost";
 const singleClusterConfig = `
 apiVersion: v1
 clusters:

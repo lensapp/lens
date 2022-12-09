@@ -51,7 +51,7 @@ export interface BaseKubeJsonApiObjectMetadata<Namespaced extends KubeObjectScop
    * external tools to store and retrieve arbitrary metadata. They are not queryable and should be
    * preserved when modifying objects.
    *
-   * More info: http://kubernetes.io/docs/user-guide/annotations
+   * More info: https://kubernetes.io/docs/user-guide/annotations
    */
   annotations?: Partial<Record<string, string>>;
 
@@ -136,7 +136,7 @@ export interface BaseKubeJsonApiObjectMetadata<Namespaced extends KubeObjectScop
    * Map of string keys and values that can be used to organize and categorize (scope and select)
    * objects. May match selectors of replication controllers and services.
    *
-   * More info: http://kubernetes.io/docs/user-guide/labels
+   * More info: https://kubernetes.io/docs/user-guide/labels
    */
   labels?: Partial<Record<string, string>>;
 
@@ -154,7 +154,7 @@ export interface BaseKubeJsonApiObjectMetadata<Namespaced extends KubeObjectScop
    * resources may allow a client to request the generation of an appropriate name automatically.
    * Name is primarily intended for creation idempotence and configuration definition.
    *
-   * More info: http://kubernetes.io/docs/user-guide/identifiers#names
+   * More info: https://kubernetes.io/docs/user-guide/identifiers#names
    */
   readonly name: string;
 
@@ -162,7 +162,7 @@ export interface BaseKubeJsonApiObjectMetadata<Namespaced extends KubeObjectScop
    * Namespace defines the space within which each name must be unique. An empty namespace is
    * equivalent to the "default" namespace, but "default" is the canonical representation. Not all
    * objects are required to be scoped to a namespace - the value of this field for those objects
-   * will be empty.  Must be a DNS_LABEL. Cannot be updated. More info: http://kubernetes.io/docs/user-guide/namespaces
+   * will be empty.  Must be a DNS_LABEL. Cannot be updated. More info: https://kubernetes.io/docs/user-guide/namespaces
    */
   readonly namespace?: ScopedNamespace<Namespaced>;
 
@@ -196,7 +196,7 @@ export interface BaseKubeJsonApiObjectMetadata<Namespaced extends KubeObjectScop
    * server on successful creation of a resource and is not allowed to change on PUT operations.
    * Populated by the system.
    *
-   * More info: http://kubernetes.io/docs/user-guide/identifiers#uids
+   * More info: https://kubernetes.io/docs/user-guide/identifiers#uids
    */
   readonly uid?: string;
 

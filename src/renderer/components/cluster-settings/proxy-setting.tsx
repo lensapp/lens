@@ -48,7 +48,7 @@ export class ClusterProxySetting extends React.Component<ClusterProxySettingProp
           value={this.proxy}
           onChange={this.onChange}
           onBlur={this.save}
-          placeholder="http://<address>:<port>"
+          placeholder="https://<address>:<port>"
           validators={this.proxy ? InputValidators.isUrl : undefined}
         />
         <small className="hint">

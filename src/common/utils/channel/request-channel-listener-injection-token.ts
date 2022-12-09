@@ -8,3 +8,7 @@ export interface RequestChannel<Request, Response> {
   _requestSignature?: Request; // used only to mark `Request` as "used"
   _responseSignature?: Response; // used only to mark `Response` as "used"
 }
+
+export const getRequestChannel = <Request, Response>(id: string): RequestChannel<Request, Response> => ({
+  id,
+});

@@ -21,7 +21,7 @@ export const HelmChartIcon = ({
   if (!icon || failedToLoad) {
     return (
       <div className={className}>
-        <svg viewBox="0 0 722.8 702" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 722.8 702" xmlns="https://www.w3.org/2000/svg">
           <g fill="currentColor">
             <path d="m318 299.5c2.1 1.6 4.8 2.5 7.6 2.5 6.9 0 12.6-5.5 12.9-12.3l.3-.2 4.3-76.7c-5.2.6-10.4 1.5-15.6 2.7-28.5 6.5-53.2 20.5-72.6 39.5l62.9 44.6z"/>
             <path d="m309.5 411.9c-1.4-5.9-6.6-9.9-12.4-10-.8 0-1.7.1-2.5.2l-.1-.2-75.5 12.8c11.7 32.2 33.4 58.5 60.8 76.1l29.2-70.7-.2-.3c1.1-2.4 1.4-5.2.7-7.9z"/>

@@ -174,7 +174,7 @@ describe("kubeconfig manager tests", () => {
         describe("when writing out new proxy kubeconfig resolves", () => {
           beforeEach(async () => {
             await writeFileMock.resolveSpecific(
-              ["/some-directory-for-temp/kubeconfig-foo", "apiVersion: v1\nkind: Config\npreferences: {}\ncurrent-context: minikube\nclusters:\n  - name: minikube\n    cluster:\n      server: http://127.0.0.1:9191/foo\ncontexts:\n  - name: minikube\n    context:\n      cluster: minikube\n      user: proxy\nusers:\n  - name: proxy\n    user: {}\n"],
+              ["/some-directory-for-temp/kubeconfig-foo", "apiVersion: v1\nkind: Config\npreferences: {}\ncurrent-context: minikube\nclusters:\n  - name: minikube\n    cluster:\n      server: https://127.0.0.1:9191/foo\ncontexts:\n  - name: minikube\n    context:\n      cluster: minikube\n      user: proxy\nusers:\n  - name: proxy\n    user: {}\n"],
             );
           });
 
@@ -300,7 +300,7 @@ describe("kubeconfig manager tests", () => {
                   describe("when writing out new proxy kubeconfig resolves", () => {
                     beforeEach(async () => {
                       await writeFileMock.resolveSpecific(
-                        ["/some-directory-for-temp/kubeconfig-foo", "apiVersion: v1\nkind: Config\npreferences: {}\ncurrent-context: minikube\nclusters:\n  - name: minikube\n    cluster:\n      server: http://127.0.0.1:9191/foo\ncontexts:\n  - name: minikube\n    context:\n      cluster: minikube\n      user: proxy\nusers:\n  - name: proxy\n    user: {}\n"],
+                        ["/some-directory-for-temp/kubeconfig-foo", "apiVersion: v1\nkind: Config\npreferences: {}\ncurrent-context: minikube\nclusters:\n  - name: minikube\n    cluster:\n      server: https://127.0.0.1:9191/foo\ncontexts:\n  - name: minikube\n    context:\n      cluster: minikube\n      user: proxy\nusers:\n  - name: proxy\n    user: {}\n"],
                       );
                     });
 

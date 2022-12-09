@@ -16,7 +16,7 @@ export default getGlobalOverride(applicationInformationInjectable, () => ({
     bundledKubectlVersion: "1.23.3",
     bundledHelmVersion: "3.7.2",
     sentryDsn: "",
-    contentSecurityPolicy: "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
+    contentSecurityPolicy: "script-src 'unsafe-eval' 'self'; frame-src https://*.localhost:*/; img-src * data:",
     welcomeRoute: "/welcome",
     extensions: [],
   },

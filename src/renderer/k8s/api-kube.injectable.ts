@@ -25,7 +25,7 @@ const apiKubeInjectable = getInjectable({
     const lensAuthenticationHeaderValue = di.inject(lensAuthenticationHeaderValueInjectionToken);
 
     const apiKube = createKubeJsonApi({
-      serverAddress: `http://127.0.0.1:${port}`,
+      serverAddress: `https://127.0.0.1:${port}`,
       apiBase: apiKubePrefix,
       debug: isDevelopment,
     }, {

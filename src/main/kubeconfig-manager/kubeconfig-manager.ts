@@ -16,12 +16,14 @@ import type { PathExists } from "../../common/fs/path-exists.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { WriteFile } from "../../common/fs/write-file.injectable";
 import { lensAuthenticationHeader } from "../../common/vars/auth-header";
+import type { SelfSignedCert } from "selfsigned";
 
 export interface KubeconfigManagerDependencies {
   readonly directoryForTemp: string;
   readonly logger: Logger;
   readonly lensProxyPort: { get: () => number };
   readonly authHeaderValue: string;
+  readonly lensProxyCertificate: SelfSignedCert;
   joinPaths: JoinPaths;
   getDirnameOfPath: GetDirnameOfPath;
   pathExists: PathExists;
@@ -108,7 +110,9 @@ export class KubeconfigManager {
       clusters: [
         {
           name: contextName,
-          server: `http://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}?${searchParams}`,
+          caData: Buffer.from(this.dependencies.lensProxyCertificate.cert).toString("base64"),
+          server: `https://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}?${searchParams}`,
+          skipTLSVerify: false,
         },
       ],
       users: [

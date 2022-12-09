@@ -14,7 +14,7 @@ const devStaticFileRouteHandlerInjectable = getInjectable({
   instantiate: (di) => {
     const proxy = httpProxy.createProxy();
     const appName = di.inject(appNameInjectable);
-    const proxyTarget = `http://127.0.0.1:${webpackDevServerPort}`;
+    const proxyTarget = `https://127.0.0.1:${webpackDevServerPort}`;
 
     return async ({ raw: { req, res }}: LensApiRequest<"/{path*}">): Promise<RouteResponse<Buffer>> => {
       if (req.url === "/" || !req.url) {

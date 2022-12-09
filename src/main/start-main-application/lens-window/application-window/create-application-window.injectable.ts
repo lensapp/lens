@@ -33,7 +33,7 @@ const createApplicationWindowInjectable = getInjectable({
           defaultHeight: 900,
           defaultWidth: 1440,
           getContentSource: () => ({
-            url: `http://localhost:${lensProxyPort.get()}`,
+            url: `https://localhost:${lensProxyPort.get()}`,
           }),
           resizable: true,
           windowFrameUtilitiesAreShown: isMac,

@@ -146,7 +146,7 @@ describe("add custom helm repository in preferences", () => {
 
             const urlInput = rendered.getByTestId("custom-helm-repository-url-input");
 
-            fireEvent.change(urlInput, { target: { value: "http://some.url" }});
+            fireEvent.change(urlInput, { target: { value: "https://some.url" }});
           });
 
           it("renders", () => {
@@ -170,7 +170,7 @@ describe("add custom helm repository in preferences", () => {
             it("adds the repository", () => {
               expect(execFileMock).toHaveBeenCalledWith(
                 "some-helm-binary-path",
-                ["repo", "add", "some-custom-repository", "http://some.url"],
+                ["repo", "add", "some-custom-repository", "https://some.url"],
                 {
                   maxBuffer: 34359738368,
                   env: {},
@@ -224,7 +224,7 @@ describe("add custom helm repository in preferences", () => {
                 await execFileMock.resolveSpecific(
                   [
                     "some-helm-binary-path",
-                    ["repo", "add", "some-custom-repository", "http://some.url"],
+                    ["repo", "add", "some-custom-repository", "https://some.url"],
                   ],
                   {
                     callWasSuccessful: true,
@@ -365,7 +365,7 @@ describe("add custom helm repository in preferences", () => {
                     "repo",
                     "add",
                     "some-custom-repository",
-                    "http://some.url",
+                    "https://some.url",
                     "--insecure-skip-tls-verify",
                     "--username",
                     "some-username",

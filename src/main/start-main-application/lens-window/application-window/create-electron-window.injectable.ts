@@ -14,6 +14,8 @@ import lensResourcesDirInjectable from "../../../../common/vars/lens-resources-d
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import applicationInformationInjectable from "../../../../common/vars/application-information.injectable";
 import pathExistsSyncInjectable from "../../../../common/fs/path-exists-sync.injectable";
+import lensProxyCertificateInjectable from "../../../lens-proxy/certificate.injectable";
+import { timingSafeEqual, X509Certificate } from "crypto";
 
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
@@ -56,6 +58,8 @@ const createElectronWindowInjectable = getInjectable({
     const isLinux = di.inject(isLinuxInjectable);
     const applicationInformation = di.inject(applicationInformationInjectable);
     const pathExistsSync = di.inject(pathExistsSyncInjectable);
+    const lensProxyCertificate = di.inject(lensProxyCertificateInjectable);
+    const lensProxyCert = new X509Certificate(lensProxyCertificate.cert);
 
     return (configuration) => {
       const applicationWindowState = di.inject(
@@ -122,6 +126,13 @@ const createElectronWindowInjectable = getInjectable({
         })
         .webContents.on("dom-ready", () => {
           configuration.onDomReady?.();
+        })
+        .on("certificate-error", (event, url, error, certificate, shouldBeTrusted) => {
+          const cert = new X509Certificate(certificate.data);
+          const shouldTrustCert = cert.raw.length === lensProxyCert.raw.length
+            && timingSafeEqual(cert.raw, lensProxyCert.raw);
+
+          shouldBeTrusted(shouldTrustCert);
         })
         .on("did-fail-load", (_event, code, desc) => {
           logger.error(

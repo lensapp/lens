@@ -108,7 +108,7 @@ describe("ContextHandler", () => {
       id: "some-cluster-id",
       kubeConfigPath: "/some/path/to/kubeconfig",
     }, {
-      clusterServerUrl: "http://localhost:81",
+      clusterServerUrl: "https://localhost:81",
     });
   });
 

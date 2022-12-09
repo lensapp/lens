@@ -4,7 +4,8 @@
  */
 
 import net from "net";
-import http from "http";
+import type http from "http";
+import https from "https";
 import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
@@ -20,6 +21,7 @@ import { lensAuthenticationHeader } from "../../common/vars/auth-header";
 import { contentTypes } from "../router/router-content-types";
 import { writeServerResponseFor } from "../router/write-server-response";
 import { URL } from "url";
+import type { SelfSignedCert } from "selfsigned";
 
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 
@@ -36,13 +38,14 @@ interface Dependencies {
   readonly contentSecurityPolicy: string;
   readonly logger: Logger;
   readonly authHeaderValue: string;
+  readonly certificate: SelfSignedCert;
 }
 
 const watchParam = "watch";
 const followParam = "follow";
 
 export function isLongRunningRequest(reqUrl: string) {
-  const url = new URL(reqUrl, "http://localhost");
+  const url = new URL(reqUrl, "https://localhost");
 
   return getBoolean(url.searchParams, watchParam) || getBoolean(url.searchParams, followParam);
 }
@@ -71,16 +74,22 @@ export class LensProxy {
   protected readonly retryCounters = new Map<string, number>();
 
   constructor(private readonly dependencies: Dependencies) {
-    this.configureProxy(dependencies.proxy);
+    this.configureProxy(this.dependencies.proxy);
 
-    this.proxyServer = http.createServer((req, res) => {
-      this.handleRequest(req as ServerIncomingMessage, res);
-    });
+    this.proxyServer = https.createServer(
+      {
+        key: this.dependencies.certificate.private,
+        cert: this.dependencies.certificate.cert,
+      },
+      (req, res) => {
+        this.handleRequest(req as ServerIncomingMessage, res);
+      },
+    );
 
     this.proxyServer
       .on("upgrade", (req: ServerIncomingMessage, socket: net.Socket, head: Buffer) => {
         const cluster = this.dependencies.getClusterForRequest(req);
-        const url = new URL(req.url, "http://localhost");
+        const url = new URL(req.url, "https://localhost");
 
         if (url.searchParams.get(lensAuthenticationHeader) !== this.dependencies.authHeaderValue) {
           this.dependencies.logger.warn(`[LENS-PROXY]: Request from url=${req.url} missing authentication`);

@@ -14,6 +14,7 @@ import contentSecurityPolicyInjectable from "../../common/vars/content-security-
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import authHeaderValueInjectable from "./auth-header-value.injectable";
+import lensProxyCertificateInjectable from "./certificate.injectable";
 
 const lensProxyInjectable = getInjectable({
   id: "lens-proxy",
@@ -29,6 +30,7 @@ const lensProxyInjectable = getInjectable({
     emitAppEvent: di.inject(emitAppEventInjectable),
     logger: di.inject(loggerInjectable),
     authHeaderValue: di.inject(authHeaderValueInjectable),
+    certificate: di.inject(lensProxyCertificateInjectable),
   }),
 });
 
