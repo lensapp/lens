@@ -45,6 +45,7 @@ import autoRegistrationInjectable from "../common/k8s-api/api-manager/auto-regis
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
 import initializeSentryReportingWithInjectable from "../common/error-reporting/initialize-sentry-reporting.injectable";
+import addFileLoggingInjectable from "./logger/add-file-logging.injectable";
 
 configurePackages(); // global packages
 registerCustomThemes(); // monaco editor themes
@@ -90,6 +91,8 @@ export async function bootstrap(di: DiContainer) {
    * auto initialization.
    */
   di.inject(autoRegistrationInjectable);
+
+  di.inject(addFileLoggingInjectable);
 
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
