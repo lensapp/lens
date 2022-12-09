@@ -34,7 +34,7 @@ const computedNextEdge = (traversed: string[], graph: Map<string, Set<string>>, 
   }
 };
 
-const verifyRunnablesAreDAG = <Param>(runnables: Runnable<Param>[]) => {
+const verifyRunnablesAreDAG = <Param>(injectionToken: InjectionToken<Runnable<Param>, void>, runnables: Runnable<Param>[]) => {
   const rootId = uuid.v4();
   const runnableGraph = new Map<string, Set<string>>();
   const seenIds = new Set<string>();
@@ -63,7 +63,9 @@ const verifyRunnablesAreDAG = <Param>(runnables: Runnable<Param>[]) => {
     if (!seenIds.has(id)) {
       const runnable = runnables.find(runnable => runnable.id === id);
 
-      assert(runnable, `Unknown runnable id="${id}", logic error`);
+      if (!runnable) {
+        throw new Error(`Runnable "${id}" is not part of the injection token "${injectionToken.id}"`);
+      }
 
       const runAfters = [runnable.runAfter]
         .flat()
@@ -71,7 +73,7 @@ const verifyRunnablesAreDAG = <Param>(runnables: Runnable<Param>[]) => {
         .map(runnable => runnable.id)
         .join('", "');
 
-      throw new Error(`Unreachable runnable="${id}". The specified runAfters; all of "${runAfters}"; are not part of this injection token`);
+      throw new Error(`Runnable "${id}" is unreachable for injection token "${injectionToken.id}": run afters "${runAfters}" are a part of different injection tokens.`);
     }
   }
 };
@@ -96,7 +98,7 @@ export function runManyFor(di: DiContainerForInjection): RunMany {
     const executeRunnable = executeRunnableWith(param);
     const allRunnables = di.injectMany(injectionToken);
 
-    verifyRunnablesAreDAG(allRunnables);
+    verifyRunnablesAreDAG(injectionToken, allRunnables);
 
     await Promise.all(allRunnables.map(executeRunnable));
   };

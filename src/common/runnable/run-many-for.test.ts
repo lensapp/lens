@@ -223,7 +223,68 @@ describe("runManyFor", () => {
     );
 
     return expect(() => runMany()).rejects.toThrow(
-      /Unreachable runnable="some-runnable-1". The specified runAfters; all of "some-runnable-2"; are not part of this injection token/,
+      /Runnable "some-runnable-1" is unreachable for injection token "some-injection-token": run afters "some-runnable-2" are a part of different injection tokens./,
+    );
+  });
+
+  it("given partially incorrect hierarchy, when running runnables, throws", () => {
+    const rootDi = createContainer("irrelevant");
+
+    const runMock = asyncFn<(...args: unknown[]) => void>();
+
+    const someInjectionToken = getInjectionToken<Runnable>({
+      id: "some-injection-token",
+    });
+
+    const someOtherInjectionToken = getInjectionToken<Runnable>({
+      id: "some-other-injection-token",
+    });
+
+    const someInjectable = getInjectable({
+      id: "some-runnable-1",
+
+      instantiate: (di) => ({
+        id: "some-runnable-1",
+        run: () => runMock("some-runnable-1"),
+        runAfter: [
+          di.inject(someOtherInjectable),
+          di.inject(someSecondInjectable),
+        ],
+      }),
+
+      injectionToken: someInjectionToken,
+    });
+
+    const someSecondInjectable = getInjectable({
+      id: "some-runnable-2",
+
+      instantiate: () => ({
+        id: "some-runnable-2",
+        run: () => runMock("some-runnable-2"),
+      }),
+
+      injectionToken: someInjectionToken,
+    });
+
+    const someOtherInjectable = getInjectable({
+      id: "some-runnable-3",
+
+      instantiate: () => ({
+        id: "some-runnable-3",
+        run: () => runMock("some-runnable-3"),
+      }),
+
+      injectionToken: someOtherInjectionToken,
+    });
+
+    rootDi.register(someInjectable, someOtherInjectable, someSecondInjectable);
+
+    const runMany = runManyFor(rootDi)(
+      someInjectionToken,
+    );
+
+    return expect(() => runMany()).rejects.toThrow(
+      /Runnable "some-runnable-3" is not part of the injection token "some-injection-token"/,
     );
   });
 
