@@ -9,16 +9,14 @@ import { init } from "@sentry/electron/renderer";
 
 const setupSentryInjectable = getInjectable({
   id: "setup-sentry",
-  instantiate: (di) => {
-    const initializeSentryReportingWith = di.inject(initializeSentryReportingWithInjectable);
+  instantiate: (di) => ({
+    id: "setup-sentry",
+    run: () => {
+      const initializeSentryReportingWith = di.inject(initializeSentryReportingWithInjectable);
 
-    return {
-      id: "setup-sentry",
-      run: () => {
-        initializeSentryReportingWith(init);
-      },
-    };
-  },
+      initializeSentryReportingWith(init);
+    },
+  }),
   injectionToken: evenBeforeMainFrameStartsInjectionToken,
 });
 

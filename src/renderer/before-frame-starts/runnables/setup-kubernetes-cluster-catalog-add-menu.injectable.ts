@@ -8,7 +8,6 @@ import navigateToAddClusterInjectable from "../../../common/front-end-routing/ro
 import isLinuxInjectable from "../../../common/vars/is-linux.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import openPathPickingDialogInjectable from "../../../features/path-picking-dialog/renderer/pick-paths.injectable";
-import setupAppPathsInjectable from "../../app-paths/setup-app-paths.injectable";
 import addSyncEntriesInjectable from "../../initializers/add-sync-entries.injectable";
 import { beforeFrameStartsInjectionToken } from "../tokens";
 
@@ -75,7 +74,6 @@ const setupKubernetesClusterCatalogAddMenuListenerInjectable = getInjectable({
         }
       });
     },
-    runAfter: di.inject(setupAppPathsInjectable),
   }),
   injectionToken: beforeFrameStartsInjectionToken,
 });

@@ -8,7 +8,6 @@ import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.in
 import readFileInjectable from "../../../common/fs/read-file.injectable";
 import { loadConfigFromString } from "../../../common/kube-helpers";
 import loggerInjectable from "../../../common/logger.injectable";
-import setupAppPathsInjectable from "../../app-paths/setup-app-paths.injectable";
 import openDeleteClusterDialogInjectable from "../../components/delete-cluster-dialog/open.injectable";
 import { beforeFrameStartsInjectionToken } from "../tokens";
 
@@ -50,7 +49,6 @@ const setupKubernetesClusterContextMenuOpenInjectable = getInjectable({
           }
         });
     },
-    runAfter: di.inject(setupAppPathsInjectable),
   }),
   injectionToken: beforeFrameStartsInjectionToken,
 });

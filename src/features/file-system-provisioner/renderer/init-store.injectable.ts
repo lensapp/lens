@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import fileSystemProvisionerStoreInjectable from "../../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
-import setupAppPathsInjectable from "../../../renderer/app-paths/setup-app-paths.injectable";
 import { beforeFrameStartsInjectionToken } from "../../../renderer/before-frame-starts/tokens";
 
 const initFileSystemProvisionerStoreInjectable = getInjectable({
@@ -16,7 +15,6 @@ const initFileSystemProvisionerStoreInjectable = getInjectable({
 
       store.load();
     },
-    runAfter: di.inject(setupAppPathsInjectable),
   }),
   injectionToken: beforeFrameStartsInjectionToken,
 });

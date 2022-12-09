@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import setupAppPathsInjectable from "../app-paths/setup-app-paths.injectable";
 import { beforeFrameStartsInjectionToken } from "../before-frame-starts/tokens";
 import initDefaultUpdateChannelInjectable from "../vars/default-update-channel/init.injectable";
 
@@ -18,10 +17,7 @@ const initUserStoreInjectable = getInjectable({
 
       return userStore.load();
     },
-    runAfter: [
-      di.inject(initDefaultUpdateChannelInjectable),
-      di.inject(setupAppPathsInjectable),
-    ],
+    runAfter: di.inject(initDefaultUpdateChannelInjectable),
   }),
   injectionToken: beforeFrameStartsInjectionToken,
 });
