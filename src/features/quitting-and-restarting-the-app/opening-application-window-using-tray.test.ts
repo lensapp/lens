@@ -8,12 +8,12 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { LensWindow } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
-import lensResourcesDirInjectable from "../../common/vars/lens-resources-dir.injectable";
 import focusApplicationInjectable from "../../main/electron-app/features/focus-application.injectable";
 import type { CreateElectronWindow } from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import createElectronWindowInjectable from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import splashWindowInjectable from "../../main/start-main-application/lens-window/splash-window/splash-window.injectable";
 import { runInAction } from "mobx";
+import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
 
 describe("opening application window using tray", () => {
   describe("given application has started", () => {
@@ -36,8 +36,8 @@ describe("opening application window using tray", () => {
         mainDi.override(focusApplicationInjectable, () => focusApplicationMock);
 
         mainDi.override(
-          lensResourcesDirInjectable,
-          () => "/some-lens-resources-directory",
+          staticFilesDirectoryInjectable,
+          () => "/some-static-directory",
         );
 
         const loadFileMock = jest
@@ -119,7 +119,7 @@ describe("opening application window using tray", () => {
         });
 
         it("starts loading static HTML of splash window", () => {
-          expect(callForSplashWindowHtmlMock).toHaveBeenCalledWith("/some-lens-resources-directory/static/splash.html");
+          expect(callForSplashWindowHtmlMock).toHaveBeenCalledWith("/some-static-directory/splash.html");
         });
 
         describe("when loading of splash window HTML resolves", () => {
