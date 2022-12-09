@@ -25,12 +25,17 @@ export interface BaseStoreParams<T> extends Omit<ConfOptions<T>, "migrations"> {
   configName: string;
 }
 
+export interface IpcChannelPrefixes {
+  local: string;
+  remote: string;
+}
+
 export interface BaseStoreDependencies {
   readonly logger: Logger;
   readonly storeMigrationVersion: string;
   readonly directoryForUserData: string;
   readonly migrations: Migrations<Record<string, unknown>>;
-  readonly ipcChannelPrefix: string;
+  readonly ipcChannelPrefixes: IpcChannelPrefixes;
   readonly shouldDisableSyncInListener: boolean;
   getConfigurationFileModel: GetConfigurationFileModel;
   persistStateToConfig: PersistStateToConfig;
@@ -83,7 +88,6 @@ export abstract class BaseStore<T extends object> {
 
   private startSyncing(config: Config<T>) {
     const name = this.dependencies.getBasenameOfPath(config.path);
-    const channelName = `${this.dependencies.ipcChannelPrefix}:${config.path}`;
 
     const disableSync = () => this.syncDisposers();
     const enableSync = () => {
@@ -92,13 +96,13 @@ export abstract class BaseStore<T extends object> {
           () => toJS(this.toJSON()), // unwrap possible observables and react to everything
           model => {
             this.dependencies.persistStateToConfig(config, model);
-            broadcastMessage(channelName, model);
+            broadcastMessage(`${this.dependencies.ipcChannelPrefixes.remote}:${config.path}`, model);
           },
           this.params.syncOptions,
         ),
         this.dependencies.enlistMessageChannelListener({
           channel: {
-            id: channelName,
+            id: `${this.dependencies.ipcChannelPrefixes.local}:${config.path}`,
           },
           handler: (model) => {
             this.dependencies.logger.silly(`[${this.displayName}]: syncing ${name}`, { model });

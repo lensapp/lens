@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import { baseStoreIpcChannelPrefixInjectionToken } from "../base-store/channel-prefix";
+import { baseStoreIpcChannelPrefixesInjectionToken } from "../base-store/channel-prefix";
 import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../base-store/disable-sync";
 import storeMigrationsInjectable from "../base-store/migrations.injectable";
 import { persistStateToConfigInjectionToken } from "../base-store/save-to-file";
@@ -25,7 +25,7 @@ const weblinkStoreInjectable = getInjectable({
     storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
     migrations: di.inject(storeMigrationsInjectable, weblinkStoreMigrationInjectionToken),
     getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
-    ipcChannelPrefix: di.inject(baseStoreIpcChannelPrefixInjectionToken),
+    ipcChannelPrefixes: di.inject(baseStoreIpcChannelPrefixesInjectionToken),
     persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
     enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
     shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),

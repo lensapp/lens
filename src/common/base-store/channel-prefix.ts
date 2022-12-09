@@ -4,7 +4,8 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
+import type { IpcChannelPrefixes } from "./base-store";
 
-export const baseStoreIpcChannelPrefixInjectionToken = getInjectionToken<string>({
+export const baseStoreIpcChannelPrefixesInjectionToken = getInjectionToken<IpcChannelPrefixes>({
   id: "base-store-ipc-channel-prefix-token",
 });

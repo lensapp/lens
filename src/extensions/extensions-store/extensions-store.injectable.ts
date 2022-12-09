@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import { baseStoreIpcChannelPrefixInjectionToken } from "../../common/base-store/channel-prefix";
+import { baseStoreIpcChannelPrefixesInjectionToken } from "../../common/base-store/channel-prefix";
 import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../../common/base-store/disable-sync";
 import { persistStateToConfigInjectionToken } from "../../common/base-store/save-to-file";
 import getConfigurationFileModelInjectable from "../../common/get-configuration-file-model/get-configuration-file-model.injectable";
@@ -23,7 +23,7 @@ const extensionsStoreInjectable = getInjectable({
     storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
     migrations: {},
     getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
-    ipcChannelPrefix: di.inject(baseStoreIpcChannelPrefixInjectionToken),
+    ipcChannelPrefixes: di.inject(baseStoreIpcChannelPrefixesInjectionToken),
     persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
     enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
     shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),

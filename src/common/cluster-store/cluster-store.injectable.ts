@@ -13,7 +13,7 @@ import loggerInjectable from "../logger.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import storeMigrationsInjectable from "../base-store/migrations.injectable";
 import { clusterStoreMigrationInjectionToken } from "./migration-token";
-import { baseStoreIpcChannelPrefixInjectionToken } from "../base-store/channel-prefix";
+import { baseStoreIpcChannelPrefixesInjectionToken } from "../base-store/channel-prefix";
 import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../base-store/disable-sync";
 import { persistStateToConfigInjectionToken } from "../base-store/save-to-file";
 import getBasenameOfPathInjectable from "../path/get-basename.injectable";
@@ -32,7 +32,7 @@ const clusterStoreInjectable = getInjectable({
     storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
     migrations: di.inject(storeMigrationsInjectable, clusterStoreMigrationInjectionToken),
     getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
-    ipcChannelPrefix: di.inject(baseStoreIpcChannelPrefixInjectionToken),
+    ipcChannelPrefixes: di.inject(baseStoreIpcChannelPrefixesInjectionToken),
     persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
     enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
     shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),

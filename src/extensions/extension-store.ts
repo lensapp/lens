@@ -16,7 +16,7 @@ import getConfigurationFileModelInjectable from "../common/get-configuration-fil
 import loggerInjectable from "../common/logger.injectable";
 import storeMigrationVersionInjectable from "../common/vars/store-migration-version.injectable";
 import type { Migrations } from "conf/dist/source/types";
-import { baseStoreIpcChannelPrefixInjectionToken } from "../common/base-store/channel-prefix";
+import { baseStoreIpcChannelPrefixesInjectionToken } from "../common/base-store/channel-prefix";
 import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../common/base-store/disable-sync";
 import { persistStateToConfigInjectionToken } from "../common/base-store/save-to-file";
 import getBasenameOfPathInjectable from "../common/path/get-basename.injectable";
@@ -59,7 +59,7 @@ export abstract class ExtensionStore<T extends object> extends BaseStore<T> {
       storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
       migrations: migrations as Migrations<Record<string, unknown>>,
       getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
-      ipcChannelPrefix: di.inject(baseStoreIpcChannelPrefixInjectionToken),
+      ipcChannelPrefixes: di.inject(baseStoreIpcChannelPrefixesInjectionToken),
       persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
       enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
       shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
