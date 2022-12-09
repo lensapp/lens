@@ -196,7 +196,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
                     class="SubTitle"
                   >
                     Automatic Error Reporting
-
+                     
                   </div>
                   <label
                     class="Checkbox flex align-center checked"
@@ -572,7 +572,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     class="SubTitle"
                   >
                     Theme
-
+                     
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -663,7 +663,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     class="SubTitle"
                   >
                     Extension Install Registry
-
+                     
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -740,8 +740,8 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   <p
                     class="mt-4 mb-5 leading-relaxed"
                   >
-                    This setting is to change the registry URL for installing extensions by name.
-                    If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
+                    This setting is to change the registry URL for installing extensions by name. 
+                    If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
                     <b>
                       .npmrc
                     </b>
@@ -781,7 +781,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     class="SubTitle"
                   >
                     Start-up
-
+                     
                   </div>
                   <label
                     class="Switch"
@@ -808,7 +808,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     class="SubTitle"
                   >
                     Update Channel
-
+                     
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -897,7 +897,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     class="SubTitle"
                   >
                     Locale Timezone
-
+                     
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -1334,7 +1334,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     class="SubTitle"
                   >
                     Theme
-
+                     
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -1425,7 +1425,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     class="SubTitle"
                   >
                     Extension Install Registry
-
+                     
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -1502,8 +1502,8 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                   <p
                     class="mt-4 mb-5 leading-relaxed"
                   >
-                    This setting is to change the registry URL for installing extensions by name.
-                    If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
+                    This setting is to change the registry URL for installing extensions by name. 
+                    If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
                     <b>
                       .npmrc
                     </b>
@@ -1543,7 +1543,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     class="SubTitle"
                   >
                     Start-up
-
+                     
                   </div>
                   <label
                     class="Switch"
@@ -1570,7 +1570,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     class="SubTitle"
                   >
                     Update Channel
-
+                     
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -1659,7 +1659,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     class="SubTitle"
                   >
                     Locale Timezone
-
+                     
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -2097,7 +2097,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
                     class="SubTitle"
                   >
                     Some telemetry-preference item
-
+                     
                   </div>
                   <div
                     data-testid="some-preference-item-input"

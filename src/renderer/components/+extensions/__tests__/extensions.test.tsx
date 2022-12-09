@@ -29,6 +29,7 @@ import type { DownloadJson } from "../../../../common/fetch/download-json.inject
 import type { DownloadBinary } from "../../../../common/fetch/download-binary.injectable";
 import downloadJsonInjectable from "../../../../common/fetch/download-json.injectable";
 import downloadBinaryInjectable from "../../../../common/fetch/download-binary.injectable";
+import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";
 
 describe("Extensions", () => {
   let extensionLoader: ExtensionLoader;
@@ -45,6 +46,7 @@ describe("Extensions", () => {
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(directoryForDownloadsInjectable, () => "some-directory-for-downloads");
+    di.override(currentlyInClusterFrameInjectable, () => false);
 
     render = renderFor(di);
 

@@ -207,7 +207,7 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                       class="SubTitle"
                     >
                       Theme
-
+                       
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"
@@ -298,7 +298,7 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                       class="SubTitle"
                     >
                       Extension Install Registry
-
+                       
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"
@@ -375,8 +375,8 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                     <p
                       class="mt-4 mb-5 leading-relaxed"
                     >
-                      This setting is to change the registry URL for installing extensions by name.
-                      If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
+                      This setting is to change the registry URL for installing extensions by name. 
+                      If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
                       <b>
                         .npmrc
                       </b>
@@ -416,7 +416,7 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                       class="SubTitle"
                     >
                       Start-up
-
+                       
                     </div>
                     <label
                       class="Switch"
@@ -443,7 +443,7 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                       class="SubTitle"
                     >
                       Update Channel
-
+                       
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"
@@ -532,7 +532,7 @@ exports[`preferences: extension adding preference tabs given in preferences, whe
                       class="SubTitle"
                     >
                       Locale Timezone
-
+                       
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"

@@ -29,6 +29,7 @@ import { flushPromises } from "../../../common/test-utils/flush-promises";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import releaseChannelInjectable from "../../../common/vars/release-channel.injectable";
 import defaultUpdateChannelInjectable from "../../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
+import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
 
 class MockCatalogEntity extends CatalogEntity {
   public apiVersion = "api";
@@ -68,7 +69,7 @@ describe("<Catalog />", () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-
+    di.override(currentlyInClusterFrameInjectable, () => false);
     di.override(broadcastMessageInjectable, () => async () => {});
 
     di.permitSideEffects(getConfigurationFileModelInjectable);

@@ -21,6 +21,7 @@ import toggleMaximizeWindowInjectable from "./toggle-maximize-window/toggle-maxi
 import topBarStateInjectable from "./state.injectable";
 import platformInjectable from "../../../../common/vars/platform.injectable";
 import goForwardInjectable from "./top-bar-items/navigation-to-forward/go-forward/go-forward.injectable";
+import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";
 
 describe("<TopBar/>", () => {
   let di: DiContainer;
@@ -42,6 +43,7 @@ describe("<TopBar/>", () => {
     di.override(closeWindowInjectable, () => closeWindow = jest.fn());
     di.override(maximizeWindowInjectable, () => maximizeWindow = jest.fn());
     di.override(toggleMaximizeWindowInjectable, () => toggleMaximizeWindow = jest.fn());
+    di.override(currentlyInClusterFrameInjectable, () => false);
 
     render = renderFor(di);
   });
