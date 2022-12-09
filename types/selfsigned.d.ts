@@ -22,5 +22,5 @@
      clientCertificateCN?: string;
    }
 
-   export function generate(GenerateAttributes, GenerateOptions): SelfSignedCert;
+   export function generate(attrs: GenerateAttributes, opts: GenerateOptions): SelfSignedCert;
  }
