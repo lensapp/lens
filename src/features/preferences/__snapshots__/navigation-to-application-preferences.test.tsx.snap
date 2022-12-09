@@ -182,7 +182,7 @@ exports[`preferences - navigation to application preferences given in preference
                     class="SubTitle"
                   >
                     Theme
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -273,7 +273,7 @@ exports[`preferences - navigation to application preferences given in preference
                     class="SubTitle"
                   >
                     Extension Install Registry
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -350,8 +350,8 @@ exports[`preferences - navigation to application preferences given in preference
                   <p
                     class="mt-4 mb-5 leading-relaxed"
                   >
-                    This setting is to change the registry URL for installing extensions by name. 
-                    If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
+                    This setting is to change the registry URL for installing extensions by name.
+                    If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
                     <b>
                       .npmrc
                     </b>
@@ -391,7 +391,7 @@ exports[`preferences - navigation to application preferences given in preference
                     class="SubTitle"
                   >
                     Start-up
-                     
+
                   </div>
                   <label
                     class="Switch"
@@ -418,7 +418,7 @@ exports[`preferences - navigation to application preferences given in preference
                     class="SubTitle"
                   >
                     Update Channel
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -507,7 +507,7 @@ exports[`preferences - navigation to application preferences given in preference
                     class="SubTitle"
                   >
                     Locale Timezone
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -531,7 +531,7 @@ exports[`preferences - navigation to application preferences given in preference
                         <div
                           class="Select__single-value css-1dimb5e-singleValue"
                         >
-                          Africa/Abidjan
+                          Etc/GMT
                         </div>
                         <div
                           class="Select__input-container css-qbdosj-Input"
@@ -932,7 +932,7 @@ exports[`preferences - navigation to application preferences given in preference
                     class="SubTitle"
                   >
                     Theme
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -1023,7 +1023,7 @@ exports[`preferences - navigation to application preferences given in preference
                     class="SubTitle"
                   >
                     Extension Install Registry
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -1100,8 +1100,8 @@ exports[`preferences - navigation to application preferences given in preference
                   <p
                     class="mt-4 mb-5 leading-relaxed"
                   >
-                    This setting is to change the registry URL for installing extensions by name. 
-                    If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
+                    This setting is to change the registry URL for installing extensions by name.
+                    If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
                     <b>
                       .npmrc
                     </b>
@@ -1141,7 +1141,7 @@ exports[`preferences - navigation to application preferences given in preference
                     class="SubTitle"
                   >
                     Start-up
-                     
+
                   </div>
                   <label
                     class="Switch"
@@ -1168,7 +1168,7 @@ exports[`preferences - navigation to application preferences given in preference
                     class="SubTitle"
                   >
                     Update Channel
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -1257,7 +1257,7 @@ exports[`preferences - navigation to application preferences given in preference
                     class="SubTitle"
                   >
                     Locale Timezone
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -1281,7 +1281,7 @@ exports[`preferences - navigation to application preferences given in preference
                         <div
                           class="Select__single-value css-1dimb5e-singleValue"
                         >
-                          Africa/Abidjan
+                          Etc/GMT
                         </div>
                         <div
                           class="Select__input-container css-qbdosj-Input"
@@ -1347,7 +1347,7 @@ exports[`preferences - navigation to application preferences given in preference
                     class="SubTitle"
                   >
                     Some application-preference item
-                     
+
                   </div>
                   <div
                     data-testid="some-preference-item-input"
@@ -1711,7 +1711,7 @@ exports[`preferences - navigation to application preferences given in some child
                     class="SubTitle"
                   >
                     HTTP Proxy
-                     
+
                   </div>
                   <div
                     class="Input theme round black"
@@ -1751,7 +1751,7 @@ exports[`preferences - navigation to application preferences given in some child
                     class="SubTitle"
                   >
                     Certificate Trust
-                     
+
                   </div>
                   <label
                     class="Switch"
@@ -2119,7 +2119,7 @@ exports[`preferences - navigation to application preferences given in some child
                     class="SubTitle"
                   >
                     Theme
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -2210,7 +2210,7 @@ exports[`preferences - navigation to application preferences given in some child
                     class="SubTitle"
                   >
                     Extension Install Registry
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -2287,8 +2287,8 @@ exports[`preferences - navigation to application preferences given in some child
                   <p
                     class="mt-4 mb-5 leading-relaxed"
                   >
-                    This setting is to change the registry URL for installing extensions by name. 
-                    If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
+                    This setting is to change the registry URL for installing extensions by name.
+                    If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
                     <b>
                       .npmrc
                     </b>
@@ -2328,7 +2328,7 @@ exports[`preferences - navigation to application preferences given in some child
                     class="SubTitle"
                   >
                     Start-up
-                     
+
                   </div>
                   <label
                     class="Switch"
@@ -2355,7 +2355,7 @@ exports[`preferences - navigation to application preferences given in some child
                     class="SubTitle"
                   >
                     Update Channel
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -2444,7 +2444,7 @@ exports[`preferences - navigation to application preferences given in some child
                     class="SubTitle"
                   >
                     Locale Timezone
-                     
+
                   </div>
                   <div
                     class="Select theme-lens css-b62m3t-container"
@@ -2468,7 +2468,7 @@ exports[`preferences - navigation to application preferences given in some child
                         <div
                           class="Select__single-value css-1dimb5e-singleValue"
                         >
-                          Africa/Abidjan
+                          Etc/GMT
                         </div>
                         <div
                           class="Select__input-container css-qbdosj-Input"
@@ -2870,7 +2870,7 @@ exports[`preferences - navigation to application preferences given in some child
                       class="SubTitle"
                     >
                       Theme
-                       
+
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"
@@ -2961,7 +2961,7 @@ exports[`preferences - navigation to application preferences given in some child
                       class="SubTitle"
                     >
                       Extension Install Registry
-                       
+
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"
@@ -3038,8 +3038,8 @@ exports[`preferences - navigation to application preferences given in some child
                     <p
                       class="mt-4 mb-5 leading-relaxed"
                     >
-                      This setting is to change the registry URL for installing extensions by name. 
-                      If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
+                      This setting is to change the registry URL for installing extensions by name.
+                      If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
                       <b>
                         .npmrc
                       </b>
@@ -3079,7 +3079,7 @@ exports[`preferences - navigation to application preferences given in some child
                       class="SubTitle"
                     >
                       Start-up
-                       
+
                     </div>
                     <label
                       class="Switch"
@@ -3106,7 +3106,7 @@ exports[`preferences - navigation to application preferences given in some child
                       class="SubTitle"
                     >
                       Update Channel
-                       
+
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"
@@ -3195,7 +3195,7 @@ exports[`preferences - navigation to application preferences given in some child
                       class="SubTitle"
                     >
                       Locale Timezone
-                       
+
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"
@@ -3219,7 +3219,7 @@ exports[`preferences - navigation to application preferences given in some child
                           <div
                             class="Select__single-value css-1dimb5e-singleValue"
                           >
-                            Africa/Abidjan
+                            Etc/GMT
                           </div>
                           <div
                             class="Select__input-container css-qbdosj-Input"

@@ -99,13 +99,13 @@ exports[`show-about-using-tray renders 1`] = `
                 </h2>
                 <p>
                   To get you started we have auto-detected your clusters in your
-                   
+
                   kubeconfig file and added them to the catalog, your centralized
-                   
+
                   view for managing all your cloud-native resources.
                   <br />
                   <br />
-                  If you have any questions or feedback, please join our 
+                  If you have any questions or feedback, please join our
                   <a
                     class="link"
                     href="https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ"
@@ -468,7 +468,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                       class="SubTitle"
                     >
                       Theme
-                       
+
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"
@@ -559,7 +559,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                       class="SubTitle"
                     >
                       Extension Install Registry
-                       
+
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"
@@ -636,8 +636,8 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                     <p
                       class="mt-4 mb-5 leading-relaxed"
                     >
-                      This setting is to change the registry URL for installing extensions by name. 
-                      If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your 
+                      This setting is to change the registry URL for installing extensions by name.
+                      If you are unable to access the default registry (https://registry.npmjs.org) you can change it in your
                       <b>
                         .npmrc
                       </b>
@@ -677,7 +677,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                       class="SubTitle"
                     >
                       Start-up
-                       
+
                     </div>
                     <label
                       class="Switch"
@@ -704,7 +704,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                       class="SubTitle"
                     >
                       Update Channel
-                       
+
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"
@@ -793,7 +793,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                       class="SubTitle"
                     >
                       Locale Timezone
-                       
+
                     </div>
                     <div
                       class="Select theme-lens css-b62m3t-container"
@@ -817,7 +817,7 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
                           <div
                             class="Select__single-value css-1dimb5e-singleValue"
                           >
-                            Africa/Abidjan
+                            Etc/GMT
                           </div>
                           <div
                             class="Select__input-container css-qbdosj-Input"
