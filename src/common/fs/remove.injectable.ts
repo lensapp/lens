@@ -9,7 +9,11 @@ export type RemovePath = (filePath: string) => Promise<void>;
 
 const removePathInjectable = getInjectable({
   id: "remove-path",
-  instantiate: (di): RemovePath => di.inject(fsInjectable).rm,
+  instantiate: (di): RemovePath => {
+    const { rm } = di.inject(fsInjectable);
+
+    return (filePath) => rm(filePath, { force: true });
+  },
 });
 
 export default removePathInjectable;
