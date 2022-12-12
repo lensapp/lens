@@ -28,12 +28,12 @@
   --font-weight-bold: 500;
   --main-layout-header: 40px;
 
-  --z-index-base: 1;
-  --z-index-topmost: 9999;
   --z-index-behind: -1;
+  --z-index-base: 1;
   --z-index-base-above: 2;
   --z-index-middle: 3;
   --z-index-menus: 4;
+  --z-index-topmost: 9999;
 }
 
 *, *:before, *:after {
