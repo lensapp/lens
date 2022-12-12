@@ -11,6 +11,7 @@ export type RandomBytes = (size: number) => Promise<Buffer>;
 const randomBytesInjectable = getInjectable({
   id: "random-bytes",
   instantiate: (): RandomBytes => promisify(randomBytes),
+  causesSideEffects: true,
 });
 
 export default randomBytesInjectable;
