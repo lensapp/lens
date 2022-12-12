@@ -7,9 +7,9 @@ import { hasCorrectExtension } from "./has-correct-extension";
 import readFileInjectable from "../../../../common/fs/read-file.injectable";
 import readDirectoryInjectable from "../../../../common/fs/read-directory.injectable";
 import type { RawTemplates } from "./create-resource-templates.injectable";
-import staticFilesDirectoryInjectable from "../../../../common/vars/static-files-directory.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import parsePathInjectable from "../../../../common/path/parse.injectable";
+import lensResourcesDirInjectable from "../../../../common/vars/lens-resources-dir.injectable";
 
 const lensCreateResourceTemplatesInjectable = getInjectable({
   id: "lens-create-resource-templates",
@@ -18,14 +18,14 @@ const lensCreateResourceTemplatesInjectable = getInjectable({
     const readFile = di.inject(readFileInjectable);
     const readDir = di.inject(readDirectoryInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
-    const staticFilesDirectory = di.inject(staticFilesDirectoryInjectable);
     const parsePath = di.inject(parsePathInjectable);
+    const resourcesDirectory = di.inject(lensResourcesDirInjectable);
 
     /**
      * Mapping between file names and their contents
      */
     const templates: [file: string, contents: string][] = [];
-    const templatesFolder = joinPaths(staticFilesDirectory, "../templates/create-resource");
+    const templatesFolder = joinPaths(resourcesDirectory, "templates/create-resource");
 
     for (const dirEntry of await readDir(templatesFolder)) {
       if (hasCorrectExtension(dirEntry)) {

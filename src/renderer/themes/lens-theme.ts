@@ -76,8 +76,6 @@ export type LensColorName =
   | "tableBgcStripe"
   | "tableBgcSelected"
   | "tableHeaderBackground"
-  | "tableHeaderBorderWidth"
-  | "tableHeaderBorderColor"
   | "tableHeaderColor"
   | "tableSelectedRowColor"
   | "helmLogoBackground"

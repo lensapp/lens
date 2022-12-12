@@ -79,7 +79,7 @@ describe("installing update", () => {
 
     it("shows normal tray icon", () => {
       expect(builder.tray.getIconPath()).toBe(
-        "/some-static-files-directory/icons/trayIconTemplate.png",
+        "/some-static-files-directory/build/tray/trayIconTemplate.png",
       );
     });
 
@@ -97,7 +97,7 @@ describe("installing update", () => {
 
       it("shows tray icon for checking for updates", () => {
         expect(builder.tray.getIconPath()).toBe(
-          "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
+          "/some-static-files-directory/build/tray/trayIconCheckingForUpdatesTemplate.png",
         );
       });
 
@@ -114,7 +114,7 @@ describe("installing update", () => {
 
         it("shows tray icon for normal", () => {
           expect(builder.tray.getIconPath()).toBe(
-            "/some-static-files-directory/icons/trayIconTemplate.png",
+            "/some-static-files-directory/build/tray/trayIconTemplate.png",
           );
         });
 
@@ -141,7 +141,7 @@ describe("installing update", () => {
 
         it("still shows tray icon for downloading", () => {
           expect(builder.tray.getIconPath()).toBe(
-            "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
+            "/some-static-files-directory/build/tray/trayIconCheckingForUpdatesTemplate.png",
           );
         });
 
@@ -160,7 +160,7 @@ describe("installing update", () => {
 
           it("still shows normal tray icon", () => {
             expect(builder.tray.getIconPath()).toBe(
-              "/some-static-files-directory/icons/trayIconTemplate.png",
+              "/some-static-files-directory/build/tray/trayIconTemplate.png",
             );
           });
 
@@ -180,7 +180,7 @@ describe("installing update", () => {
 
           it("shows tray icon for update being available", () => {
             expect(builder.tray.getIconPath()).toBe(
-              "/some-static-files-directory/icons/trayIconUpdateAvailableTemplate.png",
+              "/some-static-files-directory/build/tray/trayIconUpdateAvailableTemplate.png",
             );
           });
 
@@ -197,7 +197,7 @@ describe("installing update", () => {
 
             it("shows tray icon for checking for updates", () => {
               expect(builder.tray.getIconPath()).toBe(
-                "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
+                "/some-static-files-directory/build/tray/trayIconCheckingForUpdatesTemplate.png",
               );
             });
 
@@ -215,7 +215,7 @@ describe("installing update", () => {
 
               it("shows tray icon for update being available", () => {
                 expect(builder.tray.getIconPath()).toBe(
-                  "/some-static-files-directory/icons/trayIconUpdateAvailableTemplate.png",
+                  "/some-static-files-directory/build/tray/trayIconUpdateAvailableTemplate.png",
                 );
               });
             });
@@ -234,7 +234,7 @@ describe("installing update", () => {
 
               it("shows tray icon for downloading update", () => {
                 expect(builder.tray.getIconPath()).toBe(
-                  "/some-static-files-directory/icons/trayIconCheckingForUpdatesTemplate.png",
+                  "/some-static-files-directory/build/tray/trayIconCheckingForUpdatesTemplate.png",
                 );
               });
             });

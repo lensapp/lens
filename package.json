@@ -94,25 +94,10 @@
   "build": {
     "generateUpdatesFilesForAllChannels": true,
     "files": [
-      "static/build/main.js"
+      "static/**/*"
     ],
     "afterSign": "build/notarize.js",
     "extraResources": [
-      {
-        "from": "locales/",
-        "to": "locales/",
-        "filter": "**/*.js"
-      },
-      {
-        "from": "static/",
-        "to": "static/",
-        "filter": "!**/main.js"
-      },
-      {
-        "from": "build/tray",
-        "to": "static/icons",
-        "filter": "*.png"
-      },
       {
         "from": "extensions/",
         "to": "./extensions/",
@@ -281,7 +266,7 @@
     "rfc6902": "^4.0.2",
     "selfsigned": "^2.1.1",
     "semver": "^7.3.8",
-    "tar": "^6.1.12",
+    "tar": "^6.1.13",
     "tcp-port-used": "^1.0.2",
     "tempy": "1.0.1",
     "typed-regex": "^0.0.8",
@@ -302,7 +287,7 @@
     "@sentry/types": "^6.19.7",
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.3.21",
-    "@swc/jest": "^0.2.23",
+    "@swc/jest": "^0.2.24",
     "@testing-library/dom": "^7.31.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
@@ -359,8 +344,8 @@
     "@types/webpack-dev-server": "^4.7.2",
     "@types/webpack-env": "^1.18.0",
     "@types/webpack-node-externals": "^2.5.3",
-    "@typescript-eslint/eslint-plugin": "^5.45.1",
-    "@typescript-eslint/parser": "^5.45.1",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
     "adr": "^1.4.3",
     "ansi_up": "^5.1.0",
     "chalk": "^4.1.2",
@@ -376,7 +361,7 @@
     "electron": "^19.1.9",
     "electron-builder": "^23.6.0",
     "electron-notarize": "^0.3.0",
-    "esbuild": "^0.15.18",
+    "esbuild": "^0.16.3",
     "esbuild-loader": "^2.20.0",
     "eslint": "^8.29.0",
     "eslint-import-resolver-typescript": "^3.5.2",
@@ -397,13 +382,13 @@
     "jest-mock-extended": "^2.0.9",
     "make-plural": "^6.2.2",
     "memorystream": "^0.3.1",
-    "mini-css-extract-plugin": "^2.7.1",
+    "mini-css-extract-plugin": "^2.7.2",
     "mock-http": "^1.1.0",
     "node-gyp": "^8.3.0",
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.20",
     "playwright": "^1.28.1",
-    "postcss": "^8.4.19",
+    "postcss": "^8.4.20",
     "postcss-loader": "^6.2.1",
     "query-string": "^7.1.3",
     "randomcolor": "^0.6.2",
@@ -427,7 +412,7 @@
     "typed-emitter": "^1.4.0",
     "typedoc": "0.23.21",
     "typedoc-plugin-markdown": "^3.13.6",
-    "typescript": "^4.9.3",
+    "typescript": "^4.9.4",
     "typescript-plugin-css-modules": "^3.4.0",
     "webpack": "^5.75.0",
     "webpack-cli": "^4.9.2",
