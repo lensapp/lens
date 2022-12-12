@@ -27,6 +27,13 @@
   --font-weight-normal: 400;
   --font-weight-bold: 500;
   --main-layout-header: 40px;
+
+  --z-index-base: 1;
+  --z-index-topmost: 9999;
+  --z-index-behind: -1;
+  --z-index-base-above: 2;
+  --z-index-middle: 3;
+  --z-index-menus: 4;
 }
 
 *, *:before, *:after {
@@ -250,17 +257,17 @@ iframe {
 }
 
 // app's common loading indicator, displaying on the route transitions
-#loading {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin: -15px;
-  z-index: 1000;
+// #loading {
+//   position: absolute;
+//   left: 50%;
+//   top: 50%;
+//   margin: -15px;
+//   // z-index: 1000;
 
-  &.hidden {
-    display: none;
-  }
-}
+//   &.hidden {
+//     display: none;
+//   }
+// }
 
 // hack-fix: remove crappy yellow background from auto-filled inputs in chrome
 @keyframes autofill-remove-bgc {
