@@ -261,7 +261,7 @@
     "mock-fs": "^5.2.0",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.39",
-    "monaco-editor": "^0.29.1",
+    "monaco-editor": "^0.34.1",
     "monaco-editor-webpack-plugin": "^5.0.0",
     "node-fetch": "^3.3.0",
     "node-pty": "0.10.1",
