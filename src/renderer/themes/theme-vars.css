@@ -1,5 +1,5 @@
 
-/* 
+/*
     Generated Lens theme CSS-variables, don't edit manually.
     To refresh file run $: yarn run ts-node build/build_theme_vars.ts
 */
@@ -38,8 +38,6 @@
 --tableBgcStripe: #2a2d33;
 --tableBgcSelected: #383c42;
 --tableHeaderBackground: #262b2f;
---tableHeaderBorderWidth: 1px;
---tableHeaderBorderColor: #36393e;
 --tableHeaderColor: #ffffff;
 --tableSelectedRowColor: #ffffff;
 --helmLogoBackground: #ffffff;

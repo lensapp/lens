@@ -45,8 +45,6 @@ const lensDarkTheme: LensTheme = {
     "tableBgcStripe": "#2a2d33",
     "tableBgcSelected": "#383c42",
     "tableHeaderBackground": "#262b2f",
-    "tableHeaderBorderWidth": "1px",
-    "tableHeaderBorderColor": "#36393e",
     "tableHeaderColor": "#ffffff",
     "tableSelectedRowColor": "#ffffff",
     "helmLogoBackground": "#ffffff",
