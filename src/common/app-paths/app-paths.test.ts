@@ -19,6 +19,7 @@ describe("app-paths", () => {
     builder = getApplicationBuilder();
 
     const defaultAppPathsStub: AppPaths = {
+      currentApp: "some-current-app",
       appData: "some-app-data",
       cache: "some-cache",
       crashDumps: "some-crash-dumps",
@@ -70,6 +71,7 @@ describe("app-paths", () => {
       const actual = windowDi.inject(appPathsInjectionToken);
 
       expect(actual).toEqual({
+        currentApp: "some-current-app",
         appData: "some-app-data",
         cache: "some-cache",
         crashDumps: "some-crash-dumps",
@@ -93,6 +95,7 @@ describe("app-paths", () => {
       const actual = mainDi.inject(appPathsInjectionToken);
 
       expect(actual).toEqual({
+        currentApp: "some-current-app",
         appData: "some-app-data",
         cache: "some-cache",
         crashDumps: "some-crash-dumps",
