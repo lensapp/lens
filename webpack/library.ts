@@ -5,112 +5,89 @@
 
 import path from "path";
 import type webpack from "webpack";
+import type { WebpackPluginInstance } from "webpack";
 import { DefinePlugin } from "webpack";
 import nodeExternals from "webpack-node-externals";
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
+import CircularDependencyPlugin from "circular-dependency-plugin";
+import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import getTypeScriptLoader from "./get-typescript-loader";
 import rendererConfig, { iconsAndImagesWebpackRules } from "./renderer";
-import { buildDir, isDevelopment, mainDir } from "./vars";
+import { appName, assetsFolderName, buildDir, htmlTemplate, isDevelopment, mainDir, publicPath } from "./vars";
 import { platform } from "process";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
-const configs: { (): webpack.Configuration }[] = [
-  rendererConfig,
-];
-
-configs.push((): webpack.Configuration => {
-  console.info("WEBPACK:library", {
-    isDevelopment,
-    buildDir,
-  });
-
-  return {
-    name: "lens-app-library",
-    context: __dirname,
-    target: "electron-main",
-    mode: isDevelopment ? "development" : "production",
-    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
-    cache: isDevelopment ? { type: "filesystem" } : false,
-    entry: {
-      library: path.resolve(mainDir, "..", "library.ts"),
-    },
-    output: {
-      path: path.join(buildDir, "library"),
-      library: {
-        type: "commonjs",
+const renderer: webpack.Configuration = ({
+  ...rendererConfig({ showVars: false }),
+  plugins: [
+    // see also: https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+    new MonacoWebpackPlugin({
+      // publicPath: "/",
+      // filename: "[name].worker.js",
+      languages: ["json", "yaml"],
+      globalAPI: isDevelopment,
+    }),
+    new HtmlWebpackPlugin({
+      filename: `${appName}.html`,
+      template: htmlTemplate,
+      inject: true,
+      hash: true,
+      templateParameters: {
+        assetPath: `${publicPath}${assetsFolderName}`,
       },
-    },
-    resolve: {
-      extensions: [".json", ".js", ".ts"],
-    },
-    externals: [
-      nodeExternals(),
-    ],
-    module: {
-      rules: [
-        {
-          test: /\.node$/,
-          use: "node-loader",
-        },
-        {
-          test: /\.tsx?$/,
-          loader: "ts-loader",
-          options: {
-            compilerOptions: {
-              declaration: true, // output .d.ts
-              sourceMap: false, // to override sourceMap: true in tsconfig.json
-              outDir: path.join(buildDir, "library"),
-            },
-          },
-        },
-        ...iconsAndImagesWebpackRules(),
-      ],
-    },
-    plugins: [
-      new DefinePlugin({
-        CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
-        CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
-      }),
-    ],
-  };
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+    }),
+  ],
 });
 
-configs.push((): webpack.Configuration => {
-  console.info("WEBPACK:library:download-binaries", {
-    isDevelopment,
-    buildDir,
-  });
-
-  return {
-    name: "lens-app-library-download-binaries",
-    context: __dirname,
-    target: "electron-main",
-    mode: isDevelopment ? "development" : "production",
-    devtool: false,
-    cache: isDevelopment ? { type: "filesystem" } : false,
-    entry: {
-      download_binaries: path.resolve(process.cwd(), "build", "download_binaries.ts"),
-    },
-    output: {
-      path: path.join(buildDir, "library"),
-    },
-    resolve: {
-      extensions: [".json", ".js", ".ts"],
-    },
-    externals: [
-      nodeExternals(),
+const main: webpack.Configuration = ({
+  name: "lens-app-main",
+  context: __dirname,
+  target: "electron-main",
+  mode: isDevelopment ? "development" : "production",
+  devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
+  cache: isDevelopment ? { type: "filesystem" } : false,
+  entry: {
+    main: path.resolve(mainDir, "index.ts"),
+  },
+  output: {
+    libraryTarget: "global",
+    path: buildDir,
+  },
+  resolve: {
+    extensions: [".json", ".js", ".ts"],
+  },
+  externals: [
+    nodeExternals(),
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.node$/,
+        use: "node-loader",
+      },
+      getTypeScriptLoader({}, /\.ts$/),
+      ...iconsAndImagesWebpackRules(),
     ],
-    module: {
-      rules: [
-        {
-          test: /\.node$/,
-          use: "node-loader",
-        },
-        getTypeScriptLoader({}, /\.ts$/),
-        ...iconsAndImagesWebpackRules(),
-      ],
-    },
-    plugins: [
-    ],
-  };
+  },
+  plugins: [
+    new DefinePlugin({
+      CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
+      CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
+    }),
+    new ForkTsCheckerPlugin(),
+    new CircularDependencyPlugin({
+      cwd: __dirname,
+      exclude: /node_modules/,
+      failOnError: true,
+    }) as unknown as WebpackPluginInstance,
+  ],
 });
 
-export default configs;
+export {
+  main,
+  renderer,
+};

@@ -38,7 +38,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
     cache: isDevelopment ? { type: "filesystem" } : false,
     entry: {
-      [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
+      [appName]: path.resolve(rendererDir, "index.ts"),
     },
     output: {
       libraryTarget: "global",
@@ -65,6 +65,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     },
     externals: {
       "node-fetch": "commonjs node-fetch",
+      "npm": "commonjs npm",
     },
     optimization: {
       minimize: false,
@@ -192,7 +193,7 @@ export function cssModulesWebpackRule({ styleLoader }: CssModulesWebpackRuleOpti
           sourceMap: isDevelopment,
           postcssOptions: {
             plugins: [
-              "tailwindcss",
+              ["tailwindcss", { config: path.resolve(__dirname, "..", "tailwind.config.js") }],
             ],
           },
         },

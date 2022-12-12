@@ -6,13 +6,26 @@
   "version": "6.3.0-alpha.0",
   "main": "static/build/main.js",
   "exports": {
-    ".": "./static/build/library/library.js"
+    "./main": "./static/build/library/main.js",
+    "./renderer": "./static/build/library/renderer.js",
+    "./styles": "./static/build/library/renderer.css"
+  },
+  "typesVersions": {
+    "*": {
+      "main": [
+        "./src/library.ts"
+      ],
+      "renderer": [
+        "./src/renderer/library.ts"
+      ]
+    }
   },
   "files": [
-    "static/**/*",
-    "!static/build/main.*",
     "build/**/*",
-    "templates/**/*"
+    "static/build/library/**/*",
+    "src/**/*",
+    "webpack/*",
+    "types/*"
   ],
   "copyright": "© 2022 OpenLens Authors",
   "license": "MIT",

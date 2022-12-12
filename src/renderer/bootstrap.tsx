@@ -3,16 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./components/app.scss";
-
 import React from "react";
-import ReactDOM, { render, unmountComponentAtNode } from "react-dom";
-import * as Mobx from "mobx";
-import * as MobxReact from "mobx-react";
-import * as ReactRouter from "react-router";
-import * as ReactRouterDom from "react-router-dom";
-import * as LensExtensionsCommonApi from "../extensions/common-api";
-import * as LensExtensionsRendererApi from "../extensions/renderer-api";
+import { render, unmountComponentAtNode } from "react-dom";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
 import { DefaultProps } from "./mui-base-theme";
@@ -21,7 +13,6 @@ import * as initializers from "./initializers";
 import logger from "../common/logger";
 import { WeblinkStore } from "../common/weblink-store";
 import { registerCustomThemes } from "./components/monaco-editor";
-import { getDi } from "./getDi";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DiContainer } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
@@ -46,9 +37,6 @@ import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
 import initializeSentryReportingWithInjectable from "../common/error-reporting/initialize-sentry-reporting.injectable";
 
-configurePackages(); // global packages
-registerCustomThemes(); // monaco editor themes
-
 /**
  * If this is a development build, wait a second to attach
  * Chrome Debugger to renderer process
@@ -61,6 +49,9 @@ async function attachChromeDebugger() {
 }
 
 export async function bootstrap(di: DiContainer) {
+  configurePackages(); // global packages
+  registerCustomThemes(); // monaco editor themes
+
   const initializeSentryReportingWith = di.inject(initializeSentryReportingWithInjectable);
 
   if (process.isMainFrame) {
@@ -171,28 +162,3 @@ export async function bootstrap(di: DiContainer) {
     rootElem,
   );
 }
-
-const di = getDi();
-
-// run
-bootstrap(di);
-
-/**
- * Exports for virtual package "@k8slens/extensions" for renderer-process.
- * All exporting names available in global runtime scope:
- * e.g. Devtools -> Console -> window.LensExtensions (renderer)
- */
-const LensExtensions = {
-  Common: LensExtensionsCommonApi,
-  Renderer: LensExtensionsRendererApi,
-};
-
-export {
-  React,
-  ReactDOM,
-  ReactRouter,
-  ReactRouterDom,
-  Mobx,
-  MobxReact,
-  LensExtensions,
-};
