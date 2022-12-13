@@ -6,16 +6,18 @@
 import "./components/app.scss";
 
 import { getDi } from "./getDi";
-import { bootstrap } from "./bootstrap";
 import { 
   React, ReactDOM, ReactRouter, 
   ReactRouterDom, Mobx, MobxReact, LensExtensions,
 } from "./extension-api";
+import { startApp } from "./start-app";
 
 const di = getDi();
 
 // run
-bootstrap(di);
+startApp({
+  di,
+});
 
 export {
   React,
