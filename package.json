@@ -62,7 +62,7 @@
     "extensions": [
       "kube-object-event-status",
       "metrics-cluster-feature",
-      "node-menu", 
+      "node-menu",
       "pod-menu"
     ]
   },
@@ -248,9 +248,14 @@
     "joi": "^17.7.0",
     "js-yaml": "^4.1.0",
     "jsdom": "^16.7.0",
+    "kube-object-event-status": "file:./extensions/kube-object-event-status",
+    "lens-metrics-cluster-feature": "file:./extensions/metrics-cluster-feature",
+    "lens-node-menu": "file:./extensions/node-menu",
+    "lens-pod-menu": "file:./extensions/pod-menu",
     "lodash": "^4.17.15",
     "marked": "^4.2.3",
     "md5-file": "^5.0.0",
+    "metrics-cluster-feature": "file:./extensions/metrics-cluster-feature",
     "mobx": "^6.7.0",
     "mobx-observable-history": "^2.0.3",
     "mobx-react": "^7.6.0",
@@ -261,10 +266,12 @@
     "monaco-editor": "^0.29.1",
     "monaco-editor-webpack-plugin": "^5.0.0",
     "node-fetch": "^3.3.0",
+    "node-menu": "file:./extensions/node-menu",
     "node-pty": "0.10.1",
     "npm": "^8.19.3",
     "p-limit": "^3.1.0",
     "path-to-regexp": "^6.2.0",
+    "pod-menu": "file:./extensions/pod-menu",
     "proper-lockfile": "^4.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -287,11 +294,7 @@
     "winston": "^3.8.2",
     "winston-transport-browserconsole": "^1.0.5",
     "ws": "^8.11.0",
-    "xterm-link-provider": "^1.3.1",
-    "kube-object-event-status": "file:./extensions/kube-object-event-status",
-    "metrics-cluster-feature": "file:./extensions/metrics-cluster-feature",
-    "node-menu": "file:./extensions/node-menu",
-    "pod-menu": "file:./extensions/pod-menu"
+    "xterm-link-provider": "^1.3.1"
   },
   "devDependencies": {
     "@async-fn/jest": "1.6.4",

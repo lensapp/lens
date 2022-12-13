@@ -8276,6 +8276,15 @@ lazy-val@^1.0.4, lazy-val@^1.0.5:
   resolved "https://registry.yarnpkg.com/lazy-val/-/lazy-val-1.0.5.tgz#6cf3b9f5bc31cee7ee3e369c0832b7583dcd923d"
   integrity sha512-0/BnGCCfyUMkBpeDgWihanIAF9JmZhHBgUhEqzvf+adhNGLoP6TaiI5oF8oyb3I45P+PcnrqihSf01M0l0G5+Q==
 
+"lens-metrics-cluster-feature@file:./extensions/metrics-cluster-feature":
+  version "6.1.0"
+
+"lens-node-menu@file:./extensions/node-menu":
+  version "6.1.0"
+
+"lens-pod-menu@file:./extensions/pod-menu":
+  version "6.1.0"
+
 less@^4.1.1:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/less/-/less-4.1.2.tgz#6099ee584999750c2624b65f80145f8674e4b4b0"
