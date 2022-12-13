@@ -9,7 +9,7 @@ import { beforeApplicationIsLoadingInjectionToken } from "./start-main-applicati
 import { beforeElectronIsReadyInjectionToken } from "./start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
 import { onLoadOfApplicationInjectionToken } from "./start-main-application/runnable-tokens/on-load-of-application-injection-token";
 import * as extensionApi from "./extension-api";
-import type { startApp } from "./start-app";
+import { startApp } from "./start-app";
 
 export { 
   registerInjectables,
