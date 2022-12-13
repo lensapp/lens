@@ -6,7 +6,7 @@ import "./components/app.scss";
 
 import * as extensionApi from "./extension-api";
 import { registerInjectables } from "./register-injectables";
-import type { startApp } from "./start-app";
+import { startApp } from "./start-app";
 
 export {
   startApp,
