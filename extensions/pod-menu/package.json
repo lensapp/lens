@@ -8,7 +8,7 @@
     "styles": []
   },
   "scripts": {
-    "build": "npx webpack && npm pack",
+    "build": "npx webpack",
     "dev": "npx webpack -- --watch",
     "test": "npx jest --passWithNoTests --env=jsdom src $@"
   },

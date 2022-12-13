@@ -8394,6 +8394,9 @@ klona@^2.0.4, klona@^2.0.5:
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.5.tgz#d166574d90076395d9963aa7a928fabb8d76afbc"
   integrity sha512-pJiBpiXMbt7dkzXe8Ghj/u4FfXOOa98fPW+bihOJ4SjnoijweJrNThJfd3ifXpXhREjpoF2mZVH1GfS9LV3kHQ==
 
+"kube-object-event-status@file:./extensions/kube-object-event-status":
+  version "6.1.1"
+
 kuler@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/kuler/-/kuler-2.0.0.tgz#e2c570a3800388fb44407e851531c1d670b061b3"
@@ -8410,6 +8413,15 @@ lazy-val@^1.0.4, lazy-val@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/lazy-val/-/lazy-val-1.0.5.tgz#6cf3b9f5bc31cee7ee3e369c0832b7583dcd923d"
   integrity sha512-0/BnGCCfyUMkBpeDgWihanIAF9JmZhHBgUhEqzvf+adhNGLoP6TaiI5oF8oyb3I45P+PcnrqihSf01M0l0G5+Q==
+
+"lens-metrics-cluster-feature@file:./extensions/metrics-cluster-feature":
+  version "6.1.0"
+
+"lens-node-menu@file:./extensions/node-menu":
+  version "6.1.0"
+
+"lens-pod-menu@file:./extensions/pod-menu":
+  version "6.1.0"
 
 less@^4.1.1:
   version "4.1.2"
@@ -8976,6 +8988,9 @@ methods@~1.1.2:
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=
 
+"metrics-cluster-feature@file:./extensions/metrics-cluster-feature":
+  version "6.1.0"
+
 micromatch@^4.0.0, micromatch@^4.0.2, micromatch@^4.0.4, micromatch@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-4.0.5.tgz#bc8999a7cbbf77cdc89f132f6e467051b49090c6"
@@ -9421,6 +9436,9 @@ node-loader@^2.0.0:
   integrity sha512-I5VN34NO4/5UYJaUBtkrODPWxbobrE4hgDqPrjB25yPkonFhCmZ146vTH+Zg417E9Iwoh1l/MbRs1apc5J295Q==
   dependencies:
     loader-utils "^2.0.0"
+
+"node-menu@file:./extensions/node-menu":
+  version "6.1.0"
 
 node-pty@0.10.1:
   version "0.10.1"
@@ -10226,6 +10244,9 @@ plist@^3.0.1, plist@^3.0.4:
   dependencies:
     base64-js "^1.5.1"
     xmlbuilder "^9.0.7"
+
+"pod-menu@file:./extensions/pod-menu":
+  version "6.1.0"
 
 popper.js@1.16.1-lts:
   version "1.16.1-lts"

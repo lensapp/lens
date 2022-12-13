@@ -69,6 +69,7 @@ $(extension_node_modules): node_modules
 
 $(extension_dists): src/extensions/npm/extensions/dist $(extension_node_modules)
 	cd $(@:/dist=) && ../../node_modules/.bin/npm run build
+	rm -rf ./node_modules/$(shell basename $(@:/dist=))
 
 .PHONY: clean-old-extensions
 clean-old-extensions:
@@ -76,6 +77,7 @@ clean-old-extensions:
 
 .PHONY: build-extensions
 build-extensions: node_modules clean-old-extensions $(extension_dists)
+	yarn install --check-files --frozen-lockfile --network-timeout=100000
 
 .PHONY: test-extensions
 test-extensions: $(extension_node_modules)
