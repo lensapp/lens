@@ -44,7 +44,7 @@
       content: "\00A0";
       position: sticky;
       min-width: 8px;
-      z-index: 1;
+      z-index: var(--z-index-base);
     }
 
     &::before {

@@ -27,6 +27,12 @@
   --font-weight-normal: 400;
   --font-weight-bold: 500;
   --main-layout-header: 40px;
+
+  --z-index-base: 0;
+  --z-index-above: 1;
+  --z-index-modals: 2;
+  --z-index-menus: 3;
+  --z-index-topmost: 9999;
 }
 
 *, *:before, *:after {
@@ -246,19 +252,6 @@ iframe {
       content: "text-example"; // some text required to start applying/rendering font in document
       font-family: inherit; // font-family must be specified via style="" (see: template.html)
     }
-  }
-}
-
-// app's common loading indicator, displaying on the route transitions
-#loading {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin: -15px;
-  z-index: 1000;
-
-  &.hidden {
-    display: none;
   }
 }
 

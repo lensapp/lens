@@ -40,7 +40,7 @@
     }
 
     &:focus-visible {
-      z-index: 1;
+      z-index: var(--z-index-base);
     }
   }
 }

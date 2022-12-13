@@ -12,7 +12,7 @@
   background: var(--bgc);
   list-style: none;
   border: 1px solid var(--borderColor);
-  z-index: 101;
+  z-index: var(--z-index-menus);
   box-shadow: rgb(0 0 0 / 17%) 0px 6px 9px 0px;
   border-radius: 4px;
 

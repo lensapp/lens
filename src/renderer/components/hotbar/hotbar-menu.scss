@@ -12,6 +12,7 @@
   padding-top: 1px;
   width: var(--hotbar-width);
   overflow: hidden;
+  isolation: isolate;
 
   &.draggingOver::after {
     content: " ";
