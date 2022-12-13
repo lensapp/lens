@@ -14,7 +14,7 @@ const config = [
   {
     ...main,
     entry: {
-      main: path.resolve(__dirname, "..", "src", "library.ts"),
+      main: path.resolve(__dirname, "..", "src", "main", "library.ts"),
     },
     output: {
       libraryTarget: "commonjs",

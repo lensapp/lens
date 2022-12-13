@@ -13,7 +13,7 @@
   "typesVersions": {
     "*": {
       "main": [
-        "./src/library.ts"
+        "./src/main/library.ts"
       ],
       "renderer": [
         "./src/renderer/library.ts"
