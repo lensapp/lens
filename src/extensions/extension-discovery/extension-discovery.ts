@@ -37,7 +37,7 @@ interface Dependencies {
   readonly extensionsStore: ExtensionsStore;
   readonly extensionInstallationStateStore: ExtensionInstallationStateStore;
   readonly extensionPackageRootDirectory: string;
-  readonly staticFilesDirectory: string;
+  readonly resourcesDirectory: string;
   readonly logger: Logger;
   readonly isProduction: boolean;
   readonly fileSystemSeparator: string;

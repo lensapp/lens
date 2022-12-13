@@ -33,6 +33,7 @@ ci-validate-dev: binaries/client build-extensions compile-dev
 .PHONY: dev
 dev: binaries/client build-extensions
 	rm -rf static/build/
+	yarn run build:tray-icons
 	yarn dev
 
 .PHONY: lint

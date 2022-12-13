@@ -4,18 +4,14 @@
  */
 
 .TableHead {
-  $border: 1px solid var(--tableHeaderBorderColor);
-
   background-color: var(--tableHeaderBackground);
-  border-bottom-width: var(--tableHeaderBorderWidth);
-  border-bottom-style: solid;
-  border-bottom-color: var(--tableHeaderBorderColor);
+  border-bottom: 1px solid var(--borderFaintColor);
   color: var(--tableHeaderColor);
   display: flex;
   flex-shrink: 0;
 
   &.topLine {
-    border-top: $border;
+    border-top: 1px solid var(--borderFaintColor);
   }
 
   &.sticky {
