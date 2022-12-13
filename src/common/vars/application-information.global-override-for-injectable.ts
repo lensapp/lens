@@ -18,6 +18,7 @@ export default getGlobalOverride(applicationInformationInjectable, () => ({
     sentryDsn: "",
     contentSecurityPolicy: "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
     welcomeRoute: "/welcome",
+    extensions: [],
   },
   copyright: "some-copyright-information",
   description: "some-descriptive-text",

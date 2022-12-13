@@ -7,6 +7,7 @@ import { LEVEL, MESSAGE, SPLAT } from "triple-beam";
 import chalk from "chalk";
 import type { InspectOptions } from "util";
 import { inspect } from "util";
+import { omit } from "lodash";
 
 // The following license was copied from https://github.com/duccio/winston-console-format/blob/master/LICENSE
 // This was modified to support formatting causes
@@ -112,8 +113,8 @@ export class ConsoleFormat {
     const messages: string[] = [];
 
     if (source instanceof Error && source.cause) {
-      messages.push(`Cause: ${source.cause}`);
-      messages.push(...this.getLines(source.cause).map(l => `    ${l}`));
+      messages.push("Cause:");
+      messages.push(...this.getLines(omit(source.cause, "response")).map(l => `    ${l}`));
       messages.push(...this._cause(source.cause));
     }
 
