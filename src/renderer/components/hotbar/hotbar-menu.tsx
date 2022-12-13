@@ -89,7 +89,7 @@ class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuPro
     hotbar.addToHotbar(entity, index);
   };
 
-  getMoveAwayDirection(entityId: string | undefined, cellIndex: number) {
+  getMoveAwayDirection(entityId: string | undefined | null, cellIndex: number) {
     if (!entityId) {
       return "animateDown";
     }
@@ -110,10 +110,13 @@ class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuPro
               index={index}
               key={entity ? entity.getId() : `cell${index}`}
               innerRef={provided.innerRef}
-              className={cssNames({
-                isDraggingOver: snapshot.isDraggingOver,
-                isDraggingOwner: snapshot.draggingOverWith == entity?.getId(),
-              }, this.getMoveAwayDirection(snapshot.draggingOverWith, index))}
+              className={cssNames(
+                {
+                  isDraggingOver: snapshot.isDraggingOver,
+                  isDraggingOwner: snapshot.draggingOverWith == entity?.getId(),
+                },
+                this.getMoveAwayDirection(snapshot.draggingOverWith, index),
+              )}
               {...provided.droppableProps}
             >
               {item && (
