@@ -8,6 +8,7 @@ import { getOrInsertSetFor, isDefined } from "../utils";
 import { observable, when } from "mobx";
 import * as uuid from "uuid";
 import assert from "assert";
+import type { Asyncify } from "type-fest";
 
 export interface Runnable<TParameter = void> {
   id: string;
@@ -17,7 +18,7 @@ export interface Runnable<TParameter = void> {
 
 type Run<Param> = (parameter: Param) => Promise<void> | void;
 
-export type RunMany = <Param>(injectionToken: InjectionToken<Runnable<Param>, void>) => Run<Param>;
+export type RunMany = <Param>(injectionToken: InjectionToken<Runnable<Param>, void>) => Asyncify<Run<Param>>;
 
 const computedNextEdge = (traversed: string[], graph: Map<string, Set<string>>, currentId: string, seenIds: Set<string>) => {
   seenIds.add(currentId);
@@ -44,7 +45,7 @@ const verifyRunnablesAreDAG = <Param>(injectionToken: InjectionToken<Runnable<Pa
   for (const runnable of runnables) {
     addRunnableId(runnable.id);
 
-    if (!runnable.runAfter) {
+    if (!runnable.runAfter || (Array.isArray(runnable.runAfter) && runnable.runAfter.length === 0)) {
       addRunnableId(rootId).add(runnable.id);
     } else if (Array.isArray(runnable.runAfter)) {
       for (const parentRunnable of runnable.runAfter) {
