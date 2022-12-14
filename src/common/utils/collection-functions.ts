@@ -49,6 +49,13 @@ export function getOrInsertSet<K, SK>(map: Map<K, Set<SK>>, key: K): Set<SK> {
 }
 
 /**
+ * A currying version of {@link getOrInsertSet}
+ */
+export function getOrInsertSetFor<K, SK>(map: Map<K, Set<SK>>): (key: K) => Set<SK> {
+  return (key) => getOrInsertSet(map, key);
+}
+
+/**
  * Like `getOrInsert` but with delayed creation of the item. Which is useful
  * if it is very expensive to create the initial value.
  */

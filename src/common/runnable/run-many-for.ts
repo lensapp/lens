@@ -4,7 +4,7 @@
  */
 import type { DiContainerForInjection, InjectionToken } from "@ogre-tools/injectable";
 import type { SingleOrMany } from "../utils";
-import { getOrInsertSet, isDefined } from "../utils";
+import { getOrInsertSetFor, isDefined } from "../utils";
 import { observable, when } from "mobx";
 import * as uuid from "uuid";
 import assert from "assert";
@@ -38,23 +38,24 @@ const verifyRunnablesAreDAG = <Param>(injectionToken: InjectionToken<Runnable<Pa
   const rootId = uuid.v4();
   const runnableGraph = new Map<string, Set<string>>();
   const seenIds = new Set<string>();
+  const addRunnableId = getOrInsertSetFor(runnableGraph);
 
   // Build the Directed graph
   for (const runnable of runnables) {
-    getOrInsertSet(runnableGraph, runnable.id);
+    addRunnableId(runnable.id);
 
     if (!runnable.runAfter) {
-      getOrInsertSet(runnableGraph, rootId).add(runnable.id);
+      addRunnableId(rootId).add(runnable.id);
     } else if (Array.isArray(runnable.runAfter)) {
       for (const parentRunnable of runnable.runAfter) {
-        getOrInsertSet(runnableGraph, parentRunnable.id).add(runnable.id);
+        addRunnableId(parentRunnable.id).add(runnable.id);
       }
     } else {
-      getOrInsertSet(runnableGraph, runnable.runAfter.id).add(runnable.id);
+      addRunnableId(runnable.runAfter.id).add(runnable.id);
     }
   }
 
-  getOrInsertSet(runnableGraph, rootId);
+  addRunnableId(rootId);
 
   // Do a DFS to find any cycles
   computedNextEdge([], runnableGraph, rootId, seenIds);
