@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { setAutoFreeze, enableMapSet } from "immer";
-import { evenBeforeFrameStartsInjectionToken } from "../tokens";
+import { beforeFrameStartsFirstInjectionToken } from "../tokens";
 
 const configureImmerInjectable = getInjectable({
   id: "configure-immer",
@@ -17,7 +17,7 @@ const configureImmerInjectable = getInjectable({
       enableMapSet(); // allow to merge maps and sets
     },
   }),
-  injectionToken: evenBeforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsFirstInjectionToken,
 });
 
 export default configureImmerInjectable;

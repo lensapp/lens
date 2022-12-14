@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { configure } from "mobx";
-import { evenBeforeFrameStartsInjectionToken } from "../tokens";
+import { beforeFrameStartsFirstInjectionToken } from "../tokens";
 
 const configureMobxInjectable = getInjectable({
   id: "configure-mobx",
@@ -22,7 +22,7 @@ const configureMobxInjectable = getInjectable({
       });
     },
   }),
-  injectionToken: evenBeforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsFirstInjectionToken,
 });
 
 export default configureMobxInjectable;

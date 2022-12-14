@@ -9,7 +9,7 @@ import { CustomResourceStore } from "../../../common/k8s-api/api-manager/resourc
 import type { CustomResourceDefinition } from "../../../common/k8s-api/endpoints";
 import { KubeApi } from "../../../common/k8s-api/kube-api";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
-import { evenBeforeClusterFrameStartsInjectionToken } from "../tokens";
+import { beforeClusterFrameStartsInjectionToken } from "../tokens";
 
 const setupAutoRegistrationInjectable = getInjectable({
   id: "setup-auto-registration",
@@ -73,7 +73,7 @@ const setupAutoRegistrationInjectable = getInjectable({
       initialized = true;
     },
   }),
-  injectionToken: evenBeforeClusterFrameStartsInjectionToken,
+  injectionToken: beforeClusterFrameStartsInjectionToken,
 });
 
 export default setupAutoRegistrationInjectable;

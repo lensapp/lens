@@ -7,7 +7,7 @@ import { reaction } from "mobx";
 import { currentClusterMessageChannel } from "../../../common/cluster/current-cluster-channel";
 import { sendMessageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
 import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.injectable";
-import { evenBeforeMainFrameStartsInjectionToken } from "../tokens";
+import { beforeMainFrameStartsInjectionToken } from "../tokens";
 
 const setupCurrentClusterBroadcastInjectable = getInjectable({
   id: "setup-current-cluster-broadcast",
@@ -26,7 +26,7 @@ const setupCurrentClusterBroadcastInjectable = getInjectable({
       );
     },
   }),
-  injectionToken: evenBeforeMainFrameStartsInjectionToken,
+  injectionToken: beforeMainFrameStartsInjectionToken,
 });
 
 export default setupCurrentClusterBroadcastInjectable;

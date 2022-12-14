@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import initializeSentryReportingWithInjectable from "../../../common/error-reporting/initialize-sentry-reporting.injectable";
-import { evenBeforeMainFrameStartsInjectionToken } from "../tokens";
+import { beforeMainFrameStartsInjectionToken } from "../tokens";
 import { init } from "@sentry/electron/renderer";
 
 const setupSentryInjectable = getInjectable({
@@ -17,7 +17,7 @@ const setupSentryInjectable = getInjectable({
       initializeSentryReportingWith(init);
     },
   }),
-  injectionToken: evenBeforeMainFrameStartsInjectionToken,
+  injectionToken: beforeMainFrameStartsInjectionToken,
 });
 
 export default setupSentryInjectable;
