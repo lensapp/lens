@@ -8,6 +8,7 @@
   "exports": {
     "./main": "./static/build/library/main.js",
     "./renderer": "./static/build/library/renderer.js",
+    "./common": "./static/build/library/common.js",
     "./styles": "./static/build/library/renderer.css"
   },
   "typesVersions": {
@@ -17,6 +18,9 @@
       ],
       "renderer": [
         "./src/renderer/library.ts"
+      ],
+      "common": [
+        "./src/common/library.ts"
       ]
     }
   },

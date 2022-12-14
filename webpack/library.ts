@@ -5,16 +5,11 @@
 
 import path from "path";
 import type webpack from "webpack";
-import type { WebpackPluginInstance } from "webpack";
-import { DefinePlugin } from "webpack";
 import nodeExternals from "webpack-node-externals";
-import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
-import CircularDependencyPlugin from "circular-dependency-plugin";
 import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import getTypeScriptLoader from "./get-typescript-loader";
 import rendererConfig, { iconsAndImagesWebpackRules } from "./renderer";
-import { appName, assetsFolderName, buildDir, htmlTemplate, isDevelopment, mainDir, publicPath } from "./vars";
-import { platform } from "process";
+import { assetsFolderName, buildDir, htmlTemplate, isDevelopment, mainDir, publicPath } from "./vars";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
@@ -29,7 +24,7 @@ const renderer: webpack.Configuration = ({
       globalAPI: isDevelopment,
     }),
     new HtmlWebpackPlugin({
-      filename: `${appName}.html`,
+      filename: "index.html",
       template: htmlTemplate,
       inject: true,
       hash: true,
@@ -73,18 +68,7 @@ const main: webpack.Configuration = ({
       ...iconsAndImagesWebpackRules(),
     ],
   },
-  plugins: [
-    new DefinePlugin({
-      CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
-      CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
-    }),
-    new ForkTsCheckerPlugin(),
-    new CircularDependencyPlugin({
-      cwd: __dirname,
-      exclude: /node_modules/,
-      failOnError: true,
-    }) as unknown as WebpackPluginInstance,
-  ],
+  plugins: [],
 });
 
 export {

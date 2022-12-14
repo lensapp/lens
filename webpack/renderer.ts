@@ -103,7 +103,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       }),
 
       new HtmlWebpackPlugin({
-        filename: `${appName}.html`,
+        filename: "index.html",
         template: htmlTemplate,
         inject: true,
         hash: true,

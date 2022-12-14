@@ -13,7 +13,7 @@ import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path
 import lensResourcesDirInjectable from "../../../../common/vars/lens-resources-dir.injectable";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import fsInjectable from "../../../../common/fs/fs.injectable";
-import applicationInformationInjectable from "../../../../common/vars/application-information.injectable";
+import applicationInformationToken from "../../../../common/vars/application-information-token.injectable";
 
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
@@ -54,7 +54,7 @@ const createElectronWindowInjectable = getInjectable({
     const getAbsolutePath = di.inject(getAbsolutePathInjectable);
     const lensResourcesDir = di.inject(lensResourcesDirInjectable);
     const isLinux = di.inject(isLinuxInjectable);
-    const applicationInformation = di.inject(applicationInformationInjectable);
+    const applicationInformation = di.inject(applicationInformationToken);
 
     return (configuration) => {
       const applicationWindowState = di.inject(

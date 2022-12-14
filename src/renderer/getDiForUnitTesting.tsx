@@ -51,6 +51,7 @@ import storageSaveDelayInjectable from "./utils/create-storage/storage-save-dela
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
 import type { PartialDeep } from "type-fest";
+import applicationInformationForTestingInjectable from "../common/vars/application-information.injectable-for-testing";
 
 export const getDiForUnitTesting = (
   opts: { doGeneralOverrides?: boolean } = {},
@@ -74,6 +75,8 @@ export const getDiForUnitTesting = (
   runInAction(() => {
     registerMobX(di);
 
+    di.register(applicationInformationForTestingInjectable);
+    
     chunk(100)(injectables).forEach((chunkInjectables) => {
       di.register(...chunkInjectables);
     });

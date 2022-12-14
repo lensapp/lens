@@ -17,7 +17,9 @@ const config = [
       main: path.resolve(__dirname, "..", "src", "main", "library.ts"),
     },
     output: {
-      libraryTarget: "commonjs",
+      library: {
+        type: "commonjs2",
+      },
       path: path.resolve(buildDir, "library"),
     },
     optimization: {
@@ -33,10 +35,32 @@ const config = [
   {
     ...renderer,
     entry: {
+      common: path.resolve(__dirname, "..", "src", "common", "library.ts"),
+    },
+    output: {
+      library: {
+        type: "commonjs2",
+      },
+      path: path.resolve(buildDir, "library"),
+    },
+    optimization: {
+      minimize: false,
+    },
+    externals: [
+      nodeExternals(),
+    ],
+    plugins: [],
+  },
+  {
+    ...renderer,
+    name: "lens-app-common",
+    entry: {
       renderer: path.resolve(__dirname, "..", "src", "renderer", "library.ts"),
     },
     output: {
-      libraryTarget: "commonjs",
+      library: {
+        type: "commonjs2",
+      },
       path: path.resolve(buildDir, "library"),
     },
     optimization: {
