@@ -1,9 +1,246 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
+<div>
+  <div
+    class="PodDetailsList flex column"
+  >
+    <div
+      class="Table flex column box grow selectable sortable autoSize"
+    >
+      <div
+        class="TableHead sticky"
+      >
+        <div
+          class="TableCell name sorting"
+        >
+          Name
+          <i
+            class="Icon sortIcon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
+        </div>
+        <div
+          class="TableCell warning"
+        />
+        <div
+          class="TableCell node sorting"
+        >
+          Node
+          <i
+            class="Icon sortIcon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
+        </div>
+        <div
+          class="TableCell namespace sorting"
+        >
+          Namespace
+          <i
+            class="Icon sortIcon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
+        </div>
+        <div
+          class="TableCell ready"
+        >
+          Ready
+        </div>
+        <div
+          class="TableCell cpu sorting"
+        >
+          CPU
+          <i
+            class="Icon sortIcon enabled material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
+        </div>
+        <div
+          class="TableCell memory sorting"
+        >
+          Memory
+          <i
+            class="Icon sortIcon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
+        </div>
+        <div
+          class="TableCell status"
+        >
+          Status
+        </div>
+      </div>
+      <div
+        class="TableRow nowrap"
+      >
+        <div
+          class="TableCell name"
+        >
+          foobar
+        </div>
+        <div
+          class="TableCell warning"
+        />
+        <div
+          class="TableCell node"
+        />
+        <div
+          class="TableCell namespace"
+        >
+          default
+        </div>
+        <div
+          class="TableCell ready"
+        >
+          0 / 0
+        </div>
+        <div
+          class="TableCell cpu"
+        >
+          0
+        </div>
+        <div
+          class="TableCell memory"
+        >
+          0
+        </div>
+        <div
+          class="TableCell status running"
+        >
+          Running
+        </div>
+      </div>
+      <div
+        class="TableRow nowrap"
+      >
+        <div
+          class="TableCell name"
+        >
+          foobar-failed
+        </div>
+        <div
+          class="TableCell warning"
+        />
+        <div
+          class="TableCell node"
+        />
+        <div
+          class="TableCell namespace"
+        >
+          default
+        </div>
+        <div
+          class="TableCell ready"
+        >
+          0 / 0
+        </div>
+        <div
+          class="TableCell cpu"
+        >
+          0
+        </div>
+        <div
+          class="TableCell memory"
+        >
+          0
+        </div>
+        <div
+          class="TableCell status failed"
+        >
+          Failed
+        </div>
+      </div>
+      <div
+        class="TableRow nowrap"
+      >
+        <div
+          class="TableCell name"
+        >
+          foobar-pending
+        </div>
+        <div
+          class="TableCell warning"
+        />
+        <div
+          class="TableCell node"
+        />
+        <div
+          class="TableCell namespace"
+        >
+          default
+        </div>
+        <div
+          class="TableCell ready"
+        >
+          0 / 0
+        </div>
+        <div
+          class="TableCell cpu"
+        >
+          0
+        </div>
+        <div
+          class="TableCell memory"
+        >
+          0
+        </div>
+        <div
+          class="TableCell status waiting"
+        >
+          Waiting
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`<PodDetailsList /> when no pods passed and podStore is loaded renders 1`] = `
 <div>
   <div>
     No items found
+  </div>
+</div>
+`;
+
+exports[`<PodDetailsList /> when podStore is still loading renders spinner 1`] = `
+<div>
+  <div
+    class="PodDetailsList flex justify-center"
+  >
+    <div
+      class="Spinner singleColor"
+    />
   </div>
 </div>
 `;
