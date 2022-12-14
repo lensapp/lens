@@ -14,10 +14,11 @@ import { getDi } from "./getDi";
 import startMainApplicationInjectable from "./start-main-application/start-main-application.injectable";
 
 const di = getDi();
+const startMainApplication = di.inject(startMainApplicationInjectable);
 
 (async () => {
   try {
-    await di.inject(startMainApplicationInjectable);
+    await startMainApplication();
   } catch (error) {
     console.error(error);
     process.exit(1);

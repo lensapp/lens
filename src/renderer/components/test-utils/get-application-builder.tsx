@@ -290,6 +290,24 @@ export const getApplicationBuilder = () => {
   const namespaces = observable.set<string>();
   const namespaceItems = observable.array<Namespace>();
   const selectedNamespaces = observable.set<string>();
+  const startMainApplication = mainDi.inject(startMainApplicationInjectable);
+
+  const startApplication = async ({ shouldStartHidden }: { shouldStartHidden: boolean }) => {
+    mainDi.inject(lensProxyPortInjectable).set(42);
+
+    for (const callback of beforeApplicationStartCallbacks) {
+      await callback(mainDi);
+    }
+
+    mainDi.override(shouldStartHiddenInjectable, () => shouldStartHidden);
+    await startMainApplication();
+
+    for (const callback of afterApplicationStartCallbacks) {
+      await callback(mainDi);
+    }
+
+    applicationHasStarted = true;
+  };
 
   const builder: ApplicationBuilder = {
     mainDi,
@@ -672,37 +690,11 @@ export const getApplicationBuilder = () => {
     },
 
     startHidden: async () => {
-      mainDi.inject(lensProxyPortInjectable).set(42);
-
-      for (const callback of beforeApplicationStartCallbacks) {
-        await callback(mainDi);
-      }
-
-      mainDi.override(shouldStartHiddenInjectable, () => true);
-      await mainDi.inject(startMainApplicationInjectable);
-
-      for (const callback of afterApplicationStartCallbacks) {
-        await callback(mainDi);
-      }
-
-      applicationHasStarted = true;
+      await startApplication({ shouldStartHidden: true });
     },
 
     async render() {
-      mainDi.inject(lensProxyPortInjectable).set(42);
-
-      for (const callback of beforeApplicationStartCallbacks) {
-        await callback(mainDi);
-      }
-
-      mainDi.override(shouldStartHiddenInjectable, () => false);
-      await mainDi.inject(startMainApplicationInjectable);
-
-      for (const callback of afterApplicationStartCallbacks) {
-        await callback(mainDi);
-      }
-
-      applicationHasStarted = true;
+      await startApplication({ shouldStartHidden: false });
 
       return builder
         .applicationWindow
