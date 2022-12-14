@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PodDetailsList /> when no pods passed and podStore is loaded renders 1`] = `
+<div>
+  <div>
+    No items found
+  </div>
+</div>
+`;
