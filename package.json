@@ -364,7 +364,7 @@
     "electron": "^19.1.9",
     "electron-builder": "^23.6.0",
     "electron-notarize": "^0.3.0",
-    "esbuild": "^0.16.3",
+    "esbuild": "^0.16.5",
     "esbuild-loader": "^2.20.0",
     "eslint": "^8.29.0",
     "eslint-import-resolver-typescript": "^3.5.2",
