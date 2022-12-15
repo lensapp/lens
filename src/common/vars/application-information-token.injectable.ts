@@ -7,7 +7,7 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 import type packageJson from "../../../package.json";
 
 export type ApplicationInformation = Pick<typeof packageJson, "version" | "config" | "productName" | "copyright" | "description" | "name"> & {
-  build: { publish?: unknown[] };
+  build: Partial<typeof packageJson["build"]> & { publish?: unknown[] };
 };
 
 const applicationInformationToken = getInjectionToken<ApplicationInformation>({
