@@ -11,7 +11,6 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Service } from "../../../common/k8s-api/endpoints";
-import { KubeObjectMeta } from "../kube-object-meta";
 import { ServicePortComponent } from "./service-port-component";
 import type { EndpointsStore } from "../+network-endpoints/store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
@@ -75,8 +74,6 @@ class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & De
 
     return (
       <div className="ServicesDetails">
-        <KubeObjectMeta object={service}/>
-
         <DrawerItem name="Selector" labelsOnly>
           {service.getSelector().map(selector => <Badge key={selector} label={selector}/>)}
         </DrawerItem>

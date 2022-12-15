@@ -6,54 +6,26 @@
 import "./ingress-details.scss";
 
 import React from "react";
-import { disposeOnUnmount, observer } from "mobx-react";
-import { makeObservable, observable, reaction } from "mobx";
+import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { ILoadBalancerIngress } from "../../../common/k8s-api/endpoints";
 import { Ingress } from "../../../common/k8s-api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { ResourceMetrics } from "../resource-metrics";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { IngressCharts } from "./ingress-charts";
-import { KubeObjectMeta } from "../kube-object-meta";
 import { computeRuleDeclarations } from "../../../common/k8s-api/endpoints/ingress.api";
-import { getActiveClusterEntity } from "../../api/catalog/entity/legacy-globals";
-import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import logger from "../../../common/logger";
-import type { IngressMetricData, RequestIngressMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-ingress-metrics.injectable";
+import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import requestIngressMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-ingress-metrics.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface IngressDetailsProps extends KubeObjectDetailsProps<Ingress> {
 }
 
 interface Dependencies {
-  requestIngressMetrics: RequestIngressMetrics;
+  logger: Logger;
 }
 
 @observer
 class NonInjectedIngressDetails extends React.Component<IngressDetailsProps & Dependencies> {
-  @observable metrics: IngressMetricData | null = null;
-
-  constructor(props: IngressDetailsProps & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      reaction(() => this.props.object, () => {
-        this.metrics = null;
-      }),
-    ]);
-  }
-
-  loadMetrics = async () => {
-    const { object: ingress, requestIngressMetrics } = this.props;
-
-    this.metrics = await requestIngressMetrics(ingress.getName(), ingress.getNs());
-  };
-
   renderPaths(ingress: Ingress) {
     return ingress.getRules()
       .map((rule, index) => (
@@ -124,7 +96,7 @@ class NonInjectedIngressDetails extends React.Component<IngressDetailsProps & De
   }
 
   render() {
-    const { object: ingress } = this.props;
+    const { object: ingress, logger } = this.props;
 
     if (!ingress) {
       return null;
@@ -136,25 +108,10 @@ class NonInjectedIngressDetails extends React.Component<IngressDetailsProps & De
       return null;
     }
 
-    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Ingress);
     const port = ingress.getServiceNamePort();
 
     return (
       <div className="IngressDetails">
-        {!isMetricHidden && (
-          <ResourceMetrics
-            loader={this.loadMetrics}
-            tabs={[
-              "Network",
-              "Duration",
-            ]}
-            object={ingress}
-            metrics={this.metrics}
-          >
-            <IngressCharts/>
-          </ResourceMetrics>
-        )}
-        <KubeObjectMeta object={ingress}/>
         <DrawerItem name="Ports">
           {ingress.getPorts()}
         </DrawerItem>
@@ -181,6 +138,6 @@ class NonInjectedIngressDetails extends React.Component<IngressDetailsProps & De
 export const IngressDetails = withInjectables<Dependencies, IngressDetailsProps>(NonInjectedIngressDetails, {
   getProps: (di, props) => ({
     ...props,
-    requestIngressMetrics: di.inject(requestIngressMetricsInjectable),
+    logger: di.inject(loggerInjectable),
   }),
 });

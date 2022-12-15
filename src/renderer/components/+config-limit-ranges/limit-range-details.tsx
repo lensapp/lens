@@ -10,7 +10,6 @@ import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { LimitRangeItem } from "../../../common/k8s-api/endpoints/limit-range.api";
 import { LimitPart, LimitRange, Resource } from "../../../common/k8s-api/endpoints/limit-range.api";
-import { KubeObjectMeta } from "../kube-object-meta";
 import { DrawerItem } from "../drawer/drawer-item";
 import { Badge } from "../badge";
 import logger from "../../../common/logger";
@@ -73,8 +72,6 @@ export class LimitRangeDetails extends React.Component<LimitRangeDetailsProps> {
 
     return (
       <div className="LimitRangeDetails">
-        <KubeObjectMeta object={limitRange}/>
-
         {containerLimits.length > 0 && (
           <DrawerItem name="Container Limits" labelsOnly>
             {

@@ -14,7 +14,6 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Input } from "../input";
-import { KubeObjectMeta } from "../kube-object-meta";
 import { MonacoEditor } from "../monaco-editor";
 import logger from "../../../common/logger";
 
@@ -42,8 +41,6 @@ export class CRDDetails extends React.Component<CRDDetailsProps> {
 
     return (
       <div className="CRDDetails">
-        <KubeObjectMeta object={crd}/>
-
         <DrawerItem name="Group">
           {crd.getGroup()}
         </DrawerItem>

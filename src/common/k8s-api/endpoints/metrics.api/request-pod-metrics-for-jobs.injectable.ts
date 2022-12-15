@@ -24,7 +24,7 @@ const requestPodMetricsForJobsInjectable = getInjectable({
   instantiate: (di): RequestPodMetricsForJobs => {
     const requestMetrics = di.inject(requestMetricsInjectable);
 
-    return (jobs, namespace, selector) => {
+    return (jobs, namespace, selector = "") => {
       const podSelector = jobs.map(job => `${job.getName()}-[[:alnum:]]{5}`).join("|");
       const opts = { category: "pods", pods: podSelector, namespace, selector };
 

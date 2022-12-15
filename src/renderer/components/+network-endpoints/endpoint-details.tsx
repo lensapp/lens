@@ -10,7 +10,6 @@ import { observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Endpoints } from "../../../common/k8s-api/endpoints";
-import { KubeObjectMeta } from "../kube-object-meta";
 import { EndpointSubsetList } from "./endpoint-subset-list";
 import logger from "../../../common/logger";
 
@@ -34,7 +33,6 @@ export class EndpointsDetails extends React.Component<EndpointsDetailsProps> {
 
     return (
       <div className="EndpointDetails">
-        <KubeObjectMeta object={endpoint}/>
         <DrawerTitle>Subsets</DrawerTitle>
         {
           endpoint.getEndpointSubsets().map((subset) => (

@@ -13,13 +13,13 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Pod } from "../../../common/k8s-api/endpoints/pod.api";
 import type { GetPodById } from "../+workloads-pods/get-pod-by-id.injectable";
 
-export interface EventStoreDependencies {
+interface Dependencies {
   getPodById: GetPodById;
 }
 
 export class EventStore extends KubeObjectStore<KubeEvent, KubeEventApi> {
   constructor(
-    protected readonly dependencies: EventStoreDependencies,
+    protected readonly dependencies: Dependencies,
     api: KubeEventApi,
     opts: KubeObjectStoreOptions = {},
   ) {

@@ -14,7 +14,6 @@ import { autoBind, ObservableHashSet, prevDefault } from "../../../utils";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
-import { KubeObjectMeta } from "../../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { ClusterRoleBindingDialog } from "./dialog";
 import { clusterRoleBindingStore } from "./legacy-store";
@@ -76,8 +75,6 @@ class NonInjectedClusterRoleBindingDetails extends React.Component<ClusterRoleBi
 
     return (
       <div className="ClusterRoleBindingDetails">
-        <KubeObjectMeta object={clusterRoleBinding} />
-
         <DrawerTitle>Reference</DrawerTitle>
         <Table>
           <TableHead>

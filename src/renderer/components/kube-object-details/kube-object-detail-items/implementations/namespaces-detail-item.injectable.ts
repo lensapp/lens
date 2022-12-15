@@ -17,7 +17,7 @@ const namespacesDetailItemInjectable = getInjectable({
 
     return {
       Component: NamespaceDetails,
-      enabled: computed(() => isNamespace(kubeObject.get())),
+      enabled: computed(() => isNamespace(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

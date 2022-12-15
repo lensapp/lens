@@ -10,7 +10,6 @@ import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { PriorityClass } from "../../../common/k8s-api/endpoints";
-import { KubeObjectMeta } from "../kube-object-meta";
 
 export interface PriorityClassesDetailsProps extends KubeObjectDetailsProps<PriorityClass> {
 }
@@ -23,8 +22,6 @@ export class PriorityClassesDetails extends React.Component<PriorityClassesDetai
 
     return (
       <div className="PriorityClassesDetails">
-        <KubeObjectMeta object={pc} />
-
         <DrawerItem name="Description">
           {pc.getDescription()}
         </DrawerItem>

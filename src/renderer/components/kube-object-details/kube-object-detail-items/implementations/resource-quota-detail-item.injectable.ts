@@ -17,7 +17,7 @@ const resourceQuotaDetailItemInjectable = getInjectable({
 
     return {
       Component: ResourceQuotaDetails,
-      enabled: computed(() => isResourceQuota(kubeObject.get())),
+      enabled: computed(() => isResourceQuota(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

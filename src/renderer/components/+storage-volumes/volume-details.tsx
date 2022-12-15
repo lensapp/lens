@@ -13,7 +13,6 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { PersistentVolume, persistentVolumeClaimApi, storageClassApi } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { KubeObjectMeta } from "../kube-object-meta";
 import { getDetailsUrl } from "../kube-detail-params";
 import logger from "../../../common/logger";
 import { stopPropagation } from "../../../renderer/utils";
@@ -44,7 +43,6 @@ export class PersistentVolumeDetails extends React.Component<PersistentVolumeDet
 
     return (
       <div className="PersistentVolumeDetails">
-        <KubeObjectMeta object={volume} />
         <DrawerItem name="Capacity">
           {capacity?.storage}
         </DrawerItem>

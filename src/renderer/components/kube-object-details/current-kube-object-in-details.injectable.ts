@@ -3,10 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
 import kubeDetailsUrlParamInjectable from "../kube-detail-params/kube-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { asyncComputed } from "@ogre-tools/injectable-react";
+import type { KubeObject } from "../../../common/k8s-api/kube-object";
+
+export type CurrentKubeObject =
+  | undefined
+  | { object: KubeObject; error?: undefined }
+  | { object?: undefined; error: string };
 
 const currentKubeObjectInDetailsInjectable = getInjectable({
   id: "current-kube-object-in-details",
@@ -14,20 +19,24 @@ const currentKubeObjectInDetailsInjectable = getInjectable({
   instantiate: (di) => {
     const urlParam = di.inject(kubeDetailsUrlParamInjectable);
     const apiManager = di.inject(apiManagerInjectable);
-    const logger = di.inject(loggerInjectable);
 
-    return computed(() => {
-      const path = urlParam.get();
+    return asyncComputed({
+      getValueFromObservedPromise: async (): Promise<CurrentKubeObject> => {
+        const path = urlParam.get();
+        const store = apiManager.getStore(path);
 
-      try {
-        return apiManager.getStore(path)?.getByPath(path);
-      } catch (error) {
-        logger.error(
-          `[KUBE-OBJECT-DETAILS]: failed to get store or object ${path}: ${error}`,
-        );
+        if (!store) {
+          return undefined;
+        }
 
-        return undefined;
-      }
+        try {
+          const object = await store.loadFromPath(path);
+
+          return { object };
+        } catch (error) {
+          return { error: String(error) };
+        }
+      },
     });
   },
 });

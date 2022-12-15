@@ -16,22 +16,16 @@ import type { DaemonSetStore } from "./store";
 import type { PodStore } from "../+workloads-pods/store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { DaemonSet } from "../../../common/k8s-api/endpoints";
-import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
-import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
-import { makeObservable, observable, reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { KubeObjectMeta } from "../kube-object-meta";
-import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import daemonSetStoreInjectable from "./store.injectable";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
-import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import type { DaemonSetPodMetricData, RequestPodMetricsForDaemonSets } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-daemon-sets.injectable";
 import requestPodMetricsForDaemonSetsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-daemon-sets.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface DaemonSetDetailsProps extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -40,38 +34,21 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   daemonSetStore: DaemonSetStore;
   podStore: PodStore;
-  getActiveClusterEntity: GetActiveClusterEntity;
-  requestPodMetricsForDaemonSets: RequestPodMetricsForDaemonSets;
+  logger: Logger;
 }
 
 @observer
 class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps & Dependencies> {
-  @observable metrics: DaemonSetPodMetricData | null = null;
-
-  constructor(props: DaemonSetDetailsProps & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.object, () => {
-        this.metrics = null;
-      }),
       this.props.subscribeStores([
         this.props.podStore,
       ]),
     ]);
   }
 
-  loadMetrics = async () => {
-    const { object: daemonSet, requestPodMetricsForDaemonSets } = this.props;
-
-    this.metrics = await requestPodMetricsForDaemonSets([daemonSet], daemonSet.getNs());
-  };
-
   render() {
-    const { object: daemonSet, daemonSetStore, podStore, getActiveClusterEntity } = this.props;
+    const { object: daemonSet, daemonSetStore, logger } = this.props;
 
     if (!daemonSet) {
       return null;
@@ -88,21 +65,9 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
     const images = daemonSet.getImages();
     const nodeSelector = daemonSet.getNodeSelectors();
     const childPods = daemonSetStore.getChildPods(daemonSet);
-    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.DaemonSet);
 
     return (
       <div className="DaemonSetDetails">
-        {!isMetricHidden && podStore.isLoaded && (
-          <ResourceMetrics
-            loader={this.loadMetrics}
-            tabs={podMetricTabs}
-            object={daemonSet}
-            metrics={this.metrics}
-          >
-            <PodCharts/>
-          </ResourceMetrics>
-        )}
-        <KubeObjectMeta object={daemonSet}/>
         {selectors.length > 0 && (
           <DrawerItem name="Selector" labelsOnly>
             {
@@ -132,7 +97,6 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
         <DrawerItem name="Pod Status" className="pod-status">
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
-        <ResourceMetricsText metrics={this.metrics}/>
         <PodDetailsList pods={childPods} owner={daemonSet}/>
       </div>
     );
@@ -147,5 +111,6 @@ export const DaemonSetDetails = withInjectables<Dependencies, DaemonSetDetailsPr
     podStore: di.inject(podStoreInjectable),
     getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
     requestPodMetricsForDaemonSets: di.inject(requestPodMetricsForDaemonSetsInjectable),
+    logger: di.inject(loggerInjectable),
   }),
 });

@@ -16,7 +16,6 @@ import { base64, toggle } from "../../utils";
 import { Icon } from "../icon";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Secret } from "../../../common/k8s-api/endpoints";
-import { KubeObjectMeta } from "../kube-object-meta";
 import type { Logger } from "../../../common/logger";
 import type { SecretStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -161,7 +160,6 @@ class NonInjectedSecretDetails extends React.Component<SecretDetailsProps & Depe
 
     return (
       <div className="SecretDetails">
-        <KubeObjectMeta object={secret}/>
         <DrawerItem name="Type">
           {secret.type}
         </DrawerItem>
