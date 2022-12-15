@@ -3,43 +3,34 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/before-frame-starts-injection-token";
+import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/tokens";
 import { syncBoxInitialValueChannel } from "../../../common/utils/sync-box/channels";
 import createSyncBoxStateInjectable from "../../../common/utils/sync-box/sync-box-state.injectable";
 import { requestFromChannelInjectionToken } from "../../../common/utils/channel/request-from-channel-injection-token";
 import { runInAction } from "mobx";
-import type { SyncBox } from "../../../common/utils/sync-box/sync-box-injection-token";
 import { syncBoxInjectionToken } from "../../../common/utils/sync-box/sync-box-injection-token";
 import assert from "assert";
 
 const provideInitialValuesForSyncBoxesInjectable = getInjectable({
   id: "provide-initial-values-for-sync-boxes",
 
-  instantiate: (di) => {
-    const requestFromChannel = di.inject(requestFromChannelInjectionToken);
+  instantiate: (di) => ({
+    id: "provide-initial-values-for-sync-boxes",
+    run: async () => {
+      const requestFromChannel = di.inject(requestFromChannelInjectionToken);
+      const syncBoxes = di.injectMany(syncBoxInjectionToken);
+      const initialValues = await requestFromChannel(syncBoxInitialValueChannel);
 
-    const syncBoxes = di.injectMany(syncBoxInjectionToken);
+      runInAction(() => {
+        for (const { id, value } of initialValues) {
+          const syncBox = syncBoxes.find((box) => box.id === id);
 
-    const setSyncBoxState = (syncBox: SyncBox<any>, state: any) =>
-      di.inject(createSyncBoxStateInjectable, syncBox.id).set(state);
-
-    return {
-      id: "provide-initial-values-for-sync-boxes",
-      run: async () => {
-        const initialValues = await requestFromChannel(syncBoxInitialValueChannel);
-
-        runInAction(() => {
-          initialValues.forEach(({ id, value }) => {
-            const syncBox = syncBoxes.find((box) => box.id === id);
-
-            assert(syncBox);
-
-            setSyncBoxState(syncBox, value);
-          });
-        });
-      },
-    };
-  },
+          assert(syncBox);
+          di.inject(createSyncBoxStateInjectable, syncBox.id).set(value);
+        }
+      });
+    },
+  }),
 
   injectionToken: beforeFrameStartsInjectionToken,
 });

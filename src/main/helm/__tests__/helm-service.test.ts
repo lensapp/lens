@@ -41,10 +41,17 @@ describe("Helm Service tests", () => {
     getActiveHelmRepositoriesMock.mockReturnValue(
       Promise.resolve({
         callWasSuccessful: true,
-
         response: [
-          { name: "stable", url: "stableurl" },
-          { name: "experiment", url: "experimenturl" },
+          {
+            name: "stable",
+            url: "stableurl",
+            cacheFilePath: "/some-cache-file-path-for-stable",
+          },
+          {
+            name: "experiment",
+            url: "experimenturl",
+            cacheFilePath: "/some-cache-file-path-for-experiment",
+          },
         ],
       }),
     );
@@ -152,7 +159,11 @@ describe("Helm Service tests", () => {
     getActiveHelmRepositoriesMock.mockReturnValue(
       Promise.resolve({
         callWasSuccessful: true,
-        response: [{ name: "bitnami", url: "bitnamiurl" }],
+        response: [{
+          name: "bitnami",
+          url: "bitnamiurl",
+          cacheFilePath: "/some-cache-file-path-for-bitnami",
+        }],
       }),
     );
 

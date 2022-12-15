@@ -164,7 +164,23 @@ exports[`add-cluster - navigation using application menu renders 1`] = `
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -231,7 +247,7 @@ exports[`add-cluster - navigation using application menu renders 1`] = `
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i
@@ -436,7 +452,23 @@ exports[`add-cluster - navigation using application menu when navigating to add 
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -503,7 +535,7 @@ exports[`add-cluster - navigation using application menu when navigating to add 
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i

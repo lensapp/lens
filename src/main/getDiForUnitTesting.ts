@@ -12,13 +12,6 @@ import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
 import readFileInjectable from "../common/fs/read-file.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
-import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
-import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
-import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
-import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
-import userStoreInjectable from "../common/user-store/user-store.injectable";
-import type { UserStore } from "../common/user-store";
-import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
 import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
@@ -47,7 +40,6 @@ import clusterFramesInjectable from "../common/cluster-frames.injectable";
 import type { ClusterFrameInfo } from "../common/cluster-frames";
 import { observable, runInAction } from "mobx";
 import waitForElectronToBeReadyInjectable from "./electron-app/features/wait-for-electron-to-be-ready.injectable";
-import setupListenerForCurrentClusterFrameInjectable from "./start-main-application/lens-window/current-cluster-frame/setup-listener-for-current-cluster-frame.injectable";
 import setupRunnablesAfterWindowIsOpenedInjectable from "./electron-app/runnables/setup-runnables-after-window-is-opened.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import getElectronThemeInjectable from "./electron-app/features/get-electron-theme.injectable";
@@ -74,7 +66,6 @@ import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-rel
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
-import type { HotbarStore } from "../common/hotbars/store";
 import focusApplicationInjectable from "./electron-app/features/focus-application.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "./kubectl/normalized-arch.injectable";
 import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
@@ -121,19 +112,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
-    di.override(hotbarStoreInjectable, () => ({
-      load: () => {},
-      getActive: () => ({ name: "some-hotbar", items: [] }),
-      getDisplayIndex: () => "0",
-    }) as unknown as HotbarStore);
-
-    di.override(userStoreInjectable, () => ({
-      startMainReactions: () => {},
-      extensionRegistryUrl: { customUrl: "some-custom-url" },
-      load: () => {},
-    }) as Partial<UserStore> as UserStore);
-    di.override(extensionsStoreInjectable, () => ({ isEnabled: (opts) => (void opts, false) }) as ExtensionsStore);
-    di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
 
     overrideOperatingSystem(di);
     overrideRunnablesHavingSideEffects(di);
@@ -199,7 +177,6 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
     setupShellInjectable,
     setupSyncingOfWeblinksInjectable,
     setupSystemCaInjectable,
-    setupListenerForCurrentClusterFrameInjectable,
     setupRunnablesAfterWindowIsOpenedInjectable,
     startCatalogSyncInjectable,
     startKubeConfigSyncInjectable,

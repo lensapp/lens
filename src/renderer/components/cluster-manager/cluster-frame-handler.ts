@@ -37,11 +37,18 @@ export class ClusterFrameHandler {
   @action
   public initView(clusterId: ClusterId) {
     const cluster = this.dependencies.getClusterById(clusterId);
+
+    if (!cluster) {
+      this.dependencies.logger.warn(`[LENS-VIEW]: not initializing view; unknown clusterId="${clusterId}"`);
+
+      return;
+    }
+
     const parentElem = document.getElementById("lens-views");
 
     assert(parentElem, "DOM with #lens-views must be present");
 
-    if (!cluster || this.views.has(clusterId)) {
+    if (this.views.has(clusterId)) {
       return;
     }
 

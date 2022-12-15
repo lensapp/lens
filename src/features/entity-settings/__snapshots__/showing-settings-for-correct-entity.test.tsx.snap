@@ -165,7 +165,23 @@ exports[`Showing correct entity settings renders 1`] = `
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -232,7 +248,7 @@ exports[`Showing correct entity settings renders 1`] = `
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -511,7 +527,23 @@ exports[`Showing correct entity settings when navigating to local cluster entity
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -578,7 +610,7 @@ exports[`Showing correct entity settings when navigating to local cluster entity
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -798,40 +830,7 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
                 >
                   Proxy
                 </h2>
-                <section>
-                  <section>
-                    <div
-                      class="SubTitle"
-                      id="http-proxy"
-                    >
-                      HTTP Proxy
-                       
-                    </div>
-                    <div
-                      class="Input theme round black"
-                    >
-                      <label
-                        class="input-area flex gaps align-center"
-                        id=""
-                      >
-                        <input
-                          class="input box grow"
-                          placeholder="http://<address>:<port>"
-                          spellcheck="false"
-                          value=""
-                        />
-                      </label>
-                      <div
-                        class="input-info flex gaps"
-                      />
-                    </div>
-                    <small
-                      class="hint"
-                    >
-                      HTTP Proxy server. Used for communicating with Kubernetes API.
-                    </small>
-                  </section>
-                </section>
+                <section />
               </section>
             </div>
             <div
@@ -878,7 +877,23 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -945,7 +960,7 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -1147,7 +1162,23 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -1214,7 +1245,7 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i

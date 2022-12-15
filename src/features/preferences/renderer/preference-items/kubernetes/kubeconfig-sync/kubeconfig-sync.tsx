@@ -3,12 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { withInjectables } from "@ogre-tools/injectable-react";
-import fse from "fs-extra";
-import { computed, makeObservable, observable, reaction } from "mobx";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Notice } from "../../../../../../renderer/components/+extensions/notice";
-import type { KubeconfigSyncEntry, KubeconfigSyncValue, UserStore } from "../../../../../../common/user-store";
+import type { UserStore } from "../../../../../../common/user-store";
 import { iter, tuple } from "../../../../../../renderer/utils";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { PathPicker } from "../../../../../../renderer/components/path-picker/path-picker";
@@ -18,56 +17,26 @@ import userStoreInjectable from "../../../../../../common/user-store/user-store.
 import isWindowsInjectable from "../../../../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../../../../common/logger.injectable";
 import type { Logger } from "../../../../../../common/logger";
+import type { DiscoverAllKubeconfigSyncKinds } from "./discover-all-sync-kinds.injectable";
+import type { DiscoverKubeconfigSyncKind, SyncKind } from "./discover-sync-kind.injectable";
+import discoverKubeconfigSyncKindInjectable from "./discover-sync-kind.injectable";
+import discoverAllKubeconfigSyncKindsInjectable from "./discover-all-sync-kinds.injectable";
 
-interface SyncInfo {
-  type: "file" | "folder" | "unknown";
-}
-
-interface Entry extends Value {
+interface Entry extends SyncKind {
   filePath: string;
-}
-
-interface Value {
-  data: KubeconfigSyncValue;
-  info: SyncInfo;
-}
-
-async function getMapEntry({ filePath, ...data }: KubeconfigSyncEntry, logger: Logger): Promise<[string, Value]> {
-  try {
-    // stat follows the stat(2) linux syscall spec, namely it follows symlinks
-    const stats = await fse.stat(filePath);
-
-    if (stats.isFile()) {
-      return [filePath, { info: { type: "file" }, data }];
-    }
-
-    if (stats.isDirectory()) {
-      return [filePath, { info: { type: "folder" }, data }];
-    }
-
-    logger.warn("[KubeconfigSyncs]: unknown stat entry", { stats });
-
-    return [filePath, { info: { type: "unknown" }, data }];
-  } catch (error) {
-    logger.warn(`[KubeconfigSyncs]: failed to stat entry: ${error}`, { error });
-
-    return [filePath, { info: { type: "unknown" }, data }];
-  }
-}
-
-export async function getAllEntries(filePaths: string[], logger: Logger): Promise<[string, Value][]> {
-  return Promise.all(filePaths.map(filePath => getMapEntry({ filePath }, logger)));
 }
 
 interface Dependencies {
   userStore: UserStore;
   isWindows: boolean;
   logger: Logger;
+  discoverAllKubeconfigSyncKinds: DiscoverAllKubeconfigSyncKinds;
+  discoverKubeconfigSyncKind: DiscoverKubeconfigSyncKind;
 }
 
 @observer
 class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
-  syncs = observable.map<string, Value>();
+  readonly syncs = observable.map<string, SyncKind>();
   @observable loaded = false;
 
   constructor(props: Dependencies) {
@@ -79,7 +48,7 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
     const mapEntries = await Promise.all(
       iter.map(
         this.props.userStore.syncKubeconfigEntries,
-        ([filePath, ...value]) => getMapEntry({ filePath, ...value }, this.props.logger),
+        ([filePath]) => this.props.discoverKubeconfigSyncKind(filePath),
       ),
     );
 
@@ -88,9 +57,13 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
 
     disposeOnUnmount(this, [
       reaction(
-        () => Array.from(this.syncs.entries(), ([filePath, { data }]) => tuple.from(filePath, data)),
+        () => Array.from(this.syncs.entries(), ([filePath, kind]) => tuple.from(filePath, kind)),
         syncs => {
-          this.props.userStore.syncKubeconfigEntries.replace(syncs);
+          action(() => {
+            for (const [path] of syncs) {
+              this.props.userStore.syncKubeconfigEntries.set(path, {});
+            }
+          });
         },
       ),
     ]);
@@ -105,11 +78,11 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
   }
 
   onPick = async (filePaths: string[]) => {
-    this.syncs.merge(await getAllEntries(filePaths, this.props.logger));
+    this.syncs.merge(await this.props.discoverAllKubeconfigSyncKinds(filePaths));
   };
 
   getIconName(entry: Entry) {
-    switch (entry.info.type) {
+    switch (entry.type) {
       case "file":
         return "description";
       case "folder":
@@ -165,14 +138,14 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
       return (
         <div className="flex gaps align-center mb-5">
           <PathPicker
-            label="Sync file(s)"
+            message="Sync file(s)"
             onPick={this.onPick}
             buttonLabel="Sync"
             properties={["showHiddenFiles", "multiSelections", "openFile"]}
           />
           <span>or</span>
           <PathPicker
-            label="Sync folder(s)"
+            message="Sync folder(s)"
             onPick={this.onPick}
             buttonLabel="Sync"
             properties={["showHiddenFiles", "multiSelections", "openDirectory"]}
@@ -184,7 +157,7 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
     return (
       <div className="self-start mb-5">
         <PathPicker
-          label="Sync Files and Folders"
+          message="Sync Files and Folders"
           onPick={this.onPick}
           buttonLabel="Sync"
           properties={["showHiddenFiles", "multiSelections", "openFile", "openDirectory"]}
@@ -206,14 +179,12 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
   }
 }
 
-export const KubeconfigSync = withInjectables<Dependencies>(
-  NonInjectedKubeconfigSync,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-      isWindows: di.inject(isWindowsInjectable),
-      logger: di.inject(loggerInjectable),
-    }),
-  },
-);
+export const KubeconfigSync = withInjectables<Dependencies>(NonInjectedKubeconfigSync, {
+  getProps: (di) => ({
+    userStore: di.inject(userStoreInjectable),
+    isWindows: di.inject(isWindowsInjectable),
+    logger: di.inject(loggerInjectable),
+    discoverAllKubeconfigSyncKinds: di.inject(discoverAllKubeconfigSyncKindsInjectable),
+    discoverKubeconfigSyncKind: di.inject(discoverKubeconfigSyncKindInjectable),
+  }),
+});

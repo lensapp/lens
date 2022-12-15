@@ -292,13 +292,12 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container css-1fdsijx-ValueContainer"
+                        class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-1jqq78o-placeholder"
-                          id="react-select-extension-install-registry-input-placeholder"
+                          class="Select__single-value css-1dimb5e-singleValue"
                         >
-                          Select...
+                          Default Url
                         </div>
                         <div
                           class="Select__input-container css-qbdosj-Input"
@@ -306,7 +305,6 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                         >
                           <input
                             aria-autocomplete="list"
-                            aria-describedby="react-select-extension-install-registry-input-placeholder"
                             aria-expanded="false"
                             aria-haspopup="true"
                             autocapitalize="none"
@@ -371,7 +369,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                         disabled=""
                         placeholder="Custom Extension Registry URL..."
                         spellcheck="false"
-                        value="some-custom-url"
+                        value=""
                       />
                     </label>
                     <div
@@ -528,13 +526,12 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container css-1fdsijx-ValueContainer"
+                        class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-1jqq78o-placeholder"
-                          id="react-select-timezone-input-placeholder"
+                          class="Select__single-value css-1dimb5e-singleValue"
                         >
-                          Select...
+                          Etc/GMT
                         </div>
                         <div
                           class="Select__input-container css-qbdosj-Input"
@@ -542,7 +539,6 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                         >
                           <input
                             aria-autocomplete="list"
-                            aria-describedby="react-select-timezone-input-placeholder"
                             aria-expanded="false"
                             aria-haspopup="true"
                             autocapitalize="none"
@@ -635,7 +631,23 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -702,7 +714,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i
@@ -932,6 +944,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                       >
                         Download kubectl binaries matching the Kubernetes cluster version
                         <input
+                          checked=""
                           role="switch"
                           type="checkbox"
                         />
@@ -952,7 +965,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                          
                       </div>
                       <div
-                        class="Select theme-lens Select--is-disabled css-3iigni-container"
+                        class="Select theme-lens css-b62m3t-container"
                       >
                         <span
                           class="css-1f43avz-a11yText-A11yText"
@@ -965,31 +978,28 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                           class="css-1f43avz-a11yText-A11yText"
                         />
                         <div
-                          class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                          class="Select__control css-13cymwt-control"
                         >
                           <div
-                            class="Select__value-container css-1fdsijx-ValueContainer"
+                            class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                           >
                             <div
-                              class="Select__placeholder css-1jqq78o-placeholder"
-                              id="react-select-download-mirror-input-placeholder"
+                              class="Select__single-value css-1dimb5e-singleValue"
                             >
-                              Download mirror for kubectl
+                              Default (Google)
                             </div>
                             <div
-                              class="Select__input-container css-1h01tm3-Input"
+                              class="Select__input-container css-qbdosj-Input"
                               data-value=""
                             >
                               <input
                                 aria-autocomplete="list"
-                                aria-describedby="react-select-download-mirror-input-placeholder"
                                 aria-expanded="false"
                                 aria-haspopup="true"
                                 autocapitalize="none"
                                 autocomplete="off"
                                 autocorrect="off"
                                 class="Select__input"
-                                disabled=""
                                 id="download-mirror-input"
                                 role="combobox"
                                 spellcheck="false"
@@ -1004,7 +1014,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                             class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                           >
                             <span
-                              class="Select__indicator-separator css-894a34-indicatorSeparator"
+                              class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                             />
                             <div
                               aria-hidden="true"
@@ -1042,7 +1052,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                          
                       </div>
                       <div
-                        class="Input theme round black disabled"
+                        class="Input theme round black"
                       >
                         <label
                           class="input-area flex gaps align-center"
@@ -1050,7 +1060,6 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                         >
                           <input
                             class="input box grow"
-                            disabled=""
                             placeholder="/some-electron-app-path-for-user-data/binaries"
                             spellcheck="false"
                             value=""
@@ -1081,7 +1090,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                          
                       </div>
                       <div
-                        class="Input theme round black"
+                        class="Input theme round black disabled"
                       >
                         <label
                           class="input-area flex gaps align-center"
@@ -1089,6 +1098,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                         >
                           <input
                             class="input box grow"
+                            disabled=""
                             placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                             spellcheck="false"
                             value=""
@@ -1133,13 +1143,11 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
                      
                   </div>
                   <div
-                    class="notice mt-3"
+                    class="loading-spinner"
                   >
                     <div
-                      class="flex-grow text-center"
-                    >
-                      No files and folders have been synced yet
-                    </div>
+                      class="Spinner singleColor"
+                    />
                   </div>
                 </section>
               </div>
@@ -1300,7 +1308,23 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -1367,7 +1391,7 @@ exports[`preferences - navigation to kubernetes preferences given in preferences
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i

@@ -4,20 +4,29 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { FileFilter } from "electron";
-import { requestOpenFilePickingDialog } from "../../../../../../../renderer/ipc";
+import type { PathPickOpts } from "../../../../../../../renderer/components/path-picker";
+import openPathPickingDialogInjectable from "../../../../../../path-picking-dialog/renderer/pick-paths.injectable";
 
-const getFilePathsInjectable = getInjectable({
-  id: "get-file-paths",
+export interface RequestFilePathOptions extends Pick<PathPickOpts, "onCancel" | "onPick"> {
+  filter: FileFilter;
+}
 
-  instantiate: () => async (fileFilter: FileFilter) =>
-    await requestOpenFilePickingDialog({
+export type RequestFilePaths = (options: RequestFilePathOptions) => Promise<void>;
+
+const requestFilePathsInjectable = getInjectable({
+  id: "request-file-paths",
+
+  instantiate: (di): RequestFilePaths => {
+    const openPathPickingDialog = di.inject(openPathPickingDialogInjectable);
+
+    return async ({ filter, ...opts }) => await openPathPickingDialog({
       properties: ["openFile", "showHiddenFiles"],
-      message: `Select file`,
-      buttonLabel: `Use file`,
-      filters: [fileFilter, { name: "Any", extensions: ["*"] }],
-    }),
-
-  causesSideEffects: true,
+      message: "Select file",
+      buttonLabel: "Use file",
+      filters: [filter, { name: "Any", extensions: ["*"] }],
+      ...opts,
+    });
+  },
 });
 
-export default getFilePathsInjectable;
+export default requestFilePathsInjectable;

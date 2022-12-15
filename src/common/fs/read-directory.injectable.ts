@@ -14,18 +14,16 @@ export interface ReadDirectory {
   (
     path: string,
     options?:
-      | { encoding: BufferEncoding | string | null; withFileTypes?: false | undefined }
+      | { encoding: BufferEncoding; withFileTypes?: false | undefined }
       | BufferEncoding
-      | string
-      | null,
   ): Promise<string[]>;
   (
     path: string,
-    options?: { encoding?: BufferEncoding | string | null | undefined; withFileTypes?: false | undefined },
+    options?: { encoding?: BufferEncoding; withFileTypes?: false | undefined },
   ): Promise<string[] | Buffer[]>;
   (
     path: string,
-    options: { encoding?: BufferEncoding | string | null | undefined; withFileTypes: true },
+    options: { encoding?: BufferEncoding; withFileTypes: true },
   ): Promise<Dirent[]>;
 }
 

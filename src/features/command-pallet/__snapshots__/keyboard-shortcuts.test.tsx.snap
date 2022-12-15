@@ -256,7 +256,23 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -323,7 +339,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -616,7 +632,23 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -683,7 +715,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -976,7 +1008,23 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -1043,7 +1091,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -1348,7 +1396,23 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -1415,7 +1479,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -1617,7 +1681,23 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -1684,7 +1764,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -1886,7 +1966,23 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -1953,7 +2049,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -2155,7 +2251,23 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -2222,7 +2334,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -2436,7 +2548,23 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -2503,7 +2631,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i

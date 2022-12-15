@@ -12,7 +12,7 @@ import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "../../../../../common/test-utils/get-promise-status";
 import type { DiContainer } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../../../common/logger.injectable";
-import type { Logger } from "../../../../../common/logger";
+import { noop } from "../../../../../common/utils";
 
 describe("download-platform-update", () => {
   let downloadPlatformUpdate: DownloadPlatformUpdate;
@@ -43,7 +43,13 @@ describe("download-platform-update", () => {
     di.override(electronUpdaterInjectable, () => electronUpdaterFake);
 
     logErrorMock = jest.fn();
-    di.override(loggerInjectable, () => ({ error: logErrorMock }) as unknown as Logger);
+    di.override(loggerInjectable, () => ({
+      error: logErrorMock,
+      debug: noop,
+      info: noop,
+      silly: noop,
+      warn: noop,
+    }));
 
     downloadPlatformUpdate = di.inject(downloadPlatformUpdateInjectable);
   });

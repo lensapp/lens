@@ -9,16 +9,9 @@ import { createContainer, isInjectable } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import loggerInjectable from "../common/logger.injectable";
-import { overrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
+import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import { createMemoryHistory } from "history";
 import focusWindowInjectable from "./navigation/focus-window.injectable";
-import extensionsStoreInjectable from "../extensions/extensions-store/extensions-store.injectable";
-import type { ExtensionsStore } from "../extensions/extensions-store/extensions-store";
-import fileSystemProvisionerStoreInjectable from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
-import type { FileSystemProvisionerStore } from "../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store";
-import userStoreInjectable from "../common/user-store/user-store.injectable";
-import type { UserStore } from "../common/user-store";
-import hotbarStoreInjectable from "../common/hotbars/store.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
 import historyInjectable from "./navigation/history.injectable";
@@ -26,16 +19,14 @@ import { ApiManager } from "../common/k8s-api/api-manager";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import apiManagerInjectable from "../common/k8s-api/api-manager/manager.injectable";
-import { observable, computed, runInAction } from "mobx";
+import { computed, runInAction } from "mobx";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
-import getFilePathsInjectable from "../features/helm-charts/child-features/preferences/renderer/adding-of-custom-helm-repository/helm-file-input/get-file-paths.injectable";
-import callForPublicHelmRepositoriesInjectable from "../features/helm-charts/child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import requestPublicHelmRepositoriesInjectable from "../features/helm-charts/child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
-import type { HotbarStore } from "../common/hotbars/store";
 import cronJobTriggerDialogClusterFrameChildComponentInjectable from "./components/+workloads-cronjobs/cron-job-trigger-dialog-cluster-frame-child-component.injectable";
 import deploymentScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-deployments/scale/deployment-scale-dialog-cluster-frame-child-component.injectable";
 import replicasetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-replicasets/scale-dialog/replicaset-scale-dialog-cluster-frame-child-component.injectable";
@@ -50,7 +41,6 @@ import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injecta
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
-import type { PartialDeep } from "type-fest";
 
 export const getDiForUnitTesting = (
   opts: { doGeneralOverrides?: boolean } = {},
@@ -141,40 +131,14 @@ export const getDiForUnitTesting = (
 
     overrideFunctionalInjectables(di, [
       broadcastMessageInjectable,
-      getFilePathsInjectable,
-      callForPublicHelmRepositoriesInjectable,
+      requestPublicHelmRepositoriesInjectable,
     ]);
-
-    di.override(extensionsStoreInjectable, () => ({
-      isEnabled: () => false,
-    }) as Partial<ExtensionsStore> as ExtensionsStore);
-
-    di.override(hotbarStoreInjectable, () => ({
-      getActive: () => ({
-        name: "some-hotbar",
-        items: [null, null, null, null, null, null, null, null, null, null, null, null],
-        id: "some-hotbar",
-      }),
-      getDisplayIndex: () => "0",
-      isAddedToActive: () => false,
-    }) as Partial<HotbarStore> as HotbarStore);
-
-    di.override(fileSystemProvisionerStoreInjectable, () => ({}) as FileSystemProvisionerStore);
-
-    di.override(userStoreInjectable, () => ({
-      isTableColumnHidden: () => false,
-      extensionRegistryUrl: { customUrl: "some-custom-url" },
-      syncKubeconfigEntries: observable.map(),
-      terminalConfig: { fontSize: 42 },
-      editorConfiguration: { minimap: {}, tabSize: 42, fontSize: 42 },
-      load: () => {},
-    } as PartialDeep<UserStore> as UserStore));
 
     di.override(apiManagerInjectable, () => new ApiManager());
 
     di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));
 
-    overrideFsWithFakes(di);
+    getOverrideFsWithFakes()(di);
 
     di.override(focusWindowInjectable, () => () => {});
 

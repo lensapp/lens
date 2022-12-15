@@ -18,7 +18,7 @@ import userShellSettingInjectable from "../../../common/user-store/shell-setting
 import appNameInjectable from "../../../common/vars/app-name.injectable";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
-import statInjectable from "../../../common/fs/stat/stat.injectable";
+import statInjectable from "../../../common/fs/stat.injectable";
 
 export interface NodeShellSessionArgs {
   websocket: WebSocket;

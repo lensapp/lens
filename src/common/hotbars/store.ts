@@ -4,8 +4,8 @@
  */
 
 import { action, comparer, observable, makeObservable, computed } from "mobx";
-import { BaseStore } from "../base-store";
-import migrations from "../../migrations/hotbar-store";
+import type { BaseStoreDependencies } from "../base-store/base-store";
+import { BaseStore } from "../base-store/base-store";
 import { toJS } from "../utils";
 import type { CatalogEntity } from "../catalog";
 import { broadcastMessage } from "../ipc";
@@ -21,26 +21,23 @@ export interface HotbarStoreModel {
   activeHotbarId: string;
 }
 
-interface Dependencies {
+interface Dependencies extends BaseStoreDependencies {
   readonly catalogCatalogEntity: GeneralEntity;
   readonly logger: Logger;
 }
 
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
-  readonly displayName = "HotbarStore";
   @observable hotbars: Hotbar[] = [];
   @observable private _activeHotbarId!: string;
 
-  constructor(private readonly dependencies: Dependencies) {
-    super({
+  constructor(protected readonly dependencies: Dependencies) {
+    super(dependencies, {
       configName: "lens-hotbar-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {
         equals: comparer.structural,
       },
-      migrations,
     });
-
     makeObservable(this);
   }
 
@@ -99,21 +96,19 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     this.hotbars.forEach(ensureExactHotbarItemLength);
 
     if (data.activeHotbarId) {
-      this.setActiveHotbar(data.activeHotbarId);
+      this._activeHotbarId = data.activeHotbarId;
     }
 
-    if (!this.activeHotbarId) {
-      this.setActiveHotbar(0);
+    if (!this._activeHotbarId) {
+      this._activeHotbarId = this.hotbars[0].id;
     }
   }
 
   toJSON(): HotbarStoreModel {
-    const model: HotbarStoreModel = {
+    return toJS({
       hotbars: this.hotbars,
       activeHotbarId: this.activeHotbarId,
-    };
-
-    return toJS(model);
+    });
   }
 
   getActive(): Hotbar {
@@ -148,7 +143,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
     const index = this.hotbars.findIndex((hotbar) => hotbar.id === id);
 
     if (index < 0) {
-      return void console.warn(
+      return this.dependencies.logger.warn(
         `[HOTBAR-STORE]: cannot setHotbarName: unknown id`,
         { id },
       );

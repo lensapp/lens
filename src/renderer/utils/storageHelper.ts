@@ -8,8 +8,8 @@ import { action, comparer, computed, makeObservable, observable, observe, toJS, 
 import type { Draft } from "immer";
 import { produce, isDraft } from "immer";
 import { isEqual, isPlainObject } from "lodash";
-import logger from "../../main/logger";
 import assert from "assert";
+import type { Logger } from "../../common/logger";
 
 export interface StorageChange<T> {
   key: string;
@@ -26,9 +26,9 @@ export interface StorageAdapter<T> {
 }
 
 export interface StorageHelperOptions<T> {
-  autoInit?: boolean; // start preloading data immediately, default: true
-  storage: StorageAdapter<T>;
-  defaultValue: T;
+  readonly autoInit?: boolean; // start preloading data immediately, default: true
+  readonly storage: StorageAdapter<T>;
+  readonly defaultValue: T;
 }
 
 export interface StorageLayer<T> {
@@ -41,11 +41,16 @@ export interface StorageLayer<T> {
   merge(value: Partial<T> | ((draft: Draft<T>) => Partial<T> | void)): void;
 }
 
+export const storageHelperLogPrefix = "[STORAGE-HELPER]:";
+
+interface Dependencies {
+  readonly logger: Logger;
+}
+
 export class StorageHelper<T> implements StorageLayer<T> {
-  static logPrefix = "[StorageHelper]:";
   readonly storage: StorageAdapter<T>;
 
-  private data = observable.box<T | undefined>(undefined, {
+  private readonly data = observable.box<T | undefined>(undefined, {
     deep: true,
     equals: comparer.structural,
   });
@@ -61,7 +66,7 @@ export class StorageHelper<T> implements StorageLayer<T> {
     return this.options.defaultValue;
   }
 
-  constructor(readonly key: string, private options: StorageHelperOptions<T>) {
+  constructor(private readonly dependencies: Dependencies, readonly key: string, private readonly options: StorageHelperOptions<T>) {
     makeObservable(this);
 
     const { storage, autoInit = true } = options;
@@ -89,7 +94,7 @@ export class StorageHelper<T> implements StorageLayer<T> {
   };
 
   private onError = (error: any): void => {
-    logger.error(`${StorageHelper.logPrefix} loading error: ${error}`, this);
+    this.dependencies.logger.error(`${storageHelperLogPrefix} loading error: ${error}`, this);
   };
 
   @action
@@ -127,7 +132,7 @@ export class StorageHelper<T> implements StorageLayer<T> {
 
       this.storage.onChange?.({ value, oldValue, key: this.key });
     } catch (error) {
-      logger.error(`${StorageHelper.logPrefix} updating storage: ${error}`, this, { value, oldValue });
+      this.dependencies.logger.error(`${storageHelperLogPrefix} updating storage: ${error}`, this, { value, oldValue });
     }
   }
 

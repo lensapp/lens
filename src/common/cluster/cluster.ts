@@ -316,7 +316,6 @@ export class Cluster implements ClusterModel, ClusterState {
     const refreshMetadataTimer = setInterval(() => this.available && this.refreshAccessibilityAndMetadata(), 900000); // every 15 minutes
 
     this.eventsDisposer.push(
-      reaction(() => this.getState(), state => this.pushState(state)),
       reaction(
         () => this.prometheusPreferences,
         prefs => this.contextHandler.setupPrometheus(prefs),
@@ -349,7 +348,7 @@ export class Cluster implements ClusterModel, ClusterState {
   @action
   async activate(force = false) {
     if (this.activated && !force) {
-      return this.pushState();
+      return;
     }
 
     this.dependencies.logger.info(`[CLUSTER]: activate`, this.getMeta());
@@ -395,7 +394,6 @@ export class Cluster implements ClusterModel, ClusterState {
     }
 
     this.activated = true;
-    this.pushState();
   }
 
   /**
@@ -437,7 +435,6 @@ export class Cluster implements ClusterModel, ClusterState {
     this.activated = false;
     this.allowedNamespaces = [];
     this.resourceAccessStatuses.clear();
-    this.pushState();
     this.dependencies.logger.info(`[CLUSTER]: disconnected`, { id: this.id });
   }
 
@@ -448,7 +445,6 @@ export class Cluster implements ClusterModel, ClusterState {
   async refresh() {
     this.dependencies.logger.info(`[CLUSTER]: refresh`, this.getMeta());
     await this.refreshConnectionStatus();
-    this.pushState();
   }
 
   /**
@@ -614,16 +610,15 @@ export class Cluster implements ClusterModel, ClusterState {
    * @param state cluster state
    */
   @action setState(state: ClusterState) {
-    Object.assign(this, state);
-  }
-
-  /**
-   * @internal
-   * @param state cluster state
-   */
-  pushState(state = this.getState()) {
-    this.dependencies.logger.silly(`[CLUSTER]: push-state`, state);
-    this.dependencies.broadcastMessage("cluster:state", this.id, state);
+    this.accessible = state.accessible;
+    this.allowedNamespaces = state.allowedNamespaces;
+    this.allowedResources = state.allowedResources;
+    this.apiUrl = state.apiUrl;
+    this.disconnected = state.disconnected;
+    this.isAdmin = state.isAdmin;
+    this.isGlobalWatchEnabled = state.isGlobalWatchEnabled;
+    this.online = state.online;
+    this.ready = state.ready;
   }
 
   // get cluster system meta, e.g. use in "logger"

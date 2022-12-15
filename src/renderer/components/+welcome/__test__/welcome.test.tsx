@@ -15,6 +15,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
 import { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import type { WelcomeBannerRegistration } from "../welcome-banner-items/welcome-banner-registration";
+import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";
 
 jest.mock("electron", () => ({
   ipcRenderer: {
@@ -32,6 +33,9 @@ describe("<Welcome/>", () => {
 
   beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    di.override(currentlyInClusterFrameInjectable, () => false);
+
     render = renderFor(di);
     welcomeBannersStub = [];
 

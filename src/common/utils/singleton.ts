@@ -3,10 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-interface StaticThis<T, R extends any[]> { new(...args: R): T }
+export interface StaticThis<T, R extends any[]> { new(...args: R): T }
 
+/**
+ * @deprecated This is a form of global shared state
+ */
 export class Singleton {
-  private static instances = new WeakMap<object, Singleton>();
+  private static readonly instances = new WeakMap<object, Singleton>();
   private static creating = "";
 
   constructor() {

@@ -13,7 +13,7 @@ import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { HelmRepo } from "../../common/helm/helm-repo";
-import callForPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import requestPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import isPathInjectable from "../../renderer/components/input/validators/is-path.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
@@ -47,7 +47,7 @@ describe("add custom helm repository in preferences", () => {
     });
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
+      windowDi.override(requestPublicHelmRepositoriesInjectable, () => async () => []);
       windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
       windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
 
@@ -73,9 +73,11 @@ describe("add custom helm repository in preferences", () => {
         await Promise.all([
           getActiveHelmRepositoriesMock.resolve({
             callWasSuccessful: true,
-            response: [
-              { name: "Some active repository", url: "some-url" },
-            ],
+            response: [{
+              name: "Some active repository",
+              url: "some-url",
+              cacheFilePath: "/some-cache-file-for-active",
+            }],
           }),
         ]);
       });

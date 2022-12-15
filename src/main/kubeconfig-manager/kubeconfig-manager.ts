@@ -13,7 +13,7 @@ import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 import type { PathExists } from "../../common/fs/path-exists.injectable";
-import type { DeleteFile } from "../../common/fs/delete-file.injectable";
+import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { WriteFile } from "../../common/fs/write-file.injectable";
 
 export interface KubeconfigManagerDependencies {
@@ -23,7 +23,7 @@ export interface KubeconfigManagerDependencies {
   joinPaths: JoinPaths;
   getDirnameOfPath: GetDirnameOfPath;
   pathExists: PathExists;
-  deleteFile: DeleteFile;
+  removePath: RemovePath;
   writeFile: WriteFile;
 }
 
@@ -65,7 +65,7 @@ export class KubeconfigManager {
     this.dependencies.logger.info(`[KUBECONFIG-MANAGER]: Deleting temporary kubeconfig: ${this.tempFilePath}`);
 
     try {
-      await this.dependencies.deleteFile(this.tempFilePath);
+      await this.dependencies.removePath(this.tempFilePath);
     } catch (error) {
       if (isErrnoException(error) && error.code !== "ENOENT") {
         throw error;

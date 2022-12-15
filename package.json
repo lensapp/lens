@@ -228,6 +228,7 @@
     "grapheme-splitter": "^1.0.4",
     "handlebars": "^4.7.7",
     "history": "^4.10.1",
+    "hpagent": "^1.2.0",
     "http-proxy": "^1.18.1",
     "immer": "^9.0.16",
     "joi": "^17.7.0",

@@ -305,13 +305,12 @@ exports[`preferences - navigation to extension specific preferences given in pre
                         class="Select__control css-13cymwt-control"
                       >
                         <div
-                          class="Select__value-container css-1fdsijx-ValueContainer"
+                          class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                         >
                           <div
-                            class="Select__placeholder css-1jqq78o-placeholder"
-                            id="react-select-extension-install-registry-input-placeholder"
+                            class="Select__single-value css-1dimb5e-singleValue"
                           >
-                            Select...
+                            Default Url
                           </div>
                           <div
                             class="Select__input-container css-qbdosj-Input"
@@ -319,7 +318,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                           >
                             <input
                               aria-autocomplete="list"
-                              aria-describedby="react-select-extension-install-registry-input-placeholder"
                               aria-expanded="false"
                               aria-haspopup="true"
                               autocapitalize="none"
@@ -384,7 +382,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                           disabled=""
                           placeholder="Custom Extension Registry URL..."
                           spellcheck="false"
-                          value="some-custom-url"
+                          value=""
                         />
                       </label>
                       <div
@@ -541,13 +539,12 @@ exports[`preferences - navigation to extension specific preferences given in pre
                         class="Select__control css-13cymwt-control"
                       >
                         <div
-                          class="Select__value-container css-1fdsijx-ValueContainer"
+                          class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                         >
                           <div
-                            class="Select__placeholder css-1jqq78o-placeholder"
-                            id="react-select-timezone-input-placeholder"
+                            class="Select__single-value css-1dimb5e-singleValue"
                           >
-                            Select...
+                            Etc/GMT
                           </div>
                           <div
                             class="Select__input-container css-qbdosj-Input"
@@ -555,7 +552,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                           >
                             <input
                               aria-autocomplete="list"
-                              aria-describedby="react-select-timezone-input-placeholder"
                               aria-expanded="false"
                               aria-haspopup="true"
                               autocapitalize="none"
@@ -648,7 +644,23 @@ exports[`preferences - navigation to extension specific preferences given in pre
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -715,7 +727,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -1012,7 +1024,23 @@ exports[`preferences - navigation to extension specific preferences given in pre
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -1079,7 +1107,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i
@@ -1387,7 +1415,23 @@ exports[`preferences - navigation to extension specific preferences given in pre
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -1454,7 +1498,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i
@@ -1762,7 +1806,23 @@ exports[`preferences - navigation to extension specific preferences given in pre
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -1829,7 +1889,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i
@@ -2163,7 +2223,23 @@ exports[`preferences - navigation to extension specific preferences given in pre
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -2230,7 +2306,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i
@@ -2558,13 +2634,12 @@ exports[`preferences - navigation to extension specific preferences given in pre
                       class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container css-1fdsijx-ValueContainer"
+                        class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-1jqq78o-placeholder"
-                          id="react-select-extension-install-registry-input-placeholder"
+                          class="Select__single-value css-1dimb5e-singleValue"
                         >
-                          Select...
+                          Default Url
                         </div>
                         <div
                           class="Select__input-container css-qbdosj-Input"
@@ -2572,7 +2647,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                         >
                           <input
                             aria-autocomplete="list"
-                            aria-describedby="react-select-extension-install-registry-input-placeholder"
                             aria-expanded="false"
                             aria-haspopup="true"
                             autocapitalize="none"
@@ -2637,7 +2711,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                         disabled=""
                         placeholder="Custom Extension Registry URL..."
                         spellcheck="false"
-                        value="some-custom-url"
+                        value=""
                       />
                     </label>
                     <div
@@ -2794,13 +2868,12 @@ exports[`preferences - navigation to extension specific preferences given in pre
                       class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container css-1fdsijx-ValueContainer"
+                        class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-1jqq78o-placeholder"
-                          id="react-select-timezone-input-placeholder"
+                          class="Select__single-value css-1dimb5e-singleValue"
                         >
-                          Select...
+                          Etc/GMT
                         </div>
                         <div
                           class="Select__input-container css-qbdosj-Input"
@@ -2808,7 +2881,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                         >
                           <input
                             aria-autocomplete="list"
-                            aria-describedby="react-select-timezone-input-placeholder"
                             aria-expanded="false"
                             aria-haspopup="true"
                             autocapitalize="none"
@@ -2901,7 +2973,23 @@ exports[`preferences - navigation to extension specific preferences given in pre
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -2968,7 +3056,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i
@@ -3334,13 +3422,12 @@ exports[`preferences - navigation to extension specific preferences given in pre
                       class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container css-1fdsijx-ValueContainer"
+                        class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-1jqq78o-placeholder"
-                          id="react-select-extension-install-registry-input-placeholder"
+                          class="Select__single-value css-1dimb5e-singleValue"
                         >
-                          Select...
+                          Default Url
                         </div>
                         <div
                           class="Select__input-container css-qbdosj-Input"
@@ -3348,7 +3435,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                         >
                           <input
                             aria-autocomplete="list"
-                            aria-describedby="react-select-extension-install-registry-input-placeholder"
                             aria-expanded="false"
                             aria-haspopup="true"
                             autocapitalize="none"
@@ -3413,7 +3499,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
                         disabled=""
                         placeholder="Custom Extension Registry URL..."
                         spellcheck="false"
-                        value="some-custom-url"
+                        value=""
                       />
                     </label>
                     <div
@@ -3570,13 +3656,12 @@ exports[`preferences - navigation to extension specific preferences given in pre
                       class="Select__control css-13cymwt-control"
                     >
                       <div
-                        class="Select__value-container css-1fdsijx-ValueContainer"
+                        class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                       >
                         <div
-                          class="Select__placeholder css-1jqq78o-placeholder"
-                          id="react-select-timezone-input-placeholder"
+                          class="Select__single-value css-1dimb5e-singleValue"
                         >
-                          Select...
+                          Etc/GMT
                         </div>
                         <div
                           class="Select__input-container css-qbdosj-Input"
@@ -3584,7 +3669,6 @@ exports[`preferences - navigation to extension specific preferences given in pre
                         >
                           <input
                             aria-autocomplete="list"
-                            aria-describedby="react-select-timezone-input-placeholder"
                             aria-expanded="false"
                             aria-haspopup="true"
                             autocapitalize="none"
@@ -3677,7 +3761,23 @@ exports[`preferences - navigation to extension specific preferences given in pre
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -3744,7 +3844,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i
@@ -4066,7 +4166,23 @@ exports[`preferences - navigation to extension specific preferences given in pre
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="0"
-        />
+        >
+          <div
+            style="z-index: 12; position: absolute;"
+          >
+            <div
+              class="HotbarIcon contextMenuAvailable"
+            >
+              <div
+                class="Avatar rounded disabled avatar"
+                id="hotbarIcon-hotbar-icon-catalog-entity"
+                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+              >
+                Ca
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           class="HotbarCell isDraggingOwner animateDown"
           index="1"
@@ -4133,7 +4249,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="badge Badge small clickable"
             id="hotbarIndex"
           >
-            0
+            1
           </div>
         </div>
         <i
@@ -4386,7 +4502,23 @@ exports[`preferences - navigation to extension specific preferences given in pre
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -4453,7 +4585,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i

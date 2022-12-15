@@ -12,7 +12,7 @@ import checkForPlatformUpdatesInjectable from "./check-for-platform-updates.inje
 import type { UpdateChannel, ReleaseChannel } from "../../../common/update-channels";
 import { getPromiseStatus } from "../../../../../common/test-utils/get-promise-status";
 import loggerInjectable from "../../../../../common/logger.injectable";
-import type { Logger } from "../../../../../common/logger";
+import { noop } from "../../../../../common/utils";
 
 describe("check-for-platform-updates", () => {
   let checkForPlatformUpdates: CheckForPlatformUpdates;
@@ -37,7 +37,13 @@ describe("check-for-platform-updates", () => {
 
     logErrorMock = jest.fn();
 
-    di.override(loggerInjectable, () => ({ error: logErrorMock }) as unknown as Logger);
+    di.override(loggerInjectable, () => ({
+      error: logErrorMock,
+      debug: noop,
+      info: noop,
+      silly: noop,
+      warn: noop,
+    }));
 
     checkForPlatformUpdates = di.inject(checkForPlatformUpdatesInjectable);
   });

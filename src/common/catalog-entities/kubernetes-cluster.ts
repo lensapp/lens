@@ -5,13 +5,14 @@
 
 import type { CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus, CatalogCategorySpec } from "../catalog";
 import { CatalogEntity, CatalogCategory, categoryVersion } from "../catalog/catalog-entity";
-import { ClusterStore } from "../cluster-store/cluster-store";
 import { broadcastMessage } from "../ipc";
 import { app } from "electron";
 import type { CatalogEntityConstructor, CatalogEntitySpec } from "../catalog/catalog-entity";
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
 import { requestClusterActivation, requestClusterDisconnection } from "../../renderer/ipc";
 import KubeClusterCategoryIcon from "./icons/kubernetes.svg";
+import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import getClusterByIdInjectable from "../cluster-store/get-by-id.injectable";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -63,6 +64,8 @@ export function isKubernetesCluster(item: unknown): item is KubernetesCluster {
   return item instanceof KubernetesCluster;
 }
 
+const getClusterById = asLegacyGlobalFunctionForExtensionApi(getClusterByIdInjectable);
+
 export class KubernetesCluster<
   Metadata extends KubernetesClusterMetadata = KubernetesClusterMetadata,
   Status extends KubernetesClusterStatus = KubernetesClusterStatus,
@@ -76,7 +79,7 @@ export class KubernetesCluster<
 
   async connect(): Promise<void> {
     if (app) {
-      await ClusterStore.getInstance().getById(this.getId())?.activate();
+      await getClusterById(this.getId())?.activate();
     } else {
       await requestClusterActivation(this.getId(), false);
     }
@@ -84,7 +87,7 @@ export class KubernetesCluster<
 
   async disconnect(): Promise<void> {
     if (app) {
-      ClusterStore.getInstance().getById(this.getId())?.disconnect();
+      getClusterById(this.getId())?.disconnect();
     } else {
       await requestClusterDisconnection(this.getId(), false);
     }

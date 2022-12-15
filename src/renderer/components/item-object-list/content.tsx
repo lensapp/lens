@@ -21,7 +21,7 @@ import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
 import type { ItemObject } from "../../../common/item.store";
 import type { Filter, PageFiltersStore } from "./page-filters/store";
-import type { LensTheme } from "../../themes/store";
+import type { LensTheme } from "../../themes/lens-theme";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";

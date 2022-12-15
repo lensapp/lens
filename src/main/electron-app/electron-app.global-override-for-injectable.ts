@@ -8,4 +8,5 @@ import electronAppInjectable from "./electron-app.injectable";
 
 export default getGlobalOverride(electronAppInjectable, () => ({
   getVersion: () => "6.0.0",
-} as Electron.App));
+  setLoginItemSettings: () => {},
+} as Partial<Electron.App> as Electron.App));

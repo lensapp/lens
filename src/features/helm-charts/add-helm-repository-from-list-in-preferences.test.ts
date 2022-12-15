@@ -12,7 +12,7 @@ import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { HelmRepo } from "../../common/helm/helm-repo";
-import callForPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import requestPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
@@ -44,7 +44,7 @@ describe("add helm repository from list in preferences", () => {
     builder.beforeWindowStart((windowDi) => {
       windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
       windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
-      windowDi.override(callForPublicHelmRepositoriesInjectable, () => callForPublicHelmRepositoriesMock);
+      windowDi.override(requestPublicHelmRepositoriesInjectable, () => callForPublicHelmRepositoriesMock);
     });
 
     rendered = await builder.render();
@@ -72,15 +72,25 @@ describe("add helm repository from list in preferences", () => {
       beforeEach(async () => {
         await Promise.all([
           callForPublicHelmRepositoriesMock.resolve([
-            { name: "Some already active repository", url: "some-url" },
-            { name: "Some to be added repository", url: "some-other-url" },
+            {
+              name: "Some already active repository",
+              url: "some-url",
+              cacheFilePath: "/some-cache-file-for-active",
+            },
+            {
+              name: "Some to be added repository",
+              url: "some-other-url",
+              cacheFilePath: "/some-cache-file-for-non-active",
+            },
           ]),
 
           getActiveHelmRepositoriesMock.resolve({
             callWasSuccessful: true,
-            response: [
-              { name: "Some already active repository", url: "some-url" },
-            ],
+            response: [{
+              name: "Some already active repository",
+              url: "some-url",
+              cacheFilePath: "/some-cache-file-for-active",
+            }],
           }),
         ]);
       });
@@ -195,8 +205,16 @@ describe("add helm repository from list in preferences", () => {
                 await getActiveHelmRepositoriesMock.resolve({
                   callWasSuccessful: true,
                   response: [
-                    { name: "Some already active repository", url: "some-url" },
-                    { name: "Some to be added repository", url: "some-other-url" },
+                    {
+                      name: "Some already active repository",
+                      url: "some-url",
+                      cacheFilePath: "/some-cache-file-for-active",
+                    },
+                    {
+                      name: "Some to be added repository",
+                      url: "some-other-url",
+                      cacheFilePath: "/some-cache-file-for-non-active",
+                    },
                   ],
                 });
               });

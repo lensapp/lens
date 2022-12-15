@@ -11,9 +11,9 @@ import loggerInjectable from "../../common/logger.injectable";
 import lensProxyPortInjectable from "../lens-proxy/lens-proxy-port.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
-import deleteFileInjectable from "../../common/fs/delete-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import writeFileInjectable from "../../common/fs/write-file.injectable";
+import removePathInjectable from "../../common/fs/remove.injectable";
 
 export interface KubeConfigManagerInstantiationParameter {
   cluster: Cluster;
@@ -31,7 +31,7 @@ const createKubeconfigManagerInjectable = getInjectable({
       lensProxyPort: di.inject(lensProxyPortInjectable),
       joinPaths: di.inject(joinPathsInjectable),
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
-      deleteFile: di.inject(deleteFileInjectable),
+      removePath: di.inject(removePathInjectable),
       pathExists: di.inject(pathExistsInjectable),
       writeFile: di.inject(writeFileInjectable),
     };

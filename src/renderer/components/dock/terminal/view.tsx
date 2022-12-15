@@ -10,7 +10,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../../utils";
 import type { Terminal } from "./terminal";
 import type { TerminalStore } from "./store";
-import type { LensTheme } from "../../../themes/store";
+import type { LensTheme } from "../../../themes/lens-theme";
 import type { DockTab, DockStore } from "../dock/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "../dock/store.injectable";
