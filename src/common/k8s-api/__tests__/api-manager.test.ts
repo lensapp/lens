@@ -4,9 +4,12 @@
  */
 
 import type { DiContainer } from "@ogre-tools/injectable";
+import createClusterInjectable from "../../../main/create-cluster/create-cluster.injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
+import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
+import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { ApiManager } from "../api-manager";
 import apiManagerInjectable from "../api-manager/manager.injectable";
@@ -31,8 +34,19 @@ describe("ApiManager", () => {
   beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
+    di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+
+    const createCluster = di.inject(createClusterInjectable);
+
+    di.override(hostedClusterInjectable, () => createCluster({
+      contextName: "some-context-name",
+      id: "some-cluster-id",
+      kubeConfigPath: "/some-path-to-a-kubeconfig",
+    }, {
+      clusterServerUrl: "https://localhost:8080",
+    }));
 
     apiManager = di.inject(apiManagerInjectable);
   });

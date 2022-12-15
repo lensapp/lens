@@ -9,11 +9,14 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import React from "react";
+import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { Fetch } from "../../../common/fetch/fetch.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import { createMockResponseFromString } from "../../../test-utils/mock-responses";
+import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
+import createClusterInjectable from "../../cluster/create-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
@@ -46,9 +49,21 @@ describe("<NamespaceSelectFilter />", () => {
 
   beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
-    di.override(directoryForUserDataInjectable, () => "/some-directory");
-    di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.unoverride(subscribeStoresInjectable);
+
+    di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
+    di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+
+    const createCluster = di.inject(createClusterInjectable);
+
+    di.override(hostedClusterInjectable, () => createCluster({
+      contextName: "some-context-name",
+      id: "some-cluster-id",
+      kubeConfigPath: "/some-path-to-a-kubeconfig",
+    }, {
+      clusterServerUrl: "https://localhost:8080",
+    }));
 
     namespaceStore = di.inject(namespaceStoreInjectable);
 
