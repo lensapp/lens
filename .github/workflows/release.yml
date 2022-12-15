@@ -28,3 +28,6 @@ jobs:
           commit: master
           tag: ${{ steps.tagger.outputs.tagname }}
           body: ${{ github.event.pull_request.body }}
+  publish-npm:
+    uses: ./.github/workflows/publish-release-npm.yml
+    needs: release
