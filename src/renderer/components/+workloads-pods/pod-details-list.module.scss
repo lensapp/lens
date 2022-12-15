@@ -1,0 +1,56 @@
+.PodDetailsList {
+  @mixin status-colors {
+    @each $status, $color in $pod-status-color-list {
+      &:global(.#{$status}) {
+        color: $color;
+      }
+    }
+  }
+
+  .table {
+    &:global(.virtual) {
+      height: 500px;
+    }
+
+    :global(.TableCell).warning {
+      @include table-cell-warning;
+    }
+
+    :global(.TableCell).status {
+      @include status-colors;
+    }
+  }
+}
+
+.table {
+  margin: 0 (-$margin * 3);
+}
+
+.name {
+  flex-grow: 2;
+  margin-left: $margin;
+}
+
+.node {
+  flex-grow: 2;
+}
+
+.namespace {
+  flex-grow: 1.2;
+}
+
+.cpu {
+  align-self: center;
+
+  .LineProgress {
+    color: var(--blue);
+  }
+}
+
+.memory {
+  align-self: center;
+
+  :global(.LineProgress) {
+    color: var(--magenta);
+  }
+}

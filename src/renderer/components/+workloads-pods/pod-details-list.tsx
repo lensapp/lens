@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./pod-details-list.scss";
+import styles from "./pod-details-list.module.scss";
 
 import { withInjectables } from "@ogre-tools/injectable-react";
 import kebabCase from "lodash/kebabCase";
@@ -21,6 +21,7 @@ import { Spinner } from "../spinner";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { PodStore } from "./store";
 import podStoreInjectable from "./store.injectable";
+import { Tooltip, TooltipPosition } from "../tooltip";
 
 enum sortBy {
   name = "name",
@@ -124,16 +125,32 @@ export class NonInjectedPodDetailsList extends React.Component<PodDetailsListPro
         nowrap
         onClick={prevDefault(() => showDetails(pod.selfLink, false))}
       >
-        <TableCell className="name">{pod.getName()}</TableCell>
-        <TableCell className="warning"><KubeObjectStatusIcon key="icon" object={pod}/></TableCell>
-        <TableCell className="node">{pod.getNodeName()}</TableCell>
-        <TableCell className="namespace">{pod.getNs()}</TableCell>
-        <TableCell className="ready">
+        <TableCell className={styles.name}>
+          <span id={`pod-list-pod-item-${pod.getId()}`}>{pod.getName()}</span>
+          <Tooltip
+            targetId={`pod-list-pod-item-${pod.getId()}`}
+            preferredPositions={[TooltipPosition.TOP, TooltipPosition.TOP_LEFT]}
+          >
+            {pod.getName()}
+          </Tooltip>
+        </TableCell>
+        <TableCell className={styles.warning}><KubeObjectStatusIcon key="icon" object={pod}/></TableCell>
+        <TableCell className={styles.node}>{pod.getNodeName()}</TableCell>
+        <TableCell className={styles.namespace}>
+          <span id={`pod-list-pod-namespace-${pod.getId()}`}>{pod.getNs()}</span>
+          <Tooltip
+            targetId={`pod-list-pod-namespace-${pod.getId()}`}
+            preferredPositions={[TooltipPosition.TOP, TooltipPosition.TOP_LEFT]}
+          >
+            {pod.getNs()}
+          </Tooltip>
+        </TableCell>
+        <TableCell>
           {`${pod.getRunningContainers().length} / ${pod.getContainers().length}`}
         </TableCell>
-        <TableCell className="cpu">{this.renderCpuUsage(`cpu-${pod.getId()}`, metrics.cpu)}</TableCell>
-        <TableCell className="memory">{this.renderMemoryUsage(`memory-${pod.getId()}`, metrics.memory)}</TableCell>
-        <TableCell className={cssNames("status", kebabCase(pod.getStatusMessage()))}>{pod.getStatusMessage()}</TableCell>
+        <TableCell className={styles.cpu}>{this.renderCpuUsage(`cpu-${pod.getId()}`, metrics.cpu)}</TableCell>
+        <TableCell className={styles.memory}>{this.renderMemoryUsage(`memory-${pod.getId()}`, metrics.memory)}</TableCell>
+        <TableCell className={cssNames(styles.status, kebabCase(pod.getStatusMessage()))}>{pod.getStatusMessage()}</TableCell>
       </TableRow>
     );
   }
@@ -160,7 +177,7 @@ export class NonInjectedPodDetailsList extends React.Component<PodDetailsListPro
     const virtual = pods.length > 20;
 
     return (
-      <div className="PodDetailsList flex column">
+      <div className={styles.PodDetailsList}>
         <DrawerTitle>Pods</DrawerTitle>
         <Table
           tableId="workloads_pod_details_list"
@@ -185,17 +202,17 @@ export class NonInjectedPodDetailsList extends React.Component<PodDetailsListPro
               ? undefined
               : (pod => this.getTableRow(pod.getId()))
           )}
-          className="box grow"
+          className={styles.table}
         >
           <TableHead>
-            <TableCell className="name" sortBy={sortBy.name}>Name</TableCell>
-            <TableCell className="warning"/>
-            <TableCell className="node" sortBy={sortBy.node}>Node</TableCell>
-            <TableCell className="namespace" sortBy={sortBy.namespace}>Namespace</TableCell>
-            <TableCell className="ready">Ready</TableCell>
-            <TableCell className="cpu" sortBy={sortBy.cpu}>CPU</TableCell>
-            <TableCell className="memory" sortBy={sortBy.memory}>Memory</TableCell>
-            <TableCell className="status">Status</TableCell>
+            <TableCell className={styles.name} sortBy={sortBy.name}>Name</TableCell>
+            <TableCell className={styles.warning}/>
+            <TableCell className={styles.node} sortBy={sortBy.node}>Node</TableCell>
+            <TableCell className={styles.namespace} sortBy={sortBy.namespace}>Namespace</TableCell>
+            <TableCell>Ready</TableCell>
+            <TableCell className={styles.cpu} sortBy={sortBy.cpu}>CPU</TableCell>
+            <TableCell className={styles.memory} sortBy={sortBy.memory}>Memory</TableCell>
+            <TableCell className={styles.status}>Status</TableCell>
           </TableHead>
         </Table>
       </div>

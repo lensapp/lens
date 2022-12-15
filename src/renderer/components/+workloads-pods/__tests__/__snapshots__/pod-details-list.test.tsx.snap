@@ -3,7 +3,7 @@
 exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
 <div>
   <div
-    class="PodDetailsList flex column"
+    class="PodDetailsList"
   >
     <div
       class="DrawerTitle title"
@@ -11,7 +11,7 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
       Pods
     </div>
     <div
-      class="Table flex column box grow selectable sortable autoSize"
+      class="Table flex column table selectable sortable autoSize"
     >
       <div
         class="TableHead sticky"
@@ -65,7 +65,7 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
           </i>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           Ready
         </div>
@@ -111,7 +111,11 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
         <div
           class="TableCell name"
         >
-          foobar
+          <span
+            id="pod-list-pod-item-foobar"
+          >
+            foobar
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -122,10 +126,14 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
         <div
           class="TableCell namespace"
         >
-          default
+          <span
+            id="pod-list-pod-namespace-foobar"
+          >
+            default
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -151,7 +159,11 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
         <div
           class="TableCell name"
         >
-          foobar-failed
+          <span
+            id="pod-list-pod-item-foobar-failed"
+          >
+            foobar-failed
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -162,10 +174,14 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
         <div
           class="TableCell namespace"
         >
-          kube-system
+          <span
+            id="pod-list-pod-namespace-foobar-failed"
+          >
+            kube-system
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -191,7 +207,11 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
         <div
           class="TableCell name"
         >
-          foobar-pending
+          <span
+            id="pod-list-pod-item-foobar-pending"
+          >
+            foobar-pending
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -202,10 +222,14 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
         <div
           class="TableCell namespace"
         >
-          default
+          <span
+            id="pod-list-pod-namespace-foobar-pending"
+          >
+            default
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -233,7 +257,7 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
 exports[`<PodDetailsList /> when few pods passed when metrics max values passed renders table with metric lines 1`] = `
 <div>
   <div
-    class="PodDetailsList flex column"
+    class="PodDetailsList"
   >
     <div
       class="DrawerTitle title"
@@ -241,7 +265,7 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
       Pods
     </div>
     <div
-      class="Table flex column box grow selectable sortable autoSize"
+      class="Table flex column table selectable sortable autoSize"
     >
       <div
         class="TableHead sticky"
@@ -295,7 +319,7 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </i>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           Ready
         </div>
@@ -341,7 +365,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar-pending
+          <span
+            id="pod-list-pod-item-foobar-pending"
+          >
+            foobar-pending
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -352,10 +380,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          default
+          <span
+            id="pod-list-pod-namespace-foobar-pending"
+          >
+            default
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -409,7 +441,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar-failed
+          <span
+            id="pod-list-pod-item-foobar-failed"
+          >
+            foobar-failed
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -420,10 +456,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          kube-system
+          <span
+            id="pod-list-pod-namespace-foobar-failed"
+          >
+            kube-system
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -477,7 +517,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar
+          <span
+            id="pod-list-pod-item-foobar"
+          >
+            foobar
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -488,10 +532,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          default
+          <span
+            id="pod-list-pod-namespace-foobar"
+          >
+            default
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -547,7 +595,7 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
 exports[`<PodDetailsList /> when few pods passed when metrics max values passed sorts table by cpu 1`] = `
 <div>
   <div
-    class="PodDetailsList flex column"
+    class="PodDetailsList"
   >
     <div
       class="DrawerTitle title"
@@ -555,7 +603,7 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
       Pods
     </div>
     <div
-      class="Table flex column box grow selectable sortable autoSize"
+      class="Table flex column table selectable sortable autoSize"
     >
       <div
         class="TableHead sticky"
@@ -609,7 +657,7 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </i>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           Ready
         </div>
@@ -655,7 +703,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar-pending
+          <span
+            id="pod-list-pod-item-foobar-pending"
+          >
+            foobar-pending
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -666,10 +718,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          default
+          <span
+            id="pod-list-pod-namespace-foobar-pending"
+          >
+            default
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -723,7 +779,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar-failed
+          <span
+            id="pod-list-pod-item-foobar-failed"
+          >
+            foobar-failed
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -734,10 +794,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          kube-system
+          <span
+            id="pod-list-pod-namespace-foobar-failed"
+          >
+            kube-system
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -791,7 +855,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar
+          <span
+            id="pod-list-pod-item-foobar"
+          >
+            foobar
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -802,10 +870,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          default
+          <span
+            id="pod-list-pod-namespace-foobar"
+          >
+            default
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -861,7 +933,7 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
 exports[`<PodDetailsList /> when few pods passed when metrics max values passed sorts table by memory 1`] = `
 <div>
   <div
-    class="PodDetailsList flex column"
+    class="PodDetailsList"
   >
     <div
       class="DrawerTitle title"
@@ -869,7 +941,7 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
       Pods
     </div>
     <div
-      class="Table flex column box grow selectable sortable autoSize"
+      class="Table flex column table selectable sortable autoSize"
     >
       <div
         class="TableHead sticky"
@@ -923,7 +995,7 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </i>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           Ready
         </div>
@@ -969,7 +1041,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar-failed
+          <span
+            id="pod-list-pod-item-foobar-failed"
+          >
+            foobar-failed
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -980,10 +1056,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          kube-system
+          <span
+            id="pod-list-pod-namespace-foobar-failed"
+          >
+            kube-system
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -1037,7 +1117,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar-pending
+          <span
+            id="pod-list-pod-item-foobar-pending"
+          >
+            foobar-pending
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -1048,10 +1132,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          default
+          <span
+            id="pod-list-pod-namespace-foobar-pending"
+          >
+            default
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -1105,7 +1193,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar
+          <span
+            id="pod-list-pod-item-foobar"
+          >
+            foobar
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -1116,10 +1208,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          default
+          <span
+            id="pod-list-pod-namespace-foobar"
+          >
+            default
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -1175,7 +1271,7 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
 exports[`<PodDetailsList /> when few pods passed when metrics max values passed sorts table by name 1`] = `
 <div>
   <div
-    class="PodDetailsList flex column"
+    class="PodDetailsList"
   >
     <div
       class="DrawerTitle title"
@@ -1183,7 +1279,7 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
       Pods
     </div>
     <div
-      class="Table flex column box grow selectable sortable autoSize"
+      class="Table flex column table selectable sortable autoSize"
     >
       <div
         class="TableHead sticky"
@@ -1237,7 +1333,7 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </i>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           Ready
         </div>
@@ -1283,7 +1379,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar-pending
+          <span
+            id="pod-list-pod-item-foobar-pending"
+          >
+            foobar-pending
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -1294,10 +1394,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          default
+          <span
+            id="pod-list-pod-namespace-foobar-pending"
+          >
+            default
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -1351,7 +1455,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar-failed
+          <span
+            id="pod-list-pod-item-foobar-failed"
+          >
+            foobar-failed
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -1362,10 +1470,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          kube-system
+          <span
+            id="pod-list-pod-namespace-foobar-failed"
+          >
+            kube-system
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
@@ -1419,7 +1531,11 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell name"
         >
-          foobar
+          <span
+            id="pod-list-pod-item-foobar"
+          >
+            foobar
+          </span>
         </div>
         <div
           class="TableCell warning"
@@ -1430,10 +1546,14 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
         <div
           class="TableCell namespace"
         >
-          default
+          <span
+            id="pod-list-pod-namespace-foobar"
+          >
+            default
+          </span>
         </div>
         <div
-          class="TableCell ready"
+          class="TableCell"
         >
           0 / 0
         </div>
