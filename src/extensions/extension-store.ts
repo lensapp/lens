@@ -27,12 +27,12 @@ export interface ExtensionStoreParams<T extends object> extends BaseStoreParams<
 }
 
 export abstract class ExtensionStore<T extends object> extends BaseStore<T> {
-  private static readonly instances = new WeakMap<object, ExtensionStore<object>>();
+  private static readonly instances = new WeakMap<object, any>();
 
   /**
    * @deprecated This is a form of global shared state. Just call `new Store(...)`
    */
-  static createInstance<T extends ExtensionStore<object>, R extends any[]>(this: StaticThis<T, R>, ...args: R): T {
+  static createInstance<T, R extends any[]>(this: StaticThis<T, R>, ...args: R): T {
     return getOrInsertWith(ExtensionStore.instances, this, () =>  new this(...args)) as T;
   }
 
