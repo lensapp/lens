@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { FileSystemProvisionerStore } from "./file-system-provisioner-store";
 import directoryForExtensionDataInjectable from "./directory-for-extension-data.injectable";
-import ensureDirectoryInjectable from "../../../common/fs/ensure-dir.injectable";
+import ensureDirectoryInjectable from "../../../common/fs/ensure-directory.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import randomBytesInjectable from "../../../common/utils/random-bytes.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
