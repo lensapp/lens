@@ -161,7 +161,7 @@ class NonInjectedDeploymentDetails extends React.Component<DeploymentDetailsProp
         <PodDetailsAffinities workload={deployment}/>
         <ResourceMetricsText metrics={this.metrics}/>
         <DeploymentReplicaSets replicaSets={replicaSets}/>
-        <PodDetailsList pods={childPods} owner={deployment}/>
+        <PodDetailsList pods={childPods}/>
       </div>
     );
   }

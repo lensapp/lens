@@ -133,7 +133,7 @@ class NonInjectedReplicaSetDetails extends React.Component<ReplicaSetDetailsProp
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <ResourceMetricsText metrics={this.metrics}/>
-        <PodDetailsList pods={childPods} owner={replicaSet}/>
+        <PodDetailsList pods={childPods}/>
       </div>
     );
   }

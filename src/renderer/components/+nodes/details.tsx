@@ -183,7 +183,6 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
         <NodeDetailsResources node={node} type="allocatable"/>
         <PodDetailsList
           pods={childPods}
-          owner={node}
           maxCpu={node.getCpuCapacity()}
           maxMemory={node.getMemoryCapacity()}
         />

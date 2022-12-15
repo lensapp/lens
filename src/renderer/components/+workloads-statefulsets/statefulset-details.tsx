@@ -132,7 +132,7 @@ class NonInjectedStatefulSetDetails extends React.Component<StatefulSetDetailsPr
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <ResourceMetricsText metrics={this.metrics}/>
-        <PodDetailsList pods={childPods} owner={statefulSet}/>
+        <PodDetailsList pods={childPods}/>
       </div>
     );
   }

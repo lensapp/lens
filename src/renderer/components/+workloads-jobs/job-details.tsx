@@ -149,7 +149,7 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
         <DrawerItem name="Pod Status" className="pod-status">
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
-        <PodDetailsList pods={childPods} owner={job}/>
+        <PodDetailsList pods={childPods} />
       </div>
     );
   }

@@ -133,7 +133,7 @@ class NonInjectedDaemonSetDetails extends React.Component<DaemonSetDetailsProps 
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <ResourceMetricsText metrics={this.metrics}/>
-        <PodDetailsList pods={childPods} owner={daemonSet}/>
+        <PodDetailsList pods={childPods}/>
       </div>
     );
   }

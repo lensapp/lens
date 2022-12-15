@@ -5,20 +5,22 @@
 
 import "./pod-details-list.scss";
 
-import React from "react";
+import { withInjectables } from "@ogre-tools/injectable-react";
 import kebabCase from "lodash/kebabCase";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { podStore } from "./legacy-store";
+import React from "react";
 import type { Pod } from "../../../common/k8s-api/endpoints";
-import { autoBind, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
-import { LineProgress } from "../line-progress";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { Table, TableCell, TableHead, TableRow } from "../table";
-import { Spinner } from "../spinner";
+import { bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
 import { DrawerTitle } from "../drawer";
-import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { showDetails } from "../kube-detail-params";
+import getDetailsUrlInjectable, { type GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { LineProgress } from "../line-progress";
+import { Spinner } from "../spinner";
+import { Table, TableCell, TableHead, TableRow } from "../table";
+import type { PodStore } from "./store";
+import podStoreInjectable from "./store.injectable";
 
 enum sortBy {
   name = "name",
@@ -30,26 +32,25 @@ enum sortBy {
 
 export interface PodDetailsListProps {
   pods: Pod[];
-  owner: KubeObject;
   maxCpu?: number;
   maxMemory?: number;
 }
 
-@observer
-export class PodDetailsList extends React.Component<PodDetailsListProps> {
-  constructor(props: PodDetailsListProps) {
-    super(props);
-    autoBind(this);
-  }
+interface Dependencies {
+  getDetailsUrl: GetDetailsUrl;
+  podStore: PodStore;
+}
 
+@observer
+export class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & Dependencies> {
   private metricsWatcher = interval(120, () => {
-    podStore.loadKubeMetrics(this.props.owner.getNs());
+    this.props.podStore.loadKubeMetrics(this.props.pods[0]?.getNs());
   });
 
   componentDidMount() {
     this.metricsWatcher.start(true);
     disposeOnUnmount(this, [
-      reaction(() => this.props.owner, () => this.metricsWatcher.restart(true)),
+      reaction(() => this.props.pods[0]?.getNs(), () => this.metricsWatcher.restart(true)),
     ]);
   }
 
@@ -114,7 +115,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
       return;
     }
 
-    const metrics = podStore.getPodKubeMetrics(pod);
+    const metrics = this.props.podStore.getPodKubeMetrics(pod);
 
     return (
       <TableRow
@@ -138,7 +139,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
   }
 
   render() {
-    const { pods } = this.props;
+    const { pods, podStore } = this.props;
 
     if (!podStore.isLoaded) {
       return (
@@ -149,7 +150,11 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
     }
 
     if (!pods.length) {
-      return null;
+      return (
+        <div>
+          No items found
+        </div>
+      );
     }
 
     const virtual = pods.length > 20;
@@ -197,3 +202,11 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
     );
   }
 }
+
+export const PodDetailsList = withInjectables<Dependencies, PodDetailsListProps>(NonInjectedPodDetailsList, {
+  getProps: (di, props) => ({
+    ...props,
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    podStore: di.inject(podStoreInjectable),
+  }),
+});
