@@ -6,6 +6,7 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { DiContainer } from "@ogre-tools/injectable";
+import { fireEvent } from "@testing-library/react";
 import React from "react";
 import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import fetchInjectable, { Fetch } from "../../../../common/fetch/fetch.injectable";
@@ -88,7 +89,7 @@ const failedPod = new Pod({
       kind: "ReplicaSet",
       name: "failed",
     }],
-    namespace: "default",
+    namespace: "kube-system",
     selfLink: "/apis/apps/v1/replicasets/default/foobar-failed",
   },
   status: {
@@ -177,6 +178,109 @@ describe("<PodDetailsList />", () => {
       );
 
       expect(result.container).toMatchSnapshot();
+    });
+
+    describe("when metrics max values passed", () => {
+      beforeEach(() => {
+        podStore.getPodKubeMetrics = (pod: Pod) => {
+          let cpu = 0.4;
+          let memory = 1024;
+
+          switch(pod.getId()) {
+            case "foobar":
+              cpu = 0.2;
+              memory = 128;
+              break;
+            case "foobar-pending":
+              cpu = 0.5;
+              memory = 256;
+          }
+
+          return {
+            cpu,
+            memory
+          }
+        };
+      });
+
+      it("renders table with metric lines", () => {
+        const result = render(
+          <PodDetailsList
+            pods={[
+              runningPod,
+              failedPod,
+              pendingPod,
+            ]}
+            maxCpu={1}
+            maxMemory={2048}
+          />
+        );
+
+        expect(result.container).toMatchSnapshot();
+      });
+
+      it("sorts table by name", () => {
+        const result = render(
+          <PodDetailsList
+            pods={[
+              runningPod,
+              failedPod,
+              pendingPod,
+            ]}
+            maxCpu={1}
+            maxMemory={2048}
+          />
+        );
+
+        const column = result.getByText("Name");
+
+        fireEvent.click(column);
+        fireEvent.click(column);
+
+        expect(result.container).toMatchSnapshot();
+      });
+
+      it("sorts table by cpu", () => {
+        const result = render(
+          <PodDetailsList
+            pods={[
+              runningPod,
+              failedPod,
+              pendingPod,
+            ]}
+            maxCpu={1}
+            maxMemory={2048}
+          />
+        );
+
+        const column = result.getByText("CPU");
+
+        fireEvent.click(column);
+        fireEvent.click(column);
+
+        expect(result.container).toMatchSnapshot();
+      });
+
+      it("sorts table by memory", () => {
+        const result = render(
+          <PodDetailsList
+            pods={[
+              runningPod,
+              failedPod,
+              pendingPod,
+            ]}
+            maxCpu={1}
+            maxMemory={2048}
+          />
+        );
+
+        const column = result.getByText("Memory");
+
+        fireEvent.click(column);
+        fireEvent.click(column);
+
+        expect(result.container).toMatchSnapshot();
+      });
     });
   });
 });
