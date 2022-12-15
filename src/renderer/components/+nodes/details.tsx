@@ -68,6 +68,8 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
         this.props.podStore,
       ]),
     ]);
+
+    this.loadAllPods();
   }
 
   loadAllPods() {
