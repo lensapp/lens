@@ -267,7 +267,7 @@
     "readable-stream": "^3.6.0",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.9",
-    "rfc6902": "^4.0.2",
+    "rfc6902": "^5.0.0",
     "selfsigned": "^2.1.1",
     "semver": "^7.3.8",
     "tar": "^6.1.13",
