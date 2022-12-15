@@ -1,6 +1,4 @@
 .controls {
-  @include hidden-scrollbar;
-
   display: flex;
   gap: var(--padding);
   align-items: center;

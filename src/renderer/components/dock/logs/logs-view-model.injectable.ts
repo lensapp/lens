@@ -20,6 +20,7 @@ import getPodsByOwnerIdInjectable from "../../+workloads-pods/get-pods-by-owner-
 import getPodByIdInjectable from "../../+workloads-pods/get-pod-by-id.injectable";
 import downloadLogsInjectable from "./download-logs.injectable";
 import downloadAllLogsInjectable from "./download-all-logs.injectable";
+import getVisibleLogsInjectable from "./get-visible-logs.injectable";
 
 export interface InstantiateArgs {
   tabId: TabId;
@@ -32,6 +33,7 @@ const logsViewModelInjectable = getInjectable({
     getLogs: di.inject(getLogsInjectable),
     getLogsWithoutTimestamps: di.inject(getLogsWithoutTimestampsInjectable),
     getTimestampSplitLogs: di.inject(getTimestampSplitLogsInjectable),
+    getVisibleLogs: di.inject(getVisibleLogsInjectable),
     reloadLogs: di.inject(reloadLogsInjectable),
     getLogTabData: di.inject(getLogTabDataInjectable),
     setLogTabData: di.inject(setLogTabDataInjectable),

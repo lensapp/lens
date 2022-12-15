@@ -31,6 +31,7 @@ const createLogsTab = ({ createDockTab, setLogTabData, getRandomId }: Dependenci
     setLogTabData(id, {
       showTimestamps: false,
       showPrevious: false,
+      wrap: false,
       ...data,
     });
   });

@@ -748,31 +748,37 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                 </div>
               </div>
               <div
-                class="LogList flex"
+                class="LogList"
+                data-testid="pod-log-list"
               >
                 <div
-                  class="VirtualList box grow"
+                  class="virtualizer"
+                  style="height: 0px;"
                 >
-                  <div>
-                    <div
-                      class="list"
-                      style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
-                    >
+                  <div
+                    class="anchorLine"
+                    style="top: 0px;"
+                  />
+                  <div
+                    class="rowWrapper"
+                    data-index="0"
+                    style="transform: translateY(0px);"
+                  >
+                    <div>
                       <div
-                        style="height: 18px; width: 100%;"
+                        class="LogRow"
                       >
-                        <div
-                          class="LogRow"
-                          style="position: absolute; left: 0px; top: 0px; height: 18px; width: 100%;"
-                        >
-                          <span>
-                            some-logs
-                          </span>
-                          <br />
-                        </div>
+                        <span>
+                          some-logs
+                        </span>
+                        <br />
                       </div>
                     </div>
                   </div>
+                  <div
+                    class="anchorLine"
+                    style="bottom: 0px;"
+                  />
                 </div>
               </div>
               <div
@@ -791,6 +797,21 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                 <div
                   class="flex gaps align-center"
                 >
+                  <label
+                    class="Checkbox flex align-center wrap-logs"
+                  >
+                    <input
+                      type="checkbox"
+                    />
+                    <i
+                      class="box flex align-center"
+                    />
+                    <span
+                      class="label"
+                    >
+                      Wrap logs
+                    </span>
+                  </label>
                   <label
                     class="Checkbox flex align-center show-timestamps"
                   >
@@ -1603,11 +1624,22 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                 </div>
               </div>
               <div
-                class="LogList flex box grow align-center justify-center"
+                class="LogList"
+                data-testid="pod-log-list"
               >
-                There are no logs available for container
-                 
-                docker-exporter
+                <div
+                  class="virtualizer"
+                  style="height: 0px;"
+                >
+                  <div
+                    class="anchorLine"
+                    style="top: 0px;"
+                  />
+                  <div
+                    class="anchorLine"
+                    style="bottom: 0px;"
+                  />
+                </div>
               </div>
               <div
                 class="controls"
@@ -1617,6 +1649,21 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                 <div
                   class="flex gaps align-center"
                 >
+                  <label
+                    class="Checkbox flex align-center wrap-logs"
+                  >
+                    <input
+                      type="checkbox"
+                    />
+                    <i
+                      class="box flex align-center"
+                    />
+                    <span
+                      class="label"
+                    >
+                      Wrap logs
+                    </span>
+                  </label>
                   <label
                     class="Checkbox flex align-center show-timestamps"
                   >

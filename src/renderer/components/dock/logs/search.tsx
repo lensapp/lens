@@ -13,18 +13,13 @@ import type { LogTabViewModel } from "./logs-view-model";
 
 export interface PodLogSearchProps {
   onSearch?: (query: string) => void;
-  scrollToOverlay: (lineNumber: number | undefined) => void;
   model: LogTabViewModel;
 }
 
-export const LogSearch = observer(({ onSearch, scrollToOverlay, model: { logTabData, searchStore, ...model }}: PodLogSearchProps) => {
+export const LogSearch = observer(({ onSearch, model: { logTabData, searchStore, ...model }}: PodLogSearchProps) => {
   const tabData = logTabData.get();
 
-  if (!tabData) {
-    return null;
-  }
-
-  const logs = tabData.showTimestamps
+  const logs = tabData?.showTimestamps
     ? model.logs.get()
     : model.logsWithoutTimestamps.get();
   const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = searchStore;
@@ -33,17 +28,14 @@ export const LogSearch = observer(({ onSearch, scrollToOverlay, model: { logTabD
   const setSearch = (query: string) => {
     searchStore.onSearch(logs, query);
     onSearch?.(query);
-    scrollToOverlay(searchStore.activeOverlayLine);
   };
 
   const onPrevOverlay = () => {
     setPrevOverlayActive();
-    scrollToOverlay(searchStore.activeOverlayLine);
   };
 
   const onNextOverlay = () => {
     setNextOverlayActive();
-    scrollToOverlay(searchStore.activeOverlayLine);
   };
 
   const onClear = () => {

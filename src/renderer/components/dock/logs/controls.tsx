@@ -25,11 +25,15 @@ export const LogControls = observer(({ model }: LogControlsProps) => {
   }
 
   const logs = model.timestampSplitLogs.get();
-  const { showTimestamps, showPrevious: previous } = tabData;
+  const { showTimestamps, showPrevious: previous, wrap } = tabData;
   const since = logs.length ? logs[0][0] : null;
 
   const toggleTimestamps = () => {
     model.updateLogTabData({ showTimestamps: !showTimestamps });
+  };
+
+  const toggleWrap = () => {
+    model.updateLogTabData({ wrap: !wrap });
   };
 
   const togglePrevious = () => {
@@ -49,6 +53,12 @@ export const LogControls = observer(({ model }: LogControlsProps) => {
         )}
       </div>
       <div className="flex gaps align-center">
+        <Checkbox
+          label="Wrap logs"
+          value={wrap}
+          onChange={toggleWrap}
+          className="wrap-logs"
+        />
         <Checkbox
           label="Show timestamps"
           value={showTimestamps}

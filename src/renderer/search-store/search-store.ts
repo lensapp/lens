@@ -123,6 +123,8 @@ export class SearchStore {
    * @returns A line index within the text/logs array
    */
   @computed get activeOverlayLine(): number {
+    if (!this.occurrences.length) return -1;
+
     return this.occurrences[this.activeOverlayIndex];
   }
 

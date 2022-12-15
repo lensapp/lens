@@ -105,7 +105,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
 
       // Check if controls are available
       await frame.waitForSelector(".Dock.isOpen");
-      await frame.waitForSelector(".LogList .VirtualList");
+      await frame.waitForSelector("[data-testid=pod-log-list]");
       await frame.waitForSelector(".LogResourceSelector");
 
       const logSearchInput = await frame.waitForSelector(
@@ -113,19 +113,25 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       );
 
       await logSearchInput.type(":");
-      await frame.waitForSelector(".LogList .list span.active");
+      await frame.waitForSelector("[data-testid=search-overlay-active]");
 
-      const showTimestampsButton = await frame.waitForSelector(
+      const showTimestampsCheckbox = await frame.waitForSelector(
         "[data-testid='log-controls'] .show-timestamps",
       );
 
-      await showTimestampsButton.click();
+      await showTimestampsCheckbox.click();
 
-      const showPreviousButton = await frame.waitForSelector(
+      const showPreviousCheckbox = await frame.waitForSelector(
         "[data-testid='log-controls'] .show-previous",
       );
 
-      await showPreviousButton.click();
+      await showPreviousCheckbox.click();
+
+      const showWrapLogsCheckbox = await frame.waitForSelector(
+        "[data-testid='log-controls'] .wrap-logs",
+      );
+
+      await showWrapLogsCheckbox.click();
     },
     10 * 60 * 1000,
   );

@@ -19,6 +19,7 @@ export interface LogTabViewModelDependencies {
   getLogs: (tabId: TabId) => string[];
   getLogsWithoutTimestamps: (tabId: TabId) => string[];
   getTimestampSplitLogs: (tabId: TabId) => [string, string][];
+  getVisibleLogs: (tabId: TabId) => string[];
   getLogTabData: (tabId: TabId) => LogTabData | undefined;
   setLogTabData: (tabId: TabId, data: LogTabData) => void;
   loadLogs: LoadLogs;
@@ -45,6 +46,7 @@ export class LogTabViewModel {
   readonly logsWithoutTimestamps = computed(() => this.dependencies.getLogsWithoutTimestamps(this.tabId));
   readonly timestampSplitLogs = computed(() => this.dependencies.getTimestampSplitLogs(this.tabId));
   readonly logTabData = computed(() => this.dependencies.getLogTabData(this.tabId));
+  readonly visibleLogs = computed(() => this.dependencies.getVisibleLogs(this.tabId));
   readonly pods = computed(() => {
     const data = this.logTabData.get();
 

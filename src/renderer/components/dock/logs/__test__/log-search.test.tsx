@@ -20,6 +20,7 @@ function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependen
   return new LogTabViewModel(tabId, {
     getLogs: jest.fn(),
     getLogsWithoutTimestamps: jest.fn(),
+    getVisibleLogs: jest.fn(),
     getTimestampSplitLogs: jest.fn(),
     getLogTabData: jest.fn(),
     setLogTabData: jest.fn(),
@@ -47,6 +48,7 @@ const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependenc
       namespace: selectedPod.getNs(),
       showPrevious: false,
       showTimestamps: false,
+      wrap: false,
     }),
     getPodById: (id) => {
       if (id === selectedPod.getId()) {
@@ -61,27 +63,38 @@ const getOnePodViewModel = (tabId: TabId, deps: Partial<LogTabViewModelDependenc
 
 describe("LogSearch tests", () => {
   let render: DiRender;
+  let setPrevOverlayActiveMock: jest.SpyInstance<void, []>;
+  let setNextOverlayActiveMock: jest.SpyInstance<void, []>;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
+    setPrevOverlayActiveMock = jest
+      .spyOn(SearchStore.prototype, "setPrevOverlayActive")
+      .mockImplementation(() => jest.fn());
+
+    setNextOverlayActiveMock = jest
+      .spyOn(SearchStore.prototype, "setNextOverlayActive")
+      .mockImplementation(() => jest.fn());
+
     render = renderFor(di);
+  });
+
+  afterEach(() => {
+    setNextOverlayActiveMock.mockClear();
+    setPrevOverlayActiveMock.mockClear();
   });
 
   it("renders w/o errors", () => {
     const model = getOnePodViewModel("foobar");
     const { container } = render(
-      <LogSearch
-        model={model}
-        scrollToOverlay={jest.fn()}
-      />,
+      <LogSearch model={model}/>,
     );
 
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
   it("should scroll to new active overlay when clicking the previous button", async () => {
-    const scrollToOverlay = jest.fn();
     const model = getOnePodViewModel("foobar", {
       getLogsWithoutTimestamps: () => [
         "hello",
@@ -90,20 +103,16 @@ describe("LogSearch tests", () => {
     });
 
     render(
-      <LogSearch
-        model={model}
-        scrollToOverlay={scrollToOverlay}
-      />,
+      <LogSearch model={model}/>,
     );
-
+    
     userEvent.click(await screen.findByPlaceholderText("Search..."));
     userEvent.keyboard("o");
     userEvent.click(await screen.findByText("keyboard_arrow_up"));
-    expect(scrollToOverlay).toBeCalled();
+    expect(setPrevOverlayActiveMock).toHaveBeenCalled();
   });
 
   it("should scroll to new active overlay when clicking the next button", async () => {
-    const scrollToOverlay = jest.fn();
     const model = getOnePodViewModel("foobar", {
       getLogsWithoutTimestamps: () => [
         "hello",
@@ -112,20 +121,16 @@ describe("LogSearch tests", () => {
     });
 
     render(
-      <LogSearch
-        model={model}
-        scrollToOverlay={scrollToOverlay}
-      />,
+      <LogSearch model={model}/>,
     );
 
     userEvent.click(await screen.findByPlaceholderText("Search..."));
     userEvent.keyboard("o");
     userEvent.click(await screen.findByText("keyboard_arrow_down"));
-    expect(scrollToOverlay).toBeCalled();
+    expect(setNextOverlayActiveMock).toBeCalled();
   });
 
   it("next and previous should be disabled initially", async () => {
-    const scrollToOverlay = jest.fn();
     const model = getOnePodViewModel("foobar", {
       getLogsWithoutTimestamps: () => [
         "hello",
@@ -134,14 +139,12 @@ describe("LogSearch tests", () => {
     });
 
     render(
-      <LogSearch
-        model={model}
-        scrollToOverlay={scrollToOverlay}
-      />,
+      <LogSearch model={model}/>,
     );
 
     userEvent.click(await screen.findByText("keyboard_arrow_down"));
     userEvent.click(await screen.findByText("keyboard_arrow_up"));
-    expect(scrollToOverlay).not.toBeCalled();
+    expect(setNextOverlayActiveMock).not.toBeCalled();
+    expect(setPrevOverlayActiveMock).not.toBeCalled();
   });
 });
