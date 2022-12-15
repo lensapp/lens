@@ -1,8 +1,7 @@
 name: Publish NPM Package Release
 on:
-  release:
-    types:
-      - published
+  workflow_call:
+  workflow_dispatch:
 jobs:
   publish:
     name: Publish NPM Package Release
