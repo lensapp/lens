@@ -459,6 +459,10 @@ describe("runManyFor", () => {
       expect(runMock).toBeCalledWith("runnable-2");
     });
 
+    it("should not run 'runnable-3'", () => {
+      expect(runMock).not.toBeCalledWith("runnable-3");
+    });
+
     describe("when 'runnable-1' resolves", () => {
       beforeEach(async () => {
         await runMock.resolveSpecific(["runnable-1"]);
