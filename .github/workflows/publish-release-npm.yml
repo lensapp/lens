@@ -1,7 +1,16 @@
 name: Publish NPM Package Release
 on:
   workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
   workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        type: string
+        description: The version to release manually
 jobs:
   publish:
     name: Publish NPM Package Release
@@ -14,6 +23,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: ${{ inputs.version }}
 
       - name: Using Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
