@@ -76,7 +76,7 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
     this.props.podStore.loadAll({
       namespaces: [...this.props.namespaceStore.getItems().map(ns => ns.getName())],
       onLoadFailure: error =>
-        this.props.showErrorNotification(`Can not load Pods. ${String(error)}`)
+        this.props.showErrorNotification(`Can not load Pods. ${String(error)}`),
     });
   }
 
@@ -216,7 +216,7 @@ export const NodeDetails = withInjectables<Dependencies, NodeDetailsProps>(NonIn
     namespaceStore: di.inject(namespaceStoreInjectable),
     getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
     requestClusterMetricsByNodeNames: di.inject(requestClusterMetricsByNodeNamesInjectable),
-    showErrorNotification: di.inject(showErrorNotificationInjectable)
+    showErrorNotification: di.inject(showErrorNotificationInjectable),
   }),
 });
 

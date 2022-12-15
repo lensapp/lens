@@ -9,11 +9,13 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { fireEvent } from "@testing-library/react";
 import React from "react";
 import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
-import fetchInjectable, { Fetch } from "../../../../common/fetch/fetch.injectable";
+import type { Fetch } from "../../../../common/fetch/fetch.injectable";
+import fetchInjectable from "../../../../common/fetch/fetch.injectable";
 import { Pod } from "../../../../common/k8s-api/endpoints";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
-import { DiRender, renderFor } from "../../test-utils/renderFor";
+import type { DiRender } from "../../test-utils/renderFor";
+import { renderFor } from "../../test-utils/renderFor";
 import { PodDetailsList } from "../pod-details-list";
 import type { PodStore } from "../store";
 import podStoreInjectable from "../store.injectable";
@@ -132,7 +134,7 @@ describe("<PodDetailsList />", () => {
       const result = render(
         <PodDetailsList
           pods={[]}
-        />
+        />,
       );
 
       expect(result.container).toMatchSnapshot();
@@ -142,7 +144,7 @@ describe("<PodDetailsList />", () => {
       const result = render(
         <PodDetailsList
           pods={[]}
-        />
+        />,
       );
 
       expect(result.getByText("No items found")).toBeInTheDocument();
@@ -154,7 +156,7 @@ describe("<PodDetailsList />", () => {
       const result = render(
         <PodDetailsList
           pods={[]}
-        />
+        />,
       );
 
       expect(result.container).toMatchSnapshot();
@@ -174,7 +176,7 @@ describe("<PodDetailsList />", () => {
             failedPod,
             pendingPod,
           ]}
-        />
+        />,
       );
 
       expect(result.container).toMatchSnapshot();
@@ -198,8 +200,8 @@ describe("<PodDetailsList />", () => {
 
           return {
             cpu,
-            memory
-          }
+            memory,
+          };
         };
       });
 
@@ -213,7 +215,7 @@ describe("<PodDetailsList />", () => {
             ]}
             maxCpu={1}
             maxMemory={2048}
-          />
+          />,
         );
 
         expect(result.container).toMatchSnapshot();
@@ -229,7 +231,7 @@ describe("<PodDetailsList />", () => {
             ]}
             maxCpu={1}
             maxMemory={2048}
-          />
+          />,
         );
 
         const column = result.getByText("Name");
@@ -250,7 +252,7 @@ describe("<PodDetailsList />", () => {
             ]}
             maxCpu={1}
             maxMemory={2048}
-          />
+          />,
         );
 
         const column = result.getByText("CPU");
@@ -271,7 +273,7 @@ describe("<PodDetailsList />", () => {
             ]}
             maxCpu={1}
             maxMemory={2048}
-          />
+          />,
         );
 
         const column = result.getByText("Memory");
