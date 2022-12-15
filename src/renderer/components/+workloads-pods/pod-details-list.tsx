@@ -21,10 +21,6 @@ import { Spinner } from "../spinner";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { PodStore } from "./store";
 import podStoreInjectable from "./store.injectable";
-import namespaceStoreInjectable from "../+namespaces/store.injectable";
-import type { NamespaceStore } from "../+namespaces/store";
-import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
-import type { ShowNotification } from "../notifications/notifications";
 
 enum sortBy {
   name = "name",
@@ -43,8 +39,6 @@ export interface PodDetailsListProps {
 interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
   podStore: PodStore;
-  namespaceStore: NamespaceStore;
-  showErrorNotification: ShowNotification;
 }
 
 @observer
@@ -58,14 +52,6 @@ export class NonInjectedPodDetailsList extends React.Component<PodDetailsListPro
     disposeOnUnmount(this, [
       reaction(() => this.props.pods[0]?.getNs(), () => this.metricsWatcher.restart(true)),
     ]);
-
-    this.props.podStore.loadAll({
-      namespaces: [
-        ...this.props.namespaceStore.getItems().map(ns => ns.getName())
-      ],
-      onLoadFailure: error =>
-        this.props.showErrorNotification(`Can not load Pods. ${String(error)}`)
-    });
   }
 
   componentWillUnmount() {
@@ -222,7 +208,5 @@ export const PodDetailsList = withInjectables<Dependencies, PodDetailsListProps>
     ...props,
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     podStore: di.inject(podStoreInjectable),
-    namespaceStore: di.inject(namespaceStoreInjectable),
-    showErrorNotification: di.inject(showErrorNotificationInjectable)
   }),
 });

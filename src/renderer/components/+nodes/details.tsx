@@ -31,6 +31,10 @@ import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import type { ClusterMetricData, RequestClusterMetricsByNodeNames } from "../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
 import requestClusterMetricsByNodeNamesInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
+import type { ShowNotification } from "../notifications/notifications";
+import type { NamespaceStore } from "../+namespaces/store";
+import namespaceStoreInjectable from "../+namespaces/store.injectable";
+import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 
 export interface NodeDetailsProps extends KubeObjectDetailsProps<Node> {
 }
@@ -40,6 +44,8 @@ interface Dependencies {
   podStore: PodStore;
   getActiveClusterEntity: GetActiveClusterEntity;
   requestClusterMetricsByNodeNames: RequestClusterMetricsByNodeNames;
+  namespaceStore: NamespaceStore;
+  showErrorNotification: ShowNotification;
 }
 
 @observer
@@ -55,12 +61,21 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
     disposeOnUnmount(this, [
       reaction(() => this.props.object.getName(), () => {
         this.metrics = null;
+        this.loadAllPods();        
       }),
 
       this.props.subscribeStores([
         this.props.podStore,
       ]),
     ]);
+  }
+
+  loadAllPods() {
+    this.props.podStore.loadAll({
+      namespaces: [...this.props.namespaceStore.getItems().map(ns => ns.getName())],
+      onLoadFailure: error =>
+        this.props.showErrorNotification(`Can not load Pods. ${String(error)}`)
+    });
   }
 
   loadMetrics = async () => {
@@ -196,8 +211,10 @@ export const NodeDetails = withInjectables<Dependencies, NodeDetailsProps>(NonIn
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
+    namespaceStore: di.inject(namespaceStoreInjectable),
     getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
     requestClusterMetricsByNodeNames: di.inject(requestClusterMetricsByNodeNamesInjectable),
+    showErrorNotification: di.inject(showErrorNotificationInjectable)
   }),
 });
 
