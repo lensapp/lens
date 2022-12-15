@@ -25,7 +25,6 @@ jobs:
           make build-npm
 
       - name: publish new release
-        if: contains(github.ref, 'refs/tags/v')
         run: |
           make publish-npm
         env:
