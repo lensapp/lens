@@ -60,7 +60,6 @@
     "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
     "welcomeRoute": "/welcome",
     "extensions": [
-      "kube-object-event-status",
       "metrics-cluster-feature",
       "node-menu",
       "pod-menu"
@@ -234,7 +233,6 @@
     "joi": "^17.7.0",
     "js-yaml": "^4.1.0",
     "jsdom": "^16.7.0",
-    "kube-object-event-status": "file:./extensions/kube-object-event-status",
     "lens-metrics-cluster-feature": "file:./extensions/metrics-cluster-feature",
     "lens-node-menu": "file:./extensions/node-menu",
     "lens-pod-menu": "file:./extensions/pod-menu",
