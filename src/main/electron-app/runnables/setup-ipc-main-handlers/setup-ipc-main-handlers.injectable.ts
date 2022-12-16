@@ -7,11 +7,10 @@ import { setupIpcMainHandlers } from "./setup-ipc-main-handlers";
 import loggerInjectable from "../../../../common/logger.injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import { onLoadOfApplicationInjectionToken } from "../../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
-import operatingSystemThemeInjectable from "../../../theme/operating-system-theme.injectable";
 import catalogEntityRegistryInjectable from "../../../catalog/entity-registry.injectable";
-import askUserForFilePathsInjectable from "../../../ipc/ask-user-for-file-paths.injectable";
 import applicationMenuItemCompositeInjectable from "../../../../features/application-menu/main/application-menu-item-composite.injectable";
 import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
+import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
@@ -21,9 +20,8 @@ const setupIpcMainHandlersInjectable = getInjectable({
     const applicationMenuItemComposite = di.inject(applicationMenuItemCompositeInjectable);
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const clusterStore = di.inject(clusterStoreInjectable);
-    const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
-    const askUserForFilePaths = di.inject(askUserForFilePathsInjectable);
     const emitAppEvent = di.inject(emitAppEventInjectable);
+    const getClusterById = di.inject(getClusterByIdInjectable);
 
     return {
       id: "setup-ipc-main-handlers",
@@ -34,9 +32,8 @@ const setupIpcMainHandlersInjectable = getInjectable({
           applicationMenuItemComposite,
           catalogEntityRegistry,
           clusterStore,
-          operatingSystemTheme,
-          askUserForFilePaths,
           emitAppEvent,
+          getClusterById,
         });
       },
     };

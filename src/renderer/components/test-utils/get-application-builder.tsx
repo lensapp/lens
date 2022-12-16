@@ -63,12 +63,15 @@ import type { FakeExtensionOptions } from "./get-extension-fake";
 import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
-import { overrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
+import { getOverrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
 import applicationMenuItemCompositeInjectable from "../../../features/application-menu/main/application-menu-item-composite.injectable";
 import { getCompositePaths } from "../../../common/utils/composite/get-composite-paths/get-composite-paths";
 import { discoverFor } from "./discovery-of-html-elements";
 import { findComposite } from "../../../common/utils/composite/find-composite/find-composite";
 import shouldStartHiddenInjectable from "../../../main/electron-app/features/should-start-hidden.injectable";
+import fsInjectable from "../../../common/fs/fs.injectable";
+import joinPathsInjectable from "../../../common/path/join-paths.injectable";
+import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -114,6 +117,7 @@ export interface ApplicationBuilder {
 
   allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
+  afterApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeWindowStart: (callback: Callback) => ApplicationBuilder;
   afterWindowStart: (callback: Callback) => ApplicationBuilder;
 
@@ -170,12 +174,22 @@ export const getApplicationBuilder = () => {
   const { overrideForWindow, sendToWindow } = overrideChannels(mainDi);
 
   const beforeApplicationStartCallbacks: Callback[] = [];
+  const afterApplicationStartCallbacks: Callback[] = [];
   const beforeWindowStartCallbacks: Callback[] = [];
   const afterWindowStartCallbacks: Callback[] = [];
 
-  const fsState = new Map();
+  const overrideFsWithFakes = getOverrideFsWithFakes();
 
-  overrideFsWithFakes(mainDi, fsState);
+  overrideFsWithFakes(mainDi);
+
+  // Set up ~/.kube as existing as a folder
+  {
+    const { ensureDirSync } = mainDi.inject(fsInjectable);
+    const joinPaths = mainDi.inject(joinPathsInjectable);
+    const homeDirectoryPath = mainDi.inject(homeDirectoryPathInjectable);
+
+    ensureDirSync(joinPaths(homeDirectoryPath, ".kube"));
+  }
 
   let environment = environments.application;
 
@@ -210,7 +224,7 @@ export const getApplicationBuilder = () => {
     const windowDi = getRendererDi({ doGeneralOverrides: true });
 
     overrideForWindow(windowDi, windowId);
-    overrideFsWithFakes(windowDi, fsState);
+    overrideFsWithFakes(windowDi);
 
     runInAction(() => {
       windowDi.register(rendererExtensionsStateInjectable);
@@ -276,6 +290,24 @@ export const getApplicationBuilder = () => {
   const namespaces = observable.set<string>();
   const namespaceItems = observable.array<Namespace>();
   const selectedNamespaces = observable.set<string>();
+  const startMainApplication = mainDi.inject(startMainApplicationInjectable);
+
+  const startApplication = async ({ shouldStartHidden }: { shouldStartHidden: boolean }) => {
+    mainDi.inject(lensProxyPortInjectable).set(42);
+
+    for (const callback of beforeApplicationStartCallbacks) {
+      await callback(mainDi);
+    }
+
+    mainDi.override(shouldStartHiddenInjectable, () => shouldStartHidden);
+    await startMainApplication();
+
+    for (const callback of afterApplicationStartCallbacks) {
+      await callback(mainDi);
+    }
+
+    applicationHasStarted = true;
+  };
 
   const builder: ApplicationBuilder = {
     mainDi,
@@ -556,7 +588,7 @@ export const getApplicationBuilder = () => {
       },
 
       enable: (...extensions) => {
-        builder.beforeWindowStart((windowDi) => {
+        builder.afterWindowStart((windowDi) => {
           const rendererExtensionInstances = extensions.map((options) =>
             getExtensionFakeForRenderer(
               windowDi,
@@ -571,7 +603,7 @@ export const getApplicationBuilder = () => {
           );
         });
 
-        builder.beforeApplicationStart((mainDi) => {
+        builder.afterApplicationStart((mainDi) => {
           const mainExtensionInstances = extensions.map((extension) =>
             getExtensionFakeForMain(mainDi, extension.id, extension.name, extension.mainOptions || {}),
           );
@@ -585,7 +617,7 @@ export const getApplicationBuilder = () => {
       },
 
       disable: (...extensions) => {
-        builder.beforeWindowStart(windowDi => {
+        builder.afterWindowStart(windowDi => {
           extensions
             .map((ext) => ext.id)
             .forEach(
@@ -593,7 +625,7 @@ export const getApplicationBuilder = () => {
             );
         });
 
-        builder.beforeApplicationStart(mainDi => {
+        builder.afterApplicationStart(mainDi => {
           extensions
             .map((ext) => ext.id)
             .forEach(
@@ -623,6 +655,16 @@ export const getApplicationBuilder = () => {
       return builder;
     },
 
+    afterApplicationStart(callback) {
+      if (applicationHasStarted) {
+        callback(mainDi);
+      }
+
+      afterApplicationStartCallbacks.push(callback);
+
+      return builder;
+    },
+
     beforeWindowStart(callback) {
       const alreadyRenderedWindows = builder.applicationWindow.getAll();
 
@@ -648,29 +690,11 @@ export const getApplicationBuilder = () => {
     },
 
     startHidden: async () => {
-      mainDi.inject(lensProxyPortInjectable).set(42);
-
-      for (const callback of beforeApplicationStartCallbacks) {
-        await callback(mainDi);
-      }
-
-      mainDi.override(shouldStartHiddenInjectable, () => true);
-      await mainDi.inject(startMainApplicationInjectable);
-
-      applicationHasStarted = true;
+      await startApplication({ shouldStartHidden: true });
     },
 
     async render() {
-      mainDi.inject(lensProxyPortInjectable).set(42);
-
-      for (const callback of beforeApplicationStartCallbacks) {
-        await callback(mainDi);
-      }
-
-      mainDi.override(shouldStartHiddenInjectable, () => false);
-      await mainDi.inject(startMainApplicationInjectable);
-
-      applicationHasStarted = true;
+      await startApplication({ shouldStartHidden: false });
 
       return builder
         .applicationWindow

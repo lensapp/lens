@@ -11,7 +11,7 @@ import ChartJS from "chart.js";
 import type { ChartProps } from "./chart";
 import { Chart } from "./chart";
 import { cssNames } from "../../utils";
-import type { LensTheme } from "../../themes/store";
+import type { LensTheme } from "../../themes/lens-theme";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import activeThemeInjectable from "../../themes/active.injectable";

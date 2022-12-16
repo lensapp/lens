@@ -17,7 +17,7 @@ const podDisruptionBudgetDetailItemInjectable = getInjectable({
 
     return {
       Component: PodDisruptionBudgetDetails,
-      enabled: computed(() => isPodDisruptionBudget(kubeObject.get())),
+      enabled: computed(() => isPodDisruptionBudget(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

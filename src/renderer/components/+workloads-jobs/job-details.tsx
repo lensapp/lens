@@ -17,22 +17,14 @@ import type { JobStore } from "./store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Job } from "../../../common/k8s-api/endpoints";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { KubeObjectMeta } from "../kube-object-meta";
-import { makeObservable, observable, reaction } from "mobx";
-import { podMetricTabs, PodCharts } from "../+workloads-pods/pod-charts";
-import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import { ResourceMetrics } from "../resource-metrics";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import jobStoreInjectable from "./store.injectable";
-import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import type { JobPodMetricData, RequestPodMetricsForJobs } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-jobs.injectable";
-import requestPodMetricsForJobsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-jobs.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface JobDetailsProps extends KubeObjectDetailsProps<Job> {
 }
@@ -41,38 +33,21 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
   jobStore: JobStore;
-  getActiveClusterEntity: GetActiveClusterEntity;
-  requestPodMetricsForJobs: RequestPodMetricsForJobs;
+  logger: Logger;
 }
 
 @observer
 class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependencies> {
-  @observable metrics: JobPodMetricData | null = null;
-
-  constructor(props: JobDetailsProps & Dependencies) {
-    super(props);
-    makeObservable(this);
-  }
-
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.object, () => {
-        this.metrics = null;
-      }),
       this.props.subscribeStores([
         this.props.podStore,
       ]),
     ]);
   }
 
-  loadMetrics = async () => {
-    const { object: job, requestPodMetricsForJobs } = this.props;
-
-    this.metrics = await requestPodMetricsForJobs([job], job.getNs(), "");
-  };
-
   render() {
-    const { object: job, jobStore, getActiveClusterEntity } = this.props;
+    const { object: job, jobStore, logger } = this.props;
 
     if (!job) {
       return null;
@@ -89,21 +64,9 @@ class NonInjectedJobDetails extends React.Component<JobDetailsProps & Dependenci
     const images = job.getImages();
     const childPods = jobStore.getChildPods(job);
     const condition = job.getCondition();
-    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Job);
 
     return (
       <div className="JobDetails">
-        {!isMetricHidden && (
-          <ResourceMetrics
-            loader={this.loadMetrics}
-            tabs={podMetricTabs}
-            object={job}
-            metrics={this.metrics}
-          >
-            <PodCharts />
-          </ResourceMetrics>
-        )}
-        <KubeObjectMeta object={job}/>
         <DrawerItem name="Selector" labelsOnly>
           {
             Object.keys(selectors).map(label => <Badge key={label} label={label}/>)
@@ -161,8 +124,7 @@ export const JobDetails = withInjectables<Dependencies, JobDetailsProps>(NonInje
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
     jobStore: di.inject(jobStoreInjectable),
-    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
-    requestPodMetricsForJobs: di.inject(requestPodMetricsForJobsInjectable),
+    logger: di.inject(loggerInjectable),
   }),
 });
 

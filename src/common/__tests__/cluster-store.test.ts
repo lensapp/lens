@@ -93,10 +93,9 @@ describe("cluster-store", () => {
     mainDi.override(normalizedPlatformInjectable, () => "darwin");
 
     mainDi.permitSideEffects(getConfigurationFileModelInjectable);
-    mainDi.permitSideEffects(clusterStoreInjectable);
-    mainDi.permitSideEffects(fsInjectable);
+    mainDi.unoverride(getConfigurationFileModelInjectable);
 
-    mainDi.unoverride(clusterStoreInjectable);
+    mainDi.permitSideEffects(fsInjectable);
   });
 
   afterEach(() => {
@@ -107,23 +106,19 @@ describe("cluster-store", () => {
     let getCustomKubeConfigDirectory: (directoryName: string) => string;
 
     beforeEach(async () => {
-      getCustomKubeConfigDirectory = mainDi.inject(
-        getCustomKubeConfigDirectoryInjectable,
-      );
+      getCustomKubeConfigDirectory = mainDi.inject(getCustomKubeConfigDirectoryInjectable);
 
-      const mockOpts = {
+      mockFs({
         "some-directory-for-user-data": {
           "lens-cluster-store.json": JSON.stringify({}),
         },
-      };
-
-      mockFs(mockOpts);
+      });
 
       createCluster = mainDi.inject(createClusterInjectionToken);
 
       clusterStore = mainDi.inject(clusterStoreInjectable);
 
-      clusterStore.unregisterIpcListener();
+      clusterStore.load();
     });
 
     afterEach(() => {
@@ -207,7 +202,7 @@ describe("cluster-store", () => {
 
   describe("config with existing clusters", () => {
     beforeEach(() => {
-      const mockOpts = {
+      mockFs({
         "temp-kube-config": kubeconfig,
         "some-directory-for-user-data": {
           "lens-cluster-store.json": JSON.stringify({
@@ -241,13 +236,12 @@ describe("cluster-store", () => {
             ],
           }),
         },
-      };
-
-      mockFs(mockOpts);
+      });
 
       createCluster = mainDi.inject(createClusterInjectionToken);
 
       clusterStore = mainDi.inject(clusterStoreInjectable);
+      clusterStore.load();
     });
 
     afterEach(() => {
@@ -297,7 +291,7 @@ users:
     token: kubeconfig-user-q4lm4:xxxyyyy
 `;
 
-      const mockOpts = {
+      mockFs({
         "invalid-kube-config": invalidKubeconfig,
         "valid-kube-config": kubeconfig,
         "some-directory-for-user-data": {
@@ -325,13 +319,12 @@ users:
             ],
           }),
         },
-      };
-
-      mockFs(mockOpts);
+      });
 
       createCluster = mainDi.inject(createClusterInjectionToken);
 
       clusterStore = mainDi.inject(clusterStoreInjectable);
+      clusterStore.load();
     });
 
     afterEach(() => {
@@ -347,7 +340,7 @@ users:
 
   describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     beforeEach(() => {
-      const mockOpts = {
+      mockFs({
         "some-directory-for-user-data": {
           "lens-cluster-store.json": JSON.stringify({
             __internal__: {
@@ -368,15 +361,14 @@ users:
           }),
           icon_path: testDataIcon,
         },
-      };
-
-      mockFs(mockOpts);
+      });
 
       mainDi.override(storeMigrationVersionInjectable, () => "3.6.0");
 
       createCluster = mainDi.inject(createClusterInjectionToken);
 
       clusterStore = mainDi.inject(clusterStoreInjectable);
+      clusterStore.load();
     });
 
     afterEach(() => {

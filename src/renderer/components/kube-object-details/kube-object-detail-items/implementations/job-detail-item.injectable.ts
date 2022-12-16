@@ -17,7 +17,7 @@ const jobDetailItemInjectable = getInjectable({
 
     return {
       Component: JobDetails,
-      enabled: computed(() => isJob(kubeObject.get())),
+      enabled: computed(() => isJob(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

@@ -4,16 +4,16 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import userStoreInjectable from "../../../common/user-store/user-store.injectable";
+import httpsProxyConfigurationInjectable from "../../../common/user-store/https-proxy.injectable";
 
 const execHelmEnvInjectable = getInjectable({
   id: "exec-helm-env",
   instantiate: (di) => {
-    const userStore = di.inject(userStoreInjectable);
+    const httpsProxyConfiguration = di.inject(httpsProxyConfigurationInjectable);
 
     return computed(() => {
       const {
-        HTTPS_PROXY = userStore.httpsProxy,
+        HTTPS_PROXY = httpsProxyConfiguration.get(),
         ...env
       } = process.env;
 

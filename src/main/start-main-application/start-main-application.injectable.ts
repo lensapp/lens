@@ -29,19 +29,21 @@ const startMainApplicationInjectable = getInjectable({
     const showInitialWindowRunnablePhase = runMany(showInitialWindowRunnablePhaseInjectionToken);
     const afterApplicationIsLoaded = runMany(afterApplicationIsLoadedInjectionToken);
 
-    // Stuff happening before application is ready needs to be synchronous because of
-    // https://github.com/electron/electron/issues/21370
-    appPathsRunnablePhase();
-    beforeElectronIsReady();
+    return () => {
+      // Stuff happening before application is ready needs to be synchronous because of
+      // https://github.com/electron/electron/issues/21370
+      appPathsRunnablePhase();
+      beforeElectronIsReady();
 
-    return (async () => {
-      await waitForElectronToBeReady();
-      await beforeApplicationIsLoading();
-      await showLoadingRunnablePhase();
-      await onLoadOfApplication();
-      await showInitialWindowRunnablePhase();
-      await afterApplicationIsLoaded();
-    })();
+      return (async () => {
+        await waitForElectronToBeReady();
+        await beforeApplicationIsLoading();
+        await showLoadingRunnablePhase();
+        await onLoadOfApplication();
+        await showInitialWindowRunnablePhase();
+        await afterApplicationIsLoaded();
+      })();
+    };
   },
 });
 

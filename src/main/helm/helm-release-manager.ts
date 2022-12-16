@@ -7,9 +7,12 @@ import tempy from "tempy";
 import fse from "fs-extra";
 import * as yaml from "js-yaml";
 import { toCamelCase } from "../../common/utils/camelCase";
-import { execHelm } from "./exec";
 import type { JsonValue } from "type-fest";
 import { isObject, json } from "../../common/utils";
+import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import execHelmInjectable from "./exec-helm/exec-helm.injectable";
+
+const execHelm = asLegacyGlobalFunctionForExtensionApi(execHelmInjectable);
 
 export async function listReleases(pathToKubeconfig: string, namespace?: string): Promise<Record<string, any>[]> {
   const args = [
@@ -26,7 +29,13 @@ export async function listReleases(pathToKubeconfig: string, namespace?: string)
 
   args.push("--kubeconfig", pathToKubeconfig);
 
-  const output = json.parse(await execHelm(args));
+  const result = await execHelm(args);
+
+  if (!result.callWasSuccessful) {
+    throw result.error;
+  }
+
+  const output = json.parse(result.response);
 
   if (!Array.isArray(output) || output.length == 0) {
     return [];
@@ -60,7 +69,13 @@ export async function installChart(chart: string, values: JsonValue, name: strin
   }
 
   try {
-    const output = await execHelm(args);
+    const result = await execHelm(args);
+
+    if (!result.callWasSuccessful) {
+      throw result.error;
+    }
+
+    const output = result.response;
     const releaseName = output.split("\n")[0].split(" ")[1].trim();
 
     return {
@@ -75,13 +90,19 @@ export async function installChart(chart: string, values: JsonValue, name: strin
   }
 }
 
-export async function deleteRelease(name: string, namespace: string, kubeconfigPath: string) {
-  return execHelm([
+export async function deleteRelease(name: string, namespace: string, kubeconfigPath: string): Promise<string> {
+  const result = await execHelm([
     "delete",
     name,
     "--namespace", namespace,
     "--kubeconfig", kubeconfigPath,
   ]);
+
+  if (result.callWasSuccessful) {
+    return result.response;
+  }
+
+  throw result.error;
 }
 
 interface GetValuesOptions {
@@ -90,7 +111,7 @@ interface GetValuesOptions {
   kubeconfigPath: string;
 }
 
-export async function getValues(name: string, { namespace, all = false, kubeconfigPath }: GetValuesOptions) {
+export async function getValues(name: string, { namespace, all = false, kubeconfigPath }: GetValuesOptions): Promise<string> {
   const args = [
     "get",
     "values",
@@ -107,25 +128,41 @@ export async function getValues(name: string, { namespace, all = false, kubeconf
     "--kubeconfig", kubeconfigPath,
   );
 
-  return execHelm(args);
+  const result = await execHelm(args);
+
+  if (result.callWasSuccessful) {
+    return result.response;
+  }
+
+  throw result.error;
 }
 
-export async function getHistory(name: string, namespace: string, kubeconfigPath: string) {
-  return json.parse(await execHelm([
+export async function getHistory(name: string, namespace: string, kubeconfigPath: string): Promise<JsonValue> {
+  const result = await execHelm([
     "history",
     name,
     "--output", "json",
     "--namespace", namespace,
     "--kubeconfig", kubeconfigPath,
-  ]));
+  ]);
+
+  if (result.callWasSuccessful) {
+    return json.parse(result.response);
+  }
+
+  throw result.error;
 }
 
-export async function rollback(name: string, namespace: string, revision: number, kubeconfigPath: string) {
-  await execHelm([
+export async function rollback(name: string, namespace: string, revision: number, kubeconfigPath: string): Promise<void> {
+  const result = await execHelm([
     "rollback",
     name,
     `${revision}`,
     "--namespace", namespace,
     "--kubeconfig", kubeconfigPath,
   ]);
+
+  if (!result.callWasSuccessful) {
+    throw result.error;
+  }
 }

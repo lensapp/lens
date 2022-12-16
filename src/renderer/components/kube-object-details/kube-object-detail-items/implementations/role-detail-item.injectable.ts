@@ -17,7 +17,7 @@ const roleDetailItemInjectable = getInjectable({
 
     return {
       Component: RoleDetails,
-      enabled: computed(() => isRole(kubeObject.get())),
+      enabled: computed(() => isRole(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

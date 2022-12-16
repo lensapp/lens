@@ -13,7 +13,7 @@ import execFileInjectable from "../../common/fs/exec-file.injectable";
 import helmBinaryPathInjectable from "../../main/helm/helm-binary-path.injectable";
 import getActiveHelmRepositoriesInjectable from "../../main/helm/repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { HelmRepo } from "../../common/helm/helm-repo";
-import callForPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/call-for-public-helm-repositories.injectable";
+import requestPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
 
 describe("remove helm repository from list of active repositories in preferences", () => {
@@ -35,7 +35,7 @@ describe("remove helm repository from list of active repositories in preferences
     });
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(callForPublicHelmRepositoriesInjectable, () => async () => []);
+      windowDi.override(requestPublicHelmRepositoriesInjectable, () => async () => []);
     });
 
     rendered = await builder.render();
@@ -55,9 +55,11 @@ describe("remove helm repository from list of active repositories in preferences
       beforeEach(async () => {
         getActiveHelmRepositoriesMock.resolve({
           callWasSuccessful: true,
-          response: [
-            { name: "some-active-repository", url: "some-url" },
-          ],
+          response: [{
+            name: "some-active-repository",
+            url: "some-url",
+            cacheFilePath: "/some-cache-file",
+          }],
         });
       });
 

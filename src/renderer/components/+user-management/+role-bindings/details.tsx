@@ -13,7 +13,6 @@ import { prevDefault } from "../../../utils";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
-import { KubeObjectMeta } from "../../kube-object-meta";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { RoleBindingDialog } from "./dialog";
 import { roleBindingStore } from "./legacy-store";
@@ -71,8 +70,6 @@ class NonInjectedRoleBindingDetails extends React.Component<RoleBindingDetailsPr
 
     return (
       <div className="RoleBindingDetails">
-        <KubeObjectMeta object={roleBinding} />
-
         <DrawerTitle>Reference</DrawerTitle>
         <Table>
           <TableHead>

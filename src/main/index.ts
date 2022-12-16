@@ -7,14 +7,23 @@
 
 import * as Mobx from "mobx";
 import { spawn } from "node-pty";
+import process from "process";
 import * as LensExtensionsCommonApi from "../extensions/common-api";
 import * as LensExtensionsMainApi from "../extensions/main-api";
 import { getDi } from "./getDi";
 import startMainApplicationInjectable from "./start-main-application/start-main-application.injectable";
 
 const di = getDi();
+const startMainApplication = di.inject(startMainApplicationInjectable);
 
-void di.inject(startMainApplicationInjectable);
+(async () => {
+  try {
+    await startMainApplication();
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+})();
 
 /**
  * Exports for virtual package "@k8slens/extensions" for main-process.

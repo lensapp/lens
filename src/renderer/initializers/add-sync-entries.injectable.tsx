@@ -2,13 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getAllEntries } from "../../features/preferences/renderer/preference-items/kubernetes/kubeconfig-sync/kubeconfig-sync";
 import { Notifications } from "../components/notifications";
 import { getInjectable } from "@ogre-tools/injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import React from "react";
 import navigateToKubernetesPreferencesInjectable from "../../features/preferences/common/navigate-to-kubernetes-preferences.injectable";
-import loggerInjectable from "../../common/logger.injectable";
+import discoverAllKubeconfigSyncKindsInjectable from "../../features/preferences/renderer/preference-items/kubernetes/kubeconfig-sync/discover-all-sync-kinds.injectable";
+import { action } from "mobx";
 
 const addSyncEntriesInjectable = getInjectable({
   id: "add-sync-entries",
@@ -16,12 +16,16 @@ const addSyncEntriesInjectable = getInjectable({
   instantiate: (di) => {
     const userStore = di.inject(userStoreInjectable);
     const navigateToKubernetesPreferences = di.inject(navigateToKubernetesPreferencesInjectable);
-    const logger = di.inject(loggerInjectable);
+    const discoverAllKubeconfigSyncKinds = di.inject(discoverAllKubeconfigSyncKindsInjectable);
 
     return async (filePaths: string[]) => {
-      userStore.syncKubeconfigEntries.merge(
-        await getAllEntries(filePaths, logger),
-      );
+      const kinds = await discoverAllKubeconfigSyncKinds(filePaths);
+
+      action(() => {
+        for (const [path] of kinds) {
+          userStore.syncKubeconfigEntries.set(path, {});
+        }
+      });
 
       Notifications.ok((
         <div>

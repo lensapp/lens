@@ -8,7 +8,7 @@ import loggerInjectable from "../../../common/logger.injectable";
 import tempy from "tempy";
 import getHelmReleaseInjectable from "./get-helm-release.injectable";
 import writeFileInjectable from "../../../common/fs/write-file.injectable";
-import removePathInjectable from "../../../common/fs/remove-path.injectable";
+import removePathInjectable from "../../../common/fs/remove.injectable";
 import execHelmInjectable from "../exec-helm/exec-helm.injectable";
 
 export interface UpdateChartArgs {

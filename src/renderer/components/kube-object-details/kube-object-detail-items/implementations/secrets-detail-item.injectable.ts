@@ -17,7 +17,7 @@ const secretsDetailItemInjectable = getInjectable({
 
     return {
       Component: SecretDetails,
-      enabled: computed(() => isSecret(kubeObject.get())),
+      enabled: computed(() => isSecret(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

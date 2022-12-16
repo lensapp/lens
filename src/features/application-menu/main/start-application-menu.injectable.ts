@@ -16,8 +16,8 @@ const startApplicationMenuInjectable = getInjectable({
 
     return {
       id: "start-application-menu",
-      run: async () => {
-        await applicationMenu.start();
+      run: () => {
+        applicationMenu.start();
       },
     };
   },

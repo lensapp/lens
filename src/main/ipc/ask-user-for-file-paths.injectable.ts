@@ -3,34 +3,41 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { OpenDialogOptions } from "electron";
-import { dialog } from "electron";
 import { getInjectable } from "@ogre-tools/injectable";
 import showApplicationWindowInjectable from "../start-main-application/lens-window/show-application-window.injectable";
+import type { RequestChannelHandler } from "../utils/channel/channel-listeners/listener-tokens";
+import type { openPathPickingDialogChannel } from "../../features/path-picking-dialog/common/channel";
+import showOpenDialogInjectable from "../electron-app/features/show-open-dialog.injectable";
 
 // TODO: Replace leaking electron with abstraction
-export type AskUserForFilePaths = (
-  dialogOptions: OpenDialogOptions
-) => Promise<{ canceled: boolean; filePaths: string[] }>;
+export type AskUserForFilePaths = RequestChannelHandler<typeof openPathPickingDialogChannel>;
 
 const askUserForFilePathsInjectable = getInjectable({
   id: "ask-user-for-file-paths",
 
   instantiate: (di): AskUserForFilePaths => {
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
+    const showOpenDialog = di.inject(showOpenDialogInjectable);
 
     return async (dialogOptions) => {
       await showApplicationWindow();
 
-      const { canceled, filePaths } = await dialog.showOpenDialog(
+      const { canceled, filePaths } = await showOpenDialog(
         dialogOptions,
       );
 
-      return { canceled, filePaths };
+      if (canceled) {
+        return {
+          canceled,
+        };
+      }
+
+      return {
+        canceled: false,
+        paths: filePaths,
+      };
     };
   },
-
-  causesSideEffects: true,
 });
 
 export default askUserForFilePathsInjectable;

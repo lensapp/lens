@@ -7,8 +7,8 @@ import { Input } from "../../../../../../../renderer/components/input";
 import { Icon } from "../../../../../../../renderer/components/icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import getFilePathsInjectable from "./get-file-paths.injectable";
-import type { FileFilter } from "electron";
+import type { RequestFilePaths } from "./get-file-paths.injectable";
+import requestFilePathsInjectable from "./get-file-paths.injectable";
 import isPathInjectable from "../../../../../../../renderer/components/input/validators/is-path.injectable";
 
 interface HelmFileInputProps {
@@ -20,7 +20,7 @@ interface HelmFileInputProps {
 }
 
 interface Dependencies {
-  getFilePaths: (fileFilter: FileFilter) => Promise<{ canceled: boolean; filePaths: string[] }>;
+  requestFilePaths: RequestFilePaths;
   isPath: InputValidator<true>;
 }
 
@@ -29,7 +29,7 @@ const NonInjectedHelmFileInput = ({
   value,
   setValue,
   fileExtensions,
-  getFilePaths,
+  requestFilePaths,
   isPath,
   "data-testid": testId,
 }: Dependencies & HelmFileInputProps) => (
@@ -44,31 +44,26 @@ const NonInjectedHelmFileInput = ({
     />
     <Icon
       material="folder"
-
-      onClick={async () => {
-        const { canceled, filePaths } = await getFilePaths({
+      onClick={() => void requestFilePaths({
+        filter: {
           name: placeholder,
           extensions: fileExtensions,
-        });
-
-        if (!canceled && filePaths.length) {
-          setValue(filePaths[0]);
-        }
-      }}
-
+        },
+        onPick: (filePaths) => {
+          if (filePaths.length) {
+            setValue(filePaths[0]);
+          }
+        },
+      })}
       tooltip="Browse"
     />
   </div>
 );
 
-export const HelmFileInput = withInjectables<Dependencies, HelmFileInputProps>(
-  NonInjectedHelmFileInput,
-
-  {
-    getProps: (di, props) => ({
-      getFilePaths: di.inject(getFilePathsInjectable),
-      isPath: di.inject(isPathInjectable),
-      ...props,
-    }),
-  },
-);
+export const HelmFileInput = withInjectables<Dependencies, HelmFileInputProps>(NonInjectedHelmFileInput, {
+  getProps: (di, props) => ({
+    ...props,
+    requestFilePaths: di.inject(requestFilePathsInjectable),
+    isPath: di.inject(isPathInjectable),
+  }),
+});

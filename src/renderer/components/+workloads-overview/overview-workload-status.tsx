@@ -11,7 +11,7 @@ import { observer } from "mobx-react";
 import type { PieChartData } from "../chart";
 import { PieChart } from "../chart";
 import { object } from "../../utils";
-import type { LensTheme } from "../../themes/store";
+import type { LensTheme } from "../../themes/lens-theme";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { PascalCase } from "type-fest";
 import type { IComputedValue } from "mobx";

@@ -303,9 +303,61 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               class="drawer-content flex column box grow"
             >
               <div
+                class="DrawerItem"
+              >
+                <span
+                  class="name"
+                >
+                  Created
+                </span>
+                <span
+                  class="value"
+                >
+                  &lt;unknown&gt;
+                   ago 
+                </span>
+              </div>
+              <div
+                class="DrawerItem"
+              >
+                <span
+                  class="name"
+                >
+                  Name
+                </span>
+                <span
+                  class="value"
+                >
+                  some-name
+                </span>
+              </div>
+              <div
+                class="DrawerItem"
+              >
+                <span
+                  class="name"
+                >
+                  Namespace
+                </span>
+                <span
+                  class="value"
+                >
+                  some-namespace
+                </span>
+              </div>
+              <div
                 data-testid="some-kube-object-detail-item"
               >
                 Some detail
+              </div>
+              <div>
+                <div
+                  class="DrawerTitle flex gaps align-center title"
+                >
+                  <span>
+                    Events
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -792,6 +844,15 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   some-namespace
                 </span>
               </div>
+              <div>
+                <div
+                  class="DrawerTitle flex gaps align-center title"
+                >
+                  <span>
+                    Events
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -1276,6 +1337,15 @@ exports[`disable kube object detail items when cluster is not relevant given not
                 >
                   some-namespace
                 </span>
+              </div>
+              <div>
+                <div
+                  class="DrawerTitle flex gaps align-center title"
+                >
+                  <span>
+                    Events
+                  </span>
+                </div>
               </div>
             </div>
           </div>

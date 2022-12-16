@@ -7,17 +7,19 @@
 // Because app creates random port between restarts => storage session wiped out each time.
 import { comparer, reaction, toJS, when } from "mobx";
 import type { StorageLayer } from "../storageHelper";
-import { StorageHelper } from "../storageHelper";
-import type { JsonObject, JsonValue } from "type-fest";
+import { storageHelperLogPrefix, StorageHelper } from "../storageHelper";
+import type { JsonObject } from "type-fest";
 import type { Logger } from "../../../common/logger";
 import type { JoinPaths } from "../../../common/path/join-paths.injectable";
+import type { WriteJson } from "../../../common/fs/write-json-file.injectable";
+import type { ReadJson } from "../../../common/fs/read-json-file.injectable";
 
 interface Dependencies {
-  storage: { initialized: boolean; loaded: boolean; data: Record<string, any> };
+  storage: { initialized: boolean; loaded: boolean; data: Partial<Record<string, unknown>> };
   logger: Logger;
   directoryForLensLocalStorage: string;
-  readJsonFile: (filePath: string) => Promise<JsonValue>;
-  writeJsonFile: (filePath: string, contentObject: JsonObject) => Promise<void>;
+  readJsonFile: ReadJson;
+  writeJsonFile: WriteJson;
   joinPaths: JoinPaths;
   hostedClusterId: string | undefined;
   saveDelay: number;
@@ -37,9 +39,7 @@ export const createStorage = ({
   writeJsonFile,
   hostedClusterId,
   saveDelay,
-}: Dependencies): CreateStorage => (key, defaultValue) => {
-  const { logPrefix } = StorageHelper;
-
+}: Dependencies): CreateStorage => <T>(key: string, defaultValue: T) => {
   if (!storage.initialized) {
     storage.initialized = true;
 
@@ -51,7 +51,7 @@ export const createStorage = ({
       } catch {
         // do nothing
       } finally {
-        logger.info(`${logPrefix} loading finished for ${filePath}`);
+        logger.info(`${storageHelperLogPrefix} loading finished for ${filePath}`);
         storage.loaded = true;
       }
 
@@ -62,30 +62,32 @@ export const createStorage = ({
       });
 
       async function saveFile(state: Record<string, any> = {}) {
-        logger.info(`${logPrefix} saving ${filePath}`);
+        logger.info(`${storageHelperLogPrefix} saving ${filePath}`);
 
         try {
           await writeJsonFile(filePath, state);
         } catch (error) {
-          logger.error(`${logPrefix} saving failed: ${error}`, {
+          logger.error(`${storageHelperLogPrefix} saving failed: ${error}`, {
             json: state, jsonFilePath: filePath,
           });
         }
       }
     })()
-      .catch(error => logger.error(`${logPrefix} Failed to initialize storage: ${error}`));
+      .catch(error => logger.error(`${storageHelperLogPrefix} Failed to initialize storage: ${error}`));
   }
 
-  return new StorageHelper(key, {
+  return new StorageHelper({
+    logger,
+  }, key, {
     autoInit: true,
     defaultValue,
     storage: {
       async getItem(key: string) {
         await when(() => storage.loaded);
 
-        return storage.data[key];
+        return storage.data[key] as T;
       },
-      setItem(key: string, value: any) {
+      setItem(key: string, value: T) {
         storage.data[key] = value;
       },
       removeItem(key: string) {

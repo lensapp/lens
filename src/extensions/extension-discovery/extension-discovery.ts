@@ -28,7 +28,7 @@ import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetBasenameOfPath } from "../../common/path/get-basename.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 import type { GetRelativePath } from "../../common/path/get-relative-path.injectable";
-import type { RemovePath } from "../../common/fs/remove-path.injectable";
+import type { RemovePath } from "../../common/fs/remove.injectable";
 import type TypedEventEmitter from "typed-emitter";
 import type { ApplicationInformation } from "../../common/vars/application-information.injectable";
 

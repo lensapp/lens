@@ -11,7 +11,7 @@ import type { KubernetesObject } from "@kubernetes/client-node";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
 import type { WriteFile } from "../../common/fs/write-file.injectable";
-import type { DeleteFile } from "../../common/fs/delete-file.injectable";
+import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
@@ -19,7 +19,7 @@ import type { AsyncResult } from "../../common/utils/async-result";
 export interface ResourceApplierDependencies {
   emitAppEvent: EmitAppEvent;
   writeFile: WriteFile;
-  deleteFile: DeleteFile;
+  deleteFile: RemovePath;
   execFile: ExecFile;
   joinPaths: JoinPaths;
   readonly logger: Logger;

@@ -23,12 +23,13 @@ import installExtensionFromInputInjectable from "../install-extension-from-input
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import { observable, when } from "mobx";
-import type { DeleteFile } from "../../../../common/fs/delete-file.injectable";
-import deleteFileInjectable from "../../../../common/fs/delete-file.injectable";
+import type { RemovePath } from "../../../../common/fs/remove.injectable";
+import removePathInjectable from "../../../../common/fs/remove.injectable";
 import type { DownloadJson } from "../../../../common/fetch/download-json.injectable";
 import type { DownloadBinary } from "../../../../common/fetch/download-binary.injectable";
 import downloadJsonInjectable from "../../../../common/fetch/download-json.injectable";
 import downloadBinaryInjectable from "../../../../common/fetch/download-binary.injectable";
+import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";
 
 describe("Extensions", () => {
   let extensionLoader: ExtensionLoader;
@@ -36,7 +37,7 @@ describe("Extensions", () => {
   let installExtensionFromInput: jest.MockedFunction<InstallExtensionFromInput>;
   let extensionInstallationStateStore: ExtensionInstallationStateStore;
   let render: DiRender;
-  let deleteFileMock: jest.MockedFunction<DeleteFile>;
+  let deleteFileMock: jest.MockedFunction<RemovePath>;
   let downloadJson: jest.MockedFunction<DownloadJson>;
   let downloadBinary: jest.MockedFunction<DownloadBinary>;
 
@@ -45,6 +46,7 @@ describe("Extensions", () => {
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(directoryForDownloadsInjectable, () => "some-directory-for-downloads");
+    di.override(currentlyInClusterFrameInjectable, () => false);
 
     render = renderFor(di);
 
@@ -52,7 +54,7 @@ describe("Extensions", () => {
     di.override(installExtensionFromInputInjectable, () => installExtensionFromInput);
 
     deleteFileMock = jest.fn();
-    di.override(deleteFileInjectable, () => deleteFileMock);
+    di.override(removePathInjectable, () => deleteFileMock);
 
     downloadJson = jest.fn().mockImplementation((url) => { throw new Error(`Unexpected call to downloadJson for url=${url}`); });
     di.override(downloadJsonInjectable, () => downloadJson);

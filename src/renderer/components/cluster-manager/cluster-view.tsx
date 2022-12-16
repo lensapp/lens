@@ -11,7 +11,6 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { ClusterStatus } from "./cluster-status";
 import type { ClusterFrameHandler } from "./cluster-frame-handler";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import { requestClusterActivation } from "../../ipc";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
@@ -20,18 +19,19 @@ import clusterViewRouteParametersInjectable from "./cluster-view-route-parameter
 import clusterFrameHandlerInjectable from "./cluster-frame-handler.injectable";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
+import type { GetClusterById } from "../../../common/cluster-store/get-by-id.injectable";
+import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
 
 interface Dependencies {
   clusterId: IComputedValue<string>;
   clusterFrames: ClusterFrameHandler;
   navigateToCatalog: NavigateToCatalog;
   entityRegistry: CatalogEntityRegistry;
+  getClusterById: GetClusterById;
 }
 
 @observer
 class NonInjectedClusterView extends React.Component<Dependencies> {
-  private readonly store = ClusterStore.getInstance();
-
   constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
@@ -42,7 +42,7 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
   }
 
   @computed get cluster(): Cluster | undefined {
-    return this.store.getById(this.clusterId);
+    return this.props.getClusterById(this.clusterId);
   }
 
   private readonly isViewLoaded = computed(() => this.props.clusterFrames.hasLoadedView(this.clusterId), {
@@ -110,10 +110,11 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
 
 export const ClusterView = withInjectables<Dependencies>(NonInjectedClusterView, {
   getProps: (di) => ({
-    clusterId: di.inject(clusterViewRouteParametersInjectable).clusterId,
+    ...di.inject(clusterViewRouteParametersInjectable),
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
     clusterFrames: di.inject(clusterFrameHandlerInjectable),
     entityRegistry: di.inject(catalogEntityRegistryInjectable),
+    getClusterById: di.inject(getClusterByIdInjectable),
   }),
 });
 

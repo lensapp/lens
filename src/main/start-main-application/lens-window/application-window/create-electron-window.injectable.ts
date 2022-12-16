@@ -12,8 +12,8 @@ import openLinkInBrowserInjectable from "../../../../common/utils/open-link-in-b
 import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
 import lensResourcesDirInjectable from "../../../../common/vars/lens-resources-dir.injectable";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
-import fsInjectable from "../../../../common/fs/fs.injectable";
 import applicationInformationInjectable from "../../../../common/vars/application-information.injectable";
+import pathExistsSyncInjectable from "../../../../common/fs/path-exists-sync.injectable";
 
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
@@ -55,6 +55,7 @@ const createElectronWindowInjectable = getInjectable({
     const lensResourcesDir = di.inject(lensResourcesDirInjectable);
     const isLinux = di.inject(isLinuxInjectable);
     const applicationInformation = di.inject(applicationInformationInjectable);
+    const pathExistsSync = di.inject(pathExistsSyncInjectable);
 
     return (configuration) => {
       const applicationWindowState = di.inject(
@@ -93,7 +94,7 @@ const createElectronWindowInjectable = getInjectable({
         const iconFileName = [
           getAbsolutePath(lensResourcesDir, `../${applicationInformation.name}.png`),
           `/usr/share/icons/hicolor/512x512/apps/${applicationInformation.name}.png`,
-        ].find(di.inject(fsInjectable).existsSync);
+        ].find(pathExistsSync);
 
         if (iconFileName != null) {
           try {

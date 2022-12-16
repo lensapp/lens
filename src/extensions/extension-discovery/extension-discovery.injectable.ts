@@ -25,7 +25,7 @@ import getBasenameOfPathInjectable from "../../common/path/get-basename.injectab
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
 import getRelativePathInjectable from "../../common/path/get-relative-path.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
-import removePathInjectable from "../../common/fs/remove-path.injectable";
+import removePathInjectable from "../../common/fs/remove.injectable";
 import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
 import applicationInformationInjectable from "../../common/vars/application-information.injectable";
 import lensResourcesDirInjectable from "../../common/vars/lens-resources-dir.injectable";

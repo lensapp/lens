@@ -4,20 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import buildSemanticVersionInjectable from "../../../common/vars/build-semantic-version.injectable";
-import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/before-frame-starts-injection-token";
+import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/tokens";
 import initializeBuildVersionInjectable from "../build-version/init.injectable";
 
 const initSemanticBuildVersionInjectable = getInjectable({
   id: "init-semantic-build-version",
-  instantiate: (di) => {
-    const buildSemanticVersion = di.inject(buildSemanticVersionInjectable);
+  instantiate: (di) => ({
+    id: "init-semantic-build-version",
+    run: async () => {
+      const buildSemanticVersion = di.inject(buildSemanticVersionInjectable);
 
-    return {
-      id: "init-semantic-build-version",
-      run: () => buildSemanticVersion.init(),
-      runAfter: di.inject(initializeBuildVersionInjectable),
-    };
-  },
+      await buildSemanticVersion.init();
+    },
+    runAfter: di.inject(initializeBuildVersionInjectable),
+  }),
   injectionToken: beforeFrameStartsInjectionToken,
 });
 

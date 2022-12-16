@@ -4,17 +4,12 @@
  */
 
 
-import { ipcMain, ipcRenderer, webFrame } from "electron";
-import { action, comparer, computed, makeObservable, observable, reaction } from "mobx";
-import { BaseStore } from "../base-store";
+import { action, comparer, computed, makeObservable, observable } from "mobx";
+import type { BaseStoreDependencies } from "../base-store/base-store";
+import { BaseStore } from "../base-store/base-store";
 import { Cluster } from "../cluster/cluster";
-import migrations from "../../migrations/cluster-store";
-import logger from "../../main/logger";
-import { ipcMainHandle } from "../ipc";
-import { disposer, toJS } from "../utils";
-import type { ClusterModel, ClusterId, ClusterState } from "../cluster-types";
-import { requestInitialClusterStates } from "../../renderer/ipc";
-import { clusterStates } from "../ipc/cluster";
+import { toJS } from "../utils";
+import type { ClusterModel, ClusterId } from "../cluster-types";
 import type { CreateCluster } from "../cluster/create-cluster-injection-token";
 import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
@@ -23,76 +18,25 @@ export interface ClusterStoreModel {
   clusters?: ClusterModel[];
 }
 
-interface Dependencies {
+interface Dependencies extends BaseStoreDependencies {
   createCluster: CreateCluster;
   readClusterConfigSync: ReadClusterConfigSync;
   emitAppEvent: EmitAppEvent;
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
-  readonly displayName = "ClusterStore";
-  clusters = observable.map<ClusterId, Cluster>();
+  readonly clusters = observable.map<ClusterId, Cluster>();
 
-  protected disposer = disposer();
-
-  constructor(private readonly dependencies: Dependencies) {
-    super({
+  constructor(protected readonly dependencies: Dependencies) {
+    super(dependencies, {
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {
         equals: comparer.structural,
       },
-      migrations,
     });
 
     makeObservable(this);
-    this.load();
-    this.pushStateToViewsAutomatically();
-  }
-
-  async loadInitialOnRenderer() {
-    logger.info("[CLUSTER-STORE] requesting initial state sync");
-
-    for (const { id, state } of await requestInitialClusterStates()) {
-      this.getById(id)?.setState(state);
-    }
-  }
-
-  provideInitialFromMain() {
-    ipcMainHandle(clusterStates, () => (
-      this.clustersList.map(cluster => ({
-        id: cluster.id,
-        state: cluster.getState(),
-      }))
-    ));
-  }
-
-  protected pushStateToViewsAutomatically() {
-    if (ipcMain) {
-      this.disposer.push(
-        reaction(() => this.connectedClustersList, () => this.pushState()),
-      );
-    }
-  }
-
-  registerIpcListener() {
-    logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`);
-    const ipc = ipcMain ?? ipcRenderer;
-
-    ipc?.on("cluster:state", (event, clusterId: ClusterId, state: ClusterState) => {
-      this.getById(clusterId)?.setState(state);
-    });
-  }
-
-  unregisterIpcListener() {
-    super.unregisterIpcListener();
-    this.disposer();
-  }
-
-  pushState() {
-    this.clusters.forEach((c) => {
-      c.pushState();
-    });
   }
 
   @computed get clustersList(): Cluster[] {
@@ -150,7 +94,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         }
         newClusters.set(clusterModel.id, cluster);
       } catch (error) {
-        logger.warn(`[CLUSTER-STORE]: Failed to update/create a cluster: ${error}`);
+        this.dependencies.logger.warn(`[CLUSTER-STORE]: Failed to update/create a cluster: ${error}`);
       }
     }
 

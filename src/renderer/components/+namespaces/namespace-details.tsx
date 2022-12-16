@@ -6,7 +6,7 @@
 import "./namespace-details.scss";
 
 import React from "react";
-import { computed, makeObservable, observable, reaction } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
@@ -14,42 +14,32 @@ import { Namespace } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Link } from "react-router-dom";
 import { Spinner } from "../spinner";
-import { KubeObjectMeta } from "../kube-object-meta";
-import { ResourceMetrics } from "../resource-metrics";
-import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
-import { ClusterMetricsResourceType } from "../../../common/cluster-types";
-import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import type { ResourceQuotaStore } from "../+config-resource-quotas/store";
 import type { LimitRangeStore } from "../+config-limit-ranges/store";
-import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import limitRangeStoreInjectable from "../+config-limit-ranges/store.injectable";
 import resourceQuotaStoreInjectable from "../+config-resource-quotas/store.injectable";
-import type { PodMetricInNamespaceData, RequestPodMetricsInNamespace } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-in-namespace.injectable";
-import requestPodMetricsInNamespaceInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-in-namespace.injectable";
+import type { Logger } from "../../../common/logger";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface NamespaceDetailsProps extends KubeObjectDetailsProps<Namespace> {
 }
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
-  getActiveClusterEntity: GetActiveClusterEntity;
   getDetailsUrl: GetDetailsUrl;
   resourceQuotaStore: ResourceQuotaStore;
   limitRangeStore: LimitRangeStore;
-  requestPodMetricsInNamespace: RequestPodMetricsInNamespace;
+  logger: Logger;
 }
 
 @observer
 class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps & Dependencies> {
-  @observable metrics: PodMetricInNamespaceData | null = null;
-
   constructor(props: NamespaceDetailsProps & Dependencies) {
     super(props);
     makeObservable(this);
@@ -57,10 +47,6 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.object, () => {
-        this.metrics = null;
-      }),
-
       this.props.subscribeStores([
         this.props.resourceQuotaStore,
         this.props.limitRangeStore,
@@ -80,40 +66,23 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
     return this.props.limitRangeStore.getAllByNs(namespace);
   }
 
-  loadMetrics = async () => {
-    this.metrics = await this.props.requestPodMetricsInNamespace(this.props.object.getName());
-  };
-
   render() {
-    const { object: namespace, getActiveClusterEntity, resourceQuotaStore, getDetailsUrl, limitRangeStore } = this.props;
+    const { object: namespace, resourceQuotaStore, getDetailsUrl, limitRangeStore } = this.props;
 
     if (!namespace) {
       return null;
     }
 
     if (!(namespace instanceof Namespace)) {
-      logger.error("[NamespaceDetails]: passed object that is not an instanceof Namespace", namespace);
+      this.props.logger.error("[NamespaceDetails]: passed object that is not an instanceof Namespace", namespace);
 
       return null;
     }
 
     const status = namespace.getStatus();
-    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Namespace);
 
     return (
       <div className="NamespaceDetails">
-        {!isMetricHidden && (
-          <ResourceMetrics
-            loader={this.loadMetrics}
-            tabs={podMetricTabs}
-            object={namespace}
-            metrics={this.metrics}
-          >
-            <PodCharts />
-          </ResourceMetrics>
-        )}
-        <KubeObjectMeta object={namespace}/>
-
         <DrawerItem name="Status">
           <span className={cssNames("status", status.toLowerCase())}>{status}</span>
         </DrawerItem>
@@ -143,11 +112,10 @@ export const NamespaceDetails = withInjectables<Dependencies, NamespaceDetailsPr
   getProps: (di, props) => ({
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
-    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     limitRangeStore: di.inject(limitRangeStoreInjectable),
     resourceQuotaStore: di.inject(resourceQuotaStoreInjectable),
-    requestPodMetricsInNamespace: di.inject(requestPodMetricsInNamespaceInjectable),
+    logger: di.inject(loggerInjectable),
   }),
 });
 

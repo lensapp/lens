@@ -13,7 +13,7 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
-import statInjectable from "../../../../common/fs/stat/stat.injectable";
+import statInjectable from "../../../../common/fs/stat.injectable";
 
 describe("ClusterLocalTerminalSettings", () => {
   let render: DiRender;

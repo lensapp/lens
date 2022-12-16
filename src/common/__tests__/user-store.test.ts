@@ -35,6 +35,7 @@ import getConfigurationFileModelInjectable from "../get-configuration-file-model
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import releaseChannelInjectable from "../vars/release-channel.injectable";
 import defaultUpdateChannelInjectable from "../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
+import fsInjectable from "../fs/fs.injectable";
 
 console = new Console(stdout, stderr);
 
@@ -49,8 +50,10 @@ describe("user store tests", () => {
 
     di.override(writeFileInjectable, () => () => Promise.resolve());
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+
     di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.permitSideEffects(userStoreInjectable);
+    di.unoverride(getConfigurationFileModelInjectable);
+    di.permitSideEffects(fsInjectable);
 
     di.override(releaseChannelInjectable, () => ({
       get: () => "latest" as const,
@@ -58,7 +61,7 @@ describe("user store tests", () => {
     }));
     await di.inject(defaultUpdateChannelInjectable).init();
 
-    di.unoverride(userStoreInjectable);
+    userStore = di.inject(userStoreInjectable);
   });
 
   afterEach(() => {
@@ -67,15 +70,9 @@ describe("user store tests", () => {
 
   describe("for an empty config", () => {
     beforeEach(() => {
-      mockFs({ "some-directory-for-user-data": { "config.json": "{}", "kube_config": "{}" }});
+      mockFs({ "some-directory-for-user-data": { "lens-user-store.json": "{}", "kube_config": "{}" }});
 
-      userStore = di.inject(userStoreInjectable);
       userStore.load();
-    });
-
-    it("allows setting and retrieving lastSeenAppVersion", () => {
-      userStore.lastSeenAppVersion = "1.2.3";
-      expect(userStore.lastSeenAppVersion).toBe("1.2.3");
     });
 
     it("allows setting and getting preferences", () => {
@@ -99,10 +96,8 @@ describe("user store tests", () => {
     beforeEach(() => {
       mockFs({
         "some-directory-for-user-data": {
-          "config.json": JSON.stringify({
-            user: { username: "foobar" },
+          "lens-user-store.json": JSON.stringify({
             preferences: { colorTheme: "light" },
-            lastSeenAppVersion: "1.2.3",
           }),
           "lens-cluster-store.json": JSON.stringify({
             clusters: [
@@ -127,17 +122,16 @@ describe("user store tests", () => {
 
       di.override(storeMigrationVersionInjectable, () => "10.0.0");
 
-      userStore = di.inject(userStoreInjectable);
       userStore.load();
     });
 
-    it("sets last seen app version to 0.0.0", () => {
-      expect(userStore.lastSeenAppVersion).toBe("0.0.0");
-    });
-
-    it.only("skips clusters for adding to kube-sync with files under extension_data/", () => {
+    it("skips clusters for adding to kube-sync with files under extension_data/", () => {
       expect(userStore.syncKubeconfigEntries.has("some-directory-for-user-data/extension_data/foo/bar")).toBe(false);
       expect(userStore.syncKubeconfigEntries.has("some/other/path")).toBe(true);
+    });
+
+    it("allows access to the colorTheme preference", () => {
+      expect(userStore.colorTheme).toBe("light");
     });
   });
 });

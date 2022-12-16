@@ -8,7 +8,6 @@ import "./deployment-replicasets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import type { ReplicaSet } from "../../../common/k8s-api/endpoints";
-import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { KubeObjectMenu } from "../kube-object-menu";
 import { Spinner } from "../spinner";
 import { prevDefault, stopPropagation } from "../../utils";
@@ -28,6 +27,11 @@ enum sortBy {
   namespace = "namespace",
   pods = "pods",
   age = "age",
+}
+
+interface Dependencies {
+  replicaSetStore: ReplicaSetStore;
+  showDetails: ShowDetails;
 }
 
 export interface DeploymentReplicaSetsProps {
@@ -96,7 +100,7 @@ class NonInjectedDeploymentReplicaSets extends React.Component<DeploymentReplica
                 <TableCell className="pods">{this.getPodsLength(replica)}</TableCell>
                 <TableCell className="age"><KubeObjectAge key="age" object={replica} /></TableCell>
                 <TableCell className="actions" onClick={stopPropagation}>
-                  <ReplicaSetMenu object={replica} />
+                  <KubeObjectMenu object={replica} />
                 </TableCell>
               </TableRow>
             ))
@@ -114,9 +118,3 @@ export const DeploymentReplicaSets = withInjectables<Dependencies, DeploymentRep
     showDetails: di.inject(showDetailsInjectable),
   }),
 });
-
-export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  );
-}

@@ -7,16 +7,20 @@ import type { HelmRepo } from "../../common/helm/helm-repo";
 import { HelmChartManager } from "./helm-chart-manager";
 import helmChartManagerCacheInjectable from "./helm-chart-manager-cache.injectable";
 import loggerInjectable from "../../common/logger.injectable";
+import execHelmInjectable from "./exec-helm/exec-helm.injectable";
+import readFileInjectable from "../../common/fs/read-file.injectable";
+import statInjectable from "../../common/fs/stat.injectable";
 
 const helmChartManagerInjectable = getInjectable({
   id: "helm-chart-manager",
 
-  instantiate: (di, repo: HelmRepo) => {
-    const cache = di.inject(helmChartManagerCacheInjectable);
-    const logger = di.inject(loggerInjectable);
-
-    return new HelmChartManager(repo, { cache, logger });
-  },
+  instantiate: (di, repo: HelmRepo) => new HelmChartManager({
+    cache: di.inject(helmChartManagerCacheInjectable),
+    logger: di.inject(loggerInjectable),
+    execHelm: di.inject(execHelmInjectable),
+    readFile: di.inject(readFileInjectable),
+    stat: di.inject(statInjectable),
+  }, repo),
 
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di, repo: HelmRepo) => repo.name,

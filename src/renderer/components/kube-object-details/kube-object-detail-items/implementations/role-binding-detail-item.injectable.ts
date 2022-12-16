@@ -17,7 +17,7 @@ const roleBindingDetailItemInjectable = getInjectable({
 
     return {
       Component: RoleBindingDetails,
-      enabled: computed(() => isRoleBinding(kubeObject.get())),
+      enabled: computed(() => isRoleBinding(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

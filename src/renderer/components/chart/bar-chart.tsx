@@ -13,7 +13,7 @@ import type { ChartProps } from "./chart";
 import { Chart, ChartKind } from "./chart";
 import { bytesToUnits, cssNames, isObject } from "../../utils";
 import { ZebraStripesPlugin } from "./zebra-stripes.plugin";
-import type { LensTheme } from "../../themes/store";
+import type { LensTheme } from "../../themes/lens-theme";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import assert from "assert";
 import { withInjectables } from "@ogre-tools/injectable-react";

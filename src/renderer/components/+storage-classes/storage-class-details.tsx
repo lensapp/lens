@@ -12,7 +12,6 @@ import { Badge } from "../badge";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { StorageClass } from "../../../common/k8s-api/endpoints";
-import { KubeObjectMeta } from "../kube-object-meta";
 import type { StorageClassStore } from "./store";
 import { VolumeDetailsList } from "../+storage-volumes/volume-details-list";
 import type { PersistentVolumeStore } from "../+storage-volumes/store";
@@ -60,8 +59,6 @@ class NonInjectedStorageClassDetails extends React.Component<StorageClassDetails
 
     return (
       <div className="StorageClassDetails">
-        <KubeObjectMeta object={storageClass}/>
-
         {provisioner && (
           <DrawerItem name="Provisioner" labelsOnly>
             <Badge label={provisioner}/>
