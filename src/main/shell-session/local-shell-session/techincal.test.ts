@@ -4,7 +4,7 @@
  */
 
 import type { DiContainer } from "@ogre-tools/injectable";
-import { WebSocket } from "ws";
+import type WebSocket from "ws";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
@@ -86,13 +86,18 @@ describe("technical unit tests for local shell sessions", () => {
           };
         });
 
+        const websocket = {
+          on: jest.fn(() => websocket),
+          once: jest.fn(() => websocket),
+        } as Partial<WebSocket> as WebSocket;
+
         await openLocalShellSession({
           cluster: {
             getProxyKubeconfigPath: async () => "/some-proxy-kubeconfig",
             preferences: {},
           } as Partial<Cluster> as Cluster,
           tabId: "my-tab-id",
-          websocket: new WebSocket(null),
+          websocket,
         });
       });
     });
