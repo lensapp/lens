@@ -18,7 +18,9 @@ const setupRunnablesAfterWindowIsOpenedInjectable = getInjectable({
     return {
       id: "setup-runnables-after-window-is-opened",
       run: () => {
-        app.on("browser-window-created", () => afterWindowIsOpened);
+        app.on("browser-window-created", () => {
+          afterWindowIsOpened();
+        });
 
         return undefined;
       },
