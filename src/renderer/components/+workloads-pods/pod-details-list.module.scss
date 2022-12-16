@@ -1,56 +1,65 @@
 .PodDetailsList {
-  @mixin status-colors {
-    @each $status, $color in $pod-status-color-list {
-      &:global(.#{$status}) {
-        color: $color;
-      }
-    }
-  }
-
   .table {
+    margin: 0 (-$margin * 3);
+
     &:global(.virtual) {
       height: 500px;
     }
 
-    :global(.TableCell).warning {
-      @include table-cell-warning;
-    }
-
-    :global(.TableCell).status {
-      @include status-colors;
+    .warning {
+      display: flex;
+      align-items: center;
+      flex-grow: 0.3;
+      padding: 0;
     }
   }
-}
 
-.table {
-  margin: 0 (-$margin * 3);
-}
-
-.name {
-  flex-grow: 2;
-  margin-left: $margin;
-}
-
-.node {
-  flex-grow: 2;
-}
-
-.namespace {
-  flex-grow: 1.2;
-}
-
-.cpu {
-  align-self: center;
-
-  .LineProgress {
-    color: var(--blue);
+  .name {
+    flex-grow: 2;
+    margin-left: $margin;
   }
-}
-
-.memory {
-  align-self: center;
-
-  :global(.LineProgress) {
-    color: var(--magenta);
+  
+  .node {
+    flex-grow: 2;
+  }
+  
+  .namespace {
+    flex-grow: 1.2;
+  }
+  
+  .cpu {
+    align-self: center;
+  
+    .LineProgress {
+      color: var(--blue);
+    }
+  }
+  
+  .memory {
+    align-self: center;
+  
+    :global(.LineProgress) {
+      color: var(--magenta);
+    }
+  }
+  
+  .status[data-status=running] {
+    color: var(--colorOk);
+  }
+  
+  .status[data-status=pending] {
+    color: var(--colorWarning);
+  }
+  
+  .status[data-status=evicted] {
+    color: var(--colorError);;
+  }
+  
+  .status[data-status=failed] {
+    color: var(--colorError);;
+  }
+  
+  .status[data-status=succeeded] {
+    color: var(--colorOk);
   }
 }

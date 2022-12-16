@@ -150,7 +150,7 @@ export class NonInjectedPodDetailsList extends React.Component<PodDetailsListPro
         </TableCell>
         <TableCell className={styles.cpu}>{this.renderCpuUsage(`cpu-${pod.getId()}`, metrics.cpu)}</TableCell>
         <TableCell className={styles.memory}>{this.renderMemoryUsage(`memory-${pod.getId()}`, metrics.memory)}</TableCell>
-        <TableCell className={cssNames(styles.status, kebabCase(pod.getStatusMessage()))}>{pod.getStatusMessage()}</TableCell>
+        <TableCell className={cssNames(styles.status)} data-status={kebabCase(pod.getStatusMessage())}>{pod.getStatusMessage()}</TableCell>
       </TableRow>
     );
   }
