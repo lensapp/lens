@@ -45,6 +45,11 @@ configs.push((): webpack.Configuration => {
       nodeExternals(),
     ],
     module: {
+      parser: {
+        javascript: {
+          commonjsMagicComments: true,
+        },
+      },
       rules: [
         {
           test: /\.node$/,

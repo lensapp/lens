@@ -37,6 +37,7 @@ interface Dependencies {
   readonly extensionsStore: ExtensionsStore;
   readonly extensionInstallationStateStore: ExtensionInstallationStateStore;
   readonly extensionPackageRootDirectory: string;
+  readonly bundledExtensions: InstalledExtension[];
   readonly resourcesDirectory: string;
   readonly logger: Logger;
   readonly isProduction: boolean;
@@ -384,30 +385,11 @@ export class ExtensionDiscovery {
   }
 
   async ensureExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
-    const bundledExtensions = await this.loadBundledExtensions();
+    const bundledExtensions = this.dependencies.bundledExtensions;
     const userExtensions = await this.loadFromFolder(this.localFolderPath, bundledExtensions.map((extension) => extension.manifest.name));
     const extensions = bundledExtensions.concat(userExtensions);
 
     return this.extensions = new Map(extensions.map(extension => [extension.id, extension]));
-  }
-
-  async loadBundledExtensions(): Promise<InstalledExtension[]> {
-    const extensions: InstalledExtension[] = [];
-    const extensionNames = this.dependencies.applicationInformation.config.extensions || [];
-
-    for (const dirName of extensionNames) {
-      const absPath = this.dependencies.joinPaths(__dirname, "..", "..", "node_modules", dirName);
-      const extension = await this.loadExtensionFromFolder(absPath, { isBundled: true });
-
-      if (!extension) {
-        throw new Error(`Couldn't load bundled extension: ${dirName}`);
-      }
-
-      extensions.push(extension);
-    }
-    this.dependencies.logger.debug(`${logModule}: ${extensions.length} extensions loaded`, { extensions });
-
-    return extensions;
   }
 
   async loadFromFolder(folderPath: string, bundledExtensions: string[]): Promise<InstalledExtension[]> {

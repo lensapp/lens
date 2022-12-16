@@ -13,6 +13,7 @@ const di = getDi();
 
 startApp({
   di,
+  extensions: [],
 });
 
 export { Mobx, LensExtensions, Pty };

@@ -29,6 +29,7 @@ import removePathInjectable from "../../common/fs/remove-path.injectable";
 import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
 import applicationInformationToken from "../../common/vars/application-information-token.injectable";
 import lensResourcesDirInjectable from "../../common/vars/lens-resources-dir.injectable";
+import bundledExtensionsInjectable from "./bundled-extensions.injectable";
 
 const extensionDiscoveryInjectable = getInjectable({
   id: "extension-discovery",
@@ -59,6 +60,7 @@ const extensionDiscoveryInjectable = getInjectable({
     joinPaths: di.inject(joinPathsInjectable),
     homeDirectoryPath: di.inject(homeDirectoryPathInjectable),
     applicationInformation: di.inject(applicationInformationToken),
+    bundledExtensions: di.inject(bundledExtensionsInjectable),
   }),
 });
 

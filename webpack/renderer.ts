@@ -71,6 +71,11 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       minimize: false,
     },
     module: {
+      parser: {
+        javascript: {
+          commonjsMagicComments: true,
+        },
+      },
       rules: [
         {
           test: /\.node$/,

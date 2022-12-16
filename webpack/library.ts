@@ -13,8 +13,10 @@ import { assetsFolderName, buildDir, htmlTemplate, isDevelopment, mainDir, publi
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
+const defaultRendererConfig = rendererConfig({ showVars: false });
+
 const renderer: webpack.Configuration = ({
-  ...rendererConfig({ showVars: false }),
+  ...defaultRendererConfig,
   plugins: [
     // see also: https://github.com/Microsoft/monaco-editor-webpack-plugin#options
     new MonacoWebpackPlugin({
@@ -52,6 +54,9 @@ const main: webpack.Configuration = ({
     libraryTarget: "global",
     path: buildDir,
   },
+  optimization: {
+    minimize: false,
+  },
   resolve: {
     extensions: [".json", ".js", ".ts"],
   },
@@ -59,6 +64,11 @@ const main: webpack.Configuration = ({
     nodeExternals(),
   ],
   module: {
+    parser: {
+      javascript: {
+        commonjsMagicComments: true,
+      },
+    },
     rules: [
       {
         test: /\.node$/,
