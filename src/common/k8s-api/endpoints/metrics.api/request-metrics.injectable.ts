@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { getSecondsFromUnixEpoch } from "../../../utils/date/get-current-date-time";
-import { apiBaseInjectionToken } from "../../api-base";
+import apiBaseInjectable from "../../api-base.injectable";
 import type { MetricData } from "../metrics.api";
 
 
@@ -46,7 +46,7 @@ export interface RequestMetrics {
 const requestMetricsInjectable = getInjectable({
   id: "request-metrics",
   instantiate: (di) => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return (async (query: object, params: RequestMetricsParams = {}) => {
       const { range = 3600, step = 60, namespace } = params;

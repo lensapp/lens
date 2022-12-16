@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { urlBuilderFor } from "../../../utils/buildUrl";
-import { apiBaseInjectionToken } from "../../api-base";
+import apiBaseInjectable from "../../api-base.injectable";
 import type { HelmReleaseDto } from "../helm-releases.api";
 
 export type RequestHelmReleases = (namespace?: string) => Promise<HelmReleaseDto[]>;
@@ -15,7 +15,7 @@ const requestHelmReleasesInjectable = getInjectable({
   id: "request-helm-releases",
 
   instantiate: (di): RequestHelmReleases => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return (namespace) => apiBase.get(requestHelmReleasesEndpoint.compile({ namespace }));
   },

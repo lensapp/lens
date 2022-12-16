@@ -4,10 +4,10 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { urlBuilderFor } from "../../../utils/buildUrl";
-import { apiBaseInjectionToken } from "../../api-base";
 import { HelmChart } from "../helm-charts.api";
 import type { RawHelmChart } from "../helm-charts.api";
 import { isDefined } from "../../../utils";
+import apiBaseInjectable from "../../api-base.injectable";
 
 const requestVersionsEndpoint = urlBuilderFor("/v2/charts/:repo/:name/versions");
 
@@ -16,7 +16,7 @@ export type RequestHelmChartVersions = (repo: string, chartName: string) => Prom
 const requestHelmChartVersionsInjectable = getInjectable({
   id: "request-helm-chart-versions",
   instantiate: (di): RequestHelmChartVersions => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return async (repo, name) => {
       const rawVersions = await apiBase.get(requestVersionsEndpoint.compile({ name, repo })) as RawHelmChart[];

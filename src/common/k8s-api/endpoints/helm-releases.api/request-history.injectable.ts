@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { urlBuilderFor } from "../../../utils/buildUrl";
-import { apiBaseInjectionToken } from "../../api-base";
+import apiBaseInjectable from "../../api-base.injectable";
 
 export interface HelmReleaseRevision {
   revision: number;
@@ -22,7 +22,7 @@ const requestHistoryEnpoint = urlBuilderFor("/v2/releases/:namespace/:name/histo
 const requestHelmReleaseHistoryInjectable = getInjectable({
   id: "request-helm-release-history",
   instantiate: (di): RequestHelmReleaseHistory => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return (name, namespace) => apiBase.get(requestHistoryEnpoint.compile({ name, namespace }));
   },

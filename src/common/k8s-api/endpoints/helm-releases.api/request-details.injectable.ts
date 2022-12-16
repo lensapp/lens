@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { KubeJsonApiData } from "../../kube-json-api";
-import { apiBaseInjectionToken } from "../../api-base";
 import { urlBuilderFor } from "../../../utils/buildUrl";
+import apiBaseInjectable from "../../api-base.injectable";
 
 export interface HelmReleaseDetails {
   resources: KubeJsonApiData[];
@@ -32,7 +32,7 @@ const requestHelmReleaseDetailsInjectable = getInjectable({
   id: "call-for-helm-release-details",
 
   instantiate: (di): CallForHelmReleaseDetails => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return (name, namespace) => apiBase.get(requestDetailsEnpoint.compile({ name, namespace }));
   },

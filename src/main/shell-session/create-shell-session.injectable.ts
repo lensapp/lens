@@ -22,10 +22,11 @@ const openShellSessionInjectable = getInjectable({
 
   instantiate: (di): OpenShellSession => {
     const openLocalShellSession = di.inject(openLocalShellSessionInjectable);
+    const openNodeShellSession = di.inject(openNodeShellSessionInjectable);
 
     return ({ nodeName, ...args }) => (
       nodeName
-        ? di.inject(openNodeShellSessionInjectable, { nodeName, ...args })
+        ? openNodeShellSession({ nodeName, ...args })
         : openLocalShellSession(args)
     );
   },

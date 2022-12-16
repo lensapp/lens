@@ -4,7 +4,7 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import { apiBaseInjectionToken } from "../../../common/k8s-api/api-base";
+import apiBaseInjectable from "../../../common/k8s-api/api-base.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import { urlBuilderFor } from "../../../common/utils/buildUrl";
 import type { ForwardedPort } from "../port-forward-item";
@@ -16,7 +16,7 @@ const requestActiveEndpoint = urlBuilderFor("/pods/port-forward/:namespace/:kind
 const requestActivePortForwardInjectable = getInjectable({
   id: "request-active-port-forward",
   instantiate: (di): RequestActivePortForward => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
     const logger = di.inject(loggerInjectable);
 
     return async ({ port, forwardPort, namespace, kind, name, ...rest }) => {
