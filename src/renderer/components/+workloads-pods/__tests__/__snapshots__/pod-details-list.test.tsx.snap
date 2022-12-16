@@ -148,7 +148,8 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
           0
         </div>
         <div
-          class="TableCell status running"
+          class="TableCell status"
+          data-status="running"
         >
           Running
         </div>
@@ -196,7 +197,8 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
           0
         </div>
         <div
-          class="TableCell status failed"
+          class="TableCell status"
+          data-status="failed"
         >
           Failed
         </div>
@@ -244,7 +246,8 @@ exports[`<PodDetailsList /> when few pods passed renders table with pods 1`] = `
           0
         </div>
         <div
-          class="TableCell status waiting"
+          class="TableCell status"
+          data-status="waiting"
         >
           Waiting
         </div>
@@ -430,7 +433,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status waiting"
+          class="TableCell status"
+          data-status="waiting"
         >
           Waiting
         </div>
@@ -506,7 +510,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status failed"
+          class="TableCell status"
+          data-status="failed"
         >
           Failed
         </div>
@@ -582,7 +587,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status running"
+          class="TableCell status"
+          data-status="running"
         >
           Running
         </div>
@@ -768,7 +774,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status waiting"
+          class="TableCell status"
+          data-status="waiting"
         >
           Waiting
         </div>
@@ -844,7 +851,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status failed"
+          class="TableCell status"
+          data-status="failed"
         >
           Failed
         </div>
@@ -920,7 +928,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status running"
+          class="TableCell status"
+          data-status="running"
         >
           Running
         </div>
@@ -1106,7 +1115,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status failed"
+          class="TableCell status"
+          data-status="failed"
         >
           Failed
         </div>
@@ -1182,7 +1192,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status waiting"
+          class="TableCell status"
+          data-status="waiting"
         >
           Waiting
         </div>
@@ -1258,7 +1269,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status running"
+          class="TableCell status"
+          data-status="running"
         >
           Running
         </div>
@@ -1444,7 +1456,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status waiting"
+          class="TableCell status"
+          data-status="waiting"
         >
           Waiting
         </div>
@@ -1520,7 +1533,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status failed"
+          class="TableCell status"
+          data-status="failed"
         >
           Failed
         </div>
@@ -1596,7 +1610,8 @@ exports[`<PodDetailsList /> when few pods passed when metrics max values passed 
           </div>
         </div>
         <div
-          class="TableCell status running"
+          class="TableCell status"
+          data-status="running"
         >
           Running
         </div>
