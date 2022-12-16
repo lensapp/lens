@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { urlBuilderFor } from "../../../utils/buildUrl";
-import { apiBaseInjectionToken } from "../../api-base";
+import apiBaseInjectable from "../../api-base.injectable";
 
 const requestValuesEndpoint = urlBuilderFor("/v2/charts/:repo/:name/values");
 
@@ -13,7 +13,7 @@ export type RequestHelmChartValues = (repo: string, name: string, version: strin
 const requestHelmChartValuesInjectable = getInjectable({
   id: "request-helm-chart-values",
   instantiate: (di): RequestHelmChartValues => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return (repo, name, version) => (
       apiBase.get(requestValuesEndpoint.compile({ repo, name }, { version }))

@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { apiKubePrefix } from "../vars";
 import isDebuggingInjectable from "../vars/is-debugging.injectable";
-import { apiBaseInjectionToken } from "./api-base";
+import apiBaseInjectable from "./api-base.injectable";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
 import type { KubeJsonApi } from "./kube-json-api";
 
@@ -14,7 +14,7 @@ export type CreateKubeJsonApiForCluster = (clusterId: string) => KubeJsonApi;
 const createKubeJsonApiForClusterInjectable = getInjectable({
   id: "create-kube-json-api-for-cluster",
   instantiate: (di): CreateKubeJsonApiForCluster => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
     const isDebugging = di.inject(isDebuggingInjectable);
 

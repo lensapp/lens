@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { urlBuilderFor } from "../../../utils/buildUrl";
-import { apiBaseInjectionToken } from "../../api-base";
+import apiBaseInjectable from "../../api-base.injectable";
 
 export type RequestHelmReleaseConfiguration = (
   name: string,
@@ -18,7 +18,7 @@ const requestHelmReleaseConfigurationInjectable = getInjectable({
   id: "request-helm-release-configuration",
 
   instantiate: (di): RequestHelmReleaseConfiguration => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return (name, namespace, all: boolean) => (
       apiBase.get(requestConfigurationEnpoint.compile({ name, namespace }, { all }))

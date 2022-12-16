@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { apiBaseInjectionToken } from "../../api-base";
 import type { RawHelmChart } from "../helm-charts.api";
 import { HelmChart } from "../helm-charts.api";
 import { isDefined } from "../../../utils";
+import apiBaseInjectable from "../../api-base.injectable";
 
 export type RequestHelmCharts = () => Promise<HelmChart[]>;
 export type RepoHelmChartList = Record<string, RawHelmChart[]>;
@@ -17,7 +17,7 @@ export type RepoHelmChartList = Record<string, RawHelmChart[]>;
 const requestHelmChartsInjectable = getInjectable({
   id: "request-helm-charts",
   instantiate: (di) => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return async () => {
       const data = await apiBase.get<Record<string, RepoHelmChartList>>("/v2/charts");

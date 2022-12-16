@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { urlBuilderFor } from "../../../utils/buildUrl";
-import { apiBaseInjectionToken } from "../../api-base";
+import apiBaseInjectable from "../../api-base.injectable";
 
 const requestReadmeEndpoint = urlBuilderFor("/v2/charts/:repo/:name/readme");
 
@@ -13,7 +13,7 @@ export type RequestHelmChartReadme = (repo: string, name: string, version?: stri
 const requestHelmChartReadmeInjectable = getInjectable({
   id: "request-helm-chart-readme",
   instantiate: (di): RequestHelmChartReadme => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return (repo, name, version) => (
       apiBase.get(requestReadmeEndpoint.compile({ name, repo }, { version }))

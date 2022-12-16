@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { apiBaseInjectionToken } from "../../api-base";
 import { urlBuilderFor } from "../../../utils/buildUrl";
 import type { AsyncResult } from "../../../utils/async-result";
+import apiBaseInjectable from "../../api-base.injectable";
 
 interface HelmReleaseUpdatePayload {
   repo: string;
@@ -26,7 +26,7 @@ const requestHelmReleaseUpdateInjectable = getInjectable({
   id: "request-helm-release-update",
 
   instantiate: (di): RequestHelmReleaseUpdate => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return async (name, namespace, { repo, chart, values, version }) => {
       try {
