@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RequestInit, Response } from "node-fetch";
-import nodeFetchModuleInjectable from "./unsafe-fetch.injectable";
+import nodeFetchModuleInjectable from "./fetch-module.injectable";
 
 export type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
 
