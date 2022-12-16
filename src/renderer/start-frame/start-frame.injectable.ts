@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { runManyFor } from "../../common/runnable/run-many-for";
-import { beforeFrameStartsInjectionToken, beforeClusterFrameStartsInjectionToken, beforeFrameStartsFirstInjectionToken, beforeMainFrameStartsInjectionToken } from "../before-frame-starts/tokens";
+import * as tokens from "../before-frame-starts/tokens";
 import currentlyInClusterFrameInjectable from "../routes/currently-in-cluster-frame.injectable";
 
 const startFrameInjectable = getInjectable({
@@ -13,22 +13,30 @@ const startFrameInjectable = getInjectable({
   // TODO: Consolidate contents of bootstrap.tsx here
   instantiate: (di) => {
     const runMany = runManyFor(di);
-    const beforeFrameStartsFirst = runMany(beforeFrameStartsFirstInjectionToken);
-    const beforeMainFrameStarts = runMany(beforeMainFrameStartsInjectionToken);
-    const beforeClusterFrameStarts = runMany(beforeClusterFrameStartsInjectionToken);
-    const beforeFrameStarts = runMany(beforeFrameStartsInjectionToken);
+    const beforeFrameStartsFirst = runMany(tokens.beforeFrameStartsFirstInjectionToken);
+    const beforeMainFrameStartsFirst = runMany(tokens.beforeMainFrameStartsFirstInjectionToken);
+    const beforeClusterFrameStartsFirst = runMany(tokens.beforeClusterFrameStartsFirstInjectionToken);
+    const beforeFrameStartsSecond = runMany(tokens.beforeFrameStartsSecondInjectionToken);
+    const beforeMainFrameStartsSecond = runMany(tokens.beforeMainFrameStartsSecondInjectionToken);
+    const beforeClusterFrameStartsSecond = runMany(tokens.beforeClusterFrameStartsSecondInjectionToken);
     const currentlyInClusterFrame = di.inject(currentlyInClusterFrameInjectable);
 
     return async () => {
       await beforeFrameStartsFirst();
 
       if (currentlyInClusterFrame) {
-        await beforeClusterFrameStarts();
+        await beforeClusterFrameStartsFirst();
       } else {
-        await beforeMainFrameStarts();
+        await beforeMainFrameStartsFirst();
       }
 
-      await beforeFrameStarts();
+      await beforeFrameStartsSecond();
+
+      if (currentlyInClusterFrame) {
+        await beforeClusterFrameStartsSecond();
+      } else {
+        await beforeMainFrameStartsSecond();
+      }
     };
   },
 });

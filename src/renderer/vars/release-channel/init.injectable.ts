@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import releaseChannelInjectable from "../../../common/vars/release-channel.injectable";
-import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../../before-frame-starts/tokens";
 import initSemanticBuildVersionInjectable from "../semantic-build-version/init.injectable";
 
 const initReleaseChannelInjectable = getInjectable({
@@ -18,7 +18,7 @@ const initReleaseChannelInjectable = getInjectable({
     },
     runAfter: di.inject(initSemanticBuildVersionInjectable),
   }),
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default initReleaseChannelInjectable;

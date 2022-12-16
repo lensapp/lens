@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { customMonacoThemeInjectionToken } from "../../components/monaco-editor";
 import addNewMonacoThemeInjectable from "../../monaco/add-new-theme.injectable";
-import { beforeFrameStartsInjectionToken } from "../tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../tokens";
 
 const loadMonacoThemesInjectable = getInjectable({
   id: "load-monaco-themes",
@@ -18,7 +18,7 @@ const loadMonacoThemesInjectable = getInjectable({
       customThemes.forEach(addNewMonacoTheme);
     },
   }),
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default loadMonacoThemesInjectable;

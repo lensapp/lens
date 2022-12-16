@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeFrameStartsInjectionToken } from "../../../../renderer/before-frame-starts/tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../../../../renderer/before-frame-starts/tokens";
 import initUserStoreInjectable from "../../../../renderer/stores/init-user-store.injectable";
 import systemThemeConfigurationInjectable from "../../../../renderer/themes/system-theme.injectable";
 import requestInitialSystemThemeTypeInjectable from "./request-initial.injectable";
@@ -20,7 +20,7 @@ const initializeSystemThemeTypeInjectable = getInjectable({
     },
     runAfter: di.inject(initUserStoreInjectable),
   }),
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default initializeSystemThemeTypeInjectable;
