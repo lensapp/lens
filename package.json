@@ -60,7 +60,6 @@
     "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
     "welcomeRoute": "/welcome",
     "extensions": [
-      "node-menu",
       "pod-menu"
     ]
   },
@@ -232,7 +231,6 @@
     "joi": "^17.7.0",
     "js-yaml": "^4.1.0",
     "jsdom": "^16.7.0",
-    "lens-node-menu": "file:./extensions/node-menu",
     "lens-pod-menu": "file:./extensions/pod-menu",
     "lodash": "^4.17.15",
     "marked": "^4.2.4",
@@ -247,7 +245,6 @@
     "monaco-editor": "^0.29.1",
     "monaco-editor-webpack-plugin": "^5.0.0",
     "node-fetch": "^3.3.0",
-    "node-menu": "file:./extensions/node-menu",
     "node-pty": "0.10.1",
     "npm": "^8.19.3",
     "p-limit": "^3.1.0",
