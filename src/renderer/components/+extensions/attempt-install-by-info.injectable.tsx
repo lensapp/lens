@@ -15,7 +15,7 @@ import { reduce } from "lodash";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 import { withTimeout } from "../../../common/fetch/timeout-controller";
 import downloadBinaryInjectable from "../../../common/fetch/download-binary.injectable";
-import downloadJsonInjectable from "../../../common/fetch/download-json.injectable";
+import downloadJsonInjectable from "../../../common/fetch/download-json/normal.injectable";
 import type { PackageJson } from "type-fest";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
