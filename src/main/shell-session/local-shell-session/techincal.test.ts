@@ -4,7 +4,7 @@
  */
 
 import type { DiContainer } from "@ogre-tools/injectable";
-import { WebSocket } from "ws";
+import WebSocket from "ws";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
@@ -92,7 +92,7 @@ describe("technical unit tests for local shell sessions", () => {
             preferences: {},
           } as Partial<Cluster> as Cluster,
           tabId: "my-tab-id",
-          websocket: new WebSocket(null),
+          websocket: new WebSocket(""),
         });
       });
     });
