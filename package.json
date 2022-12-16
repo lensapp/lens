@@ -59,9 +59,7 @@
     "sentryDsn": "",
     "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
     "welcomeRoute": "/welcome",
-    "extensions": [
-      "pod-menu"
-    ]
+    "extensions": []
   },
   "engines": {
     "node": ">=16 <17"
@@ -231,7 +229,6 @@
     "joi": "^17.7.0",
     "js-yaml": "^4.1.0",
     "jsdom": "^16.7.0",
-    "lens-pod-menu": "file:./extensions/pod-menu",
     "lodash": "^4.17.15",
     "marked": "^4.2.4",
     "md5-file": "^5.0.0",
@@ -249,7 +246,6 @@
     "npm": "^8.19.3",
     "p-limit": "^3.1.0",
     "path-to-regexp": "^6.2.0",
-    "pod-menu": "file:./extensions/pod-menu",
     "proper-lockfile": "^4.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
