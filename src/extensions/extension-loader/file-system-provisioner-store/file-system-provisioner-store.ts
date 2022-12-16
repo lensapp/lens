@@ -9,7 +9,7 @@ import type { BaseStoreDependencies } from "../../../common/base-store/base-stor
 import { BaseStore } from "../../../common/base-store/base-store";
 import type { LensExtensionId } from "../../lens-extension";
 import { getOrInsertWithAsync, toJS } from "../../../common/utils";
-import type { EnsureDirectory } from "../../../common/fs/ensure-dir.injectable";
+import type { EnsureDirectory } from "../../../common/fs/ensure-directory.injectable";
 import type { JoinPaths } from "../../../common/path/join-paths.injectable";
 import type { RandomBytes } from "../../../common/utils/random-bytes.injectable";
 

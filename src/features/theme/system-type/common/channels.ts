@@ -4,7 +4,7 @@
  */
 
 import type { MessageChannel } from "../../../../common/utils/channel/message-channel-listener-injection-token";
-import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import type { RequestChannel } from "../../../../common/utils/channel/request-channel";
 
 export type SystemThemeType = "dark" | "light";
 

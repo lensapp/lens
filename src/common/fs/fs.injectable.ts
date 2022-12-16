@@ -21,6 +21,8 @@ const fsInjectable = getInjectable({
         rm,
         access,
         stat,
+        chmod,
+        copyFile,
       },
       ensureDir,
       ensureDirSync,
@@ -34,6 +36,7 @@ const fsInjectable = getInjectable({
       pathExists,
       copy,
       createReadStream,
+      createWriteStream,
     } = fse;
 
     return {
@@ -56,6 +59,9 @@ const fsInjectable = getInjectable({
       ensureDirSync,
       createReadStream,
       stat,
+      chmod,
+      copyFile,
+      createWriteStream,
     };
   },
   causesSideEffects: true,
