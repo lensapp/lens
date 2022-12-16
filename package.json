@@ -60,7 +60,6 @@
     "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
     "welcomeRoute": "/welcome",
     "extensions": [
-      "metrics-cluster-feature",
       "node-menu",
       "pod-menu"
     ]
@@ -233,13 +232,11 @@
     "joi": "^17.7.0",
     "js-yaml": "^4.1.0",
     "jsdom": "^16.7.0",
-    "lens-metrics-cluster-feature": "file:./extensions/metrics-cluster-feature",
     "lens-node-menu": "file:./extensions/node-menu",
     "lens-pod-menu": "file:./extensions/pod-menu",
     "lodash": "^4.17.15",
     "marked": "^4.2.4",
     "md5-file": "^5.0.0",
-    "metrics-cluster-feature": "file:./extensions/metrics-cluster-feature",
     "mobx": "^6.7.0",
     "mobx-observable-history": "^2.0.3",
     "mobx-react": "^7.6.0",
