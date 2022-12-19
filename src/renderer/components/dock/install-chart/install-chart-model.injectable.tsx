@@ -122,14 +122,18 @@ export class InstallChartModel {
         this.configuration.isLoading.set(true);
       });
 
-      const configuration = await this.dependencies.requestHelmChartValues(
+      const chartValuesRequest = await this.dependencies.requestHelmChartValues(
         this.chart.repo,
         this.chart.name,
         version,
       );
 
+      if (!chartValuesRequest.callWasSuccessful) {
+        throw chartValuesRequest.error;
+      }
+      
       runInAction(() => {
-        this.configuration.onChange(configuration);
+        this.configuration.onChange(chartValuesRequest.response);
         this.configuration.isLoading.set(false);
       });
     },
@@ -187,7 +191,7 @@ export class InstallChartModel {
   load = async () => {
     await this.dependencies.waitForChart();
 
-    const [defaultConfiguration, versions] = await Promise.all([
+    const [defaultConfigurationRequest, versions] = await Promise.all([
       this.dependencies.requestHelmChartValues(
         this.chart.repo,
         this.chart.name,
@@ -203,13 +207,14 @@ export class InstallChartModel {
     runInAction(() => {
       // TODO: Make "default" not hard-coded
       const namespace = this.chart.namespace || "default";
+      const values = this.chart.values || (defaultConfigurationRequest.callWasSuccessful ? defaultConfigurationRequest.response : "");
 
       this.versions.replace(versions);
 
       this.save({
         version: this.chart.version,
         namespace,
-        values: this.chart.values || defaultConfiguration,
+        values,
         releaseName: this.chart.releaseName,
       });
     });
