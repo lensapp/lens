@@ -232,7 +232,7 @@ describe("opening dock tab for installing helm chart", () => {
             beforeEach(async () => {
               await requestHelmChartReadmeMock.resolve({
                 callWasSuccessful: true,
-                response: "some-readme"
+                response: "some-readme",
               });
             });
 
@@ -281,7 +281,7 @@ describe("opening dock tab for installing helm chart", () => {
                 beforeEach(async () => {
                   await requestHelmChartReadmeMock.resolve({
                     callWasSuccessful: true,
-                    response: "some-readme"
+                    response: "some-readme",
                   });
                 });
 
@@ -310,7 +310,7 @@ describe("opening dock tab for installing helm chart", () => {
                 beforeEach(async () => {
                   await requestHelmChartReadmeMock.resolve({
                     callWasSuccessful: false,
-                    error: "some-error"
+                    error: "some-error",
                   });
                 });
 
