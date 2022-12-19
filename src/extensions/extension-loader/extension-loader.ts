@@ -21,7 +21,7 @@ import type { Extension } from "./extension/extension.injectable";
 import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
-import type { BundledExtension } from "../extension-discovery/bundled-extension-path";
+import type { BundledExtension } from "../extension-discovery/bundled-extension-token";
 
 const logModule = "[EXTENSIONS-LOADER]";
 
