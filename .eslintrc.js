@@ -11,7 +11,6 @@ module.exports = {
     "**/dist/**/*",
     "**/static/**/*",
     "**/site/**/*",
-    "extensions/*/*.tgz",
     "build/webpack/**/*",
   ],
   settings: {

@@ -6,10 +6,6 @@
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/node_modules" />
-      <excludeFolder url="file://$MODULE_DIR$/extensions/kube-object-event-status/node_modules" />
-      <excludeFolder url="file://$MODULE_DIR$/extensions/metrics-cluster-feature/node_modules" />
-      <excludeFolder url="file://$MODULE_DIR$/extensions/node-menu/node_modules" />
-      <excludeFolder url="file://$MODULE_DIR$/extensions/pod-menu/node_modules" />
       <excludeFolder url="file://$MODULE_DIR$/static/build" />
       <excludeFolder url="file://$MODULE_DIR$/src/extensions/npm/extensions/dist" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
