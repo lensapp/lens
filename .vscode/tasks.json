@@ -6,8 +6,9 @@
         {
             "type": "shell",
             "group": "build",
-            "command": "yarn",
+            "command": "npm",
             "args": [
+                "run",
                 "debug-build"
             ],
             "problemMatcher": [],

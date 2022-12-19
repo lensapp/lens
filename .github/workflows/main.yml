@@ -34,12 +34,12 @@ jobs:
 
       - name: Generate Extensions API Reference using typedocs
         run: |
-          yarn install
-          yarn typedocs-extensions-api
+          npm clean-install
+          npm run typedocs-extensions-api
 
       - name: Verify that the markdown is valid
         run: |
-          yarn run verify-docs
+          npm run verify-docs
 
   build:
     name: Deploy docs
@@ -77,8 +77,8 @@ jobs:
 
       - name: Generate Extensions API Reference using typedocs
         run: |
-          yarn install
-          yarn typedocs-extensions-api
+          npm clean-install
+          npm run typedocs-extensions-api
 
       - name: mkdocs deploy master
         if: contains(github.ref, 'refs/heads/master')

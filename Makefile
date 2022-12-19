@@ -12,16 +12,16 @@ else
     DETECTED_OS := $(shell uname)
 endif
 
-node_modules: yarn.lock
-	yarn install --check-files --frozen-lockfile --network-timeout=100000
+node_modules: package-lock.json
+	npm clean-install
 
 binaries/client: node_modules
-	yarn download:binaries
+	npm run download:binaries
 
 .PHONY: compile-dev
 compile-dev: node_modules
-	yarn compile:main --cache
-	yarn compile:renderer --cache
+	npm run compile:main -- --cache
+	npm run compile:renderer -- --cache
 
 .PHONY: validate-dev
 ci-validate-dev: binaries/client compile-dev
@@ -29,12 +29,12 @@ ci-validate-dev: binaries/client compile-dev
 .PHONY: dev
 dev: binaries/client
 	rm -rf static/build/
-	yarn run build:tray-icons
-	yarn dev
+	npm run build:tray-icons
+	npm run dev
 
 .PHONY: lint
 lint: node_modules
-	yarn lint
+	npm run lint
 
 .PHONY: tag-release
 tag-release:
@@ -42,22 +42,22 @@ tag-release:
 
 .PHONY: test
 test: node_modules binaries/client
-	yarn run jest $(or $(CMD_ARGS), "src")
+	npm exec -- jest $(or $(CMD_ARGS), "src")
 
 .PHONY: integration
 integration: build
-	yarn integration
+	npm run integration
 
 .PHONY: build-impl
 build-impl:
-	yarn run download:binaries
-	yarn run build:tray-icons
-	yarn run compile
+	npm run download:binaries
+	npm run build:tray-icons
+	npm run compile
 ifeq "$(DETECTED_OS)" "Windows"
 # https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
 	rm -rf node_modules/win-ca/pem
 endif
-	yarn run electron-builder --publish onTag $(ELECTRON_BUILDER_EXTRA_ARGS)
+	npm exec -- electron-builder --publish onTag $(ELECTRON_BUILDER_EXTRA_ARGS)
 
 .PHONY: build
 build: node_modules binaries/client build-impl
@@ -66,18 +66,18 @@ src/extensions/npm/extensions/__mocks__:
 	cp -r __mocks__ src/extensions/npm/extensions/
 
 packages/extensions/dist: packages/extensions/node_modules
-	yarn compile:extension-types
+	npm run compile:extension-types
 
 packages/extensions/node_modules: packages/extensions/package.json
 	cd packages/extensions/ && ../../node_modules/.bin/npm install --no-audit --no-fund --no-save
 
 .PHONY: build-extensions-npm
 build-extensions-npm: build-extension-types packages/extensions/__mocks__
-	yarn npm:fix-extensions-package-version
+	npm run npm:fix-extensions-package-version
 
 .PHONY: build-library-npm
 build-library-npm:
-	yarn compile-library
+	npm run compile-library
 
 .PHONY: build-extension-types
 build-extension-types: node_modules packages/extensions/dist
@@ -94,11 +94,11 @@ publish-library-npm: node_modules build-library-npm
 
 .PHONY: build-docs
 build-docs:
-	yarn typedocs-extensions-api
+	npm run typedocs-extensions-api
 
 .PHONY: docs
 docs: build-docs
-	yarn mkdocs-serve-local
+	npm run mkdocs-serve-local
 
 .PHONY: clean-npm
 clean-npm:

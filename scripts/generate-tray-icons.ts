@@ -3,19 +3,25 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { ensureDir, readFile } from "fs-extra";
+import { writeFile, mkdir, readFile } from "fs/promises";
 import { JSDOM } from "jsdom";
 import path from "path";
 import sharp from "sharp";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const size = Number(process.env.OUTPUT_SIZE || "16");
-const outputFolder = process.env.OUTPUT_DIR || "./static/build/tray";
-const inputFile = process.env.INPUT_SVG_PATH || path.resolve(__dirname, "../src/renderer/components/icon/logo-lens.svg");
-const noticeFile = process.env.NOTICE_SVG_PATH || path.resolve(__dirname, "../src/renderer/components/icon/notice.svg");
-const spinnerFile = process.env.SPINNER_SVG_PATH || path.resolve(__dirname, "../src/renderer/components/icon/arrow-spinner.svg");
+const outputFolder = path.resolve(process.env.OUTPUT_DIR || "./static/build/tray");
+const inputFile = path.resolve(__dirname, process.env.INPUT_SVG_PATH || "../src/renderer/components/icon/logo-lens.svg");
+const noticeFile = path.resolve(__dirname, process.env.NOTICE_SVG_PATH || "../src/renderer/components/icon/notice.svg");
+const spinnerFile = path.resolve(__dirname, process.env.SPINNER_SVG_PATH || "../src/renderer/components/icon/arrow-spinner.svg");
 
 async function ensureOutputFoler() {
-  await ensureDir(outputFolder);
+  await mkdir(outputFolder, {
+    recursive: true,
+  });
 }
 
 function getSvgStyling(colouring: "dark" | "light"): string {
@@ -44,10 +50,14 @@ async function getBaseIconImage(system: TargetSystems) {
 }
 
 async function generateImage(image: Buffer, size: number, namePrefix: string) {
-  sharp(image)
+  const filePath = path.join(outputFolder, `${namePrefix}.png`);
+
+  const buffer = await sharp(image)
     .resize({ width: size, height: size })
     .png()
-    .toFile(path.join(outputFolder, `${namePrefix}.png`));
+    .toBuffer();
+
+  await writeFile(filePath, buffer);
 }
 
 async function generateImages(image: Buffer, size: number, name: string) {
@@ -103,37 +113,33 @@ async function getIconImage(system: TargetSystems, filePath: string) {
   return Buffer.from(root.outerHTML);
 }
 
-async function generateTrayIcons() {
-  try {
-    console.log("Generating tray icon pngs");
-    await ensureOutputFoler();
+try {
+  console.log("Generating tray icon pngs");
+  await ensureOutputFoler();
 
-    const baseIconTemplateImage = await getBaseIconImage("macos");
-    const baseIconImage = await getBaseIconImage("windows-or-linux");
+  const baseIconTemplateImage = await getBaseIconImage("macos");
+  const baseIconImage = await getBaseIconImage("windows-or-linux");
 
-    const updateAvailableTemplateImage = await generateImageWithSvg(baseIconTemplateImage, "macos", noticeFile);
-    const updateAvailableImage = await generateImageWithSvg(baseIconImage, "windows-or-linux", noticeFile);
+  const updateAvailableTemplateImage = await generateImageWithSvg(baseIconTemplateImage, "macos", noticeFile);
+  const updateAvailableImage = await generateImageWithSvg(baseIconImage, "windows-or-linux", noticeFile);
 
-    const checkingForUpdatesTemplateImage = await generateImageWithSvg(baseIconTemplateImage, "macos", spinnerFile);
-    const checkingForUpdatesImage = await generateImageWithSvg(baseIconImage, "windows-or-linux", spinnerFile);
+  const checkingForUpdatesTemplateImage = await generateImageWithSvg(baseIconTemplateImage, "macos", spinnerFile);
+  const checkingForUpdatesImage = await generateImageWithSvg(baseIconImage, "windows-or-linux", spinnerFile);
 
-    await Promise.all([
-      // Templates are for macOS only
-      generateImages(baseIconTemplateImage, size, "trayIconTemplate"),
-      generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate"),
-      generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate"),
-      generateImages(checkingForUpdatesTemplateImage, size, "trayIconCheckingForUpdatesTemplate"),
+  await Promise.all([
+    // Templates are for macOS only
+    generateImages(baseIconTemplateImage, size, "trayIconTemplate"),
+    generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate"),
+    generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate"),
+    generateImages(checkingForUpdatesTemplateImage, size, "trayIconCheckingForUpdatesTemplate"),
 
-      // Non-templates are for windows and linux
-      generateImages(baseIconImage, size, "trayIcon"),
-      generateImages(updateAvailableImage, size, "trayIconUpdateAvailable"),
-      generateImages(checkingForUpdatesImage, size, "trayIconCheckingForUpdates"),
-    ]);
+    // Non-templates are for windows and linux
+    generateImages(baseIconImage, size, "trayIcon"),
+    generateImages(updateAvailableImage, size, "trayIconUpdateAvailable"),
+    generateImages(checkingForUpdatesImage, size, "trayIconCheckingForUpdates"),
+  ]);
 
-    console.log("Generated all images");
-  } catch (error) {
-    console.error(error);
-  }
+  console.log("Generated all images");
+} catch (error) {
+  console.error(error);
 }
-
-generateTrayIcons();

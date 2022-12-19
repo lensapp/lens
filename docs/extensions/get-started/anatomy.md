@@ -62,7 +62,7 @@ Some of the most-important fields include:
   "renderer": "dist/renderer.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "dev": "npm run build --watch"
+    "dev": "npm run build -- --watch"
   },
   "dependencies": {
     "react-open-doodles": "^1.0.5"

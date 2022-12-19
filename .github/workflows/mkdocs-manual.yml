@@ -37,8 +37,8 @@ jobs:
 
       - name: Generate Extensions API Reference using typedocs
         run: |
-          yarn install
-          yarn typedocs-extensions-api
+          npm clean-install
+          npm run typedocs-extensions-api
 
       - name: Checkout master branch from lens
         uses: actions/checkout@v3

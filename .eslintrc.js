@@ -31,7 +31,6 @@ module.exports = {
     {
       files: [
         "**/*.js",
-        "**/*.mjs",
       ],
       extends: [
         "eslint:recommended",
@@ -95,6 +94,15 @@ module.exports = {
           { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"] },
         ],
         "no-template-curly-in-string": "error",
+      },
+    },
+    {
+      files: [
+        "scripts/*.ts",
+      ],
+      env: {
+        node: false,
+        es2022: true,
       },
     },
     {
