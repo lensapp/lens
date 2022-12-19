@@ -230,7 +230,10 @@ describe("opening dock tab for installing helm chart", () => {
 
           describe("when readme resolves", () => {
             beforeEach(async () => {
-              await requestHelmChartReadmeMock.resolve("some-readme");
+              await requestHelmChartReadmeMock.resolve({
+                callWasSuccessful: true,
+                response: "some-readme",
+              });
             });
 
             it("renders", () => {
@@ -276,7 +279,10 @@ describe("opening dock tab for installing helm chart", () => {
 
               describe("when readme resolves", () => {
                 beforeEach(async () => {
-                  await requestHelmChartReadmeMock.resolve("some-readme");
+                  await requestHelmChartReadmeMock.resolve({
+                    callWasSuccessful: true,
+                    response: "some-readme",
+                  });
                 });
 
                 it("renders", () => {
@@ -297,6 +303,19 @@ describe("opening dock tab for installing helm chart", () => {
                     "some-name",
                     "some-other-version",
                   );
+                });
+              });
+
+              describe("when readme rejects", () => {
+                beforeEach(async () => {
+                  await requestHelmChartReadmeMock.resolve({
+                    callWasSuccessful: false,
+                    error: "some-error",
+                  });
+                });
+
+                it("renders", () => {
+                  expect(rendered.baseElement).toMatchSnapshot();
                 });
               });
             });
