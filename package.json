@@ -54,6 +54,7 @@
     "compile:renderer": "yarn run webpack --config webpack/renderer.ts",
     "compile:extension-types": "yarn run webpack --config webpack/extensions.ts",
     "compile:node-fetch": "yarn run webpack --config ./webpack/node-fetch.ts",
+    "prepare": "yarn run compile:node-fetch",
     "npm:fix-package-version": "yarn run ts-node build/set_npm_version.ts",
     "build:linux": "yarn run compile && electron-builder --linux --dir",
     "build:mac": "yarn run compile && electron-builder --mac --dir",
