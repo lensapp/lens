@@ -149,9 +149,10 @@ describe("installing helm chart from previously opened tab", () => {
 
     describe("when configuration and version resolves", () => {
       beforeEach(async () => {
-        await requestHelmChartValuesMock.resolve(
-          "some-default-configuration",
-        );
+        await requestHelmChartValuesMock.resolve({
+          callWasSuccessful: true,
+          response: "some-default-configuration",
+        });
 
         await requestHelmChartVersionsMock.resolve([
           HelmChart.create({
