@@ -30,7 +30,6 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { GetRelativePath } from "../../common/path/get-relative-path.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type TypedEventEmitter from "typed-emitter";
-import type { ApplicationInformation } from "../../common/vars/application-information.injectable";
 
 interface Dependencies {
   readonly extensionLoader: ExtensionLoader;
@@ -42,7 +41,7 @@ interface Dependencies {
   readonly isProduction: boolean;
   readonly fileSystemSeparator: string;
   readonly homeDirectoryPath: string;
-  readonly applicationInformation: ApplicationInformation;
+  readonly bundledExtensionPaths: string[];
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
   installExtension: (name: string) => Promise<void>;
   readJsonFile: ReadJson;
@@ -393,14 +392,12 @@ export class ExtensionDiscovery {
 
   async loadBundledExtensions(): Promise<InstalledExtension[]> {
     const extensions: InstalledExtension[] = [];
-    const extensionNames = this.dependencies.applicationInformation.config.extensions || [];
 
-    for (const dirName of extensionNames) {
-      const absPath = this.dependencies.joinPaths(__dirname, "..", "..", "node_modules", dirName);
-      const extension = await this.loadExtensionFromFolder(absPath, { isBundled: true });
+    for (const bundledExtensionPath of this.dependencies.bundledExtensionPaths) {
+      const extension = await this.loadExtensionFromFolder(bundledExtensionPath, { isBundled: true });
 
       if (!extension) {
-        throw new Error(`Couldn't load bundled extension: ${dirName}`);
+        throw new Error(`Couldn't load bundled extension: ${bundledExtensionPath}`);
       }
 
       extensions.push(extension);

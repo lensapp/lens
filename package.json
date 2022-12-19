@@ -58,8 +58,7 @@
     "bundledHelmVersion": "3.7.2",
     "sentryDsn": "",
     "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
-    "welcomeRoute": "/welcome",
-    "extensions": []
+    "welcomeRoute": "/welcome"
   },
   "engines": {
     "node": ">=16 <17"
