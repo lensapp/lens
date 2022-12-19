@@ -13,7 +13,7 @@ body.resizing {
   $dimension: 12px;
 
   position: absolute;
-  z-index: var(--z-index-base);
+  z-index: var(--z-index-above);
 
   &::after {
     content: " ";
