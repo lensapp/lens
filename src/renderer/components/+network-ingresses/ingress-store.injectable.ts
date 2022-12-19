@@ -7,7 +7,7 @@ import assert from "assert";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import ingressApiInjectable from "../../../common/k8s-api/endpoints/ingress.api.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
-import { IngressStore } from "./store";
+import { IngressStore } from "./ingress-store";
 
 const ingressStoreInjectable = getInjectable({
   id: "ingress-store",
