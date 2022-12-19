@@ -240,9 +240,10 @@ describe("installing helm chart from new tab", () => {
 
         describe("when default configuration and versions resolve", () => {
           beforeEach(async () => {
-            await requestHelmChartValuesMock.resolve(
-              "some-default-configuration",
-            );
+            await requestHelmChartValuesMock.resolve({
+              callWasSuccessful: true,
+              response: "some-default-configuration",
+            });
 
             await requestHelmChartVersionsMock.resolve([
               HelmChart.create({
@@ -537,9 +538,10 @@ describe("installing helm chart from new tab", () => {
 
               describe("when configuration and versions resolve", () => {
                 beforeEach(async () => {
-                  await requestHelmChartValuesMock.resolve(
-                    "some-other-default-configuration",
-                  );
+                  await requestHelmChartValuesMock.resolve({
+                    callWasSuccessful: true,
+                    response: "some-other-default-configuration",
+                  });
 
                   await requestHelmChartVersionsMock.resolve([]);
                 });
@@ -702,9 +704,10 @@ describe("installing helm chart from new tab", () => {
 
               describe("when default configuration resolves", () => {
                 beforeEach(async () => {
-                  await requestHelmChartValuesMock.resolve(
-                    "some-default-configuration-for-other-version",
-                  );
+                  await requestHelmChartValuesMock.resolve({
+                    callWasSuccessful: true,
+                    response: "some-default-configuration-for-other-version",
+                  });
                 });
 
                 it("renders", () => {
@@ -847,9 +850,10 @@ describe("installing helm chart from new tab", () => {
                 )
                 .selectOption("some-other-version");
 
-              await requestHelmChartValuesMock.resolve(
-                "some-default-configuration-for-other-version",
-              );
+              await requestHelmChartValuesMock.resolve({
+                callWasSuccessful: true,
+                response: "some-default-configuration-for-other-version",
+              });
 
               expect(installButton).not.toHaveAttribute("disabled");
             });
@@ -920,9 +924,10 @@ describe("installing helm chart from new tab", () => {
                 )
                 .selectOption("some-other-version");
 
-              await requestHelmChartValuesMock.resolve(
-                "some-default-configuration-for-other-version",
-              );
+              await requestHelmChartValuesMock.resolve({
+                callWasSuccessful: true,
+                response: "some-default-configuration-for-other-version",
+              });
 
               const input = rendered.getByTestId(
                 "monaco-editor-for-some-first-tab-id",
