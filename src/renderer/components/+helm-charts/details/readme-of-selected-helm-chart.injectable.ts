@@ -26,11 +26,13 @@ const readmeOfSelectedHelmChartInjectable = getInjectable({
           return "";
         }
 
-        return await requestHelmChartReadme(
+        const result = await requestHelmChartReadme(
           chartVersion.getRepository(),
           chartVersion.getName(),
           chartVersion.getVersion(),
         );
+
+        return result.callWasSuccessful ? result.response : "";
       },
 
       valueWhenPending: "",

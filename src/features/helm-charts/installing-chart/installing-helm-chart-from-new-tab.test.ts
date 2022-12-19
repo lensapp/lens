@@ -178,7 +178,10 @@ describe("installing helm chart from new tab", () => {
           }),
         ]);
 
-        await requestHelmChartReadmeMock.resolve("some-readme");
+        await requestHelmChartReadmeMock.resolve({
+          callWasSuccessful: true,
+          response: "some-readme",
+        });
       });
 
       it("renders", () => {
@@ -472,7 +475,10 @@ describe("installing helm chart from new tab", () => {
                 }),
               ]);
 
-              await requestHelmChartReadmeMock.resolve("some-readme");
+              await requestHelmChartReadmeMock.resolve({
+                callWasSuccessful: true,
+                response: "some-readme",
+              });
             });
 
             it("renders", () => {
