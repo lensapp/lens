@@ -12,7 +12,6 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { PodSecurityPolicy } from "../../../common/k8s-api/endpoints";
 import { Badge } from "../badge";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 
 export interface PodSecurityPolicyDetailsProps extends KubeObjectDetailsProps<PodSecurityPolicy> {
@@ -74,8 +73,6 @@ export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyD
 
     return (
       <div className="PodSecurityPolicyDetails">
-        <KubeObjectMeta object={psp}/>
-
         {allowedCapabilities && (
           <DrawerItem name="Allowed Capabilities">
             {allowedCapabilities.join(", ")}

@@ -195,6 +195,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -215,7 +216,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -228,31 +229,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -267,7 +265,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -305,7 +303,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -313,7 +311,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -344,7 +341,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -352,6 +349,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -396,13 +394,11 @@ exports[`add custom helm repository in preferences when navigating to preference
                        
                     </div>
                     <div
-                      class="notice mt-3"
+                      class="loading-spinner"
                     >
                       <div
-                        class="flex-grow text-center"
-                      >
-                        No files and folders have been synced yet
-                      </div>
+                        class="Spinner singleColor"
+                      />
                     </div>
                   </section>
                 </div>
@@ -587,7 +583,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -654,7 +666,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -886,6 +898,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -906,7 +919,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -919,31 +932,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -958,7 +968,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -996,7 +1006,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -1004,7 +1014,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -1035,7 +1044,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -1043,6 +1052,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -1086,13 +1096,39 @@ exports[`add custom helm repository in preferences when navigating to preference
                       Synced Items
                        
                     </div>
-                    <div
-                      class="notice mt-3"
-                    >
+                    <div>
                       <div
-                        class="flex-grow text-center"
+                        class="item flex gaps align-center justify-space-between mt-3"
                       >
-                        No files and folders have been synced yet
+                        <i
+                          class="Icon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="folder"
+                          >
+                            folder
+                          </span>
+                        </i>
+                        <div
+                          class="flex-grow break-all"
+                        >
+                          /some-home-dir/.kube
+                        </div>
+                        <i
+                          class="Icon material interactive focusable"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="delete"
+                          >
+                            delete
+                          </span>
+                        </i>
+                        <div>
+                          Remove
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -1289,7 +1325,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -1356,7 +1408,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -1588,6 +1640,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -1608,7 +1661,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -1621,31 +1674,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -1660,7 +1710,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -1698,7 +1748,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -1706,7 +1756,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -1737,7 +1786,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -1745,6 +1794,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -1788,13 +1838,39 @@ exports[`add custom helm repository in preferences when navigating to preference
                       Synced Items
                        
                     </div>
-                    <div
-                      class="notice mt-3"
-                    >
+                    <div>
                       <div
-                        class="flex-grow text-center"
+                        class="item flex gaps align-center justify-space-between mt-3"
                       >
-                        No files and folders have been synced yet
+                        <i
+                          class="Icon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="folder"
+                          >
+                            folder
+                          </span>
+                        </i>
+                        <div
+                          class="flex-grow break-all"
+                        >
+                          /some-home-dir/.kube
+                        </div>
+                        <i
+                          class="Icon material interactive focusable"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="delete"
+                          >
+                            delete
+                          </span>
+                        </i>
+                        <div>
+                          Remove
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -1991,7 +2067,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -2058,7 +2150,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -2401,6 +2493,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -2421,7 +2514,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -2434,31 +2527,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -2473,7 +2563,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -2511,7 +2601,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -2519,7 +2609,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -2550,7 +2639,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -2558,6 +2647,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -2601,13 +2691,39 @@ exports[`add custom helm repository in preferences when navigating to preference
                       Synced Items
                        
                     </div>
-                    <div
-                      class="notice mt-3"
-                    >
+                    <div>
                       <div
-                        class="flex-grow text-center"
+                        class="item flex gaps align-center justify-space-between mt-3"
                       >
-                        No files and folders have been synced yet
+                        <i
+                          class="Icon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="folder"
+                          >
+                            folder
+                          </span>
+                        </i>
+                        <div
+                          class="flex-grow break-all"
+                        >
+                          /some-home-dir/.kube
+                        </div>
+                        <i
+                          class="Icon material interactive focusable"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="delete"
+                          >
+                            delete
+                          </span>
+                        </i>
+                        <div>
+                          Remove
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -2804,7 +2920,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -2871,7 +3003,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -3111,6 +3243,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -3131,7 +3264,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -3144,31 +3277,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -3183,7 +3313,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -3221,7 +3351,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -3229,7 +3359,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -3260,7 +3389,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -3268,6 +3397,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -3311,13 +3441,39 @@ exports[`add custom helm repository in preferences when navigating to preference
                       Synced Items
                        
                     </div>
-                    <div
-                      class="notice mt-3"
-                    >
+                    <div>
                       <div
-                        class="flex-grow text-center"
+                        class="item flex gaps align-center justify-space-between mt-3"
                       >
-                        No files and folders have been synced yet
+                        <i
+                          class="Icon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="folder"
+                          >
+                            folder
+                          </span>
+                        </i>
+                        <div
+                          class="flex-grow break-all"
+                        >
+                          /some-home-dir/.kube
+                        </div>
+                        <i
+                          class="Icon material interactive focusable"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="delete"
+                          >
+                            delete
+                          </span>
+                        </i>
+                        <div>
+                          Remove
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -3514,7 +3670,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -3581,7 +3753,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -3924,6 +4096,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -3944,7 +4117,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -3957,31 +4130,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -3996,7 +4166,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -4034,7 +4204,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -4042,7 +4212,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -4073,7 +4242,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -4081,6 +4250,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -4124,13 +4294,39 @@ exports[`add custom helm repository in preferences when navigating to preference
                       Synced Items
                        
                     </div>
-                    <div
-                      class="notice mt-3"
-                    >
+                    <div>
                       <div
-                        class="flex-grow text-center"
+                        class="item flex gaps align-center justify-space-between mt-3"
                       >
-                        No files and folders have been synced yet
+                        <i
+                          class="Icon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="folder"
+                          >
+                            folder
+                          </span>
+                        </i>
+                        <div
+                          class="flex-grow break-all"
+                        >
+                          /some-home-dir/.kube
+                        </div>
+                        <i
+                          class="Icon material interactive focusable"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="delete"
+                          >
+                            delete
+                          </span>
+                        </i>
+                        <div>
+                          Remove
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -4327,7 +4523,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -4394,7 +4606,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -4919,6 +5131,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -4939,7 +5152,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -4952,31 +5165,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -4991,7 +5201,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -5029,7 +5239,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -5037,7 +5247,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -5068,7 +5277,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -5076,6 +5285,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -5119,13 +5329,39 @@ exports[`add custom helm repository in preferences when navigating to preference
                       Synced Items
                        
                     </div>
-                    <div
-                      class="notice mt-3"
-                    >
+                    <div>
                       <div
-                        class="flex-grow text-center"
+                        class="item flex gaps align-center justify-space-between mt-3"
                       >
-                        No files and folders have been synced yet
+                        <i
+                          class="Icon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="folder"
+                          >
+                            folder
+                          </span>
+                        </i>
+                        <div
+                          class="flex-grow break-all"
+                        >
+                          /some-home-dir/.kube
+                        </div>
+                        <i
+                          class="Icon material interactive focusable"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="delete"
+                          >
+                            delete
+                          </span>
+                        </i>
+                        <div>
+                          Remove
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -5322,7 +5558,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -5389,7 +5641,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -5732,6 +5984,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -5752,7 +6005,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -5765,31 +6018,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -5804,7 +6054,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -5842,7 +6092,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -5850,7 +6100,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -5881,7 +6130,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -5889,6 +6138,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -5932,13 +6182,39 @@ exports[`add custom helm repository in preferences when navigating to preference
                       Synced Items
                        
                     </div>
-                    <div
-                      class="notice mt-3"
-                    >
+                    <div>
                       <div
-                        class="flex-grow text-center"
+                        class="item flex gaps align-center justify-space-between mt-3"
                       >
-                        No files and folders have been synced yet
+                        <i
+                          class="Icon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="folder"
+                          >
+                            folder
+                          </span>
+                        </i>
+                        <div
+                          class="flex-grow break-all"
+                        >
+                          /some-home-dir/.kube
+                        </div>
+                        <i
+                          class="Icon material interactive focusable"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="delete"
+                          >
+                            delete
+                          </span>
+                        </i>
+                        <div>
+                          Remove
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -6135,7 +6411,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -6202,7 +6494,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -6727,6 +7019,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -6747,7 +7040,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -6760,31 +7053,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -6799,7 +7089,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -6837,7 +7127,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -6845,7 +7135,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -6876,7 +7165,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -6884,6 +7173,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -6927,13 +7217,39 @@ exports[`add custom helm repository in preferences when navigating to preference
                       Synced Items
                        
                     </div>
-                    <div
-                      class="notice mt-3"
-                    >
+                    <div>
                       <div
-                        class="flex-grow text-center"
+                        class="item flex gaps align-center justify-space-between mt-3"
                       >
-                        No files and folders have been synced yet
+                        <i
+                          class="Icon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="folder"
+                          >
+                            folder
+                          </span>
+                        </i>
+                        <div
+                          class="flex-grow break-all"
+                        >
+                          /some-home-dir/.kube
+                        </div>
+                        <i
+                          class="Icon material interactive focusable"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="delete"
+                          >
+                            delete
+                          </span>
+                        </i>
+                        <div>
+                          Remove
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -7130,7 +7446,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -7197,7 +7529,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -7541,6 +7873,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -7561,7 +7894,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -7574,31 +7907,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -7613,7 +7943,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -7651,7 +7981,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -7659,7 +7989,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -7690,7 +8019,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -7698,6 +8027,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -7741,13 +8071,39 @@ exports[`add custom helm repository in preferences when navigating to preference
                       Synced Items
                        
                     </div>
-                    <div
-                      class="notice mt-3"
-                    >
+                    <div>
                       <div
-                        class="flex-grow text-center"
+                        class="item flex gaps align-center justify-space-between mt-3"
                       >
-                        No files and folders have been synced yet
+                        <i
+                          class="Icon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="folder"
+                          >
+                            folder
+                          </span>
+                        </i>
+                        <div
+                          class="flex-grow break-all"
+                        >
+                          /some-home-dir/.kube
+                        </div>
+                        <i
+                          class="Icon material interactive focusable"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="delete"
+                          >
+                            delete
+                          </span>
+                        </i>
+                        <div>
+                          Remove
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -7944,7 +8300,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -8011,7 +8383,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -8251,6 +8623,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -8271,7 +8644,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -8284,31 +8657,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -8323,7 +8693,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -8361,7 +8731,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -8369,7 +8739,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -8400,7 +8769,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -8408,6 +8777,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -8451,13 +8821,39 @@ exports[`add custom helm repository in preferences when navigating to preference
                       Synced Items
                        
                     </div>
-                    <div
-                      class="notice mt-3"
-                    >
+                    <div>
                       <div
-                        class="flex-grow text-center"
+                        class="item flex gaps align-center justify-space-between mt-3"
                       >
-                        No files and folders have been synced yet
+                        <i
+                          class="Icon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="folder"
+                          >
+                            folder
+                          </span>
+                        </i>
+                        <div
+                          class="flex-grow break-all"
+                        >
+                          /some-home-dir/.kube
+                        </div>
+                        <i
+                          class="Icon material interactive focusable"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="delete"
+                          >
+                            delete
+                          </span>
+                        </i>
+                        <div>
+                          Remove
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -8643,7 +9039,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -8710,7 +9122,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i
@@ -8950,6 +9362,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                         >
                           Download kubectl binaries matching the Kubernetes cluster version
                           <input
+                            checked=""
                             role="switch"
                             type="checkbox"
                           />
@@ -8970,7 +9383,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Select theme-lens Select--is-disabled css-3iigni-container"
+                          class="Select theme-lens css-b62m3t-container"
                         >
                           <span
                             class="css-1f43avz-a11yText-A11yText"
@@ -8983,31 +9396,28 @@ exports[`add custom helm repository in preferences when navigating to preference
                             class="css-1f43avz-a11yText-A11yText"
                           />
                           <div
-                            class="Select__control Select__control--is-disabled css-16xfy0z-control"
+                            class="Select__control css-13cymwt-control"
                           >
                             <div
-                              class="Select__value-container css-1fdsijx-ValueContainer"
+                              class="Select__value-container Select__value-container--has-value css-1fdsijx-ValueContainer"
                             >
                               <div
-                                class="Select__placeholder css-1jqq78o-placeholder"
-                                id="react-select-download-mirror-input-placeholder"
+                                class="Select__single-value css-1dimb5e-singleValue"
                               >
-                                Download mirror for kubectl
+                                Default (Google)
                               </div>
                               <div
-                                class="Select__input-container css-1h01tm3-Input"
+                                class="Select__input-container css-qbdosj-Input"
                                 data-value=""
                               >
                                 <input
                                   aria-autocomplete="list"
-                                  aria-describedby="react-select-download-mirror-input-placeholder"
                                   aria-expanded="false"
                                   aria-haspopup="true"
                                   autocapitalize="none"
                                   autocomplete="off"
                                   autocorrect="off"
                                   class="Select__input"
-                                  disabled=""
                                   id="download-mirror-input"
                                   role="combobox"
                                   spellcheck="false"
@@ -9022,7 +9432,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                               class="Select__indicators css-1hb7zxy-IndicatorsContainer"
                             >
                               <span
-                                class="Select__indicator-separator css-894a34-indicatorSeparator"
+                                class="Select__indicator-separator css-1u9des2-indicatorSeparator"
                               />
                               <div
                                 aria-hidden="true"
@@ -9060,7 +9470,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black disabled"
+                          class="Input theme round black"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -9068,7 +9478,6 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
-                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries"
                               spellcheck="false"
                               value=""
@@ -9099,7 +9508,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                            
                         </div>
                         <div
-                          class="Input theme round black"
+                          class="Input theme round black disabled"
                         >
                           <label
                             class="input-area flex gaps align-center"
@@ -9107,6 +9516,7 @@ exports[`add custom helm repository in preferences when navigating to preference
                           >
                             <input
                               class="input box grow"
+                              disabled=""
                               placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
                               spellcheck="false"
                               value=""
@@ -9150,13 +9560,39 @@ exports[`add custom helm repository in preferences when navigating to preference
                       Synced Items
                        
                     </div>
-                    <div
-                      class="notice mt-3"
-                    >
+                    <div>
                       <div
-                        class="flex-grow text-center"
+                        class="item flex gaps align-center justify-space-between mt-3"
                       >
-                        No files and folders have been synced yet
+                        <i
+                          class="Icon material focusable"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="folder"
+                          >
+                            folder
+                          </span>
+                        </i>
+                        <div
+                          class="flex-grow break-all"
+                        >
+                          /some-home-dir/.kube
+                        </div>
+                        <i
+                          class="Icon material interactive focusable"
+                          tabindex="0"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="delete"
+                          >
+                            delete
+                          </span>
+                        </i>
+                        <div>
+                          Remove
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -9342,7 +9778,23 @@ exports[`add custom helm repository in preferences when navigating to preference
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="0"
-          />
+          >
+            <div
+              style="z-index: 12; position: absolute;"
+            >
+              <div
+                class="HotbarIcon contextMenuAvailable"
+              >
+                <div
+                  class="Avatar rounded disabled avatar"
+                  id="hotbarIcon-hotbar-icon-catalog-entity"
+                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                >
+                  Ca
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="HotbarCell isDraggingOwner animateDown"
             index="1"
@@ -9409,7 +9861,7 @@ exports[`add custom helm repository in preferences when navigating to preference
               class="badge Badge small clickable"
               id="hotbarIndex"
             >
-              0
+              1
             </div>
           </div>
           <i

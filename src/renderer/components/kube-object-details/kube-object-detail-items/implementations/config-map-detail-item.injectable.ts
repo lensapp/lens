@@ -17,7 +17,7 @@ const configMapDetailItemInjectable = getInjectable({
 
     return {
       Component: ConfigMapDetails,
-      enabled: computed(() => isConfigMap(kubeObject.get())),
+      enabled: computed(() => isConfigMap(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

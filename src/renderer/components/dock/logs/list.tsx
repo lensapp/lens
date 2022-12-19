@@ -15,13 +15,15 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import moment from "moment-timezone";
 import type { Align, ListOnScrollProps } from "react-window";
 import { SearchStore } from "../../../search-store/search-store";
-import { UserStore } from "../../../../common/user-store";
+import type { UserStore } from "../../../../common/user-store";
 import { array, autoBind, cssNames } from "../../../utils";
 import type { VirtualListRef } from "../../virtual-list";
 import { VirtualList } from "../../virtual-list";
 import { ToBottom } from "./to-bottom";
 import type { LogTabViewModel } from "../logs/logs-view-model";
 import { Spinner } from "../../spinner";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import userStoreInjectable from "../../../../common/user-store/user-store.injectable";
 
 export interface LogListProps {
   model: LogTabViewModel;
@@ -33,8 +35,12 @@ export interface LogListRef {
   scrollToItem: (index: number, align: Align) => void;
 }
 
+interface Dependencies {
+  userStore: UserStore;
+}
+
 @observer
-class NonForwardedLogList extends React.Component<LogListProps & { innerRef: ForwardedRef<LogListRef> }> {
+class NonForwardedLogList extends React.Component<Dependencies & LogListProps & { innerRef: ForwardedRef<LogListRef> }> {
   @observable isJumpButtonVisible = false;
   @observable isLastLineVisible = true;
 
@@ -122,7 +128,7 @@ class NonForwardedLogList extends React.Component<LogListProps & { innerRef: For
 
     return this.props.model.timestampSplitLogs
       .get()
-      .map(([logTimestamp, log]) => (`${logTimestamp && moment.tz(logTimestamp, UserStore.getInstance().localeTimezone).format()}${log}`));
+      .map(([logTimestamp, log]) => (`${logTimestamp && moment.tz(logTimestamp, this.props.userStore.localeTimezone).format()}${log}`));
   }
 
   /**
@@ -273,6 +279,13 @@ class NonForwardedLogList extends React.Component<LogListProps & { innerRef: For
   }
 }
 
+const InjectedNonForwardedLogList = withInjectables<Dependencies, LogListProps & { innerRef: ForwardedRef<LogListRef> }>(NonForwardedLogList, {
+  getProps: (di, props) => ({
+    ...props,
+    userStore: di.inject(userStoreInjectable),
+  }),
+});
+
 export const LogList = React.forwardRef<LogListRef, LogListProps>((props, ref) => (
-  <NonForwardedLogList {...props} innerRef={ref} />
+  <InjectedNonForwardedLogList {...props} innerRef={ref} />
 ));

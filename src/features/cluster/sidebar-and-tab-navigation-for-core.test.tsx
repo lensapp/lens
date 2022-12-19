@@ -24,6 +24,7 @@ import { navigateToRouteInjectionToken } from "../../common/front-end-routing/na
 import sidebarStorageInjectable from "../../renderer/components/layout/sidebar-storage/sidebar-storage.injectable";
 import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
 import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
+import { flushPromises } from "../../common/test-utils/flush-promises";
 
 describe("cluster - sidebar and tab navigation for core", () => {
   let builder: ApplicationBuilder;
@@ -282,6 +283,8 @@ describe("cluster - sidebar and tab navigation for core", () => {
             advanceFakeTime(250);
 
             const readJsonFileFake = windowDi.inject(readJsonFileInjectable);
+
+            await flushPromises();
 
             const actual = await readJsonFileFake(
               "/some-directory-for-lens-local-storage/some-cluster-id.json",

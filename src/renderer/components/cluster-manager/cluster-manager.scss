@@ -27,7 +27,7 @@
   }
 
   .error {
-    z-index: 1;
+    z-index: var(--z-index-base);
   }
 
   #lens-views {

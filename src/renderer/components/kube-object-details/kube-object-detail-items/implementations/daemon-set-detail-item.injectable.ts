@@ -17,7 +17,7 @@ const daemonSetDetailItemInjectable = getInjectable({
 
     return {
       Component: DaemonSetDetails,
-      enabled: computed(() => isDaemonSet(kubeObject.get())),
+      enabled: computed(() => isDaemonSet(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

@@ -17,7 +17,7 @@ const priorityClassDetailItemInjectable = getInjectable({
 
     return {
       Component: PriorityClassesDetails,
-      enabled: computed(() => isPriorityClass(kubeObject.get())),
+      enabled: computed(() => isPriorityClass(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

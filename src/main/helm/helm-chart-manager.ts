@@ -3,16 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import fs from "fs";
 import * as yaml from "js-yaml";
 import { iter, put, sortBySemverVersion } from "../../common/utils";
-import { execHelm } from "./exec";
-import type { SetRequired } from "type-fest";
-import { assert } from "console";
 import type { HelmRepo } from "../../common/helm/helm-repo";
 import type { HelmChartManagerCache } from "./helm-chart-manager-cache.injectable";
 import type { Logger } from "../../common/logger";
 import type { RepoHelmChartList } from "../../common/k8s-api/endpoints/helm-charts.api/request-charts.injectable";
+import type { ExecHelm } from "./exec-helm/exec-helm.injectable";
+import type { ReadFile } from "../../common/fs/read-file.injectable";
+import type { Stat } from "../../common/fs/stat.injectable";
 
 export interface HelmCacheFile {
   apiVersion: string;
@@ -20,18 +19,18 @@ export interface HelmCacheFile {
 }
 
 interface Dependencies {
-  cache: HelmChartManagerCache;
-  logger: Logger;
+  readonly cache: HelmChartManagerCache;
+  readonly logger: Logger;
+  execHelm: ExecHelm;
+  readFile: ReadFile;
+  stat: Stat;
 }
 
 export class HelmChartManager {
-  protected readonly repo: SetRequired<HelmRepo, "cacheFilePath">;
-
-  constructor(repo: HelmRepo, private dependencies: Dependencies) {
-    assert(repo.cacheFilePath, "CacheFilePath must be provided on the helm repo");
-
-    this.repo = repo as SetRequired<HelmRepo, "cacheFilePath">;
-  }
+  constructor(
+    private readonly dependencies: Dependencies,
+    protected readonly repo: HelmRepo,
+  ) {}
 
   public async chartVersions(name: string) {
     const charts = await this.charts();
@@ -56,7 +55,7 @@ export class HelmChartManager {
       args.push("--version", version);
     }
 
-    return execHelm(args);
+    return this.dependencies.execHelm(args);
   }
 
   public async getReadme(name: string, version?: string) {
@@ -68,8 +67,8 @@ export class HelmChartManager {
   }
 
   protected async updateYamlCache() {
-    const cacheFile = await fs.promises.readFile(this.repo.cacheFilePath, "utf-8");
-    const cacheFileStats = await fs.promises.stat(this.repo.cacheFilePath);
+    const cacheFile = await this.dependencies.readFile(this.repo.cacheFilePath);
+    const cacheFileStats = await this.dependencies.stat(this.repo.cacheFilePath);
     const data = yaml.load(cacheFile) as string | number | HelmCacheFile;
 
     if (!data || typeof data !== "object" || typeof data.entries !== "object") {
@@ -94,7 +93,7 @@ export class HelmChartManager {
     if (!cacheEntry) {
       cacheEntry = await this.updateYamlCache();
     } else {
-      const newStats = await fs.promises.stat(this.repo.cacheFilePath);
+      const newStats = await this.dependencies.stat(this.repo.cacheFilePath);
 
       if (cacheEntry.mtimeMs < newStats.mtimeMs) {
         cacheEntry = await this.updateYamlCache();

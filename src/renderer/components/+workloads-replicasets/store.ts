@@ -9,12 +9,12 @@ import { PodStatusPhase } from "../../../common/k8s-api/endpoints/pod.api";
 import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 
-export interface ReplicaSetStoreDependencies {
+interface Dependencies {
   getPodsByOwnerId: GetPodsByOwnerId;
 }
 
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet, ReplicaSetApi> {
-  constructor(protected readonly dependencies: ReplicaSetStoreDependencies, api: ReplicaSetApi, opts?: KubeObjectStoreOptions) {
+  constructor(protected readonly dependencies: Dependencies, api: ReplicaSetApi, opts?: KubeObjectStoreOptions) {
     super(api, opts);
   }
 

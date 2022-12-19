@@ -7,11 +7,7 @@ import userStoreInjectable from "./user-store.injectable";
 
 const kubeconfigSyncsInjectable = getInjectable({
   id: "kubeconfig-syncs",
-  instantiate: (di) => {
-    const store = di.inject(userStoreInjectable);
-
-    return store.syncKubeconfigEntries;
-  },
+  instantiate: (di) => di.inject(userStoreInjectable).syncKubeconfigEntries,
 });
 
 export default kubeconfigSyncsInjectable;

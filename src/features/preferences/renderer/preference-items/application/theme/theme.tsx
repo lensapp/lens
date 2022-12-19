@@ -8,25 +8,30 @@ import { Select } from "../../../../../../renderer/components/select";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import type { UserStore } from "../../../../../../common/user-store";
-import type { ThemeStore } from "../../../../../../renderer/themes/store";
-import { defaultThemeId } from "../../../../../../common/vars";
+import type { LensTheme } from "../../../../../../renderer/themes/lens-theme";
 import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
-import themeStoreInjectable from "../../../../../../renderer/themes/store.injectable";
+import defaultLensThemeInjectable from "../../../../../../renderer/themes/default-theme.injectable";
+import { lensThemeDeclarationInjectionToken } from "../../../../../../renderer/themes/declaration";
 
 interface Dependencies {
   userStore: UserStore;
-  themeStore: ThemeStore;
+  defaultTheme: LensTheme;
+  themes: LensTheme[];
 }
 
-const NonInjectedTheme = observer(({ userStore, themeStore }: Dependencies) => {
+const NonInjectedTheme = observer(({
+  userStore,
+  themes,
+  defaultTheme,
+}: Dependencies) => {
   const themeOptions = [
     {
       value: "system", // TODO: replace with a sentinal value that isn't string (and serialize it differently)
       label: "Sync with computer",
     },
-    ...Array.from(themeStore.themes, ([themeId, { name }]) => ({
-      value: themeId,
-      label: name,
+    ...themes.map(theme => ({
+      value: theme.name,
+      label: theme.name,
     })),
   ];
 
@@ -38,7 +43,7 @@ const NonInjectedTheme = observer(({ userStore, themeStore }: Dependencies) => {
         options={themeOptions}
         value={userStore.colorTheme}
         onChange={(value) =>
-          (userStore.colorTheme = value?.value ?? defaultThemeId)
+          (userStore.colorTheme = value?.value ?? defaultTheme.name)
         }
         themeName="lens"
       />
@@ -46,13 +51,10 @@ const NonInjectedTheme = observer(({ userStore, themeStore }: Dependencies) => {
   );
 });
 
-export const Theme = withInjectables<Dependencies>(
-  NonInjectedTheme,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-      themeStore: di.inject(themeStoreInjectable),
-    }),
-  },
-);
+export const Theme = withInjectables<Dependencies>(NonInjectedTheme, {
+  getProps: (di) => ({
+    userStore: di.inject(userStoreInjectable),
+    defaultTheme: di.inject(defaultLensThemeInjectable),
+    themes: di.injectMany(lensThemeDeclarationInjectionToken),
+  }),
+});

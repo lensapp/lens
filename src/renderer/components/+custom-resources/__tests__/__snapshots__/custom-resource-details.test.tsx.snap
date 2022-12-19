@@ -11,35 +11,6 @@ exports[`<CustomResourceDetails /> with a CRD with a boolean field should displa
       <span
         class="name"
       >
-        Created
-      </span>
-      <span
-        class="value"
-      >
-        &lt;unknown&gt;
-         ago 
-      </span>
-    </div>
-    <div
-      class="DrawerItem"
-    >
-      <span
-        class="name"
-      >
-        Name
-      </span>
-      <span
-        class="value"
-      >
-        first-crd
-      </span>
-    </div>
-    <div
-      class="DrawerItem"
-    >
-      <span
-        class="name"
-      >
         MyField
       </span>
       <span
@@ -57,35 +28,6 @@ exports[`<CustomResourceDetails /> with a CRD with a boolean field should displa
   <div
     class="CrdResourceDetails MyCrd"
   >
-    <div
-      class="DrawerItem"
-    >
-      <span
-        class="name"
-      >
-        Created
-      </span>
-      <span
-        class="value"
-      >
-        &lt;unknown&gt;
-         ago 
-      </span>
-    </div>
-    <div
-      class="DrawerItem"
-    >
-      <span
-        class="name"
-      >
-        Name
-      </span>
-      <span
-        class="value"
-      >
-        first-crd
-      </span>
-    </div>
     <div
       class="DrawerItem"
     >
@@ -115,35 +57,6 @@ exports[`<CustomResourceDetails /> with a CRD with a number field should display
       <span
         class="name"
       >
-        Created
-      </span>
-      <span
-        class="value"
-      >
-        &lt;unknown&gt;
-         ago 
-      </span>
-    </div>
-    <div
-      class="DrawerItem"
-    >
-      <span
-        class="name"
-      >
-        Name
-      </span>
-      <span
-        class="value"
-      >
-        first-crd
-      </span>
-    </div>
-    <div
-      class="DrawerItem"
-    >
-      <span
-        class="name"
-      >
         MyField
       </span>
       <span
@@ -161,35 +74,6 @@ exports[`<CustomResourceDetails /> with a CRD with a number field should display
   <div
     class="CrdResourceDetails MyCrd"
   >
-    <div
-      class="DrawerItem"
-    >
-      <span
-        class="name"
-      >
-        Created
-      </span>
-      <span
-        class="value"
-      >
-        &lt;unknown&gt;
-         ago 
-      </span>
-    </div>
-    <div
-      class="DrawerItem"
-    >
-      <span
-        class="name"
-      >
-        Name
-      </span>
-      <span
-        class="value"
-      >
-        first-crd
-      </span>
-    </div>
     <div
       class="DrawerItem"
     >

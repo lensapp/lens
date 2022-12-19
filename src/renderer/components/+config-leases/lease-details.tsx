@@ -9,7 +9,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { KubeObjectMeta } from "../kube-object-meta";
 import type { Lease } from "../../../common/k8s-api/endpoints";
 
 export interface LeaseDetailsProps extends KubeObjectDetailsProps<Lease> {
@@ -23,8 +22,6 @@ export class LeaseDetails extends React.Component<LeaseDetailsProps> {
 
     return (
       <div className="LeaseDetails">
-        <KubeObjectMeta object={lease} />
-
         <DrawerItem name="Holder Identity">
           {lease.getHolderIdentity()}
         </DrawerItem>

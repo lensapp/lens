@@ -17,7 +17,7 @@ const replicaSetDetailItemInjectable = getInjectable({
 
     return {
       Component: ReplicaSetDetails,
-      enabled: computed(() => isReplicaSet(kubeObject.get())),
+      enabled: computed(() => isReplicaSet(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

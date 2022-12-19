@@ -123,6 +123,10 @@ export function isDefined<T>(val: T | undefined | null): val is T {
   return val != null;
 }
 
+export function isFunction(val: unknown): val is (...args: unknown[]) => unknown {
+  return typeof val === "function";
+}
+
 /**
  * Checks if the value in the second position is non-nullable
  */
@@ -144,6 +148,15 @@ export function bindPredicate<FnArgs extends any[], T>(fn: (arg1: unknown, ...ar
 
 export function hasDefiniteField<Field extends keyof T, T>(field: Field): (val: T) => val is T & { [f in Field]-?: NonNullable<T[Field]> } {
   return (val): val is T & { [f in Field]-?: NonNullable<T[Field]> } => val[field] != null;
+}
+
+export function isPromiseLike(res: unknown): res is (Promise<unknown> | { then: (fn: (val: unknown) => any) => Promise<unknown> }) {
+  if (res instanceof Promise) {
+    return true;
+  }
+
+  return isObject(res)
+    && hasTypedProperty(res, "then", isFunction);
 }
 
 export function isPromiseSettledRejected<T>(result: PromiseSettledResult<T>): result is PromiseRejectedResult {

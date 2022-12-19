@@ -3,14 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import moment from "moment-timezone";
-import path from "path";
-import os from "os";
 import type { editor } from "monaco-editor";
-import merge from "lodash/merge";
-import { defaultThemeId, defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
-import type { ObservableMap } from "mobx";
-import { observable } from "mobx";
+import { defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
+import type { PreferenceDescriptors } from "./preference-descriptors.injectable";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
   filePath: string;
@@ -54,86 +49,8 @@ export interface PreferenceDescription<T, R = T> {
   toStore(val: R): T | undefined;
 }
 
-const httpsProxy: PreferenceDescription<string | undefined> = {
-  fromStore(val) {
-    return val;
-  },
-  toStore(val) {
-    return val || undefined;
-  },
-};
+export const getPreferenceDescriptor = <T, R = T>(desc: PreferenceDescription<T, R>) => desc;
 
-const shell: PreferenceDescription<string | undefined> = {
-  fromStore(val) {
-    return val;
-  },
-  toStore(val) {
-    return val || undefined;
-  },
-};
-
-const colorTheme: PreferenceDescription<string> = {
-  fromStore(val) {
-    return val || defaultThemeId;
-  },
-  toStore(val) {
-    if (!val || val === defaultThemeId) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
-const terminalTheme: PreferenceDescription<string> = {
-  fromStore(val) {
-    return val || "";
-  },
-  toStore(val) {
-    return val || undefined;
-  },
-};
-
-export const defaultLocaleTimezone = "UTC";
-
-const localeTimezone: PreferenceDescription<string> = {
-  fromStore(val) {
-    return val || moment.tz.guess(true) || defaultLocaleTimezone;
-  },
-  toStore(val) {
-    if (!val || val === moment.tz.guess(true) || val === defaultLocaleTimezone) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
-const allowUntrustedCAs: PreferenceDescription<boolean> = {
-  fromStore(val) {
-    return val ?? false;
-  },
-  toStore(val) {
-    if (!val) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
-const allowErrorReporting: PreferenceDescription<boolean> = {
-  fromStore(val) {
-    return val ?? true;
-  },
-  toStore(val) {
-    if (val === true) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
 
 export interface DownloadMirror {
   url: string;
@@ -157,142 +74,6 @@ export const packageMirrors = new Map<string, DownloadMirror>([
   }],
 ]);
 
-const downloadMirror: PreferenceDescription<string> = {
-  fromStore(val) {
-    return !val || !packageMirrors.has(val)
-      ? defaultPackageMirror
-      : val;
-  },
-  toStore(val) {
-    if (!val || val === defaultPackageMirror) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
-const downloadKubectlBinaries: PreferenceDescription<boolean> = {
-  fromStore(val) {
-    return val ?? true;
-  },
-  toStore(val) {
-    if (val === true) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
-const downloadBinariesPath: PreferenceDescription<string | undefined> = {
-  fromStore(val) {
-    return val;
-  },
-  toStore(val) {
-    if (!val) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
-const kubectlBinariesPath: PreferenceDescription<string | undefined> = {
-  fromStore(val) {
-    return val;
-  },
-  toStore(val) {
-    if (!val) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
-const openAtLogin: PreferenceDescription<boolean> = {
-  fromStore(val) {
-    return val ?? false;
-  },
-  toStore(val) {
-    if (!val) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
-const terminalCopyOnSelect: PreferenceDescription<boolean> = {
-  fromStore(val) {
-    return val ?? false;
-  },
-  toStore(val) {
-    if (!val) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
-const hiddenTableColumns: PreferenceDescription<[string, string[]][], Map<string, Set<string>>> = {
-  fromStore(val) {
-    return new Map(
-      (val ?? []).map(([tableId, columnIds]) => [tableId, new Set(columnIds)]),
-    );
-  },
-  toStore(val) {
-    const res: [string, string[]][] = [];
-
-    for (const [table, columns] of val) {
-      if (columns.size) {
-        res.push([table, Array.from(columns)]);
-      }
-    }
-
-    return res.length ? res : undefined;
-  },
-};
-
-const mainKubeFolder = path.join(os.homedir(), ".kube");
-
-const syncKubeconfigEntries: PreferenceDescription<KubeconfigSyncEntry[], ObservableMap<string, KubeconfigSyncValue>> = {
-  fromStore(val) {
-    return observable.map(
-      val
-        ?.map(({ filePath, ...rest }) => [filePath, rest])
-      ?? [[mainKubeFolder, {}]],
-    );
-  },
-  toStore(val) {
-    if (val.size === 1 && val.has(mainKubeFolder)) {
-      return undefined;
-    }
-
-    return Array.from(val, ([filePath, rest]) => ({ filePath, ...rest }));
-  },
-};
-
-const editorConfiguration: PreferenceDescription<Partial<EditorConfiguration> | undefined, EditorConfiguration> = {
-  fromStore(val) {
-    return merge(defaultEditorConfig, val);
-  },
-  toStore(val) {
-    return val;
-  },
-};
-
-const terminalConfig: PreferenceDescription<TerminalConfig, TerminalConfig> = {
-  fromStore(val) {
-    return merge(defaultTerminalConfig, val);
-  },
-  toStore(val) {
-    return val;
-  },
-};
-
 export type ExtensionRegistryLocation = "default" | "npmrc" | "custom";
 
 export type ExtensionRegistry = {
@@ -306,49 +87,13 @@ export type ExtensionRegistry = {
 export const defaultExtensionRegistryUrlLocation = "default";
 export const defaultExtensionRegistryUrl = "https://registry.npmjs.org";
 
-const extensionRegistryUrl: PreferenceDescription<ExtensionRegistry> = {
-  fromStore(val) {
-    return val ?? {
-      location: defaultExtensionRegistryUrlLocation,
-    };
-  },
-  toStore(val) {
-    if (val.location === defaultExtensionRegistryUrlLocation) {
-      return undefined;
-    }
-
-    return val;
-  },
-};
-
-type PreferencesModelType<field extends keyof typeof DESCRIPTORS> = typeof DESCRIPTORS[field] extends PreferenceDescription<infer T, any> ? T : never;
-type UserStoreModelType<field extends keyof typeof DESCRIPTORS> = typeof DESCRIPTORS[field] extends PreferenceDescription<any, infer T> ? T : never;
+type PreferencesModelType<field extends keyof PreferenceDescriptors> = PreferenceDescriptors[field] extends PreferenceDescription<infer T, any> ? T : never;
+type UserStoreModelType<field extends keyof PreferenceDescriptors> = PreferenceDescriptors[field] extends PreferenceDescription<any, infer T> ? T : never;
 
 export type UserStoreFlatModel = {
-  [field in keyof typeof DESCRIPTORS]: UserStoreModelType<field>;
+  [field in keyof PreferenceDescriptors]: UserStoreModelType<field>;
 };
 
 export type UserPreferencesModel = {
-  [field in keyof typeof DESCRIPTORS]: PreferencesModelType<field>;
+  [field in keyof PreferenceDescriptors]: PreferencesModelType<field>;
 } & { updateChannel: string };
-
-export const DESCRIPTORS = {
-  httpsProxy,
-  shell,
-  colorTheme,
-  terminalTheme,
-  localeTimezone,
-  allowUntrustedCAs,
-  allowErrorReporting,
-  downloadMirror,
-  downloadKubectlBinaries,
-  downloadBinariesPath,
-  kubectlBinariesPath,
-  openAtLogin,
-  hiddenTableColumns,
-  syncKubeconfigEntries,
-  editorConfiguration,
-  terminalCopyOnSelect,
-  terminalConfig,
-  extensionRegistryUrl,
-};

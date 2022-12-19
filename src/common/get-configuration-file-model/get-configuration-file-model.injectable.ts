@@ -4,11 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import Config from "conf";
-import type { BaseStoreParams } from "../base-store";
+import type { Options as ConfOptions } from "conf/dist/source/types";
+
+export type GetConfigurationFileModel = <T extends object>(content: ConfOptions<T>) => Config<T>;
 
 const getConfigurationFileModelInjectable = getInjectable({
   id: "get-configuration-file-model",
-  instantiate: () => <T extends object>(content: BaseStoreParams<T>) => new Config(content),
+  instantiate: (): GetConfigurationFileModel => (content) => new Config(content),
   causesSideEffects: true,
 });
 

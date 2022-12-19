@@ -22,14 +22,18 @@ import kubeconfigSyncsInjectable from "../../../common/user-store/kubeconfig-syn
 import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
-import type { Stat } from "../../../common/fs/stat/stat.injectable";
+import type { Stat } from "../../../common/fs/stat.injectable";
 import asyncFn from "@async-fn/jest";
-import statInjectable from "../../../common/fs/stat/stat.injectable";
+import statInjectable from "../../../common/fs/stat.injectable";
 import type { Watcher } from "../../../common/fs/watch/watch.injectable";
 import watchInjectable from "../../../common/fs/watch/watch.injectable";
 import EventEmitter from "events";
 import type { ReadStream, Stats } from "fs";
 import createReadFileStreamInjectable from "../../../common/fs/create-read-file-stream.injectable";
+import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
+import pathExistsInjectable from "../../../common/fs/path-exists.injectable";
+import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
+import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
 
 describe("kubeconfig-sync.source tests", () => {
   let computeKubeconfigDiff: ComputeKubeconfigDiff;
@@ -43,6 +47,10 @@ describe("kubeconfig-sync.source tests", () => {
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
+    di.override(pathExistsInjectable, () => () => { throw new Error("tried call pathExists without override"); });
+    di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
+    di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
+    di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
 
     clusters = new Map();
     di.override(getClusterByIdInjectable, () => id => clusters.get(id));

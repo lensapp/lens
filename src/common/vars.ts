@@ -4,7 +4,7 @@
  */
 
 // App's common configuration for any process (main, renderer, build pipeline, etc.)
-import type { ThemeId } from "../renderer/themes/store";
+import type { ThemeId } from "../renderer/themes/lens-theme";
 
 /**
  * @deprecated Switch to using isMacInjectable
@@ -55,12 +55,4 @@ export const apiKubePrefix = "/api-kube"; // k8s cluster apis
 export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues" as string;
 export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/zt-wcl8jq3k-68R5Wcmk1o95MLBE5igUDQ" as string;
 export const supportUrl = "https://docs.k8slens.dev/support/" as string;
-
-export const lensWebsiteWeblinkId = "lens-website-link";
-export const lensDocumentationWeblinkId = "lens-documentation-link";
-export const lensSlackWeblinkId = "lens-slack-link";
-export const lensTwitterWeblinkId = "lens-twitter-link";
-export const lensBlogWeblinkId = "lens-blog-link";
-export const kubernetesDocumentationWeblinkId = "kubernetes-documentation-link";
-
 export const docsUrl = "https://docs.k8slens.dev" as string;

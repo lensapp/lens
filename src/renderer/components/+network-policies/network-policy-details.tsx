@@ -13,7 +13,6 @@ import { Badge } from "../badge";
 import { SubTitle } from "../layout/sub-title";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 import type { LabelMatchExpression, LabelSelector } from "../../../common/k8s-api/kube-object";
 import { isEmpty } from "lodash";
@@ -170,8 +169,6 @@ export class NetworkPolicyDetails extends React.Component<NetworkPolicyDetailsPr
 
     return (
       <div className={styles.NetworkPolicyDetails}>
-        <KubeObjectMeta object={policy}/>
-
         <DrawerItem name="Pod Selector" labelsOnly={selector.length > 0}>
           {
             selector.length > 0

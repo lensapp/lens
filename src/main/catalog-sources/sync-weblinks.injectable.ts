@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { syncWeblinks } from "./weblinks";
-import weblinkStoreInjectable from "../../common/weblink-store.injectable";
+import weblinkStoreInjectable from "../../common/weblinks-store/weblink-store.injectable";
 import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
 
 const syncWeblinksInjectable = getInjectable({

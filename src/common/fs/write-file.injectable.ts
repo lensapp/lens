@@ -16,15 +16,17 @@ const writeFileInjectable = getInjectable({
     const { writeFile, ensureDir } = di.inject(fsInjectable);
     const getDirnameOfPath = di.inject(getDirnameOfPathInjectable);
 
-    return async (filePath, content, opts) => {
+    return async (filePath, content, opts = {}) => {
       await ensureDir(getDirnameOfPath(filePath), {
         mode: 0o755,
-        ...(opts ?? {}),
+        ...opts,
       });
 
+      const { encoding = "utf-8", ...options } = opts;
+
       await writeFile(filePath, content, {
-        encoding: "utf-8",
-        ...(opts ?? {}),
+        encoding: encoding as BufferEncoding,
+        ...options,
       });
     };
   },

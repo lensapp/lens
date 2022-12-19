@@ -11,7 +11,6 @@ import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { PodDisruptionBudget } from "../../../common/k8s-api/endpoints";
-import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 
 export interface PodDisruptionBudgetDetailsProps extends KubeObjectDetailsProps<PodDisruptionBudget> {
@@ -37,8 +36,6 @@ export class PodDisruptionBudgetDetails extends React.Component<PodDisruptionBud
 
     return (
       <div className="PdbDetails">
-        <KubeObjectMeta object={pdb}/>
-
         {selectors.length > 0 && (
           <DrawerItem name="Selector" labelsOnly>
             {

@@ -7,7 +7,7 @@ import periodicalCheckForUpdatesInjectable from "./periodical-check-for-updates.
 import { getGlobalOverride } from "../../../../../common/test-utils/get-global-override";
 
 export default getGlobalOverride(periodicalCheckForUpdatesInjectable, () => ({
-  start: async () => {},
-  stop: async () => {},
+  start: () => {},
+  stop: () => {},
   started: false,
 }));

@@ -10,7 +10,6 @@ import { Input } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import type { ShowNotification } from "../notifications";
 import { Icon } from "../icon";
-import { PathPicker } from "../path-picker";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 import type { ValidateDirectory } from "../../../common/fs/validate-directory.injectable";
@@ -19,6 +18,8 @@ import type { ResolveTilde } from "../../../common/path/resolve-tilde.injectable
 import resolveTildeInjectable from "../../../common/path/resolve-tilde.injectable";
 import Gutter from "../gutter/gutter";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
+import type { OpenPathPickingDialog } from "../../../features/path-picking-dialog/renderer/pick-paths.injectable";
+import openPathPickingDialogInjectable from "../../../features/path-picking-dialog/renderer/pick-paths.injectable";
 
 export interface ClusterLocalTerminalSettingProps {
   cluster: Cluster;
@@ -27,6 +28,7 @@ interface Dependencies {
   showErrorNotification: ShowNotification;
   validateDirectory: ValidateDirectory;
   resolveTilde: ResolveTilde;
+  openPathPickingDialog: OpenPathPickingDialog;
   isWindows: boolean;
 }
 
@@ -36,6 +38,7 @@ const NonInjectedClusterLocalTerminalSetting = observer(({
   validateDirectory,
   resolveTilde,
   isWindows,
+  openPathPickingDialog,
 }: Dependencies & ClusterLocalTerminalSettingProps) => {
   if (!cluster) {
     return null;
@@ -95,8 +98,8 @@ const NonInjectedClusterLocalTerminalSetting = observer(({
   };
 
   const openFilePicker = () => {
-    PathPicker.pick({
-      label: "Choose Working Directory",
+    openPathPickingDialog({
+      message: "Choose Working Directory",
       buttonLabel: "Pick",
       properties: ["openDirectory", "showHiddenFiles"],
       onPick: ([directory]) => setAndCommitDirectory(directory),
@@ -168,5 +171,6 @@ export const ClusterLocalTerminalSetting = withInjectables<Dependencies, Cluster
     validateDirectory: di.inject(validateDirectoryInjectable),
     resolveTilde: di.inject(resolveTildeInjectable),
     isWindows: di.inject(isWindowsInjectable),
+    openPathPickingDialog: di.inject(openPathPickingDialogInjectable),
   }),
 });

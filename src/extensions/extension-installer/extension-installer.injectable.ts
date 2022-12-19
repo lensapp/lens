@@ -9,12 +9,9 @@ import extensionPackageRootDirectoryInjectable from "./extension-package-root-di
 const extensionInstallerInjectable = getInjectable({
   id: "extension-installer",
 
-  instantiate: (di) =>
-    new ExtensionInstaller({
-      extensionPackageRootDirectory: di.inject(
-        extensionPackageRootDirectoryInjectable,
-      ),
-    }),
+  instantiate: (di) => new ExtensionInstaller({
+    extensionPackageRootDirectory: di.inject(extensionPackageRootDirectoryInjectable),
+  }),
 });
 
 export default extensionInstallerInjectable;

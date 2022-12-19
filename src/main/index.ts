@@ -11,9 +11,16 @@ import { startApp } from "./start-app";
 
 const di = getDi();
 
-startApp({
-  di,
-  extensions: [],
-});
+(async () => {
+  try {
+    await startApp({
+      di,
+      extensions: [],
+    });
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+})();
 
 export { Mobx, LensExtensions, Pty };

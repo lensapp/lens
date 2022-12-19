@@ -10,7 +10,7 @@ import path from "path";
 import { inspect } from "util";
 import type { CatalogEntity } from "../../../common/catalog";
 import type { Cluster } from "../../../common/cluster/cluster";
-import statInjectable from "../../../common/fs/stat/stat.injectable";
+import statInjectable from "../../../common/fs/stat.injectable";
 import type { Watcher } from "../../../common/fs/watch/watch.injectable";
 import watchInjectable from "../../../common/fs/watch/watch.injectable";
 import type { Disposer } from "../../../common/utils";

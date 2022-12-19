@@ -1,0 +1,56 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+import { getInjectable } from "@ogre-tools/injectable";
+import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
+import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
+import readFileInjectable from "../../../common/fs/read-file.injectable";
+import { loadConfigFromString } from "../../../common/kube-helpers";
+import loggerInjectable from "../../../common/logger.injectable";
+import openDeleteClusterDialogInjectable from "../../components/delete-cluster-dialog/open.injectable";
+import { beforeFrameStartsInjectionToken } from "../tokens";
+
+const setupKubernetesClusterContextMenuOpenInjectable = getInjectable({
+  id: "setup-kubernetes-cluster-context-menu-open",
+  instantiate: (di) => ({
+    id: "setup-kubernetes-cluster-context-menu-open",
+    run: () => {
+      const catalogCategoryRegistry = di.inject(catalogCategoryRegistryInjectable);
+      const openDeleteClusterDialog = di.inject(openDeleteClusterDialogInjectable);
+      const readFile = di.inject(readFileInjectable);
+      const getClusterById = di.inject(getClusterByIdInjectable);
+      const logger = di.inject(loggerInjectable);
+
+      catalogCategoryRegistry
+        .getForGroupKind("entity.k8slens.dev", "KubernetesCluster")
+        ?.on("contextMenuOpen", (entity, context) => {
+          if (entity.metadata?.source == "local") {
+            context.menuItems.push({
+              title: "Remove",
+              icon: "delete",
+              onClick: async () => {
+                const clusterId = entity.getId();
+                const cluster = getClusterById(entity.getId());
+
+                if (!cluster) {
+                  return logger.warn("[KUBERNETES-CLUSTER]: cannot delete cluster, does not exist in store", { clusterId });
+                }
+
+                const result = loadConfigFromString(await readFile(cluster.kubeConfigPath));
+
+                if (result.error) {
+                  logger.error("[KUBERNETES-CLUSTER]: failed to parse kubeconfig file", result.error);
+                } else {
+                  openDeleteClusterDialog({ cluster, config: result.config });
+                }
+              },
+            });
+          }
+        });
+    },
+  }),
+  injectionToken: beforeFrameStartsInjectionToken,
+});
+
+export default setupKubernetesClusterContextMenuOpenInjectable;

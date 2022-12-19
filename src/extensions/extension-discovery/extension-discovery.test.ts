@@ -15,10 +15,13 @@ import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import watchInjectable from "../../common/fs/watch/watch.injectable";
 import extensionApiVersionInjectable from "../../common/vars/extension-api-version.injectable";
-import removePathInjectable from "../../common/fs/remove-path.injectable";
+import removePathInjectable from "../../common/fs/remove.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
+import pathExistsSyncInjectable from "../../common/fs/path-exists-sync.injectable";
+import readJsonSyncInjectable from "../../common/fs/read-json-sync.injectable";
+import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
 
 describe("ExtensionDiscovery", () => {
   let extensionDiscovery: ExtensionDiscovery;
@@ -34,6 +37,9 @@ describe("ExtensionDiscovery", () => {
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(installExtensionInjectable, () => () => Promise.resolve());
     di.override(extensionApiVersionInjectable, () => "5.0.0");
+    di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
+    di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
+    di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
 
     joinPaths = di.inject(joinPathsInjectable);
     homeDirectoryPath = di.inject(homeDirectoryPathInjectable);

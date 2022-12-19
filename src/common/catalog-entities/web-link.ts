@@ -7,7 +7,7 @@ import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } fro
 import type { CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog/catalog-entity";
 import productNameInjectable from "../vars/product-name.injectable";
-import weblinkStoreInjectable from "../weblink-store.injectable";
+import weblinkStoreInjectable from "../weblinks-store/weblink-store.injectable";
 
 export type WebLinkStatusPhase = "available" | "unavailable";
 
@@ -34,12 +34,13 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
     // NOTE: this is safe because `onContextMenuOpen` is only supposed to be called in the renderer
     const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.renderer);
     const productName = di.inject(productNameInjectable);
+    const weblinkStore = di.inject(weblinkStoreInjectable);
 
     if (this.metadata.source === "local") {
       context.menuItems.push({
         title: "Delete",
         icon: "delete",
-        onClick: async () => di.inject(weblinkStoreInjectable).removeById(this.getId()),
+        onClick: async () => weblinkStore.removeById(this.getId()),
         confirm: {
           message: `Remove Web Link "${this.getName()}" from ${productName}?`,
         },

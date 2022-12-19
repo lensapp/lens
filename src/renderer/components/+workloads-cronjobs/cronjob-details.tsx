@@ -17,7 +17,6 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { getDetailsUrl } from "../kube-detail-params";
 import type { Job } from "../../../common/k8s-api/endpoints";
 import { CronJob } from "../../../common/k8s-api/endpoints";
-import { KubeObjectMeta } from "../kube-object-meta";
 import logger from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
@@ -61,7 +60,6 @@ class NonInjectedCronJobDetails extends React.Component<CronJobDetailsProps & De
 
     return (
       <div className="CronJobDetails">
-        <KubeObjectMeta object={cronJob}/>
         <DrawerItem name="Schedule">
           {
             cronJob.isNeverRun()

@@ -11,7 +11,7 @@
   grid-template-rows: [contents] 1fr [footer] auto;
   grid-template-columns: [sidebar] var(--sidebar-width) [contents] 1fr;
   width: 100%;
-  z-index: 1;
+  z-index: var(--z-index-base);
   height: 100%;
 }
 

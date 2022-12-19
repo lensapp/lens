@@ -6,7 +6,7 @@
 import { observable, reaction } from "mobx";
 import { StorageHelper } from "../storageHelper";
 import { delay } from "../../../common/utils/delay";
-import { toJS } from "../../../common/utils";
+import { noop, toJS } from "../../../common/utils";
 
 interface StorageModel {
   [prop: string]: any /*json-serializable*/;
@@ -26,7 +26,15 @@ describe("renderer/utils/StorageHelper", () => {
         message: "saved-before", // pretending as previously saved data
       });
 
-      storageHelper = new StorageHelper<StorageModel>(storageKey, {
+      storageHelper = new StorageHelper<StorageModel>({
+        logger: {
+          debug: noop,
+          error: noop,
+          info: noop,
+          silly: noop,
+          warn: noop,
+        },
+      }, storageKey, {
         autoInit: false,
         defaultValue: {
           message: "blabla",
@@ -48,7 +56,15 @@ describe("renderer/utils/StorageHelper", () => {
         },
       });
 
-      storageHelperAsync = new StorageHelper(storageKey, {
+      storageHelperAsync = new StorageHelper({
+        logger: {
+          debug: noop,
+          error: noop,
+          info: noop,
+          silly: noop,
+          warn: noop,
+        },
+      }, storageKey, {
         autoInit: false,
         defaultValue: storageHelper.defaultValue,
         storage: {
@@ -118,7 +134,15 @@ describe("renderer/utils/StorageHelper", () => {
     beforeEach(() => {
       observedChanges.length = 0;
 
-      storageHelper = new StorageHelper<typeof defaultValue>("some-key", {
+      storageHelper = new StorageHelper<typeof defaultValue>({
+        logger: {
+          debug: noop,
+          error: noop,
+          info: noop,
+          silly: noop,
+          warn: noop,
+        },
+      }, "some-key", {
         autoInit: true,
         defaultValue,
         storage: {

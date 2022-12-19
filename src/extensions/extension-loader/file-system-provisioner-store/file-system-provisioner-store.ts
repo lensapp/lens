@@ -3,35 +3,37 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { randomBytes } from "crypto";
 import { SHA256 } from "crypto-js";
-import fse from "fs-extra";
 import { action, makeObservable, observable } from "mobx";
-import path from "path";
-import { BaseStore } from "../../../common/base-store";
+import type { BaseStoreDependencies } from "../../../common/base-store/base-store";
+import { BaseStore } from "../../../common/base-store/base-store";
 import type { LensExtensionId } from "../../lens-extension";
-import { getOrInsertWith, toJS } from "../../../common/utils";
+import { getOrInsertWithAsync, toJS } from "../../../common/utils";
+import type { EnsureDirectory } from "../../../common/fs/ensure-dir.injectable";
+import type { JoinPaths } from "../../../common/path/join-paths.injectable";
+import type { RandomBytes } from "../../../common/utils/random-bytes.injectable";
 
 interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths
 }
 
-interface Dependencies {
-  directoryForExtensionData: string;
+interface Dependencies extends BaseStoreDependencies {
+  readonly directoryForExtensionData: string;
+  ensureDirectory: EnsureDirectory;
+  joinPaths: JoinPaths;
+  randomBytes: RandomBytes;
 }
 
 export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
-  readonly displayName = "FilesystemProvisionerStore";
-  registeredExtensions = observable.map<LensExtensionId, string>();
+  readonly registeredExtensions = observable.map<LensExtensionId, string>();
 
-  constructor(private dependencies: Dependencies) {
-    super({
+  constructor(protected readonly dependencies: Dependencies) {
+    super(dependencies, {
       configName: "lens-filesystem-provisioner-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
     });
 
     makeObservable(this);
-    this.load();
   }
 
   /**
@@ -41,14 +43,14 @@ export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
    * @returns path to the folder that the extension can safely write files to.
    */
   async requestDirectory(extensionName: string): Promise<string> {
-    const dirPath = getOrInsertWith(this.registeredExtensions, extensionName, () => {
-      const salt = randomBytes(32).toString("hex");
+    const dirPath = await getOrInsertWithAsync(this.registeredExtensions, extensionName, async () => {
+      const salt = (await this.dependencies.randomBytes(32)).toString("hex");
       const hashedName = SHA256(`${extensionName}/${salt}`).toString();
 
-      return path.resolve(this.dependencies.directoryForExtensionData, hashedName);
+      return this.dependencies.joinPaths(this.dependencies.directoryForExtensionData, hashedName);
     });
 
-    await fse.ensureDir(dirPath);
+    await this.dependencies.ensureDirectory(dirPath);
 
     return dirPath;
   }

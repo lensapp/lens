@@ -6,7 +6,6 @@
 import React from "react";
 import type { LensProtocolRouterRenderer } from "../lens-protocol-router-renderer/lens-protocol-router-renderer";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
-import { ClusterStore } from "../../../common/cluster-store/cluster-store";
 import {
   EXTENSION_NAME_MATCH,
   EXTENSION_PUBLISHER_MATCH,
@@ -18,6 +17,7 @@ import type { NavigateToEntitySettings } from "../../../common/front-end-routing
 import type { NavigateToClusterView } from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
 import assert from "assert";
 import type { AttemptInstallByInfo } from "../../components/+extensions/attempt-install-by-info.injectable";
+import type { GetClusterById } from "../../../common/cluster-store/get-by-id.injectable";
 
 // TODO: make it so that the handlers are type safe and we don't need to do the asserts
 interface Dependencies {
@@ -30,6 +30,7 @@ interface Dependencies {
   navigateToClusterView: NavigateToClusterView;
   navigateToPreferences: (tabId: string) => void;
   entityRegistry: CatalogEntityRegistry;
+  getClusterById: GetClusterById;
 }
 
 export const bindProtocolAddRouteHandlers = ({
@@ -42,6 +43,7 @@ export const bindProtocolAddRouteHandlers = ({
   navigateToClusterView,
   navigateToPreferences,
   entityRegistry,
+  getClusterById,
 }: Dependencies) => () => {
   lensProtocolRouterRenderer
     .addInternalHandler("/preferences", ({ search: { highlight: tabId }}) => {
@@ -93,7 +95,7 @@ export const bindProtocolAddRouteHandlers = ({
     // Handlers below are deprecated and only kept for backward compact purposes
     .addInternalHandler("/cluster/:clusterId", ({ pathname: { clusterId }}) => {
       assert(clusterId);
-      const cluster = ClusterStore.getInstance().getById(clusterId);
+      const cluster = getClusterById(clusterId);
 
       if (cluster) {
         navigateToClusterView(clusterId);
@@ -109,7 +111,7 @@ export const bindProtocolAddRouteHandlers = ({
     })
     .addInternalHandler("/cluster/:clusterId/settings", ({ pathname: { clusterId }}) => {
       assert(clusterId);
-      const cluster = ClusterStore.getInstance().getById(clusterId);
+      const cluster = getClusterById(clusterId);
 
       if (cluster) {
         navigateToEntitySettings(clusterId);

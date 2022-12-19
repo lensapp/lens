@@ -36,7 +36,9 @@ export async function startApp(conf: AppConfig) {
     });
   }
 
-  await di.inject(startMainApplicationInjectable);
+  const startMainApplication = di.inject(startMainApplicationInjectable);
+
+  await startMainApplication();
 
   return di;
 }

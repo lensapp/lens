@@ -7,6 +7,11 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { WebSocket } from "ws";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
+import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
+import pathExistsInjectable from "../../../common/fs/path-exists.injectable";
+import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
+import statInjectable from "../../../common/fs/stat.injectable";
+import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
 import platformInjectable from "../../../common/vars/platform.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import createKubectlInjectable from "../../kubectl/create-kubectl.injectable";
@@ -29,6 +34,11 @@ describe("technical unit tests for local shell sessions", () => {
     di.override(buildVersionInjectable, () => ({
       get: () => "1.1.1",
     }));
+    di.override(pathExistsInjectable, () => () => { throw new Error("tried call pathExists without override"); });
+    di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
+    di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
+    di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
+    di.override(statInjectable, () => () => { throw new Error("tried call stat without override"); });
   });
 
   describe("when on windows", () => {

@@ -17,7 +17,7 @@ const nodeDetailItemInjectable = getInjectable({
 
     return {
       Component: NodeDetails,
-      enabled: computed(() => isNode(kubeObject.get())),
+      enabled: computed(() => isNode(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },

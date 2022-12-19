@@ -13,6 +13,7 @@ import type { CategoryColumns, GetCategoryColumnsParams } from "../columns/get.i
 import getCategoryColumnsInjectable from "../columns/get.injectable";
 import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import extensionInjectable from "../../../../extensions/extension-loader/extension/extension.injectable";
+import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";
 
 class TestCategory extends CatalogCategory {
   apiVersion = "catalog.k8slens.dev/v1alpha1";
@@ -46,6 +47,8 @@ describe("Custom Category Columns", () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(hotbarStoreInjectable, () => ({}));
+    di.override(currentlyInClusterFrameInjectable, () => false);
+
     getCategoryColumns = di.inject(getCategoryColumnsInjectable);
   });
 
