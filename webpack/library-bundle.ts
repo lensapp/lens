@@ -3,19 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import nodeExternals from "webpack-node-externals";
 import { platform } from "os";
 import path from "path";
 import type { WebpackPluginInstance } from "webpack";
 import { DefinePlugin, optimize } from "webpack";
-import { main, renderer } from "./library";
+import main from "./main";
+import renderer from "./renderer";
 import { buildDir } from "./vars";
 import CircularDependencyPlugin from "circular-dependency-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 
 const config = [
   {
-    ...main,
+    ...main(),
     entry: {
       main: path.resolve(__dirname, "..", "src", "main", "library.ts"),
     },
@@ -33,7 +33,6 @@ const config = [
         CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
         CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
       }),
-      new ForkTsCheckerPlugin(),
       new CircularDependencyPlugin({
         cwd: __dirname,
         exclude: /node_modules/,
@@ -42,7 +41,7 @@ const config = [
     ],
   },
   {
-    ...renderer,
+    ...renderer({ showVars: false }),
     entry: {
       common: path.resolve(__dirname, "..", "src", "common", "library.ts"),
     },
@@ -55,9 +54,6 @@ const config = [
     optimization: {
       minimize: false,
     },
-    externals: [
-      nodeExternals(),
-    ],
     plugins: [
       new ForkTsCheckerPlugin(),
       new CircularDependencyPlugin({
@@ -68,7 +64,7 @@ const config = [
     ],
   },
   {
-    ...renderer,
+    ...renderer({ showVars: false }),
     name: "lens-app-common",
     entry: {
       renderer: path.resolve(__dirname, "..", "src", "renderer", "library.ts"),
@@ -82,9 +78,6 @@ const config = [
     optimization: {
       minimize: false,
     },
-    externals: [
-      nodeExternals(),
-    ],
     plugins: [
       new DefinePlugin({
         CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
