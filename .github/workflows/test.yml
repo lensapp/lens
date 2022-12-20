@@ -57,10 +57,6 @@ jobs:
         name: Run tests
         if: ${{ matrix.type == 'unit' }}
 
-      - run: make test-extensions
-        name: Run In-tree Extension tests
-        if: ${{ matrix.type == 'unit' }}
-
       - run: make ci-validate-dev
         if: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') && matrix.type == 'unit' }}
         name: Validate dev mode will work

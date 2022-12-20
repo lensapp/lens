@@ -77,60 +77,6 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
   );
 
   it(
-    "show logs and highlight the log search entries",
-    async () => {
-      await navigateToPods(frame);
-
-      const namespacesSelector = await frame.waitForSelector(
-        ".NamespaceSelect",
-      );
-
-      await namespacesSelector.click();
-      await namespacesSelector.type("kube-system");
-      await namespacesSelector.press("Enter");
-      await namespacesSelector.click();
-
-      const kubeApiServerRow = await frame.waitForSelector(
-        "div.TableCell >> text=kube-apiserver",
-      );
-
-      await kubeApiServerRow.click();
-      await frame.waitForSelector(".Drawer", { state: "visible" });
-
-      const showPodLogsIcon = await frame.waitForSelector(
-        ".Drawer .drawer-title .Icon >> text=subject",
-      );
-
-      showPodLogsIcon.click();
-
-      // Check if controls are available
-      await frame.waitForSelector(".Dock.isOpen");
-      await frame.waitForSelector(".LogList .VirtualList");
-      await frame.waitForSelector(".LogResourceSelector");
-
-      const logSearchInput = await frame.waitForSelector(
-        ".LogSearch .SearchInput input",
-      );
-
-      await logSearchInput.type(":");
-      await frame.waitForSelector(".LogList .list span.active");
-
-      const showTimestampsButton = await frame.waitForSelector(
-        "[data-testid='log-controls'] .show-timestamps",
-      );
-
-      await showTimestampsButton.click();
-
-      const showPreviousButton = await frame.waitForSelector(
-        "[data-testid='log-controls'] .show-previous",
-      );
-
-      await showPreviousButton.click();
-    },
-    10 * 60 * 1000,
-  );
-
-  it(
     "should show the default namespaces",
     async () => {
       await navigateToNamespaces(frame);

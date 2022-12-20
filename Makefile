@@ -5,10 +5,6 @@ CMD_ARGS = $(filter-out $@,$(MAKECMDGOALS))
 
 NPM_RELEASE_TAG ?= latest
 ELECTRON_BUILDER_EXTRA_ARGS ?=
-EXTENSIONS_DIR = ./extensions
-extensions = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir})
-extension_node_modules = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/node_modules)
-extension_dists = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/dist)
 
 ifeq ($(OS),Windows_NT)
     DETECTED_OS := Windows
@@ -28,10 +24,10 @@ compile-dev: node_modules
 	yarn compile:renderer --cache
 
 .PHONY: validate-dev
-ci-validate-dev: binaries/client build-extensions compile-dev
+ci-validate-dev: binaries/client compile-dev
 
 .PHONY: dev
-dev: binaries/client build-extensions
+dev: binaries/client
 	rm -rf static/build/
 	yarn run build:tray-icons
 	yarn dev
@@ -54,7 +50,6 @@ integration: build
 
 .PHONY: build
 build: node_modules binaries/client
-	$(MAKE) build-extensions -B
 	yarn run build:tray-icons
 	yarn run compile
 ifeq "$(DETECTED_OS)" "Windows"
@@ -62,26 +57,6 @@ ifeq "$(DETECTED_OS)" "Windows"
 	rm -rf node_modules/win-ca/pem
 endif
 	yarn run electron-builder --publish onTag $(ELECTRON_BUILDER_EXTRA_ARGS)
-
-.NOTPARALLEL: $(extension_node_modules)
-$(extension_node_modules): node_modules
-	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund --no-save
-
-$(extension_dists): src/extensions/npm/extensions/dist $(extension_node_modules)
-	cd $(@:/dist=) && ../../node_modules/.bin/npm run build
-	rm -rf ./node_modules/$(shell basename $(@:/dist=))
-
-.PHONY: clean-old-extensions
-clean-old-extensions:
-	find ./extensions -mindepth 1 -maxdepth 1 -type d '!' -exec test -e '{}/package.json' \; -exec rm -rf {} \;
-
-.PHONY: build-extensions
-build-extensions: node_modules clean-old-extensions $(extension_dists)
-	yarn install --check-files --frozen-lockfile --network-timeout=100000
-
-.PHONY: test-extensions
-test-extensions: $(extension_node_modules)
-	$(foreach dir, $(extensions), (cd $(dir) && npm run test || exit $?);)
 
 src/extensions/npm/extensions/__mocks__:
 	cp -r __mocks__ src/extensions/npm/extensions/
@@ -113,16 +88,12 @@ build-docs:
 docs: build-docs
 	yarn mkdocs-serve-local
 
-.PHONY: clean-extensions
-clean-extensions:
-	rm -rf $(EXTENSIONS_DIR)/*/{dist,node_modules,*.tgz}
-
 .PHONY: clean-npm
 clean-npm:
 	rm -rf src/extensions/npm/extensions/{dist,__mocks__,node_modules}
 
 .PHONY: clean
-clean: clean-npm clean-extensions
+clean: clean-npm
 	rm -rf binaries/client
 	rm -rf dist
 	rm -rf static/build
