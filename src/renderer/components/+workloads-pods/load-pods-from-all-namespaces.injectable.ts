@@ -21,8 +21,8 @@ const loadPodsFromAllNamespacesInjectable = getInjectable({
         onLoadFailure: error =>
           showErrorNotification(`Can not load Pods. ${String(error)}`),
       });
-    }
-  }
-})
+    };
+  },
+});
 
 export default loadPodsFromAllNamespacesInjectable;
