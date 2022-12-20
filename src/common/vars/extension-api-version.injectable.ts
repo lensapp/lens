@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { SemVer } from "semver";
-import applicationInformationToken from "./application-information-token.injectable";
+import applicationInformationToken from "./application-information-token";
 
 const extensionApiVersionInjectable = getInjectable({
   id: "extension-api-version",

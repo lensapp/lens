@@ -27,7 +27,7 @@ import getRelativePathInjectable from "../../common/path/get-relative-path.injec
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import removePathInjectable from "../../common/fs/remove.injectable";
 import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
-import applicationInformationToken from "../../common/vars/application-information-token.injectable";
+import applicationInformationToken from "../../common/vars/application-information-token";
 import lensResourcesDirInjectable from "../../common/vars/lens-resources-dir.injectable";
 import bundledExtensionsInjectable from "./bundled-extensions.injectable";
 

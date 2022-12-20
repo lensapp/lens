@@ -30,7 +30,7 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { GetRelativePath } from "../../common/path/get-relative-path.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type TypedEventEmitter from "typed-emitter";
-import type { ApplicationInformation } from "../../common/vars/application-information-token.injectable";
+import type { ApplicationInformation } from "../../common/vars/application-information-token";
 
 interface Dependencies {
   readonly extensionLoader: ExtensionLoader;

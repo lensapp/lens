@@ -4,7 +4,7 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import applicationInformationToken from "./application-information-token.injectable";
+import applicationInformationToken from "./application-information-token";
 
 const applicationInformationForTestingInjectable = getInjectable({
   id: "application-information-for-testing",
