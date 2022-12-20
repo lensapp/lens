@@ -21,7 +21,7 @@ import { KubeObjectMeta } from "../kube-object-meta";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import { NodeDetailsResources } from "./details-resources";
 import { DrawerTitle } from "../drawer/drawer-title";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
@@ -31,6 +31,8 @@ import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active
 import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import type { ClusterMetricData, RequestClusterMetricsByNodeNames } from "../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
 import requestClusterMetricsByNodeNamesInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
+import loadPodsFromAllNamespacesInjectable from "../+workloads-pods/load-pods-from-all-namespaces.injectable";
 
 export interface NodeDetailsProps extends KubeObjectDetailsProps<Node> {
 }
@@ -40,6 +42,8 @@ interface Dependencies {
   podStore: PodStore;
   getActiveClusterEntity: GetActiveClusterEntity;
   requestClusterMetricsByNodeNames: RequestClusterMetricsByNodeNames;
+  logger: Logger;
+  loadPodsFromAllNamespaces: () => void;
 }
 
 @observer
@@ -61,6 +65,8 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
         this.props.podStore,
       ]),
     ]);
+
+    this.props.loadPodsFromAllNamespaces();
   }
 
   loadMetrics = async () => {
@@ -77,7 +83,7 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
     }
 
     if (!(node instanceof Node)) {
-      logger.error("[NodeDetails]: passed object that is not an instanceof Node", node);
+      this.props.logger.error("[NodeDetails]: passed object that is not an instanceof Node", node);
 
       return null;
     }
@@ -199,6 +205,8 @@ export const NodeDetails = withInjectables<Dependencies, NodeDetailsProps>(NonIn
     podStore: di.inject(podStoreInjectable),
     getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
     requestClusterMetricsByNodeNames: di.inject(requestClusterMetricsByNodeNamesInjectable),
+    logger: di.inject(loggerInjectable),
+    loadPodsFromAllNamespaces: di.inject(loadPodsFromAllNamespacesInjectable),
   }),
 });
 
