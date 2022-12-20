@@ -32,13 +32,13 @@ export class ClusterAccessibleNamespaces extends React.Component<ClusterAccessib
           placeholder="Add new namespace..."
           add={(newNamespace) => {
             this.namespaces.add(newNamespace);
-            this.props.cluster.accessibleNamespaces = Array.from(this.namespaces);
+            this.props.cluster.accessibleNamespaces.replace([...this.namespaces]);
           }}
           validators={systemName}
           items={Array.from(this.namespaces)}
           remove={({ oldItem: oldNamespace }) => {
             this.namespaces.delete(oldNamespace);
-            this.props.cluster.accessibleNamespaces = Array.from(this.namespaces);
+            this.props.cluster.accessibleNamespaces.replace([...this.namespaces]);
           }}
           inputTheme="round-black"
         />

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
-import { beforeFrameStartsInjectionToken } from "../../../../renderer/before-frame-starts/tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../../../../renderer/before-frame-starts/tokens";
 import initClusterStoreInjectable from "../../store/renderer/init.injectable";
 import requestInitialClusterStatesInjectable from "./request-initial.injectable";
 
@@ -23,7 +23,7 @@ const setupClusterStateSyncInjectable = getInjectable({
     },
     runAfter: di.inject(initClusterStoreInjectable),
   }),
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default setupClusterStateSyncInjectable;

@@ -3,22 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { IReactionDisposer } from "mobx";
+import type { IComputedValue, IReactionDisposer } from "mobx";
 import { action, comparer, computed, makeObservable, reaction } from "mobx";
 import type { StorageLayer } from "../../utils";
 import { autoBind, noop, toggle } from "../../utils";
-import type { KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObjectStoreDependencies, KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { NamespaceApi } from "../../../common/k8s-api/endpoints/namespace.api";
 import { Namespace } from "../../../common/k8s-api/endpoints/namespace.api";
 
-interface Dependencies {
-  storage: StorageLayer<string[] | undefined>;
+interface Dependencies extends KubeObjectStoreDependencies {
+  readonly storage: StorageLayer<string[] | undefined>;
+  readonly clusterConfiguredAccessibleNamespaces: IComputedValue<string[]>;
 }
 
 export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   constructor(protected readonly dependencies: Dependencies, api: NamespaceApi) {
-    super(api);
+    super(dependencies, api);
     makeObservable(this);
     autoBind(this);
 
@@ -26,11 +27,21 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   private async init() {
-    await this.contextReady;
     await this.dependencies.storage.whenReady;
 
-    this.selectNamespaces(this.initialNamespaces);
-    this.autoLoadAllowedNamespaces();
+    const { allowedNamespaces } = this;
+    const selectedNamespaces = this.dependencies.storage.get(); // raw namespaces, undefined on first load
+
+    // return previously saved namespaces from local-storage (if any)
+    if (Array.isArray(selectedNamespaces)) {
+      this.selectNamespaces(selectedNamespaces.filter(namespace => allowedNamespaces.includes(namespace)));
+    } else if (allowedNamespaces.includes("default")) {
+      this.selectNamespaces(["default"]);
+    } else if (allowedNamespaces.length) {
+      this.selectNamespaces([allowedNamespaces[0]]);
+    } else {
+      this.selectNamespaces([]);
+    }
   }
 
   public onContextChange(callback: (namespaces: string[]) => void, opts: { fireImmediately?: boolean } = {}): IReactionDisposer {
@@ -38,32 +49,6 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
       fireImmediately: opts.fireImmediately,
       equals: comparer.shallow,
     });
-  }
-
-  private autoLoadAllowedNamespaces(): IReactionDisposer {
-    return reaction(() => this.allowedNamespaces, namespaces => this.loadAll({ namespaces }), {
-      fireImmediately: true,
-      equals: comparer.shallow,
-    });
-  }
-
-  private get initialNamespaces(): string[] {
-    const { allowedNamespaces } = this;
-    const selectedNamespaces = this.dependencies.storage.get(); // raw namespaces, undefined on first load
-
-    // return previously saved namespaces from local-storage (if any)
-    if (Array.isArray(selectedNamespaces)) {
-      return selectedNamespaces.filter(namespace => allowedNamespaces.includes(namespace));
-    }
-
-    // otherwise select "default" or first allowed namespace
-    if (allowedNamespaces.includes("default")) {
-      return ["default"];
-    } else if (allowedNamespaces.length) {
-      return [allowedNamespaces[0]];
-    }
-
-    return [];
   }
 
   /**
@@ -75,10 +60,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   @computed get allowedNamespaces(): string[] {
-    return Array.from(new Set([
-      ...(this.context?.allNamespaces ?? []), // allowed namespaces from cluster (main), updating every 30s
-      ...this.items.map(item => item.getName()), // loaded namespaces from k8s api
-    ].flat()));
+    return this.items.map(item => item.getName());
   }
 
   /**
@@ -110,11 +92,13 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   subscribe() {
+    const clusterConfiguredAccessibleNamespaces = this.dependencies.clusterConfiguredAccessibleNamespaces.get();
+
     /**
      * if user has given static list of namespaces let's not start watches
      * because watch adds stuff that's not wanted or will just fail
      */
-    if ((this.context?.cluster.accessibleNamespaces.length ?? 0) > 0) {
+    if (clusterConfiguredAccessibleNamespaces.length > 0) {
       return noop;
     }
 
@@ -122,17 +106,13 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   protected async loadItems(params: KubeObjectStoreLoadingParams): Promise<Namespace[]> {
-    const { allowedNamespaces } = this;
+    const clusterConfiguredAccessibleNamespaces = this.dependencies.clusterConfiguredAccessibleNamespaces.get();
 
-    let namespaces = await super.loadItems(params).catch(() => []);
-
-    namespaces = namespaces.filter(namespace => allowedNamespaces.includes(namespace.getName()));
-
-    if (!namespaces.length && allowedNamespaces.length > 0) {
-      return allowedNamespaces.map(getDummyNamespace);
+    if (clusterConfiguredAccessibleNamespaces.length > 0) {
+      return clusterConfiguredAccessibleNamespaces.map(getDummyNamespace);
     }
 
-    return namespaces;
+    return super.loadItems(params);
   }
 
   @action selectNamespaces = (namespace: string | string[]) => {

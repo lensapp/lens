@@ -3,11 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ClusterContext } from "./cluster-context";
-
-import { action, computed, makeObservable, observable, reaction, when } from "mobx";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
 import type { Disposer } from "../utils";
-import { waitUntilDefined, autoBind, includes, noop, rejectPromiseBy } from "../utils";
+import { waitUntilDefined, autoBind, includes, rejectPromiseBy } from "../utils";
 import type { KubeJsonApiDataFor, KubeObject } from "./kube-object";
 import { KubeStatus } from "./kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-event";
@@ -21,6 +19,7 @@ import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import { entries } from "../utils/objects";
 import AbortController from "abort-controller";
+import type { ClusterContext } from "../../renderer/cluster-frame-context/cluster-frame-context";
 
 export type OnLoadFailure = (error: unknown) => void;
 
@@ -85,38 +84,26 @@ export type KubeApiDataFrom<K extends KubeObject, A> = A extends KubeApi<K, infe
 
 export type JsonPatch = Patch;
 
+export interface KubeObjectStoreDependencies {
+  readonly context: ClusterContext;
+}
+
 export abstract class KubeObjectStore<
   K extends KubeObject = KubeObject,
   A extends KubeApi<K, D> = KubeApi<K, KubeJsonApiDataFor<K>>,
   D extends KubeJsonApiDataFor<K> = KubeApiDataFrom<K, A>,
 > extends ItemStore<K> {
-  static readonly defaultContext = observable.box<ClusterContext>(); // TODO: support multiple cluster contexts
-
-  public readonly api!: A;
   public readonly limit: number | undefined;
   public readonly bufferSize: number;
-  @observable private loadedNamespaces: string[] | undefined = undefined;
 
-  get contextReady() {
-    return when(() => Boolean(this.context));
-  }
+  private readonly loadedNamespaces = observable.box<string[]>();
 
-  get namespacesReady() {
-    return when(() => Boolean(this.loadedNamespaces));
-  }
-
-  constructor(api: A, opts?: KubeObjectStoreOptions);
-  /**
-   * @deprecated Supply API instance through constructor
-   */
-  constructor();
-  constructor(api?: A, opts?: KubeObjectStoreOptions) {
+  constructor(
+    protected readonly dependencies: KubeObjectStoreDependencies,
+    public readonly api: A,
+    opts?: KubeObjectStoreOptions,
+  ) {
     super();
-
-    if (api) {
-      this.api = api;
-    }
-
     this.limit = opts?.limit;
     this.bufferSize = opts?.bufferSize ?? 50_000;
 
@@ -125,13 +112,9 @@ export abstract class KubeObjectStore<
     this.bindWatchEventsUpdater();
   }
 
-  get context(): ClusterContext | undefined {
-    return KubeObjectStore.defaultContext.get();
-  }
-
   // TODO: Circular dependency: KubeObjectStore -> ClusterFrameContext -> NamespaceStore -> KubeObjectStore
   @computed get contextItems(): K[] {
-    const namespaces = this.context?.contextNamespaces ?? [];
+    const namespaces = this.dependencies.context.contextNamespaces;
 
     return this.items.filter(item => {
       const itemNamespace = item.getNs();
@@ -202,17 +185,11 @@ export abstract class KubeObjectStore<
   }
 
   protected async loadItems({ namespaces, reqInit, onLoadFailure }: KubeObjectStoreLoadingParams): Promise<K[]> {
-    if (!this.context?.cluster?.isAllowedResource(this.api.kind)) {
-      return [];
-    }
-
-    const isLoadingAll = this.context.allNamespaces?.length > 1
-      && this.context.cluster.accessibleNamespaces.length === 0
-      && this.context.allNamespaces.every(ns => namespaces.includes(ns));
+    const isLoadingAll = this.dependencies.context.isLoadingAll(namespaces);
 
     if (!this.api.isNamespaced || isLoadingAll) {
       if (this.api.isNamespaced) {
-        this.loadedNamespaces = [];
+        this.loadedNamespaces.set([]);
       }
 
       const res = this.api.list({ reqInit }, this.query);
@@ -234,7 +211,7 @@ export abstract class KubeObjectStore<
       return await res ?? [];
     }
 
-    this.loadedNamespaces = namespaces;
+    this.loadedNamespaces.set(namespaces);
 
     const results = await Promise.allSettled(
       namespaces.map(namespace => this.api.list({ namespace, reqInit }, this.query)),
@@ -266,9 +243,7 @@ export abstract class KubeObjectStore<
 
   @action
   async loadAll({ namespaces, merge = true, reqInit, onLoadFailure }: KubeObjectStoreLoadAllParams = {}): Promise<undefined | K[]> {
-    const context = await waitUntilDefined(() => this.context);
-
-    namespaces ??= context.contextNamespaces;
+    namespaces ??= this.dependencies.context.contextNamespaces;
     this.isLoading = true;
 
     try {
@@ -425,7 +400,7 @@ export abstract class KubeObjectStore<
   }
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
-  protected eventsBuffer = observable.array<IKubeWatchEvent<D>>([], { deep: false });
+  protected readonly eventsBuffer = observable.array<IKubeWatchEvent<D>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {
     reaction(() => [...this.eventsBuffer], this.updateFromEventsBuffer, {
@@ -435,25 +410,24 @@ export abstract class KubeObjectStore<
 
   subscribe({ onLoadFailure, abortController = new AbortController() }: KubeObjectStoreSubscribeParams = {}): Disposer {
     if (this.api.isNamespaced) {
-      Promise.race([
-        rejectPromiseBy(abortController.signal),
-        Promise.all([
-          waitUntilDefined(() => this.context),
-          this.namespacesReady,
-        ] as const),
-      ])
-        .then(([context]) => {
-          assert(this.loadedNamespaces);
+      void (async () => {
+        try {
+          const loadedNamespaces = await Promise.race([
+            rejectPromiseBy(abortController.signal),
+            waitUntilDefined(() => this.loadedNamespaces.get()),
+          ]);
 
-          if (context.cluster?.isGlobalWatchEnabled && this.loadedNamespaces.length === 0) {
-            return this.watchNamespace("", abortController, { onLoadFailure });
+          if (this.dependencies.context.isGlobalWatchEnabled() && loadedNamespaces.length === 0) {
+            this.watchNamespace("", abortController, { onLoadFailure });
+          } else {
+            for (const namespace of loadedNamespaces) {
+              this.watchNamespace(namespace, abortController, { onLoadFailure });
+            }
           }
-
-          for (const namespace of this.loadedNamespaces) {
-            this.watchNamespace(namespace, abortController, { onLoadFailure });
-          }
-        })
-        .catch(noop); // ignore DOMExceptions
+        } catch (error) {
+          console.error(`[KUBE-OBJECT-STORE]: failed to subscribe to ${this.api.apiBase}`, error);
+        }
+      })();
     } else {
       this.watchNamespace("", abortController, { onLoadFailure });
     }
@@ -467,7 +441,7 @@ export abstract class KubeObjectStore<
     }
 
     let timedRetry: NodeJS.Timeout;
-    const watch = () => this.api.watch({
+    const startNewWatch = () => this.api.watch({
       namespace,
       abortController,
       callback,
@@ -486,7 +460,7 @@ export abstract class KubeObjectStore<
 
         // not sure what to do, best to retry
         clearTimeout(timedRetry);
-        timedRetry = setTimeout(watch, 5000);
+        timedRetry = setTimeout(startNewWatch, 5000);
       } else if (error instanceof KubeStatus && error.code === 410) {
         clearTimeout(timedRetry);
         // resourceVersion has gone, let's try to reload
@@ -495,11 +469,11 @@ export abstract class KubeObjectStore<
             namespace
               ? this.loadAll({ namespaces: [namespace], reqInit: { signal }, ...opts })
               : this.loadAll({ merge: false, reqInit: { signal }, ...opts })
-          ).then(watch);
+          ).then(startNewWatch);
         }, 1000);
       } else if (error) { // not sure what to do, best to retry
         clearTimeout(timedRetry);
-        timedRetry = setTimeout(watch, 5000);
+        timedRetry = setTimeout(startNewWatch, 5000);
       }
 
       if (data) {
@@ -508,7 +482,7 @@ export abstract class KubeObjectStore<
     };
 
     signal.addEventListener("abort", () => clearTimeout(timedRetry));
-    watch();
+    startNewWatch();
   }
 
   @action

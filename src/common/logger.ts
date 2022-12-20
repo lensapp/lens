@@ -17,4 +17,6 @@ export interface Logger {
 /**
  * @deprecated use `di.inject(loggerInjectable)` instead
  */
-export default asLegacyGlobalForExtensionApi(loggerInjectable);
+const logger = asLegacyGlobalForExtensionApi(loggerInjectable);
+
+export default logger;

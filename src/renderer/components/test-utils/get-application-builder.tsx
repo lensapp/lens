@@ -9,10 +9,10 @@ import type { IComputedValue, ObservableMap } from "mobx";
 import { action, computed, observable, runInAction } from "mobx";
 import React from "react";
 import { Router } from "react-router";
-import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent, queryByText } from "@testing-library/react";
-import type { KubeResource } from "../../../common/rbac";
+import type { KubeApiResourceDescriptor } from "../../../common/rbac";
+import { formatKubeApiResource } from "../../../common/rbac";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
@@ -22,10 +22,7 @@ import navigateToPreferencesInjectable from "../../../features/preferences/commo
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
-import { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
 import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
 import startFrameInjectable from "../../start-frame/start-frame.injectable";
 import type { NamespaceStore } from "../+namespaces/store";
@@ -52,7 +49,6 @@ import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluste
 import activeKubernetesClusterInjectable from "../../cluster-frame-context/active-kubernetes-cluster.injectable";
 import { catalogEntityFromCluster } from "../../../main/cluster/manager";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
-import { isAllowedResource } from "../../../common/cluster/is-allowed-resource";
 import createApplicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-application-window.injectable";
 import type { CreateElectronWindow } from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import createElectronWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
@@ -115,7 +111,7 @@ export interface ApplicationBuilder {
     create: (id: string) => LensWindowWithHelpers;
   };
 
-  allowKubeResource: (resourceName: KubeResource) => ApplicationBuilder;
+  allowKubeResource: (resource: KubeApiResourceDescriptor) => ApplicationBuilder;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   afterApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeWindowStart: (callback: Callback) => ApplicationBuilder;
@@ -214,7 +210,7 @@ export const getApplicationBuilder = () => {
     },
   }));
 
-  const allowedResourcesState = observable.array<KubeResource>();
+  const allowedResourcesState = observable.set<string>();
 
   const windowHelpers = new Map<string, { di: DiContainer; getRendered: () => RenderResult }>();
 
@@ -502,15 +498,11 @@ export const getApplicationBuilder = () => {
       environment = environments.clusterFrame;
 
       builder.beforeWindowStart((windowDi) => {
-        windowDi.override(allowedResourcesInjectable, () =>
-          computed(() => new Set([...allowedResourcesState])),
-        );
-
         const clusterStub = {
           id: "some-cluster-id",
-          accessibleNamespaces: [],
-          isAllowedResource: isAllowedResource(allowedResourcesState),
-        } as unknown as Cluster;
+          accessibleNamespaces: observable.array(),
+          shouldShowResource: (kind) => allowedResourcesState.has(formatKubeApiResource(kind)),
+        } as Partial<Cluster> as Cluster;
 
         windowDi.override(activeKubernetesClusterInjectable, () =>
           computed(() => catalogEntityFromCluster(clusterStub)),
@@ -538,20 +530,8 @@ export const getApplicationBuilder = () => {
           getTotalCount: () => namespaceItems.length,
         } as Partial<NamespaceStore> as NamespaceStore;
 
-        const clusterFrameContextFake = new ClusterFrameContext(
-          clusterStub,
-
-          {
-            namespaceStore: namespaceStoreStub,
-          },
-        );
-
         windowDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
         windowDi.override(hostedClusterInjectable, () => clusterStub);
-        windowDi.override(clusterFrameContextInjectable, () => clusterFrameContextFake);
-
-        // Todo: get rid of global state.
-        KubeObjectStore.defaultContext.set(clusterFrameContextFake);
       });
 
       return builder;
@@ -635,11 +615,11 @@ export const getApplicationBuilder = () => {
       },
     },
 
-    allowKubeResource: (resourceName) => {
+    allowKubeResource: (resource) => {
       environment.onAllowKubeResource();
 
       runInAction(() => {
-        allowedResourcesState.push(resourceName);
+        allowedResourcesState.add(formatKubeApiResource(resource));
       });
 
       return builder;

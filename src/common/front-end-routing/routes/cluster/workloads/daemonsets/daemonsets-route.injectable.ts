@@ -3,21 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import isAllowedResourceInjectable from "../../../../../utils/is-allowed-resource.injectable";
+import { shouldShowResourceInjectionToken } from "../../../../../cluster-store/allowed-resources-injection-token";
 import { frontEndRouteInjectionToken } from "../../../../front-end-route-injection-token";
 
 const daemonsetsRouteInjectable = getInjectable({
   id: "daemonsets-route",
 
-  instantiate: (di) => {
-    const isAllowedResource = di.inject(isAllowedResourceInjectable, "daemonsets");
-
-    return {
-      path: "/daemonsets",
-      clusterFrame: true,
-      isEnabled: isAllowedResource,
-    };
-  },
+  instantiate: (di) => ({
+    path: "/daemonsets",
+    clusterFrame: true,
+    isEnabled: di.inject(shouldShowResourceInjectionToken, {
+      apiName: "daemonsets",
+      group: "apps",
+    }),
+  }),
 
   injectionToken: frontEndRouteInjectionToken,
 });

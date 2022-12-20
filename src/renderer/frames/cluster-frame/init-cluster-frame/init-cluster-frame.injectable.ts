@@ -7,10 +7,11 @@ import { initClusterFrame } from "./init-cluster-frame";
 import catalogEntityRegistryInjectable from "../../../api/catalog/entity/registry.injectable";
 import frameRoutingIdInjectable from "./frame-routing-id/frame-routing-id.injectable";
 import hostedClusterInjectable from "../../../cluster-frame-context/hosted-cluster.injectable";
-import clusterFrameContextInjectable from "../../../cluster-frame-context/cluster-frame-context.injectable";
 import assert from "assert";
 import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
 import loadExtensionsInjectable from "../../load-extensions.injectable";
+import loggerInjectable from "../../../../common/logger.injectable";
+import showErrorNotificationInjectable from "../../../components/notifications/show-error-notification.injectable";
 
 const initClusterFrameInjectable = getInjectable({
   id: "init-cluster-frame",
@@ -26,7 +27,8 @@ const initClusterFrameInjectable = getInjectable({
       catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
       frameRoutingId: di.inject(frameRoutingIdInjectable),
       emitAppEvent: di.inject(emitAppEventInjectable),
-      clusterFrameContext: di.inject(clusterFrameContextInjectable),
+      logger: di.inject(loggerInjectable),
+      showErrorNotification: di.inject(showErrorNotificationInjectable),
     });
   },
 });

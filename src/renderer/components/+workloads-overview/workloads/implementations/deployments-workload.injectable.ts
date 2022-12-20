@@ -19,7 +19,10 @@ const deploymentsWorkloadInjectable = getInjectable({
     const store = di.inject(deploymentsStoreInjectable);
 
     return {
-      resourceName: "deployments",
+      resource: {
+        apiName: "deployments",
+        group: "apps",
+      },
       open: navigate,
 
       amountOfItems: computed(

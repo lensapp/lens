@@ -14,7 +14,6 @@ import kubectlBinaryNameInjectable from "../../../main/kubectl/binary-name.injec
 import kubectlDownloadingNormalizedArchInjectable from "../../../main/kubectl/normalized-arch.injectable";
 import openDeleteClusterDialogInjectable, { type OpenDeleteClusterDialog } from "../../../renderer/components/delete-cluster-dialog/open.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
@@ -90,7 +89,6 @@ describe("Deleting a cluster", () => {
     });
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.override(storesAndApisCanBeCreatedInjectable, () => true);
       openDeleteClusterDialog = windowDi.inject(openDeleteClusterDialogInjectable);
     });
 

@@ -9,7 +9,9 @@ import { CustomResourceStore } from "../../../common/k8s-api/api-manager/resourc
 import type { CustomResourceDefinition } from "../../../common/k8s-api/endpoints";
 import { KubeApi } from "../../../common/k8s-api/kube-api";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
-import { beforeClusterFrameStartsInjectionToken } from "../tokens";
+import { beforeClusterFrameStartsSecondInjectionToken } from "../tokens";
+import type { KubeObjectStoreDependencies } from "../../../common/k8s-api/kube-object.store";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 
 const setupAutoRegistrationInjectable = getInjectable({
   id: "setup-auto-registration",
@@ -19,6 +21,9 @@ const setupAutoRegistrationInjectable = getInjectable({
       const autoRegistrationEmitter = di.inject(autoRegistrationEmitterInjectable);
       const beforeApiManagerInitializationCrds: CustomResourceDefinition[] = [];
       const beforeApiManagerInitializationApis: KubeApi[] = [];
+      const deps: KubeObjectStoreDependencies = {
+        context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+      };
       let initialized = false;
 
       const autoInitCustomResourceStore = (crd: CustomResourceDefinition) => {
@@ -43,7 +48,7 @@ const setupAutoRegistrationInjectable = getInjectable({
         })();
 
         if (!apiManager.getStore(api)) {
-          apiManager.registerStore(new CustomResourceStore(api));
+          apiManager.registerStore(new CustomResourceStore(deps, api));
         }
       };
       const autoInitKubeApi = (api: KubeApi) => {
@@ -66,6 +71,7 @@ const setupAutoRegistrationInjectable = getInjectable({
           }
         });
 
+      // NOTE: this MUST happen after the event emitter listeners are registered
       const apiManager = di.inject(apiManagerInjectable);
 
       beforeApiManagerInitializationCrds.forEach(autoInitCustomResourceStore);
@@ -73,7 +79,7 @@ const setupAutoRegistrationInjectable = getInjectable({
       initialized = true;
     },
   }),
-  injectionToken: beforeClusterFrameStartsInjectionToken,
+  injectionToken: beforeClusterFrameStartsSecondInjectionToken,
 });
 
 export default setupAutoRegistrationInjectable;

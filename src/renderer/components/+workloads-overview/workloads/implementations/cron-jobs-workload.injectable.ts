@@ -19,17 +19,17 @@ const cronJobsWorkloadInjectable = getInjectable({
     const store = di.inject(cronJobsStoreInjectable);
 
     return {
-      resourceName: "cronjobs",
+      resource: {
+        apiName: "cronjobs",
+        group: "batch",
+      },
       open: navigate,
-
       amountOfItems: computed(
         () => store.getAllByNs(namespaceStore.contextNamespaces).length,
       ),
-
       status: computed(() =>
         store.getStatuses(store.getAllByNs(namespaceStore.contextNamespaces)),
       ),
-
       title: ResourceNames.cronjobs,
       orderNumber: 70,
     };

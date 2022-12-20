@@ -6,7 +6,7 @@
 import type { PodStore } from "../+workloads-pods/store";
 import type { Deployment, DeploymentApi } from "../../../common/k8s-api/endpoints";
 import { PodStatusPhase } from "../../../common/k8s-api/endpoints";
-import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 
 // This needs to be disables because of https://github.com/microsoft/TypeScript/issues/15300
@@ -17,13 +17,13 @@ export type DeploymentStatuses = {
   pending: number;
 };
 
-export interface DeploymentStoreDependencies {
+export interface DeploymentStoreDependencies extends KubeObjectStoreDependencies {
   readonly podStore: PodStore;
 }
 
 export class DeploymentStore extends KubeObjectStore<Deployment, DeploymentApi> {
   constructor(protected readonly dependencies: DeploymentStoreDependencies, api: DeploymentApi, opts?: KubeObjectStoreOptions) {
-    super(api, opts);
+    super(dependencies, api, opts);
   }
 
   protected sortItems(items: Deployment[]) {

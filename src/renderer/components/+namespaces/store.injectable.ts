@@ -9,6 +9,8 @@ import createStorageInjectable from "../../utils/create-storage/create-storage.i
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import assert from "assert";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
+import clusterFrameContextForClusterScopedResourcesInjectable from "../../cluster-frame-context/for-cluster-scoped-resources.injectable";
+import clusterConfiguredAccessibleNamespacesInjectable from "../../cluster/accessible-namespaces.injectable";
 
 const namespaceStoreInjectable = getInjectable({
   id: "namespace-store",
@@ -20,7 +22,9 @@ const namespaceStoreInjectable = getInjectable({
     const api = di.inject(namespaceApiInjectable);
 
     return new NamespaceStore({
+      context: di.inject(clusterFrameContextForClusterScopedResourcesInjectable),
       storage: createStorage<string[] | undefined>("selected_namespaces", undefined),
+      clusterConfiguredAccessibleNamespaces: di.inject(clusterConfiguredAccessibleNamespacesInjectable),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

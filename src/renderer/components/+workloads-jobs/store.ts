@@ -3,20 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { Job, JobApi } from "../../../common/k8s-api/endpoints/job.api";
 import type { CronJob, Pod } from "../../../common/k8s-api/endpoints";
 import { PodStatusPhase } from "../../../common/k8s-api/endpoints";
 import type { GetPodsByOwnerId } from "../+workloads-pods/get-pods-by-owner-id.injectable";
 
-interface Dependencies {
+interface Dependencies extends KubeObjectStoreDependencies {
   getPodsByOwnerId: GetPodsByOwnerId;
 }
 
 export class JobStore extends KubeObjectStore<Job, JobApi> {
   constructor(protected readonly dependencies: Dependencies, api: JobApi, opts?: KubeObjectStoreOptions) {
-    super(api, opts);
+    super(dependencies, api, opts);
   }
 
   getChildPods(job: Job): Pod[] {

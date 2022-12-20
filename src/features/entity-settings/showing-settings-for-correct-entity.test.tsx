@@ -11,7 +11,7 @@ import type { Cluster } from "../../common/cluster/cluster";
 import navigateToEntitySettingsInjectable from "../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import createClusterInjectable from "../../renderer/create-cluster/create-cluster.injectable";
+import createClusterInjectable from "../../renderer/cluster/create-cluster.injectable";
 
 describe("Showing correct entity settings", () => {
   let builder: ApplicationBuilder;

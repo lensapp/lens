@@ -7,26 +7,6 @@
 import type { ThemeId } from "../renderer/themes/lens-theme";
 
 /**
- * @deprecated Switch to using isMacInjectable
- */
-export const isMac = process.platform === "darwin";
-
-/**
- * @deprecated Switch to using isWindowsInjectable
- */
-export const isWindows = process.platform === "win32";
-
-/**
- * @deprecated Switch to using isLinuxInjectable
- */
-export const isLinux = process.platform === "linux";
-
-/**
- * @deprecated switch to using `isDebuggingInjectable`
- */
-export const isDebugging = ["true", "1", "yes", "y", "on"].includes((process.env.DEBUG ?? "").toLowerCase());
-
-/**
  * @deprecated Switch to using isTestEnvInjectable
  */
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
