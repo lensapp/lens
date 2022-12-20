@@ -13,6 +13,8 @@ import { buildDir } from "./vars";
 import CircularDependencyPlugin from "circular-dependency-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 
+const rendererConfig = renderer({ showVars: false });
+
 const config = [
   {
     ...main(),
@@ -41,7 +43,8 @@ const config = [
     ],
   },
   {
-    ...renderer({ showVars: false }),
+    ...rendererConfig,
+    name: "lens-app-common",
     entry: {
       common: path.resolve(__dirname, "..", "src", "common", "library.ts"),
     },
@@ -64,8 +67,7 @@ const config = [
     ],
   },
   {
-    ...renderer({ showVars: false }),
-    name: "lens-app-common",
+    ...rendererConfig,
     entry: {
       renderer: path.resolve(__dirname, "..", "src", "renderer", "library.ts"),
     },
@@ -77,6 +79,10 @@ const config = [
     },
     optimization: {
       minimize: false,
+    },
+    externals: {
+      ...(rendererConfig.externals as any),
+      "monaco-editor": "commonjs monaco-editor",
     },
     plugins: [
       new DefinePlugin({
