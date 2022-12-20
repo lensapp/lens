@@ -1329,8 +1329,9 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#delete">delete</a></p>
 <hr />
 <h3 id="formaturlforlisting">formatUrlForListing<a class="headerlink" href="#formaturlforlisting" title="Permanent link">#</a></h3>
-<p>▸ <strong>formatUrlForListing</strong>(<code>namespace</code>): <code>string</code></p>
-<p>This method differs from <a href="./#formaturlfornotlisting">formatUrlForNotListing</a> because this treats <code>""</code> as "all namespaces"</p>
+<p>▸ <strong>formatUrlForListing</strong>(<code>namespace</code>, <code>query?</code>): <code>string</code></p>
+<p>This method differs from <a href="./#formaturlfornotlisting">formatUrlForNotListing</a> because this treats <code>""</code> as "all namespaces"
+NOTE: This is also useful for watching</p>
 <h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1343,8 +1344,13 @@
 <tbody>
 <tr>
 <td align="left"><code>namespace</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>undefined</code> | <code>string</code></td>
 <td align="left">The namespace to list in or <code>""</code> for all namespaces</td>
+</tr>
+<tr>
+<td align="left"><code>query?</code></td>
+<td align="left"><code>Partial</code>&lt;<code>KubeApiQueryParams</code>></td>
+<td align="left">-</td>
 </tr>
 </tbody>
 </table>
@@ -1354,7 +1360,7 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#formaturlforlisting">formatUrlForListing</a></p>
 <hr />
 <h3 id="formaturlfornotlisting">formatUrlForNotListing<a class="headerlink" href="#formaturlfornotlisting" title="Permanent link">#</a></h3>
-<p>▸ <strong>formatUrlForNotListing</strong>(<code>resource?</code>, <code>query?</code>): <code>string</code></p>
+<p>▸ <strong>formatUrlForNotListing</strong>(<code>__namedParameters?</code>): <code>string</code></p>
 <p>Format a URL pathname and query for acting upon a specific resource.</p>
 <h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
@@ -1366,12 +1372,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>resource?</code></td>
+<td align="left"><code>__namedParameters</code></td>
 <td align="left"><code>Partial</code>&lt;<code>ResourceDescriptor</code>></td>
-</tr>
-<tr>
-<td align="left"><code>query?</code></td>
-<td align="left"><code>Partial</code>&lt;<code>KubeApiQueryParams</code>></td>
 </tr>
 </tbody>
 </table>
@@ -1489,7 +1491,7 @@
 <h3 id="geturl">getUrl<a class="headerlink" href="#geturl" title="Permanent link">#</a></h3>
 <p>▸ <strong>getUrl</strong>(<code>resource?</code>, <code>query?</code>): <code>string</code></p>
 <p><strong><code>Deprecated</code></strong></p>
-<p>use <a href="./#formaturlfornotlisting">formatUrlForNotListing</a> instead</p>
+<p>use <a href="./#formaturlfornotlisting">formatUrlForNotListing</a> or <a href="./#formaturlforlisting">formatUrlForListing</a> instead</p>
 <h4 id="parameters_9">Parameters<a class="headerlink" href="#parameters_9" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1884,7 +1886,7 @@
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#update">update</a></p>
 <hr />
 <h3 id="watch">watch<a class="headerlink" href="#watch" title="Permanent link">#</a></h3>
-<p>▸ <strong>watch</strong>(<code>opts?</code>): () =&gt; <code>void</code></p>
+<p>▸ <strong>watch</strong>(<code>opts?</code>): <code>Disposer</code></p>
 <h4 id="parameters_24">Parameters<a class="headerlink" href="#parameters_24" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -1901,10 +1903,7 @@
 </tbody>
 </table>
 <h4 id="returns_25">Returns<a class="headerlink" href="#returns_25" title="Permanent link">#</a></h4>
-<p><code>fn</code></p>
-<p>▸ (): <code>void</code></p>
-<h5 id="returns_26">Returns<a class="headerlink" href="#returns_26" title="Permanent link">#</a></h5>
-<p><code>void</code></p>
+<p><code>Disposer</code></p>
 <h4 id="inherited-from_37">Inherited from<a class="headerlink" href="#inherited-from_37" title="Permanent link">#</a></h4>
 <p><a href="../Renderer.K8sApi.KubeApi/">KubeApi</a>.<a href="../Renderer.K8sApi.KubeApi/#watch">watch</a></p>
                 
