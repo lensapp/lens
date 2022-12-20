@@ -23,6 +23,7 @@ import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.inj
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import loadPodsFromAllNamespacesInjectable from "../+workloads-pods/load-pods-from-all-namespaces.injectable";
 
 export interface NodeDetailsProps extends KubeObjectDetailsProps<Node> {
 }
@@ -31,6 +32,7 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   podStore: PodStore;
   logger: Logger;
+  loadPodsFromAllNamespaces: () => void;
 }
 
 @observer
@@ -41,6 +43,8 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
         this.props.podStore,
       ]),
     ]);
+
+    this.props.loadPodsFromAllNamespaces();
   }
 
   render() {
@@ -154,6 +158,7 @@ export const NodeDetails = withInjectables<Dependencies, NodeDetailsProps>(NonIn
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
     logger: di.inject(loggerInjectable),
+    loadPodsFromAllNamespaces: di.inject(loadPodsFromAllNamespacesInjectable),
   }),
 });
 
