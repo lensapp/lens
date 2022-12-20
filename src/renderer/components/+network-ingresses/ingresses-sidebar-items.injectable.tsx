@@ -3,11 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
-
+import { computed, IComputedValue } from "mobx";
 import ingressesRouteInjectable
   from "../../../common/front-end-routing/routes/cluster/network/ingresses/ingresses-route.injectable";
-import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
+import {
+  SidebarItemRegistration,
+  sidebarItemsInjectionToken
+} from "../layout/sidebar-items.injectable";
 import { networkSidebarItemId } from "../+network/network-sidebar-items.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import navigateToIngressesInjectable
@@ -20,7 +22,7 @@ import navigateToIngressClassesInjectable
 const ingressesSidebarItemsInjectable = getInjectable({
   id: "ingresses-sidebar-items",
 
-  instantiate: (di) => {
+  instantiate: (di): IComputedValue<SidebarItemRegistration[]> => {
     const ingressRoute = di.inject(ingressesRouteInjectable);
     const ingressClassRoute = di.inject(ingressClassesesRouteInjectable);
 
