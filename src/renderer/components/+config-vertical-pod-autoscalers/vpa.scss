@@ -1,0 +1,32 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+@import "autoscaler.mixins";
+
+.VerticalPodAutoscalers {
+  .TableCell {
+    &.name {
+      flex: 1.5;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.metrics {
+      flex: 1.5;
+    }
+
+    &.status {
+      flex: 1.5;
+      @include table-cell-labels-offsets;
+      @include vpa-status-bgc;
+    }
+
+    &.age {
+      flex: .5;
+    }
+  }
+}

@@ -4,20 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
-import { HpaDetails } from "../../../+config-horizontal-pod-autoscalers";
+import { VpaDetails } from "../../../+config-vertical-pod-autoscalers";
 import { computed } from "mobx";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
-const horizontalPodAutoscalerDetailItemInjectable = getInjectable({
-  id: "horizontal-pod-autoscaler-detail-item",
+const verticalPodAutoscalerDetailItemInjectable = getInjectable({
+  id: "vertical-pod-autoscaler-detail-item",
 
   instantiate: (di) => {
     const kubeObject = di.inject(currentKubeObjectInDetailsInjectable);
 
     return {
-      Component: HpaDetails,
-      enabled: computed(() => isHorizontalPodAutoscaler(kubeObject.value.get()?.object)),
+      Component: VpaDetails,
+      enabled: computed(() => isVerticalPodAutoscaler(kubeObject.value.get()?.object)),
       orderNumber: 10,
     };
   },
@@ -25,9 +25,9 @@ const horizontalPodAutoscalerDetailItemInjectable = getInjectable({
   injectionToken: kubeObjectDetailItemInjectionToken,
 });
 
-export const isHorizontalPodAutoscaler = kubeObjectMatchesToKindAndApiVersion(
-  "HorizontalPodAutoscaler",
-  ["autoscaling/v2", "autoscaling/v2beta2", "autoscaling/v2beta1", "autoscaling/v1"],
+export const isVerticalPodAutoscaler = kubeObjectMatchesToKindAndApiVersion(
+  "VerticalPodAutoscaler",
+  ["autoscaling.k8s.io/v1"],
 );
 
-export default horizontalPodAutoscalerDetailItemInjectable;
+export default verticalPodAutoscalerDetailItemInjectable;

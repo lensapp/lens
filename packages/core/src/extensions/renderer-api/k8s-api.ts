@@ -23,6 +23,7 @@ import secretApiInjectable from "../../common/k8s-api/endpoints/secret.api.injec
 import resourceQuotaApiInjectable from "../../common/k8s-api/endpoints/resource-quota.api.injectable";
 import limitRangeApiInjectable from "../../common/k8s-api/endpoints/limit-range.api.injectable";
 import horizontalPodAutoscalerApiInjectable from "../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api.injectable";
+import verticalPodAutoscalerApiInjectable from "../../common/k8s-api/endpoints/vertical-pod-autoscaler.api.injectable";
 import podDisruptionBudgetApiInjectable from "../../common/k8s-api/endpoints/pod-disruption-budget.api.injectable";
 import priorityClassStoreApiInjectable from "../../common/k8s-api/endpoints/priority-class.api.injectable";
 import serviceApiInjectable from "../../common/k8s-api/endpoints/service.api.injectable";
@@ -76,6 +77,7 @@ export const resourceQuotaApi = asLegacyGlobalForExtensionApi(resourceQuotaApiIn
 export const limitRangeApi = asLegacyGlobalForExtensionApi(limitRangeApiInjectable);
 export const serviceApi = asLegacyGlobalForExtensionApi(serviceApiInjectable);
 export const hpaApi = asLegacyGlobalForExtensionApi(horizontalPodAutoscalerApiInjectable);
+export const vpaApi = asLegacyGlobalForExtensionApi(verticalPodAutoscalerApiInjectable);
 export const pdbApi = asLegacyGlobalForExtensionApi(podDisruptionBudgetApiInjectable);
 export const pcApi = asLegacyGlobalForExtensionApi(priorityClassStoreApiInjectable);
 export const endpointApi = asLegacyGlobalForExtensionApi(endpointsApiInjectable);
@@ -110,7 +112,8 @@ export type { SecretStore as SecretsStore } from "../../renderer/components/+con
 export type { ReplicaSetStore } from "../../renderer/components/+workloads-replicasets/store";
 export type { ResourceQuotaStore as ResourceQuotasStore } from "../../renderer/components/+config-resource-quotas/store";
 export type { LimitRangeStore as LimitRangesStore } from "../../renderer/components/+config-limit-ranges/store";
-export type { HorizontalPodAutoscalerStore as HPAStore } from "../../renderer/components/+config-autoscalers/store";
+export type { HorizontalPodAutoscalerStore as HPAStore } from "../../renderer/components/+config-horizontal-pod-autoscalers/store";
+export type { VerticalPodAutoscalerStore as VPAStore } from "../../renderer/components/+config-vertical-pod-autoscalers/store";
 export type { PodDisruptionBudgetStore as PodDisruptionBudgetsStore } from "../../renderer/components/+config-pod-disruption-budgets/store";
 export type { PriorityClassStore as PriorityClassStoreStore } from "../../renderer/components/+config-priority-classes/store";
 export type { ServiceStore } from "../../renderer/components/+network-services/store";
