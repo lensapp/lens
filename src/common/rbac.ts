@@ -5,7 +5,7 @@
 
 export type KubeResource =
   "namespaces" | "nodes" | "events" | "resourcequotas" | "services" | "limitranges" | "leases" |
-  "secrets" | "configmaps" | "ingresses" | "networkpolicies" | "persistentvolumeclaims" | "persistentvolumes" | "storageclasses" |
+  "secrets" | "configmaps" | "ingresses" | "ingressclasses" | "networkpolicies" | "persistentvolumeclaims" | "persistentvolumes" | "storageclasses" |
   "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "jobs" | "cronjobs" |
   "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets" |
   "priorityclasses" | "runtimeclasses" |
@@ -32,6 +32,7 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   "events": { kind: "Event" },
   "horizontalpodautoscalers": { kind: "HorizontalPodAutoscaler", group: "autoscaling" },
   "ingresses": { kind: "Ingress", group: "networking.k8s.io" },
+  "ingressclasses": { kind: "IngressClass", group: "networking.k8s.io" },
   "jobs": { kind: "Job", group: "batch" },
   "namespaces": { kind: "Namespace" },
   "limitranges": { kind: "LimitRange" },
