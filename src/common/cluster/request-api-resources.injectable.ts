@@ -10,6 +10,7 @@ import loggerInjectable from "../logger.injectable";
 import type { KubeApiResource } from "../rbac";
 import type { Cluster } from "./cluster";
 import plimit from "p-limit";
+import { pipeline } from "../utils/iter";
 
 export type RequestApiResources = (cluster: Cluster) => Promise<KubeApiResource[]>;
 
@@ -24,58 +25,49 @@ const requestApiResourcesInjectable = getInjectable({
     const k8sRequest = di.inject(k8SRequestInjectable);
     const logger = di.inject(loggerInjectable);
 
+    const requestApiVersions = async (cluster: Cluster) => (await k8sRequest(cluster, "/api") as V1APIVersions).versions;
+    const requestApisVersions = async (cluster: Cluster) => (await k8sRequest(cluster, "/apis") as V1APIGroupList).groups;
+    const limitingFor = (limit: plimit.Limit) => <Args extends any[], Res>(fn: (...args: Args) => Res) => (...args: Args) => limit(() => fn(...args));
+    const requestKubeApiResourcesFor = (cluster: Cluster) => async ({ group, path }: KubeResourceListGroup): Promise<KubeApiResource[]> => {
+      const { resources } = await k8sRequest(cluster, path) as V1APIResourceList;
+
+      return resources.map(resource => ({
+        apiName: resource.name,
+        kind: resource.kind,
+        group,
+        namespaced: resource.namespaced,
+      }));
+    };
+
     return async (cluster) => {
-      const apiLimit = plimit(5);
-      const kubeApiResources: KubeApiResource[] = [];
-      const resourceListGroups: KubeResourceListGroup[] = [];
+      const requestKubeApiResources = requestKubeApiResourcesFor(cluster);
+      const withApiLimit = limitingFor(plimit(5));
 
       try {
-        await Promise.all([
-          (async () => {
-            const { versions } = await k8sRequest(cluster, "/api") as V1APIVersions;
+        const resourceListGroups: KubeResourceListGroup[] = [
+          ...(await requestApiVersions(cluster))
+            .map(version => ({
+              group: version,
+              path: `/api/${version}`,
+            })),
+          ...pipeline((await requestApisVersions(cluster)).values())
+            .filterMap(group => group.preferredVersion?.groupVersion && ({
+              group: group.name,
+              path: `/apis/${group.preferredVersion.groupVersion}`,
+            })),
+        ];
 
-            for (const version of versions) {
-              resourceListGroups.push({
-                group: version,
-                path: `/api/${version}`,
-              });
-            }
-          })(),
-          (async () => {
-            const { groups } = await k8sRequest(cluster, "/apis") as V1APIGroupList;
-
-            for (const { preferredVersion, name } of groups) {
-              const { groupVersion } = preferredVersion ?? {};
-
-              if (groupVersion) {
-                resourceListGroups.push({
-                  group: name,
-                  path: `/apis/${groupVersion}`,
-                });
-              }
-            }
-          })(),
-        ]);
-
-        await Promise.all(
-          resourceListGroups.map(({ group, path }) => apiLimit(async () => {
-            const { resources } = await k8sRequest(cluster, path) as V1APIResourceList;
-
-            for (const resource of resources) {
-              kubeApiResources.push({
-                apiName: resource.name,
-                kind: resource.kind,
-                group,
-                namespaced: resource.namespaced,
-              });
-            }
-          })),
+        const resources = await Promise.all(
+          resourceListGroups
+            .map(withApiLimit(requestKubeApiResources)),
         );
+
+        return resources.flat();
       } catch (error) {
         logger.error(`[LIST-API-RESOURCES]: failed to list api resources: ${error}`);
-      }
 
-      return kubeApiResources;
+        return [];
+      }
     };
   },
 });
