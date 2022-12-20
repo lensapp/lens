@@ -268,13 +268,13 @@ export class ExtensionLoader {
           }
 
           const installedExtension: InstalledExtension = {
-            absolutePath: "irrelavent",
+            absolutePath: "irrelevant",
             id: extension.manifest.name,
             isBundled: true,
             isCompatible: true,
             isEnabled: true,
             manifest: extension.manifest,
-            manifestPath: "irrelavent",
+            manifestPath: "irrelevant",
           };
           const instance = this.dependencies.createExtensionInstance(
             LensExtensionClass,
