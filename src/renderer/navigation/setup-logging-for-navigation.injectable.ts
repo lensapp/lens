@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../common/logger.injectable";
-import { beforeFrameStartsInjectionToken } from "../before-frame-starts/tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../before-frame-starts/tokens";
 import observableHistoryInjectable from "./observable-history.injectable";
 
 const setupLoggingForNavigationInjectable = getInjectable({
@@ -27,7 +27,7 @@ const setupLoggingForNavigationInjectable = getInjectable({
       });
     },
   }),
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default setupLoggingForNavigationInjectable;
