@@ -6,11 +6,8 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import { KubernetesCluster, WebLink } from "../../common/catalog-entities";
-import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
-import type { Cluster } from "../../common/cluster/cluster";
 import navigateToEntitySettingsInjectable from "../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
-import createClusterInjectable from "../../renderer/create-cluster/create-cluster.injectable";
 import type { ApplicationBuilder } from "../test-utils/application-builder";
 import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 
@@ -21,14 +18,11 @@ describe("Showing correct entity settings", () => {
   let clusterEntity: KubernetesCluster;
   let localClusterEntity: KubernetesCluster;
   let otherEntity: WebLink;
-  let cluster: Cluster;
 
   setupInitializingApplicationBuilder(b => builder = b);
 
   beforeEach(async () => {
     builder.afterWindowStart((windowDi) => {
-      const createCluster = windowDi.inject(createClusterInjectable);
-
       clusterEntity = new KubernetesCluster({
         metadata: {
           labels: {},
@@ -70,22 +64,6 @@ describe("Showing correct entity settings", () => {
         status: {
           phase: "available",
         },
-      });
-      cluster = createCluster({
-        contextName: clusterEntity.spec.kubeconfigContext,
-        id: clusterEntity.getId(),
-        kubeConfigPath: clusterEntity.spec.kubeconfigPath,
-      }, {
-        clusterServerUrl: "https://localhost:9999",
-      });
-
-      // TODO: remove once ClusterStore can be used without overriding it
-      windowDi.override(getClusterByIdInjectable, () => (clusterId) => {
-        if (clusterId === cluster.id) {
-          return cluster;
-        }
-
-        return undefined;
       });
 
       // TODO: replace with proper entity source once syncing entities between main and windows is injectable
