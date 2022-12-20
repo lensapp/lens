@@ -48,4 +48,31 @@ export class IngressClass extends KubeObject<IngressClassMetadata, IngressClassS
   static readonly namespaced = true;
   static readonly apiBase = "/apis/networking.k8s.io/v1/ingressclasses";
 
+  getController() {
+    return this.spec.controller;
+  }
+
+  getApiGroup(){
+    return this.spec.parameters.apiGroup;
+  }
+
+  getScope(){
+    return this.spec.parameters.scope;
+  }
+
+  getNs() {
+    return this.spec.parameters?.namespace as string;
+  }
+
+  getKind(){
+    return this.spec.parameters.kind;
+  }
+
+  getName(){
+    return this.spec.parameters.name;
+  }
+
+  get isDefault(){
+    return this.metadata?.annotations?.["ingressclass.kubernetes.io/is-default-class"] === "true";
+  }
 }

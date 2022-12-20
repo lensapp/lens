@@ -1,0 +1,32 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.IngressClasses {
+  :global(.TableCell) {
+    &.is_default {
+      :global(.Checkbox) {
+        align-items: flex-start;
+      }
+    }
+
+    &.name {
+    }
+
+    &.namespace {
+    }
+
+    &.controller {
+    }
+
+    &.apiGroup {
+    }
+
+    &.scope {
+    }
+
+    &.kind {
+    }
+  }
+}
