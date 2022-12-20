@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import isAllowedResourceInjectable from "../../../../../utils/is-allowed-resource.injectable";
 import { frontEndRouteInjectionToken } from "../../../../front-end-route-injection-token";
 
-const ingressClassesRouteInjectable = getInjectable({
+const ingressClassesesRouteInjectable = getInjectable({
   id: "ingress-classes-route",
 
   instantiate: (di) => {
@@ -22,4 +22,4 @@ const ingressClassesRouteInjectable = getInjectable({
   injectionToken: frontEndRouteInjectionToken,
 });
 
-export default ingressClassesRouteInjectable;
+export default ingressClassesesRouteInjectable;
