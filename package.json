@@ -4,9 +4,6 @@
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
   "version": "6.3.0-alpha.0",
-  "directories": {
-    "doc": "docs"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -97,12 +94,7 @@
     "bundledHelmVersion": "3.7.2",
     "sentryDsn": "",
     "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
-<<<<<<< HEAD
     "welcomeRoute": "/welcome"
-=======
-    "welcomeRoute": "/welcome",
-    "extensions": []
->>>>>>> master
   },
   "engines": {
     "node": ">=16 <17"
