@@ -11,7 +11,7 @@ import lensProxyPortInjectable from "./lens-proxy/lens-proxy-port.injectable";
 
 export type K8sRequest = (cluster: Cluster, path: string, options?: RequestPromiseOptions) => Promise<any>;
 
-const k8SRequestInjectable = getInjectable({
+const k8sRequestInjectable = getInjectable({
   id: "k8s-request",
 
   instantiate: (di) => {
@@ -34,4 +34,4 @@ const k8SRequestInjectable = getInjectable({
   },
 });
 
-export default k8SRequestInjectable;
+export default k8sRequestInjectable;
