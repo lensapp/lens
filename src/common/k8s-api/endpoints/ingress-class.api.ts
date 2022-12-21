@@ -36,8 +36,8 @@ export interface IngressClassParametersReference {
 }
 
 export interface IngressClassSpec {
-  "controller": string; // example.com/ingress-controller
-  "parameters": IngressClassParametersReference,
+  controller: string; // example.com/ingress-controller
+  parameters?: IngressClassParametersReference,
 }
 
 export interface IngressClassStatus {
@@ -52,27 +52,27 @@ export class IngressClass extends KubeObject<IngressClassMetadata, IngressClassS
     return this.spec.controller;
   }
 
-  getApiGroup(){
-    return this.spec.parameters.apiGroup;
+  getApiGroup() {
+    return this.spec.parameters?.apiGroup;
   }
 
-  getScope(){
-    return this.spec.parameters.scope;
+  getScope() {
+    return this.spec.parameters?.scope;
   }
 
   getNs() {
     return this.spec.parameters?.namespace as string;
   }
 
-  getKind(){
-    return this.spec.parameters.kind;
+  getKind() {
+    return this.spec.parameters?.kind;
   }
 
-  getName(){
-    return this.spec.parameters.name;
+  getSpecName() {
+    return this.spec.parameters?.name as string;
   }
 
-  get isDefault(){
-    return this.metadata?.annotations?.["ingressclass.kubernetes.io/is-default-class"] === "true";
+  get isDefault() {
+    return this.metadata.annotations?.["ingressclass.kubernetes.io/is-default-class"] === "true";
   }
 }

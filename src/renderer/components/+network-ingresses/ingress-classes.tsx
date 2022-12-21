@@ -15,7 +15,6 @@ import ingressClassStoreInjectable from "./ingress-class-store.injectable";
 import type { IngressClass } from "../../../common/k8s-api/endpoints/ingress-class.api";
 
 enum columnId {
-  is_default = "is-default",
   name = "name",
   namespace = "namespace",
   controller = "controller",
@@ -41,7 +40,6 @@ const NonInjectedIngressClasses = observer((props: Dependencies) => {
         className={styles.IngressClasses}
         store={store}
         sortingCallbacks={{
-          [columnId.is_default]: (resource: IngressClass) => resource.isDefault ? 1 : 0,
           [columnId.name]: (resource: IngressClass) => resource.getName(),
           [columnId.namespace]: (resource: IngressClass) => resource.getNs(),
           [columnId.controller]: (resource: IngressClass) => resource.getController(),
@@ -54,8 +52,7 @@ const NonInjectedIngressClasses = observer((props: Dependencies) => {
         ]}
         renderHeaderTitle="Ingress Classes"
         renderTableHeader={[
-          { title: "Default", className: styles.is_default, id: columnId.is_default },
-          { title: "Name", className: styles.names, sortBy: columnId.name, id: columnId.name },
+          { title: "Name", className: styles.name, sortBy: columnId.name, id: columnId.name },
           {
             title: "Namespace",
             className: styles.namespace,
@@ -69,7 +66,7 @@ const NonInjectedIngressClasses = observer((props: Dependencies) => {
             id: columnId.controller,
           },
           {
-            title: "ApiGroup",
+            title: "API Group",
             className: styles.apiGroup,
             sortBy: columnId.apiGroup,
             id: columnId.apiGroup,
@@ -77,11 +74,11 @@ const NonInjectedIngressClasses = observer((props: Dependencies) => {
           { title: "Scope", className: styles.scope, sortBy: columnId.scope, id: columnId.scope, },
           { title: "Kind", className: styles.kind, sortBy: columnId.kind, id: columnId.kind, },
         ]}
-        renderTableContents={ingressClass => [
-          <span>checkbox-set-default</span>,
+        renderTableContents={(ingressClass: IngressClass) => [
+          // TODO: add "is-default" icon/marker + some actions how to "set as default" for each IngressClass
           ingressClass.getName(),
-          ingressClass.getNs(),
           ingressClass.getController(),
+          ingressClass.getNs(),
           ingressClass.getApiGroup(),
           ingressClass.getScope(),
           ingressClass.getKind(),

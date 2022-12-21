@@ -5,3 +5,4 @@
 
 export * from "./ingresses";
 export * from "./ingress-details";
+export * from "./ingress-classes";
