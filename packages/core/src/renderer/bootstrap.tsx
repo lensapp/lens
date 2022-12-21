@@ -19,6 +19,7 @@ import { Router } from "react-router";
 import historyInjectable from "./navigation/history.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
+import closeRendererLogFileInjectable from "./logger/close-renderer-log-file.injectable";
 
 export async function bootstrap(di: DiContainer) {
   const startFrame = di.inject(startFrameInjectable);
@@ -54,7 +55,15 @@ export async function bootstrap(di: DiContainer) {
   }
 
   try {
-    await initializeApp(() => unmountComponentAtNode(rootElem));
+    const unmount = () => {
+      const closeLogFile = di.inject(closeRendererLogFileInjectable);
+
+      closeLogFile();
+
+      unmountComponentAtNode(rootElem);
+    };
+
+    await initializeApp(unmount);
   } catch (error) {
     console.error(`[BOOTSTRAP]: view initialization error: ${error}`, {
       origin: location.href,
