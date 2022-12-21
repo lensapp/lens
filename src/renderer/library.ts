@@ -8,6 +8,7 @@ import * as extensionApi from "./extension-api";
 import { registerInjectables } from "./register-injectables";
 import { startApp } from "./start-app";
 
+// @experimental
 export {
   startApp,
   extensionApi,

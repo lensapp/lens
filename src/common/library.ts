@@ -6,6 +6,7 @@ import applicationInformationToken from "./vars/application-information-token";
 import type { ApplicationInformation } from "./vars/application-information-token";
 import { bundledExtensionInjectionToken } from "../extensions/extension-discovery/bundled-extension-injection-token";
 
+// @experimental
 export {
   applicationInformationToken,
   ApplicationInformation,

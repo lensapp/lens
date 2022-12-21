@@ -11,6 +11,7 @@ import { onLoadOfApplicationInjectionToken } from "./start-main-application/runn
 import * as extensionApi from "./extension-api";
 import { startApp } from "./start-app";
 
+// @experimental
 export { 
   registerInjectables,
   startApp,
