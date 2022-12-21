@@ -28,7 +28,6 @@ import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
 
 export async function bootstrap(di: DiContainer) {
-  console.log(window.frameElement);
   const startFrame = di.inject(startFrameInjectable);
 
   await startFrame();
