@@ -21,7 +21,9 @@ const getTrayIconPathInjectable = getInjectable({
 
     const baseIconDirectory = joinPaths(
       staticFilesDirectory,
-      isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
+      isDevelopment ? ".." : "",
+      "build",
+      "tray",
     );
 
     const fileSuffix = isMac ? "Template.png" : ".png";
