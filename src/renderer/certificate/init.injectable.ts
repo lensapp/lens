@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { evenBeforeFrameStartsInjectionToken } from "../before-frame-starts/tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../before-frame-starts/tokens";
 import requestLensProxyCertificateInjectable from "./request.injectable";
 import lensProxyCertificateStateInjectable from "./state.injectable";
 
@@ -18,7 +18,7 @@ const initLensProxyCertificateStateInjectable = getInjectable({
       lensProxyCertificateState.set(await requestLensProxyCertificate());
     },
   }),
-  injectionToken: evenBeforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default initLensProxyCertificateStateInjectable;

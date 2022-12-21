@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { lensAuthenticationChannel } from "../../common/auth/channel";
-import { beforeFrameStartsInjectionToken } from "../before-frame-starts/tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../before-frame-starts/tokens";
 import requestFromChannelInjectable from "../utils/channel/request-from-channel.injectable";
 import authHeaderValueStateInjectable from "./auth-header-state.injectable";
 
@@ -21,7 +21,7 @@ const initAuthHeaderValueStateInjectable = getInjectable({
       },
     };
   },
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default initAuthHeaderValueStateInjectable;
