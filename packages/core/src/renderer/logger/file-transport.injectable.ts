@@ -30,7 +30,7 @@ const rendererFileLoggerTransportInjectable = getInjectable({
 
     return new transports.File({
       handleExceptions: false,
-      level: "debug",
+      level: "info",
       filename: `lens-renderer-${frameId}.log`,
       dirname: di.inject(directoryForLogsInjectable),
       maxsize: 1024 * 1024,
