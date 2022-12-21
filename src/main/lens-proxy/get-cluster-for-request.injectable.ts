@@ -19,8 +19,6 @@ const getClusterForRequestInjectable = getInjectable({
     return (req) => {
       const clusterId = req.headers[lensClusterIdHeader.toLowerCase()];
 
-      console.log(clusterId);
-
       if (typeof clusterId === "string") {
         return getClusterById(clusterId);
       }

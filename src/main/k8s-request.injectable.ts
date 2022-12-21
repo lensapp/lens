@@ -5,7 +5,7 @@
 import { apiKubePrefix } from "../common/vars";
 import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";
-import lensProxyPortInjectable from "./lens-proxy/lens-proxy-port.injectable";
+import lensProxyPortInjectable from "../features/lens-proxy/common/port.injectable";
 import type { AuthenticatedRequestInit } from "../common/fetch/lens-authed-fetch.injectable";
 import lensAuthenticatedFetchInjectable from "../common/fetch/lens-authed-fetch.injectable";
 import nodeFetchModuleInjectable from "../common/fetch/fetch-module.injectable";
@@ -34,8 +34,6 @@ const k8sRequestInjectable = getInjectable({
 
       if (200 <= response.status && response.status < 300) {
         const body = await response.text();
-
-        console.log(body);
 
         return JSON.parse(body);
       }

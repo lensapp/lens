@@ -469,13 +469,11 @@ export class Cluster implements ClusterModel {
      const canI = this.dependencies.createAuthorizationReview(proxyConfig);
      const requestNamespaceListPermissions = this.dependencies.requestNamespaceListPermissionsFor(proxyConfig);
 
-     console.log("before this.isAdmin");
      this.isAdmin = await canI({
        namespace: "kube-system",
        resource: "*",
        verb: "create",
      });
-     console.log("finished this.isAdmin");
      this.isGlobalWatchEnabled = await canI({
        verb: "watch",
        resource: "*",
@@ -528,7 +526,6 @@ export class Cluster implements ClusterModel {
 
       return ClusterStatus.AccessGranted;
     } catch (error) {
-      console.error(error);
       this.dependencies.logger.error(`[CLUSTER]: Failed to connect to "${this.contextName}": ${error}`);
 
       if (isRequestError(error)) {

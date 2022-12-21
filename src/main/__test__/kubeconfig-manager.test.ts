@@ -30,7 +30,7 @@ import removePathInjectable from "../../common/fs/remove.injectable";
 import pathExistsSyncInjectable from "../../common/fs/path-exists-sync.injectable";
 import readJsonSyncInjectable from "../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
-import lensProxyPortInjectable from "../lens-proxy/lens-proxy-port.injectable";
+import lensProxyPortInjectable from "../../features/lens-proxy/common/port.injectable";
 
 const clusterServerUrl = "https://192.168.64.3:8443";
 

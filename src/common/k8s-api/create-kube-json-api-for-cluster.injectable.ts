@@ -3,10 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import lensProxyPortInjectable from "../../features/lens-proxy/common/port.injectable";
+import { lensAuthenticationHeaderValueInjectionToken } from "../auth/header-value";
 import { apiKubePrefix } from "../vars";
-import { lensClusterIdHeader } from "../vars/auth-header";
+import { lensAuthenticationHeader, lensClusterIdHeader } from "../vars/auth-header";
 import isDebuggingInjectable from "../vars/is-debugging.injectable";
-import { apiBaseServerAddressInjectionToken } from "./api-base-configs";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
 import type { KubeJsonApi } from "./kube-json-api";
 
@@ -17,15 +18,18 @@ const createKubeJsonApiForClusterInjectable = getInjectable({
   instantiate: (di): CreateKubeJsonApiForCluster => {
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
     const isDebugging = di.inject(isDebuggingInjectable);
+    const lensProxyPort = di.inject(lensProxyPortInjectable);
+    const lensAuthenticationHeaderValue = di.inject(lensAuthenticationHeaderValueInjectionToken);
 
     return (clusterId) => createKubeJsonApi(
       {
-        serverAddress: di.inject(apiBaseServerAddressInjectionToken),
+        serverAddress: `https://127.0.0.1:${lensProxyPort.get()}`,
         apiBase: apiKubePrefix,
         debug: isDebugging,
       },
       {
         headers: {
+          [lensAuthenticationHeader]: `Bearer ${lensAuthenticationHeaderValue}`,
           [lensClusterIdHeader]: clusterId,
         },
       },

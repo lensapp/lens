@@ -40,7 +40,7 @@ const createAuthorizationReviewInjectable = getInjectable({
 
           return body.status?.allowed ?? false;
         } catch (error) {
-          logger.error(`[AUTHORIZATION-REVIEW]: failed to create access review: ${error}`, { resourceAttributes });
+          logger.error(`[AUTHORIZATION-REVIEW]: failed to create access review`, { resourceAttributes }, error);
 
           return false;
         }

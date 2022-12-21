@@ -8,7 +8,7 @@ import { kubeApiUpgradeRequest } from "./proxy-functions";
 import routeRequestInjectable from "../router/route-request.injectable";
 import httpProxy from "http-proxy";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
-import lensProxyPortInjectable from "./lens-proxy-port.injectable";
+import lensProxyPortInjectable from "../../features/lens-proxy/common/port.injectable";
 import contentSecurityPolicyInjectable from "../../common/vars/content-security-policy.injectable";
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import loggerInjectable from "../../common/logger.injectable";

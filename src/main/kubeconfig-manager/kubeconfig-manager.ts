@@ -15,7 +15,6 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { PathExists } from "../../common/fs/path-exists.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { WriteFile } from "../../common/fs/write-file.injectable";
-import { lensAuthenticationHeader } from "../../common/vars/auth-header";
 import type { SelfSignedCert } from "selfsigned";
 
 export interface KubeconfigManagerDependencies {
@@ -101,9 +100,6 @@ export class KubeconfigManager {
       `kubeconfig-${id}`,
     );
     const kubeConfig = await cluster.getKubeconfig();
-    const searchParams = new URLSearchParams({
-      [lensAuthenticationHeader]: this.dependencies.authHeaderValue,
-    });
 
     const proxyConfig: PartialDeep<KubeConfig> = {
       currentContext: contextName,
@@ -111,7 +107,7 @@ export class KubeconfigManager {
         {
           name: contextName,
           caData: Buffer.from(this.dependencies.lensProxyCertificate.cert).toString("base64"),
-          server: `https://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}?${searchParams}`,
+          server: `https://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`,
           skipTLSVerify: false,
         },
       ],

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import lensProxyPortInjectable from "../../main/lens-proxy/lens-proxy-port.injectable";
+import lensProxyPortInjectable from "../../features/lens-proxy/common/port.injectable";
 import lensAuthenticatedFetchInjectable from "../fetch/lens-authed-fetch.injectable";
 
 const requestAppVersionInjectable = getInjectable({

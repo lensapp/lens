@@ -18,7 +18,7 @@ const createHandlerForRouteInjectable = getInjectable({
   id: "create-handler-for-route",
   instantiate: (di): CreateHandlerForRoute => {
     const logger = di.inject(loggerInjectable);
-    const authHeaderValue = di.inject(authHeaderValueInjectable);
+    const authHeaderValue = `Bearer ${di.inject(authHeaderValueInjectable)}`;
 
     return (route) => async (request, response) => {
       const writeServerResponse = writeServerResponseFor(response);

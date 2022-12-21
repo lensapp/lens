@@ -90,7 +90,7 @@ export class LensProxy {
         const cluster = this.dependencies.getClusterForRequest(req);
         const url = new URL(req.url, "https://localhost");
 
-        if (url.searchParams.get(lensAuthenticationHeader) !== this.dependencies.authHeaderValue) {
+        if (url.searchParams.get(lensAuthenticationHeader) !== `Bearer ${this.dependencies.authHeaderValue}`) {
           this.dependencies.logger.warn(`[LENS-PROXY]: Request from url=${req.url} missing authentication`);
           socket.destroy();
 
@@ -260,8 +260,6 @@ export class LensProxy {
   protected async handleRequest(req: ServerIncomingMessage, res: http.ServerResponse) {
     const cluster = this.dependencies.getClusterForRequest(req);
 
-    console.log(cluster?.id, req.url, req.headers);
-
     const writeServerResponse = writeServerResponseFor(res);
 
     if (cluster) {
@@ -270,7 +268,7 @@ export class LensProxy {
       if (proxyTarget) {
         const authHeader = req.headers[lensAuthenticationHeader.toLowerCase()];
 
-        if (authHeader !== this.dependencies.authHeaderValue) {
+        if (authHeader !== `Bearer ${this.dependencies.authHeaderValue}`) {
           writeServerResponse(contentTypes.txt.resultMapper({
             statusCode: 401,
             response: "Missing authorization",

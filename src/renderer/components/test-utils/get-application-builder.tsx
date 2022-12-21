@@ -35,7 +35,7 @@ import { overrideChannels } from "../../../test-utils/channel-fakes/override-cha
 import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
-import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
+import lensProxyPortInjectable from "../../../features/lens-proxy/common/port.injectable";
 import type { Route } from "../../../common/front-end-routing/front-end-route-injection-token";
 import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";

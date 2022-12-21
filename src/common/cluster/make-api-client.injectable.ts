@@ -25,7 +25,7 @@ const makeApiClientInjectable = getInjectable({
 
       api.addInterceptor((opts) => {
         opts.headers ??= {};
-        opts.headers[lensAuthenticationHeader] = lensAuthenticationHeaderValue;
+        opts.headers[lensAuthenticationHeader] = `Bearer ${lensAuthenticationHeaderValue}`;
       });
 
       return api;

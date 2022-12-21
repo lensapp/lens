@@ -10,10 +10,11 @@ import { storesAndApisCanBeCreatedInjectionToken } from "../../common/k8s-api/st
 import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-api.injectable";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import showErrorNotificationInjectable from "../components/notifications/show-error-notification.injectable";
-import windowLocationInjectable from "../../common/k8s-api/window-location.injectable";
 import { lensAuthenticationHeaderValueInjectionToken } from "../../common/auth/header-value";
 import { lensAuthenticationHeader, lensClusterIdHeader } from "../../common/vars/auth-header";
 import hostedClusterIdInjectable from "../cluster-frame-context/hosted-cluster-id.injectable";
+import lensProxyPortInjectable from "../../features/lens-proxy/common/port.injectable";
+import lensAuthenticatedAgentInjectable from "../../features/lens-proxy/common/lens-auth-agent.injectable";
 
 const apiKubeInjectable = getInjectable({
   id: "api-kube",
@@ -22,22 +23,23 @@ const apiKubeInjectable = getInjectable({
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
-    const { port, host } = di.inject(windowLocationInjectable);
     const lensAuthenticationHeaderValue = di.inject(lensAuthenticationHeaderValueInjectionToken);
     const hostedClusterId = di.inject(hostedClusterIdInjectable);
+    const lensProxyPort = di.inject(lensProxyPortInjectable);
+    const lensAuthenticatedAgent = di.inject(lensAuthenticatedAgentInjectable);
 
     assert(hostedClusterId);
 
     const apiKube = createKubeJsonApi({
-      serverAddress: `https://127.0.0.1:${port}`,
+      serverAddress: `https://127.0.0.1:${lensProxyPort.get()}`,
       apiBase: apiKubePrefix,
       debug: isDevelopment,
     }, {
       headers: {
-        "Host": host,
-        [lensAuthenticationHeader]: lensAuthenticationHeaderValue,
+        [lensAuthenticationHeader]: `Bearer ${lensAuthenticationHeaderValue}`,
         [lensClusterIdHeader]: hostedClusterId,
       },
+      agent: lensAuthenticatedAgent,
     });
 
     apiKube.onError.addListener((error, res) => {

@@ -3,10 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { Agent } from "https";
 import type { RequestInit, Response } from "node-fetch";
+import lensAuthenticatedAgentInjectable from "../../features/lens-proxy/common/lens-auth-agent.injectable";
 import { lensAuthenticationHeaderValueInjectionToken } from "../auth/header-value";
-import { lensProxyCertificateInjectionToken } from "../certificate/token";
 import { lensAuthenticationHeader } from "../vars/auth-header";
 import fetchModuleInjectable from "./fetch-module.injectable";
 import fetchInjectable from "./fetch.injectable";
@@ -23,7 +22,7 @@ const lensAuthenticatedFetchInjectable = getInjectable({
   id: "lens-authenticated-fetch",
   instantiate: (di): AuthenticatedFetch => {
     const authHeaderValue = di.inject(lensAuthenticationHeaderValueInjectionToken);
-    const lensProxyCertificate = di.inject(lensProxyCertificateInjectionToken);
+    const lensAuthenticatedAgent = di.inject(lensAuthenticatedAgentInjectable);
     const fetch = di.inject(fetchInjectable);
     const { Headers } = di.inject(fetchModuleInjectable);
 
@@ -33,16 +32,13 @@ const lensAuthenticatedFetchInjectable = getInjectable({
         ...rest
       } = init ?? {};
       const headers = new Headers(headersInit);
-      const agent = new Agent({
-        ca: lensProxyCertificate.cert,
-      });
 
-      headers.set(lensAuthenticationHeader, authHeaderValue);
+      headers.set(lensAuthenticationHeader, `Bearer ${authHeaderValue}`);
 
       return fetch(url, {
         headers,
         ...rest,
-        agent,
+        agent: lensAuthenticatedAgent,
       });
     };
   },

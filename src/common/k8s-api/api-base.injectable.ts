@@ -4,12 +4,14 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { lensAuthenticationHeaderValueInjectionToken } from "../auth/header-value";
+import lensProxyPortInjectable from "../../features/lens-proxy/common/port.injectable";
 import { apiPrefix } from "../vars";
-import { lensAuthenticationHeader } from "../vars/auth-header";
+import { lensAuthenticationHeader, lensClusterIdHeader } from "../vars/auth-header";
 import isDebuggingInjectable from "../vars/is-debugging.injectable";
 import isDevelopmentInjectable from "../vars/is-development.injectable";
-import { apiBaseHostHeaderInjectionToken, apiBaseServerAddressInjectionToken } from "./api-base-configs";
 import createJsonApiInjectable from "./create-json-api.injectable";
+import lensAuthenticatedAgentInjectable from "../../features/lens-proxy/common/lens-auth-agent.injectable";
+import { currentClusterIdInjectionToken } from "../../features/cluster/cluster-id/common/current-token";
 
 const apiBaseInjectable = getInjectable({
   id: "api-base",
@@ -17,19 +19,26 @@ const apiBaseInjectable = getInjectable({
     const createJsonApi = di.inject(createJsonApiInjectable);
     const isDebugging = di.inject(isDebuggingInjectable);
     const isDevelopment = di.inject(isDevelopmentInjectable);
-    const serverAddress = di.inject(apiBaseServerAddressInjectionToken);
-    const hostHeaderValue = di.inject(apiBaseHostHeaderInjectionToken);
+    const lensProxyPort = di.inject(lensProxyPortInjectable);
     const lensAuthenticationHeaderValue = di.inject(lensAuthenticationHeaderValueInjectionToken);
+    const lensAuthenticatedAgent = di.inject(lensAuthenticatedAgentInjectable);
+    const currentClusterId = di.inject(currentClusterIdInjectionToken);
+
+    const headers = new Headers();
+
+    headers.set(lensAuthenticationHeader, `Bearer ${lensAuthenticationHeaderValue}`);
+
+    if (currentClusterId) {
+      headers.set(lensClusterIdHeader, currentClusterId);
+    }
 
     return createJsonApi({
-      serverAddress,
+      serverAddress: `https://127.0.0.1:${lensProxyPort.get()}`,
       apiBase: apiPrefix,
       debug: isDevelopment || isDebugging,
     }, {
-      headers: {
-        "Host": hostHeaderValue,
-        [lensAuthenticationHeader]: lensAuthenticationHeaderValue,
-      },
+      headers,
+      agent: lensAuthenticatedAgent,
     });
   },
 });
