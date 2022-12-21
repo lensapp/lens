@@ -30,20 +30,17 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { GetRelativePath } from "../../common/path/get-relative-path.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type TypedEventEmitter from "typed-emitter";
-import type { ApplicationInformation } from "../../common/vars/application-information-token";
 
 interface Dependencies {
   readonly extensionLoader: ExtensionLoader;
   readonly extensionsStore: ExtensionsStore;
   readonly extensionInstallationStateStore: ExtensionInstallationStateStore;
   readonly extensionPackageRootDirectory: string;
-  readonly bundledExtensions: InstalledExtension[];
   readonly resourcesDirectory: string;
   readonly logger: Logger;
   readonly isProduction: boolean;
   readonly fileSystemSeparator: string;
   readonly homeDirectoryPath: string;
-  readonly applicationInformation: ApplicationInformation;
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
   installExtension: (name: string) => Promise<void>;
   readJsonFile: ReadJson;
@@ -385,23 +382,16 @@ export class ExtensionDiscovery {
   }
 
   async ensureExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
-    const bundledExtensions = this.dependencies.bundledExtensions;
-    const userExtensions = await this.loadFromFolder(this.localFolderPath, bundledExtensions.map((extension) => extension.manifest.name));
-    const extensions = bundledExtensions.concat(userExtensions);
+    const userExtensions = await this.loadFromFolder(this.localFolderPath);
 
-    return this.extensions = new Map(extensions.map(extension => [extension.id, extension]));
+    return this.extensions = new Map(userExtensions.map(extension => [extension.id, extension]));
   }
 
-  async loadFromFolder(folderPath: string, bundledExtensions: string[]): Promise<InstalledExtension[]> {
+  async loadFromFolder(folderPath: string): Promise<InstalledExtension[]> {
     const extensions: InstalledExtension[] = [];
     const paths = await this.dependencies.readDirectory(folderPath);
 
     for (const fileName of paths) {
-      // do not allow to override bundled extensions
-      if (bundledExtensions.includes(fileName)) {
-        continue;
-      }
-
       const absPath = this.dependencies.joinPaths(folderPath, fileName);
 
       try {

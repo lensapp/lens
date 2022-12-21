@@ -15,7 +15,6 @@ const di = getDi();
   try {
     await startApp({
       di,
-      extensions: [],
     });
   } catch (error) {
     console.error(error);
