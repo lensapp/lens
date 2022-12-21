@@ -6,8 +6,8 @@ import type {  MessageChannelListener } from "../../common/utils/channel/message
 import enlistMessageChannelListenerInjectableInRenderer from "../../renderer/utils/channel/channel-listeners/enlist-message-channel-listener.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getOrInsert, getOrInsertSet } from "../../common/utils";
-import type { SendToViewArgs } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import { deserialize, serialize } from "v8";
+import type { SendToViewArgs } from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 
 type ListenerSet = Set<MessageChannelListener<any>>;
 type WindowListenerMap = Map<string, ListenerSet>;

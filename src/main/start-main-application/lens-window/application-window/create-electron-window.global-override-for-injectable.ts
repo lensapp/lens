@@ -12,4 +12,6 @@ export default getGlobalOverride(createElectronWindowInjectable, () => () => ({
   close: () => {},
   send: () => {},
   reload: () => {},
+  canGoBack: () => false,
+  canGoForward: () => false,
 }));

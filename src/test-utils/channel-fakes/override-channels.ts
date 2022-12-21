@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { SendToViewArgs } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
+import type { SendToViewArgs } from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import { overrideMessagingFromMainToWindow } from "./override-messaging-from-main-to-window";
 import { overrideMessagingFromWindowToMain } from "./override-messaging-from-window-to-main";
 import { overrideRequestingFromWindowToMain } from "./override-requesting-from-window-to-main";
