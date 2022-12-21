@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import createLensWindowInjectable from "./create-lens-window.injectable";
-import lensProxyPortInjectable from "../../../lens-proxy/lens-proxy-port.injectable";
 import isMacInjectable from "../../../../common/vars/is-mac.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./wait-until-bundled-extensions-are-loaded.injectable";
 import { applicationWindowInjectionToken } from "./application-window-injection-token";
 import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
 import { runInAction } from "mobx";
 import appNameInjectable from "../../../../common/vars/app-name.injectable";
+import windowFilePathInjectable from "../../../../common/vars/window-file-path.injectable";
 
 const createApplicationWindowInjectable = getInjectable({
   id: "create-application-window",
@@ -24,8 +24,8 @@ const createApplicationWindowInjectable = getInjectable({
         const isMac = di.inject(isMacInjectable);
         const applicationName = di.inject(appNameInjectable);
         const waitUntilBundledExtensionsAreLoaded = di.inject(waitUntilBundledExtensionsAreLoadedInjectable);
-        const lensProxyPort = di.inject(lensProxyPortInjectable);
         const emitAppEvent = di.inject(emitAppEventInjectable);
+        const windowFilePath = di.inject(windowFilePathInjectable);
 
         return createLensWindow({
           id,
@@ -33,7 +33,7 @@ const createApplicationWindowInjectable = getInjectable({
           defaultHeight: 900,
           defaultWidth: 1440,
           getContentSource: () => ({
-            url: `https://localhost:${lensProxyPort.get()}`,
+            file: windowFilePath,
           }),
           resizable: true,
           windowFrameUtilitiesAreShown: isMac,

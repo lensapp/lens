@@ -12,7 +12,8 @@ import isDevelopmentInjectable from "../../common/vars/is-development.injectable
 import showErrorNotificationInjectable from "../components/notifications/show-error-notification.injectable";
 import windowLocationInjectable from "../../common/k8s-api/window-location.injectable";
 import { lensAuthenticationHeaderValueInjectionToken } from "../../common/auth/header-value";
-import { lensAuthenticationHeader } from "../../common/vars/auth-header";
+import { lensAuthenticationHeader, lensClusterIdHeader } from "../../common/vars/auth-header";
+import hostedClusterIdInjectable from "../cluster-frame-context/hosted-cluster-id.injectable";
 
 const apiKubeInjectable = getInjectable({
   id: "api-kube",
@@ -23,6 +24,9 @@ const apiKubeInjectable = getInjectable({
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const { port, host } = di.inject(windowLocationInjectable);
     const lensAuthenticationHeaderValue = di.inject(lensAuthenticationHeaderValueInjectionToken);
+    const hostedClusterId = di.inject(hostedClusterIdInjectable);
+
+    assert(hostedClusterId);
 
     const apiKube = createKubeJsonApi({
       serverAddress: `https://127.0.0.1:${port}`,
@@ -32,6 +36,7 @@ const apiKubeInjectable = getInjectable({
       headers: {
         "Host": host,
         [lensAuthenticationHeader]: lensAuthenticationHeaderValue,
+        [lensClusterIdHeader]: hostedClusterId,
       },
     });
 

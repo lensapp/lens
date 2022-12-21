@@ -7,3 +7,4 @@
  * This is the header name that we use for request authentication
  */
 export const lensAuthenticationHeader = "Authorization";
+export const lensClusterIdHeader = "Lens-Cluster-Id";

@@ -8,7 +8,7 @@ import Joi from "joi";
 /**
  * JSON serializable metadata type
  */
-export type ClusterMetadata = Record<string, string | number | boolean | object>;
+export type ClusterMetadata = Partial<Record<string, string | number | boolean | object>>;
 
 /**
  * Metadata for cluster's prometheus settings

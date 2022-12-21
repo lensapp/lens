@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import staticFilesDirectoryInjectable from "../../../common/vars/static-files-directory.injectable";
+import isDevelopmentInjectable from "../../../common/vars/is-development.injectable";
 import isMacInjectable from "../../../common/vars/is-mac.injectable";
 import { camelCase, flow, upperFirst } from "lodash/fp";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
@@ -15,11 +16,12 @@ const getTrayIconPathInjectable = getInjectable({
   instantiate: (di) => {
     const joinPaths = di.inject(joinPathsInjectable);
     const staticFilesDirectory = di.inject(staticFilesDirectoryInjectable);
+    const isDevelopment = di.inject(isDevelopmentInjectable);
     const isMac = di.inject(isMacInjectable);
 
     const baseIconDirectory = joinPaths(
       staticFilesDirectory,
-      "build/tray",
+      isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
     );
 
     const fileSuffix = isMac ? "Template.png" : ".png";

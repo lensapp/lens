@@ -9,7 +9,6 @@ import https from "https";
 import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
-import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
 import { getBoolean } from "../utils/parse-query";
 import assert from "assert";
@@ -22,15 +21,15 @@ import { contentTypes } from "../router/router-content-types";
 import { writeServerResponseFor } from "../router/write-server-response";
 import { URL } from "url";
 import type { SelfSignedCert } from "selfsigned";
-
-type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
+import type { GetClusterForRequest } from "./get-cluster-for-request.injectable";
 
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
+export type ProxyApiRequest = (args: ProxyApiRequestArgs) => void | Promise<void>;
 
 interface Dependencies {
   getClusterForRequest: GetClusterForRequest;
-  shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
-  kubeApiUpgradeRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
+  shellApiRequest: ProxyApiRequest;
+  kubeApiUpgradeRequest: ProxyApiRequest;
   emitAppEvent: EmitAppEvent;
   routeRequest: RouteRequest;
   readonly proxy: httpProxy;
@@ -260,6 +259,9 @@ export class LensProxy {
 
   protected async handleRequest(req: ServerIncomingMessage, res: http.ServerResponse) {
     const cluster = this.dependencies.getClusterForRequest(req);
+
+    console.log(cluster?.id, req.url, req.headers);
+
     const writeServerResponse = writeServerResponseFor(res);
 
     if (cluster) {

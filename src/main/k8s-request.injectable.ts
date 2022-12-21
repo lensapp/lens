@@ -2,38 +2,45 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { RequestPromiseOptions } from "request-promise-native";
-import request from "request-promise-native";
 import { apiKubePrefix } from "../common/vars";
 import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";
 import lensProxyPortInjectable from "./lens-proxy/lens-proxy-port.injectable";
-import { lensAuthenticationHeaderValueInjectionToken } from "../common/auth/header-value";
-import { lensAuthenticationHeader } from "../common/vars/auth-header";
+import type { AuthenticatedRequestInit } from "../common/fetch/lens-authed-fetch.injectable";
+import lensAuthenticatedFetchInjectable from "../common/fetch/lens-authed-fetch.injectable";
+import nodeFetchModuleInjectable from "../common/fetch/fetch-module.injectable";
+import { lensClusterIdHeader } from "../common/vars/auth-header";
 
-export type K8sRequest = (cluster: Cluster, path: string, options?: RequestPromiseOptions) => Promise<any>;
+export type K8sRequest = (cluster: Cluster, path: string, options?: AuthenticatedRequestInit) => Promise<unknown>;
 
 const k8sRequestInjectable = getInjectable({
   id: "k8s-request",
 
-  instantiate: (di) => {
+  instantiate: (di): K8sRequest => {
     const lensProxyPort = di.inject(lensProxyPortInjectable);
-    const lensAuthenticationHeaderValue = di.inject(lensAuthenticationHeaderValueInjectionToken);
+    const fetch = di.inject(lensAuthenticatedFetchInjectable);
+    const { Headers } = di.inject(nodeFetchModuleInjectable);
 
-    return async (
-      cluster: Cluster,
-      path: string,
-      options: RequestPromiseOptions = {},
-    ) => {
+    return async (cluster, path, init = {}) => {
       const kubeProxyUrl = `https://localhost:${lensProxyPort.get()}${apiKubePrefix}`;
+      const headers = new Headers(init.headers);
 
-      options.headers ??= {};
-      options.json ??= true;
-      options.timeout ??= 30000;
-      options.headers.Host = `${cluster.id}.${new URL(kubeProxyUrl).host}`; // required in ClusterManager.getClusterForRequest()
-      options.headers[lensAuthenticationHeader] = lensAuthenticationHeaderValue;
+      headers.set(lensClusterIdHeader, cluster.id);
 
-      return request(kubeProxyUrl + path, options);
+      const response = await fetch(kubeProxyUrl + path, {
+        ...init,
+        headers,
+      });
+
+      if (200 <= response.status && response.status < 300) {
+        const body = await response.text();
+
+        console.log(body);
+
+        return JSON.parse(body);
+      }
+
+      throw new Error(`${(init.method ?? "GET").toUpperCase()} ${path} failed: ${response.statusText}`);
     };
   },
 });

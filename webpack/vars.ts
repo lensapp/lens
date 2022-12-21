@@ -18,7 +18,7 @@ export const appName = isDevelopment
   ? `${packageInfo.productName}Dev`
   : packageInfo.productName;
 export const htmlTemplate = path.resolve(rendererDir, "template.html");
-export const publicPath = "/build/";
+export const publicPath = `${path.resolve(`${__dirname}/../static/build`)}/`;
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 export const webpackDevServerPort = Number(process.env.WEBPACK_DEV_SERVER_PORT) || 9191;
 

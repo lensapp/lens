@@ -79,7 +79,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
       toPairs,
       map(([key, value]) => [
         key,
-        normalizedParams[key].stringify(value),
+        normalizedParams[key]?.stringify(value),
       ]),
       fromPairs,
     );

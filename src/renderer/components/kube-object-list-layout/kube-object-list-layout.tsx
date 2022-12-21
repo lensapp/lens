@@ -132,7 +132,10 @@ class NonInjectedKubeObjectListLayout<
       onDetails,
       ...layoutProps
     } = this.props;
-    const placeholderString = ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
+    const kind = ResourceKindMap[store.api.kind];
+    const placeholderString = kind
+      ? ResourceNames[kind] || store.api.kind
+      : store.api.kind;
 
     return (
       <ItemListLayout<K, false>

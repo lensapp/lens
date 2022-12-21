@@ -11,13 +11,10 @@ import type { Kubectl } from "../../main/kubectl/kubectl";
 import type { KubeconfigManager } from "../../main/kubeconfig-manager/kubeconfig-manager";
 import type { KubeApiResource, KubeApiResourceDescriptor } from "../rbac";
 import { formatKubeApiResource } from "../rbac";
-import type { VersionDetector } from "../../main/cluster-detectors/version-detector";
-import type { DetectorRegistry } from "../../main/cluster-detectors/detector-registry";
 import plimit from "p-limit";
 import type { ClusterState, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate, ClusterConfigData } from "../cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus, clusterModelIdChecker, updateClusterModelChecker } from "../cluster-types";
 import { disposer, isDefined, isRequestError, toJS } from "../utils";
-import type { Response } from "request";
 import { clusterListNamespaceForbiddenChannel } from "../ipc/cluster";
 import type { CreateAuthorizationReview } from "./create-authorization-review.injectable";
 import type { ListNamespaces } from "./list-namespaces.injectable";
@@ -27,11 +24,14 @@ import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
 import type { LoadConfigfromFile } from "../kube-helpers/load-config-from-file.injectable";
 import type { CanListResource, RequestNamespaceListPermissions, RequestNamespaceListPermissionsFor } from "./request-namespace-list-permissions.injectable";
 import type { RequestApiResources } from "../../main/cluster/request-api-resources.injectable";
+import type { ClusterMetadataDetector } from "../../main/cluster-detectors/base-cluster-detector";
+import type { DetectClusterMetadata } from "../../main/cluster-detectors/detect-cluster-metadata.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
   readonly logger: Logger;
-  readonly detectorRegistry: DetectorRegistry;
+  readonly clusterVersionDetector: ClusterMetadataDetector;
+  detectClusterMetadata: DetectClusterMetadata;
   createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
   createContextHandler: (cluster: Cluster) => ClusterContextHandler;
   createKubectl: (clusterVersion: string) => Kubectl;
@@ -39,7 +39,6 @@ export interface ClusterDependencies {
   requestApiResources: RequestApiResources;
   requestNamespaceListPermissionsFor: RequestNamespaceListPermissionsFor;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
-  createVersionDetector: (cluster: Cluster) => VersionDetector;
   broadcastMessage: BroadcastMessage;
   loadConfigfromFile: LoadConfigfromFile;
 }
@@ -455,7 +454,7 @@ export class Cluster implements ClusterModel {
    */
    async refreshMetadata() {
      this.dependencies.logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
-     const metadata = await this.dependencies.detectorRegistry.detectForCluster(this);
+     const metadata = await this.dependencies.detectClusterMetadata(this);
      const existingMetadata = this.metadata;
 
      this.metadata = Object.assign(existingMetadata, metadata);
@@ -470,6 +469,7 @@ export class Cluster implements ClusterModel {
      const canI = this.dependencies.createAuthorizationReview(proxyConfig);
      const requestNamespaceListPermissions = this.dependencies.requestNamespaceListPermissionsFor(proxyConfig);
 
+     console.log("before this.isAdmin");
      this.isAdmin = await canI({
        namespace: "kube-system",
        resource: "*",
@@ -522,13 +522,13 @@ export class Cluster implements ClusterModel {
 
   protected async getConnectionStatus(): Promise<ClusterStatus> {
     try {
-      const versionDetector = this.dependencies.createVersionDetector(this);
-      const versionData = await versionDetector.detect();
+      const versionData = await this.dependencies.clusterVersionDetector.detect(this);
 
-      this.metadata.version = versionData.value;
+      this.metadata.version = versionData?.value;
 
       return ClusterStatus.AccessGranted;
     } catch (error) {
+      console.error(error);
       this.dependencies.logger.error(`[CLUSTER]: Failed to connect to "${this.contextName}": ${error}`);
 
       if (isRequestError(error)) {
@@ -653,7 +653,7 @@ export class Cluster implements ClusterModel {
       const namespaceList = [ctx?.namespace].filter(isDefined);
 
       if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
-        const { response } = error as HttpError & { response: Response };
+        const { response } = error as HttpError & { response: { body: unknown }};
 
         this.dependencies.logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id, error: response.body });
         this.dependencies.broadcastMessage(clusterListNamespaceForbiddenChannel, this.id);

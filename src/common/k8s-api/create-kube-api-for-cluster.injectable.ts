@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { apiKubePrefix } from "../vars";
+import { lensClusterIdHeader } from "../vars/auth-header";
 import isDevelopmentInjectable from "../vars/is-development.injectable";
 import apiBaseInjectable from "./api-base.injectable";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
@@ -51,7 +52,7 @@ const createKubeApiForClusterInjectable = getInjectable({
             debug: isDevelopment,
           }, {
             headers: {
-              "Host": `${cluster.metadata.uid}.localhost:${new URL(apiBase.config.serverAddress).port}`,
+              [lensClusterIdHeader]: cluster.metadata.uid,
             },
           },
         ),

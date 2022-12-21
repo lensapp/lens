@@ -3,19 +3,41 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { shellApiRequest } from "./shell-api-request";
 import shellRequestAuthenticatorInjectable from "./shell-request-authenticator/shell-request-authenticator.injectable";
-import clusterManagerInjectable from "../../../cluster/manager.injectable";
 import openShellSessionInjectable from "../../../shell-session/create-shell-session.injectable";
+import type { ProxyApiRequest } from "../../lens-proxy";
+import getClusterForRequestInjectable from "../../get-cluster-for-request.injectable";
+import URLParse from "url-parse";
+import { Server as WebSocketServer } from "ws";
+import loggerInjectable from "../../../../common/logger.injectable";
 
 const shellApiRequestInjectable = getInjectable({
   id: "shell-api-request",
 
-  instantiate: (di) => shellApiRequest({
-    openShellSession: di.inject(openShellSessionInjectable),
-    authenticateRequest: di.inject(shellRequestAuthenticatorInjectable).authenticate,
-    clusterManager: di.inject(clusterManagerInjectable),
-  }),
+  instantiate: (di): ProxyApiRequest => {
+    const openShellSession = di.inject(openShellSessionInjectable);
+    const authenticateRequest = di.inject(shellRequestAuthenticatorInjectable).authenticate;
+    const getClusterForRequest = di.inject(getClusterForRequestInjectable);
+    const logger = di.inject(loggerInjectable);
+
+    return ({ req, socket, head }) => {
+      const cluster = getClusterForRequest(req);
+      const { query: { node: nodeName, shellToken, id: tabId }} = new URLParse(req.url, true);
+
+      if (!tabId || !cluster || !authenticateRequest(cluster.id, tabId, shellToken)) {
+        socket.write("Invalid shell request");
+        socket.end();
+      } else {
+        const ws = new WebSocketServer({ noServer: true });
+
+        ws.handleUpgrade(req, socket, head, (websocket) => {
+          openShellSession({ websocket, cluster, tabId, nodeName })
+            .catch(error => logger.error(`[SHELL-SESSION]: failed to open a ${nodeName ? "node" : "local"} shell`, error));
+        });
+      }
+
+    };
+  },
 });
 
 export default shellApiRequestInjectable;

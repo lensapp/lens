@@ -7,6 +7,9 @@
  * A better typed version of `Object.fromEntries` where the keys are known to
  * be a specific subset
  */
+export function fromEntries<T>(entries: Iterable<readonly [string, T]>): Partial<Record<string, T>>;
+export function fromEntries<T, Key extends string>(entries: Iterable<readonly [Key, T]>): Record<Key, T>;
+
 export function fromEntries<T, Key extends string>(entries: Iterable<readonly [Key, T]>): Record<Key, T> {
   return Object.fromEntries(entries) as Record<Key, T>;
 }

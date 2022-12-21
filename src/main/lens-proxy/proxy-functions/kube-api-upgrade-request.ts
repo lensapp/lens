@@ -7,11 +7,11 @@ import { chunk } from "lodash";
 import type { ConnectionOptions } from "tls";
 import { connect } from "tls";
 import url from "url";
-import type { ProxyApiRequestArgs } from "./types";
+import type { ProxyApiRequest } from "../lens-proxy";
 
 const skipRawHeaders = new Set(["Host", "Authorization"]);
 
-export async function kubeApiUpgradeRequest({ req, socket, head, cluster }: ProxyApiRequestArgs) {
+export const kubeApiUpgradeRequest: ProxyApiRequest = async ({ req, socket, head, cluster }) => {
   const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url;
   const proxyCa = cluster.contextHandler.resolveAuthProxyCa();
   const apiUrl = url.parse(cluster.apiUrl);
@@ -62,4 +62,4 @@ export async function kubeApiUpgradeRequest({ req, socket, head, cluster }: Prox
   socket.on("error", function () {
     proxySocket.end();
   });
-}
+};

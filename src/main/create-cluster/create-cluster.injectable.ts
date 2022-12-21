@@ -14,11 +14,11 @@ import createAuthorizationReviewInjectable from "../../common/cluster/create-aut
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import createListApiResourcesInjectable from "../cluster/request-api-resources.injectable";
 import loggerInjectable from "../../common/logger.injectable";
-import detectorRegistryInjectable from "../cluster-detectors/detector-registry.injectable";
-import createVersionDetectorInjectable from "../cluster-detectors/create-version-detector.injectable";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 import loadConfigfromFileInjectable from "../../common/kube-helpers/load-config-from-file.injectable";
 import requestNamespaceListPermissionsForInjectable from "../../common/cluster/request-namespace-list-permissions.injectable";
+import clusterVersionDetectorInjectable from "../cluster-detectors/cluster-version-detector.injectable";
+import detectClusterMetadataInjectable from "../cluster-detectors/detect-cluster-metadata.injectable";
 
 const createClusterInjectable = getInjectable({
   id: "create-cluster",
@@ -34,10 +34,10 @@ const createClusterInjectable = getInjectable({
       requestApiResources: di.inject(createListApiResourcesInjectable),
       createListNamespaces: di.inject(listNamespacesInjectable),
       logger: di.inject(loggerInjectable),
-      detectorRegistry: di.inject(detectorRegistryInjectable),
-      createVersionDetector: di.inject(createVersionDetectorInjectable),
       broadcastMessage: di.inject(broadcastMessageInjectable),
       loadConfigfromFile: di.inject(loadConfigfromFileInjectable),
+      clusterVersionDetector: di.inject(clusterVersionDetectorInjectable),
+      detectClusterMetadata: di.inject(detectClusterMetadataInjectable),
     };
 
     return (model, configData) => new Cluster(dependencies, model, configData);

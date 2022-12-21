@@ -23,16 +23,15 @@ const extensionPageParametersInjectable = getInjectable({
     const createPageParam = di.inject(createPageParamInjectable);
 
     return pipeline(
-      registration.params ?? {},
-      Object.entries,
+      object.entries(registration.params ?? {}),
       map(([key, value]): [string, PageParamInit<unknown>] => [
-        key,
+        `${key}`,
         typeof value === "string"
-          ? convertStringToPageParamInit(key, value)
-          : convertPartialPageParamInitToFull(key, value),
+          ? convertStringToPageParamInit(`${key}`, value)
+          : convertPartialPageParamInitToFull(`${key}`, value),
       ]),
       map(([key, value]) => [key, createPageParam(value)] as const),
-      object.fromEntries,
+      arg => object.fromEntries(arg),
     );
   },
 
@@ -46,7 +45,7 @@ const extensionPageParametersInjectable = getInjectable({
 
 const convertPartialPageParamInitToFull = <V>(
   key: string,
-  value: PageParamInit<V>,
+  value: Omit<PageParamInit<V>, "name">,
 ): PageParamInit<V> => ({
     name: key,
     defaultValue: value.defaultValue,

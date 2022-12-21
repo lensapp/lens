@@ -7,7 +7,6 @@ import { LensProxy } from "./lens-proxy";
 import { kubeApiUpgradeRequest } from "./proxy-functions";
 import routeRequestInjectable from "../router/route-request.injectable";
 import httpProxy from "http-proxy";
-import clusterManagerInjectable from "../cluster/manager.injectable";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request/shell-api-request.injectable";
 import lensProxyPortInjectable from "./lens-proxy-port.injectable";
 import contentSecurityPolicyInjectable from "../../common/vars/content-security-policy.injectable";
@@ -15,6 +14,7 @@ import emitAppEventInjectable from "../../common/app-event-bus/emit-event.inject
 import loggerInjectable from "../../common/logger.injectable";
 import authHeaderValueInjectable from "./auth-header-value.injectable";
 import lensProxyCertificateInjectable from "./certificate.injectable";
+import getClusterForRequestInjectable from "./get-cluster-for-request.injectable";
 
 const lensProxyInjectable = getInjectable({
   id: "lens-proxy",
@@ -24,7 +24,7 @@ const lensProxyInjectable = getInjectable({
     proxy: httpProxy.createProxy(),
     kubeApiUpgradeRequest,
     shellApiRequest: di.inject(shellApiRequestInjectable),
-    getClusterForRequest: di.inject(clusterManagerInjectable).getClusterForRequest,
+    getClusterForRequest: di.inject(getClusterForRequestInjectable),
     lensProxyPort: di.inject(lensProxyPortInjectable),
     contentSecurityPolicy: di.inject(contentSecurityPolicyInjectable),
     emitAppEvent: di.inject(emitAppEventInjectable),

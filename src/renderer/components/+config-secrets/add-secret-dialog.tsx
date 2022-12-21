@@ -92,7 +92,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
           ? [key, processValue(value)] as const
           : undefined
       ))
-      .collect(fromEntries);
+      .collect(arg => fromEntries(arg));
   };
 
   createSecret = async () => {

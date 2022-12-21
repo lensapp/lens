@@ -6,7 +6,7 @@
 import { action, makeObservable, observable, when } from "mobx";
 import type { ClusterId } from "../../../common/cluster-types";
 import type { Disposer } from "../../utils";
-import { getClusterFrameUrl, onceDefined } from "../../utils";
+import { onceDefined } from "../../utils";
 import assert from "assert";
 import type { Logger } from "../../../common/logger";
 import type { GetClusterById } from "../../../common/cluster-store/get-by-id.injectable";
@@ -19,6 +19,7 @@ export interface LensView {
 
 interface Dependencies {
   readonly logger: Logger;
+  readonly windowFilePath: string;
   getClusterById: GetClusterById;
   emitClusterVisibility: EmitClusterVisibility;
 }
@@ -57,7 +58,7 @@ export class ClusterFrameHandler {
 
     iframe.id = `cluster-frame-${cluster.id}`;
     iframe.name = cluster.contextName;
-    iframe.setAttribute("src", getClusterFrameUrl(clusterId));
+    iframe.setAttribute("src", this.dependencies.windowFilePath);
     iframe.addEventListener("load", action(() => {
       this.dependencies.logger.info(`[LENS-VIEW]: frame for clusterId=${clusterId} has loaded`);
       const view = this.views.get(clusterId);
