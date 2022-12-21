@@ -57,7 +57,7 @@ const initRootFrameInjectable = getInjectable({
 
       registerIpcListeners();
 
-      window.addEventListener("beforeunload", () => {
+      window.addEventListener("pagehide", () => {
         logger.info("[ROOT-FRAME]: Unload app");
 
         unmountRoot();

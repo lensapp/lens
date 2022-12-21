@@ -73,7 +73,7 @@ export const initClusterFrame = ({
       });
     });
 
-    window.onbeforeunload = () => {
+    window.onpagehide = () => {
       logger.info(
         `${logPrefix} Unload dashboard, clusterId=${(hostedCluster.id)}, frameId=${frameRoutingId}`,
       );
