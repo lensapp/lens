@@ -67,7 +67,7 @@ const NonInjectedCommandDialog = observer(({
     }
   };
 
-  const activeCommands = iter.pipeline(commands.get().values())
+  const activeCommands = iter.chain(commands.get().values())
     .filter(command => {
       try {
         return command.isActive(context);
