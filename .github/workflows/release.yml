@@ -33,6 +33,6 @@ jobs:
   publish-npm:
     uses: ./.github/workflows/publish-release-npm.yml
     needs: release
-    if: ${{ jobs.release.outputs.version != '' }}
+    if: ${{ needs.release.outputs.version != '' }}
     with:
-      version: ${{ jobs.release.outputs.version }}
+      version: ${{ needs.release.outputs.version }}

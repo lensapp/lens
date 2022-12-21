@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { StorageClass, StorageClassApi, StorageClassData } from "../../../common/k8s-api/endpoints/storage-class.api";
 import type { GetPersistentVolumesByStorageClass } from "../+storage-volumes/get-persisten-volumes-by-storage-class.injectable";
 
-export interface StorageClassStoreDependencies {
+export interface StorageClassStoreDependencies extends KubeObjectStoreDependencies {
   getPersistentVolumesByStorageClass: GetPersistentVolumesByStorageClass;
 }
 
@@ -18,7 +18,7 @@ export class StorageClassStore extends KubeObjectStore<StorageClass, StorageClas
     api: StorageClassApi,
     opts?: KubeObjectStoreOptions,
   ) {
-    super(api, opts);
+    super(dependencies, api, opts);
   }
 
   getPersistentVolumes(storageClass: StorageClass) {

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { sortBy } from "lodash/fp";
-import downloadJsonInjectable from "../../../../../../../common/fetch/download-json.injectable";
+import proxyDownloadJsonInjectable from "../../../../../../../common/fetch/download-json/proxy.injectable";
 import { withTimeout } from "../../../../../../../common/fetch/timeout-controller";
 import type { HelmRepo } from "../../../../../../../common/helm/helm-repo";
 import loggerInjectable from "../../../../../../../common/logger.injectable";
@@ -15,7 +15,7 @@ const requestPublicHelmRepositoriesInjectable = getInjectable({
   id: "request-public-helm-repositories",
 
   instantiate: (di) => {
-    const downloadJson = di.inject(downloadJsonInjectable);
+    const downloadJson = di.inject(proxyDownloadJsonInjectable);
     const logger = di.inject(loggerInjectable);
 
     return async (): Promise<HelmRepo[]> => {

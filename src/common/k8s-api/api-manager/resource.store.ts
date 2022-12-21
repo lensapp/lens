@@ -4,11 +4,12 @@
  */
 
 import type { KubeApi } from "../kube-api";
+import type { KubeObjectStoreDependencies } from "../kube-object.store";
 import { KubeObjectStore } from "../kube-object.store";
 import type { KubeObject } from "../kube-object";
 
 export class CustomResourceStore<K extends KubeObject> extends KubeObjectStore<K, KubeApi<K>> {
-  constructor(api: KubeApi<K>) {
-    super(api);
+  constructor(deps: KubeObjectStoreDependencies, api: KubeApi<K>) {
+    super(deps, api);
   }
 }

@@ -10,8 +10,8 @@ import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injec
 import type { Cluster } from "../../common/cluster/cluster";
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
+import createClusterInjectable from "../../renderer/cluster/create-cluster.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import createClusterInjectable from "../../renderer/create-cluster/create-cluster.injectable";
 
 describe("opening catalog entity details panel", () => {
   let builder: ApplicationBuilder;

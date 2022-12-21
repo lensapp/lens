@@ -645,8 +645,13 @@ export class KubeObject<
     }
 
     const requestKubeObjectPatch = asLegacyGlobalFunctionForExtensionApi(requestKubeObjectPatchInjectable);
+    const result = await requestKubeObjectPatch(this.getName(), this.kind, this.getNs(), patch);
 
-    return requestKubeObjectPatch(this.getName(), this.kind, this.getNs(), patch);
+    if (!result.callWasSuccessful) {
+      throw new Error(result.error);
+    }
+
+    return result.response;
   }
 
   /**
@@ -665,7 +670,13 @@ export class KubeObject<
       ...data,
     });
 
-    return requestKubeObjectCreation(descriptor);
+    const result = await requestKubeObjectCreation(descriptor);
+
+    if (!result.callWasSuccessful) {
+      throw new Error(result.error);
+    }
+
+    return result.response;
   }
 
   /**

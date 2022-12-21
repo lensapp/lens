@@ -5,7 +5,7 @@
 
 import groupBy from "lodash/groupBy";
 import compact from "lodash/compact";
-import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { autoBind } from "../../utils";
 import type { KubeEvent, KubeEventApi } from "../../../common/k8s-api/endpoints/events.api";
@@ -13,17 +13,17 @@ import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Pod } from "../../../common/k8s-api/endpoints/pod.api";
 import type { GetPodById } from "../+workloads-pods/get-pod-by-id.injectable";
 
-interface Dependencies {
+export interface EventStoreDependencies extends KubeObjectStoreDependencies {
   getPodById: GetPodById;
 }
 
 export class EventStore extends KubeObjectStore<KubeEvent, KubeEventApi> {
   constructor(
-    protected readonly dependencies: Dependencies,
+    protected readonly dependencies: EventStoreDependencies,
     api: KubeEventApi,
     opts: KubeObjectStoreOptions = {},
   ) {
-    super(api, { limit: 1000, ...opts });
+    super(dependencies, api, { limit: 1000, ...opts });
     autoBind(this);
   }
 

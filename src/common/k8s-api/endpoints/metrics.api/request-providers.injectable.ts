@@ -4,7 +4,7 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import { apiBaseInjectionToken } from "../../api-base";
+import apiBaseInjectable from "../../api-base.injectable";
 
 export interface MetricProviderInfo {
   name: string;
@@ -17,7 +17,7 @@ export type RequestMetricsProviders = () => Promise<MetricProviderInfo[]>;
 const requestMetricsProvidersInjectable = getInjectable({
   id: "request-metrics-providers",
   instantiate: (di): RequestMetricsProviders => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return () => apiBase.get("/metrics/providers");
   },

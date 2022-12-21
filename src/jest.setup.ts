@@ -3,21 +3,22 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import configurePackages from "./common/configure-packages";
 import { configure } from "mobx";
 import { setImmediate } from "timers";
 import { TextEncoder, TextDecoder as TextDecoderNode } from "util";
 import glob from "glob";
 import path from "path";
-
-// setup default configuration for external npm-packages
-configurePackages();
+import { enableMapSet, setAutoFreeze } from "immer";
 
 configure({
   // Needed because we want to use jest.spyOn()
   // ref https://github.com/mobxjs/mobx/issues/2784
   safeDescriptors: false,
+  enforceActions: "never",
 });
+
+setAutoFreeze(false); // allow to merge mobx observables
+enableMapSet(); // allow to merge maps and sets
 
 // Mock __non_webpack_require__ for tests
 globalThis.__non_webpack_require__ = jest.fn();

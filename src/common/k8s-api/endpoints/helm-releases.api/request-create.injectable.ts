@@ -5,8 +5,8 @@
 import yaml from "js-yaml";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { HelmReleaseUpdateDetails } from "../helm-releases.api";
-import { apiBaseInjectionToken } from "../../api-base";
 import { urlBuilderFor } from "../../../utils/buildUrl";
+import apiBaseInjectable from "../../api-base.injectable";
 
 interface HelmReleaseCreatePayload {
   name?: string;
@@ -25,7 +25,7 @@ const requestCreateHelmReleaseInjectable = getInjectable({
   id: "request-create-helm-release",
 
   instantiate: (di): RequestCreateHelmRelease => {
-    const apiBase = di.inject(apiBaseInjectionToken);
+    const apiBase = di.inject(apiBaseInjectable);
 
     return ({ repo, chart, values, ...data }) => {
       return apiBase.post(requestCreateEndpoint.compile({}), {

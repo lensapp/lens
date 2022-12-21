@@ -25,9 +25,7 @@ import extensionInstallationStateStoreInjectable from "../../../../extensions/ex
 import { observable, when } from "mobx";
 import type { RemovePath } from "../../../../common/fs/remove.injectable";
 import removePathInjectable from "../../../../common/fs/remove.injectable";
-import type { DownloadJson } from "../../../../common/fetch/download-json.injectable";
 import type { DownloadBinary } from "../../../../common/fetch/download-binary.injectable";
-import downloadJsonInjectable from "../../../../common/fetch/download-json.injectable";
 import downloadBinaryInjectable from "../../../../common/fetch/download-binary.injectable";
 import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";
 
@@ -38,7 +36,6 @@ describe("Extensions", () => {
   let extensionInstallationStateStore: ExtensionInstallationStateStore;
   let render: DiRender;
   let deleteFileMock: jest.MockedFunction<RemovePath>;
-  let downloadJson: jest.MockedFunction<DownloadJson>;
   let downloadBinary: jest.MockedFunction<DownloadBinary>;
 
   beforeEach(() => {
@@ -55,9 +52,6 @@ describe("Extensions", () => {
 
     deleteFileMock = jest.fn();
     di.override(removePathInjectable, () => deleteFileMock);
-
-    downloadJson = jest.fn().mockImplementation((url) => { throw new Error(`Unexpected call to downloadJson for url=${url}`); });
-    di.override(downloadJsonInjectable, () => downloadJson);
 
     downloadBinary = jest.fn().mockImplementation((url) => { throw new Error(`Unexpected call to downloadJson for url=${url}`); });
     di.override(downloadBinaryInjectable, () => downloadBinary);

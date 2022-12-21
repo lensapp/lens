@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import leaseApiInjectable from "../../../common/k8s-api/endpoints/lease.api.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { LeaseStore } from "./store";
 
@@ -16,7 +17,9 @@ const leaseStoreInjectable = getInjectable({
 
     const api = di.inject(leaseApiInjectable);
 
-    return new LeaseStore(api);
+    return new LeaseStore({
+      context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+    }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,
 });

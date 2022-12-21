@@ -15,13 +15,12 @@ import { ClusterFrame } from "./cluster-frame";
 import historyInjectable from "../../navigation/history.injectable";
 import { computed } from "mobx";
 import type { Cluster } from "../../../common/cluster/cluster";
-import createClusterInjectable from "../../create-cluster/create-cluster.injectable";
+import createClusterInjectable from "../../cluster/create-cluster.injectable";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import legacyOnChannelListenInjectable from "../../ipc/legacy-channel-listen.injectable";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
-import allowedResourcesInjectable from "../../cluster-frame-context/allowed-resources.injectable";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { useFakeTime } from "../../../common/test-utils/use-fake-time";
@@ -69,7 +68,8 @@ describe("<ClusterFrame />", () => {
 
   describe("given cluster with list nodes and namespaces permissions", () => {
     beforeEach(() => {
-      di.override(allowedResourcesInjectable, () => computed(() => new Set(["nodes", "namespaces"])));
+      // TODO: replace with not using private info
+      (cluster as any).allowedResources.replace(["v1/nodes", "v1/namespaces"]);
     });
 
     it("renders", () => {
@@ -110,7 +110,7 @@ describe("<ClusterFrame />", () => {
 
   describe("given cluster without list nodes, but with namespaces permissions", () => {
     beforeEach(() => {
-      di.override(allowedResourcesInjectable, () => computed(() => new Set(["namespaces"])));
+      (cluster as any).allowedResources.replace(["v1/namespaces"]);
     });
 
     it("renders", () => {

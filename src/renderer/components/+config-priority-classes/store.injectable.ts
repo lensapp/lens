@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import priorityClassApiInjectable from "../../../common/k8s-api/endpoints/priority-class.api.injectable";
+import clusterFrameContextForClusterScopedResourcesInjectable from "../../cluster-frame-context/for-cluster-scoped-resources.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { PriorityClassStore } from "./store";
 
@@ -16,7 +17,9 @@ const priorityClassStoreInjectable = getInjectable({
 
     const api = di.inject(priorityClassApiInjectable);
 
-    return new PriorityClassStore(api);
+    return new PriorityClassStore({
+      context: di.inject(clusterFrameContextForClusterScopedResourcesInjectable),
+    }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,
 });

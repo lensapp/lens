@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<NamespaceSelectFilter /> renders 1`] = `
+exports[`<NamespaceSelectFilter /> once the subscribe resolves renders 1`] = `
 <body>
   <div>
     <div
@@ -86,7 +86,7 @@ exports[`<NamespaceSelectFilter /> renders 1`] = `
 </body>
 `;
 
-exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
+exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked renders 1`] = `
 <body>
   <div>
     <div
@@ -244,286 +244,6 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
               </span>
             </i>
             <span>
-              test-2
-            </span>
-            <i
-              class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-test-2-selected"
-            >
-              <span
-                class="icon"
-                data-icon-name="check"
-              >
-                check
-              </span>
-            </i>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-3"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
-              test-3
-            </span>
-            <i
-              class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-test-3-selected"
-            >
-              <span
-                class="icon"
-                data-icon-name="check"
-              >
-                check
-              </span>
-            </i>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-4"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
-              test-4
-            </span>
-            <i
-              class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-test-4-selected"
-            >
-              <span
-                class="icon"
-                data-icon-name="check"
-              >
-                check
-              </span>
-            </i>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-5"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
-              test-5
-            </span>
-            <i
-              class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-test-5-selected"
-            >
-              <span
-                class="icon"
-                data-icon-name="check"
-              >
-                check
-              </span>
-            </i>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-6"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
-              test-6
-            </span>
-            <i
-              class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-test-6-selected"
-            >
-              <span
-                class="icon"
-                data-icon-name="check"
-              >
-                check
-              </span>
-            </i>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-7"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
-              test-7
-            </span>
-            <i
-              class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-test-7-selected"
-            >
-              <span
-                class="icon"
-                data-icon-name="check"
-              >
-                check
-              </span>
-            </i>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-8"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
-              test-8
-            </span>
-            <i
-              class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-test-8-selected"
-            >
-              <span
-                class="icon"
-                data-icon-name="check"
-              >
-                check
-              </span>
-            </i>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-9"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
-              test-9
-            </span>
-            <i
-              class="Icon box right material focusable small"
-              data-testid="namespace-select-filter-option-test-9-selected"
-            >
-              <span
-                class="icon"
-                data-icon-name="check"
-              >
-                check
-              </span>
-            </i>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-10"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
               test-10
             </span>
             <i
@@ -542,7 +262,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         <div
           aria-disabled="false"
           class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-11"
+          id="react-select-namespace-select-filter-option-3"
           tabindex="-1"
         >
           <div
@@ -577,7 +297,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         <div
           aria-disabled="false"
           class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-12"
+          id="react-select-namespace-select-filter-option-4"
           tabindex="-1"
         >
           <div
@@ -612,7 +332,7 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
         <div
           aria-disabled="false"
           class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-13"
+          id="react-select-namespace-select-filter-option-5"
           tabindex="-1"
         >
           <div
@@ -644,13 +364,293 @@ exports[`<NamespaceSelectFilter /> when clicked renders 1`] = `
             </i>
           </div>
         </div>
+        <div
+          aria-disabled="false"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
+          id="react-select-namespace-select-filter-option-6"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-2
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-2-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
+          id="react-select-namespace-select-filter-option-7"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-3
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-3-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
+          id="react-select-namespace-select-filter-option-8"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-4
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-4-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
+          id="react-select-namespace-select-filter-option-9"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-5
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-5-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
+          id="react-select-namespace-select-filter-option-10"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-6
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-6-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
+          id="react-select-namespace-select-filter-option-11"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-7
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-7-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
+          id="react-select-namespace-select-filter-option-12"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-8
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-8-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option Select__option--is-selected css-tr4s17-option"
+          id="react-select-namespace-select-filter-option-13"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-9
+            </span>
+            <i
+              class="Icon box right material focusable small"
+              data-testid="namespace-select-filter-option-test-9-selected"
+            >
+              <span
+                class="icon"
+                data-icon-name="check"
+              >
+                check
+              </span>
+            </i>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </body>
 `;
 
-exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked renders 1`] = `
+exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when 'test-2' is clicked renders 1`] = `
 <body>
   <div>
     <div
@@ -736,7 +736,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked renders
 </body>
 `;
 
-exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when clicked again renders 1`] = `
+exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when 'test-2' is clicked when clicked again renders 1`] = `
 <body>
   <div>
     <div
@@ -918,7 +918,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-3
+              test-10
             </span>
           </div>
         </div>
@@ -942,7 +942,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-4
+              test-11
             </span>
           </div>
         </div>
@@ -966,7 +966,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-5
+              test-12
             </span>
           </div>
         </div>
@@ -990,7 +990,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-6
+              test-13
             </span>
           </div>
         </div>
@@ -1014,7 +1014,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-7
+              test-3
             </span>
           </div>
         </div>
@@ -1038,7 +1038,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-8
+              test-4
             </span>
           </div>
         </div>
@@ -1062,7 +1062,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-9
+              test-5
             </span>
           </div>
         </div>
@@ -1086,7 +1086,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-10
+              test-6
             </span>
           </div>
         </div>
@@ -1110,7 +1110,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-11
+              test-7
             </span>
           </div>
         </div>
@@ -1134,7 +1134,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-12
+              test-8
             </span>
           </div>
         </div>
@@ -1158,7 +1158,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-13
+              test-9
             </span>
           </div>
         </div>
@@ -1168,7 +1168,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
 </body>
 `;
 
-exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when clicked again when 'test-1' is clicked renders 1`] = `
+exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when 'test-2' is clicked when clicked again when 'test-1' is clicked renders 1`] = `
 <body>
   <div>
     <div
@@ -1254,7 +1254,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
 </body>
 `;
 
-exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when clicked again when 'test-1' is clicked when clicked again, then holding down multi select key when 'test-3' is clicked renders 1`] = `
+exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when 'test-2' is clicked when clicked again when 'test-1' is clicked when clicked again, then holding down multi select key when 'test-3' is clicked renders 1`] = `
 <body>
   <div>
     <div
@@ -1412,6 +1412,102 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
+              test-10
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-10wo9uf-option"
+          id="react-select-namespace-select-filter-option-3"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-11
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-10wo9uf-option"
+          id="react-select-namespace-select-filter-option-4"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-12
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-10wo9uf-option"
+          id="react-select-namespace-select-filter-option-5"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
+              test-13
+            </span>
+          </div>
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-10wo9uf-option"
+          id="react-select-namespace-select-filter-option-6"
+          tabindex="-1"
+        >
+          <div
+            class="flex gaps align-center"
+          >
+            <i
+              class="Icon material focusable small"
+            >
+              <span
+                class="icon"
+                data-icon-name="layers"
+              >
+                layers
+              </span>
+            </i>
+            <span>
               test-2
             </span>
           </div>
@@ -1419,7 +1515,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         <div
           aria-disabled="false"
           class="Select__option Select__option--is-selected css-tr4s17-option"
-          id="react-select-namespace-select-filter-option-3"
+          id="react-select-namespace-select-filter-option-7"
           tabindex="-1"
         >
           <div
@@ -1454,7 +1550,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         <div
           aria-disabled="false"
           class="Select__option css-10wo9uf-option"
-          id="react-select-namespace-select-filter-option-4"
+          id="react-select-namespace-select-filter-option-8"
           tabindex="-1"
         >
           <div
@@ -1478,7 +1574,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         <div
           aria-disabled="false"
           class="Select__option css-10wo9uf-option"
-          id="react-select-namespace-select-filter-option-5"
+          id="react-select-namespace-select-filter-option-9"
           tabindex="-1"
         >
           <div
@@ -1502,7 +1598,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         <div
           aria-disabled="false"
           class="Select__option css-10wo9uf-option"
-          id="react-select-namespace-select-filter-option-6"
+          id="react-select-namespace-select-filter-option-10"
           tabindex="-1"
         >
           <div
@@ -1526,7 +1622,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         <div
           aria-disabled="false"
           class="Select__option css-10wo9uf-option"
-          id="react-select-namespace-select-filter-option-7"
+          id="react-select-namespace-select-filter-option-11"
           tabindex="-1"
         >
           <div
@@ -1550,7 +1646,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         <div
           aria-disabled="false"
           class="Select__option css-10wo9uf-option"
-          id="react-select-namespace-select-filter-option-8"
+          id="react-select-namespace-select-filter-option-12"
           tabindex="-1"
         >
           <div
@@ -1574,102 +1670,6 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
         <div
           aria-disabled="false"
           class="Select__option css-10wo9uf-option"
-          id="react-select-namespace-select-filter-option-9"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
-              test-9
-            </span>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option css-10wo9uf-option"
-          id="react-select-namespace-select-filter-option-10"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
-              test-10
-            </span>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option css-10wo9uf-option"
-          id="react-select-namespace-select-filter-option-11"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
-              test-11
-            </span>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option css-10wo9uf-option"
-          id="react-select-namespace-select-filter-option-12"
-          tabindex="-1"
-        >
-          <div
-            class="flex gaps align-center"
-          >
-            <i
-              class="Icon material focusable small"
-            >
-              <span
-                class="icon"
-                data-icon-name="layers"
-              >
-                layers
-              </span>
-            </i>
-            <span>
-              test-12
-            </span>
-          </div>
-        </div>
-        <div
-          aria-disabled="false"
-          class="Select__option css-10wo9uf-option"
           id="react-select-namespace-select-filter-option-13"
           tabindex="-1"
         >
@@ -1687,7 +1687,7 @@ exports[`<NamespaceSelectFilter /> when clicked when 'test-2' is clicked when cl
               </span>
             </i>
             <span>
-              test-13
+              test-9
             </span>
           </div>
         </div>

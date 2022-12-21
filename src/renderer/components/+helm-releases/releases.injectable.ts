@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
-import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import releaseSecretsInjectable from "./release-secrets.injectable";
 import requestHelmReleasesInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
 import toHelmReleaseInjectable from "./to-helm-release.injectable";
@@ -13,7 +13,7 @@ const releasesInjectable = getInjectable({
   id: "releases",
 
   instantiate: (di) => {
-    const clusterContext = di.inject(clusterFrameContextInjectable);
+    const clusterContext = di.inject(clusterFrameContextForNamespacedResourcesInjectable);
     const releaseSecrets = di.inject(releaseSecretsInjectable);
     const requestHelmReleases = di.inject(requestHelmReleasesInjectable);
     const toHelmRelease = di.inject(toHelmReleaseInjectable);

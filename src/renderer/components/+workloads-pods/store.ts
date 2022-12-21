@@ -5,13 +5,13 @@
 
 import countBy from "lodash/countBy";
 import { observable } from "mobx";
-import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import type { Pod, PodMetrics, PodApi, PodMetricsApi } from "../../../common/k8s-api/endpoints";
 import type { KubeObject, NamespaceScopedMetadata } from "../../../common/k8s-api/kube-object";
 
-export interface PodStoreDependencies {
+export interface PodStoreDependencies extends KubeObjectStoreDependencies {
   readonly podMetricsApi: PodMetricsApi;
 }
 
@@ -21,7 +21,7 @@ export class PodStore extends KubeObjectStore<Pod, PodApi> {
     api: PodApi,
     opts?: KubeObjectStoreOptions,
   ) {
-    super(api, opts);
+    super(dependencies, api, opts);
   }
 
   readonly kubeMetrics = observable.array<PodMetrics>([]);

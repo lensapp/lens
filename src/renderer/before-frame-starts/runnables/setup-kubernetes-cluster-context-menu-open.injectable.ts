@@ -9,7 +9,7 @@ import readFileInjectable from "../../../common/fs/read-file.injectable";
 import { loadConfigFromString } from "../../../common/kube-helpers";
 import loggerInjectable from "../../../common/logger.injectable";
 import openDeleteClusterDialogInjectable from "../../components/delete-cluster-dialog/open.injectable";
-import { beforeFrameStartsInjectionToken } from "../tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../tokens";
 
 const setupKubernetesClusterContextMenuOpenInjectable = getInjectable({
   id: "setup-kubernetes-cluster-context-menu-open",
@@ -50,7 +50,7 @@ const setupKubernetesClusterContextMenuOpenInjectable = getInjectable({
         });
     },
   }),
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default setupKubernetesClusterContextMenuOpenInjectable;

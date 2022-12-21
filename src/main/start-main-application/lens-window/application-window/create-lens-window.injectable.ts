@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window.injectable";
 import createElectronWindowForInjectable from "./create-electron-window.injectable";
-import assert from "assert";
 import type { ClusterFrameInfo } from "../../../../common/cluster-frames";
 
 export interface ElectronWindow {
@@ -69,7 +68,9 @@ const createLensWindowInjectable = getInjectable({
       let windowIsStarting = false;
 
       const showWindow = () => {
-        assert(browserWindow);
+        if (!browserWindow) {
+          throw new Error("Cannot show browserWindow, does not exist");
+        }
 
         browserWindow.show();
         windowIsShown = true;

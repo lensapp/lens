@@ -19,7 +19,10 @@ const replicasetsWorkloadInjectable = getInjectable({
     const store = di.inject(replicasetsStoreInjectable);
 
     return {
-      resourceName: "replicasets",
+      resource: {
+        apiName: "replicasets",
+        group: "apps",
+      },
       open: navigate,
 
       amountOfItems: computed(

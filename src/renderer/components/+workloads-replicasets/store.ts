@@ -6,16 +6,16 @@
 import type { GetPodsByOwnerId } from "../+workloads-pods/get-pods-by-owner-id.injectable";
 import type { Deployment, ReplicaSet, ReplicaSetApi } from "../../../common/k8s-api/endpoints";
 import { PodStatusPhase } from "../../../common/k8s-api/endpoints/pod.api";
-import type { KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
+import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 
-interface Dependencies {
+export interface ReplicaSetStoreDependencies extends KubeObjectStoreDependencies {
   getPodsByOwnerId: GetPodsByOwnerId;
 }
 
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet, ReplicaSetApi> {
-  constructor(protected readonly dependencies: Dependencies, api: ReplicaSetApi, opts?: KubeObjectStoreOptions) {
-    super(api, opts);
+  constructor(protected readonly dependencies: ReplicaSetStoreDependencies, api: ReplicaSetApi, opts?: KubeObjectStoreOptions) {
+    super(dependencies, api, opts);
   }
 
   getChildPods(replicaSet: ReplicaSet) {

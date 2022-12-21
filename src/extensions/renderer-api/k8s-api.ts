@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { KubeResource } from "../../common/rbac";
-import isAllowedResourceInjectable from "../../common/utils/is-allowed-resource.injectable";
-import { castArray } from "lodash/fp";
+import { apiResourceRecord } from "../../common/rbac";
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import clusterRoleBindingApiInjectable from "../../common/k8s-api/endpoints/cluster-role-binding.api.injectable";
 import clusterRoleApiInjectable from "../../common/k8s-api/endpoints/cluster-role.api.injectable";
@@ -37,13 +36,22 @@ import namespaceApiInjectable from "../../common/k8s-api/endpoints/namespace.api
 import kubeEventApiInjectable from "../../common/k8s-api/endpoints/events.api.injectable";
 import roleBindingApiInjectable from "../../common/k8s-api/endpoints/role-binding.api.injectable";
 import customResourceDefinitionApiInjectable from "../../common/k8s-api/endpoints/custom-resource-definition.api.injectable";
+import { shouldShowResourceInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
 
-export function isAllowedResource(resource: KubeResource | KubeResource[]) {
-  const resources = castArray(resource);
+export function isAllowedResource(resources: KubeResource | KubeResource[]) {
   const di = getLegacyGlobalDiForExtensionApi();
 
-  return resources.every((resourceName: any) => {
-    const _isAllowedResource = di.inject(isAllowedResourceInjectable, resourceName);
+  return [resources].flat().every((resourceName) => {
+    const resource = apiResourceRecord[resourceName];
+
+    if (!resource) {
+      return true;
+    }
+
+    const _isAllowedResource = di.inject(shouldShowResourceInjectionToken, {
+      apiName: resourceName,
+      group: resource.group,
+    });
 
     // Note: Legacy isAllowedResource does not advertise reactivity
     return _isAllowedResource.get();

@@ -9,8 +9,8 @@ import type { KubeConfig } from "@kubernetes/client-node";
 import { HttpError } from "@kubernetes/client-node";
 import type { Kubectl } from "../../main/kubectl/kubectl";
 import type { KubeconfigManager } from "../../main/kubeconfig-manager/kubeconfig-manager";
-import type { KubeApiResource, KubeResource } from "../rbac";
-import { apiResourceRecord, apiResources } from "../rbac";
+import type { KubeApiResource, KubeApiResourceDescriptor } from "../rbac";
+import { formatKubeApiResource } from "../rbac";
 import type { VersionDetector } from "../../main/cluster-detectors/version-detector";
 import type { DetectorRegistry } from "../../main/cluster-detectors/detector-registry";
 import plimit from "p-limit";
@@ -25,8 +25,8 @@ import assert from "assert";
 import type { Logger } from "../logger";
 import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
 import type { LoadConfigfromFile } from "../kube-helpers/load-config-from-file.injectable";
-import type { RequestNamespaceResources } from "./authorization-namespace-review.injectable";
-import type { RequestListApiResources } from "./list-api-resources.injectable";
+import type { CanListResource, RequestNamespaceListPermissions, RequestNamespaceListPermissionsFor } from "./request-namespace-list-permissions.injectable";
+import type { RequestApiResources } from "./request-api-resources.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
@@ -36,8 +36,8 @@ export interface ClusterDependencies {
   createContextHandler: (cluster: Cluster) => ClusterContextHandler;
   createKubectl: (clusterVersion: string) => Kubectl;
   createAuthorizationReview: (config: KubeConfig) => CanI;
-  createAuthorizationNamespaceReview: (config: KubeConfig) => RequestNamespaceResources;
-  createListApiResources: (cluster: Cluster) => RequestListApiResources;
+  requestApiResources: RequestApiResources;
+  requestNamespaceListPermissionsFor: RequestNamespaceListPermissionsFor;
   createListNamespaces: (config: KubeConfig) => ListNamespaces;
   createVersionDetector: (cluster: Cluster) => VersionDetector;
   broadcastMessage: BroadcastMessage;
@@ -49,7 +49,7 @@ export interface ClusterDependencies {
  *
  * @beta
  */
-export class Cluster implements ClusterModel, ClusterState {
+export class Cluster implements ClusterModel {
   /** Unique id for a cluster */
   public readonly id: ClusterId;
   private kubeCtl: Kubectl | undefined;
@@ -62,7 +62,6 @@ export class Cluster implements ClusterModel, ClusterState {
   protected readonly _proxyKubeconfigManager: KubeconfigManager | undefined;
   protected readonly eventsDisposer = disposer();
   protected activated = false;
-  private readonly resourceAccessStatuses = new Map<KubeApiResource, boolean>();
 
   public get contextHandler() {
     // TODO: remove these once main/renderer are seperate classes
@@ -163,25 +162,21 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable metadata: ClusterMetadata = {};
+
   /**
    * List of allowed namespaces verified via K8S::SelfSubjectAccessReview api
-   *
-   * @observable
    */
-  @observable allowedNamespaces: string[] = [];
-  /**
-   * List of allowed resources
-   *
-   * @observable
-   * @internal
-   */
-  @observable allowedResources: string[] = [];
+  readonly allowedNamespaces = observable.array<string>();
+
   /**
    * List of accessible namespaces provided by user in the Cluster Settings
-   *
-   * @observable
    */
-  @observable accessibleNamespaces: string[] = [];
+  readonly accessibleNamespaces = observable.array<string>();
+
+  private readonly knownResources = observable.array<KubeApiResource>();
+
+  // The formatting of this is `group.name` or `name` (if in core)
+  private readonly allowedResources = observable.set<string>();
 
   /**
    * Labels for the catalog entity
@@ -299,7 +294,7 @@ export class Cluster implements ClusterModel, ClusterState {
     }
 
     if (model.accessibleNamespaces) {
-      this.accessibleNamespaces = model.accessibleNamespaces;
+      this.accessibleNamespaces.replace(model.accessibleNamespaces);
     }
 
     if (model.labels) {
@@ -433,8 +428,7 @@ export class Cluster implements ClusterModel, ClusterState {
     this.accessible = false;
     this.ready = false;
     this.activated = false;
-    this.allowedNamespaces = [];
-    this.resourceAccessStatuses.clear();
+    this.allowedNamespaces.clear();
     this.dependencies.logger.info(`[CLUSTER]: disconnected`, { id: this.id });
   }
 
@@ -474,8 +468,7 @@ export class Cluster implements ClusterModel, ClusterState {
      this.dependencies.logger.info(`[CLUSTER]: refreshAccessibility`, this.getMeta());
      const proxyConfig = await this.getProxyKubeconfig();
      const canI = this.dependencies.createAuthorizationReview(proxyConfig);
-     const requestNamespaceResources = this.dependencies.createAuthorizationNamespaceReview(proxyConfig);
-     const listApiResources = this.dependencies.createListApiResources(this);
+     const requestNamespaceListPermissions = this.dependencies.requestNamespaceListPermissionsFor(proxyConfig);
 
      this.isAdmin = await canI({
        namespace: "kube-system",
@@ -486,8 +479,9 @@ export class Cluster implements ClusterModel, ClusterState {
        verb: "watch",
        resource: "*",
      });
-     this.allowedNamespaces = await this.getAllowedNamespaces(proxyConfig);
-     this.allowedResources = await this.getAllowedResources(listApiResources, requestNamespaceResources);
+     this.allowedNamespaces.replace(await this.requestAllowedNamespaces(proxyConfig));
+     this.knownResources.replace(await this.dependencies.requestApiResources(this));
+     this.allowedResources.replace(await this.getAllowedResources(requestNamespaceListPermissions));
      this.ready = true;
    }
 
@@ -600,7 +594,7 @@ export class Cluster implements ClusterModel, ClusterState {
       accessible: this.accessible,
       isAdmin: this.isAdmin,
       allowedNamespaces: this.allowedNamespaces,
-      allowedResources: this.allowedResources,
+      allowedResources: [...this.allowedResources],
       isGlobalWatchEnabled: this.isGlobalWatchEnabled,
     });
   }
@@ -611,8 +605,8 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @action setState(state: ClusterState) {
     this.accessible = state.accessible;
-    this.allowedNamespaces = state.allowedNamespaces;
-    this.allowedResources = state.allowedResources;
+    this.allowedNamespaces.replace(state.allowedNamespaces);
+    this.allowedResources.replace(state.allowedResources);
     this.apiUrl = state.apiUrl;
     this.disconnected = state.disconnected;
     this.isAdmin = state.isAdmin;
@@ -644,7 +638,7 @@ export class Cluster implements ClusterModel, ClusterState {
     this.dependencies.broadcastMessage(`cluster:${this.id}:connection-update`, update);
   }
 
-  protected async getAllowedNamespaces(proxyConfig: KubeConfig) {
+  protected async requestAllowedNamespaces(proxyConfig: KubeConfig) {
     if (this.accessibleNamespaces.length) {
       return this.accessibleNamespaces;
     }
@@ -668,69 +662,28 @@ export class Cluster implements ClusterModel, ClusterState {
     }
   }
 
-  protected async getAllowedResources(listApiResources:RequestListApiResources, requestNamespaceResources: RequestNamespaceResources) {
+  protected async getAllowedResources(requestNamespaceListPermissions: RequestNamespaceListPermissions) {
+    if (!this.allowedNamespaces.length) {
+      return [];
+    }
+
     try {
-      if (!this.allowedNamespaces.length) {
-        return [];
-      }
+      const apiLimit = plimit(5); // 5 concurrent api requests
+      const canListResourceCheckers = await Promise.all((
+        this.allowedNamespaces.map(namespace => apiLimit(() => requestNamespaceListPermissions(namespace)))
+      ));
+      const canListNamespacedResource: CanListResource = (resource) => canListResourceCheckers.some(fn => fn(resource));
 
-      const unknownResources = new Map<string, KubeApiResource>(apiResources.map(resource => ([resource.apiName, resource])));
-
-      const availableResources =  await listApiResources();
-      const availableResourcesNames = new Set(availableResources.map(apiResource => apiResource.apiName));
-
-      [...unknownResources.values()].map(unknownResource => {
-        if (!availableResourcesNames.has(unknownResource.apiName)) {
-          this.resourceAccessStatuses.set(unknownResource, false);
-          unknownResources.delete(unknownResource.apiName);
-        }
-      });
-
-      if (unknownResources.size > 0) {
-        const apiLimit = plimit(5); // 5 concurrent api requests
-
-        await Promise.all(this.allowedNamespaces.map(namespace => apiLimit(async () => {
-          if (unknownResources.size === 0) {
-            return;
-          }
-
-          const namespaceResources = await requestNamespaceResources(namespace, availableResources);
-
-          for (const resourceName of namespaceResources) {
-            const unknownResource = unknownResources.get(resourceName);
-
-            if (unknownResource) {
-              this.resourceAccessStatuses.set(unknownResource, true);
-              unknownResources.delete(resourceName);
-            }
-          }
-        })));
-
-        for (const forbiddenResource of unknownResources.values()) {
-          this.resourceAccessStatuses.set(forbiddenResource, false);
-        }
-      }
-
-      return apiResources
-        .filter((resource) => this.resourceAccessStatuses.get(resource))
-        .map(apiResource => apiResource.apiName);
+      return this.knownResources
+        .filter(canListNamespacedResource)
+        .map(formatKubeApiResource);
     } catch (error) {
       return [];
     }
   }
 
-  isAllowedResource(kind: string): boolean {
-    if ((kind as KubeResource) in apiResourceRecord) {
-      return this.allowedResources.includes(kind);
-    }
-
-    const apiResource = apiResources.find(resource => resource.kind === kind);
-
-    if (apiResource) {
-      return this.allowedResources.includes(apiResource.apiName);
-    }
-
-    return true; // allowed by default for other resources
+  shouldShowResource(resource: KubeApiResourceDescriptor): boolean {
+    return this.allowedResources.has(formatKubeApiResource(resource));
   }
 
   isMetricHidden(resource: ClusterMetricsResourceType): boolean {

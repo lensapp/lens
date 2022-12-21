@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeFrameStartsInjectionToken } from "../../../before-frame-starts/tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../../../before-frame-starts/tokens";
 import listeningOnMessageChannelsInjectable from "../../../../common/utils/channel/listening-on-message-channels.injectable";
 
 const startListeningOfChannelsInjectable = getInjectable({
@@ -18,7 +18,7 @@ const startListeningOfChannelsInjectable = getInjectable({
     },
   }),
 
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default startListeningOfChannelsInjectable;

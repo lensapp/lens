@@ -4,13 +4,11 @@
  */
 import type { Cluster } from "../../../../common/cluster/cluster";
 import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry";
-import logger from "../../../../main/logger";
-import { Notifications } from "../../../components/notifications";
+import type { ShowNotification } from "../../../components/notifications";
 import { when } from "mobx";
-import type { ClusterFrameContext } from "../../../cluster-frame-context/cluster-frame-context";
-import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import { requestSetClusterFrameId } from "../../../ipc";
 import type { EmitAppEvent } from "../../../../common/app-event-bus/emit-event.injectable";
+import type { Logger } from "../../../../common/logger";
 
 interface Dependencies {
   hostedCluster: Cluster;
@@ -18,9 +16,8 @@ interface Dependencies {
   catalogEntityRegistry: CatalogEntityRegistry;
   frameRoutingId: number;
   emitAppEvent: EmitAppEvent;
-
-  // TODO: This dependency belongs to KubeObjectStore
-  clusterFrameContext: ClusterFrameContext;
+  logger: Logger;
+  showErrorNotification: ShowNotification;
 }
 
 const logPrefix = "[CLUSTER-FRAME]:";
@@ -31,7 +28,8 @@ export const initClusterFrame = ({
   catalogEntityRegistry,
   frameRoutingId,
   emitAppEvent,
-  clusterFrameContext,
+  logger,
+  showErrorNotification,
 }: Dependencies) =>
   async (unmountRoot: () => void) => {
     // TODO: Make catalogEntityRegistry already initialized when passed as dependency
@@ -55,14 +53,12 @@ export const initClusterFrame = ({
       {
         timeout: 15_000,
         onError: (error) => {
-          console.warn(
+          logger.warn(
             "[CLUSTER-FRAME]: error from activeEntity when()",
             error,
           );
 
-          Notifications.error(
-            "Failed to get KubernetesCluster for this view. Extensions will not be loaded.",
-          );
+          showErrorNotification("Failed to get KubernetesCluster for this view. Extensions will not be loaded.");
         },
       },
     );
@@ -84,6 +80,4 @@ export const initClusterFrame = ({
 
       unmountRoot();
     };
-    // TODO: Make context dependency of KubeObjectStore
-    KubeObjectStore.defaultContext.set(clusterFrameContext);
   };

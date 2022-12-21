@@ -7,7 +7,7 @@ import React from "react";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 import { WeblinkAddCommand } from "../../components/catalog-entities/weblink-add-command";
 import commandOverlayInjectable from "../../components/command-palette/command-overlay.injectable";
-import { beforeFrameStartsInjectionToken } from "../tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../tokens";
 
 const setupWeblickContextMenuOpenInjectable = getInjectable({
   id: "setup-weblick-context-menu-open",
@@ -28,7 +28,7 @@ const setupWeblickContextMenuOpenInjectable = getInjectable({
         });
     },
   }),
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default setupWeblickContextMenuOpenInjectable;

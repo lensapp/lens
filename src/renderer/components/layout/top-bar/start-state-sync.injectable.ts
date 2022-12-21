@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { action } from "mobx";
-import { beforeFrameStartsInjectionToken } from "../../../before-frame-starts/tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../../../before-frame-starts/tokens";
 import ipcRendererInjectable from "../../../utils/channel/ipc-renderer.injectable";
 import topBarStateInjectable from "./state.injectable";
 
@@ -26,7 +26,7 @@ const startTopbarStateSyncInjectable = getInjectable({
       }));
     },
   }),
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
   causesSideEffects: true,
 });
 
