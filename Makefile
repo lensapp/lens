@@ -67,7 +67,7 @@ endif
 $(extension_node_modules): node_modules
 	cd $(@:/node_modules=) && ../../node_modules/.bin/npm install --no-audit --no-fund --no-save
 
-$(extension_dists): src/extensions/npm/extensions/dist $(extension_node_modules)
+$(extension_dists): packages/extensions/dist $(extension_node_modules)
 	cd $(@:/dist=) && ../../node_modules/.bin/npm run build
 	rm -rf ./node_modules/$(shell basename $(@:/dist=))
 
@@ -83,27 +83,35 @@ build-extensions: node_modules clean-old-extensions $(extension_dists)
 test-extensions: $(extension_node_modules)
 	$(foreach dir, $(extensions), (cd $(dir) && npm run test || exit $?);)
 
-src/extensions/npm/extensions/__mocks__:
-	cp -r __mocks__ src/extensions/npm/extensions/
+packages/extensions/__mocks__:
+	cp -r __mocks__ packages/extensions/
 
-src/extensions/npm/extensions/dist: src/extensions/npm/extensions/node_modules
+packages/extensions/dist: packages/extensions/node_modules
 	yarn compile:extension-types
 
-src/extensions/npm/extensions/node_modules: src/extensions/npm/extensions/package.json
-	cd src/extensions/npm/extensions/ && ../../../../node_modules/.bin/npm install --no-audit --no-fund --no-save
+packages/extensions/node_modules: packages/extensions/package.json
+	cd packages/extensions/ && ../../node_modules/.bin/npm install --no-audit --no-fund --no-save
 
-.PHONY: build-npm
-build-npm: build-extension-types src/extensions/npm/extensions/__mocks__
-	yarn npm:fix-package-version
+.PHONY: build-extensions-npm
+build-extensions-npm: build-extension-types packages/extensions/__mocks__
+	yarn npm:fix-extensions-package-version
+
+.PHONY: build-library-npm
+build-library-npm:
+	yarn compile-library
 
 .PHONY: build-extension-types
-build-extension-types: node_modules src/extensions/npm/extensions/dist
+build-extension-types: node_modules packages/extensions/dist
 
-.PHONY: publish-npm
-publish-npm: node_modules build-npm
+.PHONY: publish-extensions-npm
+publish-extensions-npm: node_modules build-extensions-npm
 	./node_modules/.bin/npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-	cd src/extensions/npm/extensions && npm publish --access=public --tag=$(NPM_RELEASE_TAG)
-	git restore src/extensions/npm/extensions/package.json
+	cd packages/extensions && npm publish --access=public --tag=$(NPM_RELEASE_TAG) && git restore package.json
+
+.PHONY: publish-library-npm
+publish-library-npm: node_modules build-library-npm
+	./node_modules/.bin/npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+	npm init -y --scope @k8slens && npm publish --access=public --tag=$(NPM_RELEASE_TAG) && git restore package.json
 
 .PHONY: build-docs
 build-docs:
@@ -119,7 +127,8 @@ clean-extensions:
 
 .PHONY: clean-npm
 clean-npm:
-	rm -rf src/extensions/npm/extensions/{dist,__mocks__,node_modules}
+	rm -rf packages/extensions/{dist,__mocks__,node_modules}
+	rm -rf static/build/library/
 
 .PHONY: clean
 clean: clean-npm clean-extensions

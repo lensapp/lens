@@ -4,6 +4,17 @@
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
   "version": "6.3.0-alpha.0",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/lensapp/lens/issues"
+  },
   "main": "static/build/main.js",
   "exports": {
     "./main": "./static/build/library/main.js",
@@ -25,19 +36,16 @@
     }
   },
   "files": [
-    "build/**/*",
+    "build/download_binaries.ts",
     "src/**/*",
-    "!src/extensions/npm/**/*",
     "static/build/library/**/*",
+    "templates/**/*",
     "types/*",
     "tsconfig.json"
   ],
   "copyright": "© 2022 OpenLens Authors",
   "license": "MIT",
-  "author": {
-    "name": "OpenLens Authors",
-    "email": "info@k8slens.dev"
-  },
+  "author": "OpenLens Authors <info@k8slens.dev>",
   "scripts": {
     "adr:create": "echo \"What is the title?\"; read title; adr new \"$title\"",
     "adr:change-status": "echo \"Decision number?:\"; read decision; adr status $decision",
@@ -56,7 +64,7 @@
     "compile:extension-types": "yarn run webpack --config webpack/extensions.ts",
     "compile:node-fetch": "yarn run webpack --config ./webpack/node-fetch.ts",
     "prepare": "yarn run compile:node-fetch",
-    "npm:fix-package-version": "yarn run ts-node build/set_npm_version.ts",
+    "npm:fix-extensions-package-version": "yarn run ts-node build/set_extensions_npm_version.ts",
     "build:linux": "yarn run compile && electron-builder --linux --dir",
     "build:mac": "yarn run compile && electron-builder --mac --dir",
     "build:win": "yarn run compile && electron-builder --win --dir",
