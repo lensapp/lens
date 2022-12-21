@@ -41,7 +41,7 @@ import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injecta
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
-import applicationInformationForTestingInjectable from "../common/vars/application-information.injectable-for-testing";
+import applicationInformationInjectable from "../common/vars/application-information-injectable";
 
 export const getDiForUnitTesting = (
   opts: { doGeneralOverrides?: boolean } = {},
@@ -64,8 +64,7 @@ export const getDiForUnitTesting = (
 
   runInAction(() => {
     registerMobX(di);
-
-    di.register(applicationInformationForTestingInjectable);
+    di.register(applicationInformationInjectable);
     
     chunk(100)(injectables).forEach((chunkInjectables) => {
       di.register(...chunkInjectables);

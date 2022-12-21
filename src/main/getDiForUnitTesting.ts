@@ -71,7 +71,7 @@ import kubectlDownloadingNormalizedArchInjectable from "./kubectl/normalized-arc
 import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
 import addKubeconfigSyncAsEntitySourceInjectable from "./start-main-application/runnables/kube-config-sync/add-source.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
-import applicationInformationForTestingInjectable from "../common/vars/application-information.injectable-for-testing";
+import applicationInformationInjectable from "../common/vars/application-information-injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -94,7 +94,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   runInAction(() => {
     registerMobX(di);
-    di.register(applicationInformationForTestingInjectable);
+    di.register(applicationInformationInjectable);
 
     chunk(100)(injectables).forEach(chunkInjectables => {
       di.register(...chunkInjectables);
