@@ -11,6 +11,8 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release') }}
+    outputs:
+      version: ${{ steps.tagger.outputs.tagname }}
     steps:
       - name: Checkout Release from lens
         uses: actions/checkout@v3
@@ -28,3 +30,9 @@ jobs:
           commit: master
           tag: ${{ steps.tagger.outputs.tagname }}
           body: ${{ github.event.pull_request.body }}
+  publish-npm:
+    uses: ./.github/workflows/publish-release-npm.yml
+    needs: release
+    if: ${{ needs.release.outputs.version != '' }}
+    with:
+      version: ${{ needs.release.outputs.version }}
