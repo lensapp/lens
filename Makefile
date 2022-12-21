@@ -86,7 +86,7 @@ publish-extensions-npm: node_modules build-extensions-npm
 .PHONY: publish-library-npm
 publish-library-npm: node_modules build-library-npm
 	./node_modules/.bin/npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-	npm init -y --scope @k8slens && npm publish --access=public --tag=$(NPM_RELEASE_TAG) && git restore package.json
+	npm publish --access=public --tag=$(NPM_RELEASE_TAG)
 
 .PHONY: build-docs
 build-docs:

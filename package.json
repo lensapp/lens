@@ -1,5 +1,5 @@
 {
-  "name": "open-lens",
+  "name": "@k8slens/open-lens",
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
