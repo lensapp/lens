@@ -14,7 +14,7 @@ const emitWindowLocationChangedInjectable = getInjectable({
   instantiate: (di): EmitWindowLocationChanged => {
     const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
 
-    return (location) => sendMessageToChannel(windowLocationChangedChannel, location);
+    return () => sendMessageToChannel(windowLocationChangedChannel);
   },
 });
 

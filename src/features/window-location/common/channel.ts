@@ -4,8 +4,7 @@
  */
 
 import type { MessageChannel } from "../../../common/utils/channel/message-channel-listener-injection-token";
-import type { Location } from "history";
 
-export const windowLocationChangedChannel: MessageChannel<Location> = {
+export const windowLocationChangedChannel: MessageChannel<void> = {
   id: "window-location-changed",
 };
