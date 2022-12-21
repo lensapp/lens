@@ -89,8 +89,11 @@ export class ClusterFrameHandler {
           () => {
             this.dependencies.logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
             this.views.delete(clusterId);
-            parentElem.removeChild(iframe);
             dispose();
+
+            // NOTE: this setTimeout is needed to fix the entire application going blank.
+            // TODO: remove iframes
+            setTimeout(() => parentElem.removeChild(iframe));
           },
         );
       },
