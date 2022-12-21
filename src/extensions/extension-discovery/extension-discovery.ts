@@ -30,7 +30,6 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { GetRelativePath } from "../../common/path/get-relative-path.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type TypedEventEmitter from "typed-emitter";
-import type { ApplicationInformation } from "../../common/vars/application-information.injectable";
 
 interface Dependencies {
   readonly extensionLoader: ExtensionLoader;
@@ -42,7 +41,6 @@ interface Dependencies {
   readonly isProduction: boolean;
   readonly fileSystemSeparator: string;
   readonly homeDirectoryPath: string;
-  readonly applicationInformation: ApplicationInformation;
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
   installExtension: (name: string) => Promise<void>;
   readJsonFile: ReadJson;
@@ -384,42 +382,16 @@ export class ExtensionDiscovery {
   }
 
   async ensureExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
-    const bundledExtensions = await this.loadBundledExtensions();
-    const userExtensions = await this.loadFromFolder(this.localFolderPath, bundledExtensions.map((extension) => extension.manifest.name));
-    const extensions = bundledExtensions.concat(userExtensions);
+    const userExtensions = await this.loadFromFolder(this.localFolderPath);
 
-    return this.extensions = new Map(extensions.map(extension => [extension.id, extension]));
+    return this.extensions = new Map(userExtensions.map(extension => [extension.id, extension]));
   }
 
-  async loadBundledExtensions(): Promise<InstalledExtension[]> {
-    const extensions: InstalledExtension[] = [];
-    const extensionNames = this.dependencies.applicationInformation.config.extensions || [];
-
-    for (const dirName of extensionNames) {
-      const absPath = this.dependencies.joinPaths(__dirname, "..", "..", "node_modules", dirName);
-      const extension = await this.loadExtensionFromFolder(absPath, { isBundled: true });
-
-      if (!extension) {
-        throw new Error(`Couldn't load bundled extension: ${dirName}`);
-      }
-
-      extensions.push(extension);
-    }
-    this.dependencies.logger.debug(`${logModule}: ${extensions.length} extensions loaded`, { extensions });
-
-    return extensions;
-  }
-
-  async loadFromFolder(folderPath: string, bundledExtensions: string[]): Promise<InstalledExtension[]> {
+  async loadFromFolder(folderPath: string): Promise<InstalledExtension[]> {
     const extensions: InstalledExtension[] = [];
     const paths = await this.dependencies.readDirectory(folderPath);
 
     for (const fileName of paths) {
-      // do not allow to override bundled extensions
-      if (bundledExtensions.includes(fileName)) {
-        continue;
-      }
-
       const absPath = this.dependencies.joinPaths(folderPath, fileName);
 
       try {
