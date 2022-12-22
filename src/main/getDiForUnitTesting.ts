@@ -77,13 +77,12 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   di.preventSideEffects();
 
-  const injectables: Injectable<any, any, any>[] = (
-    global as any
-  ).mainInjectablePaths.flatMap((filePath: string) =>
-    Object.values(require(filePath)).filter(
-      (maybeInjectable: any) => isInjectable(maybeInjectable),
-    ),
-  );
+  const injectables = (
+    global.injectablePaths.main.paths
+      .map(path => require(path))
+      .flatMap(Object.values)
+      .filter(isInjectable)
+  ) as Injectable<any, any, any>[];
 
   runInAction(() => {
     registerMobX(di);
@@ -95,13 +94,11 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
   });
 
   if (doGeneralOverrides) {
-    const globalOverrides: GlobalOverride[] = (global as any).mainGlobalOverridePaths.map(
-      (filePath: string) => require(filePath).default,
-    );
+    for (const globalOverridePath of global.injectablePaths.main.globalOverridePaths) {
+      const globalOverride = require(globalOverridePath).default as GlobalOverride;
 
-    globalOverrides.forEach(globalOverride => {
       di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
-    });
+    }
 
     di.override(electronInjectable, () => ({}));
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});

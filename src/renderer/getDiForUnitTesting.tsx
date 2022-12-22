@@ -20,7 +20,6 @@ import platformInjectable from "../common/vars/platform.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
-import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injectable";
 import extensionShouldBeEnabledForClusterFrameInjectable from "./extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
@@ -47,13 +46,12 @@ export const getDiForUnitTesting = (
 
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
-  const injectables: Injectable<any, any, any>[] = (
-    global as any
-  ).rendererInjectablePaths.flatMap((filePath: string) =>
-    Object.values(require(filePath)).filter(
-      (maybeInjectable: any) => isInjectable(maybeInjectable),
-    ),
-  );
+  const injectables = (
+    global.injectablePaths.renderer.paths
+      .map(path => require(path))
+      .flatMap(Object.values)
+      .filter(isInjectable)
+  ) as Injectable<any, any, any>[];
 
   runInAction(() => {
     registerMobX(di);
@@ -65,20 +63,17 @@ export const getDiForUnitTesting = (
   });
 
   if (doGeneralOverrides) {
-    const globalOverrides: GlobalOverride[] = (global as any).rendererGlobalOverridePaths.map(
-      (filePath: string) => require(filePath).default,
-    );
+    for (const globalOverridePath of global.injectablePaths.renderer.globalOverridePaths) {
+      const globalOverride = require(globalOverridePath).default as GlobalOverride;
 
-    globalOverrides.forEach(globalOverride => {
       di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
-    });
+    }
 
     di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
     di.override(platformInjectable, () => "darwin");
 
     [
       startTopbarStateSyncInjectable,
-      setupSystemCaInjectable,
     ].forEach((injectable) => {
       di.override(injectable, () => ({
         id: injectable.id,
