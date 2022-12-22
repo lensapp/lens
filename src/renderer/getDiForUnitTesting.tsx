@@ -8,7 +8,6 @@ import type { Injectable } from "@ogre-tools/injectable";
 import { createContainer, isInjectable, getInjectable } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
-import loggerInjectable from "../common/logger.injectable";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import { createMemoryHistory } from "history";
 import focusWindowInjectable from "./navigation/focus-window.injectable";
@@ -113,14 +112,6 @@ export const getDiForUnitTesting = (
     getOverrideFsWithFakes()(di);
 
     di.override(focusWindowInjectable, () => () => {});
-
-    di.override(loggerInjectable, () => ({
-      warn: noop,
-      debug: noop,
-      error: noop,
-      info: noop,
-      silly: noop,
-    }));
   }
 
   return di;

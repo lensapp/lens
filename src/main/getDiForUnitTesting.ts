@@ -3,11 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { kebabCase, noop, chunk } from "lodash/fp";
+import { kebabCase, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { createContainer, isInjectable, getInjectable } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import loggerInjectable from "../common/logger.injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
 import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
@@ -133,14 +132,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
         on: jest.fn(),
       } as never;
     });
-
-    di.override(loggerInjectable, () => ({
-      warn: noop,
-      debug: noop,
-      error: noop,
-      info: noop,
-      silly: noop,
-    }));
   }
 
   return di;
