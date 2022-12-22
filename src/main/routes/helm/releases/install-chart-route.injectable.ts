@@ -7,7 +7,7 @@ import { getRouteInjectable } from "../../../router/router.injectable";
 import Joi from "joi";
 import { payloadValidatedClusterRoute } from "../../../router/route";
 import type { InstallChartArgs } from "../../../helm/helm-service/install-helm-chart.injectable";
-import installHelmChartInjectable from "../../../helm/helm-service/install-helm-chart.injectable";
+import installClusterHelmChartInjectable from "../../../helm/helm-service/install-helm-chart.injectable";
 
 const installChartArgsValidator = Joi.object<InstallChartArgs, true, InstallChartArgs>({
   chart: Joi
@@ -31,7 +31,7 @@ const installChartRouteInjectable = getRouteInjectable({
   id: "install-chart-route",
 
   instantiate: (di) => {
-    const installHelmChart = di.inject(installHelmChartInjectable);
+    const installHelmChart = di.inject(installClusterHelmChartInjectable);
 
     return payloadValidatedClusterRoute({
       method: "post",

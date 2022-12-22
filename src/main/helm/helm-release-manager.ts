@@ -3,60 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import tempy from "tempy";
-import fse from "fs-extra";
-import * as yaml from "js-yaml";
 import type { JsonValue } from "type-fest";
 import { json } from "../../common/utils";
 import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import execHelmInjectable from "./exec-helm/exec-helm.injectable";
 
 const execHelm = asLegacyGlobalFunctionForExtensionApi(execHelmInjectable);
-
-export async function installChart(chart: string, values: JsonValue, name: string | undefined = "", namespace: string, version: string, kubeconfigPath: string) {
-  const valuesFilePath = tempy.file({ name: "values.yaml" });
-
-  await fse.writeFile(valuesFilePath, yaml.dump(values));
-
-  const args = ["install"];
-
-  if (name) {
-    args.push(name);
-  }
-
-  args.push(
-    chart,
-    "--version", version,
-    "--values", valuesFilePath,
-    "--namespace", namespace,
-    "--kubeconfig", kubeconfigPath,
-  );
-
-  if (!name) {
-    args.push("--generate-name");
-  }
-
-  try {
-    const result = await execHelm(args);
-
-    if (!result.callWasSuccessful) {
-      throw result.error;
-    }
-
-    const output = result.response;
-    const releaseName = output.split("\n")[0].split(" ")[1].trim();
-
-    return {
-      log: output,
-      release: {
-        name: releaseName,
-        namespace,
-      },
-    };
-  } finally {
-    await fse.unlink(valuesFilePath);
-  }
-}
 
 export async function deleteRelease(name: string, namespace: string, kubeconfigPath: string): Promise<string> {
   const result = await execHelm([
