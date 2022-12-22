@@ -10,10 +10,13 @@ import { Icon } from "../icon";
 import { observer } from "mobx-react";
 import { observable, makeObservable, action } from "mobx";
 import { autoBind } from "../../../common/utils";
-import type { CatalogCategory, CatalogEntityAddMenuContext, CatalogEntityAddMenu } from "../../api/catalog-entity";
+import type { CatalogCategory, CatalogEntityAddMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
-import { navigate } from "../../navigation";
-import { catalogCategoryRegistry } from "../../api/catalog-category-registry";
+import type { CatalogCategoryRegistry } from "../../../common/catalog";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
+import type { Navigate } from "../../navigation/navigate.injectable";
+import navigateInjectable from "../../navigation/navigate.injectable";
 
 export interface CatalogAddButtonProps {
   category: CatalogCategory;
@@ -21,12 +24,17 @@ export interface CatalogAddButtonProps {
 
 type CategoryId = string;
 
+interface Dependencies {
+  catalogCategoryRegistry: CatalogCategoryRegistry;
+  navigate: Navigate;
+}
+
 @observer
-export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
+class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps & Dependencies> {
   @observable protected isOpen = false;
   @observable menuItems = new Map<CategoryId, CatalogEntityAddMenu[]>();
 
-  constructor(props: CatalogAddButtonProps) {
+  constructor(props: CatalogAddButtonProps & Dependencies) {
     super(props);
     makeObservable(this);
     autoBind(this);
@@ -43,7 +51,7 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   }
 
   get categories() {
-    return catalogCategoryRegistry.filteredItems;
+    return this.props.catalogCategoryRegistry.filteredItems;
   }
 
   @action
@@ -61,12 +69,11 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
   updateCategoryItems = action((category: CatalogCategory) => {
     if (category instanceof EventEmitter) {
       const menuItems: CatalogEntityAddMenu[] = [];
-      const context: CatalogEntityAddMenuContext = {
-        navigate: (url: string) => navigate(url),
-        menuItems,
-      };
 
-      category.emit("catalogAddMenu", context);
+      category.emit("catalogAddMenu", {
+        navigate: this.props.navigate,
+        menuItems,
+      });
       this.menuItems.set(category.getId(), menuItems);
     }
   });
@@ -133,3 +140,11 @@ export class CatalogAddButton extends React.Component<CatalogAddButtonProps> {
     );
   }
 }
+
+export const CatalogAddButton = withInjectables<Dependencies, CatalogAddButtonProps>(NonInjectedCatalogAddButton, {
+  getProps: (di, props) => ({
+    ...props,
+    catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
+    navigate: di.inject(navigateInjectable),
+  }),
+});
