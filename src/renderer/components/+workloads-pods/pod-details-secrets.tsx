@@ -9,15 +9,27 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
-import type { Pod, Secret } from "../../../common/k8s-api/endpoints";
-import { secretApi } from "../../../common/k8s-api/endpoints";
-import { getDetailsUrl } from "../kube-detail-params";
+import type { Pod, Secret, SecretApi } from "../../../common/k8s-api/endpoints";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import secretApiInjectable from "../../../common/k8s-api/endpoints/secret.api.injectable";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 
 export interface PodDetailsSecretsProps {
   pod: Pod;
 }
 
-export const PodDetailsSecrets = observer(({ pod }: PodDetailsSecretsProps) => {
+interface Dependencies {
+  secretApi: SecretApi;
+  getDetailsUrl: GetDetailsUrl;
+}
+
+const NonInjectedPodDetailsSecrets = observer((props: PodDetailsSecretsProps & Dependencies) => {
+  const {
+    pod,
+    secretApi,
+    getDetailsUrl,
+  } = props;
   const [secrets, setSecrets] = useState(new Map<string, Secret>());
 
   useEffect(() => (
@@ -68,3 +80,10 @@ export const PodDetailsSecrets = observer(({ pod }: PodDetailsSecretsProps) => {
   );
 });
 
+export const PodDetailsSecrets = withInjectables<Dependencies, PodDetailsSecretsProps>(NonInjectedPodDetailsSecrets, {
+  getProps: (di, props) => ({
+    ...props,
+    secretApi: di.inject(secretApiInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+  }),
+});

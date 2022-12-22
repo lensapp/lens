@@ -3,14 +3,26 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import { secretApi } from "../../../../../../common/k8s-api/endpoints";
+import type { SecretApi } from "../../../../../../common/k8s-api/endpoints";
+import secretApiInjectable from "../../../../../../common/k8s-api/endpoints/secret.api.injectable";
 import { DrawerItem } from "../../../../drawer";
-import type { VolumeVariantComponent } from "../variant-helpers";
+import type { PodVolumeVariantSpecificProps } from "../variant-helpers";
 import { LocalRef } from "../variant-helpers";
 
-export const Secret: VolumeVariantComponent<"secret"> = (
-  ({ pod, variant: { secretName, items = [], defaultMode = 0o644, optional = false }}) => (
+interface Dependencies {
+  secretApi: SecretApi;
+}
+
+const NonInjectedSecret = (props: PodVolumeVariantSpecificProps<"secret"> & Dependencies) => {
+  const {
+    pod,
+    variant: { secretName, items = [], defaultMode = 0o644, optional = false },
+    secretApi,
+  } = props;
+
+  return (
     <>
       <LocalRef
         pod={pod}
@@ -30,5 +42,12 @@ export const Secret: VolumeVariantComponent<"secret"> = (
         {optional.toString()}
       </DrawerItem>
     </>
-  )
-);
+  );
+};
+
+export const Secret = withInjectables<Dependencies, PodVolumeVariantSpecificProps<"secret">>(NonInjectedSecret, {
+  getProps: (di, props) => ({
+    ...props,
+    secretApi: di.inject(secretApiInjectable),
+  }),
+});

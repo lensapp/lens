@@ -3,26 +3,33 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./add-secret-dialog.scss";
+import "./view.scss";
 
 import React from "react";
+import type { IComputedValue } from "mobx";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import type { DialogProps } from "../dialog";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Input } from "../input";
-import { systemName } from "../input/input_validators";
-import { reverseSecretTypeMap, secretApi, SecretType } from "../../../common/k8s-api/endpoints";
-import { SubTitle } from "../layout/sub-title";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { Select } from "../select";
-import { Icon } from "../icon";
-import { base64, iter } from "../../utils";
-import { Notifications } from "../notifications";
+import type { DialogProps } from "../../dialog";
+import { Dialog } from "../../dialog";
+import { Wizard, WizardStep } from "../../wizard";
+import { Input } from "../../input";
+import { systemName } from "../../input/input_validators";
+import type { SecretApi } from "../../../../common/k8s-api/endpoints";
+import { reverseSecretTypeMap, SecretType } from "../../../../common/k8s-api/endpoints";
+import { SubTitle } from "../../layout/sub-title";
+import { NamespaceSelect } from "../../+namespaces/namespace-select";
+import { Select } from "../../select";
+import { Icon } from "../../icon";
+import { base64, iter } from "../../../utils";
+import { Notifications } from "../../notifications";
 import upperFirst from "lodash/upperFirst";
-import { showDetails } from "../kube-detail-params";
-import { fromEntries } from "../../../common/utils/objects";
+import { fromEntries } from "../../../../common/utils/objects";
+import type { ShowDetails } from "../../kube-detail-params/show-details.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import closeAddSecretDialogInjectable from "./close.injectable";
+import secretApiInjectable from "../../../../common/k8s-api/endpoints/secret.api.injectable";
+import showDetailsInjectable from "../../kube-detail-params/show-details.injectable";
+import isAddSecretDialogOpenInjectable from "./is-open.injectable";
 
 export interface AddSecretDialogProps extends Partial<DialogProps> {
 }
@@ -42,23 +49,18 @@ interface SecretTemplate {
 
 type ISecretField = keyof SecretTemplate;
 
-const dialogState = observable.object({
-  isOpen: false,
-});
+interface Dependencies {
+  secretApi: SecretApi;
+  isAddSecretDialogOpen: IComputedValue<boolean>;
+  closeAddSecretDialog: () => void;
+  showDetails: ShowDetails;
+}
 
 @observer
-export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
-  constructor(props: AddSecretDialogProps) {
+class NonInjectedAddSecretDialog extends React.Component<AddSecretDialogProps & Dependencies> {
+  constructor(props: AddSecretDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
-  }
-
-  static open() {
-    dialogState.isOpen = true;
-  }
-
-  static close() {
-    dialogState.isOpen = false;
   }
 
   private secretTemplate: Partial<Record<SecretType, SecretTemplate>> = {
@@ -82,7 +84,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
   };
 
   close = () => {
-    AddSecretDialog.close();
+    this.props.closeAddSecretDialog();
   };
 
   private getDataFromFields = (fields: SecretTemplateField[] = [], processValue: (val: string) => string = (val => val)) => {
@@ -100,7 +102,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
     const { data = [], labels = [], annotations = [] } = this.secret[type] ?? {};
 
     try {
-      const newSecret = await secretApi.create({ namespace, name }, {
+      const newSecret = await this.props.secretApi.create({ namespace, name }, {
         type,
         data: this.getDataFromFields(data, val => val ? base64.encode(val) : ""),
         metadata: {
@@ -111,7 +113,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
         },
       });
 
-      showDetails(newSecret?.selfLink);
+      this.props.showDetails(newSecret?.selfLink);
       this.close();
     } catch (err) {
       Notifications.checkedError(err, "Unknown error occured while creating a Secret");
@@ -183,7 +185,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
   }
 
   render() {
-    const { ...dialogProps } = this.props;
+    const { closeAddSecretDialog, isAddSecretDialogOpen, secretApi, showDetails, ...dialogProps } = this.props;
     const { namespace, name, type } = this;
     const header = <h5>Create Secret</h5>;
 
@@ -191,7 +193,7 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
       <Dialog
         {...dialogProps}
         className="AddSecretDialog"
-        isOpen={dialogState.isOpen}
+        isOpen={isAddSecretDialogOpen.get()}
         onOpen={this.reset}
         close={this.close}
       >
@@ -244,3 +246,13 @@ export class AddSecretDialog extends React.Component<AddSecretDialogProps> {
     );
   }
 }
+
+export const AddSecretDialog = withInjectables<Dependencies, AddSecretDialogProps>(NonInjectedAddSecretDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    closeAddSecretDialog: di.inject(closeAddSecretDialogInjectable),
+    secretApi: di.inject(secretApiInjectable),
+    showDetails: di.inject(showDetailsInjectable),
+    isAddSecretDialogOpen: di.inject(isAddSecretDialogOpenInjectable),
+  }),
+});

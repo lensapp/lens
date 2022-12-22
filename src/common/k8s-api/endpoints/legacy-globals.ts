@@ -13,7 +13,6 @@ import persistentVolumeClaimApiInjectable from "./persistent-volume-claim.api.in
 import podApiInjectable from "./pod.api.injectable";
 import resourceQuotaApiInjectable from "./resource-quota.api.injectable";
 import roleApiInjectable from "./role.api.injectable";
-import secretApiInjectable from "./secret.api.injectable";
 
 /**
  * @deprecated use `di.inject(roleApiInjectable)` instead
@@ -59,8 +58,3 @@ export const persistentVolumeClaimApi = asLegacyGlobalForExtensionApi(persistent
  * @deprecated use `di.inject(resourceQuotaApiInjectable)` instead
  */
 export const resourceQuotaApi = asLegacyGlobalForExtensionApi(resourceQuotaApiInjectable);
-
-/**
- * @deprecated use `di.inject(secretApiInjectable)` instead
- */
-export const secretApi = asLegacyGlobalForExtensionApi(secretApiInjectable);

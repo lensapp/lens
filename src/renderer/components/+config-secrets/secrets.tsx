@@ -7,7 +7,7 @@ import "./secrets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { AddSecretDialog } from "./add-secret-dialog";
+import { AddSecretDialog } from "./add-dialog/view";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -19,6 +19,7 @@ import type { SecretStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import secretStoreInjectable from "./store.injectable";
+import openAddSecretDialogInjectable from "./add-dialog/open.injectable";
 
 enum columnId {
   name = "name",
@@ -32,6 +33,7 @@ enum columnId {
 interface Dependencies {
   filterByNamespace: FilterByNamespace;
   secretStore: SecretStore;
+  openAddSecretDialog: () => void;
 }
 
 @observer
@@ -89,7 +91,7 @@ class NonInjectedSecrets extends React.Component<Dependencies> {
             <KubeObjectAge key="age" object={secret} />,
           ]}
           addRemoveButtons={{
-            onAdd: () => AddSecretDialog.open(),
+            onAdd: this.props.openAddSecretDialog,
             addTooltip: "Create new Secret",
           }}
         />
@@ -104,5 +106,6 @@ export const Secrets = withInjectables<Dependencies>(NonInjectedSecrets, {
     ...props,
     filterByNamespace: di.inject(filterByNamespaceInjectable),
     secretStore: di.inject(secretStoreInjectable),
+    openAddSecretDialog: di.inject(openAddSecretDialogInjectable),
   }),
 });

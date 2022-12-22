@@ -3,14 +3,37 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import { secretApi } from "../../../../../../common/k8s-api/endpoints";
+import type { SecretApi } from "../../../../../../common/k8s-api/endpoints";
+import secretApiInjectable from "../../../../../../common/k8s-api/endpoints/secret.api.injectable";
 import { DrawerItem } from "../../../../drawer";
-import type { VolumeVariantComponent } from "../variant-helpers";
+import type { PodVolumeVariantSpecificProps } from "../variant-helpers";
 import { LocalRef } from "../variant-helpers";
 
-export const ScaleIo: VolumeVariantComponent<"scaleIO"> = (
-  ({ pod, variant: { gateway, system, secretRef, sslEnabled = false, protectionDomain, storagePool, storageMode = "ThinProvisioned", volumeName, fsType = "xfs", readOnly = false }}) => (
+interface Dependencies {
+  secretApi: SecretApi;
+}
+
+const NonInjectedScaleIo = (props: PodVolumeVariantSpecificProps<"scaleIO"> & Dependencies) => {
+  const {
+    pod,
+    variant: {
+      gateway,
+      system,
+      secretRef,
+      sslEnabled = false,
+      protectionDomain,
+      storagePool,
+      storageMode = "ThinProvisioned",
+      volumeName,
+      fsType = "xfs",
+      readOnly = false,
+    },
+    secretApi,
+  } = props;
+
+  return (
     <>
       <DrawerItem name="Gateway">
         {gateway}
@@ -46,5 +69,12 @@ export const ScaleIo: VolumeVariantComponent<"scaleIO"> = (
         {readOnly.toString()}
       </DrawerItem>
     </>
-  )
-);
+  );
+};
+
+export const ScaleIo = withInjectables<Dependencies, PodVolumeVariantSpecificProps<"scaleIO">>(NonInjectedScaleIo, {
+  getProps: (di, props) => ({
+    ...props,
+    secretApi: di.inject(secretApiInjectable),
+  }),
+});
