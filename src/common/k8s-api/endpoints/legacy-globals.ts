@@ -8,7 +8,6 @@ import configMapApiInjectable from "./config-map.api.injectable";
 import cronJobApiInjectable from "./cron-job.api.injectable";
 import jobApiInjectable from "./job.api.injectable";
 import networkPolicyApiInjectable from "./network-policy.api.injectable";
-import nodeApiInjectable from "./node.api.injectable";
 import podApiInjectable from "./pod.api.injectable";
 import roleApiInjectable from "./role.api.injectable";
 
@@ -41,8 +40,3 @@ export const configMapApi = asLegacyGlobalForExtensionApi(configMapApiInjectable
  * @deprecated use `di.inject(networkPolicyApiInjectable)` instead
  */
 export const networkPolicyApi = asLegacyGlobalForExtensionApi(networkPolicyApiInjectable);
-
-/**
- * @deprecated use `di.inject(nodeApiInjectable)` instead
- */
-export const nodeApi = asLegacyGlobalForExtensionApi(nodeApiInjectable);
