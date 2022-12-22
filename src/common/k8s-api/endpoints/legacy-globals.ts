@@ -4,7 +4,6 @@
  */
 
 import { asLegacyGlobalForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
-import cronJobApiInjectable from "./cron-job.api.injectable";
 import podApiInjectable from "./pod.api.injectable";
 import roleApiInjectable from "./role.api.injectable";
 
@@ -17,8 +16,3 @@ export const roleApi = asLegacyGlobalForExtensionApi(roleApiInjectable);
  * @deprecated use `di.inject(podApiInjectable)` instead
  */
 export const podApi = asLegacyGlobalForExtensionApi(podApiInjectable);
-
-/**
- * @deprecated use `di.inject(cronJobApiInjectable)` instead
- */
-export const cronJobApi = asLegacyGlobalForExtensionApi(cronJobApiInjectable);

@@ -4,8 +4,7 @@
  */
 import React from "react";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
-import type { CronJob } from "../../../common/k8s-api/endpoints";
-import { cronJobApi } from "../../../common/k8s-api/endpoints";
+import type { CronJob, CronJobApi } from "../../../common/k8s-api/endpoints";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
@@ -14,12 +13,14 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 import type { OpenCronJobTriggerDialog } from "./trigger-dialog/open.injectable";
 import openCronJobTriggerDialogInjectable from "./trigger-dialog/open.injectable";
+import cronJobApiInjectable from "../../../common/k8s-api/endpoints/cron-job.api.injectable";
 
 export interface CronJobMenuProps extends KubeObjectMenuProps<CronJob> {}
 
 interface Dependencies {
   openConfirmDialog: OpenConfirmDialog;
   openCronJobTriggerDialog: OpenCronJobTriggerDialog;
+  cronJobApi: CronJobApi;
 }
 
 const NonInjectedCronJobMenu = ({
@@ -27,6 +28,7 @@ const NonInjectedCronJobMenu = ({
   toolbar,
   openConfirmDialog,
   openCronJobTriggerDialog,
+  cronJobApi,
 }: Dependencies & CronJobMenuProps) =>  (
   <>
     <MenuItem onClick={() => openCronJobTriggerDialog(object)}>
@@ -103,5 +105,6 @@ export const CronJobMenu = withInjectables<Dependencies, CronJobMenuProps>(NonIn
     ...props,
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
     openCronJobTriggerDialog: di.inject(openCronJobTriggerDialogInjectable),
+    cronJobApi: di.inject(cronJobApiInjectable),
   }),
 });
