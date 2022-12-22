@@ -24,7 +24,7 @@ import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-f
 import type { SubscribableStore, SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import type { KubeApi } from "../../../common/k8s-api/kube-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import type { PageParam } from "../../navigation";
+import type { PageParam } from "../../navigation/page-param";
 import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
 import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
 import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";

@@ -4,7 +4,7 @@
  */
 
 import { computed, observable, reaction, makeObservable, action } from "mobx";
-import type { PageParam } from "../../../navigation";
+import type { PageParam } from "../../../navigation/page-param";
 import { autoBind } from "../../../utils";
 
 export enum FilterType {

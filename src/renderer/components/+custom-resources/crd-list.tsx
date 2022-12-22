@@ -16,7 +16,7 @@ import { Select } from "../select";
 import { Icon } from "../icon";
 import { KubeObjectAge } from "../kube-object/age";
 import { TabLayout } from "../layout/tab-layout-2";
-import type { PageParam } from "../../navigation";
+import type { PageParam } from "../../navigation/page-param";
 import type { CustomResourceDefinitionStore } from "./definition.store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import crdGroupsUrlParamInjectable from "./crd-groups-url-param.injectable";

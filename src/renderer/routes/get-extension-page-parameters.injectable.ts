@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { PageParam } from "../navigation";
+import type { PageParam } from "../navigation/page-param";
 import type { ExtensionPageParametersInstantiationParam } from "./extension-page-parameters.injectable";
 import extensionPageParametersInjectable from "./extension-page-parameters.injectable";
 

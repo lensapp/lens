@@ -14,7 +14,7 @@ import type { TableHeadElem } from "./table-head";
 import { TableHead } from "./table-head";
 import type { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
-import type { PageParam } from "../../navigation";
+import type { PageParam } from "../../navigation/page-param";
 import { computed, makeObservable } from "mobx";
 import { getSorted } from "./sorting";
 import type { TableModel } from "./table-model/table-model";
