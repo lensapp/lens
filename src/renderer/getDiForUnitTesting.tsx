@@ -9,11 +9,9 @@ import { createContainer, isInjectable, getInjectable } from "@ogre-tools/inject
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
-import { createMemoryHistory } from "history";
 import focusWindowInjectable from "./navigation/focus-window.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
-import historyInjectable from "./navigation/history.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import { runInAction } from "mobx";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
@@ -91,7 +89,6 @@ export const getDiForUnitTesting = (
     di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
     di.override(hostedClusterIdInjectable, () => undefined);
 
-    di.override(historyInjectable, () => createMemoryHistory());
     di.override(legacyOnChannelListenInjectable, () => () => noop);
 
     di.override(storageSaveDelayInjectable, () => 0);
