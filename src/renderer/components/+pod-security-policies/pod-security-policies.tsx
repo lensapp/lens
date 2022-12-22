@@ -8,10 +8,12 @@ import "./pod-security-policies.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { podSecurityPolicyStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import type { PodSecurityPolicyStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import podSecurityPolicyStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -20,8 +22,12 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  podSecurityPolicyStore: PodSecurityPolicyStore;
+}
+
 @observer
-export class PodSecurityPolicies extends React.Component {
+class NonInjectedPodSecurityPolicies extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
@@ -29,7 +35,7 @@ export class PodSecurityPolicies extends React.Component {
           isConfigurable
           tableId="access_pod_security_policies"
           className="PodSecurityPolicies"
-          store={podSecurityPolicyStore}
+          store={this.props.podSecurityPolicyStore}
           sortingCallbacks={{
             [columnId.name]: podSecurityPolicy => podSecurityPolicy.getName(),
             [columnId.volumes]: podSecurityPolicy => podSecurityPolicy.getVolumes(),
@@ -61,3 +67,10 @@ export class PodSecurityPolicies extends React.Component {
     );
   }
 }
+
+export const PodSecurityPolicies = withInjectables<Dependencies>(NonInjectedPodSecurityPolicies, {
+  getProps: (di, props) => ({
+    ...props,
+    podSecurityPolicyStore: di.inject(podSecurityPolicyStoreInjectable),
+  }),
+});
