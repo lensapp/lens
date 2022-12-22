@@ -11,19 +11,33 @@ import type { PortForwardItem } from "../../port-forward";
 import { portForwardAddress } from "../../port-forward";
 import { Drawer, DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
-import { podApi, serviceApi } from "../../../common/k8s-api/endpoints";
-import { getDetailsUrl } from "../kube-detail-params";
+import type { PodApi, ServiceApi } from "../../../common/k8s-api/endpoints";
 import { PortForwardMenu } from "./port-forward-menu";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import serviceApiInjectable from "../../../common/k8s-api/endpoints/service.api.injectable";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import podApiInjectable from "../../../common/k8s-api/endpoints/pod.api.injectable";
 
 export interface PortForwardDetailsProps {
   portForward: PortForwardItem;
   hideDetails(): void;
 }
 
-export class PortForwardDetails extends React.Component<PortForwardDetailsProps> {
+interface Dependencies {
+  serviceApi: ServiceApi;
+  getDetailsUrl: GetDetailsUrl;
+  podApi: PodApi;
+}
 
+class NonInjectedPortForwardDetails extends React.Component<PortForwardDetailsProps & Dependencies> {
   renderResourceName() {
-    const { portForward } = this.props;
+    const {
+      portForward,
+      serviceApi,
+      podApi,
+      getDetailsUrl,
+    } = this.props;
     const name = portForward.getName();
     const api = {
       "service": serviceApi,
@@ -37,7 +51,7 @@ export class PortForwardDetails extends React.Component<PortForwardDetailsProps>
     }
 
     return (
-      <Link to={getDetailsUrl(api.getUrl({ name, namespace: portForward.getNs() }))}>
+      <Link to={getDetailsUrl(api.formatUrlForNotListing({ name, namespace: portForward.getNs() }))}>
         {name}
       </Link>
     );
@@ -99,3 +113,12 @@ export class PortForwardDetails extends React.Component<PortForwardDetailsProps>
     );
   }
 }
+
+export const PortForwardDetails = withInjectables<Dependencies, PortForwardDetailsProps>(NonInjectedPortForwardDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    serviceApi: di.inject(serviceApiInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    podApi: di.inject(podApiInjectable),
+  }),
+});
