@@ -10,7 +10,8 @@
 
   flex: 1;
   overflow: hidden;
-  left: var(--spacing) !important;
-  top: var(--spacing) !important;
-  bottom: var(--spacing) !important;
+
+  .terminal.xterm {
+    padding: calc(var(--padding) * 2);
+  }
 }
