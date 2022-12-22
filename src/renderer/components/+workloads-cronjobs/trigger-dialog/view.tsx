@@ -3,45 +3,45 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./cronjob-trigger-dialog.scss";
+import "./view.scss";
 
 import React, { Component } from "react";
+import type { IObservableValue } from "mobx";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import type { DialogProps } from "../dialog";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import type { CronJob } from "../../../common/k8s-api/endpoints";
-import { jobApi } from "../../../common/k8s-api/endpoints";
-import { Notifications } from "../notifications";
-import { cssNames } from "../../utils";
-import { Input } from "../input";
-import { systemName, maxLength } from "../input/input_validators";
+import type { DialogProps } from "../../dialog";
+import { Dialog } from "../../dialog";
+import { Wizard, WizardStep } from "../../wizard";
+import type { CronJob, JobApi } from "../../../../common/k8s-api/endpoints";
+import { Notifications } from "../../notifications";
+import { cssNames } from "../../../utils";
+import { Input } from "../../input";
+import { systemName, maxLength } from "../../input/input_validators";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import closeCronJobTriggerDialogInjectable from "./close.injectable";
+import jobApiInjectable from "../../../../common/k8s-api/endpoints/job.api.injectable";
+import cronJobTriggerDialogStateInjectable from "./state.injectable";
 
 export interface CronJobTriggerDialogProps extends Partial<DialogProps> {
 }
 
-const dialogState = observable.box<CronJob | undefined>();
+interface Dependencies {
+  state: IObservableValue<CronJob | undefined>;
+  jobApi: JobApi;
+  closeCronJobTriggerDialog: () => void;
+}
 
 @observer
-export class CronJobTriggerDialog extends Component<CronJobTriggerDialogProps> {
+class NonInjectedCronJobTriggerDialog extends Component<CronJobTriggerDialogProps & Dependencies> {
   @observable jobName = "";
 
-  constructor(props: CronJobTriggerDialogProps) {
+  constructor(props: CronJobTriggerDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  static open(cronjob: CronJob) {
-    dialogState.set(cronjob);
-  }
-
-  static close() {
-    dialogState.set(undefined);
-  }
-
   onOpen = () => {
-    const cronJob = dialogState.get();
+    const cronJob = this.props.state.get();
 
     this.jobName = cronJob ? `${cronJob.getName()}-manual-${Math.random().toString(36).slice(2, 7)}` : "";
     this.jobName = this.jobName.slice(0, 63);
@@ -53,7 +53,7 @@ export class CronJobTriggerDialog extends Component<CronJobTriggerDialogProps> {
     }
 
     try {
-      await jobApi.create({
+      await this.props.jobApi.create({
         name: this.jobName,
         namespace: cronJob.getNs(),
       }, {
@@ -71,7 +71,7 @@ export class CronJobTriggerDialog extends Component<CronJobTriggerDialogProps> {
         },
       });
 
-      CronJobTriggerDialog.close();
+      this.props.closeCronJobTriggerDialog();
     } catch (err) {
       Notifications.checkedError(err, "Unknown error occurred while creating job");
     }
@@ -86,7 +86,7 @@ export class CronJobTriggerDialog extends Component<CronJobTriggerDialogProps> {
             <span>{cronJob.getName()}</span>
           </h5>
         )}
-        done={CronJobTriggerDialog.close}
+        done={this.props.closeCronJobTriggerDialog}
       >
         <WizardStep
           contentClass="flex gaps column"
@@ -115,8 +115,8 @@ export class CronJobTriggerDialog extends Component<CronJobTriggerDialogProps> {
   }
 
   render() {
-    const { className, ...dialogProps } = this.props;
-    const cronJob = dialogState.get();
+    const { className, state, closeCronJobTriggerDialog, jobApi, ...dialogProps } = this.props;
+    const cronJob = state.get();
 
     return (
       <Dialog
@@ -124,10 +124,19 @@ export class CronJobTriggerDialog extends Component<CronJobTriggerDialogProps> {
         isOpen={Boolean(cronJob)}
         className={cssNames("CronJobTriggerDialog", className)}
         onOpen={this.onOpen}
-        close={CronJobTriggerDialog.close}
+        close={closeCronJobTriggerDialog}
       >
         {cronJob && this.renderContents(cronJob)}
       </Dialog>
     );
   }
 }
+
+export const CronJobTriggerDialog = withInjectables<Dependencies, CronJobTriggerDialogProps>(NonInjectedCronJobTriggerDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    closeCronJobTriggerDialog: di.inject(closeCronJobTriggerDialogInjectable),
+    jobApi: di.inject(jobApiInjectable),
+    state: di.inject(cronJobTriggerDialogStateInjectable),
+  }),
+});
