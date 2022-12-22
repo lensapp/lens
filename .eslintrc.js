@@ -283,6 +283,15 @@ module.exports = {
               ],
               message: "No importing from the extension api definitions in application code",
             },
+            {
+              "group": [
+                "**/extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api.ts",
+                "**/extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api-with-modifications.ts",
+                "**/extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api.ts",
+                "**/extensions/as-legacy-globals-for-extension-api/as-legacy-global-singleton-object-for-extension-api.ts",
+              ],
+              message: "No importing the legacy global functions in non-ExtensionApi code",
+            },
           ],
         }],
       },
