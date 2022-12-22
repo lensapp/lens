@@ -9,13 +9,18 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { getDetailsUrl } from "../kube-detail-params";
 import { stopPropagation } from "../../utils";
-import { persistentVolumeStore } from "./legacy-store";
-import { persistentVolumeClaimApi, storageClassApi } from "../../../common/k8s-api/endpoints";
+import type { PersistentVolumeClaimApi, StorageClassApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import type { PersistentVolumeStore } from "./store";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import persistentVolumeClaimApiInjectable from "../../../common/k8s-api/endpoints/persistent-volume-claim.api.injectable";
+import persistentVolumeStoreInjectable from "./store.injectable";
+import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
 
 enum columnId {
   name = "name",
@@ -26,9 +31,23 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  storageClassApi: StorageClassApi;
+  persistentVolumeStore: PersistentVolumeStore;
+  persistentVolumeClaimApi: PersistentVolumeClaimApi;
+  getDetailsUrl: GetDetailsUrl;
+}
+
 @observer
-export class PersistentVolumes extends React.Component {
+class NonInjectedPersistentVolumes extends React.Component<Dependencies> {
   render() {
+    const {
+      getDetailsUrl,
+      persistentVolumeStore,
+      storageClassApi,
+      persistentVolumeClaimApi,
+    } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
@@ -59,7 +78,7 @@ export class PersistentVolumes extends React.Component {
           ]}
           renderTableContents={volume => {
             const { claimRef, storageClassName } = volume.spec;
-            const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
+            const storageClassDetailsUrl = getDetailsUrl(storageClassApi.formatUrlForNotListing({
               name: storageClassName,
             }));
 
@@ -75,7 +94,7 @@ export class PersistentVolumes extends React.Component {
               </Link>,
               volume.getCapacity(),
               claimRef && (
-                <Link to={getDetailsUrl(persistentVolumeClaimApi.getUrl(claimRef))} onClick={stopPropagation}>
+                <Link to={getDetailsUrl(persistentVolumeClaimApi.formatUrlForNotListing(claimRef))} onClick={stopPropagation}>
                   {claimRef.name}
                 </Link>
               ),
@@ -88,3 +107,13 @@ export class PersistentVolumes extends React.Component {
     );
   }
 }
+
+export const PersistentVolumes = withInjectables<Dependencies>(NonInjectedPersistentVolumes, {
+  getProps: (di, props) => ({
+    ...props,
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    persistentVolumeClaimApi: di.inject(persistentVolumeClaimApiInjectable),
+    persistentVolumeStore: di.inject(persistentVolumeStoreInjectable),
+    storageClassApi: di.inject(storageClassApiInjectable),
+  }),
+});

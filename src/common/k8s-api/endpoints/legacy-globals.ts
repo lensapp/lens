@@ -15,7 +15,6 @@ import resourceQuotaApiInjectable from "./resource-quota.api.injectable";
 import roleApiInjectable from "./role.api.injectable";
 import secretApiInjectable from "./secret.api.injectable";
 import serviceApiInjectable from "./service.api.injectable";
-import storageClassApiInjectable from "./storage-class.api.injectable";
 
 /**
  * @deprecated use `di.inject(roleApiInjectable)` instead
@@ -71,8 +70,3 @@ export const secretApi = asLegacyGlobalForExtensionApi(secretApiInjectable);
  * @deprecated use `di.inject(serviceApiInjectable)` instead
  */
 export const serviceApi = asLegacyGlobalForExtensionApi(serviceApiInjectable);
-
-/**
- * @deprecated use `di.inject(storageClassApiInjectable)` instead
- */
-export const storageClassApi = asLegacyGlobalForExtensionApi(storageClassApiInjectable);

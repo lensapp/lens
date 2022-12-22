@@ -11,39 +11,52 @@ import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { PersistentVolume, persistentVolumeClaimApi, storageClassApi } from "../../../common/k8s-api/endpoints";
+import type { PersistentVolumeClaimApi, StorageClassApi } from "../../../common/k8s-api/endpoints";
+import { PersistentVolume } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getDetailsUrl } from "../kube-detail-params";
 import type { Logger } from "../../../common/logger";
 import { stopPropagation } from "../../../renderer/utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import loggerInjectable from "../../../common/logger.injectable";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import persistentVolumeClaimApiInjectable from "../../../common/k8s-api/endpoints/persistent-volume-claim.api.injectable";
+import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
 
 export interface PersistentVolumeDetailsProps extends KubeObjectDetailsProps<PersistentVolume> {
 }
 
 interface Dependencies {
   logger: Logger;
+  getDetailsUrl: GetDetailsUrl;
+  storageClassApi: StorageClassApi;
+  persistentVolumeClaimApi: PersistentVolumeClaimApi;
 }
 
 @observer
 class NonInjectedPersistentVolumeDetails extends React.Component<PersistentVolumeDetailsProps & Dependencies> {
   render() {
-    const { object: volume } = this.props;
+    const {
+      object: volume,
+      storageClassApi,
+      getDetailsUrl,
+      logger,
+      persistentVolumeClaimApi,
+    } = this.props;
 
     if (!volume) {
       return null;
     }
 
     if (!(volume instanceof PersistentVolume)) {
-      this.props.logger.error("[PersistentVolumeDetails]: passed object that is not an instanceof PersistentVolume", volume);
+      logger.error("[PersistentVolumeDetails]: passed object that is not an instanceof PersistentVolume", volume);
 
       return null;
     }
 
     const { accessModes, capacity, persistentVolumeReclaimPolicy, storageClassName, claimRef, flexVolume, mountOptions, nfs } = volume.spec;
 
-    const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
+    const storageClassDetailsUrl = getDetailsUrl(storageClassApi.formatUrlForNotListing({
       name: storageClassName,
     }));
 
@@ -114,7 +127,7 @@ class NonInjectedPersistentVolumeDetails extends React.Component<PersistentVolum
               {claimRef.kind}
             </DrawerItem>
             <DrawerItem name="Name">
-              <Link to={getDetailsUrl(persistentVolumeClaimApi.getUrl(claimRef))}>
+              <Link to={getDetailsUrl(persistentVolumeClaimApi.formatUrlForNotListing(claimRef))}>
                 {claimRef.name}
               </Link>
             </DrawerItem>
@@ -132,5 +145,8 @@ export const PersistentVolumeDetails = withInjectables<Dependencies, PersistentV
   getProps: (di, props) => ({
     ...props,
     logger: di.inject(loggerInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    persistentVolumeClaimApi: di.inject(persistentVolumeClaimApiInjectable),
+    storageClassApi: di.inject(storageClassApiInjectable),
   }),
 });
