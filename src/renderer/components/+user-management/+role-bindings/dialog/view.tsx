@@ -3,64 +3,65 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./dialog.scss";
+import "./view.scss";
 
+import type { IObservableValue } from "mobx";
 import { computed, observable, makeObservable, action } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-
-import { roleStore } from "../+roles/legacy-store";
-import { serviceAccountStore } from "../+service-accounts/legacy-store";
-import { NamespaceSelect } from "../../+namespaces/namespace-select";
-import type { ClusterRole, Role, RoleBinding, ServiceAccount } from "../../../../common/k8s-api/endpoints";
-import { roleApi } from "../../../../common/k8s-api/endpoints";
-import type { DialogProps } from "../../dialog";
-import { Dialog } from "../../dialog";
-import { EditableList } from "../../editable-list";
-import { Icon } from "../../icon";
-import { showDetails } from "../../kube-detail-params";
-import { SubTitle } from "../../layout/sub-title";
-import { Notifications } from "../../notifications";
-import type { SelectOption } from "../../select";
-import { onMultiSelectFor, Select } from "../../select";
-import { Wizard, WizardStep } from "../../wizard";
-import { roleBindingStore } from "./legacy-store";
-import { clusterRoleStore } from "../+cluster-roles/legacy-store";
-import { Input } from "../../input";
-import { ObservableHashSet, nFircate } from "../../../utils";
-import type { Subject } from "../../../../common/k8s-api/endpoints/types/subject";
+import { NamespaceSelect } from "../../../+namespaces/namespace-select";
+import type { ClusterRole, Role, RoleApi, ServiceAccount } from "../../../../../common/k8s-api/endpoints";
+import type { DialogProps } from "../../../dialog";
+import { Dialog } from "../../../dialog";
+import { EditableList } from "../../../editable-list";
+import { Icon } from "../../../icon";
+import { SubTitle } from "../../../layout/sub-title";
+import { Notifications } from "../../../notifications";
+import type { SelectOption } from "../../../select";
+import { onMultiSelectFor, Select } from "../../../select";
+import { Wizard, WizardStep } from "../../../wizard";
+import { Input } from "../../../input";
+import { ObservableHashSet, nFircate } from "../../../../utils";
+import type { Subject } from "../../../../../common/k8s-api/endpoints/types/subject";
+import type { RoleBindingDialogState } from "./state.injectable";
+import type { RoleBindingStore } from "../store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import roleBindingStoreInjectable from "../store.injectable";
+import roleBindingDialogStateInjectable from "./state.injectable";
+import closeRoleBindingDialogInjectable from "./close.injectable";
+import type { ShowDetails } from "../../../kube-detail-params/show-details.injectable";
+import type { RoleStore } from "../../+roles/store";
+import type { ClusterRoleStore } from "../../+cluster-roles/store";
+import type { ServiceAccountStore } from "../../+service-accounts/store";
+import showDetailsInjectable from "../../../kube-detail-params/show-details.injectable";
+import clusterRoleStoreInjectable from "../../+cluster-roles/store.injectable";
+import roleStoreInjectable from "../../+roles/store.injectable";
+import serviceAccountStoreInjectable from "../../+service-accounts/store.injectable";
+import roleApiInjectable from "../../../../../common/k8s-api/endpoints/role.api.injectable";
 
 export interface RoleBindingDialogProps extends Partial<DialogProps> {
 }
 
-interface DialogState {
-  isOpen: boolean;
-  data?: RoleBinding;
+interface Dependencies {
+  state: IObservableValue<RoleBindingDialogState>;
+  roleBindingStore: RoleBindingStore;
+  closeRoleBindingDialog: () => void;
+  showDetails: ShowDetails;
+  roleStore: RoleStore;
+  clusterRoleStore: ClusterRoleStore;
+  serviceAccountStore: ServiceAccountStore;
+  roleApi: RoleApi;
 }
 
 @observer
-export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
-  static state = observable.object<DialogState>({
-    isOpen: false,
-  });
-
-  constructor(props: RoleBindingDialogProps) {
+class NonInjectedRoleBindingDialog extends React.Component<RoleBindingDialogProps & Dependencies> {
+  constructor(props: RoleBindingDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  static open(roleBinding?: RoleBinding) {
-    RoleBindingDialog.state.isOpen = true;
-    RoleBindingDialog.state.data = roleBinding;
-  }
-
-  static close() {
-    RoleBindingDialog.state.isOpen = false;
-    RoleBindingDialog.state.data = undefined;
-  }
-
-  get roleBinding() {
-    return RoleBindingDialog.state.data;
+  @computed get roleBinding() {
+    return this.props.state.get().roleBinding;
   }
 
   @computed get isEditing() {
@@ -97,6 +98,10 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
   }
 
   @computed get roleRefOptions(): SelectOption<Role | ClusterRole>[] {
+    const {
+      roleStore,
+      clusterRoleStore,
+    } = this.props;
     const roles = roleStore.items
       .filter(role => role.getNs() === this.bindingNamespace);
     const clusterRoles = clusterRoleStore.items;
@@ -111,7 +116,7 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
   }
 
   @computed get serviceAccountOptions(): SelectOption<ServiceAccount>[] {
-    return serviceAccountStore.items.map(serviceAccount => ({
+    return this.props.serviceAccountStore.items.map(serviceAccount => ({
       value: serviceAccount,
       label: `${serviceAccount.getName()} (${serviceAccount.getNs()})`,
       isSelected: this.selectedAccounts.has(serviceAccount),
@@ -119,18 +124,22 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
   }
 
   onOpen = action(() => {
+    const {
+      roleStore,
+      clusterRoleStore,
+      serviceAccountStore,
+      roleApi,
+    } = this.props;
     const binding = this.roleBinding;
 
     if (!binding) {
       return this.reset();
     }
 
-    const findByRoleRefName = (item: Role | ClusterRole) => item.getName() === binding.roleRef.name;
-
     this.selectedRoleRef = (
       binding.roleRef.kind === roleApi.kind
-        ? roleStore.items.find(findByRoleRefName)
-        : clusterRoleStore.items.find(findByRoleRefName)
+        ? roleStore.items.find(item => item.getName() === binding.roleRef.name)
+        : clusterRoleStore.items.find(item => item.getName() === binding.roleRef.name)
     );
 
     this.bindingName = binding.getName();
@@ -157,6 +166,10 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
   });
 
   createBindings = async () => {
+    const {
+      roleBindingStore,
+      showDetails,
+    } = this.props;
     const { selectedRoleRef, bindingNamespace, selectedBindings, roleBinding, bindingName } = this;
 
     if (!selectedRoleRef || !roleBinding || !bindingNamespace || !bindingName) {
@@ -178,7 +191,7 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
         });
 
       showDetails(newRoleBinding.selfLink);
-      RoleBindingDialog.close();
+      this.props.closeRoleBindingDialog();
     } catch (err) {
       Notifications.checkedError(err, `Unknown error occured while ${this.isEditing ? "editing" : "creating"} role bindings.`);
     }
@@ -260,7 +273,7 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
   }
 
   render() {
-    const { ...dialogProps } = this.props;
+    const { closeRoleBindingDialog, roleBindingStore, state, ...dialogProps } = this.props;
     const [action, nextLabel] = this.isEditing ? ["Edit", "Update"] : ["Add", "Create"];
     const disableNext = !this.selectedRoleRef || !this.selectedBindings.length || !this.bindingNamespace || !this.bindingName;
 
@@ -268,8 +281,8 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
       <Dialog
         {...dialogProps}
         className="AddRoleBindingDialog"
-        isOpen={RoleBindingDialog.state.isOpen}
-        close={RoleBindingDialog.close}
+        isOpen={state.get().isOpen}
+        close={closeRoleBindingDialog}
         onClose={this.reset}
         onOpen={this.onOpen}
       >
@@ -279,7 +292,7 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
               {`${action} RoleBinding`}
             </h5>
           )}
-          done={RoleBindingDialog.close}
+          done={closeRoleBindingDialog}
         >
           <WizardStep
             nextLabel={nextLabel}
@@ -293,3 +306,17 @@ export class RoleBindingDialog extends React.Component<RoleBindingDialogProps> {
     );
   }
 }
+
+export const RoleBindingDialog = withInjectables<Dependencies, RoleBindingDialogProps>(NonInjectedRoleBindingDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    roleBindingStore: di.inject(roleBindingStoreInjectable),
+    state: di.inject(roleBindingDialogStateInjectable),
+    closeRoleBindingDialog: di.inject(closeRoleBindingDialogInjectable),
+    showDetails: di.inject(showDetailsInjectable),
+    clusterRoleStore: di.inject(clusterRoleStoreInjectable),
+    roleStore: di.inject(roleStoreInjectable),
+    serviceAccountStore: di.inject(serviceAccountStoreInjectable),
+    roleApi: di.inject(roleApiInjectable),
+  }),
+});

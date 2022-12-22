@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
-import { RoleBindingDialog } from "./dialog";
+import { RoleBindingDialog } from "./dialog/view";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
 import type { RoleStore } from "../+roles/store";
@@ -23,6 +23,8 @@ import filterByNamespaceInjectable from "../../+namespaces/namespace-select-filt
 import roleBindingStoreInjectable from "./store.injectable";
 import roleStoreInjectable from "../+roles/store.injectable";
 import serviceAccountStoreInjectable from "../+service-accounts/store.injectable";
+import type { OpenRoleBindingDialog } from "./dialog/open.injectable";
+import openRoleBindingDialogInjectable from "./dialog/open.injectable";
 
 enum columnId {
   name = "name",
@@ -37,6 +39,7 @@ interface Dependencies {
   clusterRoleStore: ClusterRoleStore;
   serviceAccountStore: ServiceAccountStore;
   filterByNamespace: FilterByNamespace;
+  openRoleBindingDialog: OpenRoleBindingDialog;
 }
 
 @observer
@@ -48,6 +51,7 @@ class NonInjectedRoleBindings extends React.Component<Dependencies> {
       roleStore,
       serviceAccountStore,
       filterByNamespace,
+      openRoleBindingDialog,
     } = this.props;
 
     return (
@@ -90,7 +94,7 @@ class NonInjectedRoleBindings extends React.Component<Dependencies> {
             <KubeObjectAge key="age" object={binding} />,
           ]}
           addRemoveButtons={{
-            onAdd: () => RoleBindingDialog.open(),
+            onAdd: () => openRoleBindingDialog(),
             addTooltip: "Create new RoleBinding",
           }}
         />
@@ -108,5 +112,6 @@ export const RoleBindings = withInjectables<Dependencies>(NonInjectedRoleBinding
     roleBindingStore: di.inject(roleBindingStoreInjectable),
     roleStore: di.inject(roleStoreInjectable),
     serviceAccountStore: di.inject(serviceAccountStoreInjectable),
+    openRoleBindingDialog: di.inject(openRoleBindingDialogInjectable),
   }),
 });

@@ -14,19 +14,21 @@ import { AddRemoveButtons } from "../../add-remove-buttons";
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
-import { RoleBindingDialog } from "./dialog";
 import { roleBindingStore } from "./legacy-store";
 import { ObservableHashSet } from "../../../../common/utils/hash-set";
 import { hashSubject } from "../hashers";
 import type { OpenConfirmDialog } from "../../confirm-dialog/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openConfirmDialogInjectable from "../../confirm-dialog/open.injectable";
+import type { OpenRoleBindingDialog } from "./dialog/open.injectable";
+import openRoleBindingDialogInjectable from "./dialog/open.injectable";
 
 export interface RoleBindingDetailsProps extends KubeObjectDetailsProps<RoleBinding> {
 }
 
 interface Dependencies {
   openConfirmDialog: OpenConfirmDialog;
+  openRoleBindingDialog: OpenRoleBindingDialog;
 }
 
 @observer
@@ -60,7 +62,7 @@ class NonInjectedRoleBindingDetails extends React.Component<RoleBindingDetailsPr
 
   render() {
     const { selectedSubjects } = this;
-    const { object: roleBinding } = this.props;
+    const { object: roleBinding, openRoleBindingDialog } = this.props;
 
     if (!roleBinding) {
       return null;
@@ -116,7 +118,7 @@ class NonInjectedRoleBindingDetails extends React.Component<RoleBindingDetailsPr
         )}
 
         <AddRemoveButtons
-          onAdd={() => RoleBindingDialog.open(roleBinding)}
+          onAdd={() => openRoleBindingDialog(roleBinding)}
           onRemove={selectedSubjects.size ? this.removeSelectedSubjects : undefined}
           addTooltip={`Edit bindings of ${roleRef.name}`}
           removeTooltip={`Remove selected bindings from ${roleRef.name}`}
@@ -130,5 +132,6 @@ export const RoleBindingDetails = withInjectables<Dependencies, RoleBindingDetai
   getProps: (di, props) => ({
     ...props,
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
+    openRoleBindingDialog: di.inject(openRoleBindingDialogInjectable),
   }),
 });

@@ -6,7 +6,7 @@
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { ClusterRole } from "../../../../../common/k8s-api/endpoints";
-import { RoleBindingDialog } from "../dialog";
+import { RoleBindingDialog } from "../dialog/view";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import type { DiRender } from "../../../test-utils/renderFor";
 import { renderFor } from "../../../test-utils/renderFor";
@@ -16,9 +16,12 @@ import storesAndApisCanBeCreatedInjectable from "../../../../stores-apis-can-be-
 import directoryForKubeConfigsInjectable from "../../../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import hostedClusterInjectable from "../../../../cluster-frame-context/hosted-cluster.injectable";
 import createClusterInjectable from "../../../../cluster/create-cluster.injectable";
+import type { OpenRoleBindingDialog } from "../dialog/open.injectable";
+import openRoleBindingDialogInjectable from "../dialog/open.injectable";
 
 describe("RoleBindingDialog tests", () => {
   let render: DiRender;
+  let openRoleBindingDialog: OpenRoleBindingDialog;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -26,6 +29,8 @@ describe("RoleBindingDialog tests", () => {
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+
+    openRoleBindingDialog = di.inject(openRoleBindingDialogInjectable);
 
     const createCluster = di.inject(createClusterInjectable);
 
@@ -55,11 +60,6 @@ describe("RoleBindingDialog tests", () => {
     ]);
   });
 
-  afterEach(() => {
-    RoleBindingDialog.close();
-    jest.resetAllMocks();
-  });
-
   it("should render without any errors", () => {
     const { container } = render(<RoleBindingDialog />);
 
@@ -67,7 +67,7 @@ describe("RoleBindingDialog tests", () => {
   });
 
   it("role select should be searchable", async () => {
-    RoleBindingDialog.open();
+    openRoleBindingDialog();
     const res = render(<RoleBindingDialog />);
 
     userEvent.click(await res.findByText("Select role", { exact: false }));
