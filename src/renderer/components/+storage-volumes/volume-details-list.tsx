@@ -16,8 +16,10 @@ import { Spinner } from "../spinner/spinner";
 import { DrawerTitle } from "../drawer/drawer-title";
 import { Table } from "../table/table";
 import { TableHead } from "../table/table-head";
-import { persistentVolumeStore } from "./legacy-store";
 import kebabCase from "lodash/kebabCase";
+import type { PersistentVolumeStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import persistentVolumeStoreInjectable from "./store.injectable";
 
 export interface VolumeDetailsListProps {
   persistentVolumes: PersistentVolume[];
@@ -29,8 +31,12 @@ enum sortBy {
   capacity = "capacity",
 }
 
+interface Dependencies {
+  persistentVolumeStore: PersistentVolumeStore;
+}
+
 @observer
-export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
+class NonInjectedVolumeDetailsList extends React.Component<VolumeDetailsListProps & Dependencies> {
   private sortingCallbacks = {
     [sortBy.name]: (volume: PersistentVolume) => volume.getName(),
     [sortBy.capacity]: (volume: PersistentVolume) => volume.getCapacity(),
@@ -60,7 +66,7 @@ export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
   };
 
   render() {
-    const { persistentVolumes } = this.props;
+    const { persistentVolumes, persistentVolumeStore } = this.props;
     const virtual = persistentVolumes.length > 100;
 
     if (!persistentVolumes.length) {
@@ -94,3 +100,10 @@ export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
     );
   }
 }
+
+export const VolumeDetailsList = withInjectables<Dependencies, VolumeDetailsListProps>(NonInjectedVolumeDetailsList, {
+  getProps: (di, props) => ({
+    ...props,
+    persistentVolumeStore: di.inject(persistentVolumeStoreInjectable),
+  }),
+});
