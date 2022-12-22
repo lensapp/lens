@@ -5,28 +5,24 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import loggerInjectable from "../../../common/logger.injectable";
-import { rollback } from "../helm-release-manager";
+import type { RollbackHelmReleaseData } from "../rollback-helm-release.injectable";
+import rollbackHelmReleaseInjectable from "../rollback-helm-release.injectable";
 
-const rollbackHelmReleaseInjectable = getInjectable({
-  id: "rollback-helm-release",
+const rollbackClusterHelmReleaseInjectable = getInjectable({
+  id: "rollback-cluster-helm-release",
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
+    const rollbackHelmRelease = di.inject(rollbackHelmReleaseInjectable);
 
-    return async (
-      cluster: Cluster,
-      releaseName: string,
-      namespace: string,
-      revision: number,
-    ) => {
+    return async (cluster: Cluster, data: RollbackHelmReleaseData) => {
       const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
 
-      logger.debug("Rollback release");
-      await rollback(releaseName, namespace, revision, proxyKubeconfig);
+      logger.debug(`[CLUSTER]: rolling back helm release for clusterId=${cluster.id}`, data);
+
+      await rollbackHelmRelease(proxyKubeconfig, data);
     };
   },
-
-  causesSideEffects: true,
 });
 
-export default rollbackHelmReleaseInjectable;
+export default rollbackClusterHelmReleaseInjectable;
