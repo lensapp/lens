@@ -71,10 +71,6 @@
     transition: flex-basis 25ms ease-in;
     background: var(--dockInfoBackground);
 
-    &.terminal {
-      background: var(--terminalBackground);
-    }
-
     > *:not(.Spinner) {
       position: absolute;
       left: 0;
