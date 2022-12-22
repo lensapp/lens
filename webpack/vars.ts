@@ -11,7 +11,7 @@ export const isDevelopment = process.env.NODE_ENV !== "production";
 export const mainDir = path.join(process.cwd(), "src", "main");
 export const buildDir = path.join(process.cwd(), "static", "build");
 export const extensionEntry = path.join(process.cwd(), "src", "extensions", "extension-api.ts");
-export const extensionOutDir = path.join(process.cwd(), "src", "extensions", "npm", "extensions", "dist");
+export const extensionOutDir = path.join(process.cwd(), "packages", "extensions", "dist");
 export const assetsFolderName = "assets";
 export const rendererDir = path.join(process.cwd(), "src", "renderer");
 export const appName = isDevelopment
