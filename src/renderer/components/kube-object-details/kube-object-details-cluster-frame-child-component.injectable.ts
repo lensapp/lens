@@ -17,8 +17,6 @@ const kubeObjectDetailsClusterFrameChildComponentInjectable = getInjectable({
   }),
 
   injectionToken: clusterFrameChildComponentInjectionToken,
-
-  causesSideEffects: true,
 });
 
 export default kubeObjectDetailsClusterFrameChildComponentInjectable;

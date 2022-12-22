@@ -17,8 +17,6 @@ const replicasetScaleDialogClusterFrameChildComponentInjectable = getInjectable(
   }),
 
   injectionToken: clusterFrameChildComponentInjectionToken,
-
-  causesSideEffects: true,
 });
 
 export default replicasetScaleDialogClusterFrameChildComponentInjectable;

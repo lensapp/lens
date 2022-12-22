@@ -36,8 +36,6 @@ const listHelmChartsInjectable = getInjectable({
       );
     };
   },
-
-  causesSideEffects: true,
 });
 
 export default listHelmChartsInjectable;

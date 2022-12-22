@@ -24,8 +24,6 @@ const getHelmChartValuesInjectable = getInjectable({
       return getChartManager(repo).getValues(chartName, version);
     };
   },
-
-  causesSideEffects: true,
 });
 
 export default getHelmChartValuesInjectable;

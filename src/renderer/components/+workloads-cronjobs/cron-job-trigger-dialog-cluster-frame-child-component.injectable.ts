@@ -17,8 +17,6 @@ const cronJobTriggerDialogClusterFrameChildComponentInjectable = getInjectable({
   }),
 
   injectionToken: clusterFrameChildComponentInjectionToken,
-
-  causesSideEffects: true,
 });
 
 export default cronJobTriggerDialogClusterFrameChildComponentInjectable;

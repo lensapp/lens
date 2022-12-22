@@ -17,8 +17,6 @@ const kubeconfigDialogClusterFrameChildComponentInjectable = getInjectable({
   }),
 
   injectionToken: clusterFrameChildComponentInjectionToken,
-
-  causesSideEffects: true,
 });
 
 export default kubeconfigDialogClusterFrameChildComponentInjectable;

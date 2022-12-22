@@ -4,7 +4,7 @@
  */
 
 import { noop, chunk } from "lodash/fp";
-import type { DiContainer, Injectable } from "@ogre-tools/injectable";
+import type { Injectable } from "@ogre-tools/injectable";
 import { createContainer, isInjectable, getInjectable } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
@@ -16,22 +16,13 @@ import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-
 import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
 import historyInjectable from "./navigation/history.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
-import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
-import { computed, runInAction } from "mobx";
+import { runInAction } from "mobx";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
-import requestPublicHelmRepositoriesInjectable from "../features/helm-charts/child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import platformInjectable from "../common/vars/platform.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
-import cronJobTriggerDialogClusterFrameChildComponentInjectable from "./components/+workloads-cronjobs/cron-job-trigger-dialog-cluster-frame-child-component.injectable";
-import deploymentScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-deployments/scale/deployment-scale-dialog-cluster-frame-child-component.injectable";
-import replicasetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-replicasets/scale-dialog/replicaset-scale-dialog-cluster-frame-child-component.injectable";
-import statefulsetScaleDialogClusterFrameChildComponentInjectable from "./components/+workloads-statefulsets/scale/statefulset-scale-dialog-cluster-frame-child-component.injectable";
-import kubeObjectDetailsClusterFrameChildComponentInjectable from "./components/kube-object-details/kube-object-details-cluster-frame-child-component.injectable";
-import kubeconfigDialogClusterFrameChildComponentInjectable from "./components/kubeconfig-dialog/kubeconfig-dialog-cluster-frame-child-component.injectable";
-import portForwardDialogClusterFrameChildComponentInjectable from "./port-forward/port-forward-dialog-cluster-frame-child-component.injectable";
 import setupSystemCaInjectable from "./frames/root-frame/setup-system-ca.injectable";
 import extensionShouldBeEnabledForClusterFrameInjectable from "./extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
@@ -114,32 +105,8 @@ export const getDiForUnitTesting = (
       asyncComputed({ getValueFromObservedPromise: async () => true, valueWhenPending: true }),
     );
 
-    // TODO: Remove side-effects and shared global state
-    const clusterFrameChildComponentInjectables: Injectable<any, any, any>[] = [
-      cronJobTriggerDialogClusterFrameChildComponentInjectable,
-      deploymentScaleDialogClusterFrameChildComponentInjectable,
-      replicasetScaleDialogClusterFrameChildComponentInjectable,
-      statefulsetScaleDialogClusterFrameChildComponentInjectable,
-      kubeObjectDetailsClusterFrameChildComponentInjectable,
-      kubeconfigDialogClusterFrameChildComponentInjectable,
-      portForwardDialogClusterFrameChildComponentInjectable,
-    ];
-
-    clusterFrameChildComponentInjectables.forEach((injectable) => {
-      di.override(injectable, () => ({
-        Component: () => null,
-        id: injectable.id,
-        shouldRender: computed(() => false),
-      }));
-    });
-
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(watchHistoryStateInjectable, () => () => () => {});
-
-    overrideFunctionalInjectables(di, [
-      broadcastMessageInjectable,
-      requestPublicHelmRepositoriesInjectable,
-    ]);
 
     di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));
 
@@ -157,12 +124,4 @@ export const getDiForUnitTesting = (
   }
 
   return di;
-};
-
-const overrideFunctionalInjectables = (di: DiContainer, injectables: Injectable<any, any, any>[]) => {
-  injectables.forEach(injectable => {
-    di.override(injectable, () => () => {
-      throw new Error(`Tried to run "${injectable.id}" without explicit override.`);
-    });
-  });
 };

@@ -17,8 +17,6 @@ const portForwardDialogClusterFrameChildComponentInjectable = getInjectable({
   }),
 
   injectionToken: clusterFrameChildComponentInjectionToken,
-
-  causesSideEffects: true,
 });
 
 export default portForwardDialogClusterFrameChildComponentInjectable;

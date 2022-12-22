@@ -7,9 +7,6 @@ import { kebabCase, noop, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
 import { createContainer, isInjectable, getInjectable } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
-import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
-import readFileInjectable from "../common/fs/read-file.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import commandLineArgumentsInjectable from "./utils/command-line-arguments.injectable";
@@ -21,7 +18,6 @@ import setupLensProxyInjectable from "./start-main-application/runnables/setup-l
 import setupShellInjectable from "../features/shell-sync/main/setup-shell.injectable";
 import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
 import stopServicesAndExitAppInjectable from "./stop-services-and-exit-app.injectable";
-import isDevelopmentInjectable from "../common/vars/is-development.injectable";
 import setupSystemCaInjectable from "./start-main-application/runnables/setup-system-ca.injectable";
 import setupDeepLinkingInjectable from "./electron-app/runnables/setup-deep-linking.injectable";
 import exitAppInjectable from "./electron-app/features/exit-app.injectable";
@@ -52,11 +48,7 @@ import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-qui
 import startCatalogSyncInjectable from "./catalog-sync-to-renderer/start-catalog-sync.injectable";
 import startKubeConfigSyncInjectable from "./start-main-application/runnables/kube-config-sync/start-kube-config-sync.injectable";
 import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
-import execFileInjectable from "../common/fs/exec-file.injectable";
 import normalizedPlatformArchitectureInjectable from "../common/vars/normalized-platform-architecture.injectable";
-import getHelmChartVersionsInjectable from "./helm/helm-service/get-helm-chart-versions.injectable";
-import getHelmChartValuesInjectable from "./helm/helm-service/get-helm-chart-values.injectable";
-import listHelmChartsInjectable from "./helm/helm-service/list-helm-charts.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
@@ -67,6 +59,7 @@ import addKubeconfigSyncAsEntitySourceInjectable from "./start-main-application/
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
 import applicationInformationInjectable from "../common/vars/application-information-injectable";
 import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
+import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -119,8 +112,8 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     overrideOperatingSystem(di);
     overrideRunnablesHavingSideEffects(di);
     overrideElectronFeatures(di);
+    getOverrideFsWithFakes()(di);
 
-    di.override(isDevelopmentInjectable, () => false);
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(commandLineArgumentsInjectable, () => []);
 
@@ -128,16 +121,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
     di.override(stopServicesAndExitAppInjectable, () => () => {});
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
-
-    overrideFunctionalInjectables(di, [
-      getHelmChartVersionsInjectable,
-      getHelmChartValuesInjectable,
-      listHelmChartsInjectable,
-      writeJsonFileInjectable,
-      readJsonFileInjectable,
-      readFileInjectable,
-      execFileInjectable,
-    ]);
 
     di.override(broadcastMessageInjectable, () => (channel) => {
       throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
@@ -224,12 +207,4 @@ const overrideElectronFeatures = (di: DiContainer) => {
 
   di.override(setElectronAppPathInjectable, () => () => {});
   di.override(electronUpdaterIsActiveInjectable, () => false);
-};
-
-const overrideFunctionalInjectables = (di: DiContainer, injectables: Injectable<any, any, any>[]) => {
-  injectables.forEach(injectable => {
-    di.override(injectable, () => () => {
-      throw new Error(`Tried to run "${injectable.id}" without explicit override.`);
-    });
-  });
 };
