@@ -9,7 +9,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
-import { AddClusterRoleDialog } from "./add-dialog";
+import { AddClusterRoleDialog } from "./add-dialog/view";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
 import type { ClusterRoleStore } from "./store";

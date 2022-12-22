@@ -2,25 +2,25 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import "./add-dialog.scss";
+import "./view.scss";
 
 import { observer } from "mobx-react";
 import React from "react";
 
-import type { DialogProps } from "../../dialog";
-import { Dialog } from "../../dialog";
-import { Input } from "../../input";
-import { SubTitle } from "../../layout/sub-title";
-import { Notifications } from "../../notifications";
-import { Wizard, WizardStep } from "../../wizard";
-import type { AddClusterRoleDialogState } from "./add-dialog/state.injectable";
-import type { ClusterRoleStore } from "./store";
-import type { ShowDetails } from "../../kube-detail-params/show-details.injectable";
+import type { DialogProps } from "../../../dialog";
+import { Dialog } from "../../../dialog";
+import { Input } from "../../../input";
+import { SubTitle } from "../../../layout/sub-title";
+import { Notifications } from "../../../notifications";
+import { Wizard, WizardStep } from "../../../wizard";
+import type { AddClusterRoleDialogState } from "./state.injectable";
+import type { ClusterRoleStore } from "../store";
+import type { ShowDetails } from "../../../kube-detail-params/show-details.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import closeAddClusterRoleDialogInjectable from "./add-dialog/close.injectable";
-import clusterRoleStoreInjectable from "./store.injectable";
-import showDetailsInjectable from "../../kube-detail-params/show-details.injectable";
-import addClusterRoleDialogStateInjectable from "./add-dialog/state.injectable";
+import closeAddClusterRoleDialogInjectable from "./close.injectable";
+import clusterRoleStoreInjectable from "../store.injectable";
+import showDetailsInjectable from "../../../kube-detail-params/show-details.injectable";
+import addClusterRoleDialogStateInjectable from "./state.injectable";
 
 export interface AddClusterRoleDialogProps extends Partial<DialogProps> {
 }
