@@ -14,7 +14,6 @@ import { AddRemoveButtons } from "../../add-remove-buttons";
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
-import { roleBindingStore } from "./legacy-store";
 import { ObservableHashSet } from "../../../../common/utils/hash-set";
 import { hashSubject } from "../hashers";
 import type { OpenConfirmDialog } from "../../confirm-dialog/open.injectable";
@@ -22,6 +21,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import openConfirmDialogInjectable from "../../confirm-dialog/open.injectable";
 import type { OpenRoleBindingDialog } from "./dialog/open.injectable";
 import openRoleBindingDialogInjectable from "./dialog/open.injectable";
+import type { RoleBindingStore } from "./store";
+import roleBindingStoreInjectable from "./store.injectable";
 
 export interface RoleBindingDetailsProps extends KubeObjectDetailsProps<RoleBinding> {
 }
@@ -29,6 +30,7 @@ export interface RoleBindingDetailsProps extends KubeObjectDetailsProps<RoleBind
 interface Dependencies {
   openConfirmDialog: OpenConfirmDialog;
   openRoleBindingDialog: OpenRoleBindingDialog;
+  roleBindingStore: RoleBindingStore;
 }
 
 @observer
@@ -44,7 +46,7 @@ class NonInjectedRoleBindingDetails extends React.Component<RoleBindingDetailsPr
   }
 
   removeSelectedSubjects = () => {
-    const { object: roleBinding, openConfirmDialog } = this.props;
+    const { object: roleBinding, openConfirmDialog, roleBindingStore } = this.props;
     const { selectedSubjects } = this;
 
     openConfirmDialog({
@@ -133,5 +135,6 @@ export const RoleBindingDetails = withInjectables<Dependencies, RoleBindingDetai
     ...props,
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
     openRoleBindingDialog: di.inject(openRoleBindingDialogInjectable),
+    roleBindingStore: di.inject(roleBindingStoreInjectable),
   }),
 });
