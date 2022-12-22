@@ -5,13 +5,13 @@
 import { apiPrefix } from "../../../../common/vars";
 import { getRouteInjectable } from "../../../router/router.injectable";
 import { clusterRoute } from "../../../router/route";
-import listHelmReleasesInjectable from "../../../helm/helm-service/list-helm-releases.injectable";
+import listClusterHelmReleasesInjectable from "../../../helm/helm-service/list-helm-releases.injectable";
 
 const listReleasesRouteInjectable = getRouteInjectable({
   id: "list-releases-route",
 
   instantiate: (di) => {
-    const listHelmReleases = di.inject(listHelmReleasesInjectable);
+    const listHelmReleases = di.inject(listClusterHelmReleasesInjectable);
 
     return clusterRoute({
       method: "get",

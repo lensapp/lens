@@ -6,44 +6,12 @@
 import tempy from "tempy";
 import fse from "fs-extra";
 import * as yaml from "js-yaml";
-import { toCamelCase } from "../../common/utils/camelCase";
 import type { JsonValue } from "type-fest";
-import { isObject, json } from "../../common/utils";
+import { json } from "../../common/utils";
 import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import execHelmInjectable from "./exec-helm/exec-helm.injectable";
 
 const execHelm = asLegacyGlobalFunctionForExtensionApi(execHelmInjectable);
-
-export async function listReleases(pathToKubeconfig: string, namespace?: string): Promise<Record<string, any>[]> {
-  const args = [
-    "ls",
-    "--all",
-    "--output", "json",
-  ];
-
-  if (namespace) {
-    args.push("-n", namespace);
-  } else {
-    args.push("--all-namespaces");
-  }
-
-  args.push("--kubeconfig", pathToKubeconfig);
-
-  const result = await execHelm(args);
-
-  if (!result.callWasSuccessful) {
-    throw result.error;
-  }
-
-  const output = json.parse(result.response);
-
-  if (!Array.isArray(output) || output.length == 0) {
-    return [];
-  }
-
-  return output.filter(isObject).map(toCamelCase);
-}
-
 
 export async function installChart(chart: string, values: JsonValue, name: string | undefined = "", namespace: string, version: string, kubeconfigPath: string) {
   const valuesFilePath = tempy.file({ name: "values.yaml" });
