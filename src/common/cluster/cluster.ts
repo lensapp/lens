@@ -26,7 +26,7 @@ import type { Logger } from "../logger";
 import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
 import type { LoadConfigfromFile } from "../kube-helpers/load-config-from-file.injectable";
 import type { CanListResource, RequestNamespaceListPermissions, RequestNamespaceListPermissionsFor } from "./request-namespace-list-permissions.injectable";
-import type { RequestApiResources } from "./request-api-resources.injectable";
+import type { RequestApiResources } from "../../main/cluster/request-api-resources.injectable";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;

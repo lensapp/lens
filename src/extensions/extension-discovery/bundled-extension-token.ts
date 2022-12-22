@@ -13,5 +13,5 @@ export interface BundledExtension {
 }
 
 export const bundledExtensionInjectionToken = getInjectionToken<BundledExtension>({
-  id: "bundled-extension-injection-token",
+  id: "bundled-extension-path",
 });

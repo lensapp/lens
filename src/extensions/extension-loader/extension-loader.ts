@@ -21,7 +21,7 @@ import type { Extension } from "./extension/extension.injectable";
 import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
-import type { BundledExtension } from "../extension-discovery/bundled-extension-injection-token";
+import type { BundledExtension } from "../extension-discovery/bundled-extension-token";
 
 const logModule = "[EXTENSIONS-LOADER]";
 
@@ -37,7 +37,7 @@ interface Dependencies {
   getDirnameOfPath: GetDirnameOfPath;
 }
 
-interface SemiLoadedExtension {
+interface ExtensionBeingActivated {
   instance: LensExtension;
   installedExtension: InstalledExtension;
   activated: Promise<void>;
@@ -268,13 +268,13 @@ export class ExtensionLoader {
           }
 
           const installedExtension: InstalledExtension = {
-            absolutePath: "irrelavent",
+            absolutePath: "irrelevant",
             id: extension.manifest.name,
             isBundled: true,
             isCompatible: true,
             isEnabled: true,
             manifest: extension.manifest,
-            manifestPath: "irrelavent",
+            manifestPath: "irrelevant",
           };
           const instance = this.dependencies.createExtensionInstance(
             LensExtensionClass,
@@ -287,7 +287,7 @@ export class ExtensionLoader {
             instance,
             installedExtension,
             activated: instance.activate(),
-          } as SemiLoadedExtension;
+          } as ExtensionBeingActivated;
         } catch (err) {
           this.dependencies.logger.error(`${logModule}: error loading extension`, { ext: extension, err });
 
@@ -297,7 +297,7 @@ export class ExtensionLoader {
       .filter(isDefined);
   }
 
-  protected async loadExtensions(extensions: SemiLoadedExtension[]): Promise<ExtensionLoading[]> {
+  protected async loadExtensions(extensions: ExtensionBeingActivated[]): Promise<ExtensionLoading[]> {
     // We first need to wait until each extension's `onActivate` is resolved or rejected,
     // as this might register new catalog categories. Afterwards we can safely .enable the extension.
     await Promise.all(
@@ -359,7 +359,7 @@ export class ExtensionLoader {
               instance,
               installedExtension: extension,
               activated: instance.activate(),
-            } as SemiLoadedExtension;
+            } as ExtensionBeingActivated;
           } catch (err) {
             this.dependencies.logger.error(`${logModule}: error loading extension`, { ext: extension, err });
           }

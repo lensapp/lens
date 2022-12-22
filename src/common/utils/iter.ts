@@ -5,7 +5,7 @@
 
 export type Falsey = false | 0 | "" | null | undefined;
 
-interface Iterator<T> {
+interface Iterator<T> extends Iterable<T> {
   filter(fn: (val: T) => unknown): Iterator<T>;
   filterMap<U>(fn: (val: T) => Falsey | U): Iterator<U>;
   find(fn: (val: T) => unknown): T | undefined;
@@ -15,15 +15,16 @@ interface Iterator<T> {
   join(sep?: string): string;
 }
 
-export function pipeline<T>(src: IterableIterator<T>): Iterator<T> {
+export function chain<T>(src: IterableIterator<T>): Iterator<T> {
   return {
-    filter: (fn) => pipeline(filter(src, fn)),
-    filterMap: (fn) => pipeline(filterMap(src, fn)),
-    map: (fn) => pipeline(map(src, fn)),
-    flatMap: (fn) => pipeline(flatMap(src, fn)),
+    filter: (fn) => chain(filter(src, fn)),
+    filterMap: (fn) => chain(filterMap(src, fn)),
+    map: (fn) => chain(map(src, fn)),
+    flatMap: (fn) => chain(flatMap(src, fn)),
     find: (fn) => find(src, fn),
     join: (sep) => join(src, sep),
     collect: (fn) => fn(src),
+    [Symbol.iterator]: () => src,
   };
 }
 

@@ -12,8 +12,8 @@ import extensionInjectable from "./extension/extension.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
-import { bundledExtensionInjectionToken } from "../extension-discovery/bundled-extension-injection-token";
-import { extensionEntryPointNameInjectionToken } from "./extension-entry-point-name-injection-token";
+import { bundledExtensionInjectionToken } from "../extension-discovery/bundled-extension-token";
+import { extensionEntryPointNameInjectionToken } from "./entry-point-name";
 
 const extensionLoaderInjectable = getInjectable({
   id: "extension-loader",

@@ -12,7 +12,7 @@ import createContextHandlerInjectable from "../context-handler/create-context-ha
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
-import createListApiResourcesInjectable from "../../common/cluster/request-api-resources.injectable";
+import createListApiResourcesInjectable from "../cluster/request-api-resources.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import detectorRegistryInjectable from "../cluster-detectors/detector-registry.injectable";
 import createVersionDetectorInjectable from "../cluster-detectors/create-version-detector.injectable";
