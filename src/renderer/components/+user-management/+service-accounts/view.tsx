@@ -9,7 +9,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
-import { CreateServiceAccountDialog } from "./create-dialog";
+import { CreateServiceAccountDialog } from "./create-dialog/view";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
 import { prevDefault } from "../../../utils";
