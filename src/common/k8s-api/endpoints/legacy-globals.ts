@@ -9,7 +9,6 @@ import cronJobApiInjectable from "./cron-job.api.injectable";
 import jobApiInjectable from "./job.api.injectable";
 import networkPolicyApiInjectable from "./network-policy.api.injectable";
 import nodeApiInjectable from "./node.api.injectable";
-import persistentVolumeClaimApiInjectable from "./persistent-volume-claim.api.injectable";
 import podApiInjectable from "./pod.api.injectable";
 import roleApiInjectable from "./role.api.injectable";
 
@@ -47,8 +46,3 @@ export const networkPolicyApi = asLegacyGlobalForExtensionApi(networkPolicyApiIn
  * @deprecated use `di.inject(nodeApiInjectable)` instead
  */
 export const nodeApi = asLegacyGlobalForExtensionApi(nodeApiInjectable);
-
-/**
- * @deprecated use `di.inject(persistentVolumeClaimApiInjectable)` instead
- */
-export const persistentVolumeClaimApi = asLegacyGlobalForExtensionApi(persistentVolumeClaimApiInjectable);
