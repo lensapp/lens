@@ -24,7 +24,7 @@
   text-align: center;
   pointer-events: none;
   transition: opacity 150ms 150ms ease-in-out;
-  z-index: var(--z-index-topmost);
+  z-index: 100000;
   box-shadow: 0 8px 16px rgba(0,0,0,0.24);
   left: 0;
   top: 0;
