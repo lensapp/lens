@@ -15,7 +15,6 @@ import type { Disposer } from "../utils";
 import ipcMainInjectable from "../../main/utils/channel/ipc-main/ipc-main.injectable";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
-import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import loggerInjectable from "../logger.injectable";
 
 export const broadcastMainChannel = "ipc:broadcast-main";
@@ -43,7 +42,8 @@ export async function broadcastMessage(channel: string, ...args: any[]): Promise
     return;
   }
 
-  const logger = asLegacyGlobalForExtensionApi(loggerInjectable);
+  const di = getLegacyGlobalDiForExtensionApi();
+  const logger = di.inject(loggerInjectable);
 
   ipcMain.listeners(channel).forEach((func) => func({
     processId: undefined, frameId: undefined, sender: undefined, senderFrame: undefined,

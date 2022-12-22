@@ -20,7 +20,7 @@ import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import type { Logger } from "../logger";
-import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi, getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import autoRegistrationEmitterInjectable from "./api-manager/auto-registration-emitter.injectable";
 import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import { apiKubeInjectionToken } from "./api-kube";
@@ -286,7 +286,7 @@ export class KubeApi<
   constructor(opts: KubeApiOptions<Object, Data>) {
     const {
       objectConstructor,
-      request = asLegacyGlobalForExtensionApi(apiKubeInjectionToken),
+      request = getLegacyGlobalDiForExtensionApi().inject(apiKubeInjectionToken),
       kind = objectConstructor.kind,
       isNamespaced,
       apiBase: fullApiPathname = objectConstructor.apiBase,
