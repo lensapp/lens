@@ -12,12 +12,11 @@ import type { ItemObject } from "../item.store";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { JsonObject } from "type-fest";
-import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import requestKubeObjectPatchInjectable from "./endpoints/resource-applier.api/request-patch.injectable";
-import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import { apiKubeInjectionToken } from "./api-kube";
 import requestKubeObjectCreationInjectable from "./endpoints/resource-applier.api/request-update.injectable";
 import { dump } from "js-yaml";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export type KubeJsonApiDataFor<K> = K extends KubeObject<infer Metadata, infer Status, infer Spec>
   ? KubeJsonApiData<Metadata, Status, Spec>
@@ -644,7 +643,8 @@ export class KubeObject<
       }
     }
 
-    const requestKubeObjectPatch = asLegacyGlobalFunctionForExtensionApi(requestKubeObjectPatchInjectable);
+    const di = getLegacyGlobalDiForExtensionApi();
+    const requestKubeObjectPatch = di.inject(requestKubeObjectPatchInjectable);
     const result = await requestKubeObjectPatch(this.getName(), this.kind, this.getNs(), patch);
 
     if (!result.callWasSuccessful) {
@@ -664,7 +664,8 @@ export class KubeObject<
    * @deprecated use KubeApi.update instead
    */
   async update(data: Partial<this>): Promise<KubeJsonApiData | null> {
-    const requestKubeObjectCreation = asLegacyGlobalFunctionForExtensionApi(requestKubeObjectCreationInjectable);
+    const di = getLegacyGlobalDiForExtensionApi();
+    const requestKubeObjectCreation = di.inject(requestKubeObjectCreationInjectable);
     const descriptor = dump({
       ...this.toPlainObject(),
       ...data,
@@ -685,7 +686,8 @@ export class KubeObject<
   delete(params?: object) {
     assert(this.selfLink, "selfLink must be present to delete self");
 
-    const apiKube = asLegacyGlobalForExtensionApi(apiKubeInjectionToken);
+    const di = getLegacyGlobalDiForExtensionApi();
+    const apiKube = di.inject(apiKubeInjectionToken);
 
     return apiKube.del(this.selfLink, params);
   }
