@@ -4,70 +4,67 @@
  */
 import "./add-dialog.scss";
 
-import { makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 
 import type { DialogProps } from "../../dialog";
 import { Dialog } from "../../dialog";
 import { Input } from "../../input";
-import { showDetails } from "../../kube-detail-params";
 import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
 import { Wizard, WizardStep } from "../../wizard";
-import { clusterRoleStore } from "./legacy-store";
+import type { AddClusterRoleDialogState } from "./add-dialog/state.injectable";
+import type { ClusterRoleStore } from "./store";
+import type { ShowDetails } from "../../kube-detail-params/show-details.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import closeAddClusterRoleDialogInjectable from "./add-dialog/close.injectable";
+import clusterRoleStoreInjectable from "./store.injectable";
+import showDetailsInjectable from "../../kube-detail-params/show-details.injectable";
+import addClusterRoleDialogStateInjectable from "./add-dialog/state.injectable";
 
 export interface AddClusterRoleDialogProps extends Partial<DialogProps> {
 }
 
+interface Dependencies {
+  state: AddClusterRoleDialogState;
+  clusterRoleStore: ClusterRoleStore;
+  showDetails: ShowDetails;
+  closeAddClusterRoleDialog: () => void;
+}
+
 @observer
-export class AddClusterRoleDialog extends React.Component<AddClusterRoleDialogProps> {
-  static isOpen = observable.box(false);
-
-  @observable clusterRoleName = "";
-
-  constructor(props: AddClusterRoleDialogProps) {
-    super(props);
-    makeObservable(this);
-  }
-
-  static open() {
-    AddClusterRoleDialog.isOpen.set(true);
-  }
-
-  static close() {
-    AddClusterRoleDialog.isOpen.set(false);
-  }
-
-  reset = () => {
-    this.clusterRoleName = "";
-  };
-
+class NonInjectedAddClusterRoleDialog extends React.Component<AddClusterRoleDialogProps & Dependencies> {
   createRole = async () => {
+    const {
+      closeAddClusterRoleDialog,
+      clusterRoleStore,
+      showDetails,
+      state,
+    } = this.props;
+
     try {
-      const role = await clusterRoleStore.create({ name: this.clusterRoleName });
+      const role = await clusterRoleStore.create({ name: state.clusterRoleName.get() });
 
       showDetails(role.selfLink);
-      this.reset();
-      AddClusterRoleDialog.close();
+      closeAddClusterRoleDialog();
     } catch (error) {
       Notifications.checkedError(error, "Unknown error occured while creating the role");
     }
   };
 
   render() {
-    const { ...dialogProps } = this.props;
+    const { closeAddClusterRoleDialog, clusterRoleStore, showDetails, state, ...dialogProps } = this.props;
 
     return (
       <Dialog
         {...dialogProps}
         className="AddClusterRoleDialog"
-        isOpen={AddClusterRoleDialog.isOpen.get()}
-        close={AddClusterRoleDialog.close}
+        isOpen={state.isOpen.get()}
+        close={closeAddClusterRoleDialog}
       >
         <Wizard
           header={<h5>Create ClusterRole</h5>}
-          done={AddClusterRoleDialog.close}
+          done={closeAddClusterRoleDialog}
         >
           <WizardStep
             contentClass="flex gaps column"
@@ -80,8 +77,8 @@ export class AddClusterRoleDialog extends React.Component<AddClusterRoleDialogPr
               autoFocus
               placeholder="Name"
               iconLeft="supervisor_account"
-              value={this.clusterRoleName}
-              onChange={v => this.clusterRoleName = v}
+              value={state.clusterRoleName.get()}
+              onChange={v => state.clusterRoleName.set(v)}
             />
           </WizardStep>
         </Wizard>
@@ -89,3 +86,13 @@ export class AddClusterRoleDialog extends React.Component<AddClusterRoleDialogPr
     );
   }
 }
+
+export const AddClusterRoleDialog = withInjectables<Dependencies, AddClusterRoleDialogProps>(NonInjectedAddClusterRoleDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    closeAddClusterRoleDialog: di.inject(closeAddClusterRoleDialogInjectable),
+    clusterRoleStore: di.inject(clusterRoleStoreInjectable),
+    showDetails: di.inject(showDetailsInjectable),
+    state: di.inject(addClusterRoleDialogStateInjectable),
+  }),
+});

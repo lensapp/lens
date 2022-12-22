@@ -10,9 +10,11 @@ import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { AddClusterRoleDialog } from "./add-dialog";
-import { clusterRoleStore } from "./legacy-store";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
+import type { ClusterRoleStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import clusterRoleStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -20,8 +22,12 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  clusterRoleStore: ClusterRoleStore;
+}
+
 @observer
-export class ClusterRoles extends React.Component {
+class NonInjectedClusterRoles extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
@@ -29,7 +35,7 @@ export class ClusterRoles extends React.Component {
           isConfigurable
           tableId="access_cluster_roles"
           className="ClusterRoles"
-          store={clusterRoleStore}
+          store={this.props.clusterRoleStore}
           sortingCallbacks={{
             [columnId.name]: clusterRole => clusterRole.getName(),
             [columnId.age]: clusterRole => -clusterRole.getCreationTimestamp(),
@@ -58,3 +64,10 @@ export class ClusterRoles extends React.Component {
     );
   }
 }
+
+export const ClusterRoles = withInjectables<Dependencies>(NonInjectedClusterRoles, {
+  getProps: (di, props) => ({
+    ...props,
+    clusterRoleStore: di.inject(clusterRoleStoreInjectable),
+  }),
+});
