@@ -115,7 +115,7 @@
     },
     "modulePathIgnorePatterns": [
       "<rootDir>/dist",
-      "<rootDir>/src/extensions/npm"
+      "<rootDir>/packages"
     ],
     "setupFiles": [
       "<rootDir>/src/jest.setup.ts",
