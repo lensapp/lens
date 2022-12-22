@@ -3,75 +3,73 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./dialog.scss";
+import "./view.scss";
 
-import { action, computed, makeObservable, observable, reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import type { IObservableValue } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
+import { observer } from "mobx-react";
 import React from "react";
 
-import { serviceAccountStore } from "../+service-accounts/legacy-store";
-import type { ClusterRole, ClusterRoleBinding, ServiceAccount } from "../../../../common/k8s-api/endpoints";
-import type { DialogProps } from "../../dialog";
-import { Dialog } from "../../dialog";
-import { EditableList } from "../../editable-list";
-import { Icon } from "../../icon";
-import { showDetails } from "../../kube-detail-params";
-import { SubTitle } from "../../layout/sub-title";
-import { Notifications } from "../../notifications";
-import { onMultiSelectFor, Select } from "../../select";
-import { Wizard, WizardStep } from "../../wizard";
-import { clusterRoleBindingStore } from "./legacy-store";
-import { clusterRoleStore } from "../+cluster-roles/legacy-store";
-import { ObservableHashSet, nFircate } from "../../../utils";
-import { Input } from "../../input";
-import { TooltipPosition } from "../../tooltip";
-import type { Subject } from "../../../../common/k8s-api/endpoints/types/subject";
+import type { ClusterRole, ServiceAccount } from "../../../../../common/k8s-api/endpoints";
+import type { DialogProps } from "../../../dialog";
+import { Dialog } from "../../../dialog";
+import { EditableList } from "../../../editable-list";
+import { Icon } from "../../../icon";
+import { SubTitle } from "../../../layout/sub-title";
+import { Notifications } from "../../../notifications";
+import { onMultiSelectFor, Select } from "../../../select";
+import { Wizard, WizardStep } from "../../../wizard";
+import { ObservableHashSet, nFircate } from "../../../../utils";
+import { Input } from "../../../input";
+import { TooltipPosition } from "../../../tooltip";
+import type { Subject } from "../../../../../common/k8s-api/endpoints/types/subject";
+import type { ClusterRoleBindingDialogState } from "./state.injectable";
+import type { ClusterRoleStore } from "../../+cluster-roles/store";
+import type { ServiceAccountStore } from "../../+service-accounts/store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import clusterRoleStoreInjectable from "../../+cluster-roles/store.injectable";
+import editClusterRoleBindingNameStateInjectable from "./edit-name-state.injectable";
+import serviceAccountStoreInjectable from "../../+service-accounts/store.injectable";
+import clusterRoleBindingDialogStateInjectable from "./state.injectable";
+import type { CloseClusterRoleBindingDialog } from "./close.injectable";
+import type { OpenClusterRoleBindingDialog } from "./open.injectable";
+import openClusterRoleBindingDialogInjectable from "./open.injectable";
+import closeClusterRoleBindingDialogInjectable from "./close.injectable";
+import type { ShowDetails } from "../../../kube-detail-params/show-details.injectable";
+import type { ClusterRoleBindingStore } from "../store";
+import clusterRoleBindingStoreInjectable from "../store.injectable";
+import showDetailsInjectable from "../../../kube-detail-params/show-details.injectable";
 
 export interface ClusterRoleBindingDialogProps extends Partial<DialogProps> {
 }
 
-interface DialogState {
-  isOpen: boolean;
-  data?: ClusterRoleBinding;
+interface Dependencies {
+  state: IObservableValue<ClusterRoleBindingDialogState>;
+  editBindingNameState: IObservableValue<string>;
+  clusterRoleStore: ClusterRoleStore;
+  serviceAccountStore: ServiceAccountStore;
+  clusterRoleBindingStore: ClusterRoleBindingStore;
+  closeClusterRoleBindingDialog: CloseClusterRoleBindingDialog;
+  openClusterRoleBindingDialog: OpenClusterRoleBindingDialog;
+  showDetails: ShowDetails;
 }
 
-const dialogState = observable.object<DialogState>({
-  isOpen: false,
-});
-
 @observer
-export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBindingDialogProps> {
-  constructor(props: ClusterRoleBindingDialogProps) {
+class NonInjectedClusterRoleBindingDialog extends React.Component<ClusterRoleBindingDialogProps & Dependencies> {
+  constructor(props: ClusterRoleBindingDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      reaction(() => this.isEditing, () => {
-        this.bindingName = dialogState.data?.getName() ?? "";
-      }),
-    ]);
-  }
-
-  static open(roleBinding?: ClusterRoleBinding) {
-    dialogState.isOpen = true;
-    dialogState.data = roleBinding;
-  }
-
-  static close() {
-    dialogState.isOpen = false;
-  }
-
   @computed get clusterRoleOptions() {
-    return clusterRoleStore.items.map(clusterRole => ({
+    return this.props.clusterRoleStore.items.map(clusterRole => ({
       value: clusterRole,
       label: clusterRole.getName(),
     }));
   }
 
   @computed get serviceAccountOptions() {
-    return serviceAccountStore.items.map(serviceAccount => ({
+    return this.props.serviceAccountStore.items.map(serviceAccount => ({
       value: serviceAccount,
       label: `${serviceAccount.getName()} (${serviceAccount.getNs()})`,
       isSelected: this.selectedAccounts.has(serviceAccount),
@@ -79,7 +77,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
   }
 
   get clusterRoleBinding() {
-    return dialogState.data;
+    return this.props.state.get().clusterRoleBinding;
   }
 
   get isEditing() {
@@ -87,7 +85,6 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
   }
 
   @observable selectedRoleRef: ClusterRole | undefined = undefined;
-  @observable bindingName = "";
   selectedAccounts = new ObservableHashSet<ServiceAccount>([], sa => sa.metadata.uid);
   selectedUsers = observable.set<string>([]);
   selectedGroups = observable.set<string>([]);
@@ -121,16 +118,15 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
       return this.reset();
     }
 
-    this.selectedRoleRef = clusterRoleStore
+    this.selectedRoleRef = this.props.clusterRoleStore
       .items
       .find(item => item.getName() === binding.roleRef.name);
-    this.bindingName = binding.getName();
 
     const [saSubjects, uSubjects, gSubjects] = nFircate(binding.getSubjects(), "kind", ["ServiceAccount", "User", "Group"]);
     const accountNames = new Set(saSubjects.map(acc => acc.name));
 
     this.selectedAccounts.replace(
-      serviceAccountStore.items
+      this.props.serviceAccountStore.items
         .filter(sa => accountNames.has(sa.getName())),
     );
     this.selectedUsers.replace(uSubjects.map(user => user.name));
@@ -139,14 +135,19 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
 
   reset = action(() => {
     this.selectedRoleRef = undefined;
-    this.bindingName = "";
     this.selectedAccounts.clear();
     this.selectedUsers.clear();
     this.selectedGroups.clear();
   });
 
   createBindings = async () => {
-    const { selectedRoleRef, selectedBindings, bindingName, clusterRoleBinding } = this;
+    const {
+      closeClusterRoleBindingDialog,
+      clusterRoleBindingStore,
+      editBindingNameState,
+      showDetails,
+    } = this.props;
+    const { selectedRoleRef, selectedBindings, clusterRoleBinding } = this;
 
     if (!clusterRoleBinding || !selectedRoleRef) {
       return;
@@ -155,7 +156,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
     try {
       const { selfLink } = this.isEditing
         ? await clusterRoleBindingStore.updateSubjects(clusterRoleBinding, selectedBindings)
-        : await clusterRoleBindingStore.create({ name: bindingName }, {
+        : await clusterRoleBindingStore.create({ name: editBindingNameState.get() }, {
           subjects: selectedBindings,
           roleRef: {
             name: selectedRoleRef.getName(),
@@ -164,7 +165,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
         });
 
       showDetails(selfLink);
-      ClusterRoleBindingDialog.close();
+      closeClusterRoleBindingDialog();
     } catch (err) {
       Notifications.checkedError(err, `Unknown error occured while ${this.isEditing ? "editing the" : "creating a"} ClusterRoleBinding`);
     }
@@ -198,9 +199,10 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
           )}
           onChange={option => {
             this.selectedRoleRef = option?.value;
+            const bindingName = this.props.editBindingNameState.get();
 
-            if (!this.selectedRoleRef || this.bindingName === this.selectedRoleRef.getName()) {
-              this.bindingName = option?.value?.getName() ?? "";
+            if (!this.selectedRoleRef || bindingName === this.selectedRoleRef.getName()) {
+              this.props.editBindingNameState.set(option?.value?.getName() ?? "");
             }
           }}
         />
@@ -209,8 +211,8 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
         <Input
           placeholder="Name of ClusterRoleBinding ..."
           disabled={this.isEditing}
-          value={this.bindingName}
-          onChange={val => this.bindingName = val}
+          value={this.props.editBindingNameState.get()}
+          onChange={val => this.props.editBindingNameState.set(val)}
         />
 
         <SubTitle title="Binding targets" />
@@ -252,16 +254,24 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
   }
 
   render() {
-    const { ...dialogProps } = this.props;
+    const {
+      closeClusterRoleBindingDialog,
+      openClusterRoleBindingDialog,
+      clusterRoleStore,
+      editBindingNameState,
+      serviceAccountStore,
+      state,
+      ...dialogProps
+    } = this.props;
     const [action, nextLabel] = this.isEditing ? ["Edit", "Update"] : ["Add", "Create"];
-    const disableNext = !this.selectedRoleRef || !this.selectedBindings.length || !this.bindingName;
+    const disableNext = !this.selectedRoleRef || !this.selectedBindings.length || !editBindingNameState.get();
 
     return (
       <Dialog
         {...dialogProps}
         className="AddClusterRoleBindingDialog"
-        isOpen={dialogState.isOpen}
-        close={ClusterRoleBindingDialog.close}
+        isOpen={state.get().isOpen}
+        close={closeClusterRoleBindingDialog}
         onClose={this.reset}
         onOpen={this.onOpen}
       >
@@ -271,7 +281,7 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
               {`${action} ClusterRoleBinding`}
             </h5>
           )}
-          done={ClusterRoleBindingDialog.close}
+          done={closeClusterRoleBindingDialog}
         >
           <WizardStep
             nextLabel={nextLabel}
@@ -285,3 +295,17 @@ export class ClusterRoleBindingDialog extends React.Component<ClusterRoleBinding
     );
   }
 }
+
+export const ClusterRoleBindingDialog = withInjectables<Dependencies, ClusterRoleBindingDialogProps>(NonInjectedClusterRoleBindingDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    clusterRoleStore: di.inject(clusterRoleStoreInjectable),
+    editBindingNameState: di.inject(editClusterRoleBindingNameStateInjectable),
+    serviceAccountStore: di.inject(serviceAccountStoreInjectable),
+    state: di.inject(clusterRoleBindingDialogStateInjectable),
+    clusterRoleBindingStore: di.inject(clusterRoleBindingStoreInjectable),
+    openClusterRoleBindingDialog: di.inject(openClusterRoleBindingDialogInjectable),
+    closeClusterRoleBindingDialog: di.inject(closeClusterRoleBindingDialogInjectable),
+    showDetails: di.inject(showDetailsInjectable),
+  }),
+});

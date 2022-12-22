@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { ClusterRoleBindingDialog } from "../dialog";
+import { ClusterRoleBindingDialog } from "../dialog/view";
 import { ClusterRole } from "../../../../../common/k8s-api/endpoints";
 import userEvent from "@testing-library/user-event";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
