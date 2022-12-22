@@ -57,7 +57,6 @@ import normalizedPlatformArchitectureInjectable from "../common/vars/normalized-
 import getHelmChartVersionsInjectable from "./helm/helm-service/get-helm-chart-versions.injectable";
 import getHelmChartValuesInjectable from "./helm/helm-service/get-helm-chart-values.injectable";
 import listHelmChartsInjectable from "./helm/helm-service/list-helm-charts.injectable";
-import getHelmReleaseHistoryInjectable from "./helm/helm-service/get-helm-release-history.injectable";
 import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-release.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
@@ -135,7 +134,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       getHelmChartVersionsInjectable,
       getHelmChartValuesInjectable,
       listHelmChartsInjectable,
-      getHelmReleaseHistoryInjectable,
       rollbackHelmReleaseInjectable,
       writeJsonFileInjectable,
       readJsonFileInjectable,

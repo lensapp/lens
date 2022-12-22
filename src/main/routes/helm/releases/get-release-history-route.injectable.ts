@@ -5,23 +5,19 @@
 import { apiPrefix } from "../../../../common/vars";
 import { getRouteInjectable } from "../../../router/router.injectable";
 import { clusterRoute } from "../../../router/route";
-import getHelmReleaseHistoryInjectable from "../../../helm/helm-service/get-helm-release-history.injectable";
+import getClusterHelmReleaseHistoryInjectable from "../../../helm/helm-service/get-helm-release-history.injectable";
 
 const getReleaseRouteHistoryInjectable = getRouteInjectable({
   id: "get-release-history-route",
 
   instantiate: (di) => {
-    const getHelmReleaseHistory = di.inject(getHelmReleaseHistoryInjectable);
+    const getHelmReleaseHistory = di.inject(getClusterHelmReleaseHistoryInjectable);
 
     return clusterRoute({
       method: "get",
-      path: `${apiPrefix}/v2/releases/{namespace}/{release}/history`,
+      path: `${apiPrefix}/v2/releases/{namespace}/{name}/history`,
     })(async ({ cluster, params }) => ({
-      response: await getHelmReleaseHistory(
-        cluster,
-        params.release,
-        params.namespace,
-      ),
+      response: await getHelmReleaseHistory(cluster, params),
     }));
   },
 });
