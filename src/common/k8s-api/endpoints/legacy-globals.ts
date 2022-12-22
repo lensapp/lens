@@ -7,7 +7,6 @@ import { asLegacyGlobalForExtensionApi } from "../../../extensions/as-legacy-glo
 import configMapApiInjectable from "./config-map.api.injectable";
 import cronJobApiInjectable from "./cron-job.api.injectable";
 import jobApiInjectable from "./job.api.injectable";
-import networkPolicyApiInjectable from "./network-policy.api.injectable";
 import podApiInjectable from "./pod.api.injectable";
 import roleApiInjectable from "./role.api.injectable";
 
@@ -35,8 +34,3 @@ export const jobApi = asLegacyGlobalForExtensionApi(jobApiInjectable);
  * @deprecated use `di.inject(configMapApiInjectable)` instead
  */
 export const configMapApi = asLegacyGlobalForExtensionApi(configMapApiInjectable);
-
-/**
- * @deprecated use `di.inject(networkPolicyApiInjectable)` instead
- */
-export const networkPolicyApi = asLegacyGlobalForExtensionApi(networkPolicyApiInjectable);
