@@ -24,7 +24,7 @@ interface Dependencies {
   watchHistoryState: () => () => void;
 }
 
-export const NonInjectedClusterFrame = observer(({
+const NonInjectedClusterFrame = observer(({
   namespaceStore,
   subscribeStores,
   childComponents,

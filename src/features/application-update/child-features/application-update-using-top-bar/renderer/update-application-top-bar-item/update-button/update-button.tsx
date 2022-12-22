@@ -24,7 +24,7 @@ interface Dependencies {
   update: () => void;
 }
 
-export const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: UpdateButtonProps & Dependencies) => {
+const NonInjectedUpdateButton = observer(({ warningLevel, update, id }: UpdateButtonProps & Dependencies) => {
   const buttonId = id ?? "update-lens-button";
   const menuIconProps: IconProps = { material: "update", small: true };
   const [opened, setOpened] = useState(false);
