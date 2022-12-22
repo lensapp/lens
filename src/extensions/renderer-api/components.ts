@@ -14,12 +14,12 @@ import createWorkloadLogsTabInjectable from "../../renderer/components/dock/logs
 import sendCommandInjectable from "../../renderer/components/dock/terminal/send-command.injectable";
 import renameTabInjectable from "../../renderer/components/dock/dock/rename-tab.injectable";
 import { asLegacyGlobalObjectForExtensionApiWithModifications } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api-with-modifications";
-import { podStore } from "../../renderer/components/+workloads-pods/legacy-store";
 import { ConfirmDialog as _ConfirmDialog } from "../../renderer/components/confirm-dialog";
 import type { ConfirmDialogBooleanParams, ConfirmDialogParams, ConfirmDialogProps } from "../../renderer/components/confirm-dialog";
 import openConfirmDialogInjectable from "../../renderer/components/confirm-dialog/open.injectable";
 import confirmInjectable from "../../renderer/components/confirm-dialog/confirm.injectable";
 import notificationsStoreInjectable from "../../renderer/components/notifications/notifications-store.injectable";
+import podStoreInjectable from "../../renderer/components/+workloads-pods/store.injectable";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -103,6 +103,7 @@ export const terminalStore = asLegacyGlobalObjectForExtensionApiWithModification
 );
 
 const renameTab = asLegacyGlobalFunctionForExtensionApi(renameTabInjectable);
+const podStore = asLegacyGlobalForExtensionApi(podStoreInjectable);
 
 export const logTabStore = asLegacyGlobalObjectForExtensionApiWithModifications(
   logTabStoreInjectable,
