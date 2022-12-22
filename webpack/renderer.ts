@@ -65,7 +65,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     },
     externals: {
       "node-fetch": "commonjs node-fetch",
-      "npm": "commonjs npm",
     },
     optimization: {
       minimize: false,
@@ -198,7 +197,7 @@ export function cssModulesWebpackRule({ styleLoader }: CssModulesWebpackRuleOpti
           sourceMap: isDevelopment,
           postcssOptions: {
             plugins: [
-              ["tailwindcss", { config: path.resolve(__dirname, "..", "tailwind.config.js") }],
+              "tailwindcss",
             ],
           },
         },
