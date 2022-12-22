@@ -569,30 +569,37 @@ export const getApplicationBuilder = () => {
 
       enable: (...extensions) => {
         builder.afterWindowStart((windowDi) => {
-          const rendererExtensionInstances = extensions.map((options) =>
-            getExtensionFakeForRenderer(
-              windowDi,
-              options.id,
-              options.name,
-              options.rendererOptions || {},
-            ),
-          );
+          const enableExtension = enableExtensionFor(windowDi, rendererExtensionsStateInjectable);
 
-          rendererExtensionInstances.forEach(
-            enableExtensionFor(windowDi, rendererExtensionsStateInjectable),
-          );
+          for (const extension of extensions) {
+            const instance = getExtensionFakeForRenderer(
+              windowDi,
+              extension.id,
+              extension.name,
+              extension.rendererOptions || {},
+            );
+
+            runInAction(() => {
+              enableExtension(instance);
+            });
+          }
         });
 
         builder.afterApplicationStart((mainDi) => {
-          const mainExtensionInstances = extensions.map((extension) =>
-            getExtensionFakeForMain(mainDi, extension.id, extension.name, extension.mainOptions || {}),
-          );
+          const enableExtension = enableExtensionFor(mainDi, mainExtensionsStateInjectable);
 
-          runInAction(() => {
-            mainExtensionInstances.forEach(
-              enableExtensionFor(mainDi, mainExtensionsStateInjectable),
+          for (const extension of extensions) {
+            const instance = getExtensionFakeForMain(
+              mainDi,
+              extension.id,
+              extension.name,
+              extension.mainOptions || {},
             );
-          });
+
+            runInAction(() => {
+              enableExtension(instance);
+            });
+          }
         });
       },
 
