@@ -11,7 +11,7 @@
   position: absolute;
   background: var(--contentColor);
   box-shadow: 0 0 $unit * 2 var(--boxShadow);
-  z-index: var(--z-index-above);
+  z-index: $zIndex-drawer;
   height: 100%;
 
   &.left {

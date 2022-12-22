@@ -145,7 +145,7 @@ html {
   //-- Themes
 
   .Select__menu {
-    z-index: var(--z-index-menus); // render at the top when used inside dialog
+    z-index: $zIndex-select-portal; // render at the top when used inside dialog
   }
 
   .Select, .Select__menu {

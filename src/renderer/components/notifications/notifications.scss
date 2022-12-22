@@ -11,7 +11,7 @@
   top: 0;
   padding: $padding * 2;
   max-height: 100vh;
-  z-index: var(--z-index-topmost);
+  z-index: 100000;
   height: min-content!important;
 
   &:empty {
