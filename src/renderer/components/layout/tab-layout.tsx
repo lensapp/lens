@@ -13,7 +13,11 @@ import type { IClassName } from "../../utils";
 import { cssNames } from "../../utils";
 import { Tab, Tabs } from "../tabs";
 import { ErrorBoundary } from "../error-boundary";
-import { navigate, navigation } from "../../navigation";
+import type { ObservableHistory } from "mobx-observable-history";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import observableHistoryInjectable from "../../navigation/observable-history.injectable";
+import type { Navigate } from "../../navigation/navigate.injectable";
+import navigateInjectable from "../../navigation/navigate.injectable";
 
 export interface TabLayoutProps {
   className?: IClassName;
@@ -32,8 +36,22 @@ export interface TabLayoutRoute {
   default?: boolean; // initial tab to open with provided `url, by default tabs[0] is used
 }
 
-export const TabLayout = observer(({ className, contentClass, tabs = [], scrollable, children }: TabLayoutProps) => {
-  const currentLocation = navigation.location.pathname;
+interface Dependencies {
+  observableHistory: ObservableHistory<unknown>;
+  navigate: Navigate;
+}
+
+const NonInjectedTabLayout = observer((props: TabLayoutProps & Dependencies) => {
+  const {
+    className,
+    contentClass,
+    tabs = [],
+    scrollable,
+    children,
+    observableHistory,
+    navigate,
+  } = props;
+  const currentLocation = observableHistory.location.pathname;
   const hasTabs = tabs.length > 0;
   const startTabUrl = hasTabs ? (tabs.find(tab => tab.default) || tabs[0])?.url : null;
 
@@ -71,4 +89,12 @@ export const TabLayout = observer(({ className, contentClass, tabs = [], scrolla
       </main>
     </div>
   );
+});
+
+export const TabLayout = withInjectables<Dependencies, TabLayoutProps>(NonInjectedTabLayout, {
+  getProps: (di, props) => ({
+    ...props,
+    observableHistory: di.inject(observableHistoryInjectable),
+    navigate: di.inject(navigateInjectable),
+  }),
 });
