@@ -9,7 +9,6 @@ import { createContainer, isInjectable, getInjectable } from "@ogre-tools/inject
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
-import focusWindowInjectable from "./navigation/focus-window.injectable";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
 import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
@@ -102,8 +101,6 @@ export const getDiForUnitTesting = (
     di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));
 
     getOverrideFsWithFakes()(di);
-
-    di.override(focusWindowInjectable, () => () => {});
   }
 
   return di;
