@@ -26,7 +26,8 @@ const NonInjectedPersistentVolumeClaim = (props: PodVolumeVariantSpecificProps<"
       pod={pod}
       title="Name"
       kubeRef={{ name: claimName }}
-      api={persistentVolumeClaimApi} />
+      api={persistentVolumeClaimApi}
+    />
   );
 };
 
