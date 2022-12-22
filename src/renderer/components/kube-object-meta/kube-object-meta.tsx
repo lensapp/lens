@@ -11,13 +11,14 @@ import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { LocaleDate } from "../locale-date";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import { KubeObjectAge } from "../kube-object/age";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface KubeObjectMetaProps {
   object: KubeObject;
@@ -27,6 +28,7 @@ export interface KubeObjectMetaProps {
 interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
   apiManager: ApiManager;
+  logger: Logger;
 }
 
 const NonInjectedKubeObjectMeta = observer(({
@@ -38,6 +40,7 @@ const NonInjectedKubeObjectMeta = observer(({
     "resourceVersion",
     "selfLink",
   ],
+  logger,
 }: Dependencies & KubeObjectMetaProps) => {
   if (!object) {
     return null;
@@ -118,5 +121,6 @@ export const KubeObjectMeta = withInjectables<Dependencies, KubeObjectMetaProps>
     ...props,
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     apiManager: di.inject(apiManagerInjectable),
+    logger: di.inject(loggerInjectable),
   }),
 });

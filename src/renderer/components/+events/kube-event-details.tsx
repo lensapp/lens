@@ -12,12 +12,13 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { cssNames } from "../../utils";
 import { LocaleDate } from "../locale-date";
 import type { EventStore } from "./store";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import eventStoreInjectable from "./store.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface KubeEventDetailsProps {
   object: KubeObject;
@@ -26,6 +27,7 @@ export interface KubeEventDetailsProps {
 interface Dependencies {
   subscribeStores: SubscribeStores;
   eventStore: EventStore;
+  logger: Logger;
 }
 
 @observer
@@ -46,7 +48,7 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
     }
 
     if (!(object instanceof KubeObject)) {
-      logger.error("[KubeEventDetails]: passed object that is not an instanceof KubeObject", object);
+      this.props.logger.error("[KubeEventDetails]: passed object that is not an instanceof KubeObject", object);
 
       return null;
     }
@@ -93,6 +95,7 @@ export const KubeEventDetails = withInjectables<Dependencies, KubeEventDetailsPr
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
     eventStore: di.inject(eventStoreInjectable),
+    logger: di.inject(loggerInjectable),
   }),
 });
 

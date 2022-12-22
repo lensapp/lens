@@ -9,7 +9,9 @@ import type { IClassName } from "../../utils";
 import { autoBind, cssNames } from "../../utils";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import logger from "../../../main/logger";
+import type { Logger } from "../../../common/logger";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface DropFileInputProps<T extends HTMLElement> extends React.DOMAttributes<T> {
   className?: IClassName;
@@ -21,12 +23,16 @@ export interface DropFileMeta<T extends HTMLElement> {
   evt: React.DragEvent<T>;
 }
 
+interface Dependencies {
+  logger: Logger;
+}
+
 @observer
-export class DropFileInput<T extends HTMLElement> extends React.Component<DropFileInputProps<T>> {
+class NonInjectedDropFileInput<T extends HTMLElement> extends React.Component<DropFileInputProps<T> & Dependencies> {
   @observable dropAreaActive = false;
   dragCounter = 0; // Counter preventing firing onDragLeave() too early (https://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element)
 
-  constructor(props: DropFileInputProps<T>) {
+  constructor(props: DropFileInputProps<T> & Dependencies) {
     super(props);
     makeObservable(this);
     autoBind(this);
@@ -92,9 +98,18 @@ export class DropFileInput<T extends HTMLElement> extends React.Component<DropFi
 
       return null;
     } catch (err) {
-      logger.error(`Error: <DropFileInput/> must contain only single child element`);
+      this.props.logger.error(`Error: <DropFileInput/> must contain only single child element`);
 
       return this.props.children;
     }
   }
 }
+
+const InjectedDropFileInput = withInjectables<Dependencies, DropFileInputProps<HTMLElement>>(NonInjectedDropFileInput, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+  }),
+});
+
+export const DropFileInput = <T extends HTMLElement>(props: DropFileInputProps<T>) => <InjectedDropFileInput {...props} />;

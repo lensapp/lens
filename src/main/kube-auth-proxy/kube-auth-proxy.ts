@@ -6,7 +6,7 @@
 import type { ChildProcess } from "child_process";
 import { randomBytes } from "crypto";
 import type { Cluster } from "../../common/cluster/cluster";
-import { getPortFrom } from "../utils/get-port";
+import type { GetPortFromStream } from "../utils/get-port-from-stream.injectable";
 import { makeObservable, observable, when } from "mobx";
 import type { SelfSignedCert } from "selfsigned";
 import assert from "assert";
@@ -23,9 +23,10 @@ const startingServeRegex = Object.assign(TypedRegEx(startingServeMatcher, "i"), 
 export interface KubeAuthProxyDependencies {
   readonly proxyBinPath: string;
   readonly proxyCert: SelfSignedCert;
-  readonly spawn: Spawn;
   readonly logger: Logger;
-  readonly waitUntilPortIsUsed: WaitUntilPortIsUsed;
+  spawn: Spawn;
+  waitUntilPortIsUsed: WaitUntilPortIsUsed;
+  getPortFromStream: GetPortFromStream;
 }
 
 export class KubeAuthProxy {
@@ -101,7 +102,7 @@ export class KubeAuthProxy {
       }
     });
 
-    this._port = await getPortFrom(this.proxyProcess.stdout, {
+    this._port = await this.dependencies.getPortFromStream(this.proxyProcess.stdout, {
       lineRegex: startingServeRegex,
       onFind: () => this.cluster.broadcastConnectUpdate("Authentication proxy started"),
     });

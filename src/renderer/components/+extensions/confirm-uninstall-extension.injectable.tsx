@@ -9,7 +9,7 @@ import type { LensExtensionId } from "../../../extensions/lens-extension";
 import { extensionDisplayName } from "../../../extensions/lens-extension";
 import type { Confirm } from "../confirm-dialog/confirm.injectable";
 import confirmInjectable from "../confirm-dialog/confirm.injectable";
-import uninstallExtensionInjectable from "./uninstall-extension/uninstall-extension.injectable";
+import uninstallExtensionInjectable from "./uninstall-extension.injectable";
 
 interface Dependencies {
   uninstallExtension: (id: LensExtensionId) => Promise<boolean>;

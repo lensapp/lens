@@ -11,6 +11,7 @@ import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import loggerInjectable from "../../logger.injectable";
 import type { ApiManager } from "../api-manager";
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import { KubeApi } from "../kube-api";
@@ -64,6 +65,7 @@ describe("ApiManager", () => {
       });
       const kubeStore = new TestStore({
         context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+        logger: di.inject(loggerInjectable),
       }, kubeApi);
 
       apiManager.registerApi(apiBase, kubeApi);

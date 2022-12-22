@@ -14,7 +14,7 @@ import type { KubeApiQueryParams, KubeApi, KubeApiWatchCallback } from "./kube-a
 import { parseKubeApi } from "./kube-api-parse";
 import type { RequestInit } from "node-fetch";
 import type { Patch } from "rfc6902";
-import logger from "../logger";
+import type { Logger } from "../logger";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import { entries } from "../utils/objects";
@@ -86,6 +86,7 @@ export type JsonPatch = Patch;
 
 export interface KubeObjectStoreDependencies {
   readonly context: ClusterContext;
+  readonly logger: Logger;
 }
 
 export abstract class KubeObjectStore<
@@ -498,7 +499,7 @@ export abstract class KubeObjectStore<
         const { type, object } = event;
 
         if (!object.metadata?.uid) {
-          logger.warn("[KUBE-STORE]: watch event did not have defined .metadata.uid, skipping", { event });
+          this.dependencies.logger.warn("[KUBE-STORE]: watch event did not have defined .metadata.uid, skipping", { event });
           // Other parts of the code will break if this happens
           continue;
         }
@@ -528,7 +529,7 @@ export abstract class KubeObjectStore<
             break;
         }
       } catch (error) {
-        logger.error("[KUBE-STORE]: failed to handle event from watch buffer", { error, event });
+        this.dependencies.logger.error("[KUBE-STORE]: failed to handle event from watch buffer", { error, event });
       }
     }
 

@@ -11,8 +11,10 @@ import { Util } from "./utils";
 import * as Catalog from "./catalog";
 import * as Types from "./types";
 import * as Proxy from "./proxy";
+import loggerInjectable from "../../common/logger.injectable";
+import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 
-import logger from "../../common/logger";
+const logger = asLegacyGlobalForExtensionApi(loggerInjectable);
 
 export {
   App,

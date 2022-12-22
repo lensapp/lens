@@ -4,12 +4,12 @@
  */
 
 import { action, computed, observable } from "mobx";
-import logger from "../../main/logger";
 import { disposer } from "../../renderer/utils";
 import type { ExtendableDisposer } from "../../renderer/utils";
 import * as uuid from "uuid";
 import { broadcastMessage } from "../../common/ipc";
 import { ipcRenderer } from "electron";
+import type { Logger } from "../../common/logger";
 
 export enum ExtensionInstallationState {
   INSTALLING = "installing",
@@ -17,26 +17,29 @@ export enum ExtensionInstallationState {
   IDLE = "idle",
 }
 
+interface Dependencies {
+  readonly logger: Logger;
+}
+
 const Prefix = "[ExtensionInstallationStore]";
 
+const installingFromMainChannel = "extension-installation-state-store:install";
+const clearInstallingFromMainChannel = "extension-installation-state-store:clear-install";
+
 export class ExtensionInstallationStateStore {
-  private InstallingFromMainChannel =
-    "extension-installation-state-store:install";
+  private readonly preInstallIds = observable.set<string>();
+  private readonly uninstallingExtensions = observable.set<string>();
+  private readonly installingExtensions = observable.set<string>();
 
-  private ClearInstallingFromMainChannel =
-    "extension-installation-state-store:clear-install";
-
-  private PreInstallIds = observable.set<string>();
-  private UninstallingExtensions = observable.set<string>();
-  private InstallingExtensions = observable.set<string>();
+  constructor(private readonly dependencies: Dependencies) {}
 
   bindIpcListeners = () => {
     ipcRenderer
-      .on(this.InstallingFromMainChannel, (event, extId) => {
+      .on(installingFromMainChannel, (event, extId) => {
         this.setInstalling(extId);
       })
 
-      .on(this.ClearInstallingFromMainChannel, (event, extId) => {
+      .on(clearInstallingFromMainChannel, (event, extId) => {
         this.clearInstalling(extId);
       });
   };
@@ -47,7 +50,7 @@ export class ExtensionInstallationStateStore {
    * @throws if state is not IDLE
    */
   @action setInstalling = (extId: string): void => {
-    logger.debug(`${Prefix}: trying to set ${extId} as installing`);
+    this.dependencies.logger.debug(`${Prefix}: trying to set ${extId} as installing`);
 
     const curState = this.getInstallationState(extId);
 
@@ -57,7 +60,7 @@ export class ExtensionInstallationStateStore {
       );
     }
 
-    this.InstallingExtensions.add(extId);
+    this.installingExtensions.add(extId);
   };
 
   /**
@@ -65,7 +68,7 @@ export class ExtensionInstallationStateStore {
    * @param extId the ID of the extension
    */
   setInstallingFromMain = (extId: string): void => {
-    broadcastMessage(this.InstallingFromMainChannel, extId);
+    broadcastMessage(installingFromMainChannel, extId);
   };
 
   /**
@@ -73,7 +76,7 @@ export class ExtensionInstallationStateStore {
    * @param extId the ID of the extension
    */
   clearInstallingFromMain = (extId: string): void => {
-    broadcastMessage(this.ClearInstallingFromMainChannel, extId);
+    broadcastMessage(clearInstallingFromMainChannel, extId);
   };
 
   /**
@@ -85,14 +88,14 @@ export class ExtensionInstallationStateStore {
   @action startPreInstall = (): ExtendableDisposer => {
     const preInstallStepId = uuid.v4();
 
-    logger.debug(
+    this.dependencies.logger.debug(
       `${Prefix}: starting a new preinstall phase: ${preInstallStepId}`,
     );
-    this.PreInstallIds.add(preInstallStepId);
+    this.preInstallIds.add(preInstallStepId);
 
     return disposer(() => {
-      this.PreInstallIds.delete(preInstallStepId);
-      logger.debug(`${Prefix}: ending a preinstall phase: ${preInstallStepId}`);
+      this.preInstallIds.delete(preInstallStepId);
+      this.dependencies.logger.debug(`${Prefix}: ending a preinstall phase: ${preInstallStepId}`);
     });
   };
 
@@ -102,7 +105,7 @@ export class ExtensionInstallationStateStore {
    * @throws if state is not IDLE
    */
   @action setUninstalling = (extId: string): void => {
-    logger.debug(`${Prefix}: trying to set ${extId} as uninstalling`);
+    this.dependencies.logger.debug(`${Prefix}: trying to set ${extId} as uninstalling`);
 
     const curState = this.getInstallationState(extId);
 
@@ -112,7 +115,7 @@ export class ExtensionInstallationStateStore {
       );
     }
 
-    this.UninstallingExtensions.add(extId);
+    this.uninstallingExtensions.add(extId);
   };
 
   /**
@@ -121,13 +124,13 @@ export class ExtensionInstallationStateStore {
    * @throws if state is not INSTALLING
    */
   @action clearInstalling = (extId: string): void => {
-    logger.debug(`${Prefix}: trying to clear ${extId} as installing`);
+    this.dependencies.logger.debug(`${Prefix}: trying to clear ${extId} as installing`);
 
     const curState = this.getInstallationState(extId);
 
     switch (curState) {
       case ExtensionInstallationState.INSTALLING:
-        return void this.InstallingExtensions.delete(extId);
+        return void this.installingExtensions.delete(extId);
       default:
         throw new Error(
           `${Prefix}: cannot clear INSTALLING state for ${extId}, it is currently ${curState}`,
@@ -141,13 +144,13 @@ export class ExtensionInstallationStateStore {
    * @throws if state is not UNINSTALLING
    */
   @action clearUninstalling = (extId: string): void => {
-    logger.debug(`${Prefix}: trying to clear ${extId} as uninstalling`);
+    this.dependencies.logger.debug(`${Prefix}: trying to clear ${extId} as uninstalling`);
 
     const curState = this.getInstallationState(extId);
 
     switch (curState) {
       case ExtensionInstallationState.UNINSTALLING:
-        return void this.UninstallingExtensions.delete(extId);
+        return void this.uninstallingExtensions.delete(extId);
       default:
         throw new Error(
           `${Prefix}: cannot clear UNINSTALLING state for ${extId}, it is currently ${curState}`,
@@ -160,11 +163,11 @@ export class ExtensionInstallationStateStore {
    * @param extId The ID of the extension
    */
   getInstallationState = (extId: string): ExtensionInstallationState => {
-    if (this.InstallingExtensions.has(extId)) {
+    if (this.installingExtensions.has(extId)) {
       return ExtensionInstallationState.INSTALLING;
     }
 
-    if (this.UninstallingExtensions.has(extId)) {
+    if (this.uninstallingExtensions.has(extId)) {
       return ExtensionInstallationState.UNINSTALLING;
     }
 
@@ -197,14 +200,14 @@ export class ExtensionInstallationStateStore {
    * The current number of extensions installing
    */
   @computed get installing(): number {
-    return this.InstallingExtensions.size;
+    return this.installingExtensions.size;
   }
 
   /**
    * The current number of extensions uninstalling
    */
   get uninstalling(): number {
-    return this.UninstallingExtensions.size;
+    return this.uninstallingExtensions.size;
   }
 
   /**
@@ -225,7 +228,7 @@ export class ExtensionInstallationStateStore {
    * The current number of extensions preinstalling
    */
   get preinstalling(): number {
-    return this.PreInstallIds.size;
+    return this.preInstallIds.size;
   }
 
   /**

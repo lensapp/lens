@@ -11,13 +11,19 @@ import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { PodDisruptionBudget } from "../../../common/k8s-api/endpoints";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface PodDisruptionBudgetDetailsProps extends KubeObjectDetailsProps<PodDisruptionBudget> {
 }
 
+interface Dependencies {
+  logger: Logger;
+}
+
 @observer
-export class PodDisruptionBudgetDetails extends React.Component<PodDisruptionBudgetDetailsProps> {
+class NonInjectedPodDisruptionBudgetDetails extends React.Component<PodDisruptionBudgetDetailsProps & Dependencies> {
 
   render() {
     const { object: pdb } = this.props;
@@ -27,7 +33,7 @@ export class PodDisruptionBudgetDetails extends React.Component<PodDisruptionBud
     }
 
     if (!(pdb instanceof PodDisruptionBudget)) {
-      logger.error("[PodDisruptionBudgetDetails]: passed object that is not an instanceof PodDisruptionBudget", pdb);
+      this.props.logger.error("[PodDisruptionBudgetDetails]: passed object that is not an instanceof PodDisruptionBudget", pdb);
 
       return null;
     }
@@ -64,3 +70,10 @@ export class PodDisruptionBudgetDetails extends React.Component<PodDisruptionBud
     );
   }
 }
+
+export const PodDisruptionBudgetDetails = withInjectables<Dependencies, PodDisruptionBudgetDetailsProps>(NonInjectedPodDisruptionBudgetDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+  }),
+});

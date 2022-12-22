@@ -2,12 +2,12 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import logger from "../../../logger";
-import { getPortFrom } from "../../../utils/get-port";
+import type { GetPortFromStream } from "../../../utils/get-port-from-stream.injectable";
 import type { ChildProcessWithoutNullStreams } from "child_process";
 import { spawn } from "child_process";
 import * as tcpPortUsed from "tcp-port-used";
 import { TypedRegEx } from "typed-regex";
+import type { Logger } from "../../../../common/logger";
 
 const internalPortMatcher = "^forwarding from (?<address>.+) ->";
 const internalPortRegex = Object.assign(TypedRegEx(internalPortMatcher, "i"), {
@@ -23,8 +23,10 @@ export interface PortForwardArgs {
   forwardPort: number;
 }
 
-interface Dependencies {
+export interface PortForwardDependencies {
+  readonly logger: Logger;
   getKubectlBinPath: (bundled: boolean) => Promise<string>;
+  getPortFromStream: GetPortFromStream;
 }
 
 export class PortForward {
@@ -48,7 +50,7 @@ export class PortForward {
   public port: number;
   public forwardPort: number;
 
-  constructor(private dependencies: Dependencies, public pathToKubeConfig: string, args: PortForwardArgs) {
+  constructor(private dependencies: PortForwardDependencies, public pathToKubeConfig: string, args: PortForwardArgs) {
     this.clusterId = args.clusterId;
     this.kind = args.kind;
     this.namespace = args.namespace;
@@ -80,10 +82,10 @@ export class PortForward {
     });
 
     this.process.stderr.on("data", (data) => {
-      logger.debug(`[PORT-FORWARD-ROUTE]: kubectl port-forward process stderr: ${data}`);
+      this.dependencies.logger.debug(`[PORT-FORWARD-ROUTE]: kubectl port-forward process stderr: ${data}`);
     });
 
-    const internalPort = await getPortFrom(this.process.stdout, {
+    const internalPort = await this.dependencies.getPortFromStream(this.process.stdout, {
       lineRegex: internalPortRegex,
     });
 

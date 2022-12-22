@@ -14,14 +14,20 @@ import { Badge } from "../badge";
 import { PersistentVolume, persistentVolumeClaimApi, storageClassApi } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { getDetailsUrl } from "../kube-detail-params";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import { stopPropagation } from "../../../renderer/utils";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface PersistentVolumeDetailsProps extends KubeObjectDetailsProps<PersistentVolume> {
 }
 
+interface Dependencies {
+  logger: Logger;
+}
+
 @observer
-export class PersistentVolumeDetails extends React.Component<PersistentVolumeDetailsProps> {
+class NonInjectedPersistentVolumeDetails extends React.Component<PersistentVolumeDetailsProps & Dependencies> {
   render() {
     const { object: volume } = this.props;
 
@@ -30,7 +36,7 @@ export class PersistentVolumeDetails extends React.Component<PersistentVolumeDet
     }
 
     if (!(volume instanceof PersistentVolume)) {
-      logger.error("[PersistentVolumeDetails]: passed object that is not an instanceof PersistentVolume", volume);
+      this.props.logger.error("[PersistentVolumeDetails]: passed object that is not an instanceof PersistentVolume", volume);
 
       return null;
     }
@@ -121,3 +127,10 @@ export class PersistentVolumeDetails extends React.Component<PersistentVolumeDet
     );
   }
 }
+
+export const PersistentVolumeDetails = withInjectables<Dependencies, PersistentVolumeDetailsProps>(NonInjectedPersistentVolumeDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+  }),
+});

@@ -18,11 +18,12 @@ import { Spinner } from "../spinner";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import aboutPortForwardingInjectable from "../../port-forward/about-port-forwarding.injectable";
 import notifyErrorPortForwardingInjectable from "../../port-forward/notify-error-port-forwarding.injectable";
 import type { OpenPortForward } from "../../port-forward/open-port-forward.injectable";
 import openPortForwardInjectable from "../../port-forward/open-port-forward.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface ServicePortComponentProps {
   service: Service;
@@ -31,6 +32,7 @@ export interface ServicePortComponentProps {
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
+  logger: Logger;
   openPortForwardDialog: (item: ForwardedPort, options: { openInBrowser: boolean; onClose: () => void }) => void;
   aboutPortForwarding: () => void;
   notifyErrorPortForwarding: (message: string) => void;
@@ -127,7 +129,7 @@ class NonInjectedServicePortComponent extends React.Component<ServicePortCompone
         this.props.notifyErrorPortForwarding(`Error occurred starting port-forward, the local port may not be available or the ${portForward.kind} ${portForward.name} may not be reachable`);
       }
     } catch (error) {
-      logger.error("[SERVICE-PORT-COMPONENT]:", error, portForward);
+      this.props.logger.error("[SERVICE-PORT-COMPONENT]:", error, portForward);
     } finally {
       this.checkExistingPortForwarding();
       this.waiting = false;
@@ -196,18 +198,15 @@ class NonInjectedServicePortComponent extends React.Component<ServicePortCompone
   }
 }
 
-export const ServicePortComponent = withInjectables<Dependencies, ServicePortComponentProps>(
-  NonInjectedServicePortComponent,
-
-  {
-    getProps: (di, props) => ({
-      portForwardStore: di.inject(portForwardStoreInjectable),
-      openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
-      aboutPortForwarding: di.inject(aboutPortForwardingInjectable),
-      notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
-      openPortForward: di.inject(openPortForwardInjectable),
-      ...props,
-    }),
-  },
-);
+export const ServicePortComponent = withInjectables<Dependencies, ServicePortComponentProps>(NonInjectedServicePortComponent, {
+  getProps: (di, props) => ({
+    ...props,
+    portForwardStore: di.inject(portForwardStoreInjectable),
+    openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
+    aboutPortForwarding: di.inject(aboutPortForwardingInjectable),
+    notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
+    openPortForward: di.inject(openPortForwardInjectable),
+    logger: di.inject(loggerInjectable),
+  }),
+});
 

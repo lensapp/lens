@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 import clusterFrameContextForClusterScopedResourcesInjectable from "../../cluster-frame-context/for-cluster-scoped-resources.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { NodeStore } from "./store";
@@ -19,6 +20,7 @@ const nodeStoreInjectable = getInjectable({
 
     return new NodeStore({
       context: di.inject(clusterFrameContextForClusterScopedResourcesInjectable),
+      logger: di.inject(loggerInjectable),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

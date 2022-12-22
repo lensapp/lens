@@ -7,6 +7,7 @@ import assert from "assert";
 import getPodByIdInjectable from "../+workloads-pods/get-pod-by-id.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import kubeEventApiInjectable from "../../../common/k8s-api/endpoints/events.api.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { EventStore } from "./store";
@@ -21,6 +22,7 @@ const eventStoreInjectable = getInjectable({
     return new EventStore({
       getPodById: di.inject(getPodByIdInjectable),
       context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+      logger: di.inject(loggerInjectable),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

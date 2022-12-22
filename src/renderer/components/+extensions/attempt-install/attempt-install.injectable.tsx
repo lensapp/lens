@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
-import uninstallExtensionInjectable from "../uninstall-extension/uninstall-extension.injectable";
+import uninstallExtensionInjectable from "../uninstall-extension.injectable";
 import type { UnpackExtension } from "./unpack-extension.injectable";
 import unpackExtensionInjectable from "./unpack-extension.injectable";
 import type { GetExtensionDestFolder } from "./get-extension-dest-folder.injectable";

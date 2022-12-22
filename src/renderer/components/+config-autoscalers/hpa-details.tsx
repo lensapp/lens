@@ -16,17 +16,19 @@ import type { HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricTa
 import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface HpaDetailsProps extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 }
 
 interface Dependencies {
   apiManager: ApiManager;
+  logger: Logger;
   getDetailsUrl: GetDetailsUrl;
 }
 
@@ -104,7 +106,7 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
   }
 
   render() {
-    const { object: hpa, apiManager, getDetailsUrl } = this.props;
+    const { object: hpa, apiManager, getDetailsUrl, logger } = this.props;
 
     if (!hpa) {
       return null;
@@ -172,5 +174,6 @@ export const HpaDetails = withInjectables<Dependencies, HpaDetailsProps>(NonInje
     ...props,
     apiManager: di.inject(apiManagerInjectable),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    logger: di.inject(loggerInjectable),
   }),
 });

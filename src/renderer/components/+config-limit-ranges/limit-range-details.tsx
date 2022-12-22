@@ -12,7 +12,9 @@ import type { LimitRangeItem } from "../../../common/k8s-api/endpoints/limit-ran
 import { LimitPart, LimitRange, Resource } from "../../../common/k8s-api/endpoints/limit-range.api";
 import { DrawerItem } from "../drawer/drawer-item";
 import { Badge } from "../badge";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface LimitRangeDetailsProps extends KubeObjectDetailsProps<LimitRange> {
 }
@@ -51,10 +53,14 @@ function renderLimitDetails(limits: LimitRangeItem[], resources: Resource[]) {
   ));
 }
 
+interface Dependencies {
+  logger: Logger;
+}
+
 @observer
-export class LimitRangeDetails extends React.Component<LimitRangeDetailsProps> {
+class NonInjectedLimitRangeDetails extends React.Component<LimitRangeDetailsProps & Dependencies> {
   render() {
-    const { object: limitRange } = this.props;
+    const { object: limitRange, logger } = this.props;
 
     if (!limitRange) {
       return null;
@@ -97,3 +103,10 @@ export class LimitRangeDetails extends React.Component<LimitRangeDetailsProps> {
     );
   }
 }
+
+export const LimitRangeDetails = withInjectables<Dependencies, LimitRangeDetailsProps>(NonInjectedLimitRangeDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+  }),
+});

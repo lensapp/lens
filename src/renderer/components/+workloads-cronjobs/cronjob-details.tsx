@@ -17,12 +17,13 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { getDetailsUrl } from "../kube-detail-params";
 import type { Job } from "../../../common/k8s-api/endpoints";
 import { CronJob } from "../../../common/k8s-api/endpoints";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import cronJobStoreInjectable from "./store.injectable";
 import jobStoreInjectable from "../+workloads-jobs/store.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface CronJobDetailsProps extends KubeObjectDetailsProps<CronJob> {
 }
@@ -31,6 +32,7 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   jobStore: JobStore;
   cronJobStore: CronJobStore;
+  logger: Logger;
 }
 
 @observer
@@ -51,7 +53,7 @@ class NonInjectedCronJobDetails extends React.Component<CronJobDetailsProps & De
     }
 
     if (!(cronJob instanceof CronJob)) {
-      logger.error("[CronJobDetails]: passed object that is not an instanceof CronJob", cronJob);
+      this.props.logger.error("[CronJobDetails]: passed object that is not an instanceof CronJob", cronJob);
 
       return null;
     }
@@ -123,5 +125,6 @@ export const CronJobDetails = withInjectables<Dependencies, CronJobDetailsProps>
     subscribeStores: di.inject(subscribeStoresInjectable),
     cronJobStore: di.inject(cronJobStoreInjectable),
     jobStore: di.inject(jobStoreInjectable),
+    logger: di.inject(loggerInjectable),
   }),
 });

@@ -14,6 +14,7 @@ import assert from "assert";
 import nodeStoreInjectable from "../../+nodes/store.injectable";
 import requestClusterMetricsByNodeNamesInjectable from "../../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../../cluster-frame-context/for-namespaced-resources.injectable";
+import loggerInjectable from "../../../../common/logger.injectable";
 
 const clusterOverviewStoreInjectable = getInjectable({
   id: "cluster-overview-store",
@@ -34,6 +35,7 @@ const clusterOverviewStoreInjectable = getInjectable({
       nodeStore: di.inject(nodeStoreInjectable),
       requestClusterMetricsByNodeNames: di.inject(requestClusterMetricsByNodeNamesInjectable),
       context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+      logger: di.inject(loggerInjectable),
     }, clusterApi);
   },
   injectionToken: kubeObjectStoreInjectionToken,

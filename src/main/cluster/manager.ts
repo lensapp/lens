@@ -4,13 +4,10 @@
  */
 
 import "../../common/ipc/cluster";
-import type http from "http";
 import type { IObservableValue, ObservableSet } from "mobx";
 import { action, makeObservable, observe, reaction, toJS } from "mobx";
 import type { Cluster } from "../../common/cluster/cluster";
-import logger from "../logger";
-import { apiKubePrefix } from "../../common/vars";
-import { getClusterIdFromHost, isErrnoException } from "../../common/utils";
+import { isErrnoException } from "../../common/utils";
 import type { KubernetesClusterPrometheusMetrics } from "../../common/catalog-entities/kubernetes-cluster";
 import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../../common/ipc";
@@ -18,6 +15,7 @@ import { once } from "lodash";
 import type { ClusterStore } from "../../common/cluster-store/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
 import type { CatalogEntityRegistry } from "../catalog";
+import type { Logger } from "../../common/logger";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
@@ -28,6 +26,7 @@ interface Dependencies {
   readonly catalogEntityRegistry: CatalogEntityRegistry;
   readonly clustersThatAreBeingDeleted: ObservableSet<ClusterId>;
   readonly visibleCluster: IObservableValue<ClusterId | null>;
+  readonly logger: Logger;
 }
 
 export class ClusterManager {
@@ -80,7 +79,7 @@ export class ClusterManager {
 
   @action
   protected updateCatalog(clusters: Cluster[]) {
-    logger.debug("[CLUSTER-MANAGER]: updating catalog from cluster store");
+    this.dependencies.logger.debug("[CLUSTER-MANAGER]: updating catalog from cluster store");
 
     for (const cluster of clusters) {
       this.updateEntityFromCluster(cluster);
@@ -146,31 +145,31 @@ export class ClusterManager {
     } else {
       entity.status.phase = (() => {
         if (!cluster) {
-          logger.debug(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="no cluster"`);
+          this.dependencies.logger.debug(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="no cluster"`);
 
           return LensKubernetesClusterStatus.DISCONNECTED;
         }
 
         if (cluster.accessible) {
-          logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTED, reason="cluster is accessible"`);
+          this.dependencies.logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTED, reason="cluster is accessible"`);
 
           return LensKubernetesClusterStatus.CONNECTED;
         }
 
         if (!cluster.disconnected) {
-          logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTING, reason="cluster is not disconnected"`);
+          this.dependencies.logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTING, reason="cluster is not disconnected"`);
 
           return LensKubernetesClusterStatus.CONNECTING;
         }
 
         // Extensions are not allowed to use the Lens specific status phases
         if (!lensSpecificClusterStatuses.has(entity?.status?.phase)) {
-          logger.debug(`${logPrefix} not clearing entity ${entity.getName()} status, reason="custom string"`);
+          this.dependencies.logger.debug(`${logPrefix} not clearing entity ${entity.getName()} status, reason="custom string"`);
 
           return entity.status.phase;
         }
 
-        logger.debug(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="fallthrough"`);
+        this.dependencies.logger.debug(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="fallthrough"`);
 
         return LensKubernetesClusterStatus.DISCONNECTED;
       })();
@@ -200,9 +199,9 @@ export class ClusterManager {
           this.dependencies.store.addCluster(model);
         } catch (error) {
           if (isErrnoException(error) && error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
-            logger.warn(`${logPrefix} kubeconfig file disappeared`, model);
+            this.dependencies.logger.warn(`${logPrefix} kubeconfig file disappeared`, model);
           } else {
-            logger.error(`${logPrefix} failed to add cluster: ${error}`, model);
+            this.dependencies.logger.error(`${logPrefix} failed to add cluster: ${error}`, model);
           }
         }
       } else {
@@ -235,7 +234,7 @@ export class ClusterManager {
   }
 
   protected onNetworkOffline = () => {
-    logger.info(`${logPrefix} network is offline`);
+    this.dependencies.logger.info(`${logPrefix} network is offline`);
     this.dependencies.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.online = false;
@@ -246,7 +245,7 @@ export class ClusterManager {
   };
 
   protected onNetworkOnline = () => {
-    logger.info(`${logPrefix} network is online`);
+    this.dependencies.logger.info(`${logPrefix} network is online`);
     this.dependencies.store.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.refreshConnectionStatus().catch((e) => e);
@@ -259,27 +258,6 @@ export class ClusterManager {
       cluster.disconnect();
     });
   }
-
-  getClusterForRequest = (req: http.IncomingMessage): Cluster | undefined => {
-    if (!req.headers.host) {
-      return undefined;
-    }
-
-    // lens-server is connecting to 127.0.0.1:<port>/<uid>
-    if (req.url && req.headers.host.startsWith("127.0.0.1")) {
-      const clusterId = req.url.split("/")[1];
-      const cluster = this.dependencies.store.getById(clusterId);
-
-      if (cluster) {
-        // we need to swap path prefix so that request is proxied to kube api
-        req.url = req.url.replace(`/${clusterId}`, apiKubePrefix);
-      }
-
-      return cluster;
-    }
-
-    return this.dependencies.store.getById(getClusterIdFromHost(req.headers.host));
-  };
 }
 
 export function catalogEntityFromCluster(cluster: Cluster) {

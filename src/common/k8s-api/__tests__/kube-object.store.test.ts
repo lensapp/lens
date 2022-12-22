@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { noop } from "../../utils";
 import type { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import type { KubeObjectStoreLoadingParams } from "../kube-object.store";
@@ -17,6 +18,13 @@ class FakeKubeObjectStore extends KubeObjectStore<KubeObject> {
         hasSelectedAll: false,
         isGlobalWatchEnabled: () => true,
         isLoadingAll: () => true,
+      },
+      logger: {
+        debug: noop,
+        error: noop,
+        info: noop,
+        silly: noop,
+        warn: noop,
       },
     }, api as KubeApi<KubeObject>);
   }

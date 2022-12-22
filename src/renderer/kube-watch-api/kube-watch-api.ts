@@ -6,7 +6,7 @@ import { comparer, reaction } from "mobx";
 import type { Disposer } from "../../common/utils";
 import { disposer, getOrInsert, noop, WrappedAbortController } from "../../common/utils";
 import { once } from "lodash";
-import logger from "../../common/logger";
+import type { Logger } from "../../common/logger";
 import type { KubeObjectStoreLoadAllParams, KubeObjectStoreSubscribeParams } from "../../common/k8s-api/kube-object.store";
 import AbortController from "abort-controller";
 import type { ClusterContext } from "../cluster-frame-context/cluster-frame-context";
@@ -21,13 +21,19 @@ interface SubscribeStoreParams {
   onLoadFailure?: (err: any) => void;
 }
 
+interface WatchCountDependencies {
+  readonly logger: Logger;
+}
+
 class WatchCount {
   readonly #data = new Map<SubscribableStore, number>();
+
+  constructor(private readonly dependencies: WatchCountDependencies) {}
 
   public inc(store: SubscribableStore): number {
     const newCount = getOrInsert(this.#data, store, 0) + 1;
 
-    logger.info(`[KUBE-WATCH-API]: inc() count for ${store.api.apiBase} is now ${newCount}`);
+    this.dependencies.logger.info(`[KUBE-WATCH-API]: inc() count for ${store.api.apiBase} is now ${newCount}`);
     this.#data.set(store, newCount);
 
     return newCount;
@@ -46,7 +52,7 @@ class WatchCount {
       throw new Error(`Cannot dec count more times than it has been inc: ${store.api.kind}`);
     }
 
-    logger.info(`[KUBE-WATCH-API]: dec() count for ${store.api.apiBase} is now ${newCount}`);
+    this.dependencies.logger.info(`[KUBE-WATCH-API]: dec() count for ${store.api.apiBase} is now ${newCount}`);
     this.#data.set(store, newCount);
 
     return newCount;
@@ -69,6 +75,7 @@ export interface KubeWatchSubscribeStoreOptions {
 
 interface Dependencies {
   readonly clusterContext: ClusterContext;
+  readonly logger: Logger;
 }
 
 export interface SubscribableStore {
@@ -84,7 +91,7 @@ export interface SubscribableStore {
 export type SubscribeStores = (stores: SubscribableStore[], opts?: KubeWatchSubscribeStoreOptions) => Disposer;
 
 export class KubeWatchApi {
-  readonly #watch = new WatchCount();
+  readonly #watch = new WatchCount(this.dependencies);
 
   constructor(private readonly dependencies: Dependencies) {}
 
@@ -173,8 +180,8 @@ export class KubeWatchApi {
 
   protected log(message: any, meta: any) {
     const log = message instanceof Error
-      ? console.error
-      : console.debug;
+      ? this.dependencies.logger.error
+      : this.dependencies.logger.debug;
 
     log("[KUBE-WATCH-API]:", message, {
       time: new Date().toLocaleString(),

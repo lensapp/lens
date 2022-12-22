@@ -12,6 +12,7 @@ import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { beforeClusterFrameStartsSecondInjectionToken } from "../tokens";
 import type { KubeObjectStoreDependencies } from "../../../common/k8s-api/kube-object.store";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 const setupAutoRegistrationInjectable = getInjectable({
   id: "setup-auto-registration",
@@ -23,6 +24,7 @@ const setupAutoRegistrationInjectable = getInjectable({
       const beforeApiManagerInitializationApis: KubeApi[] = [];
       const deps: KubeObjectStoreDependencies = {
         context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+        logger: di.inject(loggerInjectable),
       };
       let initialized = false;
 

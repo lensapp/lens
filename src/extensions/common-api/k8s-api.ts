@@ -21,6 +21,8 @@ import type { KubeJsonApiDataFor, KubeObject } from "../../common/k8s-api/kube-o
 import type { KubeApi } from "../../common/k8s-api/kube-api";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
 import type { ClusterContext } from "../../renderer/cluster-frame-context/cluster-frame-context";
+import loggerInjectable from "../../common/logger.injectable";
+import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);
 export const forCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForClusterInjectable);
@@ -104,9 +106,12 @@ export abstract class KubeObjectStore<
    */
   constructor();
   constructor(api?: A, opts?: KubeObjectStoreOptions) {
+    const di = getLegacyGlobalDiForExtensionApi();
+
     super(
       {
-        context: asLegacyGlobalForExtensionApi(clusterFrameContextForNamespacedResourcesInjectable),
+        context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+        logger: di.inject(loggerInjectable),
       },
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       api!,

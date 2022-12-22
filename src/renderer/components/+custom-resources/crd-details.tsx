@@ -15,13 +15,19 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Input } from "../input";
 import { MonacoEditor } from "../monaco-editor";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface CRDDetailsProps extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
 
+interface Dependencies {
+  logger: Logger;
+}
+
 @observer
-export class CRDDetails extends React.Component<CRDDetailsProps> {
+class NonInjectedCRDDetails extends React.Component<CRDDetailsProps & Dependencies> {
   render() {
     const { object: crd } = this.props;
 
@@ -30,7 +36,7 @@ export class CRDDetails extends React.Component<CRDDetailsProps> {
     }
 
     if (!(crd instanceof CustomResourceDefinition)) {
-      logger.error("[CRDDetails]: passed object that is not an instanceof CustomResourceDefinition", crd);
+      this.props.logger.error("[CRDDetails]: passed object that is not an instanceof CustomResourceDefinition", crd);
 
       return null;
     }
@@ -152,3 +158,10 @@ export class CRDDetails extends React.Component<CRDDetailsProps> {
     );
   }
 }
+
+export const CRDDetails = withInjectables<Dependencies, CRDDetailsProps>(NonInjectedCRDDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+  }),
+});
