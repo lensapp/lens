@@ -244,29 +244,33 @@ export const getApplicationBuilder = () => {
     return {
       show: () => {},
       close: () => {},
-      loadFile: async () => {},
+      loadFile: async (filePath) => {
+        if (filePath === "/some-static-directory/build/some-product-name.html") {
+          for (const callback of beforeWindowStartCallbacks) {
+            await callback(windowDi);
+          }
+
+          const startFrame = windowDi.inject(startFrameInjectable);
+
+          await startFrame();
+
+          for (const callback of afterWindowStartCallbacks) {
+            await callback(windowDi);
+          }
+
+          const history = windowDi.inject(historyInjectable);
+
+          const render = renderFor(windowDi);
+
+          rendered = render(
+            <Router history={history}>
+              <environment.RootComponent />
+            </Router>,
+          );
+        }
+      },
       loadUrl: async () => {
-        for (const callback of beforeWindowStartCallbacks) {
-          await callback(windowDi);
-        }
-
-        const startFrame = windowDi.inject(startFrameInjectable);
-
-        await startFrame();
-
-        for (const callback of afterWindowStartCallbacks) {
-          await callback(windowDi);
-        }
-
-        const history = windowDi.inject(historyInjectable);
-
-        const render = renderFor(windowDi);
-
-        rendered = render(
-          <Router history={history}>
-            <environment.RootComponent />
-          </Router>,
-        );
+        throw new Error("Loading from URL is no longer supported");
       },
 
       send: (arg) => {
