@@ -10,21 +10,6 @@ import execHelmInjectable from "./exec-helm/exec-helm.injectable";
 
 const execHelm = asLegacyGlobalFunctionForExtensionApi(execHelmInjectable);
 
-export async function deleteRelease(name: string, namespace: string, kubeconfigPath: string): Promise<string> {
-  const result = await execHelm([
-    "delete",
-    name,
-    "--namespace", namespace,
-    "--kubeconfig", kubeconfigPath,
-  ]);
-
-  if (result.callWasSuccessful) {
-    return result.response;
-  }
-
-  throw result.error;
-}
-
 interface GetValuesOptions {
   namespace: string;
   all?: boolean;

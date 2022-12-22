@@ -5,19 +5,19 @@
 import { apiPrefix } from "../../../../common/vars";
 import { getRouteInjectable } from "../../../router/router.injectable";
 import { clusterRoute } from "../../../router/route";
-import deleteHelmReleaseInjectable from "../../../helm/helm-service/delete-helm-release.injectable";
+import deleteClusterHelmReleaseInjectable from "../../../helm/helm-service/delete-helm-release.injectable";
 
 const deleteReleaseRouteInjectable = getRouteInjectable({
   id: "delete-release-route",
 
   instantiate: (di) => {
-    const deleteHelmRelease = di.inject(deleteHelmReleaseInjectable);
+    const deleteHelmRelease = di.inject(deleteClusterHelmReleaseInjectable);
 
     return clusterRoute({
       method: "delete",
-      path: `${apiPrefix}/v2/releases/{namespace}/{release}`,
-    })(async ({ cluster, params: { release, namespace }}) => ({
-      response: await deleteHelmRelease(cluster, release, namespace),
+      path: `${apiPrefix}/v2/releases/{namespace}/{name}`,
+    })(async ({ cluster, params }) => ({
+      response: await deleteHelmRelease(cluster, params),
     }));
   },
 });

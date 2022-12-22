@@ -57,7 +57,6 @@ import normalizedPlatformArchitectureInjectable from "../common/vars/normalized-
 import getHelmChartVersionsInjectable from "./helm/helm-service/get-helm-chart-versions.injectable";
 import getHelmChartValuesInjectable from "./helm/helm-service/get-helm-chart-values.injectable";
 import listHelmChartsInjectable from "./helm/helm-service/list-helm-charts.injectable";
-import deleteHelmReleaseInjectable from "./helm/helm-service/delete-helm-release.injectable";
 import getHelmReleaseHistoryInjectable from "./helm/helm-service/get-helm-release-history.injectable";
 import getHelmReleaseValuesInjectable from "./helm/helm-service/get-helm-release-values.injectable";
 import rollbackHelmReleaseInjectable from "./helm/helm-service/rollback-helm-release.injectable";
@@ -137,7 +136,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       getHelmChartVersionsInjectable,
       getHelmChartValuesInjectable,
       listHelmChartsInjectable,
-      deleteHelmReleaseInjectable,
       getHelmReleaseHistoryInjectable,
       getHelmReleaseValuesInjectable,
       rollbackHelmReleaseInjectable,
