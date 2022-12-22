@@ -8,7 +8,7 @@ import "./resource-quotas.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { AddQuotaDialog } from "./add-quota-dialog";
+import { AddQuotaDialog } from "./add-dialog/view";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
@@ -18,6 +18,7 @@ import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-m
 import { withInjectables } from "@ogre-tools/injectable-react";
 import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import resourceQuotaStoreInjectable from "./store.injectable";
+import openAddQuotaDialogInjectable from "./add-dialog/open.injectable";
 
 enum columnId {
   name = "name",
@@ -28,6 +29,7 @@ enum columnId {
 interface Dependencies {
   resourceQuotaStore: ResourceQuotaStore;
   filterByNamespace: FilterByNamespace;
+  openAddQuotaDialog: () => void;
 }
 
 @observer
@@ -69,7 +71,7 @@ class NonInjectedResourceQuotas extends React.Component<Dependencies> {
             <KubeObjectAge key="age" object={resourceQuota} />,
           ]}
           addRemoveButtons={{
-            onAdd: () => AddQuotaDialog.open(),
+            onAdd: this.props.openAddQuotaDialog,
             addTooltip: "Create new ResourceQuota",
           }}
         />
@@ -84,5 +86,6 @@ export const ResourceQuotas = withInjectables<Dependencies>(NonInjectedResourceQ
     ...props,
     filterByNamespace: di.inject(filterByNamespaceInjectable),
     resourceQuotaStore: di.inject(resourceQuotaStoreInjectable),
+    openAddQuotaDialog: di.inject(openAddQuotaDialogInjectable),
   }),
 });

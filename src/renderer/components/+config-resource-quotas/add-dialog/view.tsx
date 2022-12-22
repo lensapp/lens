@@ -3,54 +3,61 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./add-quota-dialog.scss";
+import "./view.scss";
 
 import React from "react";
+import type { IComputedValue } from "mobx";
 import { computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
-import type { DialogProps } from "../dialog";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Input } from "../input";
-import { systemName } from "../input/input_validators";
-import type { IResourceQuotaValues } from "../../../common/k8s-api/endpoints";
-import { resourceQuotaApi } from "../../../common/k8s-api/endpoints";
-import { Select } from "../select";
-import { Icon } from "../icon";
-import { Button } from "../button";
-import { Notifications } from "../notifications";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { SubTitle } from "../layout/sub-title";
+import type { DialogProps } from "../../dialog";
+import { Dialog } from "../../dialog";
+import { Wizard, WizardStep } from "../../wizard";
+import { Input } from "../../input";
+import { systemName } from "../../input/input_validators";
+import type { IResourceQuotaValues, ResourceQuotaApi } from "../../../../common/k8s-api/endpoints";
+import { Select } from "../../select";
+import { Icon } from "../../icon";
+import { Button } from "../../button";
+import { Notifications } from "../../notifications";
+import { NamespaceSelect } from "../../+namespaces/namespace-select";
+import { SubTitle } from "../../layout/sub-title";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import closeAddQuotaDialogInjectable from "./close.injectable";
+import isAddQuotaDialogOpenInjectable from "./is-open.injectable";
+import resourceQuotaApiInjectable from "../../../../common/k8s-api/endpoints/resource-quota.api.injectable";
 
 export interface AddQuotaDialogProps extends DialogProps {
 }
 
-const dialogState = observable.object({
-  isOpen: false,
-});
+interface Dependencies {
+  resourceQuotaApi: ResourceQuotaApi;
+  isAddQuotaDialogOpen: IComputedValue<boolean>;
+  closeAddQuotaDialog: () => void;
+}
+
+const defaultQuotas = JSON.stringify({
+  "limits.cpu": "",
+  "limits.memory": "",
+  "requests.cpu": "",
+  "requests.memory": "",
+  "requests.storage": "",
+  "persistentvolumeclaims": "",
+  "count/pods": "",
+  "count/persistentvolumeclaims": "",
+  "count/services": "",
+  "count/secrets": "",
+  "count/configmaps": "",
+  "count/replicationcontrollers": "",
+  "count/deployments.apps": "",
+  "count/replicasets.apps": "",
+  "count/statefulsets.apps": "",
+  "count/jobs.batch": "",
+  "count/cronjobs.batch": "",
+  "count/deployments.extensions": "",
+} as IResourceQuotaValues);
 
 @observer
-export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
-  static defaultQuotas: IResourceQuotaValues = {
-    "limits.cpu": "",
-    "limits.memory": "",
-    "requests.cpu": "",
-    "requests.memory": "",
-    "requests.storage": "",
-    "persistentvolumeclaims": "",
-    "count/pods": "",
-    "count/persistentvolumeclaims": "",
-    "count/services": "",
-    "count/secrets": "",
-    "count/configmaps": "",
-    "count/replicationcontrollers": "",
-    "count/deployments.apps": "",
-    "count/replicasets.apps": "",
-    "count/statefulsets.apps": "",
-    "count/jobs.batch": "",
-    "count/cronjobs.batch": "",
-    "count/deployments.extensions": "",
-  };
+class NonInjectedAddQuotaDialog extends React.Component<AddQuotaDialogProps & Dependencies> {
 
   public defaultNamespace = "default";
 
@@ -58,19 +65,11 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
   @observable quotaSelectValue: string | null = null;
   @observable quotaInputValue = "";
   @observable namespace: string | null = this.defaultNamespace;
-  @observable quotas = AddQuotaDialog.defaultQuotas;
+  @observable quotas: IResourceQuotaValues = JSON.parse(defaultQuotas);
 
-  constructor(props: AddQuotaDialogProps) {
+  constructor(props: AddQuotaDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
-  }
-
-  static open() {
-    dialogState.isOpen = true;
-  }
-
-  static close() {
-    dialogState.isOpen = false;
   }
 
   @computed get quotaEntries() {
@@ -101,7 +100,7 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
   };
 
   close = () => {
-    AddQuotaDialog.close();
+    this.props.closeAddQuotaDialog();
   };
 
   reset = () => {
@@ -109,7 +108,7 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
     this.quotaSelectValue = "";
     this.quotaInputValue = "";
     this.namespace = this.defaultNamespace;
-    this.quotas = AddQuotaDialog.defaultQuotas;
+    this.quotas = JSON.parse(defaultQuotas);
   };
 
   addQuota = async () => {
@@ -122,7 +121,7 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
     try {
       const quotas = Object.fromEntries(this.quotaEntries);
 
-      await resourceQuotaApi.create({ namespace, name: quotaName }, {
+      await this.props.resourceQuotaApi.create({ namespace, name: quotaName }, {
         spec: {
           hard: quotas,
         },
@@ -143,14 +142,14 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
   };
 
   render() {
-    const { ...dialogProps } = this.props;
+    const { closeAddQuotaDialog, isAddQuotaDialogOpen, resourceQuotaApi, ...dialogProps } = this.props;
     const header = <h5>Create ResourceQuota</h5>;
 
     return (
       <Dialog
         {...dialogProps}
         className="AddQuotaDialog"
-        isOpen={dialogState.isOpen}
+        isOpen={isAddQuotaDialogOpen.get()}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
@@ -244,3 +243,12 @@ export class AddQuotaDialog extends React.Component<AddQuotaDialogProps> {
     );
   }
 }
+
+export const AddQuotaDialog = withInjectables<Dependencies, AddQuotaDialogProps>(NonInjectedAddQuotaDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    closeAddQuotaDialog: di.inject(closeAddQuotaDialogInjectable),
+    isAddQuotaDialogOpen: di.inject(isAddQuotaDialogOpenInjectable),
+    resourceQuotaApi: di.inject(resourceQuotaApiInjectable),
+  }),
+});
