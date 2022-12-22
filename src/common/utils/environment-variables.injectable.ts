@@ -3,14 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import nodeEnvInjectionToken from "../vars/node-env-injection-token";
 
 const environmentVariablesInjectable = getInjectable({
   id: "environment-variables",
 
-  instantiate: () => {
+  instantiate: (di) => {
     // IMPORTANT: The syntax needs to be exactly this in order to make environment variable values
     // hard-coded at compile-time by Webpack.
-    const NODE_ENV = process.env.NODE_ENV;
+    const NODE_ENV = di.inject(nodeEnvInjectionToken);
     const JEST_WORKER_ID = process.env.JEST_WORKER_ID;
     const CICD = process.env.CICD;
 

@@ -10,14 +10,16 @@ import {
   React, ReactDOM, ReactRouter, 
   ReactRouterDom, Mobx, MobxReact, LensExtensions,
 } from "./extension-api";
-import { startApp } from "./start-app";
+import { createApp } from "./create-app";
 
 const di = getDi();
+const app = createApp({
+  di,
+  mode: process.env.NODE_ENV || "development",
+});
 
 // run
-startApp({
-  di,
-});
+app.start();
 
 export {
   React,

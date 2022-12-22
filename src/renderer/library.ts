@@ -5,12 +5,10 @@
 import "./components/app.scss";
 
 import * as extensionApi from "./extension-api";
-import { registerInjectables } from "./register-injectables";
-import { startApp } from "./start-app";
+import { createApp } from "./create-app";
 
 // @experimental
 export {
-  startApp,
+  createApp,
   extensionApi,
-  registerInjectables,
 };
