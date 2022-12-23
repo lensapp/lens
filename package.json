@@ -142,6 +142,7 @@
       "LICENSE"
     ],
     "linux": {
+      "executableName": "open-lens",
       "category": "Network",
       "artifactName": "${productName}-${version}.${arch}.${ext}",
       "target": [
@@ -170,6 +171,7 @@
       ]
     },
     "mac": {
+      "executableName": "OpenLens",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
@@ -190,6 +192,7 @@
       ]
     },
     "win": {
+      "executableName": "OpenLens.exe",
       "target": [
         "nsis"
       ],
