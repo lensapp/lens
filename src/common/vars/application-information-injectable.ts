@@ -4,14 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import packageJson from "../../../package.json";
-
-export type ApplicationInformation = Pick<typeof packageJson, "version" | "config" | "productName" | "copyright" | "description" | "name"> & {
-  build: Partial<typeof packageJson["build"]> & { publish?: unknown[] };
-};
+import applicationInformationToken from "../../common/vars/application-information-token";
 
 const applicationInformationInjectable = getInjectable({
   id: "application-information",
-  instantiate: (): ApplicationInformation => {
+  injectionToken: applicationInformationToken,
+  instantiate: () => {
     const { version, config, productName, build, copyright, description, name } = packageJson;
 
     return { version, config, productName, build, copyright, description, name };

@@ -38,7 +38,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
     cache: isDevelopment ? { type: "filesystem" } : false,
     entry: {
-      [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
+      [appName]: path.resolve(rendererDir, "index.ts"),
     },
     output: {
       libraryTarget: "global",
@@ -70,6 +70,11 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       minimize: false,
     },
     module: {
+      parser: {
+        javascript: {
+          commonjsMagicComments: true,
+        },
+      },
       rules: [
         {
           test: /\.node$/,
@@ -102,7 +107,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       }),
 
       new HtmlWebpackPlugin({
-        filename: `${appName}.html`,
+        filename: "index.html",
         template: htmlTemplate,
         inject: true,
         hash: true,

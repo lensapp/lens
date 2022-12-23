@@ -208,7 +208,7 @@ async function main() {
     noTTYOutput: true,
     format: "[{bar}] {percentage}% | {downloadArch} {binaryName}",
   });
-  const baseDir = path.join(__dirname, "..", "binaries", "client");
+  const baseDir = path.join(process.cwd(), "binaries", "client");
   const downloaders: BinaryDownloader[] = [
     new LensK8sProxyDownloader(deps, {
       version: packageInfo.config.k8sProxyVersion,

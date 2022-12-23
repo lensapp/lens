@@ -10,10 +10,6 @@ static/build
 static/types
 binaries/client/
 binaries/server/
-src/extensions/*/*.js
-src/extensions/*/*.d.ts
-types/extension-api.d.ts
-types/extension-renderer-api.d.ts
 docs/extensions/api
 site/
 build/webpack/

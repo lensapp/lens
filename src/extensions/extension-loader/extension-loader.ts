@@ -404,7 +404,7 @@ export class ExtensionLoader {
     const extAbsolutePath = this.dependencies.joinPaths(this.dependencies.getDirnameOfPath(extension.manifestPath), extRelativePath);
 
     try {
-      return __non_webpack_require__(extAbsolutePath).default;
+      return require(/* webpackIgnore: true */ extAbsolutePath).default;
     } catch (error) {
       const message = (error instanceof Error ? error.stack : undefined) || error;
 

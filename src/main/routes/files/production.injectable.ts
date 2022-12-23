@@ -6,7 +6,6 @@ import { getInjectable } from "@ogre-tools/injectable";
 import readFileBufferInjectable from "../../../common/fs/read-file-buffer.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import staticFilesDirectoryInjectable from "../../../common/vars/static-files-directory.injectable";
-import appNameInjectable from "../../../common/vars/app-name.injectable";
 import type { LensApiRequest } from "../../router/route";
 import path from "path";
 import type { SupportedFileExtension } from "../../router/router-content-types";
@@ -20,7 +19,6 @@ const prodStaticFileRouteHandlerInjectable = getInjectable({
     const readFileBuffer = di.inject(readFileBufferInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
     const staticFilesDirectory = di.inject(staticFilesDirectoryInjectable);
-    const appName = di.inject(appNameInjectable);
     const logger = di.inject(loggerInjectable);
 
     return async ({ params }: LensApiRequest<"/{path*}">) => {
@@ -49,7 +47,7 @@ const prodStaticFileRouteHandlerInjectable = getInjectable({
             return { statusCode: 404 };
           }
 
-          filePath = `${publicPath}/${appName}.html`;
+          filePath = `${publicPath}/index.html`;
         }
       }
 

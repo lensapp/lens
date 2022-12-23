@@ -1,17 +1,16 @@
 name: Publish NPM Package `master`
 on:
-  push:
-    branches:
-      - master
+  pull_request:
+    types:
+      - closed
 concurrency:
   group: publish-master-npm
   cancel-in-progress: true
 jobs:
   publish:
-    name: Publish NPM Package `master`
+    name: Publish Extensions NPM Package `master`
     runs-on: ubuntu-latest
-    if: |
-      ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'area/extension') }}
+    if: ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'area/extension') }}
     strategy:
       matrix:
         node-version: [16.x]
@@ -28,11 +27,11 @@ jobs:
 
       - name: Generate NPM package
         run: |
-          make build-npm
+          make build-extensions-npm
 
       - name: publish new release
         run: |
-          make publish-npm
+          make publish-extensions-npm
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_RELEASE_TAG: master

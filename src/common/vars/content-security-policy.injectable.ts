@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import applicationInformationInjectable from "./application-information.injectable";
+import applicationInformationToken from "./application-information-token";
 
 const contentSecurityPolicyInjectable = getInjectable({
   id: "content-security-policy",
-  instantiate: (di) => di.inject(applicationInformationInjectable).config.contentSecurityPolicy,
+  instantiate: (di) => di.inject(applicationInformationToken).config.contentSecurityPolicy,
 });
 
 export default contentSecurityPolicyInjectable;

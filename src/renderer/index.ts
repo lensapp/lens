@@ -3,10 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-// Main process
+import "./components/app.scss";
 
 import { getDi } from "./getDi";
-import { Mobx, LensExtensions, Pty } from "./extension-api";
+import { 
+  React, ReactDOM, ReactRouter, 
+  ReactRouterDom, Mobx, MobxReact, LensExtensions,
+} from "./extension-api";
 import { createApp } from "./create-app";
 
 const di = getDi();
@@ -15,9 +18,15 @@ const app = createApp({
   mode: process.env.NODE_ENV || "development",
 });
 
-app.start().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+// run
+app.start();
 
-export { Mobx, LensExtensions, Pty };
+export {
+  React,
+  ReactDOM,
+  ReactRouter,
+  ReactRouterDom,
+  Mobx,
+  MobxReact,
+  LensExtensions,
+};
