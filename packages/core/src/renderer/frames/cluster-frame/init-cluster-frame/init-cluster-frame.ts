@@ -2,6 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { once } from "lodash";
 import type { Cluster } from "../../../../common/cluster/cluster";
 import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry";
 import type { ShowNotification } from "../../../components/notifications";
@@ -18,6 +19,7 @@ interface Dependencies {
   emitAppEvent: EmitAppEvent;
   logger: Logger;
   showErrorNotification: ShowNotification;
+  closeFileLogging: () => void;
 }
 
 const logPrefix = "[CLUSTER-FRAME]:";
@@ -30,6 +32,7 @@ export const initClusterFrame = ({
   emitAppEvent,
   logger,
   showErrorNotification,
+  closeFileLogging,
 }: Dependencies) =>
   async (unmountRoot: () => void) => {
     // TODO: Make catalogEntityRegistry already initialized when passed as dependency
@@ -73,11 +76,14 @@ export const initClusterFrame = ({
       });
     });
 
-    window.onpagehide = () => {
+    const onCloseFrame = once(() => {
       logger.info(
         `${logPrefix} Unload dashboard, clusterId=${(hostedCluster.id)}, frameId=${frameRoutingId}`,
       );
-
+      closeFileLogging();
       unmountRoot();
-    };
+    });
+
+    window.addEventListener("beforeunload", onCloseFrame, { capture: true });
+    window.addEventListener("pagehide", onCloseFrame, { capture: true });
   };
