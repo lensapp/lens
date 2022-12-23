@@ -6,13 +6,11 @@
 import { createContainer } from "@ogre-tools/injectable";
 import { runInAction } from "mobx";
 import applicationInformationInjectable from "../common/vars/application-information-injectable";
-import { registerInjectables } from "./register-injectables";
 
 export const getDi = () => {
   const di = createContainer("renderer");
 
   runInAction(() => {
-    registerInjectables(di);
     di.register(applicationInformationInjectable);
   });
 
