@@ -7,4 +7,16 @@
   width: 100%;
   height: 100%;
   flex: 1;
+
+  &.small {
+    height: 90px;
+  }
+
+  &.medium {
+    height: 180px;
+  }
+
+  &.large {
+    height: 360px;
+  }
 }

@@ -18,6 +18,7 @@ import type { LensTheme } from "../../themes/lens-theme";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import activeThemeInjectable from "../../themes/active.injectable";
+import getEditorHeightFromLinesNumberInjectable from "./get-editor-height-from-lines-number.injectable";
 
 export type MonacoEditorId = string;
 
@@ -37,11 +38,13 @@ export interface MonacoEditorProps {
   onDidContentSizeChange?(evt: editor.IContentSizeChangedEvent): void;
   onModelChange?(model: editor.ITextModel, prev?: editor.ITextModel): void;
   innerRef?: React.ForwardedRef<MonacoEditorRef>;
+  setInitialHeight?: boolean;
 }
 
 interface Dependencies {
   userStore: UserStore;
   activeTheme: IComputedValue<LensTheme>;
+  getEditorHeightFromLinesNumber: (linesNumber: number) => "small" | "medium" | "large";
 }
 
 export function createMonacoUri(id: MonacoEditorId): Uri {
@@ -288,13 +291,23 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   // avoid excessive validations during typing
   validateLazy = debounce(this.validate, 250);
 
+  get initialHeightClassName() {
+    if (!this.props.setInitialHeight) {
+      return;
+    }
+
+    const lines = this.model.getLineCount();
+
+    return styles[this.props.getEditorHeightFromLinesNumber(lines)];
+  }
+
   render() {
     const { className, style } = this.props;
 
     return (
       <div
         data-test-id="monaco-editor"
-        className={cssNames(styles.MonacoEditor, className)}
+        className={cssNames(styles.MonacoEditor, className, this.initialHeightClassName)}
         style={style}
         ref={elem => this.containerElem = elem}
       />
@@ -309,6 +322,7 @@ export const MonacoEditor = withInjectables<Dependencies, MonacoEditorProps, Mon
       ...props,
       userStore: di.inject(userStoreInjectable),
       activeTheme: di.inject(activeThemeInjectable),
+      getEditorHeightFromLinesNumber: di.inject(getEditorHeightFromLinesNumberInjectable),
     }),
   },
 );
