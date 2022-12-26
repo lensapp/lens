@@ -292,13 +292,9 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   validateLazy = debounce(this.validate, 250);
 
   get initialHeightClassName() {
-    if (!this.props.setInitialHeight) {
-      return;
-    }
-
-    const lines = this.model.getLineCount();
-
-    return styles[this.props.getEditorHeightFromLinesNumber(lines)];
+    return this.props.setInitialHeight ?
+      styles[this.props.getEditorHeightFromLinesNumber(this.model.getLineCount())] :
+      null;
   }
 
   render() {
