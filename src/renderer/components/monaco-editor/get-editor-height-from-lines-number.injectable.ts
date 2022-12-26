@@ -24,7 +24,7 @@ const getEditorHeightFromLinesCountInjectable = getInjectable({
 
       return "large";
     };
-  }
+  },
 });
 
 export default getEditorHeightFromLinesCountInjectable;
