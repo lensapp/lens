@@ -4,7 +4,7 @@
  */
 
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import getEditorHeightFromLinesNumberInjectable from "./get-editor-height-from-lines-number.injectable";
+import getEditorHeightFromLinesCountInjectable from "./get-editor-height-from-lines-number.injectable";
 
 describe("get-editor-height-from-lines-number", () => {
   let getEditorHeightFromLinesNumber: (linesNumber: number) => string;
@@ -12,7 +12,7 @@ describe("get-editor-height-from-lines-number", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: false });
 
-    getEditorHeightFromLinesNumber = di.inject(getEditorHeightFromLinesNumberInjectable);
+    getEditorHeightFromLinesNumber = di.inject(getEditorHeightFromLinesCountInjectable);
   });
 
   it("given linesNumber is less than 10, when called, returns small", () => {

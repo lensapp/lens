@@ -5,7 +5,7 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 
-const getEditorHeightFromLinesNumberInjectable = getInjectable({
+const getEditorHeightFromLinesCountInjectable = getInjectable({
   id: "get-editor-height-from-lines-number",
 
   instantiate: () => {
@@ -27,4 +27,4 @@ const getEditorHeightFromLinesNumberInjectable = getInjectable({
   }
 });
 
-export default getEditorHeightFromLinesNumberInjectable;
+export default getEditorHeightFromLinesCountInjectable;
