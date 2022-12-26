@@ -104,7 +104,12 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
                     <div className="name">{name}</div>
                     <MonacoEditor
                       id={`config-map-data-${name}`}
-                      style={{ resize: "vertical", overflow: "hidden" }}
+                      style={{
+                        resize: "vertical",
+                        overflow: "hidden",
+                        border: "1px solid var(--borderFaintColor)",
+                        borderRadius: "4px",
+                      }}
                       value={value || ""}
                       onChange={v => this.data.set(name, v)}
                       setInitialHeight
