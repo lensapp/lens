@@ -6,10 +6,10 @@ import { comparer, reaction } from "mobx";
 import type { Disposer } from "../../common/utils";
 import { disposer, getOrInsert, noop, WrappedAbortController } from "../../common/utils";
 import { once } from "lodash";
-import type { ClusterFrameContext } from "../cluster-frame-context/cluster-frame-context";
 import logger from "../../common/logger";
 import type { KubeObjectStoreLoadAllParams, KubeObjectStoreSubscribeParams } from "../../common/k8s-api/kube-object.store";
 import AbortController from "abort-controller";
+import type { ClusterContext } from "../cluster-frame-context/cluster-frame-context";
 
 // Kubernetes watch-api client
 // API: https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
@@ -68,7 +68,7 @@ export interface KubeWatchSubscribeStoreOptions {
 }
 
 interface Dependencies {
-  clusterFrameContext: ClusterFrameContext;
+  readonly clusterContext: ClusterContext;
 }
 
 export interface SubscribableStore {
@@ -86,7 +86,7 @@ export type SubscribeStores = (stores: SubscribableStore[], opts?: KubeWatchSubs
 export class KubeWatchApi {
   readonly #watch = new WatchCount();
 
-  constructor(private dependencies: Dependencies) {}
+  constructor(private readonly dependencies: Dependencies) {}
 
   private subscribeStore({ store, parent, namespaces, onLoadFailure }: SubscribeStoreParams): Disposer {
     const isNamespaceFilterWatch = !namespaces;
@@ -96,7 +96,7 @@ export class KubeWatchApi {
       return () => this.#watch.dec(store);
     }
 
-    namespaces ??= this.dependencies.clusterFrameContext?.contextNamespaces ?? [];
+    namespaces ??= this.dependencies.clusterContext?.contextNamespaces ?? [];
 
     let childController = new WrappedAbortController(parent);
     const unsubscribe = disposer();
@@ -123,7 +123,7 @@ export class KubeWatchApi {
     const cancelReloading = isNamespaceFilterWatch && store.api.isNamespaced
       ? reaction(
         // Note: must slice because reaction won't fire if it isn't there
-        () => [this.dependencies.clusterFrameContext.contextNamespaces.slice(), this.dependencies.clusterFrameContext.hasSelectedAll] as const,
+        () => [this.dependencies.clusterContext.contextNamespaces.slice(), this.dependencies.clusterContext.hasSelectedAll] as const,
         ([namespaces, curSelectedAll], [prevNamespaces, prevSelectedAll]) => {
           if (curSelectedAll && prevSelectedAll) {
             const action = namespaces.length > prevNamespaces.length ? "created" : "deleted";

@@ -8,6 +8,7 @@ import { storesAndApisCanBeCreatedInjectionToken } from "../../../../common/k8s-
 import clusterRoleApiInjectable from "../../../../common/k8s-api/endpoints/cluster-role.api.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../../common/k8s-api/api-manager/manager.injectable";
 import { ClusterRoleStore } from "./store";
+import clusterFrameContextForClusterScopedResourcesInjectable from "../../../cluster-frame-context/for-cluster-scoped-resources.injectable";
 
 const clusterRoleStoreInjectable = getInjectable({
   id: "cluster-role-store",
@@ -16,7 +17,9 @@ const clusterRoleStoreInjectable = getInjectable({
 
     const api = di.inject(clusterRoleApiInjectable);
 
-    return new ClusterRoleStore(api);
+    return new ClusterRoleStore({
+      context: di.inject(clusterFrameContextForClusterScopedResourcesInjectable),
+    }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,
 });

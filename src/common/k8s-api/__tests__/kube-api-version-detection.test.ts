@@ -3,43 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { KubeJsonApi } from "../kube-json-api";
-import { PassThrough } from "stream";
 import type { ApiManager } from "../api-manager";
 import { Ingress, IngressApi } from "../endpoints";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import apiManagerInjectable from "../api-manager/manager.injectable";
-import autoRegistrationInjectable from "../api-manager/auto-registration.injectable";
 import type { Fetch } from "../../fetch/fetch.injectable";
 import fetchInjectable from "../../fetch/fetch.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { flushPromises } from "../../test-utils/flush-promises";
 import createKubeJsonApiInjectable from "../create-kube-json-api.injectable";
-import type { Response, Headers as NodeFetchHeaders } from "node-fetch";
-
-const createMockResponseFromString = (url: string, data: string, statusCode = 200) => {
-  const res: jest.Mocked<Response> = {
-    buffer: jest.fn(async () => { throw new Error("buffer() is not supported"); }),
-    clone: jest.fn(() => res),
-    arrayBuffer: jest.fn(async () => { throw new Error("arrayBuffer() is not supported"); }),
-    blob: jest.fn(async () => { throw new Error("blob() is not supported"); }),
-    body: new PassThrough(),
-    bodyUsed: false,
-    headers: new Headers() as NodeFetchHeaders,
-    json: jest.fn(async () => JSON.parse(await res.text())),
-    ok: 200 <= statusCode && statusCode < 300,
-    redirected: 300 <= statusCode && statusCode < 400,
-    size: data.length,
-    status: statusCode,
-    statusText: "some-text",
-    text: jest.fn(async () => data),
-    type: "basic",
-    url,
-    formData: jest.fn(async () => { throw new Error("formData() is not supported"); }),
-  };
-
-  return res;
-};
+import setupAutoRegistrationInjectable from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
+import { createMockResponseFromString } from "../../../test-utils/mock-responses";
+import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
+import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import createClusterInjectable from "../../../main/create-cluster/create-cluster.injectable";
+import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
+import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 
 describe("KubeApi", () => {
   let request: KubeJsonApi;
@@ -52,6 +32,20 @@ describe("KubeApi", () => {
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
 
+    di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
+    di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+
+    const createCluster = di.inject(createClusterInjectable);
+
+    di.override(hostedClusterInjectable, () => createCluster({
+      contextName: "some-context-name",
+      id: "some-cluster-id",
+      kubeConfigPath: "/some-path-to-a-kubeconfig",
+    }, {
+      clusterServerUrl: "https://localhost:8080",
+    }));
+
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 
     request = createKubeJsonApi({
@@ -60,7 +54,9 @@ describe("KubeApi", () => {
     });
     registerApiSpy = jest.spyOn(di.inject(apiManagerInjectable), "registerApi");
 
-    di.inject(autoRegistrationInjectable);
+    const setupAutoRegistration = di.inject(setupAutoRegistrationInjectable);
+
+    setupAutoRegistration.run();
   });
 
   describe("on first call to IngressApi.get()", () => {

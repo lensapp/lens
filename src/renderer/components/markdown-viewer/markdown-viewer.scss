@@ -658,7 +658,7 @@
 
   :checked + .radio-label {
     position: relative;
-    z-index: var(--z-index-base);
+    z-index: 1;
     border-color: #4078c0;
   }
 

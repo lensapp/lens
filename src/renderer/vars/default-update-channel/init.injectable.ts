@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../../before-frame-starts/tokens";
 import initReleaseChannelInjectable from "../release-channel/init.injectable";
 import defaultUpdateChannelInjectable from "../../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 
@@ -18,7 +18,7 @@ const initDefaultUpdateChannelInjectable = getInjectable({
     },
     runAfter: di.inject(initReleaseChannelInjectable),
   }),
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default initDefaultUpdateChannelInjectable;

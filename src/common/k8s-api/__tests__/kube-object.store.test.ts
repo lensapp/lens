@@ -3,27 +3,22 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Cluster } from "../../cluster/cluster";
-import type { ClusterContext } from "../cluster-context";
 import type { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import type { KubeObjectStoreLoadingParams } from "../kube-object.store";
 import { KubeObjectStore } from "../kube-object.store";
 
 class FakeKubeObjectStore extends KubeObjectStore<KubeObject> {
-  _context = {
-    allNamespaces: [],
-    contextNamespaces: [],
-    hasSelectedAll: false,
-    cluster: {} as Cluster,
-  } as ClusterContext;
-
-  get context() {
-    return this._context;
-  }
-
   constructor(private readonly _loadItems: (params: KubeObjectStoreLoadingParams) => KubeObject[], api: Partial<KubeApi<KubeObject>>) {
-    super(api as KubeApi<KubeObject>);
+    super({
+      context: {
+        allNamespaces: [],
+        contextNamespaces: [],
+        hasSelectedAll: false,
+        isGlobalWatchEnabled: () => true,
+        isLoadingAll: () => true,
+      },
+    }, api as KubeApi<KubeObject>);
   }
 
   async loadItems(params: KubeObjectStoreLoadingParams) {

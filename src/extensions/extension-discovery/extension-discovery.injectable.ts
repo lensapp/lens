@@ -27,7 +27,6 @@ import getRelativePathInjectable from "../../common/path/get-relative-path.injec
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import removePathInjectable from "../../common/fs/remove.injectable";
 import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
-import applicationInformationInjectable from "../../common/vars/application-information.injectable";
 import lensResourcesDirInjectable from "../../common/vars/lens-resources-dir.injectable";
 
 const extensionDiscoveryInjectable = getInjectable({
@@ -58,7 +57,6 @@ const extensionDiscoveryInjectable = getInjectable({
     getRelativePath: di.inject(getRelativePathInjectable),
     joinPaths: di.inject(joinPathsInjectable),
     homeDirectoryPath: di.inject(homeDirectoryPathInjectable),
-    applicationInformation: di.inject(applicationInformationInjectable),
   }),
 });
 

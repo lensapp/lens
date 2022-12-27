@@ -15,14 +15,14 @@ import { DefinePlugin } from "webpack";
 import { buildDir, isDevelopment, mainDir } from "./vars";
 import { platform } from "process";
 
-const configs: { (): webpack.Configuration }[] = [];
-
-configs.push((): webpack.Configuration => {
-  console.info("WEBPACK:main", {
-    isDevelopment,
-    mainDir,
-    buildDir,
-  });
+const main = ({ showVars = true } = {}): webpack.Configuration => {
+  if (showVars) {
+    console.info("WEBPACK:main", {
+      isDevelopment,
+      mainDir,
+      buildDir,
+    });
+  }
 
   return {
     name: "lens-app-main",
@@ -45,6 +45,11 @@ configs.push((): webpack.Configuration => {
       nodeExternals(),
     ],
     module: {
+      parser: {
+        javascript: {
+          commonjsMagicComments: true,
+        },
+      },
       rules: [
         {
           test: /\.node$/,
@@ -67,6 +72,6 @@ configs.push((): webpack.Configuration => {
       }) as unknown as WebpackPluginInstance,
     ],
   };
-});
+};
 
-export default configs;
+export default main;

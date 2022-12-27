@@ -12,7 +12,7 @@ import openLinkInBrowserInjectable from "../../../../common/utils/open-link-in-b
 import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
 import lensResourcesDirInjectable from "../../../../common/vars/lens-resources-dir.injectable";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
-import applicationInformationInjectable from "../../../../common/vars/application-information.injectable";
+import applicationInformationToken from "../../../../common/vars/application-information-token";
 import pathExistsSyncInjectable from "../../../../common/fs/path-exists-sync.injectable";
 
 
@@ -54,7 +54,7 @@ const createElectronWindowInjectable = getInjectable({
     const getAbsolutePath = di.inject(getAbsolutePathInjectable);
     const lensResourcesDir = di.inject(lensResourcesDirInjectable);
     const isLinux = di.inject(isLinuxInjectable);
-    const applicationInformation = di.inject(applicationInformationInjectable);
+    const applicationInformation = di.inject(applicationInformationToken);
     const pathExistsSync = di.inject(pathExistsSyncInjectable);
 
     return (configuration) => {

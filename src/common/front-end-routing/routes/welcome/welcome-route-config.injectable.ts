@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import applicationInformationInjectable from "../../../vars/application-information.injectable";
+import applicationInformationToken from "../../../vars/application-information-token";
 
 const welcomeRouteConfigInjectable = getInjectable({
   id: "welcome-route-config",
 
-  instantiate: (di) => di.inject(applicationInformationInjectable).config.welcomeRoute,
+  instantiate: (di) => di.inject(applicationInformationToken).config.welcomeRoute,
 });
 
 export default welcomeRouteConfigInjectable;

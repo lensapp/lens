@@ -17,8 +17,7 @@ import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { Icon } from "../icon";
 import { TooltipPosition } from "../tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import clusterFrameContextInjectable from "../../cluster-frame-context/cluster-frame-context.injectable";
-import type { ClusterFrameContext } from "../../cluster-frame-context/cluster-frame-context";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import workloadOverviewDetailsInjectable from "./workload-overview-details/workload-overview-details.injectable";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
@@ -35,10 +34,11 @@ import jobStoreInjectable from "../+workloads-jobs/store.injectable";
 import statefulSetStoreInjectable from "../+workloads-statefulsets/store.injectable";
 import type { EventStore } from "../+events/store";
 import eventStoreInjectable from "../+events/store.injectable";
+import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
 
 interface Dependencies {
   detailComponents: IComputedValue<React.ElementType<{}>[]>;
-  clusterFrameContext: ClusterFrameContext;
+  clusterFrameContext: ClusterContext;
   subscribeStores: SubscribeStores;
   podStore: PodStore;
   daemonSetStore: DaemonSetStore;
@@ -123,7 +123,7 @@ class NonInjectedWorkloadsOverview extends React.Component<Dependencies> {
 export const WorkloadsOverview = withInjectables<Dependencies>(NonInjectedWorkloadsOverview, {
   getProps: (di) => ({
     detailComponents: di.inject(workloadOverviewDetailsInjectable),
-    clusterFrameContext: di.inject(clusterFrameContextInjectable),
+    clusterFrameContext: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
     subscribeStores: di.inject(subscribeStoresInjectable),
     daemonSetStore: di.inject(daemonSetStoreInjectable),
     podStore: di.inject(podStoreInjectable),

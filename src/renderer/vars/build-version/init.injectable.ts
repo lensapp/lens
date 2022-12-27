@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeFrameStartsInjectionToken } from "../../before-frame-starts/tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../../before-frame-starts/tokens";
 import buildVersionInjectable from "./build-version.injectable";
 
 const initializeBuildVersionInjectable = getInjectable({
@@ -16,7 +16,7 @@ const initializeBuildVersionInjectable = getInjectable({
       await buildVersion.init();
     },
   }),
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default initializeBuildVersionInjectable;

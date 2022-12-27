@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import applicationInformationInjectable from "../../../../../common/vars/application-information.injectable";
+import applicationInformationToken from "../../../../../common/vars/application-information-token";
 
 const publishIsConfiguredInjectable = getInjectable({
   id: "publish-is-configured",
-  instantiate: (di) => Boolean(di.inject(applicationInformationInjectable).build.publish?.length),
+  instantiate: (di) => Boolean(di.inject(applicationInformationToken).build.publish?.length),
 });
 
 export default publishIsConfiguredInjectable;

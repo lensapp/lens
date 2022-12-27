@@ -12,8 +12,8 @@ on:
         type: string
         description: The version to release manually
 jobs:
-  publish:
-    name: Publish NPM Package Release
+  publish-extensions:
+    name: Publish Extensions NPM Package Release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -32,10 +32,37 @@ jobs:
 
       - name: Generate NPM package
         run: |
-          make build-npm
+          make build-extensions-npm
 
-      - name: publish new release
+      - name: Publish NPM package
         run: |
-          make publish-npm
+          make publish-extensions-npm
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  publish-library:
+    name: Publish Library NPM Package Release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - name: Checkout Release
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.version }}
+
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Generate NPM package
+        run: |
+          make build-library-npm
+
+      - name: Publish NPM package
+        run: |
+          make publish-library-npm
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

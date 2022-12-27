@@ -12,6 +12,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import workloadsInjectable from "./workloads/workloads.injectable";
 import type { Workload } from "./workloads/workload-injection-token";
+import { formatKubeApiResource } from "../../../common/rbac";
 
 export interface OverviewStatusesProps {}
 
@@ -24,7 +25,7 @@ const NonInjectedOverviewStatuses = observer(
     <div className="OverviewStatuses">
       <div className="workloads">
         {workloads.get().map((workload) => (
-          <div className="workload" key={workload.resourceName}>
+          <div className="workload" key={formatKubeApiResource(workload.resource)}>
             <div className="title">
               <a onClick={workload.open}>
                 {`${workload.title} (${workload.amountOfItems.get()})`}

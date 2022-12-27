@@ -33,6 +33,7 @@
     height: 100%;
     left: 0;
     opacity: 0.15;
+    z-index: -1;
     transition: opacity 0.1s;
   }
 }

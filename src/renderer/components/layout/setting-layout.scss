@@ -10,7 +10,7 @@
   display: grid;
   color: var(--settingsColor);
   position: fixed;
-  z-index: var(--z-index-modals);
+  z-index: 13!important;
   left: 0;
   top: 0;
   right: 0;

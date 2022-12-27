@@ -104,7 +104,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
     );
     const { query } = params ?? {};
 
-    if (query) {
+    if (query && Object.keys(query).length > 0) {
       const queryString = stringify(query as unknown as QueryParams);
 
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
@@ -171,7 +171,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
       reqInit.body = JSON.stringify(data);
     }
 
-    if (query) {
+    if (query && Object.keys(query).length > 0) {
       const queryString = stringify(query as unknown as QueryParams);
 
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;

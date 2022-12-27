@@ -6,7 +6,7 @@
 // Fix embedded kubeconfig paths under snap config
 
 import { getInjectable } from "@ogre-tools/injectable";
-import applicationInformationInjectable from "../../../common/vars/application-information.injectable";
+import applicationInformationToken from "../../../common/vars/application-information-token";
 import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-store/migration-token";
 import loggerInjectable from "../../../common/logger.injectable";
 import isSnapPackageInjectable from "../../../common/vars/is-snap-package.injectable";
@@ -16,7 +16,7 @@ import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.inject
 const clusterStoreSnapMigrationInjectable = getInjectable({
   id: "cluster-store-snap-migration",
   instantiate: (di) => {
-    const { version } = di.inject(applicationInformationInjectable);
+    const { version } = di.inject(applicationInformationToken);
     const logger = di.inject(loggerInjectable);
     const isSnapPackage = di.inject(isSnapPackageInjectable);
     const pathExistsSync = di.inject(pathExistsSyncInjectable);

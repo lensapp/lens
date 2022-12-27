@@ -13,8 +13,8 @@ import { observer } from "mobx-react";
 import type { CreateResourceTabStore } from "./store";
 import { EditorPanel } from "../editor-panel";
 import { InfoPanel } from "../info-panel";
-import { Notifications } from "../../notifications";
-import logger from "../../../../common/logger";
+import type { ShowNotification } from "../../notifications";
+import type { Logger } from "../../../../common/logger";
 import type { ApiManager } from "../../../../common/k8s-api/api-manager";
 import { isObject, prevDefault } from "../../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -29,6 +29,10 @@ import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.in
 import navigateInjectable from "../../../navigation/navigate.injectable";
 import type { RequestKubeObjectCreation } from "../../../../common/k8s-api/endpoints/resource-applier.api/request-update.injectable";
 import requestKubeObjectCreationInjectable from "../../../../common/k8s-api/endpoints/resource-applier.api/request-update.injectable";
+import loggerInjectable from "../../../../common/logger.injectable";
+import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
+import showSuccessNotificationInjectable from "../../notifications/show-success-notification.injectable";
+import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 
 export interface CreateResourceProps {
   tabId: string;
@@ -38,9 +42,12 @@ interface Dependencies {
   createResourceTemplates: IComputedValue<GroupBase<{ label: string; value: string }>[]>;
   createResourceTabStore: CreateResourceTabStore;
   apiManager: ApiManager;
+  logger: Logger;
   navigate: Navigate;
   getDetailsUrl: GetDetailsUrl;
   requestKubeObjectCreation: RequestKubeObjectCreation;
+  showSuccessNotification: ShowNotification;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -81,34 +88,38 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
     const resources = yaml.loadAll(this.data).filter(isObject);
 
     if (resources.length === 0) {
-      return void logger.info("Nothing to create");
+      return this.props.logger.info("Nothing to create");
     }
 
     const creatingResources = resources.map(async (resource) => {
-      try {
-        const data = await requestKubeObjectCreation(dump(resource));
-        const { kind, apiVersion, metadata: { name, namespace }} = data;
+      const result = await requestKubeObjectCreation(dump(resource));
 
-        const showDetails = () => {
-          const resourceLink = apiManager.lookupApiLink({ kind, apiVersion, name, namespace });
+      if (!result.callWasSuccessful) {
+        this.props.logger.warn("Failed to create resource", { resource }, result.error);
+        this.props.showCheckedErrorNotification(result.error, "Unknown error occured while creating resources");
 
-          navigate(getDetailsUrl(resourceLink));
-          close();
-        };
-
-        const close = Notifications.ok(
-          <p>
-            {kind}
-            {" "}
-            <a onClick={prevDefault(showDetails)}>
-              {name}
-            </a>
-            {" successfully created."}
-          </p>,
-        );
-      } catch (error) {
-        Notifications.checkedError(error, "Unknown error occured while creating resources");
+        return;
       }
+
+      const { kind, apiVersion, metadata: { name, namespace }} = result.response;
+
+      const close = this.props.showSuccessNotification((
+        <p>
+          {kind}
+          {" "}
+          <a
+            onClick={prevDefault(() => {
+              const resourceLink = apiManager.lookupApiLink({ kind, apiVersion, name, namespace });
+
+              navigate(getDetailsUrl(resourceLink));
+              close();
+            })}
+          >
+            {name}
+          </a>
+          {" successfully created."}
+        </p>
+      ));
     });
 
     await Promise.allSettled(creatingResources);
@@ -168,8 +179,11 @@ export const CreateResource = withInjectables<Dependencies, CreateResourceProps>
     createResourceTabStore: di.inject(createResourceTabStoreInjectable),
     createResourceTemplates: await di.inject(createResourceTemplatesInjectable),
     apiManager: di.inject(apiManagerInjectable),
+    logger: di.inject(loggerInjectable),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     navigate: di.inject(navigateInjectable),
     requestKubeObjectCreation: di.inject(requestKubeObjectCreationInjectable),
+    showSuccessNotification: di.inject(showSuccessNotificationInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

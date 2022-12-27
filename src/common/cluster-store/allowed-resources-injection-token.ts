@@ -5,7 +5,8 @@
 
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
+import type { KubeApiResourceDescriptor } from "../rbac";
 
-export const allowedResourcesInjectionToken = getInjectionToken<IComputedValue<Set<string>>>({
-  id: "allowed-resources",
+export const shouldShowResourceInjectionToken = getInjectionToken<IComputedValue<boolean>, KubeApiResourceDescriptor>({
+  id: "should-show-resource",
 });

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
-import { beforeFrameStartsInjectionToken } from "../../../../renderer/before-frame-starts/tokens";
+import { beforeFrameStartsSecondInjectionToken } from "../../../../renderer/before-frame-starts/tokens";
 import initUserStoreInjectable from "../../../../renderer/stores/init-user-store.injectable";
 
 const initClusterStoreInjectable = getInjectable({
@@ -18,7 +18,7 @@ const initClusterStoreInjectable = getInjectable({
     },
     runAfter: di.inject(initUserStoreInjectable),
   }),
-  injectionToken: beforeFrameStartsInjectionToken,
+  injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
 export default initClusterStoreInjectable;

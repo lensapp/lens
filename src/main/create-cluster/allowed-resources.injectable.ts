@@ -2,15 +2,20 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { allowedResourcesInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
+import { shouldShowResourceInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
+import type { KubeApiResourceDescriptor } from "../../common/rbac";
+import { formatKubeApiResource } from "../../common/rbac";
 
 // TODO: Figure out implementation for this later.
 const allowedResourcesInjectable = getInjectable({
   id: "allowed-resources",
-  instantiate: () => computed(() => new Set<string>()),
-  injectionToken: allowedResourcesInjectionToken,
+  instantiate: () => computed(() => false),
+  injectionToken: shouldShowResourceInjectionToken,
+  lifecycle: lifecycleEnum.keyedSingleton({
+    getInstanceKey: (di, resource: KubeApiResourceDescriptor) => formatKubeApiResource(resource),
+  }),
 });
 
 export default allowedResourcesInjectable;

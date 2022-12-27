@@ -9,6 +9,7 @@
   margin-right: $padding * 4;
   bottom: 0;
   right: 0;
+  z-index: 99;
 
   .Button {
     &.remove-button {

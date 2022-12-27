@@ -37,6 +37,7 @@
         &::before, &::after {
           content: ' ';
           position: absolute;
+          z-index: 20;
           display: block;
           width: 8px;
           height: var(--font-size);

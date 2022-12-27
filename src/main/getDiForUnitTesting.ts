@@ -5,7 +5,7 @@
 
 import { kebabCase, noop, chunk } from "lodash/fp";
 import type { DiContainer, Injectable } from "@ogre-tools/injectable";
-import { createContainer, isInjectable } from "@ogre-tools/injectable";
+import { createContainer, isInjectable, getInjectable } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import writeJsonFileInjectable from "../common/fs/write-json-file.injectable";
 import readJsonFileInjectable from "../common/fs/read-json-file.injectable";
@@ -71,6 +71,8 @@ import kubectlDownloadingNormalizedArchInjectable from "./kubectl/normalized-arc
 import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
 import addKubeconfigSyncAsEntitySourceInjectable from "./start-main-application/runnables/kube-config-sync/add-source.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
+import applicationInformationInjectable from "../common/vars/application-information-injectable";
+import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -78,6 +80,12 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
   } = opts;
 
   const di = createContainer("main");
+
+  di.register(getInjectable({
+    id: "node-env",
+    instantiate: () => "test",
+    injectionToken: nodeEnvInjectionToken,
+  }));
 
   setLegacyGlobalDiForExtensionApi(di, Environments.main);
 
@@ -93,6 +101,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   runInAction(() => {
     registerMobX(di);
+    di.register(applicationInformationInjectable);
 
     chunk(100)(injectables).forEach(chunkInjectables => {
       di.register(...chunkInjectables);

@@ -5,5 +5,4 @@
 import { getGlobalOverride } from "../test-utils/get-global-override";
 import staticFilesDirectoryInjectable from "./static-files-directory.injectable";
 
-
 export default getGlobalOverride(staticFilesDirectoryInjectable, () => "/some-static-directory");

@@ -3,22 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import isAllowedResourceInjectable from "../../../../../utils/is-allowed-resource.injectable";
+import { shouldShowResourceInjectionToken } from "../../../../../cluster-store/allowed-resources-injection-token";
 import { frontEndRouteInjectionToken } from "../../../../front-end-route-injection-token";
 
 const configMapsRouteInjectable = getInjectable({
   id: "config-maps-route",
-
-  instantiate: (di) => {
-    const isAllowedResource = di.inject(isAllowedResourceInjectable, "configmaps");
-
-    return {
-      path: "/configmaps",
-      clusterFrame: true,
-      isEnabled: isAllowedResource,
-    };
-  },
-
+  instantiate: (di) => ({
+    path: "/configmaps",
+    clusterFrame: true,
+    isEnabled: di.inject(shouldShowResourceInjectionToken, {
+      apiName: "configmaps",
+      group: "v1",
+    }),
+  }),
   injectionToken: frontEndRouteInjectionToken,
 });
 

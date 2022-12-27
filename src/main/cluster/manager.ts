@@ -210,7 +210,7 @@ export class ClusterManager {
         cluster.contextName = entity.spec.kubeconfigContext;
 
         if (entity.spec.accessibleNamespaces) {
-          cluster.accessibleNamespaces = entity.spec.accessibleNamespaces;
+          cluster.accessibleNamespaces.replace(entity.spec.accessibleNamespaces);
         }
 
         if (entity.spec.metrics) {

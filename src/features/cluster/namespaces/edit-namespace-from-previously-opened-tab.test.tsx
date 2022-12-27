@@ -42,7 +42,10 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
       windowDi.override(callForResourceInjectable, () => callForNamespaceMock);
     });
 
-    builder.allowKubeResource("namespaces");
+    builder.allowKubeResource({
+      apiName: "namespaces",
+      group: "v1",
+    });
   });
 
   describe("given tab was previously opened, when application is started", () => {

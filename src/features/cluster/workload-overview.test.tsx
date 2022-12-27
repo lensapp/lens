@@ -13,7 +13,10 @@ describe("workload overview", () => {
 
   beforeEach(async () => {
     applicationBuilder = getApplicationBuilder().setEnvironmentToClusterFrame();
-    applicationBuilder.allowKubeResource("pods");
+    applicationBuilder.allowKubeResource({
+      apiName: "pods",
+      group: "v1",
+    });
     rendered = await applicationBuilder.render();
   });
 
