@@ -13,6 +13,9 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IngressClassStore } from "./ingress-class-store";
 import ingressClassStoreInjectable from "./ingress-class-store.injectable";
 import type { IngressClass } from "../../../common/k8s-api/endpoints/ingress-class.api";
+import { Icon } from "../icon";
+import { cssNames } from "../../utils";
+import { KubeObjectMenu } from "../kube-object-menu";
 
 enum columnId {
   name = "name",
@@ -75,14 +78,28 @@ const NonInjectedIngressClasses = observer((props: Dependencies) => {
           { title: "Kind", className: styles.kind, sortBy: columnId.kind, id: columnId.kind },
         ]}
         renderTableContents={(ingressClass: IngressClass) => [
-          // TODO: add "is-default" icon/marker + some actions how to "set as default" for each IngressClass
-          ingressClass.getName(),
+          <div key={ingressClass.getId()} className={cssNames(styles.name)}>
+            {ingressClass.getName()}
+            {" "}
+            {ingressClass.isDefault && (
+              <Icon
+                small
+                material="star"
+                tooltip="Is default class for ingresses (when not specified)"
+                className={styles.set_default_icon}
+              />
+            )}
+          </div>,
           ingressClass.getController(),
           ingressClass.getNs(),
           ingressClass.getApiGroup(),
           ingressClass.getScope(),
           ingressClass.getKind(),
         ]}
+        renderItemMenu={item => (
+          // TODO: customize menu + add set-default.injectable.ts item (?)
+          <KubeObjectMenu object={item} />
+        )}
       />
     </SiblingsInTabLayout>
   );

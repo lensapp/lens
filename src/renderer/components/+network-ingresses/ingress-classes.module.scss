@@ -29,4 +29,15 @@
     &.kind {
     }
   }
+
+  :global(.Icon) {
+    &.set_default_icon {
+      filter: brightness(.75);
+
+      &:hover {
+        filter: brightness(1.5);
+      }
+    }
+  }
+
 }
