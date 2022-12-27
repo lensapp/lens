@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { KubeObject, KubeObjectMetadata, KubeObjectScope } from "../kube-object";
+import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
+import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
 export class IngressClassApi extends KubeApi<IngressClass> {
@@ -19,25 +20,25 @@ export type IngressClassMetadata = KubeObjectMetadata<KubeObjectScope.Namespace>
   "name": string;
   "labels"?: {
     [name: string]: string | undefined;
-    "app.kubernetes.io/component"?: "controller"
-  }
+    "app.kubernetes.io/component"?: "controller";
+  };
   "annotations"?: {
     [name: string]: string | undefined;
-    "ingressclass.kubernetes.io/is-default-class"?: "true",
-  }
+    "ingressclass.kubernetes.io/is-default-class"?: "true";
+  };
 };
 
 export interface IngressClassParametersReference {
   "apiGroup": string; // k8s.example.net
-  "scope": "Namespace" | "Cluster"
-  "kind": "ClusterIngressParameter" | "IngressParameter"
+  "scope": "Namespace" | "Cluster";
+  "kind": "ClusterIngressParameter" | "IngressParameter";
   "name": string; // external-config-1
   "namespace"?: string; // namespaced for IngressClass must be defined in `spec.parameters.namespace` instead of `metadata.namespace` (!)
 }
 
 export interface IngressClassSpec {
   controller: string; // example.com/ingress-controller
-  parameters?: IngressClassParametersReference,
+  parameters?: IngressClassParametersReference;
 }
 
 export interface IngressClassStatus {

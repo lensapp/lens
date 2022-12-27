@@ -71,8 +71,8 @@ const NonInjectedIngressClasses = observer((props: Dependencies) => {
             sortBy: columnId.apiGroup,
             id: columnId.apiGroup,
           },
-          { title: "Scope", className: styles.scope, sortBy: columnId.scope, id: columnId.scope, },
-          { title: "Kind", className: styles.kind, sortBy: columnId.kind, id: columnId.kind, },
+          { title: "Scope", className: styles.scope, sortBy: columnId.scope, id: columnId.scope },
+          { title: "Kind", className: styles.kind, sortBy: columnId.kind, id: columnId.kind },
         ]}
         renderTableContents={(ingressClass: IngressClass) => [
           // TODO: add "is-default" icon/marker + some actions how to "set as default" for each IngressClass

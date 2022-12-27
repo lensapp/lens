@@ -3,12 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed, IComputedValue } from "mobx";
+import type { IComputedValue } from "mobx";
+import { computed } from "mobx";
 import ingressesRouteInjectable
   from "../../../common/front-end-routing/routes/cluster/network/ingresses/ingresses-route.injectable";
+import type {
+  SidebarItemRegistration } from "../layout/sidebar-items.injectable";
 import {
-  SidebarItemRegistration,
-  sidebarItemsInjectionToken
+  sidebarItemsInjectionToken,
 } from "../layout/sidebar-items.injectable";
 import { networkSidebarItemId } from "../+network/network-sidebar-items.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import {
-  routeSpecificComponentInjectionToken
+  routeSpecificComponentInjectionToken,
 } from "../../routes/route-specific-component-injection-token";
 import ingressClassesesRouteInjectable
   from "../../../common/front-end-routing/routes/cluster/network/ingress-class/ingress-classeses-route.injectable";

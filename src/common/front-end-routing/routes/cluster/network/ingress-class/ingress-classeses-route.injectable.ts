@@ -3,19 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import isAllowedResourceInjectable from "../../../../../utils/is-allowed-resource.injectable";
 import { frontEndRouteInjectionToken } from "../../../../front-end-route-injection-token";
+import {
+  shouldShowResourceInjectionToken,
+} from "../../../../../cluster-store/allowed-resources-injection-token";
 
 const ingressClassesesRouteInjectable = getInjectable({
   id: "ingress-classes-route",
 
   instantiate: (di) => {
-    const isAllowedResource = di.inject(isAllowedResourceInjectable, "ingressclasses");
+    const isEnabled = di.inject(shouldShowResourceInjectionToken, {
+      apiName: "ingresses",
+      group: "networking.k8s.io",
+    });
 
     return {
       path: "/ingress-classes",
       clusterFrame: true,
-      isEnabled: isAllowedResource,
+      isEnabled,
     };
   },
 
