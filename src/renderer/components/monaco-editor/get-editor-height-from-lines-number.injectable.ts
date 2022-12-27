@@ -5,24 +5,26 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 
+export type MonacoEditorSize = (linesCount: number) => number;
+
 const getEditorHeightFromLinesCountInjectable = getInjectable({
   id: "get-editor-height-from-lines-number",
 
   instantiate: () => {
-    return (linesNumber: number) => {
-      if (typeof linesNumber !== "number") {
+    return (linesCount: number) => {
+      if (typeof linesCount !== "number") {
         throw new Error("linesNumber must be a number");
       }
 
-      if (linesNumber < 10) {
-        return "small";
+      if (linesCount < 10) {
+        return 90;
       }
 
-      if (linesNumber < 20) {
-        return "medium";
+      if (linesCount < 20) {
+        return 180;
       }
 
-      return "large";
+      return 360;
     };
   },
 });

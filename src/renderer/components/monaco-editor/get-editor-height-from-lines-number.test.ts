@@ -7,7 +7,7 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import getEditorHeightFromLinesCountInjectable from "./get-editor-height-from-lines-number.injectable";
 
 describe("get-editor-height-from-lines-number", () => {
-  let getEditorHeightFromLinesNumber: (linesNumber: number) => string;
+  let getEditorHeightFromLinesNumber: (linesCount: number) => number;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: false });
@@ -15,33 +15,33 @@ describe("get-editor-height-from-lines-number", () => {
     getEditorHeightFromLinesNumber = di.inject(getEditorHeightFromLinesCountInjectable);
   });
 
-  it("given linesNumber is less than 10, when called, returns small", () => {
+  it("given linesCount is less than 10, when called, returns small number", () => {
     const actual = getEditorHeightFromLinesNumber(9);
 
-    expect(actual).toBe("small");
+    expect(actual).toBe(90);
   });
 
-  it("given linesNumber is equal to 10, when called, returns medium", () => {
+  it("given linesCount is equal to 10, when called, returns medium number", () => {
     const actual = getEditorHeightFromLinesNumber(10);
 
-    expect(actual).toBe("medium");
+    expect(actual).toBe(180);
   });
 
-  it("given linesNumber is greater than 10 and less than 20, when called, returns medium", () => {
+  it("given linesCount is greater than 10 and less than 20, when called, returns medium number", () => {
     const actual = getEditorHeightFromLinesNumber(19);
 
-    expect(actual).toBe("medium");
+    expect(actual).toBe(180);
   });
 
-  it("given linesNumber is equal to 20, when called, returns large", () => {
+  it("given linesCount is equal to 20, when called, returns large number", () => {
     const actual = getEditorHeightFromLinesNumber(20);
 
-    expect(actual).toBe("large");
+    expect(actual).toBe(360);
   });
 
-  it("given linesNumber is greater than 20, when called, returns large", () => {
+  it("given linesCount is greater than 20, when called, returns large number", () => {
     const actual = getEditorHeightFromLinesNumber(21);
 
-    expect(actual).toBe("large");
+    expect(actual).toBe(360);
   });
 });
