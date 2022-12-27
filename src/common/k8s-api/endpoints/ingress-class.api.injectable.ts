@@ -8,7 +8,7 @@ import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
 
 const ingressClassApiInjectable = getInjectable({
   id: "ingress-class-api",
-  instantiate: (di) => {
+  instantiate: () => {
     return new IngressClassApi();
   },
 
