@@ -18,7 +18,8 @@ import type { LensTheme } from "../../themes/lens-theme";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import activeThemeInjectable from "../../themes/active.injectable";
-import getEditorHeightFromLinesCountInjectable, { MonacoEditorSize } from "./get-editor-height-from-lines-number.injectable";
+import type { MonacoEditorSize } from "./get-editor-height-from-lines-number.injectable";
+import getEditorHeightFromLinesCountInjectable from "./get-editor-height-from-lines-number.injectable";
 
 export type MonacoEditorId = string;
 
@@ -301,7 +302,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
     const css: React.CSSProperties = {
       ...style,
       height: setInitialHeight ? this.initialHeight : style?.height,
-    }
+    };
 
     return (
       <div
