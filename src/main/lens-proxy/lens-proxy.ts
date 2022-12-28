@@ -4,7 +4,8 @@
  */
 
 import net from "net";
-import http from "http";
+import https from "https";
+import type http from "http";
 import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import type { Router } from "../router/router";
@@ -16,6 +17,7 @@ import assert from "assert";
 import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
+import type { SelfSignedCert } from "selfsigned";
 
 type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 
@@ -31,6 +33,7 @@ interface Dependencies {
   readonly lensProxyPort: { set: (portNumber: number) => void };
   readonly contentSecurityPolicy: string;
   readonly logger: Logger;
+  readonly certificate: SelfSignedCert;
 }
 
 const watchParam = "watch";
@@ -61,27 +64,33 @@ const disallowedPorts = new Set([
 ]);
 
 export class LensProxy {
-  protected proxyServer: http.Server;
+  protected proxyServer: https.Server;
   protected closed = false;
   protected retryCounters = new Map<string, number>();
 
   constructor(private readonly dependencies: Dependencies) {
     this.configureProxy(dependencies.proxy);
 
-    this.proxyServer = http.createServer((req, res) => {
-      this.handleRequest(req as ServerIncomingMessage, res);
-    });
+    this.proxyServer = https.createServer(
+      {
+        key: dependencies.certificate.private,
+        cert: dependencies.certificate.cert,
+      },
+      (req, res) => {
+        this.handleRequest(req as ServerIncomingMessage, res);
+      },
+    );
 
     this.proxyServer
       .on("upgrade", (req: ServerIncomingMessage, socket: net.Socket, head: Buffer) => {
-        const cluster = dependencies.getClusterForRequest(req);
+        const cluster = this.dependencies.getClusterForRequest(req);
 
         if (!cluster) {
           this.dependencies.logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
           socket.destroy();
         } else {
           const isInternal = req.url.startsWith(`${apiPrefix}?`);
-          const reqHandler = isInternal ? dependencies.shellApiRequest : dependencies.kubeApiUpgradeRequest;
+          const reqHandler = isInternal ? this.dependencies.shellApiRequest : this.dependencies.kubeApiUpgradeRequest;
 
           (async () => reqHandler({ req, socket, head, cluster }))()
             .catch(error => this.dependencies.logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
@@ -157,6 +166,7 @@ export class LensProxy {
 
   close() {
     this.dependencies.logger.info("[LENS-PROXY]: Closing server");
+
     this.proxyServer.close();
     this.closed = true;
   }

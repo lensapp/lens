@@ -23,7 +23,7 @@ export interface IKubeApiParsed extends IKubeApiLinkRef {
 }
 
 export function parseKubeApi(path: string): IKubeApiParsed {
-  const apiPath = new URL(path, "http://localhost").pathname;
+  const apiPath = new URL(path, "https://localhost").pathname;
   const [, prefix, ...parts] = apiPath.split("/");
   const apiPrefix = `/${prefix}`;
   const [left, right, namespaced] = splitArray(parts, "namespaces");

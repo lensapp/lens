@@ -88,8 +88,8 @@ describe("<NamespaceSelectFilter />", () => {
   describe("once the subscribe resolves", () => {
     beforeEach(async () => {
       await fetchMock.resolveSpecific([
-        "http://127.0.0.1:12345/api-kube/api/v1/namespaces",
-      ], createMockResponseFromString("http://127.0.0.1:12345/api-kube/api/v1/namespaces", JSON.stringify({
+        "https://127.0.0.1:12345/api-kube/api/v1/namespaces",
+      ], createMockResponseFromString("https://127.0.0.1:12345/api-kube/api/v1/namespaces", JSON.stringify({
         apiVersion: "v1",
         kind: "NamespaceList",
         metadata: {},

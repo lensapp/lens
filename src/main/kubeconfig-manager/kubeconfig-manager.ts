@@ -15,6 +15,7 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { PathExists } from "../../common/fs/path-exists.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { WriteFile } from "../../common/fs/write-file.injectable";
+import type { SelfSignedCert } from "selfsigned";
 
 export interface KubeconfigManagerDependencies {
   readonly directoryForTemp: string;
@@ -25,6 +26,7 @@ export interface KubeconfigManagerDependencies {
   pathExists: PathExists;
   removePath: RemovePath;
   writeFile: WriteFile;
+  certificate: SelfSignedCert;
 }
 
 export class KubeconfigManager {
@@ -86,7 +88,7 @@ export class KubeconfigManager {
   }
 
   get resolveProxyUrl() {
-    return `http://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`;
+    return `https://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`;
   }
 
   /**
@@ -101,16 +103,19 @@ export class KubeconfigManager {
       `kubeconfig-${id}`,
     );
     const kubeConfig = await cluster.getKubeconfig();
+    const { certificate } = this.dependencies;
     const proxyConfig: PartialDeep<KubeConfig> = {
       currentContext: contextName,
       clusters: [
         {
           name: contextName,
           server: this.resolveProxyUrl,
+          skipTLSVerify: false,
+          caData: Buffer.from(certificate.cert).toString("base64"),
         },
       ],
       users: [
-        { name: "proxy" },
+        { name: "proxy", username: "lens", password: "fake" },
       ],
       contexts: [
         {

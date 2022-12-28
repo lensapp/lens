@@ -11,7 +11,7 @@ const apiBaseServerAddressInjectable = getInjectable({
   instantiate: (di) => {
     const { port } = di.inject(windowLocationInjectable);
 
-    return `http://127.0.0.1:${port}`;
+    return `https://127.0.0.1:${port}`;
   },
   injectionToken: apiBaseServerAddressInjectionToken,
 });
