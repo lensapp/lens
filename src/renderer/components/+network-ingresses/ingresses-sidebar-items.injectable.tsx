@@ -45,7 +45,7 @@ const ingressesSidebarItemsInjectable = getInjectable({
         onClick: di.inject(navigateToIngressClassesInjectable),
         isActive: di.inject(routeIsActiveInjectable, ingressClassRoute),
         isVisible: ingressClassRoute.isEnabled,
-        orderNumber: 30,
+        orderNumber: 31,
       },
     ]);
   },
