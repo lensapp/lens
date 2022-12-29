@@ -15,7 +15,6 @@ import ingressClassStoreInjectable from "./ingress-class-store.injectable";
 import type { IngressClass } from "../../../common/k8s-api/endpoints/ingress-class.api";
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";
-import { KubeObjectMenu } from "../kube-object-menu";
 
 enum columnId {
   name = "name",
@@ -96,10 +95,6 @@ const NonInjectedIngressClasses = observer((props: Dependencies) => {
           ingressClass.getScope(),
           ingressClass.getKind(),
         ]}
-        renderItemMenu={item => (
-          // TODO: customize menu + add set-default.injectable.ts item (?)
-          <KubeObjectMenu object={item} />
-        )}
       />
     </SiblingsInTabLayout>
   );
