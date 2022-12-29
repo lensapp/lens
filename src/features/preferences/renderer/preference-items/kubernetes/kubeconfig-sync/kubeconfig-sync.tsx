@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { action, computed, makeObservable, observable, reaction } from "mobx";
+import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Notice } from "../../../../../../renderer/components/+extensions/notice";
@@ -59,11 +59,7 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
       reaction(
         () => Array.from(this.syncs.entries(), ([filePath, kind]) => tuple.from(filePath, kind)),
         syncs => {
-          action(() => {
-            for (const [path] of syncs) {
-              this.props.userStore.syncKubeconfigEntries.set(path, {});
-            }
-          });
+          this.props.userStore.syncKubeconfigEntries.replace(syncs);
         },
       ),
     ]);
