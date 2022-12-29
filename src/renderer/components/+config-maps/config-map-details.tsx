@@ -99,7 +99,7 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
             <>
               <DrawerTitle>Data</DrawerTitle>
               {
-                data.map(([name, value]) => (
+                data.map(([name, value = ""]) => (
                   <div key={name} className="data">
                     <div className="name">{name}</div>
                     <MonacoEditor
@@ -110,7 +110,7 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
                         border: "1px solid var(--borderFaintColor)",
                         borderRadius: "4px",
                       }}
-                      value={value || ""}
+                      value={value}
                       onChange={v => this.data.set(name, v)}
                       setInitialHeight
                     />

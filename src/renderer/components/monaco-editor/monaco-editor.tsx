@@ -18,7 +18,6 @@ import type { LensTheme } from "../../themes/lens-theme";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import activeThemeInjectable from "../../themes/active.injectable";
-import type { MonacoEditorSize } from "./get-editor-height-from-lines-number.injectable";
 import getEditorHeightFromLinesCountInjectable from "./get-editor-height-from-lines-number.injectable";
 
 export type MonacoEditorId = string;
@@ -45,7 +44,7 @@ export interface MonacoEditorProps {
 interface Dependencies {
   userStore: UserStore;
   activeTheme: IComputedValue<LensTheme>;
-  getEditorHeightFromLinesCount: MonacoEditorSize;
+  getEditorHeightFromLinesCount: (linesCount: number) => number;
 }
 
 export function createMonacoUri(id: MonacoEditorId): Uri {
@@ -297,11 +296,11 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   }
 
   render() {
-    const { className, style, setInitialHeight } = this.props;
+    const { className, style } = this.props;
 
     const css: React.CSSProperties = {
       ...style,
-      height: setInitialHeight ? this.initialHeight : style?.height,
+      height: style?.height ?? this.initialHeight,
     };
 
     return (
