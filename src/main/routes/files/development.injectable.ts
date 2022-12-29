@@ -15,7 +15,7 @@ const devStaticFileRouteHandlerInjectable = getInjectable({
     const proxyTarget = `http://127.0.0.1:${webpackDevServerPort}`;
 
     return async ({ raw: { req, res }}: LensApiRequest<"/{path*}">): Promise<RouteResponse<Buffer>> => {
-      if (req.url === "/" || !req.url) {
+      if (req.url === "/" || !req.url || !req.url.startsWith(publicPath)) {
         req.url = `${publicPath}/index.html`;
       } else if (!req.url.startsWith("/build/")) {
         return { statusCode: 404 };
