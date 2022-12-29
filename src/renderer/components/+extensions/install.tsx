@@ -89,7 +89,7 @@ const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({
     </div>
     <small className={styles.proTip}>
       <b>Pro-Tip</b>
-      : you can drag-n-drop tarball-file to this area
+      : you can drag and drop a tarball file to this area
     </small>
   </section>
 );
