@@ -10,7 +10,6 @@ import { autorun, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
 import type { ShowNotification } from "../notifications";
-import { Input } from "../input";
 import { Button } from "../button";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ConfigMap } from "../../../common/k8s-api/endpoints";
@@ -21,6 +20,7 @@ import configMapStoreInjectable from "./store.injectable";
 import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import { MonacoEditor } from "../monaco-editor";
 
 export interface ConfigMapDetailsProps extends KubeObjectDetailsProps<ConfigMap> {
 }
@@ -99,18 +99,21 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
             <>
               <DrawerTitle>Data</DrawerTitle>
               {
-                data.map(([name, value]) => (
+                data.map(([name, value = ""]) => (
                   <div key={name} className="data">
                     <div className="name">{name}</div>
-                    <div className="flex gaps align-flex-start">
-                      <Input
-                        multiLine
-                        theme="round-black"
-                        className="box grow"
-                        value={value}
-                        onChange={v => this.data.set(name, v)}
-                      />
-                    </div>
+                    <MonacoEditor
+                      id={`config-map-data-${name}`}
+                      style={{
+                        resize: "vertical",
+                        overflow: "hidden",
+                        border: "1px solid var(--borderFaintColor)",
+                        borderRadius: "4px",
+                      }}
+                      value={value}
+                      onChange={v => this.data.set(name, v)}
+                      setInitialHeight
+                    />
                   </div>
                 ))
               }
