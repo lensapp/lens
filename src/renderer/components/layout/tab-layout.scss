@@ -11,7 +11,8 @@
 
   > .Tabs {
     background: var(--layoutTabsBackground);
-    min-height: 36px;
+    flex-shrink: 0;
+    height: 34px;
   }
 
   main {
