@@ -9,7 +9,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import { computed } from "mobx";
 import type {
   KubeObjectMenuItemComponent,
-  KubeObjectMenuItem } from "../kube-object-menu/kube-object-menu-item-injection-token";
+  KubeObjectMenuItem,
+} from "../kube-object-menu/kube-object-menu-item-injection-token";
 import {
   kubeObjectMenuItemInjectionToken,
 } from "../kube-object-menu/kube-object-menu-item-injection-token";
@@ -17,15 +18,20 @@ import { ingressClassSetDefaultInjectable } from "./ingress-class-set-default.in
 import { MenuItem } from "../menu";
 import type { IngressClass } from "../../../common/k8s-api/endpoints/ingress-class.api";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
+import { Icon } from "../icon";
 
 export interface IngressClassMenuProps extends KubeObjectMenuProps<IngressClass> {
   setDefault(item: IngressClass): void;
 }
 
-export function NonInjectedIngressClassMenu({ object, setDefault }: IngressClassMenuProps) {
+export function NonInjectedIngressClassMenu({ object, toolbar, ...props }: IngressClassMenuProps) {
   return (
-    <MenuItem icon="star" onClick={() => setDefault(object)}>
-      Set as default
+    <MenuItem onClick={() => props.setDefault(object)}>
+      <Icon
+        material="star"
+        tooltip="Set as default"
+        interactive={toolbar} />
+      <span className="title">Set as default</span>
     </MenuItem>
   );
 }
