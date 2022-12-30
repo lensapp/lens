@@ -5,13 +5,12 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import type { IngressClass } from "../../../common/k8s-api/endpoints/ingress-class.api";
 
-// TODO: figure out if this needs to be injectable
 export const ingressClassSetDefaultInjectable = getInjectable({
   id: "ingressClassSetDefaultInjectable",
 
   instantiate() {
     return (item: IngressClass) => {
-      console.log("TODO: implement set-default ingress-class api call(s)", item);
+      console.log(`TODO: implement set-default ingress-class api call(s)`, item);
     };
   },
 

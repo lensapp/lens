@@ -7,9 +7,11 @@ import React from "react";
 import { getInjectable } from "@ogre-tools/injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { computed } from "mobx";
+import type {
+  KubeObjectMenuItemComponent,
+  KubeObjectMenuItem } from "../kube-object-menu/kube-object-menu-item-injection-token";
 import {
   kubeObjectMenuItemInjectionToken,
-  KubeObjectMenuItemComponent,
 } from "../kube-object-menu/kube-object-menu-item-injection-token";
 import { ingressClassSetDefaultInjectable } from "./ingress-class-set-default.injectable";
 import { MenuItem } from "../menu";
@@ -39,14 +41,14 @@ export const IngressClassMenu = withInjectables<{}, IngressClassMenuProps>(NonIn
 const ingressClassMenuInjectable = getInjectable({
   id: "ingress-class-kube-object-menu",
 
-  instantiate: () => {
+  instantiate(): KubeObjectMenuItem {
     return {
       kind: "IngressClass",
       apiVersions: ["networking.k8s.io/v1"],
       Component: IngressClassMenu as KubeObjectMenuItemComponent,
       enabled: computed(() => true),
       orderNumber: 30,
-    }
+    };
   },
 
   injectionToken: kubeObjectMenuItemInjectionToken,
