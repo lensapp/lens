@@ -18,6 +18,7 @@ import type { LensTheme } from "../../themes/lens-theme";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import activeThemeInjectable from "../../themes/active.injectable";
+import getEditorHeightFromLinesCountInjectable from "./get-editor-height-from-lines-number.injectable";
 
 export type MonacoEditorId = string;
 
@@ -37,11 +38,13 @@ export interface MonacoEditorProps {
   onDidContentSizeChange?(evt: editor.IContentSizeChangedEvent): void;
   onModelChange?(model: editor.ITextModel, prev?: editor.ITextModel): void;
   innerRef?: React.ForwardedRef<MonacoEditorRef>;
+  setInitialHeight?: boolean;
 }
 
 interface Dependencies {
   userStore: UserStore;
   activeTheme: IComputedValue<LensTheme>;
+  getEditorHeightFromLinesCount: (linesCount: number) => number;
 }
 
 export function createMonacoUri(id: MonacoEditorId): Uri {
@@ -288,14 +291,23 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   // avoid excessive validations during typing
   validateLazy = debounce(this.validate, 250);
 
+  get initialHeight() {
+    return this.props.getEditorHeightFromLinesCount(this.model.getLineCount());
+  }
+
   render() {
     const { className, style } = this.props;
+
+    const css: React.CSSProperties = {
+      ...style,
+      height: style?.height ?? this.initialHeight,
+    };
 
     return (
       <div
         data-test-id="monaco-editor"
         className={cssNames(styles.MonacoEditor, className)}
-        style={style}
+        style={css}
         ref={elem => this.containerElem = elem}
       />
     );
@@ -309,6 +321,7 @@ export const MonacoEditor = withInjectables<Dependencies, MonacoEditorProps, Mon
       ...props,
       userStore: di.inject(userStoreInjectable),
       activeTheme: di.inject(activeThemeInjectable),
+      getEditorHeightFromLinesCount: di.inject(getEditorHeightFromLinesCountInjectable),
     }),
   },
 );

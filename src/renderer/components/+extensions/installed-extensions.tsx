@@ -152,7 +152,7 @@ const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extension
         <h3 className="font-medium text-3xl mt-5 mb-2">
           There are no extensions installed.
         </h3>
-        <p>Please use the form above to install or drag tarbar-file here.</p>
+        <p>Please use the form above to install or drag a tarball file here.</p>
       </div>
     );
   }
