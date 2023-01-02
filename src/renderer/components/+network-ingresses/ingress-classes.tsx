@@ -13,8 +13,9 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IngressClassStore } from "./ingress-class-store";
 import ingressClassStoreInjectable from "./ingress-class-store.injectable";
 import type { IngressClass } from "../../../common/k8s-api/endpoints/ingress-class.api";
-import { Icon } from "../icon";
 import { cssNames } from "../../utils";
+import { Icon } from "../icon";
+import { Badge } from "../badge";
 
 enum columnId {
   name = "name",
@@ -42,15 +43,19 @@ const NonInjectedIngressClasses = observer((props: Dependencies) => {
         className={styles.IngressClasses}
         store={store}
         sortingCallbacks={{
-          [columnId.name]: (resource: IngressClass) => resource.getName(),
-          [columnId.namespace]: (resource: IngressClass) => resource.getNs(),
-          [columnId.controller]: (resource: IngressClass) => resource.getController(),
-          [columnId.apiGroup]: (resource: IngressClass) => resource.getApiGroup(),
-          [columnId.scope]: (resource: IngressClass) => resource.getScope(),
-          [columnId.kind]: (resource: IngressClass) => resource.getKind(),
+          [columnId.name]: (resource: IngressClass) => resource.getCtrlName(),
+          [columnId.namespace]: (resource: IngressClass) => resource.getCtrlNs(),
+          [columnId.controller]: (resource: IngressClass) => resource.getIngressCtrl(),
+          [columnId.apiGroup]: (resource: IngressClass) => resource.getCtrlApiGroup(),
+          [columnId.scope]: (resource: IngressClass) => resource.getCtrlScope(),
+          [columnId.kind]: (resource: IngressClass) => resource.getCtrlKind(),
         }}
         searchFilters={[
-          ingress => ingress.getSearchFields(),
+          (resource: IngressClass) => resource.getSearchFields(),
+          (resource: IngressClass) => resource.getIngressCtrl(),
+          (resource: IngressClass) => resource.getCtrlApiGroup(),
+          (resource: IngressClass) => resource.getCtrlScope(),
+          (resource: IngressClass) => resource.getCtrlKind(),
         ]}
         renderHeaderTitle="Ingress Classes"
         renderTableHeader={[
@@ -89,11 +94,11 @@ const NonInjectedIngressClasses = observer((props: Dependencies) => {
               />
             )}
           </div>,
-          ingressClass.getController(),
-          ingressClass.getNs(),
-          ingressClass.getApiGroup(),
-          ingressClass.getScope(),
-          ingressClass.getKind(),
+          ingressClass.getCtrlNs(),
+          <Badge label={ingressClass.getIngressCtrl()} tooltip={ingressClass.getIngressCtrl()} />,
+          ingressClass.getCtrlApiGroup(),
+          ingressClass.getCtrlScope(),
+          ingressClass.getCtrlKind(),
         ]}
       />
     </SiblingsInTabLayout>

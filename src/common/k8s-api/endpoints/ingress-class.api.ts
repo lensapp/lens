@@ -11,6 +11,8 @@ export class IngressClassApi extends KubeApi<IngressClass> {
   constructor() {
     super({
       objectConstructor: IngressClass,
+      checkPreferredVersion: true,
+      fallbackApiBases: ["/apis/extensions/v1beta1/ingressclasses"],
     });
   }
 }
@@ -37,7 +39,7 @@ export interface IngressClassParametersReference {
 }
 
 export interface IngressClassSpec {
-  controller: string; // example.com/ingress-controller
+  controller: string; // "example.com/ingress-controller"
   parameters?: IngressClassParametersReference;
 }
 
@@ -49,28 +51,28 @@ export class IngressClass extends KubeObject<IngressClassMetadata, IngressClassS
   static readonly namespaced = true;
   static readonly apiBase = "/apis/networking.k8s.io/v1/ingressclasses";
 
-  getController() {
+  getIngressCtrl(): string {
     return this.spec.controller;
   }
 
-  getApiGroup() {
-    return this.spec.parameters?.apiGroup;
+  getCtrlApiGroup() {
+    return this.spec?.parameters?.apiGroup;
   }
 
-  getScope() {
-    return this.spec.parameters?.scope;
+  getCtrlScope() {
+    return this.spec?.parameters?.scope;
   }
 
-  getNs() {
-    return this.spec.parameters?.namespace as string;
+  getCtrlNs() {
+    return this.spec?.parameters?.namespace as string;
   }
 
-  getKind() {
-    return this.spec.parameters?.kind;
+  getCtrlKind() {
+    return this.spec?.parameters?.kind;
   }
 
-  getSpecName() {
-    return this.spec.parameters?.name as string;
+  getCtrlName() {
+    return this.spec?.parameters?.name as string;
   }
 
   get isDefault() {
