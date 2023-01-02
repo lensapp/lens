@@ -51,7 +51,7 @@ export class IngressClass extends KubeObject<IngressClassMetadata, IngressClassS
   static readonly namespaced = true;
   static readonly apiBase = "/apis/networking.k8s.io/v1/ingressclasses";
 
-  getIngressCtrl(): string {
+  getController(): string {
     return this.spec.controller;
   }
 

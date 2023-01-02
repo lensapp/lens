@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import assert from "assert";
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import {
   kubeObjectStoreInjectionToken,
 } from "../../../common/k8s-api/api-manager/manager.injectable";
@@ -28,7 +28,6 @@ const ingressClassStoreInjectable = getInjectable({
   },
 
   injectionToken: kubeObjectStoreInjectionToken,
-  lifecycle: lifecycleEnum.transient,
 });
 
 export default ingressClassStoreInjectable;
