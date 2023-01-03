@@ -22,7 +22,6 @@ import type { PartialDeep } from "type-fest";
 import type { Logger } from "../logger";
 import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi, getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import autoRegistrationEmitterInjectable from "./api-manager/auto-registration-emitter.injectable";
-import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import { apiKubeInjectionToken } from "./api-kube";
 import type AbortController from "abort-controller";
 import loggerInjectable from "../logger.injectable";
@@ -316,8 +315,10 @@ export class KubeApi<
     this.objectConstructor = objectConstructor;
     legacyRegisterApi(this);
 
+    const di = getLegacyGlobalDiForExtensionApi();
+
     this.dependencies = {
-      logger: asLegacyGlobalForExtensionApi(loggerInjectable),
+      logger: di.inject(loggerInjectable),
     };
   }
 
