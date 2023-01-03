@@ -1,7 +1,7 @@
 # Lens Desktop Core ("OpenLens")
 
 [![Build Status](https://github.com/lensapp/lens/actions/workflows/test.yml/badge.svg)](https://github.com/lensapp/lens/actions/workflows/test.yml)
-[![Chat on Slack](https://img.shields.io/badge/chat-on%20slack-blue.svg?logo=slack&longCache=true&style=flat)](https://join.slack.com/t/k8slens/shared_invite/zt-198iepl92-EPJsCckkJ~f887vWqJcgGA)
+[![Chat on Slack](https://img.shields.io/badge/chat-on%20slack-blue.svg?logo=slack&longCache=true&style=flat)](https://k8slens.dev/slack.html)
 
 ## The Repository
 
