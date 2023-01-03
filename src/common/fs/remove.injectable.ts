@@ -12,7 +12,7 @@ const removePathInjectable = getInjectable({
   instantiate: (di): RemovePath => {
     const { rm } = di.inject(fsInjectable);
 
-    return (filePath) => rm(filePath, { force: true });
+    return (filePath) => rm(filePath, { force: true, recursive: true });
   },
 });
 
