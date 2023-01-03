@@ -22,6 +22,7 @@ import type { PartialDeep } from "type-fest";
 import type { Logger } from "../logger";
 import type AbortController from "abort-controller";
 import { matches } from "lodash/fp";
+import { action, makeObservable, observable } from "mobx";
 
 /**
  * The options used for creating a `KubeApi`
@@ -215,7 +216,9 @@ export class KubeApi<
 > {
   readonly kind: string;
   readonly apiVersion: string;
-  apiBase: string;
+
+  @observable apiBase: string;
+
   apiPrefix: string;
   apiGroup: string;
   apiVersionPreferred: string | undefined;
@@ -242,6 +245,7 @@ export class KubeApi<
       fallbackApiBases,
     } = opts;
 
+    makeObservable(this);
     assert(fullApiPathname, "apiBase MUST be provied either via KubeApiOptions.apiBase or KubeApiOptions.objectConstructor.apiBase");
     assert(request, "request MUST be provided if not in a cluster page frame context");
 
@@ -308,6 +312,7 @@ export class KubeApi<
     throw new Error(`Can't find working API for the Kubernetes resource ${this.apiResource}`);
   }
 
+  @action
   protected async checkPreferredVersion() {
     if (this.fallbackApiBases && !this.doCheckPreferredVersion) {
       throw new Error("checkPreferredVersion must be enabled if fallbackApiBases is set in KubeApi");
