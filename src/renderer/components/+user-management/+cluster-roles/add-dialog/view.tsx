@@ -11,7 +11,6 @@ import type { DialogProps } from "../../../dialog";
 import { Dialog } from "../../../dialog";
 import { Input } from "../../../input";
 import { SubTitle } from "../../../layout/sub-title";
-import { Notifications } from "../../../notifications";
 import { Wizard, WizardStep } from "../../../wizard";
 import type { AddClusterRoleDialogState } from "./state.injectable";
 import type { ClusterRoleStore } from "../store";
@@ -21,6 +20,8 @@ import closeAddClusterRoleDialogInjectable from "./close.injectable";
 import clusterRoleStoreInjectable from "../store.injectable";
 import showDetailsInjectable from "../../../kube-detail-params/show-details.injectable";
 import addClusterRoleDialogStateInjectable from "./state.injectable";
+import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
 
 export interface AddClusterRoleDialogProps extends Partial<DialogProps> {
 }
@@ -30,6 +31,7 @@ interface Dependencies {
   clusterRoleStore: ClusterRoleStore;
   showDetails: ShowDetails;
   closeAddClusterRoleDialog: () => void;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -40,6 +42,7 @@ class NonInjectedAddClusterRoleDialog extends React.Component<AddClusterRoleDial
       clusterRoleStore,
       showDetails,
       state,
+      showCheckedErrorNotification,
     } = this.props;
 
     try {
@@ -48,7 +51,7 @@ class NonInjectedAddClusterRoleDialog extends React.Component<AddClusterRoleDial
       showDetails(role.selfLink);
       closeAddClusterRoleDialog();
     } catch (error) {
-      Notifications.checkedError(error, "Unknown error occured while creating the role");
+      showCheckedErrorNotification(error, "Unknown error occured while creating the role");
     }
   };
 
@@ -94,5 +97,6 @@ export const AddClusterRoleDialog = withInjectables<Dependencies, AddClusterRole
     clusterRoleStore: di.inject(clusterRoleStoreInjectable),
     showDetails: di.inject(showDetailsInjectable),
     state: di.inject(addClusterRoleDialogStateInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

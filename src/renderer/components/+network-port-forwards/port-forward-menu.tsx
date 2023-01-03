@@ -10,12 +10,13 @@ import type { MenuActionsProps } from "../menu/menu-actions";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { Notifications } from "../notifications";
+import type { ShowNotification } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardDialogModelInjectable from "../../port-forward/port-forward-dialog-model/port-forward-dialog-model.injectable";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 import type { OpenPortForward } from "../../port-forward/open-port-forward.injectable";
 import openPortForwardInjectable from "../../port-forward/open-port-forward.injectable";
+import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 
 export interface PortForwardMenuProps extends MenuActionsProps {
   portForward: PortForwardItem;
@@ -26,6 +27,7 @@ interface Dependencies {
   portForwardStore: PortForwardStore;
   openPortForwardDialog: (item: PortForwardItem) => void;
   openPortForward: OpenPortForward;
+  showErrorNotification: ShowNotification;
 }
 
 class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependencies> extends React.Component<Props> {
@@ -35,12 +37,12 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
   }
 
   remove() {
-    const { portForward } = this.props;
+    const { portForward, showErrorNotification } = this.props;
 
     try {
       this.portForwardStore.remove(portForward);
     } catch (error) {
-      Notifications.error(`Error occurred stopping the port-forward from port ${portForward.forwardPort}. The port-forward may still be active.`);
+      showErrorNotification(`Error occurred stopping the port-forward from port ${portForward.forwardPort}. The port-forward may still be active.`);
     }
   }
 
@@ -49,14 +51,14 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
   }
 
   private startPortForwarding = async () => {
-    const { portForward } = this.props;
+    const { portForward, showErrorNotification } = this.props;
 
     const pf = await this.portForwardStore.start(portForward);
 
     if (pf.status === "Disabled") {
       const { name, kind, forwardPort } = portForward;
 
-      Notifications.error(`Error occurred starting port-forward, the local port ${forwardPort} may not be available or the ${kind} ${name} may not be reachable`);
+      showErrorNotification(`Error occurred starting port-forward, the local port ${forwardPort} may not be available or the ${kind} ${name} may not be reachable`);
     }
   };
 
@@ -134,15 +136,12 @@ class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependenci
   }
 }
 
-export const PortForwardMenu = withInjectables<Dependencies, PortForwardMenuProps>(
-  NonInjectedPortForwardMenu,
-
-  {
-    getProps: (di, props) => ({
-      portForwardStore: di.inject(portForwardStoreInjectable),
-      openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
-      openPortForward: di.inject(openPortForwardInjectable),
-      ...props,
-    }),
-  },
-);
+export const PortForwardMenu = withInjectables<Dependencies, PortForwardMenuProps>(NonInjectedPortForwardMenu, {
+  getProps: (di, props) => ({
+    ...props,
+    portForwardStore: di.inject(portForwardStoreInjectable),
+    openPortForwardDialog: di.inject(portForwardDialogModelInjectable).open,
+    openPortForward: di.inject(openPortForwardInjectable),
+    showErrorNotification: di.inject(showErrorNotificationInjectable),
+  }),
+});

@@ -16,7 +16,6 @@ import { Dialog } from "../../../dialog";
 import { EditableList } from "../../../editable-list";
 import { Icon } from "../../../icon";
 import { SubTitle } from "../../../layout/sub-title";
-import { Notifications } from "../../../notifications";
 import type { SelectOption } from "../../../select";
 import { onMultiSelectFor, Select } from "../../../select";
 import { Wizard, WizardStep } from "../../../wizard";
@@ -38,6 +37,8 @@ import clusterRoleStoreInjectable from "../../+cluster-roles/store.injectable";
 import roleStoreInjectable from "../../+roles/store.injectable";
 import serviceAccountStoreInjectable from "../../+service-accounts/store.injectable";
 import roleApiInjectable from "../../../../../common/k8s-api/endpoints/role.api.injectable";
+import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
 
 export interface RoleBindingDialogProps extends Partial<DialogProps> {
 }
@@ -51,6 +52,7 @@ interface Dependencies {
   clusterRoleStore: ClusterRoleStore;
   serviceAccountStore: ServiceAccountStore;
   roleApi: RoleApi;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -169,6 +171,7 @@ class NonInjectedRoleBindingDialog extends React.Component<RoleBindingDialogProp
     const {
       roleBindingStore,
       showDetails,
+      showCheckedErrorNotification,
     } = this.props;
     const { selectedRoleRef, bindingNamespace, selectedBindings, roleBinding, bindingName } = this;
 
@@ -193,7 +196,7 @@ class NonInjectedRoleBindingDialog extends React.Component<RoleBindingDialogProp
       showDetails(newRoleBinding.selfLink);
       this.props.closeRoleBindingDialog();
     } catch (err) {
-      Notifications.checkedError(err, `Unknown error occured while ${this.isEditing ? "editing" : "creating"} role bindings.`);
+      showCheckedErrorNotification(err, `Unknown error occured while ${this.isEditing ? "editing" : "creating"} role bindings.`);
     }
   };
 
@@ -318,5 +321,6 @@ export const RoleBindingDialog = withInjectables<Dependencies, RoleBindingDialog
     roleStore: di.inject(roleStoreInjectable),
     serviceAccountStore: di.inject(serviceAccountStoreInjectable),
     roleApi: di.inject(roleApiInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

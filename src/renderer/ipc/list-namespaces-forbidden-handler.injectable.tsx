@@ -5,13 +5,15 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import navigateToEntitySettingsInjectable from "../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import type { ListNamespaceForbiddenArgs } from "../../common/ipc/cluster";
-import { Notifications } from "../components/notifications";
 import { Button } from "../components/button";
 import type { IpcRendererEvent } from "electron";
 import React from "react";
 import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
 import { getMillisecondsFromUnixEpoch } from "../../common/utils/date/get-current-date-time";
 import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
+import showSuccessNotificationInjectable from "../components/notifications/show-success-notification.injectable";
+
+const intervalBetweenNotifications = 1000 * 60; // 60s
 
 const listNamespacesForbiddenHandlerInjectable = getInjectable({
   id: "list-namespaces-forbidden-handler",
@@ -21,7 +23,7 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
     const notificationsStore = di.inject(notificationsStoreInjectable);
     const getClusterById = di.inject(getClusterByIdInjectable);
     const notificationLastDisplayedAt = new Map<string, number>();
-    const intervalBetweenNotifications = 1000 * 60; // 60s
+    const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
 
     return (
       event: IpcRendererEvent,
@@ -47,7 +49,7 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
         return;
       }
 
-      Notifications.info(
+      showSuccessNotification(
         (
           <div className="flex column gaps">
             <b>Add Accessible Namespaces</b>

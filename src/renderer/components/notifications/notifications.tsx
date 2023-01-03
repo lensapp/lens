@@ -16,13 +16,6 @@ import { Animate } from "../animate";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import notificationsStoreInjectable from "./notifications-store.injectable";
-import { asLegacyGlobalFunctionForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
-import showSuccessNotificationInjectable from "./show-success-notification.injectable";
-import type { ShowCheckedErrorNotification } from "./show-checked-error.injectable";
-import showCheckedErrorNotificationInjectable from "./show-checked-error.injectable";
-import showErrorNotificationInjectable from "./show-error-notification.injectable";
-import showInfoNotificationInjectable from "./show-info-notification.injectable";
-import showShortInfoNotificationInjectable from "./show-short-info.injectable";
 
 export type ShowNotification = (message: NotificationMessage, opts?: CreateNotificationOptions) => Disposer;
 
@@ -102,25 +95,8 @@ class NonInjectedNotifications extends React.Component<Dependencies> {
   }
 }
 
-export const Notifications = withInjectables<Dependencies>(
-  NonInjectedNotifications,
-
-  {
-    getProps: (di) => ({
-      store: di.inject(notificationsStoreInjectable),
-    }),
-  },
-) as React.FC & {
-  ok: ShowNotification;
-  checkedError: ShowCheckedErrorNotification;
-  error: ShowNotification;
-  shortInfo: ShowNotification;
-  info: ShowNotification;
-};
-
-Notifications.ok = asLegacyGlobalFunctionForExtensionApi(showSuccessNotificationInjectable);
-Notifications.error = asLegacyGlobalFunctionForExtensionApi(showErrorNotificationInjectable);
-Notifications.checkedError = asLegacyGlobalFunctionForExtensionApi(showCheckedErrorNotificationInjectable);
-Notifications.info = asLegacyGlobalFunctionForExtensionApi(showInfoNotificationInjectable);
-Notifications.shortInfo = asLegacyGlobalFunctionForExtensionApi(showShortInfoNotificationInjectable);
-
+export const Notifications = withInjectables<Dependencies>(NonInjectedNotifications, {
+  getProps: (di) => ({
+    store: di.inject(notificationsStoreInjectable),
+  }),
+});

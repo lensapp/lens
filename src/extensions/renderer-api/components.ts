@@ -22,6 +22,11 @@ import notificationsStoreInjectable from "../../renderer/components/notification
 import podStoreInjectable from "../../renderer/components/+workloads-pods/store.injectable";
 import getDetailsUrlInjectable from "../../renderer/components/kube-detail-params/get-details-url.injectable";
 import showDetailsInjectable from "../../renderer/components/kube-detail-params/show-details.injectable";
+import showCheckedErrorNotificationInjectable from "../../renderer/components/notifications/show-checked-error.injectable";
+import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
+import showInfoNotificationInjectable from "../../renderer/components/notifications/show-info-notification.injectable";
+import showShortInfoNotificationInjectable from "../../renderer/components/notifications/show-short-info.injectable";
+import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -67,7 +72,25 @@ export * from "../../renderer/components/drawer";
 export * from "../../renderer/components/dialog";
 export * from "../../renderer/components/line-progress";
 export * from "../../renderer/components/menu";
-export * from "../../renderer/components/notifications";
+
+export type {
+  CreateNotificationOptions,
+  Notification,
+  NotificationId,
+  NotificationMessage,
+  NotificationStatus,
+  ShowNotification,
+  NotificationsStore,
+} from "../../renderer/components/notifications";
+
+export const Notifications = {
+  ok: asLegacyGlobalFunctionForExtensionApi(showSuccessNotificationInjectable),
+  error: asLegacyGlobalFunctionForExtensionApi(showErrorNotificationInjectable),
+  checkedError: asLegacyGlobalFunctionForExtensionApi(showCheckedErrorNotificationInjectable),
+  info: asLegacyGlobalFunctionForExtensionApi(showInfoNotificationInjectable),
+  shortInfo: asLegacyGlobalFunctionForExtensionApi(showShortInfoNotificationInjectable),
+};
+
 export * from "../../renderer/components/spinner";
 export * from "../../renderer/components/stepper";
 export * from "../../renderer/components/wizard";

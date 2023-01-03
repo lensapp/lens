@@ -14,7 +14,6 @@ import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import { Select } from "../../select";
-import { Notifications } from "../../notifications";
 import orderBy from "lodash/orderBy";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import releaseRollbackDialogStateInjectable from "./state.injectable";
@@ -22,6 +21,8 @@ import type { RollbackRelease } from "../rollback-release/rollback-release.injec
 import rollbackReleaseInjectable from "../rollback-release/rollback-release.injectable";
 import type { HelmReleaseRevision, RequestHelmReleaseHistory } from "../../../../common/k8s-api/endpoints/helm-releases.api/request-history.injectable";
 import requestHelmReleaseHistoryInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-history.injectable";
+import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 
 export interface ReleaseRollbackDialogProps extends DialogProps {
 }
@@ -30,6 +31,7 @@ interface Dependencies {
   rollbackRelease: RollbackRelease;
   state: IObservableValue<HelmRelease | undefined>;
   requestHelmReleaseHistory: RequestHelmReleaseHistory;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -71,7 +73,7 @@ class NonInjectedReleaseRollbackDialog extends React.Component<ReleaseRollbackDi
       await this.props.rollbackRelease(release.getName(), release.getNs(), revision.revision);
       this.close();
     } catch (err) {
-      Notifications.checkedError(err, "Unknown error occured while rolling back release");
+      this.props.showCheckedErrorNotification(err, "Unknown error occured while rolling back release");
     }
   };
 
@@ -143,5 +145,6 @@ export const ReleaseRollbackDialog = withInjectables<Dependencies, ReleaseRollba
     rollbackRelease: di.inject(rollbackReleaseInjectable),
     state: di.inject(releaseRollbackDialogStateInjectable),
     requestHelmReleaseHistory: di.inject(requestHelmReleaseHistoryInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

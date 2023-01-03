@@ -21,7 +21,6 @@ import { NamespaceSelect } from "../../+namespaces/namespace-select";
 import { Select } from "../../select";
 import { Icon } from "../../icon";
 import { base64, iter } from "../../../utils";
-import { Notifications } from "../../notifications";
 import upperFirst from "lodash/upperFirst";
 import { fromEntries } from "../../../../common/utils/objects";
 import type { ShowDetails } from "../../kube-detail-params/show-details.injectable";
@@ -30,6 +29,8 @@ import closeAddSecretDialogInjectable from "./close.injectable";
 import secretApiInjectable from "../../../../common/k8s-api/endpoints/secret.api.injectable";
 import showDetailsInjectable from "../../kube-detail-params/show-details.injectable";
 import isAddSecretDialogOpenInjectable from "./is-open.injectable";
+import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 
 export interface AddSecretDialogProps extends Partial<DialogProps> {
 }
@@ -54,6 +55,7 @@ interface Dependencies {
   isAddSecretDialogOpen: IComputedValue<boolean>;
   closeAddSecretDialog: () => void;
   showDetails: ShowDetails;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -116,7 +118,7 @@ class NonInjectedAddSecretDialog extends React.Component<AddSecretDialogProps & 
       this.props.showDetails(newSecret?.selfLink);
       this.close();
     } catch (err) {
-      Notifications.checkedError(err, "Unknown error occured while creating a Secret");
+      this.props.showCheckedErrorNotification(err, "Unknown error occured while creating a Secret");
     }
   };
 
@@ -254,5 +256,6 @@ export const AddSecretDialog = withInjectables<Dependencies, AddSecretDialogProp
     secretApi: di.inject(secretApiInjectable),
     showDetails: di.inject(showDetailsInjectable),
     isAddSecretDialogOpen: di.inject(isAddSecretDialogOpenInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

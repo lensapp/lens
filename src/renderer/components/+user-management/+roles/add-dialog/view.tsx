@@ -13,7 +13,6 @@ import type { DialogProps } from "../../../dialog";
 import { Dialog } from "../../../dialog";
 import { Input } from "../../../input";
 import { SubTitle } from "../../../layout/sub-title";
-import { Notifications } from "../../../notifications";
 import { Wizard, WizardStep } from "../../../wizard";
 import type { AddRoleDialogState } from "./state.injectable";
 import type { RoleStore } from "../store";
@@ -23,6 +22,8 @@ import closeAddRoleDialogInjectable from "./close.injectable";
 import roleStoreInjectable from "../store.injectable";
 import showDetailsInjectable from "../../../kube-detail-params/show-details.injectable";
 import addRoleDialogStateInjectable from "./state.injectable";
+import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
 
 export interface AddRoleDialogProps extends Partial<DialogProps> {
 }
@@ -32,6 +33,7 @@ interface Dependencies {
   showDetails: ShowDetails;
   state: AddRoleDialogState;
   roleStore: RoleStore;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -42,6 +44,7 @@ class NonInjectedAddRoleDialog extends React.Component<AddRoleDialogProps & Depe
       roleStore,
       state,
       showDetails,
+      showCheckedErrorNotification,
     } = this.props;
 
     try {
@@ -53,7 +56,7 @@ class NonInjectedAddRoleDialog extends React.Component<AddRoleDialogProps & Depe
       showDetails(role.selfLink);
       closeAddRoleDialog();
     } catch (err) {
-      Notifications.checkedError(err, "Unknown error occured while creating role");
+      showCheckedErrorNotification(err, "Unknown error occured while creating role");
     }
   };
 
@@ -104,5 +107,6 @@ export const AddRoleDialog = withInjectables<Dependencies, AddRoleDialogProps>(N
     roleStore: di.inject(roleStoreInjectable),
     showDetails: di.inject(showDetailsInjectable),
     state: di.inject(addRoleDialogStateInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

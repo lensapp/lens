@@ -9,10 +9,11 @@ import extensionDiscoveryInjectable from "../../../extensions/extension-discover
 import loggerInjectable from "../../../common/logger.injectable";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import { extensionDisplayName } from "../../../extensions/lens-extension";
-import { Notifications } from "../notifications";
 import React from "react";
 import { when } from "mobx";
 import { getMessageFromError } from "./get-message-from-error/get-message-from-error";
+import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
+import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 
 const uninstallExtensionInjectable = getInjectable({
   id: "uninstall-extension",
@@ -22,6 +23,8 @@ const uninstallExtensionInjectable = getInjectable({
     const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
     const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
     const logger = di.inject(loggerInjectable);
+    const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
+    const showErrorNotification = di.inject(showErrorNotificationInjectable);
 
     return async (extensionId: LensExtensionId): Promise<boolean> => {
       const ext = extensionLoader.getExtension(extensionId);
@@ -44,7 +47,7 @@ const uninstallExtensionInjectable = getInjectable({
         // wait for the ExtensionLoader to actually uninstall the extension
         await when(() => !extensionLoader.userExtensions.has(extensionId));
 
-        Notifications.ok(
+        showSuccessNotification(
           <p>
             {"Extension "}
             <b>{displayName}</b>
@@ -60,7 +63,7 @@ const uninstallExtensionInjectable = getInjectable({
           `[EXTENSION-UNINSTALL]: uninstalling ${displayName} has failed: ${error}`,
           { error },
         );
-        Notifications.error(
+        showErrorNotification(
           <p>
             {"Uninstalling extension "}
             <b>{displayName}</b>

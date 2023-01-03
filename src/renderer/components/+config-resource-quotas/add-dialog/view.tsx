@@ -18,13 +18,14 @@ import type { IResourceQuotaValues, ResourceQuotaApi } from "../../../../common/
 import { Select } from "../../select";
 import { Icon } from "../../icon";
 import { Button } from "../../button";
-import { Notifications } from "../../notifications";
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
 import { SubTitle } from "../../layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import closeAddQuotaDialogInjectable from "./close.injectable";
 import isAddQuotaDialogOpenInjectable from "./is-open.injectable";
 import resourceQuotaApiInjectable from "../../../../common/k8s-api/endpoints/resource-quota.api.injectable";
+import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 
 export interface AddQuotaDialogProps extends DialogProps {
 }
@@ -33,6 +34,7 @@ interface Dependencies {
   resourceQuotaApi: ResourceQuotaApi;
   isAddQuotaDialogOpen: IComputedValue<boolean>;
   closeAddQuotaDialog: () => void;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 const defaultQuotas = JSON.stringify({
@@ -128,7 +130,7 @@ class NonInjectedAddQuotaDialog extends React.Component<AddQuotaDialogProps & De
       });
       this.close();
     } catch (err) {
-      Notifications.checkedError(err, "Unknown error occured while creating ResourceQuota");
+      this.props.showCheckedErrorNotification(err, "Unknown error occured while creating ResourceQuota");
     }
   };
 
@@ -250,5 +252,6 @@ export const AddQuotaDialog = withInjectables<Dependencies, AddQuotaDialogProps>
     closeAddQuotaDialog: di.inject(closeAddQuotaDialogInjectable),
     isAddQuotaDialogOpen: di.inject(isAddQuotaDialogOpenInjectable),
     resourceQuotaApi: di.inject(resourceQuotaApiInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

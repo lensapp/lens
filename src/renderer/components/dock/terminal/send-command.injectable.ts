@@ -4,21 +4,15 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { when } from "mobx";
+import loggerInjectable from "../../../../common/logger.injectable";
 import { TerminalChannels } from "../../../../common/terminal/channels";
 import { waitUntilDefined } from "../../../../common/utils/wait";
-import type { TerminalApi } from "../../../api/terminal-api";
 import { noop } from "../../../utils";
-import { Notifications } from "../../notifications";
+import showSuccessNotificationInjectable from "../../notifications/show-success-notification.injectable";
 import selectDockTabInjectable from "../dock/select-dock-tab.injectable";
-import type { DockTab, TabId } from "../dock/store";
+import type { TabId } from "../dock/store";
 import createTerminalTabInjectable from "./create-terminal-tab.injectable";
 import getTerminalApiInjectable from "./get-terminal-api.injectable";
-
-interface Dependencies {
-  selectTab: (tabId: TabId) => void;
-  createTerminalTab: () => DockTab;
-  getTerminalApi: (tabId: TabId) => TerminalApi | undefined;
-}
 
 export interface SendCommandOptions {
   /**
@@ -37,59 +31,63 @@ export interface SendCommandOptions {
   tabId?: TabId;
 }
 
-const sendCommand = ({ selectTab, createTerminalTab, getTerminalApi }: Dependencies) => async (command: string, options: SendCommandOptions = {}): Promise<void> => {
-  let tabId: string | undefined = options.tabId;
-
-  if (tabId) {
-    selectTab(tabId);
-  } else {
-    tabId = createTerminalTab().id;
-  }
-
-  const terminalApi = await waitUntilDefined(() => (
-    tabId
-      ? getTerminalApi(tabId)
-      : undefined
-  ));
-  const shellIsReady = when(() => terminalApi.isReady);
-  const notifyVeryLong = setTimeout(() => {
-    shellIsReady.cancel();
-    Notifications.info(
-      "If terminal shell is not ready please check your shell init files, if applicable.",
-      {
-        timeout: 4_000,
-      },
-    );
-  }, 10_000);
-
-  await shellIsReady.catch(noop);
-  clearTimeout(notifyVeryLong);
-
-  if (terminalApi) {
-    if (options.enter) {
-      command += "\r";
-    }
-
-    terminalApi.sendMessage({
-      type: TerminalChannels.STDIN,
-      data: command,
-    });
-  } else {
-    console.warn(
-      "The selected tab is does not have a connection. Cannot send command.",
-      { tabId, command },
-    );
-  }
-};
+export type SendCommand = (command: string, options?: SendCommandOptions) => Promise<void>;
 
 const sendCommandInjectable = getInjectable({
   id: "send-command",
 
-  instantiate: (di) => sendCommand({
-    createTerminalTab: di.inject(createTerminalTabInjectable),
-    selectTab: di.inject(selectDockTabInjectable),
-    getTerminalApi: di.inject(getTerminalApiInjectable),
-  }),
+  instantiate: (di): SendCommand => {
+    const createTerminalTab = di.inject(createTerminalTabInjectable);
+    const selectTab = di.inject(selectDockTabInjectable);
+    const getTerminalApi = di.inject(getTerminalApiInjectable);
+    const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
+    const logger = di.inject(loggerInjectable);
+
+    return async (command: string, options: SendCommandOptions = {}): Promise<void> => {
+      let tabId: string | undefined = options.tabId;
+
+      if (tabId) {
+        selectTab(tabId);
+      } else {
+        tabId = createTerminalTab().id;
+      }
+
+      const terminalApi = await waitUntilDefined(() => (
+        tabId
+          ? getTerminalApi(tabId)
+          : undefined
+      ));
+      const shellIsReady = when(() => terminalApi.isReady);
+      const notifyVeryLong = setTimeout(() => {
+        shellIsReady.cancel();
+        showSuccessNotification(
+          "If terminal shell is not ready please check your shell init files, if applicable.",
+          {
+            timeout: 4_000,
+          },
+        );
+      }, 10_000);
+
+      await shellIsReady.catch(noop);
+      clearTimeout(notifyVeryLong);
+
+      if (terminalApi) {
+        if (options.enter) {
+          command += "\r";
+        }
+
+        terminalApi.sendMessage({
+          type: TerminalChannels.STDIN,
+          data: command,
+        });
+      } else {
+        logger.warn(
+          "The selected tab is does not have a connection. Cannot send command.",
+          { tabId, command },
+        );
+      }
+    };
+  },
 });
 
 export default sendCommandInjectable;

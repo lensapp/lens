@@ -13,7 +13,7 @@ import type { DialogProps } from "../../dialog";
 import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
 import type { CronJob, JobApi } from "../../../../common/k8s-api/endpoints";
-import { Notifications } from "../../notifications";
+import type { ShowNotification } from "../../notifications";
 import { cssNames } from "../../../utils";
 import { Input } from "../../input";
 import { systemName, maxLength } from "../../input/input_validators";
@@ -21,6 +21,9 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import closeCronJobTriggerDialogInjectable from "./close.injectable";
 import jobApiInjectable from "../../../../common/k8s-api/endpoints/job.api.injectable";
 import cronJobTriggerDialogStateInjectable from "./state.injectable";
+import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
+import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
 
 export interface CronJobTriggerDialogProps extends Partial<DialogProps> {
 }
@@ -29,6 +32,8 @@ interface Dependencies {
   state: IObservableValue<CronJob | undefined>;
   jobApi: JobApi;
   closeCronJobTriggerDialog: () => void;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
+  showErrorNotification: ShowNotification;
 }
 
 @observer
@@ -49,7 +54,9 @@ class NonInjectedCronJobTriggerDialog extends Component<CronJobTriggerDialogProp
 
   async trigger(cronJob: CronJob): Promise<void> {
     if (!cronJob.spec.jobTemplate) {
-      return void Notifications.error(`CronJob ${cronJob.getName()} has no jobTemplate`);
+      this.props.showErrorNotification(`CronJob ${cronJob.getName()} has no jobTemplate`);
+
+      return;
     }
 
     try {
@@ -73,7 +80,7 @@ class NonInjectedCronJobTriggerDialog extends Component<CronJobTriggerDialogProp
 
       this.props.closeCronJobTriggerDialog();
     } catch (err) {
-      Notifications.checkedError(err, "Unknown error occurred while creating job");
+      this.props.showCheckedErrorNotification(err, "Unknown error occurred while creating job");
     }
   }
 
@@ -138,5 +145,7 @@ export const CronJobTriggerDialog = withInjectables<Dependencies, CronJobTrigger
     closeCronJobTriggerDialog: di.inject(closeCronJobTriggerDialogInjectable),
     jobApi: di.inject(jobApiInjectable),
     state: di.inject(cronJobTriggerDialogStateInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
+    showErrorNotification: di.inject(showErrorNotificationInjectable),
   }),
 });

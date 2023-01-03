@@ -15,11 +15,12 @@ import { Wizard, WizardStep } from "../../wizard";
 import type { Deployment, DeploymentApi } from "../../../../common/k8s-api/endpoints";
 import { Icon } from "../../icon";
 import { Slider } from "../../slider";
-import { Notifications } from "../../notifications";
 import { cssNames } from "../../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import deploymentApiInjectable from "../../../../common/k8s-api/endpoints/deployment.api.injectable";
 import deploymentScaleDialogStateInjectable from "./dialog-state.injectable";
+import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 
 export interface DeploymentScaleDialogProps extends Partial<DialogProps> {
 }
@@ -27,6 +28,7 @@ export interface DeploymentScaleDialogProps extends Partial<DialogProps> {
 interface Dependencies {
   deploymentApi: DeploymentApi;
   state: IObservableValue<Deployment | undefined>;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -82,7 +84,7 @@ class NonInjectedDeploymentScaleDialog extends Component<DeploymentScaleDialogPr
       }
       close();
     } catch (err) {
-      Notifications.checkedError(err, "Unknown error occured while scaling Deployment");
+      this.props.showCheckedErrorNotification(err, "Unknown error occured while scaling Deployment");
     }
   };
 
@@ -182,5 +184,6 @@ export const DeploymentScaleDialog = withInjectables<Dependencies, DeploymentSca
     ...props,
     deploymentApi: di.inject(deploymentApiInjectable),
     state: di.inject(deploymentScaleDialogStateInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

@@ -16,7 +16,6 @@ import { Dialog } from "../../../dialog";
 import { EditableList } from "../../../editable-list";
 import { Icon } from "../../../icon";
 import { SubTitle } from "../../../layout/sub-title";
-import { Notifications } from "../../../notifications";
 import { onMultiSelectFor, Select } from "../../../select";
 import { Wizard, WizardStep } from "../../../wizard";
 import { ObservableHashSet, nFircate } from "../../../../utils";
@@ -39,6 +38,8 @@ import type { ShowDetails } from "../../../kube-detail-params/show-details.injec
 import type { ClusterRoleBindingStore } from "../store";
 import clusterRoleBindingStoreInjectable from "../store.injectable";
 import showDetailsInjectable from "../../../kube-detail-params/show-details.injectable";
+import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
 
 export interface ClusterRoleBindingDialogProps extends Partial<DialogProps> {
 }
@@ -52,6 +53,7 @@ interface Dependencies {
   closeClusterRoleBindingDialog: CloseClusterRoleBindingDialog;
   openClusterRoleBindingDialog: OpenClusterRoleBindingDialog;
   showDetails: ShowDetails;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -167,7 +169,7 @@ class NonInjectedClusterRoleBindingDialog extends React.Component<ClusterRoleBin
       showDetails(selfLink);
       closeClusterRoleBindingDialog();
     } catch (err) {
-      Notifications.checkedError(err, `Unknown error occured while ${this.isEditing ? "editing the" : "creating a"} ClusterRoleBinding`);
+      this.props.showCheckedErrorNotification(err, `Unknown error occured while ${this.isEditing ? "editing the" : "creating a"} ClusterRoleBinding`);
     }
   };
 
@@ -307,5 +309,6 @@ export const ClusterRoleBindingDialog = withInjectables<Dependencies, ClusterRol
     openClusterRoleBindingDialog: di.inject(openClusterRoleBindingDialogInjectable),
     closeClusterRoleBindingDialog: di.inject(closeClusterRoleBindingDialogInjectable),
     showDetails: di.inject(showDetailsInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

@@ -16,9 +16,10 @@ import { Button } from "../button";
 import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Icon } from "../icon";
-import { Notifications } from "../notifications";
+import type { ShowNotification } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import confirmDialogStateInjectable from "./state.injectable";
+import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 
 export interface ConfirmDialogProps extends Partial<DialogProps> {
 }
@@ -39,6 +40,7 @@ export interface ConfirmDialogBooleanParams {
 
 interface Dependencies {
   state: IObservableValue<ConfirmDialogParams | undefined>;
+  showErrorNotification: ShowNotification;
 }
 
 const defaultParams = {
@@ -68,7 +70,7 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
       this.isSaving = true;
       await (async () => this.params.ok())();
     } catch (error) {
-      Notifications.error(
+      this.props.showErrorNotification(
         <>
           <p>Confirmation action failed:</p>
           <p>
@@ -96,7 +98,7 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
     try {
       await Promise.resolve(this.params.cancel());
     } catch (error) {
-      Notifications.error(
+      this.props.showErrorNotification(
         <>
           <p>Cancelling action failed:</p>
           <p>
@@ -167,5 +169,6 @@ export const ConfirmDialog = withInjectables<Dependencies, ConfirmDialogProps>(N
   getProps: (di, props) => ({
     ...props,
     state: di.inject(confirmDialogStateInjectable),
+    showErrorNotification: di.inject(showErrorNotificationInjectable),
   }),
 });

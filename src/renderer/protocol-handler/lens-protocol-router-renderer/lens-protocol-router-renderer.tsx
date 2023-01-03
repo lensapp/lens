@@ -9,12 +9,15 @@ import * as proto from "../../../common/protocol-handler";
 import Url from "url-parse";
 import type { LensProtocolRouterDependencies } from "../../../common/protocol-handler";
 import { foldAttemptResults, ProtocolHandlerInvalid, RouteAttempt } from "../../../common/protocol-handler";
-import { Notifications } from "../../components/notifications";
+import type { ShowNotification } from "../../components/notifications";
 
-interface Dependencies extends LensProtocolRouterDependencies {}
+interface Dependencies extends LensProtocolRouterDependencies {
+  showShortInfoNotification: ShowNotification;
+  showErrorNotification: ShowNotification;
+}
 
 export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
-  constructor(protected dependencies: Dependencies) {
+  constructor(protected readonly dependencies: Dependencies) {
     super(dependencies);
   }
 
@@ -26,7 +29,7 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
       const rendererAttempt = this._routeToInternal(new Url(rawUrl, true));
 
       if (foldAttemptResults(mainAttemptResult, rendererAttempt) === RouteAttempt.MISSING) {
-        Notifications.shortInfo((
+        this.dependencies.showShortInfoNotification((
           <p>
             {"Unknown action "}
             <code>{rawUrl}</code>
@@ -40,7 +43,7 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
 
       switch (foldAttemptResults(mainAttemptResult, rendererAttempt)) {
         case RouteAttempt.MISSING:
-          Notifications.shortInfo((
+          this.dependencies.showShortInfoNotification((
             <p>
               {"Unknown action "}
               <code>{rawUrl}</code>
@@ -49,7 +52,7 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
           ));
           break;
         case RouteAttempt.MISSING_EXTENSION:
-          Notifications.shortInfo((
+          this.dependencies.showShortInfoNotification((
             <p>
               {"Missing extension for action "}
               <code>{rawUrl}</code>
@@ -60,7 +63,7 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
       }
     });
     ipcRenderer.on(ProtocolHandlerInvalid, (event, error: string, rawUrl: string) => {
-      Notifications.error((
+      this.dependencies.showErrorNotification((
         <>
           <p>
             {"Failed to route "}

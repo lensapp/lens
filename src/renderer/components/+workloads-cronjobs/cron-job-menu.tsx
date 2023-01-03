@@ -7,13 +7,14 @@ import type { KubeObjectMenuProps } from "../kube-object-menu";
 import type { CronJob, CronJobApi } from "../../../common/k8s-api/endpoints";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { Notifications } from "../notifications";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 import type { OpenCronJobTriggerDialog } from "./trigger-dialog/open.injectable";
 import openCronJobTriggerDialogInjectable from "./trigger-dialog/open.injectable";
 import cronJobApiInjectable from "../../../common/k8s-api/endpoints/cron-job.api.injectable";
+import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 
 export interface CronJobMenuProps extends KubeObjectMenuProps<CronJob> {}
 
@@ -21,6 +22,7 @@ interface Dependencies {
   openConfirmDialog: OpenConfirmDialog;
   openCronJobTriggerDialog: OpenCronJobTriggerDialog;
   cronJobApi: CronJobApi;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 const NonInjectedCronJobMenu = ({
@@ -29,6 +31,7 @@ const NonInjectedCronJobMenu = ({
   openConfirmDialog,
   openCronJobTriggerDialog,
   cronJobApi,
+  showCheckedErrorNotification,
 }: Dependencies & CronJobMenuProps) =>  (
   <>
     <MenuItem onClick={() => openCronJobTriggerDialog(object)}>
@@ -48,7 +51,7 @@ const NonInjectedCronJobMenu = ({
               try {
                 await cronJobApi.resume({ namespace: object.getNs(), name: object.getName() });
               } catch (err) {
-                Notifications.checkedError(err, "Unknown error occured while resuming CronJob");
+                showCheckedErrorNotification(err, "Unknown error occured while resuming CronJob");
               }
             },
             labelOk: `Resume`,
@@ -76,7 +79,7 @@ const NonInjectedCronJobMenu = ({
               try {
                 await cronJobApi.suspend({ namespace: object.getNs(), name: object.getName() });
               } catch (err) {
-                Notifications.checkedError(err, "Unknown error occured while suspending CronJob");
+                showCheckedErrorNotification(err, "Unknown error occured while suspending CronJob");
               }
             },
             labelOk: `Suspend`,
@@ -106,5 +109,6 @@ export const CronJobMenu = withInjectables<Dependencies, CronJobMenuProps>(NonIn
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
     openCronJobTriggerDialog: di.inject(openCronJobTriggerDialogInjectable),
     cronJobApi: di.inject(cronJobApiInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

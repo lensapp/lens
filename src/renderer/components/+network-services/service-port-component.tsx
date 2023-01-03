@@ -10,7 +10,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import type { Service, ServicePort } from "../../../common/k8s-api/endpoints";
 import { action, makeObservable, observable, reaction } from "mobx";
 import { cssNames } from "../../utils";
-import { Notifications } from "../notifications";
+import type { ShowNotification } from "../notifications";
 import { Button } from "../button";
 import type { ForwardedPort, PortForwardStore } from "../../port-forward";
 import { predictProtocol } from "../../port-forward";
@@ -24,6 +24,7 @@ import notifyErrorPortForwardingInjectable from "../../port-forward/notify-error
 import type { OpenPortForward } from "../../port-forward/open-port-forward.injectable";
 import openPortForwardInjectable from "../../port-forward/open-port-forward.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 
 export interface ServicePortComponentProps {
   service: Service;
@@ -37,6 +38,7 @@ interface Dependencies {
   aboutPortForwarding: () => void;
   notifyErrorPortForwarding: (message: string) => void;
   openPortForward: OpenPortForward;
+  showErrorNotification: ShowNotification;
 }
 
 @observer
@@ -138,7 +140,7 @@ class NonInjectedServicePortComponent extends React.Component<ServicePortCompone
 
   @action
   async stopPortForward() {
-    const { service, port } = this.props;
+    const { service, port, showErrorNotification } = this.props;
     const portForward: ForwardedPort = {
       kind: "service",
       name: service.getName(),
@@ -152,7 +154,7 @@ class NonInjectedServicePortComponent extends React.Component<ServicePortCompone
     try {
       await this.portForwardStore.remove(portForward);
     } catch (error) {
-      Notifications.error(`Error occurred stopping the port-forward from port ${portForward.forwardPort}.`);
+      showErrorNotification(`Error occurred stopping the port-forward from port ${portForward.forwardPort}.`);
     } finally {
       this.checkExistingPortForwarding();
       this.forwardPort = 0;
@@ -207,6 +209,7 @@ export const ServicePortComponent = withInjectables<Dependencies, ServicePortCom
     notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
     openPortForward: di.inject(openPortForwardInjectable),
     logger: di.inject(loggerInjectable),
+    showErrorNotification: di.inject(showErrorNotificationInjectable),
   }),
 });
 

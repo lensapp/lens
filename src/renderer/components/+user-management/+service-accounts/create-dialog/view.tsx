@@ -14,7 +14,6 @@ import { Dialog } from "../../../dialog";
 import { Input } from "../../../input";
 import { systemName } from "../../../input/input_validators";
 import { SubTitle } from "../../../layout/sub-title";
-import { Notifications } from "../../../notifications";
 import { Wizard, WizardStep } from "../../../wizard";
 import type { CreateServiceAccountDialogState } from "./state.injectable";
 import type { ServiceAccountStore } from "../store";
@@ -24,6 +23,8 @@ import closeCreateServiceAccountDialogInjectable from "./close.injectable";
 import serviceAccountStoreInjectable from "../store.injectable";
 import showDetailsInjectable from "../../../kube-detail-params/show-details.injectable";
 import createServiceAccountDialogStateInjectable from "./state.injectable";
+import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
 
 export interface CreateServiceAccountDialogProps extends Partial<DialogProps> {
 }
@@ -33,12 +34,19 @@ interface Dependencies {
   serviceAccountStore: ServiceAccountStore;
   closeCreateServiceAccountDialog: () => void;
   showDetails: ShowDetails;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
 class NonInjectedCreateServiceAccountDialog extends React.Component<CreateServiceAccountDialogProps & Dependencies> {
   createAccount = async () => {
-    const { closeCreateServiceAccountDialog, serviceAccountStore, state, showDetails } = this.props;
+    const {
+      closeCreateServiceAccountDialog,
+      serviceAccountStore,
+      state,
+      showDetails,
+      showCheckedErrorNotification,
+    } = this.props;
 
     try {
       const serviceAccount = await serviceAccountStore.create({
@@ -49,7 +57,7 @@ class NonInjectedCreateServiceAccountDialog extends React.Component<CreateServic
       showDetails(serviceAccount.selfLink);
       closeCreateServiceAccountDialog();
     } catch (err) {
-      Notifications.checkedError(err, "Unknown error occured while creating service account");
+      showCheckedErrorNotification(err, "Unknown error occured while creating service account");
     }
   };
 
@@ -99,5 +107,6 @@ export const CreateServiceAccountDialog = withInjectables<Dependencies, CreateSe
     serviceAccountStore: di.inject(serviceAccountStoreInjectable),
     showDetails: di.inject(showDetailsInjectable),
     state: di.inject(createServiceAccountDialogStateInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });
