@@ -10,7 +10,6 @@ import { observer } from "mobx-react";
 import type { PersistentVolume } from "../../../common/k8s-api/endpoints/persistent-volume.api";
 import { TableRow } from "../table/table-row";
 import { cssNames, prevDefault } from "../../utils";
-import { showDetails } from "../kube-detail-params";
 import { TableCell } from "../table/table-cell";
 import { Spinner } from "../spinner/spinner";
 import { DrawerTitle } from "../drawer/drawer-title";
@@ -20,6 +19,8 @@ import kebabCase from "lodash/kebabCase";
 import type { PersistentVolumeStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import persistentVolumeStoreInjectable from "./store.injectable";
+import type { ShowDetails } from "../kube-detail-params/show-details.injectable";
+import showDetailsInjectable from "../kube-detail-params/show-details.injectable";
 
 export interface VolumeDetailsListProps {
   persistentVolumes: PersistentVolume[];
@@ -33,6 +34,7 @@ enum sortBy {
 
 interface Dependencies {
   persistentVolumeStore: PersistentVolumeStore;
+  showDetails: ShowDetails;
 }
 
 @observer
@@ -44,7 +46,7 @@ class NonInjectedVolumeDetailsList extends React.Component<VolumeDetailsListProp
   };
 
   getTableRow = (uid: string) => {
-    const { persistentVolumes } = this.props;
+    const { persistentVolumes, showDetails } = this.props;
     const volume = persistentVolumes.find(volume => volume.getId() === uid);
 
     if (!volume) {
@@ -105,5 +107,6 @@ export const VolumeDetailsList = withInjectables<Dependencies, VolumeDetailsList
   getProps: (di, props) => ({
     ...props,
     persistentVolumeStore: di.inject(persistentVolumeStoreInjectable),
+    showDetails: di.inject(showDetailsInjectable),
   }),
 });

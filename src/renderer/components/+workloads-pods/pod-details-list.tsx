@@ -17,10 +17,11 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Spinner } from "../spinner";
 import { DrawerTitle } from "../drawer";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { showDetails } from "../kube-detail-params";
 import type { PodStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import podStoreInjectable from "./store.injectable";
+import type { ShowDetails } from "../kube-detail-params/show-details.injectable";
+import showDetailsInjectable from "../kube-detail-params/show-details.injectable";
 
 enum sortBy {
   name = "name",
@@ -39,6 +40,7 @@ export interface PodDetailsListProps {
 
 interface Dependencies {
   podStore: PodStore;
+  showDetails: ShowDetails;
 }
 
 @observer
@@ -113,7 +115,7 @@ class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & De
   }
 
   getTableRow(uid: string) {
-    const { pods, podStore } = this.props;
+    const { pods, podStore, showDetails } = this.props;
     const pod = pods.find(pod => pod.getId() == uid);
 
     if (!pod) {
@@ -208,5 +210,6 @@ export const PodDetailsList = withInjectables<Dependencies, PodDetailsListProps>
   getProps: (di, props) => ({
     ...props,
     podStore: di.inject(podStoreInjectable),
+    showDetails: di.inject(showDetailsInjectable),
   }),
 });
