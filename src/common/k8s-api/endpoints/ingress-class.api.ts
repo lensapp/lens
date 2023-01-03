@@ -48,7 +48,7 @@ export interface IngressClassStatus {
 
 export class IngressClass extends KubeObject<IngressClassMetadata, IngressClassStatus, IngressClassSpec> {
   static readonly kind = "IngressClass";
-  static readonly namespaced = true;
+  static readonly namespaced = false;
   static readonly apiBase = "/apis/networking.k8s.io/v1/ingressclasses";
 
   getController(): string {
