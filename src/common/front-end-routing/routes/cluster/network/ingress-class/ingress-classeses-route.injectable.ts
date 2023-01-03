@@ -13,7 +13,7 @@ const ingressClassesesRouteInjectable = getInjectable({
 
   instantiate: (di) => {
     const isEnabled = di.inject(shouldShowResourceInjectionToken, {
-      apiName: "ingresses",
+      apiName: "ingressclasses",
       group: "networking.k8s.io",
     });
 
