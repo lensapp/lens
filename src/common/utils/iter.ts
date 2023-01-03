@@ -12,6 +12,7 @@ interface Iterator<T> extends Iterable<T> {
   collect<U>(fn: (values: Iterable<T>) => U): U;
   map<U>(fn: (val: T) => U): Iterator<U>;
   flatMap<U>(fn: (val: T) => U[]): Iterator<U>;
+  concat(src2: IterableIterator<T>): Iterator<T>;
   join(sep?: string): string;
 }
 
@@ -24,6 +25,7 @@ export function chain<T>(src: IterableIterator<T>): Iterator<T> {
     find: (fn) => find(src, fn),
     join: (sep) => join(src, sep),
     collect: (fn) => fn(src),
+    concat: (src2) => chain(concat(src, src2)),
     [Symbol.iterator]: () => src,
   };
 }
@@ -235,4 +237,14 @@ export function every<T>(src: Iterable<T>, fn: (val: T) => any): boolean {
   }
 
   return true;
+}
+
+export function* concat<T>(src1: IterableIterator<T>, src2: IterableIterator<T>): IterableIterator<T> {
+  for (const val of src1) {
+    yield val;
+  }
+
+  for (const val of src2) {
+    yield val;
+  }
 }
