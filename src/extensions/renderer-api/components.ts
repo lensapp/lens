@@ -20,6 +20,8 @@ import openConfirmDialogInjectable from "../../renderer/components/confirm-dialo
 import confirmInjectable from "../../renderer/components/confirm-dialog/confirm.injectable";
 import notificationsStoreInjectable from "../../renderer/components/notifications/notifications-store.injectable";
 import podStoreInjectable from "../../renderer/components/+workloads-pods/store.injectable";
+import getDetailsUrlInjectable from "../../renderer/components/kube-detail-params/get-details-url.injectable";
+import showDetailsInjectable from "../../renderer/components/kube-detail-params/show-details.injectable";
 
 // layouts
 export * from "../../renderer/components/layout/main-layout";
@@ -82,8 +84,17 @@ export {
   type MonacoTheme, type MonacoCustomTheme,
 } from "../../renderer/components/monaco-editor";
 
+/**
+ * @deprecated Use `Renderer.Navigation.getDetailsUrl`
+ */
+export const getDetailsUrl = asLegacyGlobalFunctionForExtensionApi(getDetailsUrlInjectable);
+
+/**
+ * @deprecated Use `Renderer.Navigation.showDetails`
+ */
+export const showDetails = asLegacyGlobalFunctionForExtensionApi(showDetailsInjectable);
+
 // kube helpers
-export * from "../../renderer/components/kube-detail-params";
 export * from "../../renderer/components/kube-object-details";
 export * from "../../renderer/components/kube-object-list-layout";
 export * from "../../renderer/components/kube-object-menu";
