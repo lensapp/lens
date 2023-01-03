@@ -249,7 +249,7 @@ function legacyRegisterApi(api: KubeApi<any, any>): void {
     const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.renderer);
     const autoRegistrationEmitter = di.inject(autoRegistrationEmitterInjectable);
 
-    autoRegistrationEmitter.emit("kubeApi", api);
+    setImmediate(() => autoRegistrationEmitter.emit("kubeApi", api));
   } catch {
     // ignore error
   }
