@@ -20,8 +20,6 @@ import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import type { Logger } from "../logger";
-import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import autoRegistrationEmitterInjectable from "./api-manager/auto-registration-emitter.injectable";
 import type AbortController from "abort-controller";
 import { matches } from "lodash/fp";
 
@@ -206,30 +204,6 @@ export interface DeleteResourceDescriptor extends ResourceDescriptor {
   propagationPolicy?: PropagationPolicy;
 }
 
-/**
- * @deprecated In the new extension API, don't expose `KubeApi`'s constructor
- */
-function legacyRegisterApi(api: KubeApi<any, any>): void {
-  try {
-    /**
-     * This function throws if called in `main`, so the `try..catch` is to make sure that doesn't
-     * leak.
-     *
-     * However, we need this code to be run in `renderer` so that the auto registering of `KubeApi`
-     * instances still works. That auto registering never worked or was applicable in `main` because
-     * there is no "single cluster" on `main`.
-     *
-     * TODO: rearchitect this design pattern in the new extension API
-     */
-    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.renderer);
-    const autoRegistrationEmitter = di.inject(autoRegistrationEmitterInjectable);
-
-    setImmediate(() => autoRegistrationEmitter.emit("kubeApi", api));
-  } catch {
-    // ignore error
-  }
-}
-
 export interface KubeApiDependencies {
   readonly logger: Logger;
   readonly maybeKubeApi: KubeJsonApi | undefined;
@@ -288,7 +262,6 @@ export class KubeApi<
     this.apiResource = resource;
     this.request = request;
     this.objectConstructor = objectConstructor;
-    legacyRegisterApi(this);
   }
 
   get apiVersionWithGroup() {
@@ -347,7 +320,6 @@ export class KubeApi<
       this.apiGroup = apiGroup;
       this.apiVersionPreferred = apiVersionPreferred;
       this.apiBase = this.computeApiBase();
-      legacyRegisterApi(this);
     }
   }
 
