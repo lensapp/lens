@@ -18,8 +18,9 @@ import { KubeObject } from "../../../../common/k8s-api/kube-object";
 import extensionShouldBeEnabledForClusterFrameInjectable from "../../../../renderer/extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import { KubeObjectDetails } from "../../../../renderer/components/kube-object-details";
-import type { ApiManager } from "../../../../common/k8s-api/api-manager";
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
+import type { KubeApi } from "../../../../common/k8s-api/kube-api";
+import showDetailsInjectable from "../../../../renderer/components/kube-detail-params/show-details.injectable";
 
 describe("disable kube object detail items when cluster is not relevant", () => {
   let builder: ApplicationBuilder;
@@ -32,12 +33,18 @@ describe("disable kube object detail items when cluster is not relevant", () => 
     builder = getApplicationBuilder();
     builder.setEnvironmentToClusterFrame();
 
-    builder.beforeWindowStart((windowDi) => {
-      windowDi.override(apiManagerInjectable, () => ({
-        getStore: () => ({
-          loadFromPath: async () => getKubeObjectStub("some-kind", "some-api-version"),
-        }) as Partial<KubeObjectStore> as KubeObjectStore,
-      }) as Partial<ApiManager> as ApiManager);
+    builder.afterWindowStart((windowDi) => {
+      const apiManager = windowDi.inject(apiManagerInjectable);
+      const api = {
+        apiBase: "/apis/some-api-version/some-kind",
+      } as Partial<KubeApi<KubeObject>> as KubeApi<KubeObject>;
+      const store = {
+        api,
+        loadFromPath: async () => getKubeObjectStub("some-kind", "some-api-version"),
+      } as Partial<KubeObjectStore<KubeObject>> as KubeObjectStore<KubeObject>;
+
+      apiManager.registerApi(api);
+      apiManager.registerStore(store);
 
       windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
 
@@ -76,9 +83,11 @@ describe("disable kube object detail items when cluster is not relevant", () => 
     const windowDi = builder.applicationWindow.only.di;
 
     const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
+    const showDetails = windowDi.inject(showDetailsInjectable);
     const testRoute = windowDi.inject(testRouteInjectable);
 
     navigateToRoute(testRoute);
+    showDetails("/apis/some-api-version/namespaces/some-namespace/some-kind/some-name");
 
     builder.extensions.enable(testExtension);
   });

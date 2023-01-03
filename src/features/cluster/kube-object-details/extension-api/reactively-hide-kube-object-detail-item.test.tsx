@@ -15,8 +15,9 @@ import { routeSpecificComponentInjectionToken } from "../../../../renderer/route
 import { KubeObject } from "../../../../common/k8s-api/kube-object";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import { KubeObjectDetails } from "../../../../renderer/components/kube-object-details";
-import type { ApiManager } from "../../../../common/k8s-api/api-manager";
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
+import type { KubeApi } from "../../../../common/k8s-api/kube-api";
+import showDetailsInjectable from "../../../../renderer/components/kube-detail-params/show-details.injectable";
 
 describe("reactively hide kube object detail item", () => {
   let builder: ApplicationBuilder;
@@ -28,12 +29,18 @@ describe("reactively hide kube object detail item", () => {
 
     builder.setEnvironmentToClusterFrame();
 
-    builder.beforeWindowStart((windowDi) => {
-      windowDi.override(apiManagerInjectable, () => ({
-        getStore: () => ({
-          loadFromPath: async () => getKubeObjectStub("some-kind", "some-api-version"),
-        }) as Partial<KubeObjectStore> as KubeObjectStore,
-      }) as Partial<ApiManager> as ApiManager);
+    builder.afterWindowStart((windowDi) => {
+      const apiManager = windowDi.inject(apiManagerInjectable);
+      const api = {
+        apiBase: "/apis/some-api-version/some-kind",
+      } as Partial<KubeApi<KubeObject>> as KubeApi<KubeObject>;
+      const store = {
+        api,
+        loadFromPath: async () => getKubeObjectStub("some-kind", "some-api-version"),
+      } as Partial<KubeObjectStore<KubeObject>> as KubeObjectStore<KubeObject>;
+
+      apiManager.registerApi(api);
+      apiManager.registerStore(store);
 
       runInAction(() => {
         windowDi.register(testRouteInjectable, testRouteComponentInjectable);
@@ -71,11 +78,17 @@ describe("reactively hide kube object detail item", () => {
     const windowDi = builder.applicationWindow.only.di;
 
     const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
+    const showDetails = windowDi.inject(showDetailsInjectable);
     const testRoute = windowDi.inject(testRouteInjectable);
 
     navigateToRoute(testRoute);
+    showDetails("/apis/some-api-version/namespaces/some-namespace/some-kind/some-name");
 
     builder.extensions.enable(testExtension);
+  });
+
+  it("renders", () => {
+    expect(rendered.baseElement).toMatchSnapshot();
   });
 
   it("does not show the kube object detail item", () => {
@@ -84,15 +97,24 @@ describe("reactively hide kube object detail item", () => {
     expect(actual).not.toBeInTheDocument();
   });
 
-  it("given item should be shown, shows the kube object detail item", () => {
-    runInAction(() => {
-      someObservable.set(true);
+  describe("when the item is shown", () => {
+    beforeEach(() => {
+      runInAction(() => {
+        someObservable.set(true);
+      });
     });
 
-    const actual = rendered.queryByTestId("some-kube-object-detail-item");
+    it("renders", () => {
+      expect(rendered.baseElement).toMatchSnapshot();
+    });
 
-    expect(actual).toBeInTheDocument();
+    it("shows the kube object detail item", () => {
+      const actual = rendered.queryByTestId("some-kube-object-detail-item");
+
+      expect(actual).toBeInTheDocument();
+    });
   });
+
 });
 
 const testRouteInjectable = getInjectable({
