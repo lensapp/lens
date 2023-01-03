@@ -6,11 +6,11 @@
 import type { KubeObjectStore } from "../kube-object.store";
 
 import type { IComputedValue } from "mobx";
-import { action, observable } from "mobx";
+import { autorun,  action, observable } from "mobx";
 import type { KubeApi } from "../kube-api";
 import type { KubeObject, ObjectReference } from "../kube-object";
 import { parseKubeApi, createKubeApiURL } from "../kube-api-parse";
-import { chain } from "../../utils/iter";
+import { chain, find } from "../../utils/iter";
 
 export type RegisterableStore<Store> = Store extends KubeObjectStore<any, any, any>
   ? Store
@@ -33,20 +33,38 @@ export class ApiManager {
   private readonly externalApis = observable.array<KubeApi>();
   private readonly externalStores = observable.array<KubeObjectStore>();
 
-  constructor(private readonly dependencies: Dependencies) {}
+  private readonly apis = observable.map<string, KubeApi>();
+
+  constructor(private readonly dependencies: Dependencies) {
+    // NOTE: this is done to preserve the old behaviour of an API being discoverable using all previous apiBases
+    autorun(() => {
+      const apis = chain(this.dependencies.apis.get().values())
+        .concat(this.externalApis.values());
+      const removedApis = new Set(this.apis.values());
+
+      for (const api of apis) {
+        removedApis.delete(api);
+        this.apis.set(api.apiBase, api);
+      }
+
+      for (const api of removedApis) {
+        for (const [apiBase, storedApi] of this.apis) {
+          if (storedApi === api) {
+            this.apis.delete(apiBase);
+          }
+        }
+      }
+    });
+  }
 
   getApi(pathOrCallback: string | FindApiCallback) {
-    const callback: FindApiCallback = typeof pathOrCallback === "function"
-      ? pathOrCallback
-      : (() => {
-        const { apiBase } = parseKubeApi(pathOrCallback);
+    if (typeof pathOrCallback === "function") {
+      return find(this.apis.values(), pathOrCallback);
+    }
 
-        return api => api.apiBase === apiBase;
-      })();
+    const { apiBase } = parseKubeApi(pathOrCallback);
 
-    return chain(this.dependencies.apis.get().values())
-      .concat(this.externalApis.values())
-      .find(callback);
+    return this.apis.get(apiBase);
   }
 
   getApiByKind(kind: string, apiVersion: string) {
@@ -103,10 +121,11 @@ export class ApiManager {
     const { apiBase } = typeof apiOrBase === "string"
       ? parseKubeApi(apiOrBase)
       : apiOrBase;
+    const api = this.getApi(apiBase);
 
     return chain(this.dependencies.stores.get().values())
       .concat(this.externalStores.values())
-      .find(store => store.api.apiBase === apiBase);
+      .find(store => store.api === api);
   }
 
   lookupApiLink(ref: ObjectReference, parentObject?: KubeObject): string {

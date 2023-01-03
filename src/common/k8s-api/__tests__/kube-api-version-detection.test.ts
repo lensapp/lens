@@ -341,6 +341,10 @@ describe("KubeApi", () => {
             expect(apiManager.getApi("/apis/networking.k8s.io/v1beta1/ingresses")).toBeDefined();
           });
 
+          it("api is retrievable with the old apiBase", () => {
+            expect(apiManager.getApi("/apis/networking.k8s.io/v1/ingresses")).toBeDefined();
+          });
+
           describe("when the request resolves with no data", () => {
             let result: Ingress | null;
 
