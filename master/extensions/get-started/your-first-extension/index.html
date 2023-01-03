@@ -878,41 +878,41 @@
 <p>In this topic, you'll learn the basics of building extensions by creating an extension that adds a "Hello World" page to a cluster menu.</p>
 <h2 id="install-the-extension">Install the Extension<a class="headerlink" href="#install-the-extension" title="Permanent link">#</a></h2>
 <p>To install the extension, clone the <a href="https://github.com/lensapp/lens-extension-samples">Lens Extension samples</a> repository to your local machine:</p>
-<div class="highlight"><pre><span></span><code>git clone https://github.com/lensapp/lens-extension-samples.git
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/lensapp/lens-extension-samples.git
 </code></pre></div>
 <p>Next you need to create a symlink.
 A symlink connects the directory that Lens will monitor for user-installed extensions to the sample extension.
 In this case the sample extension is <code>helloworld-sample</code>.</p>
 <h3 id="linux-macos">Linux &amp; macOS<a class="headerlink" href="#linux-macos" title="Permanent link">#</a></h3>
-<div class="highlight"><pre><span></span><code>mkdir -p ~/.k8slens/extensions
-<span class="nb">cd</span> ~/.k8slens/extensions
-ln -s lens-extension-samples/helloworld-sample helloworld-sample
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.k8slens/extensions
+<span class="nb">cd</span><span class="w"> </span>~/.k8slens/extensions
+ln<span class="w"> </span>-s<span class="w"> </span>lens-extension-samples/helloworld-sample<span class="w"> </span>helloworld-sample
 </code></pre></div>
 <h3 id="windows">Windows<a class="headerlink" href="#windows" title="Permanent link">#</a></h3>
 <p>Create the directory that Lens will monitor for user-installed extensions:</p>
-<div class="highlight"><pre><span></span><code>mkdir C:<span class="se">\U</span>sers<span class="se">\&lt;</span>user&gt;<span class="se">\.</span>k8slens<span class="se">\e</span>xtensions -force
-<span class="nb">cd</span> C:<span class="se">\U</span>sers<span class="se">\&lt;</span>user&gt;<span class="se">\.</span>k8slens<span class="se">\e</span>xtensions
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>C:<span class="se">\U</span>sers<span class="se">\&lt;</span>user&gt;<span class="se">\.</span>k8slens<span class="se">\e</span>xtensions<span class="w"> </span>-force
+<span class="nb">cd</span><span class="w"> </span>C:<span class="se">\U</span>sers<span class="se">\&lt;</span>user&gt;<span class="se">\.</span>k8slens<span class="se">\e</span>xtensions
 </code></pre></div>
 <p>If you have administrator rights, you can create symlink to the sample extension – in this case <code>helloworld-sample</code>:</p>
-<div class="highlight"><pre><span></span><code>cmd /c mklink /D helloworld-sample lens-extension-samples<span class="se">\h</span>elloworld-sample
+<div class="highlight"><pre><span></span><code>cmd<span class="w"> </span>/c<span class="w"> </span>mklink<span class="w"> </span>/D<span class="w"> </span>helloworld-sample<span class="w"> </span>lens-extension-samples<span class="se">\h</span>elloworld-sample
 </code></pre></div>
 <p>Without administrator rights, you need to copy the extensions sample directory into <code>C:\Users\&lt;user&gt;\.k8slens\extensions</code>:</p>
-<div class="highlight"><pre><span></span><code>Copy-Item <span class="s1">&#39;lens-extension-samples\helloworld-sample&#39;</span> <span class="s1">&#39;C:\Users\&lt;user&gt;\.k8slens\extensions\helloworld-sample&#39;</span>
+<div class="highlight"><pre><span></span><code>Copy-Item<span class="w"> </span><span class="s1">&#39;lens-extension-samples\helloworld-sample&#39;</span><span class="w"> </span><span class="s1">&#39;C:\Users\&lt;user&gt;\.k8slens\extensions\helloworld-sample&#39;</span>
 </code></pre></div>
 <h2 id="build-the-extension">Build the Extension<a class="headerlink" href="#build-the-extension" title="Permanent link">#</a></h2>
 <p>To build the extension you can use <code>make</code> or run the <code>npm</code> commands manually:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> &lt;lens-extension-samples directory&gt;/helloworld-sample
-make build
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>&lt;lens-extension-samples<span class="w"> </span>directory&gt;/helloworld-sample
+make<span class="w"> </span>build
 </code></pre></div>
 <p>To run the <code>npm</code> commands, enter:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> &lt;lens-extension-samples directory&gt;/helloworld-sample
-npm install
-npm run build
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>&lt;lens-extension-samples<span class="w"> </span>directory&gt;/helloworld-sample
+npm<span class="w"> </span>install
+npm<span class="w"> </span>run<span class="w"> </span>build
 </code></pre></div>
 <p>Optionally, automatically rebuild the extension by watching for changes to the source code.
 To do so, enter:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> &lt;lens-extension-samples directory&gt;/helloworld-sample
-npm run dev
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>&lt;lens-extension-samples<span class="w"> </span>directory&gt;/helloworld-sample
+npm<span class="w"> </span>run<span class="w"> </span>dev
 </code></pre></div>
 <p>You must restart Lens for the extension to load.
 After this initial restart, reload Lens and it will automatically pick up changes any time the extension rebuilds.</p>
