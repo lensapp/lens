@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { timingSafeEqual, X509Certificate } from "crypto";
 import loggerInjectable from "../../../../common/logger.injectable";
 import applicationWindowStateInjectable from "./application-window-state.injectable";
 import { BrowserWindow } from "electron";
@@ -14,7 +15,7 @@ import lensResourcesDirInjectable from "../../../../common/vars/lens-resources-d
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import applicationInformationToken from "../../../../common/vars/application-information-token";
 import pathExistsSyncInjectable from "../../../../common/fs/path-exists-sync.injectable";
-
+import lensProxyCertificateInjectable from "../../../../common/certificate/lens-proxy-certificate.injectable";
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
 
@@ -56,6 +57,8 @@ const createElectronWindowInjectable = getInjectable({
     const isLinux = di.inject(isLinuxInjectable);
     const applicationInformation = di.inject(applicationInformationToken);
     const pathExistsSync = di.inject(pathExistsSyncInjectable);
+    const lensProxyCertificate = di.inject(lensProxyCertificateInjectable).get();
+    const lensProxyX509Cert = new X509Certificate(lensProxyCertificate.cert);
 
     return (configuration) => {
       const applicationWindowState = di.inject(
@@ -122,6 +125,13 @@ const createElectronWindowInjectable = getInjectable({
         })
         .webContents.on("dom-ready", () => {
           configuration.onDomReady?.();
+        })
+        .on("certificate-error", (event, url, error, certificate, shouldBeTrusted) => {
+          const cert = new X509Certificate(certificate.data);
+          const shouldTrustCert = cert.raw.length === lensProxyX509Cert.raw.length
+            && timingSafeEqual(cert.raw, lensProxyX509Cert.raw);
+
+          shouldBeTrusted(shouldTrustCert);
         })
         .on("did-fail-load", (_event, code, desc) => {
           logger.error(

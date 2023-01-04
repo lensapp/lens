@@ -3,7 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { Agent } from "https";
 import type { RequestInit } from "node-fetch";
+import lensProxyCertificateInjectable from "../certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../fetch/fetch.injectable";
 import loggerInjectable from "../logger.injectable";
 import type { JsonApiConfig, JsonApiData, JsonApiDependencies, JsonApiParams } from "./json-api";
@@ -18,8 +20,23 @@ const createJsonApiInjectable = getInjectable({
       fetch: di.inject(fetchInjectable),
       logger: di.inject(loggerInjectable),
     };
+    const lensProxyCert = di.inject(lensProxyCertificateInjectable);
 
-    return (config, reqInit) => new JsonApi(deps, config, reqInit);
+    return (config, reqInit) => {
+      if (!config.getRequestOptions) {
+        config.getRequestOptions = async () => {
+          const agent = new Agent({
+            ca: lensProxyCert.get().cert,
+          });
+  
+          return {
+            agent,
+          };
+        };
+      }
+
+      return new JsonApi(deps, config, reqInit);
+    };
   },
 });
 

@@ -4,10 +4,10 @@
  */
 import type { RequestPromiseOptions } from "request-promise-native";
 import request from "request-promise-native";
-import { apiKubePrefix } from "../common/vars";
 import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";
 import lensProxyPortInjectable from "./lens-proxy/lens-proxy-port.injectable";
+import lensProxyCertificateInjectable from "../common/certificate/lens-proxy-certificate.injectable";
 
 export type K8sRequest = (cluster: Cluster, path: string, options?: RequestPromiseOptions) => Promise<any>;
 
@@ -16,18 +16,19 @@ const k8sRequestInjectable = getInjectable({
 
   instantiate: (di) => {
     const lensProxyPort = di.inject(lensProxyPortInjectable);
+    const lensProxyCertificate = di.inject(lensProxyCertificateInjectable);
 
     return async (
       cluster: Cluster,
       path: string,
       options: RequestPromiseOptions = {},
     ) => {
-      const kubeProxyUrl = `http://localhost:${lensProxyPort.get()}${apiKubePrefix}`;
+      const kubeProxyUrl = `https://127.0.0.1:${lensProxyPort.get()}/${cluster.id}`;
 
+      options.ca = lensProxyCertificate.get().cert;
       options.headers ??= {};
       options.json ??= true;
       options.timeout ??= 30000;
-      options.headers.Host = `${cluster.id}.${new URL(kubeProxyUrl).host}`; // required in ClusterManager.getClusterForRequest()
 
       return request(kubeProxyUrl + path, options);
     };

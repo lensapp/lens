@@ -14,7 +14,7 @@ export function getClusterIdFromHost(host: string): ClusterId | undefined {
   // e.g host == "%clusterId.localhost:45345"
   const subDomains = host.split(":")[0].split(".");
 
-  return subDomains.slice(-2, -1)[0]; // ClusterId or undefined
+  return subDomains.slice(-3, -2)[0]; // ClusterId or undefined
 }
 
 /**
