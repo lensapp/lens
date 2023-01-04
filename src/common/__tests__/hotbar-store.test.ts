@@ -4,10 +4,8 @@
  */
 
 import { anyObject } from "jest-mock-extended";
-import mockFs from "mock-fs";
 import type { CatalogEntity, CatalogEntityData, CatalogEntityKindData } from "../catalog";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
-import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import hotbarStoreInjectable from "../hotbars/store.injectable";
 import type { HotbarStore } from "../hotbars/store";
@@ -19,7 +17,7 @@ import loggerInjectable from "../logger.injectable";
 import type { Logger } from "../logger";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
-import fsInjectable from "../fs/fs.injectable";
+import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
 
 function getMockCatalogEntity(data: Partial<CatalogEntityData> & CatalogEntityKindData): CatalogEntity {
   return {
@@ -46,8 +44,6 @@ describe("HotbarStore", () => {
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
-
-    di.unoverride(hotbarStoreInjectable);
 
     testCluster = getMockCatalogEntity({
       apiVersion: "v1",
@@ -101,7 +97,7 @@ describe("HotbarStore", () => {
 
     di.override(loggerInjectable, () => loggerMock);
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);
@@ -112,20 +108,10 @@ describe("HotbarStore", () => {
       awsCluster,
       catalogCatalogEntity,
     ]));
-
-    di.permitSideEffects(fsInjectable);
-    di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.unoverride(getConfigurationFileModelInjectable);
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   describe("given no previous data in store, running all migrations", () => {
     beforeEach(() => {
-      mockFs();
-
       hotbarStore = di.inject(hotbarStoreInjectable);
 
       hotbarStore.load();
@@ -276,66 +262,64 @@ describe("HotbarStore", () => {
 
   describe("given data from 5.0.0-beta.3 and version being 5.0.0-beta.10", () => {
     beforeEach(() => {
-      mockFs({
-        "some-directory-for-user-data": {
-          "lens-hotbar-store.json": JSON.stringify({
-            __internal__: {
-              migrations: {
-                version: "5.0.0-beta.3",
-              },
-            },
-            hotbars: [
-              {
-                id: "3caac17f-aec2-4723-9694-ad204465d935",
-                name: "myhotbar",
-                items: [
-                  {
-                    entity: {
-                      uid: "some-aws-id",
-                    },
-                  },
-                  {
-                    entity: {
-                      uid: "55b42c3c7ba3b04193416cda405269a5",
-                    },
-                  },
-                  {
-                    entity: {
-                      uid: "176fd331968660832f62283219d7eb6e",
-                    },
-                  },
-                  {
-                    entity: {
-                      uid: "61c4fb45528840ebad1badc25da41d14",
-                      name: "user1-context",
-                      source: "local",
-                    },
-                  },
-                  {
-                    entity: {
-                      uid: "27d6f99fe9e7548a6e306760bfe19969",
-                      name: "foo2",
-                      source: "local",
-                    },
-                  },
-                  null,
-                  {
-                    entity: {
-                      uid: "c0b20040646849bb4dcf773e43a0bf27",
-                      name: "multinode-demo",
-                      source: "local",
-                    },
-                  },
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                ],
-              },
-            ],
-          }),
+      const writeJsonSync = di.inject(writeJsonSyncInjectable);
+
+      writeJsonSync("/some-directory-for-user-data/lens-hotbar-store.json", {
+        __internal__: {
+          migrations: {
+            version: "5.0.0-beta.3",
+          },
         },
+        hotbars: [
+          {
+            id: "3caac17f-aec2-4723-9694-ad204465d935",
+            name: "myhotbar",
+            items: [
+              {
+                entity: {
+                  uid: "some-aws-id",
+                },
+              },
+              {
+                entity: {
+                  uid: "55b42c3c7ba3b04193416cda405269a5",
+                },
+              },
+              {
+                entity: {
+                  uid: "176fd331968660832f62283219d7eb6e",
+                },
+              },
+              {
+                entity: {
+                  uid: "61c4fb45528840ebad1badc25da41d14",
+                  name: "user1-context",
+                  source: "local",
+                },
+              },
+              {
+                entity: {
+                  uid: "27d6f99fe9e7548a6e306760bfe19969",
+                  name: "foo2",
+                  source: "local",
+                },
+              },
+              null,
+              {
+                entity: {
+                  uid: "c0b20040646849bb4dcf773e43a0bf27",
+                  name: "multinode-demo",
+                  source: "local",
+                },
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+            ],
+          },
+        ],
       });
 
       di.override(storeMigrationVersionInjectable, () => "5.0.0-beta.10");
