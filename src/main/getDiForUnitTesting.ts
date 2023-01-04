@@ -63,7 +63,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   di.register(getInjectable({
     id: "node-env",
-    instantiate: () => "test",
+    instantiate: () => "production",
     injectionToken: nodeEnvInjectionToken,
   }));
 

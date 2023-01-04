@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getGlobalOverride } from "../../common/test-utils/get-global-override";
-import applicationInformationInjectable from "../../common/vars/application-information-injectable";
+import { getGlobalOverride } from "../test-utils/get-global-override";
+import applicationInformationInjectable from "./application-information-injectable";
 
 export default getGlobalOverride(applicationInformationInjectable, () => ({
   name: "some-product-name",

@@ -37,7 +37,7 @@ export const getDiForUnitTesting = (
 
   di.register(getInjectable({
     id: "node-env",
-    instantiate: () => "test",
+    instantiate: () => "production",
     injectionToken: nodeEnvInjectionToken,
   }));
 
