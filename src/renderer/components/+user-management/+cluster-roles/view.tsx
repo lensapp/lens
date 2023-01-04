@@ -15,6 +15,8 @@ import { KubeObjectAge } from "../../kube-object/age";
 import type { ClusterRoleStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterRoleStoreInjectable from "./store.injectable";
+import type { OpenAddClusterRoleDialog } from "./add-dialog/open.injectable";
+import openAddClusterRoleDialogInjectable from "./add-dialog/open.injectable";
 
 enum columnId {
   name = "name",
@@ -24,18 +26,24 @@ enum columnId {
 
 interface Dependencies {
   clusterRoleStore: ClusterRoleStore;
+  openAddClusterRoleDialog: OpenAddClusterRoleDialog;
 }
 
 @observer
 class NonInjectedClusterRoles extends React.Component<Dependencies> {
   render() {
+    const {
+      openAddClusterRoleDialog,
+      clusterRoleStore,
+    } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
           isConfigurable
           tableId="access_cluster_roles"
           className="ClusterRoles"
-          store={this.props.clusterRoleStore}
+          store={clusterRoleStore}
           sortingCallbacks={{
             [columnId.name]: clusterRole => clusterRole.getName(),
             [columnId.age]: clusterRole => -clusterRole.getCreationTimestamp(),
@@ -55,7 +63,7 @@ class NonInjectedClusterRoles extends React.Component<Dependencies> {
             <KubeObjectAge key="age" object={clusterRole} />,
           ]}
           addRemoveButtons={{
-            onAdd: () => AddClusterRoleDialog.open(),
+            onAdd: () => openAddClusterRoleDialog(),
             addTooltip: "Create new ClusterRole",
           }}
         />
@@ -69,5 +77,6 @@ export const ClusterRoles = withInjectables<Dependencies>(NonInjectedClusterRole
   getProps: (di, props) => ({
     ...props,
     clusterRoleStore: di.inject(clusterRoleStoreInjectable),
+    openAddClusterRoleDialog: di.inject(openAddClusterRoleDialogInjectable),
   }),
 });

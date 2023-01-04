@@ -6,8 +6,10 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { action } from "mobx";
 import addClusterRoleDialogStateInjectable from "./state.injectable";
 
-const openAddClusterRoleDialogStateInjectable = getInjectable({
-  id: "open-add-cluster-role-dialog-state",
+export type OpenAddClusterRoleDialog = () => void;
+
+const openAddClusterRoleDialogInjectable = getInjectable({
+  id: "open-add-cluster-role-dialog",
   instantiate: (di) => {
     const state = di.inject(addClusterRoleDialogStateInjectable);
 
@@ -18,4 +20,4 @@ const openAddClusterRoleDialogStateInjectable = getInjectable({
   },
 });
 
-export default openAddClusterRoleDialogStateInjectable;
+export default openAddClusterRoleDialogInjectable;
