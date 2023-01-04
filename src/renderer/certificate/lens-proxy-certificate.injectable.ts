@@ -4,15 +4,11 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { SelfSignedCert } from "selfsigned";
-import { lensProxyCertificateChannel } from "../../common/certificate/lens-proxy-certificate-channel";
 import { lensProxyCertificateInjectionToken } from "../../common/certificate/lens-proxy-certificate-injection-token";
-import requestFromChannelInjectable from "../utils/channel/request-from-channel.injectable";
 
 const lensProxyCertificateInjectable = getInjectable({
   id: "lens-proxy-certificate",
-  instantiate: (di) => {
-    const requestFromChannel = di.inject(requestFromChannelInjectable);
-
+  instantiate: () => {
     let certState: SelfSignedCert;
     const cert = {
       get: () => {
@@ -26,10 +22,6 @@ const lensProxyCertificateInjectable = getInjectable({
         certState = certificate;
       },
     };
-    
-    requestFromChannel(lensProxyCertificateChannel).then((value) => {
-      cert.set(value);
-    });
 
     return cert;
   },
