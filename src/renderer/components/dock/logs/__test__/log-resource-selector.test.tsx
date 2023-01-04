@@ -8,7 +8,6 @@ import "@testing-library/jest-dom/extend-expect";
 import * as selectEvent from "react-select-event";
 import { LogResourceSelector } from "../resource-selector";
 import { dockerPod, deploymentPod1, deploymentPod2 } from "./pod.mock";
-import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import type { DiRender } from "../../../test-utils/renderFor";
 import { renderFor } from "../../../test-utils/renderFor";
@@ -19,28 +18,8 @@ import { LogTabViewModel } from "../logs-view-model";
 import type { TabId } from "../../dock/store";
 import userEvent from "@testing-library/user-event";
 import { SearchStore } from "../../../../search-store/search-store";
-import getConfigurationFileModelInjectable from "../../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import assert from "assert";
-
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-  ipcRenderer: {
-    on: jest.fn(),
-    invoke: jest.fn(),
-  },
-}));
+import fsInjectable from "../../../../../common/fs/fs.injectable";
 
 function mockLogTabViewModel(tabId: TabId, deps: Partial<LogTabViewModelDependencies>): LogTabViewModel {
   return new LogTabViewModel(tabId, {
@@ -130,20 +109,14 @@ describe("<LogResourceSelector />", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-    di.override(callForLogsInjectable, () => () => Promise.resolve("some-logs"));
+    const { ensureDirSync } = di.inject(fsInjectable);
 
-    di.permitSideEffects(getConfigurationFileModelInjectable);
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
+    di.override(callForLogsInjectable, () => () => Promise.resolve("some-logs"));
 
     render = renderFor(di);
 
-    mockFs({
-      "tmp": {},
-    });
-  });
-
-  afterEach(() => {
-    mockFs.restore();
+    ensureDirSync("/tmp");
   });
 
   describe("with one pod", () => {
