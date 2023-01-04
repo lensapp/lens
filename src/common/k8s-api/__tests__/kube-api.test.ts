@@ -151,6 +151,9 @@ describe("KubeApi", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
+    fetchMock = asyncFn();
+    di.override(fetchInjectable, () => fetchMock);
+
     const createCluster = di.inject(createClusterInjectable);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 
@@ -161,9 +164,6 @@ describe("KubeApi", () => {
     }, {
       clusterServerUrl: "https://localhost:8080",
     }));
-
-    fetchMock = asyncFn();
-    di.override(fetchInjectable, () => fetchMock);
 
     di.override(apiKubeInjectable, () => createKubeJsonApi({
       serverAddress: `http://127.0.0.1:9999`,
