@@ -7,22 +7,6 @@ import type { LensApiRequest, Route } from "../router/route";
 import staticFileRouteInjectable from "../routes/files/static-file-route.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
-
 describe("static-file-route", () => {
   let handleStaticFileRoute: Route<Buffer, "/{path*}">;
 

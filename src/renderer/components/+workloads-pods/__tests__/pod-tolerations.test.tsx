@@ -13,12 +13,6 @@ import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 
-jest.mock("electron", () => ({
-  app: {
-    getPath: () => "/foo",
-  },
-}));
-
 const tolerations: Toleration[] =[
   {
     key: "CriticalAddonsOnly",

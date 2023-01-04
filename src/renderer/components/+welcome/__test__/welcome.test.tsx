@@ -17,15 +17,6 @@ import { LensRendererExtension } from "../../../../extensions/lens-renderer-exte
 import type { WelcomeBannerRegistration } from "../welcome-banner-items/welcome-banner-registration";
 import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";
 
-jest.mock("electron", () => ({
-  ipcRenderer: {
-    on: jest.fn(),
-  },
-  app: {
-    getPath: () => "tmp",
-  },
-}));
-
 describe("<Welcome/>", () => {
   let render: DiRender;
   let di: DiContainer;

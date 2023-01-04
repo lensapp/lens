@@ -20,34 +20,6 @@ import getConfigurationFileModelInjectable from "../../../../common/get-configur
 import assert from "assert";
 import hostedClusterIdInjectable from "../../../cluster-frame-context/hosted-cluster-id.injectable";
 
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-  ipcRenderer: {
-    on: jest.fn(),
-    invoke: jest.fn(),
-  },
-}));
-
-Object.defineProperty(window, "ResizeObserver", {
-  writable: true,
-  value: jest.fn().mockImplementation(() => ({
-    observe: jest.fn(),
-    disconnect: jest.fn(),
-  })),
-});
-
 const initialTabs: DockTab[] = [
   { id: "terminal", kind: TabKind.TERMINAL, title: "Terminal", pinned: false },
   { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource", pinned: false },
