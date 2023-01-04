@@ -13,9 +13,7 @@ import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import { ConfirmDialog } from "../../confirm-dialog";
-import mockFs from "mock-fs";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import getConfigurationFileModelInjectable from "../../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import type { HotbarStore } from "../../../../common/hotbars/store";
 import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
 
@@ -27,13 +25,6 @@ const mockHotbars: Partial<Record<string, any>> = {
   },
 };
 
-jest.mock("electron", () => ({
-  ipcRenderer: {
-    on: jest.fn(),
-    invoke: jest.fn(),
-  },
-}));
-
 describe("<HotbarRemoveCommand />", () => {
   let di: DiContainer;
   let render: DiRender;
@@ -41,19 +32,10 @@ describe("<HotbarRemoveCommand />", () => {
   beforeEach(() => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    mockFs();
-
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-
-    di.permitSideEffects(hotbarStoreInjectable);
-    di.permitSideEffects(getConfigurationFileModelInjectable);
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 
     render = renderFor(di);
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it("renders w/o errors", () => {
