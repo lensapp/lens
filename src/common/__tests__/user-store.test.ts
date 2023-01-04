@@ -2,28 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-import mockFs from "mock-fs";
-
-jest.mock("electron", () => ({
-  app: {
-    getVersion: () => "99.99.99",
-    getName: () => "lens",
-    setName: jest.fn(),
-    setPath: jest.fn(),
-    getPath: () => "tmp",
-    getLocale: () => "en",
-    setLoginItemSettings: jest.fn(),
-  },
-  ipcMain: {
-    on: jest.fn(),
-    handle: jest.fn(),
-  },
-}));
-
 import type { UserStore } from "../user-store";
-import { Console } from "console";
-import { stdout, stderr } from "process";
 import userStoreInjectable from "../user-store/user-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -31,13 +10,11 @@ import type { ClusterStoreModel } from "../cluster-store/cluster-store";
 import { defaultThemeId } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
-import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import releaseChannelInjectable from "../vars/release-channel.injectable";
 import defaultUpdateChannelInjectable from "../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
-import fsInjectable from "../fs/fs.injectable";
-
-console = new Console(stdout, stderr);
+import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
+import writeFileSyncInjectable from "../fs/write-file-sync.injectable";
 
 describe("user store tests", () => {
   let userStore: UserStore;
@@ -46,14 +23,8 @@ describe("user store tests", () => {
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    mockFs();
-
     di.override(writeFileInjectable, () => () => Promise.resolve());
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-
-    di.permitSideEffects(getConfigurationFileModelInjectable);
-    di.unoverride(getConfigurationFileModelInjectable);
-    di.permitSideEffects(fsInjectable);
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 
     di.override(releaseChannelInjectable, () => ({
       get: () => "latest" as const,
@@ -64,13 +35,12 @@ describe("user store tests", () => {
     userStore = di.inject(userStoreInjectable);
   });
 
-  afterEach(() => {
-    mockFs.restore();
-  });
-
   describe("for an empty config", () => {
     beforeEach(() => {
-      mockFs({ "some-directory-for-user-data": { "lens-user-store.json": "{}", "kube_config": "{}" }});
+      const writeJsonSync = di.inject(writeJsonSyncInjectable);
+
+      writeJsonSync("/some-directory-for-user-data/lens-user-store.json", {});
+      writeJsonSync("/some-directory-for-user-data/kube_config", {});
 
       userStore.load();
     });
@@ -94,31 +64,29 @@ describe("user store tests", () => {
 
   describe("migrations", () => {
     beforeEach(() => {
-      mockFs({
-        "some-directory-for-user-data": {
-          "lens-user-store.json": JSON.stringify({
-            preferences: { colorTheme: "light" },
-          }),
-          "lens-cluster-store.json": JSON.stringify({
-            clusters: [
-              {
-                id: "foobar",
-                kubeConfigPath: "some-directory-for-user-data/extension_data/foo/bar",
-              },
-              {
-                id: "barfoo",
-                kubeConfigPath: "some/other/path",
-              },
-            ],
-          } as ClusterStoreModel),
-          "extension_data": {},
-        },
-        "some": {
-          "other": {
-            "path": "is file",
-          },
-        },
+      const writeJsonSync = di.inject(writeJsonSyncInjectable);
+      const writeFileSync = di.inject(writeFileSyncInjectable);
+
+      writeJsonSync("/some-directory-for-user-data/lens-user-store.json", {
+        preferences: { colorTheme: "light" },
       });
+
+      writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {
+        clusters: [
+          {
+            id: "foobar",
+            kubeConfigPath: "/some-directory-for-user-data/extension_data/foo/bar",
+          },
+          {
+            id: "barfoo",
+            kubeConfigPath: "/some/other/path",
+          },
+        ],
+      } as ClusterStoreModel);
+
+      writeJsonSync("/some-directory-for-user-data/extension_data", {});
+
+      writeFileSync("/some/other/path", "is file");
 
       di.override(storeMigrationVersionInjectable, () => "10.0.0");
 
@@ -126,8 +94,8 @@ describe("user store tests", () => {
     });
 
     it("skips clusters for adding to kube-sync with files under extension_data/", () => {
-      expect(userStore.syncKubeconfigEntries.has("some-directory-for-user-data/extension_data/foo/bar")).toBe(false);
-      expect(userStore.syncKubeconfigEntries.has("some/other/path")).toBe(true);
+      expect(userStore.syncKubeconfigEntries.has("/some-directory-for-user-data/extension_data/foo/bar")).toBe(false);
+      expect(userStore.syncKubeconfigEntries.has("/some/other/path")).toBe(true);
     });
 
     it("allows access to the colorTheme preference", () => {
