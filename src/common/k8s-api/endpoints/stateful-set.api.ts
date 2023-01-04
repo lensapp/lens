@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import moment from "moment";
+
 import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { LabelSelector, NamespaceScopedMetadata } from "../kube-object";
@@ -39,6 +41,25 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
     {
       headers: {
         "content-type": "application/merge-patch+json",
+      },
+    });
+  }
+
+  restart(params: { namespace: string; name: string }) {
+    return this.request.patch(this.getUrl(params), {
+      data: {
+        spec: {
+          template: {
+            metadata: {
+              annotations: { "kubectl.kubernetes.io/restartedAt" : moment.utc().format() },
+            },
+          },
+        },
+      },
+    },
+    {
+      headers: {
+        "content-type": "application/strategic-merge-patch+json",
       },
     });
   }
