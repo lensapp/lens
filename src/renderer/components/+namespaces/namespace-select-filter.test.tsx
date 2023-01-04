@@ -55,6 +55,9 @@ describe("<NamespaceSelectFilter />", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
+    fetchMock = asyncFn();
+    di.override(fetchInjectable, () => fetchMock);
+
     const createCluster = di.inject(createClusterInjectable);
 
     di.override(hostedClusterInjectable, () => createCluster({
@@ -70,9 +73,6 @@ describe("<NamespaceSelectFilter />", () => {
     const subscribeStores = di.inject(subscribeStoresInjectable);
 
     cleanup = disposer(subscribeStores([namespaceStore]));
-
-    fetchMock = asyncFn();
-    di.override(fetchInjectable, () => fetchMock);
 
     const render = renderFor(di);
 
