@@ -12,28 +12,21 @@ import type { DeepMockProxy } from "jest-mock-extended";
 import { mockDeep, mock } from "jest-mock-extended";
 import type { Readable } from "stream";
 import { EventEmitter } from "stream";
-import { Console } from "console";
-import { stdout, stderr } from "process";
-import mockFs from "mock-fs";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import type { CreateCluster } from "../../common/cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
-import path from "path";
 import spawnInjectable from "../child-process/spawn.injectable";
-import getConfigurationFileModelInjectable from "../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
-import pathExistsInjectable from "../../common/fs/path-exists.injectable";
-import readJsonSyncInjectable from "../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
-import pathExistsSyncInjectable from "../../common/fs/path-exists-sync.injectable";
-
-console = new Console(stdout, stderr);
+import ensureDirInjectable from "../../common/fs/ensure-dir.injectable";
+import type { GetBasenameOfPath } from "../../common/path/get-basename.injectable";
+import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
 
 const clusterServerUrl = "https://192.168.64.3:8443";
 
@@ -43,44 +36,42 @@ describe("kube auth proxy tests", () => {
   let spawnMock: jest.Mock;
   let waitUntilPortIsUsedMock: jest.Mock;
   let broadcastMessageMock: jest.Mock;
+  let getBasenameOfPath: GetBasenameOfPath;
 
   beforeEach(async () => {
-    jest.clearAllMocks();
-
-    const mockMinikubeConfig = {
-      "minikube-config.yml": JSON.stringify({
-        apiVersion: "v1",
-        clusters: [{
-          name: "minikube",
-          cluster: {
-            server: clusterServerUrl,
-          },
-        }],
-        "current-context": "minikube",
-        contexts: [{
-          context: {
-            cluster: "minikube",
-            user: "minikube",
-          },
-          name: "minikube",
-        }],
-        users: [{
-          name: "minikube",
-        }],
-        kind: "Config",
-        preferences: {},
-      }),
-      "tmp": {},
-    };
-
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-    di.override(directoryForTempInjectable, () => "some-directory-for-temp");
-    di.override(pathExistsInjectable, () => () => { throw new Error("tried call pathExists without override"); });
-    di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
-    di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
-    di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
+    di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
+
+    const writeJsonSync = di.inject(writeJsonSyncInjectable);
+    const ensureDir = di.inject(ensureDirInjectable);
+
+    getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
+
+    writeJsonSync("/minikube-config.yml", {
+      apiVersion: "v1",
+      clusters: [{
+        name: "minikube",
+        cluster: {
+          server: clusterServerUrl,
+        },
+      }],
+      "current-context": "minikube",
+      contexts: [{
+        context: {
+          cluster: "minikube",
+          user: "minikube",
+        },
+        name: "minikube",
+      }],
+      users: [{
+        name: "minikube",
+      }],
+      kind: "Config",
+      preferences: {},
+    });
+    await ensureDir("/tmp");
 
     spawnMock = jest.fn();
     di.override(spawnInjectable, () => spawnMock);
@@ -95,17 +86,8 @@ describe("kube auth proxy tests", () => {
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
 
-    di.permitSideEffects(getConfigurationFileModelInjectable);
-
-    mockFs(mockMinikubeConfig);
-
     createCluster = di.inject(createClusterInjectionToken);
-
     createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it("calling exit multiple times shouldn't throw", async () => {
@@ -197,7 +179,7 @@ describe("kube auth proxy tests", () => {
         return stdout;
       });
       spawnMock.mockImplementationOnce((command: string): ChildProcess => {
-        expect(path.basename(command).split(".")[0]).toBe("lens-k8s-proxy");
+        expect(getBasenameOfPath(command).split(".")[0]).toBe("lens-k8s-proxy");
 
         return mockedCP;
       });
