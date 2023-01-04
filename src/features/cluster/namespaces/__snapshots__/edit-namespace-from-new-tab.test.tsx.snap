@@ -721,48 +721,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
     </div>
     <div
       class="Notifications flex column align-flex-end"
-    >
-      <div
-        class="Animate opacity notification flex error enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          Loading resource failed: some-error
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_9"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-    </div>
+    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -6060,52 +6019,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
     </div>
     <div
       class="Notifications flex column align-flex-end"
-    >
-      <div
-        class="Animate opacity notification flex error enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          <p>
-            Failed to save resource:
-             
-            some-error
-          </p>
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_1"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-    </div>
+    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
@@ -9709,52 +9623,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
     </div>
     <div
       class="Notifications flex column align-flex-end"
-    >
-      <div
-        class="Animate opacity notification flex error enter"
-        style="--enter-duration: 100ms; --leave-duration: 100ms;"
-      >
-        <div
-          class="box"
-        >
-          <i
-            class="Icon material focusable"
-          >
-            <span
-              class="icon"
-              data-icon-name="info_outline"
-            >
-              info_outline
-            </span>
-          </i>
-        </div>
-        <div
-          class="message box grow"
-        >
-          <p>
-            Failed to save resource:
-             
-            Some error
-          </p>
-        </div>
-        <div
-          class="box"
-        >
-          <i
-            class="Icon close material interactive focusable"
-            data-testid="close-notification-for-notification_8"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-        </div>
-      </div>
-    </div>
+    />
     <div
       class="mainLayout"
       style="--sidebar-width: 200px;"
