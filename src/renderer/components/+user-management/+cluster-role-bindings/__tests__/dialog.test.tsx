@@ -16,9 +16,15 @@ import directoryForUserDataInjectable from "../../../../../common/app-paths/dire
 import directoryForKubeConfigsInjectable from "../../../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import hostedClusterInjectable from "../../../../cluster-frame-context/hosted-cluster.injectable";
 import createClusterInjectable from "../../../../cluster/create-cluster.injectable";
+import type { CloseClusterRoleBindingDialog } from "../dialog/close.injectable";
+import closeClusterRoleBindingDialogInjectable from "../dialog/close.injectable";
+import type { OpenClusterRoleBindingDialog } from "../dialog/open.injectable";
+import openClusterRoleBindingDialogInjectable from "../dialog/open.injectable";
 
 describe("ClusterRoleBindingDialog tests", () => {
   let render: DiRender;
+  let closeClusterRoleBindingDialog: CloseClusterRoleBindingDialog;
+  let openClusterRoleBindingDialog: OpenClusterRoleBindingDialog;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -26,6 +32,9 @@ describe("ClusterRoleBindingDialog tests", () => {
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+
+    closeClusterRoleBindingDialog = di.inject(closeClusterRoleBindingDialogInjectable);
+    openClusterRoleBindingDialog = di.inject(openClusterRoleBindingDialogInjectable);
 
     const createCluster = di.inject(createClusterInjectable);
 
@@ -56,7 +65,7 @@ describe("ClusterRoleBindingDialog tests", () => {
   });
 
   afterEach(() => {
-    ClusterRoleBindingDialog.close();
+    closeClusterRoleBindingDialog();
     jest.resetAllMocks();
   });
 
@@ -67,7 +76,7 @@ describe("ClusterRoleBindingDialog tests", () => {
   });
 
   it("clusterrole select should be searchable", async () => {
-    ClusterRoleBindingDialog.open();
+    openClusterRoleBindingDialog();
     const res = render(<ClusterRoleBindingDialog />);
 
     userEvent.keyboard("a");
