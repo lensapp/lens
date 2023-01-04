@@ -15,7 +15,7 @@ const setupHostnamesInjectable = getInjectable({
     return {
       id: "setup-hostnames",
       run: () => {
-        app.commandLine?.appendSwitch("host-rules", [
+        app.commandLine.appendSwitch("host-rules", [
           "MAP localhost 127.0.0.1",
           "MAP lens.app 127.0.0.1",
           "MAP *.lens.app 127.0.0.1",
