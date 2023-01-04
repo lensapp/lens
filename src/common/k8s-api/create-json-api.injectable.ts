@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { Agent } from "https";
 import type { RequestInit } from "node-fetch";
-import { lensProxyCertificateInjectionToken } from "../certificate/lens-proxy-certificate-injection-token";
+import lensProxyCertificateInjectable from "../certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../fetch/fetch.injectable";
 import loggerInjectable from "../logger.injectable";
 import type { JsonApiConfig, JsonApiData, JsonApiDependencies, JsonApiParams } from "./json-api";
@@ -20,7 +20,7 @@ const createJsonApiInjectable = getInjectable({
       fetch: di.inject(fetchInjectable),
       logger: di.inject(loggerInjectable),
     };
-    const lensProxyCert = di.inject(lensProxyCertificateInjectionToken);
+    const lensProxyCert = di.inject(lensProxyCertificateInjectable);
 
     return (config, reqInit) => {
       if (!config.getRequestOptions) {

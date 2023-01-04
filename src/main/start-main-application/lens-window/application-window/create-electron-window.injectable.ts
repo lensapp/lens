@@ -15,7 +15,7 @@ import lensResourcesDirInjectable from "../../../../common/vars/lens-resources-d
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import applicationInformationToken from "../../../../common/vars/application-information-token";
 import pathExistsSyncInjectable from "../../../../common/fs/path-exists-sync.injectable";
-import lensProxyCertificateInjectable from "../../../lens-proxy/lens-proxy-certificate.injectable";
+import lensProxyCertificateInjectable from "../../../../common/certificate/lens-proxy-certificate.injectable";
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
 

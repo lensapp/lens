@@ -12,7 +12,7 @@ import showErrorPopupInjectable from "../../electron-app/features/show-error-pop
 import { beforeApplicationIsLoadingInjectionToken } from "../runnable-tokens/before-application-is-loading-injection-token";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import initializeBuildVersionInjectable from "../../vars/build-version/init.injectable";
-import lensProxyCertificateInjectable from "../../lens-proxy/lens-proxy-certificate.injectable";
+import lensProxyCertificateInjectable from "../../../common/certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Agent } from "https";
 

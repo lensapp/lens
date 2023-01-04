@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { SelfSignedCert } from "selfsigned";
-import { lensProxyCertificateInjectionToken } from "../../common/certificate/lens-proxy-certificate-injection-token";
 
 const lensProxyCertificateInjectable = getInjectable({
   id: "lens-proxy-certificate",
@@ -19,13 +18,16 @@ const lensProxyCertificateInjectable = getInjectable({
         return certState;
       },
       set: (certificate: SelfSignedCert) => {
+        if (certState) {
+          throw "certificate has already been set";
+        }
+
         certState = certificate;
       },
     };
 
     return cert;
   },
-  injectionToken: lensProxyCertificateInjectionToken,
 });
 
 export default lensProxyCertificateInjectable;

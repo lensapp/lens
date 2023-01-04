@@ -5,7 +5,7 @@
 import type { SelfSignedCert } from "selfsigned";
 import { lensProxyCertificateChannel } from "../../common/certificate/lens-proxy-certificate-channel";
 import { getRequestChannelListenerInjectable } from "../utils/channel/channel-listeners/listener-tokens";
-import lensProxyCertificateInjectable from "./lens-proxy-certificate.injectable";
+import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
 
 const lensProxyCertificateRequestHandlerInjectable = getRequestChannelListenerInjectable({
   channel: lensProxyCertificateChannel,

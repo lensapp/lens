@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeFrameStartsFirstInjectionToken } from "../tokens";
-import lensProxyCertificateInjectable from "../../certificate/lens-proxy-certificate.injectable";
+import lensProxyCertificateInjectable from "../../../common/certificate/lens-proxy-certificate.injectable";
 import requestLensProxyCertificateInjectable from "../../certificate/request-lens-proxy-certificate.injectable";
 
 const setupLensProxyCertificateInjectable = getInjectable({

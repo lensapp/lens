@@ -14,7 +14,7 @@ import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import writeFileInjectable from "../../common/fs/write-file.injectable";
 import removePathInjectable from "../../common/fs/remove.injectable";
-import lensProxyCertificateInjectable from "../lens-proxy/lens-proxy-certificate.injectable";
+import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
 
 export interface KubeConfigManagerInstantiationParameter {
   cluster: Cluster;
