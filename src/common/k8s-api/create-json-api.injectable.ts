@@ -23,15 +23,17 @@ const createJsonApiInjectable = getInjectable({
     const lensProxyCert = di.inject(lensProxyCertificateInjectionToken);
 
     return (config, reqInit) => {
-      config.getRequestOptions = async () => {
-        const agent = new Agent({
-          ca: lensProxyCert.get().cert,
-        });
-
-        return {
-          agent,
+      if (!config.getRequestOptions) {
+        config.getRequestOptions = async () => {
+          const agent = new Agent({
+            ca: lensProxyCert.get().cert,
+          });
+  
+          return {
+            agent,
+          };
         };
-      };
+      }
 
       return new JsonApi(deps, config, reqInit);
     };
