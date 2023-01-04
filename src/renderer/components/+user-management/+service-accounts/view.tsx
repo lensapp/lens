@@ -18,6 +18,8 @@ import type { FilterByNamespace } from "../../+namespaces/namespace-select-filte
 import { withInjectables } from "@ogre-tools/injectable-react";
 import filterByNamespaceInjectable from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import serviceAccountStoreInjectable from "./store.injectable";
+import type { OpenCreateServiceAccountDialog } from "./create-dialog/open.injectable";
+import openCreateServiceAccountDialogInjectable from "./create-dialog/open.injectable";
 
 enum columnId {
   name = "name",
@@ -28,6 +30,7 @@ enum columnId {
 interface Dependencies {
   serviceAccountStore: ServiceAccountStore;
   filterByNamespace: FilterByNamespace;
+  openCreateServiceAccountDialog: OpenCreateServiceAccountDialog;
 }
 
 @observer
@@ -36,6 +39,7 @@ class NonInjectedServiceAccounts extends React.Component<Dependencies> {
     const {
       filterByNamespace,
       serviceAccountStore,
+      openCreateServiceAccountDialog,
     } = this.props;
 
     return (
@@ -73,7 +77,7 @@ class NonInjectedServiceAccounts extends React.Component<Dependencies> {
             <KubeObjectAge key="age" object={account} />,
           ]}
           addRemoveButtons={{
-            onAdd: () => CreateServiceAccountDialog.open(),
+            onAdd: () => openCreateServiceAccountDialog(),
             addTooltip: "Create new Service Account",
           }}
         />
@@ -88,5 +92,6 @@ export const ServiceAccounts = withInjectables<Dependencies>(NonInjectedServiceA
     ...props,
     filterByNamespace: di.inject(filterByNamespaceInjectable),
     serviceAccountStore: di.inject(serviceAccountStoreInjectable),
+    openCreateServiceAccountDialog: di.inject(openCreateServiceAccountDialogInjectable),
   }),
 });

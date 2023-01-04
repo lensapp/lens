@@ -6,6 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { action } from "mobx";
 import createServiceAccountDialogStateInjectable from "./state.injectable";
 
+export type OpenCreateServiceAccountDialog = () => void;
+
 const openCreateServiceAccountDialogInjectable = getInjectable({
   id: "open-create-service-account-dialog",
   instantiate: (di) => {
