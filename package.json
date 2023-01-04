@@ -352,7 +352,7 @@
     "@types/react-dom": "^17.0.16",
     "@types/react-router": "^5.1.19",
     "@types/react-router-dom": "^5.3.3",
-    "@types/react-table": "^7.7.12",
+    "@types/react-table": "^7.7.14",
     "@types/react-virtualized-auto-sizer": "^1.0.1",
     "@types/react-window": "^1.8.5",
     "@types/readable-stream": "^2.3.13",
