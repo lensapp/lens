@@ -6,14 +6,19 @@
 import { getGlobalOverride } from "../../common/test-utils/get-global-override";
 import electronAppInjectable from "./electron-app.injectable";
 
-export default getGlobalOverride(electronAppInjectable, () => ({
-  getVersion: () => "6.0.0",
-  setLoginItemSettings: () => {},
-  commandLine: {
-    appendArgument: () => {},
-    appendSwitch: () => {},
-    getSwitchValue: () => "",
-    hasSwitch: () => false,
-    removeSwitch: () => {},
-  },
-} as Partial<Electron.App> as Electron.App));
+export default getGlobalOverride(electronAppInjectable, () => {
+  const app = ({
+    getVersion: () => "6.0.0",
+    setLoginItemSettings: () => { },
+    on: () => app,
+    commandLine: {
+      appendArgument: () => {},
+      appendSwitch: () => {},
+      getSwitchValue: () => "",
+      hasSwitch: () => false,
+      removeSwitch: () => {},
+    },
+  } as Partial<Electron.App> as Electron.App);
+
+  return app;
+});
