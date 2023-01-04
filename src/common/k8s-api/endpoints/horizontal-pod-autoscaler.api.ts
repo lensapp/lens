@@ -5,7 +5,7 @@
 
 import type { BaseKubeObjectCondition, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { OptionVarient } from "../../utils";
 
@@ -202,8 +202,8 @@ export class HorizontalPodAutoscaler extends KubeObject<
 }
 
 export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler> {
-  constructor(opts?: DerivedKubeApiOptions) {
-    super({
+  constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
+    super(deps, {
       objectConstructor: HorizontalPodAutoscaler,
       ...opts ?? {},
     });

@@ -68,6 +68,7 @@ import shouldStartHiddenInjectable from "../../../main/electron-app/features/sho
 import fsInjectable from "../../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
+import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -166,6 +167,8 @@ export const getApplicationBuilder = () => {
   runInAction(() => {
     mainDi.register(mainExtensionsStateInjectable);
   });
+
+  testUsingFakeTime();
 
   const { overrideForWindow, sendToWindow } = overrideChannels(mainDi);
 

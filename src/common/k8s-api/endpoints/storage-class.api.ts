@@ -6,7 +6,7 @@
 import { autoBind } from "../../utils";
 import type { ClusterScopedMetadata, KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 
@@ -86,8 +86,8 @@ export class StorageClass extends KubeObject<
 }
 
 export class StorageClassApi extends KubeApi<StorageClass, StorageClassData> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       ...opts,
       objectConstructor: StorageClass,
     });

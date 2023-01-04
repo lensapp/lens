@@ -7,6 +7,8 @@ import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { JobApi } from "./job.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
+import loggerInjectable from "../../logger.injectable";
+import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const jobApiInjectable = getInjectable({
   id: "job-api",
@@ -14,6 +16,9 @@ const jobApiInjectable = getInjectable({
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "jobApi is only available in certain environments");
 
     return new JobApi({
+      logger: di.inject(loggerInjectable),
+      maybeKubeApi: di.inject(maybeKubeApiInjectable),
+    }, {
       checkPreferredVersion: true,
     });
   },

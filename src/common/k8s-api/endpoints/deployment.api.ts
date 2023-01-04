@@ -5,7 +5,7 @@
 
 import moment from "moment";
 
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { PodSpec } from "./pod.api";
 import type { KubeObjectStatus, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
@@ -13,10 +13,10 @@ import { KubeObject } from "../kube-object";
 import { hasTypedProperty, isNumber, isObject } from "../../utils";
 
 export class DeploymentApi extends KubeApi<Deployment> {
-  constructor(opts?: DerivedKubeApiOptions) {
-    super({
-      objectConstructor: Deployment,
+  constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
+    super(deps, {
       ...opts ?? {},
+      objectConstructor: Deployment,
     });
   }
 

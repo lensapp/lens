@@ -5,7 +5,7 @@
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import populateApplicationMenuInjectable from "./main/populate-application-menu.injectable";
-import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
+import { advanceFakeTime, testUsingFakeTime } from "../../common/test-utils/use-fake-time";
 import { getCompositePaths } from "../../common/utils/composite/get-composite-paths/get-composite-paths";
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuItemInjectionToken from "./main/menu-items/application-menu-item-injection-token";
@@ -18,7 +18,7 @@ describe("handling-of-orphan-application-menu-items, given orphan menu item", ()
   let logErrorMock: jest.Mock;
 
   beforeEach(async () => {
-    useFakeTime();
+    testUsingFakeTime();
 
     populateApplicationMenuMock = jest.fn();
     logErrorMock = jest.fn();

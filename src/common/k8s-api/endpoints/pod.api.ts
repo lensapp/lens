@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { DerivedKubeApiOptions, IgnoredKubeApiOptions, ResourceDescriptor } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies, ResourceDescriptor } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { RequireExactlyOne } from "type-fest";
 import type { KubeObjectMetadata, LocalObjectReference, Affinity, Toleration, NamespaceScopedMetadata } from "../kube-object";
@@ -17,9 +17,9 @@ import type { Container } from "./types/container";
 import type { ObjectFieldSelector, ResourceFieldSelector } from "./types";
 
 export class PodApi extends KubeApi<Pod> {
-  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
-    super({
-      ...opts,
+  constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
+    super(deps, {
+      ...opts ?? {},
       objectConstructor: Pod,
     });
   }

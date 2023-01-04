@@ -17,6 +17,7 @@ import apiManagerInjectable from "../api-manager/manager.injectable";
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import { KubeObjectStore } from "../kube-object.store";
+import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 class TestApi extends KubeApi<KubeObject> {
   protected async checkPreferredVersion() {
@@ -57,6 +58,9 @@ describe("ApiManager", () => {
       const apiBase = "apis/v1/foo";
       const fallbackApiBase = "/apis/extensions/v1beta1/foo";
       const kubeApi = new TestApi({
+        logger: di.inject(loggerInjectable),
+        maybeKubeApi: di.inject(maybeKubeApiInjectable),
+      }, {
         objectConstructor: KubeObject,
         apiBase,
         kind: "foo",

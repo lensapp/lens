@@ -18,17 +18,40 @@ import type { KubernetesCluster } from "./catalog";
 import type { KubeApiDataFrom, KubeObjectStoreOptions } from "../../common/k8s-api/kube-object.store";
 import { KubeObjectStore as InternalKubeObjectStore } from "../../common/k8s-api/kube-object.store";
 import type { KubeJsonApiDataFor, KubeObject } from "../../common/k8s-api/kube-object";
-import type { KubeApi } from "../../common/k8s-api/kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies, KubeApiOptions } from "../../common/k8s-api/kube-api";
+import { KubeApi as InternalKubeApi } from "../../common/k8s-api/kube-api";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
 import type { ClusterContext } from "../../renderer/cluster-frame-context/cluster-frame-context";
 import loggerInjectable from "../../common/logger.injectable";
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import maybeKubeApiInjectable from "../../common/k8s-api/maybe-kube-api.injectable";
+import { DeploymentApi as InternalDeploymentApi, IngressApi as InternalIngressApi, NodeApi, PersistentVolumeClaimApi, PodApi } from "../../common/k8s-api/endpoints";
 
 export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);
 export const forCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForClusterInjectable);
 export const forRemoteCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForRemoteClusterInjectable);
 
-export { KubeApi } from "../../common/k8s-api/kube-api";
+const getKubeApiDeps = (): KubeApiDependencies => {
+  const di = getLegacyGlobalDiForExtensionApi();
+
+  return {
+    logger: di.inject(loggerInjectable),
+    maybeKubeApi: di.inject(maybeKubeApiInjectable),
+  };
+};
+
+// NOTE: this is done to preserve `instanceOf` behaviour
+function KubeApiCstr<
+  Object extends KubeObject = KubeObject,
+  Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
+>(opts: KubeApiOptions<Object, Data>) {
+  return new InternalKubeApi(getKubeApiDeps(), opts);
+}
+
+export const KubeApi = KubeApiCstr as unknown as new<
+  Object extends KubeObject = KubeObject,
+  Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
+>(opts: KubeApiOptions<Object, Data>) => InternalKubeApi<Object, Data>;
 
 export const createResourceStack = asLegacyGlobalFunctionForExtensionApi(createResourceStackInjectable);
 
@@ -82,7 +105,7 @@ export {
 
 export abstract class KubeObjectStore<
   K extends KubeObject = KubeObject,
-  A extends KubeApi<K, D> = KubeApi<K, KubeJsonApiDataFor<K>>,
+  A extends InternalKubeApi<K, D> = InternalKubeApi<K, KubeJsonApiDataFor<K>>,
   D extends KubeJsonApiDataFor<K> = KubeApiDataFrom<K, A>,
 > extends InternalKubeObjectStore<K, A, D> {
   /**
@@ -127,15 +150,65 @@ export {
   type KubeObjectStoreSubscribeParams,
 } from "../../common/k8s-api/kube-object.store";
 
+/**
+ * @deprecated This type is only present for backwards compatable typescript support
+ */
+export interface IgnoredKubeApiOptions {
+  /**
+   * @deprecated this option is overridden and should not be used
+   */
+  objectConstructor?: any;
+  /**
+   * @deprecated this option is overridden and should not be used
+   */
+  kind?: any;
+  /**
+   * @deprecated this option is overridden and should not be used
+   */
+  isNamespaces?: any;
+  /**
+   * @deprecated this option is overridden and should not be used
+   */
+  apiBase?: any;
+}
+
+// NOTE: these *Constructor functions MUST be `function` to work with `new X()`
+function PodsApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) {
+  return new PodApi(getKubeApiDeps(), opts ?? {});
+}
+
+export const PodsApi = PodsApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => PodApi;
+
+function NodesApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) {
+  return new NodeApi(getKubeApiDeps(), opts ?? {});
+}
+
+export const NodesApi = NodesApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => NodeApi;
+
+function DeploymentApiConstructor(opts?: DerivedKubeApiOptions) {
+  return new InternalDeploymentApi(getKubeApiDeps(), opts ?? {});
+}
+
+export const DeploymentApi = DeploymentApiConstructor as unknown as new (opts?: DerivedKubeApiOptions) => InternalDeploymentApi;
+
+function IngressApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) {
+  return new InternalIngressApi(getKubeApiDeps(), opts ?? {});
+}
+
+export const IngressApi = IngressApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => InternalIngressApi;
+
+function PersistentVolumeClaimsApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) {
+  return new PersistentVolumeClaimApi(getKubeApiDeps(), opts ?? {});
+}
+
+export const PersistentVolumeClaimsApi = PersistentVolumeClaimsApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => PersistentVolumeClaimApi;
+
 export {
   type Container as IPodContainer,
   type PodContainerStatus as IPodContainerStatus,
   Pod,
-  PodApi as PodsApi,
   Node,
-  NodeApi as NodesApi,
   Deployment,
-  DeploymentApi,
   DaemonSet,
   StatefulSet,
   Job,
@@ -151,11 +224,10 @@ export {
   PriorityClass,
   Service,
   Endpoints as Endpoint,
-  Ingress, IngressApi,
+  Ingress,
   NetworkPolicy,
   PersistentVolume,
   PersistentVolumeClaim,
-  PersistentVolumeClaimApi as PersistentVolumeClaimsApi,
   StorageClass,
   Namespace,
   KubeEvent,

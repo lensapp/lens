@@ -2,9 +2,9 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { KubeJsonApi } from "../kube-json-api";
 import type { ApiManager } from "../api-manager";
-import { Ingress, IngressApi } from "../endpoints";
+import type { IngressApi } from "../endpoints";
+import { Ingress } from "../endpoints";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import type { Fetch } from "../../fetch/fetch.injectable";
@@ -20,14 +20,17 @@ import directoryForUserDataInjectable from "../../app-paths/directory-for-user-d
 import createClusterInjectable from "../../../main/create-cluster/create-cluster.injectable";
 import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
 import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
+import ingressApiInjectable from "../endpoints/ingress.api.injectable";
 
 describe("KubeApi", () => {
-  let request: KubeJsonApi;
+  let di: DiContainer;
   let registerApiSpy: jest.SpiedFunction<ApiManager["registerApi"]>;
   let fetchMock: AsyncFnMock<Fetch>;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
@@ -37,6 +40,7 @@ describe("KubeApi", () => {
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
     const createCluster = di.inject(createClusterInjectable);
+    const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 
     di.override(hostedClusterInjectable, () => createCluster({
       contextName: "some-context-name",
@@ -46,12 +50,11 @@ describe("KubeApi", () => {
       clusterServerUrl: "https://localhost:8080",
     }));
 
-    const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
-
-    request = createKubeJsonApi({
+    di.override(apiKubeInjectable, () => createKubeJsonApi({
       serverAddress: `http://127.0.0.1:9999`,
       apiBase: "/api-kube",
-    });
+    }));
+
     registerApiSpy = jest.spyOn(di.inject(apiManagerInjectable), "registerApi");
 
     const setupAutoRegistration = di.inject(setupAutoRegistrationInjectable);
@@ -64,13 +67,7 @@ describe("KubeApi", () => {
     let getCall: Promise<Ingress | null>;
 
     beforeEach(async () => {
-      ingressApi = new IngressApi({
-        request,
-        objectConstructor: Ingress,
-        apiBase: "/apis/networking.k8s.io/v1/ingresses",
-        fallbackApiBases: ["/apis/extensions/v1beta1/ingresses"],
-        checkPreferredVersion: true,
-      });
+      ingressApi = di.inject(ingressApiInjectable);
       getCall = ingressApi.get({
         name: "foo",
         namespace: "default",

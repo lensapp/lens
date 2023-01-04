@@ -5,7 +5,7 @@
 import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import React from "react";
-import { useFakeTime } from "../../../common/test-utils/use-fake-time";
+import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IAtom } from "mobx";
@@ -28,7 +28,7 @@ describe("show status for a kube object", () => {
   let criticalStatusIsShown: boolean;
 
   beforeEach(() => {
-    useFakeTime("2015-10-21T07:28:00Z");
+    testUsingFakeTime("2015-10-21T07:28:00Z");
 
     builder = getApplicationBuilder();
 

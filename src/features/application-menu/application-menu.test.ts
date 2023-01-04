@@ -5,7 +5,7 @@
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import populateApplicationMenuInjectable from "./main/populate-application-menu.injectable";
-import { advanceFakeTime, useFakeTime } from "../../common/test-utils/use-fake-time";
+import { advanceFakeTime, testUsingFakeTime } from "../../common/test-utils/use-fake-time";
 import { getCompositePaths } from "../../common/utils/composite/get-composite-paths/get-composite-paths";
 import platformInjectable, { allPlatforms } from "../../common/vars/platform.injectable";
 
@@ -14,7 +14,7 @@ describe.each(allPlatforms)("application-menu, given platform is '%s'", (platfor
   let populateApplicationMenuMock: jest.Mock;
 
   beforeEach(async () => {
-    useFakeTime();
+    testUsingFakeTime();
 
     populateApplicationMenuMock = jest.fn();
 

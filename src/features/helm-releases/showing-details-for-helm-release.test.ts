@@ -15,7 +15,7 @@ import type { RequestHelmReleaseConfiguration } from "../../common/k8s-api/endpo
 import requestHelmReleaseConfigurationInjectable from "../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import type { RequestHelmReleaseUpdate } from "../../common/k8s-api/endpoints/helm-releases.api/request-update.injectable";
 import requestHelmReleaseUpdateInjectable from "../../common/k8s-api/endpoints/helm-releases.api/request-update.injectable";
-import { useFakeTime } from "../../common/test-utils/use-fake-time";
+import { testUsingFakeTime } from "../../common/test-utils/use-fake-time";
 import type { RequestDetailedHelmRelease } from "../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 import requestDetailedHelmReleaseInjectable from "../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
@@ -45,7 +45,7 @@ describe("showing details for helm release", () => {
   let showCheckedErrorNotificationMock: jest.Mock;
 
   beforeEach(() => {
-    useFakeTime("2015-10-21T07:28:00Z");
+    testUsingFakeTime("2015-10-21T07:28:00Z");
 
     builder = getApplicationBuilder();
 

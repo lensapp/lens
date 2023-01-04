@@ -5,7 +5,7 @@
 
 import type { ClusterScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
 export interface PodSecurityPolicySpec {
@@ -111,8 +111,8 @@ export class PodSecurityPolicy extends KubeObject<
 }
 
 export class PodSecurityPolicyApi extends KubeApi<PodSecurityPolicy> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       ...opts,
       objectConstructor: PodSecurityPolicy,
 
