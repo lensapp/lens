@@ -5,7 +5,7 @@
 import styles from "./view.module.scss";
 
 import type { IObservableValue } from "mobx";
-import {  action, observable } from "mobx";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 
@@ -29,6 +29,7 @@ import requestDeleteClusterInjectable from "../../../features/cluster/delete-dia
 import type { SaveKubeconfig } from "./save-kubeconfig.injectable";
 import saveKubeconfigInjectable from "./save-kubeconfig.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import { isCurrentContext } from "./is-current-context";
 
 interface Dependencies {
   state: IObservableValue<DeleteClusterDialogState | undefined>;
@@ -42,40 +43,22 @@ interface Dependencies {
 
 @observer
 class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
-  private readonly showContextSwitch = observable.box(false);
-  private readonly newCurrentContext = observable.box<string | undefined>();
-
-  @action
-  onOpen(state: DeleteClusterDialogState) {
-    this.newCurrentContext.set("");
-    this.showContextSwitch.set(this.isCurrentContext(state));
-  }
-
-  onClose = () => {
-    this.showContextSwitch.set(false);
-  };
-
-  removeContext(state: DeleteClusterDialogState) {
-    state.config.contexts = state.config.contexts.filter(item =>
-      item.name !== state.cluster.contextName,
-    );
-  }
-
-  changeCurrentContext(state: DeleteClusterDialogState) {
-    const newCurrentContext = this.newCurrentContext.get();
-    const showContextSwitch = this.showContextSwitch.get();
-
-    if (newCurrentContext && showContextSwitch) {
-      state.config.currentContext = newCurrentContext;
-    }
-  }
-
   async onDelete(state: DeleteClusterDialogState) {
-    const { cluster, config } = state;
+    const { cluster, config, newCurrentContext, showContextSwitch } = state;
 
     await this.props.requestSetClusterAsDeleting(cluster.id);
-    this.removeContext(state);
-    this.changeCurrentContext(state);
+
+    runInAction(() => {
+      this.props.state.set({
+        ...state,
+        config: Object.assign(config, {
+          contexts: config.contexts.filter(item => item.name !== state.cluster.contextName),
+          currentContext: newCurrentContext && showContextSwitch
+            ? newCurrentContext
+            : config.currentContext,
+        }),
+      });
+    });
 
     try {
       await this.props.saveKubeconfig(config, cluster.kubeConfigPath);
@@ -85,15 +68,13 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
       this.props.showErrorNotification(`Cannot remove cluster, failed to process config file. ${error}`);
     } finally {
       await this.props.requestClearClusterAsDeleting(cluster.id);
+      this.close();
     }
-
-    this.onClose();
   }
 
-  shouldDeleteBeDisabled({ cluster, config }: DeleteClusterDialogState): boolean {
+  shouldDeleteBeDisabled({ cluster, config, newCurrentContext, showContextSwitch }: DeleteClusterDialogState): boolean {
     const noContextsAvailable = config.contexts.filter(context => context.name !== cluster.contextName).length == 0;
-    const newContextNotSelected = this.newCurrentContext.get() === "";
-    const showContextSwitch = this.showContextSwitch.get();
+    const newContextNotSelected = newCurrentContext === "";
 
     if (noContextsAvailable) {
       return false;
@@ -102,12 +83,10 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
     return showContextSwitch && newContextNotSelected;
   }
 
-  isCurrentContext({ cluster, config }: DeleteClusterDialogState) {
-    return config.currentContext == cluster.contextName;
-  }
+  renderCurrentContextSwitch(state: DeleteClusterDialogState) {
+    const { cluster, config, showContextSwitch, newCurrentContext } = state;
 
-  renderCurrentContextSwitch({ cluster, config }: DeleteClusterDialogState) {
-    if (!this.showContextSwitch.get()) {
+    if (!showContextSwitch) {
       return null;
     }
 
@@ -124,10 +103,13 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
         <Select
           id="delete-cluster-input"
           options={selectOptions}
-          value={this.newCurrentContext.get()}
+          value={newCurrentContext}
           onChange={opt => {
             if (opt) {
-              this.newCurrentContext.set(opt.value);
+              this.props.state.set({
+                ...state,
+                newCurrentContext: opt.value,
+              });
             }
           }}
           themeName="light"
@@ -185,7 +167,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
       );
     }
 
-    if (this.isCurrentContext({ cluster, config })) {
+    if (isCurrentContext(config, cluster)) {
       return (
         <p data-testid="current-context-warning">
           This will remove active context in kubeconfig. Use drop down below to&nbsp;select a&nbsp;different one.
@@ -208,8 +190,10 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
   }
 
   renderContents(state: DeleteClusterDialogState) {
+    const { config, cluster, showContextSwitch } = state;
     const contexts = state.config.contexts.filter(context => context.name !== state.cluster.contextName);
     const disableDelete = this.shouldDeleteBeDisabled(state);
+    const currentContext = isCurrentContext(config, cluster);
 
     return (
       <>
@@ -226,11 +210,16 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
                     <>
                       <span className="font-semibold">Select current-context</span>
                       {" "}
-                      {!this.isCurrentContext(state) && "(optional)"}
+                      {!currentContext && "(optional)"}
                     </>
                   )}
-                  value={this.showContextSwitch.get()}
-                  onChange={value => this.showContextSwitch.set(this.isCurrentContext(state) || value)}
+                  value={showContextSwitch}
+                  onChange={value => {
+                    this.props.state.set({
+                      ...state,
+                      showContextSwitch: currentContext || value,
+                    });
+                  }}
                 />
               </div>
               {this.renderCurrentContextSwitch(state)}
@@ -265,8 +254,6 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
         className={styles.dialog}
         isOpen={Boolean(state)}
         close={this.close}
-        onClose={this.onClose}
-        onOpen={state && (() => this.onOpen(state))}
         data-testid={state ? "delete-cluster-dialog" : undefined}
       >
         {state && this.renderContents(state)}

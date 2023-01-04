@@ -18,6 +18,7 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
+import { advanceFakeTime } from "../../../common/test-utils/use-fake-time";
 
 const currentClusterServerUrl = "https://localhost";
 const nonCurrentClusterServerUrl = "http://localhost";
@@ -135,11 +136,8 @@ describe("Deleting a cluster", () => {
     describe("when the dialog is opened for the current cluster", () => {
       // TODO: replace with actual behaviour instead of technical use
       beforeEach(async () => {
-        openDeleteClusterDialog({
-          cluster: currentCluster,
-          config,
-        });
-
+        openDeleteClusterDialog(config, currentCluster);
+        advanceFakeTime(1000);
         await rendered.findByTestId("delete-cluster-dialog");
       });
 
@@ -159,11 +157,8 @@ describe("Deleting a cluster", () => {
     describe("when the dialog is opened for not the current cluster", () => {
       // TODO: replace with actual behaviour instead of technical use
       beforeEach(async () => {
-        openDeleteClusterDialog({
-          cluster: nonCurrentCluster,
-          config,
-        });
-
+        openDeleteClusterDialog(config, nonCurrentCluster);
+        advanceFakeTime(1000);
         await rendered.findByTestId("delete-cluster-dialog");
       });
 
@@ -219,11 +214,8 @@ describe("Deleting a cluster", () => {
     describe("when the dialog is opened", () => {
       // TODO: replace with actual behaviour instead of technical use
       beforeEach(async () => {
-        openDeleteClusterDialog({
-          cluster: currentCluster,
-          config,
-        });
-
+        openDeleteClusterDialog(config, currentCluster);
+        advanceFakeTime(1000);
         await rendered.findByTestId("delete-cluster-dialog");
       });
 
@@ -258,11 +250,8 @@ describe("Deleting a cluster", () => {
     describe("when the dialog is opened", () => {
       // TODO: replace with actual behaviour instead of technical use
       beforeEach(async () => {
-        openDeleteClusterDialog({
-          cluster: currentCluster,
-          config,
-        });
-
+        openDeleteClusterDialog(config, currentCluster);
+        advanceFakeTime(1000);
         await rendered.findByTestId("delete-cluster-dialog");
       });
 
