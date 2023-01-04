@@ -4,6 +4,120 @@ exports[`disable kube object detail items when cluster is not relevant given ext
 <body>
   <div>
     <div
+      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
+    >
+      <div
+        class="drawer-wrapper flex column"
+      >
+        <div
+          class="drawer-title flex align-center"
+        >
+          <div
+            class="drawer-title-text flex gaps align-center"
+          >
+            some-kind: some-name
+            <i
+              class="Icon material interactive focusable"
+              tabindex="0"
+            >
+              <span
+                class="icon"
+                data-icon-name="content_copy"
+              >
+                content_copy
+              </span>
+            </i>
+            <div>
+              Copy
+            </div>
+          </div>
+          <ul
+            class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+            id="menu-actions-for-kube-object-menu-for-some-uid"
+          />
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="close"
+            >
+              close
+            </span>
+          </i>
+          <div>
+            Close
+          </div>
+        </div>
+        <div
+          class="drawer-content flex column box grow"
+        >
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Created
+            </span>
+            <span
+              class="value"
+            >
+              &lt;unknown&gt;
+               ago 
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Name
+            </span>
+            <span
+              class="value"
+            >
+              some-name
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Namespace
+            </span>
+            <span
+              class="value"
+            >
+              some-namespace
+            </span>
+          </div>
+          <div
+            data-testid="some-kube-object-detail-item"
+          >
+            Some detail
+          </div>
+          <div>
+            <div
+              class="DrawerTitle flex gaps align-center title"
+            >
+              <span>
+                Events
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="ResizingAnchor horizontal leading"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -252,7 +366,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
         class="contents"
       >
         <div
-          class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+          class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
           style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
         >
           <div
@@ -503,6 +617,115 @@ exports[`disable kube object detail items when cluster is not relevant given ext
 <body>
   <div>
     <div
+      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
+    >
+      <div
+        class="drawer-wrapper flex column"
+      >
+        <div
+          class="drawer-title flex align-center"
+        >
+          <div
+            class="drawer-title-text flex gaps align-center"
+          >
+            some-kind: some-name
+            <i
+              class="Icon material interactive focusable"
+              tabindex="0"
+            >
+              <span
+                class="icon"
+                data-icon-name="content_copy"
+              >
+                content_copy
+              </span>
+            </i>
+            <div>
+              Copy
+            </div>
+          </div>
+          <ul
+            class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+            id="menu-actions-for-kube-object-menu-for-some-uid"
+          />
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="close"
+            >
+              close
+            </span>
+          </i>
+          <div>
+            Close
+          </div>
+        </div>
+        <div
+          class="drawer-content flex column box grow"
+        >
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Created
+            </span>
+            <span
+              class="value"
+            >
+              &lt;unknown&gt;
+               ago 
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Name
+            </span>
+            <span
+              class="value"
+            >
+              some-name
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Namespace
+            </span>
+            <span
+              class="value"
+            >
+              some-namespace
+            </span>
+          </div>
+          <div>
+            <div
+              class="DrawerTitle flex gaps align-center title"
+            >
+              <span>
+                Events
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="ResizingAnchor horizontal leading"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -751,7 +974,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
         class="contents"
       >
         <div
-          class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+          class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
           style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
         >
           <div
@@ -997,6 +1220,115 @@ exports[`disable kube object detail items when cluster is not relevant given not
 <body>
   <div>
     <div
+      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
+    >
+      <div
+        class="drawer-wrapper flex column"
+      >
+        <div
+          class="drawer-title flex align-center"
+        >
+          <div
+            class="drawer-title-text flex gaps align-center"
+          >
+            some-kind: some-name
+            <i
+              class="Icon material interactive focusable"
+              tabindex="0"
+            >
+              <span
+                class="icon"
+                data-icon-name="content_copy"
+              >
+                content_copy
+              </span>
+            </i>
+            <div>
+              Copy
+            </div>
+          </div>
+          <ul
+            class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+            id="menu-actions-for-kube-object-menu-for-some-uid"
+          />
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="close"
+            >
+              close
+            </span>
+          </i>
+          <div>
+            Close
+          </div>
+        </div>
+        <div
+          class="drawer-content flex column box grow"
+        >
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Created
+            </span>
+            <span
+              class="value"
+            >
+              &lt;unknown&gt;
+               ago 
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Name
+            </span>
+            <span
+              class="value"
+            >
+              some-name
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Namespace
+            </span>
+            <span
+              class="value"
+            >
+              some-namespace
+            </span>
+          </div>
+          <div>
+            <div
+              class="DrawerTitle flex gaps align-center title"
+            >
+              <span>
+                Events
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="ResizingAnchor horizontal leading"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -1245,7 +1577,7 @@ exports[`disable kube object detail items when cluster is not relevant given not
         class="contents"
       >
         <div
-          class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+          class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
           style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
         >
           <div
