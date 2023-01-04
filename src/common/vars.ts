@@ -6,21 +6,6 @@
 // App's common configuration for any process (main, renderer, build pipeline, etc.)
 import type { ThemeId } from "../renderer/themes/lens-theme";
 
-/**
- * @deprecated Switch to using isTestEnvInjectable
- */
-export const isTestEnv = !!process.env.JEST_WORKER_ID;
-
-/**
- * @deprecated Switch to using isProductionInjectable
- */
-export const isProduction = process.env.NODE_ENV === "production";
-
-/**
- * @deprecated Switch to using isDevelopmentInjectable
- */
-export const isDevelopment = !isTestEnv && !isProduction;
-
 export const publicPath = "/build/" as string;
 export const defaultThemeId: ThemeId = "lens-dark";
 export const defaultFontSize = 12;
