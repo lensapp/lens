@@ -18,7 +18,7 @@ export class IngressClassApi extends KubeApi<IngressClass> {
 }
 
 // API docs: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.22/#ingressclass-v1-networking-k8s-io
-export type IngressClassMetadata = KubeObjectMetadata<KubeObjectScope.Namespace> & {
+export type IngressClassMetadata = KubeObjectMetadata<KubeObjectScope.Cluster> & {
   "name": string;
   "labels"?: {
     [name: string]: string | undefined;
