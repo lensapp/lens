@@ -20,7 +20,7 @@ import type { ShowNotification } from "../notifications";
 import { SettingLayout } from "../layout/setting-layout";
 import { MonacoEditor } from "../monaco-editor";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import getCustomKubeConfigDirectoryInjectable from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
+import getCustomKubeConfigFilePathInjectable from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import type { EmitAppEvent } from "../../../common/app-event-bus/emit-event.injectable";
@@ -163,7 +163,7 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
 
 export const AddCluster = withInjectables<Dependencies>(NonInjectedAddCluster, {
   getProps: (di) => ({
-    getCustomKubeConfigDirectory: di.inject(getCustomKubeConfigDirectoryInjectable),
+    getCustomKubeConfigDirectory: di.inject(getCustomKubeConfigFilePathInjectable),
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
     getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
     emitAppEvent: di.inject(emitAppEventInjectable),

@@ -3,34 +3,33 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import fs from "fs";
-import mockFs from "mock-fs";
-import path from "path";
-import fse from "fs-extra";
 import type { ClusterStore } from "../cluster-store/cluster-store";
-import { Console } from "console";
-import { stdout, stderr } from "process";
-import getCustomKubeConfigDirectoryInjectable from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
+import type { GetCustomKubeConfigFilePath } from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
+import getCustomKubeConfigFilePathInjectable from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { CreateCluster } from "../cluster/create-cluster-injection-token";
 import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
-import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import assert from "assert";
 import directoryForTempInjectable from "../app-paths/directory-for-temp/directory-for-temp.injectable";
 import kubectlBinaryNameInjectable from "../../main/kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../../main/kubectl/normalized-arch.injectable";
 import normalizedPlatformInjectable from "../vars/normalized-platform.injectable";
-import fsInjectable from "../fs/fs.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
+import type { WriteJsonSync } from "../fs/write-json-sync.injectable";
+import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
+import type { ReadFileSync } from "../fs/read-file-sync.injectable";
+import readFileSyncInjectable from "../fs/read-file-sync.injectable";
+import { readFileSync } from "fs";
+import type { WriteFileSync } from "../fs/write-file-sync.injectable";
+import writeFileSyncInjectable from "../fs/write-file-sync.injectable";
+import type { WriteBufferSync } from "../fs/write-buffer-sync.injectable";
+import writeBufferSyncInjectable from "../fs/write-buffer-sync.injectable";
 
-console = new Console(stdout, stderr);
-
-const testDataIcon = fs.readFileSync(
-  "test-data/cluster-store-migration-icon.png",
-);
+// NOTE: this is intended to read the actual file system
+const testDataIcon = readFileSync("test-data/cluster-store-migration-icon.png");
 const clusterServerUrl = "https://localhost";
 const kubeconfig = `
 apiVersion: v1
@@ -56,73 +55,39 @@ users:
     token: kubeconfig-user-q4lm4:xxxyyyy
 `;
 
-const embed = (directoryName: string, contents: any): string => {
-  fse.ensureDirSync(path.dirname(directoryName));
-  fse.writeFileSync(directoryName, contents, {
-    encoding: "utf-8",
-    mode: 0o600,
-  });
-
-  return directoryName;
-};
-
-jest.mock("electron", () => ({
-  ipcMain: {
-    handle: jest.fn(),
-    on: jest.fn(),
-    removeAllListeners: jest.fn(),
-    off: jest.fn(),
-    send: jest.fn(),
-  },
-}));
-
 describe("cluster-store", () => {
-  let mainDi: DiContainer;
+  let di: DiContainer;
   let clusterStore: ClusterStore;
   let createCluster: CreateCluster;
+  let writeJsonSync: WriteJsonSync;
+  let writeFileSync: WriteFileSync;
+  let writeBufferSync: WriteBufferSync;
+  let readFileSync: ReadFileSync;
+  let getCustomKubeConfigFilePath: GetCustomKubeConfigFilePath;
+  let writeFileSyncAndReturnPath: (filePath: string, contents: string) => string;
 
   beforeEach(async () => {
-    mainDi = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    mockFs();
-
-    mainDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
-    mainDi.override(directoryForTempInjectable, () => "some-temp-directory");
-    mainDi.override(kubectlBinaryNameInjectable, () => "kubectl");
-    mainDi.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
-    mainDi.override(normalizedPlatformInjectable, () => "darwin");
-
-    mainDi.permitSideEffects(getConfigurationFileModelInjectable);
-    mainDi.unoverride(getConfigurationFileModelInjectable);
-
-    mainDi.permitSideEffects(fsInjectable);
-  });
-
-  afterEach(() => {
-    mockFs.restore();
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
+    di.override(directoryForTempInjectable, () => "/some-temp-directory");
+    di.override(kubectlBinaryNameInjectable, () => "kubectl");
+    di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
+    di.override(normalizedPlatformInjectable, () => "darwin");
+    createCluster = di.inject(createClusterInjectionToken);
+    getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
+    writeJsonSync = di.inject(writeJsonSyncInjectable);
+    writeFileSync = di.inject(writeFileSyncInjectable);
+    writeBufferSync = di.inject(writeBufferSyncInjectable);
+    readFileSync = di.inject(readFileSyncInjectable);
+    writeFileSyncAndReturnPath = (filePath, contents) => (writeFileSync(filePath, contents), filePath);
   });
 
   describe("empty config", () => {
-    let getCustomKubeConfigDirectory: (directoryName: string) => string;
-
     beforeEach(async () => {
-      getCustomKubeConfigDirectory = mainDi.inject(getCustomKubeConfigDirectoryInjectable);
-
-      mockFs({
-        "some-directory-for-user-data": {
-          "lens-cluster-store.json": JSON.stringify({}),
-        },
-      });
-
-      createCluster = mainDi.inject(createClusterInjectionToken);
-
-      clusterStore = mainDi.inject(clusterStoreInjectable);
-
+      writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {});
+      clusterStore = di.inject(clusterStoreInjectable);
       clusterStore.load();
-    });
-
-    afterEach(() => {
-      mockFs.restore();
     });
 
     describe("with foo cluster added", () => {
@@ -135,8 +100,8 @@ describe("cluster-store", () => {
             icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
             clusterName: "minikube",
           },
-          kubeConfigPath: embed(
-            getCustomKubeConfigDirectory("foo"),
+          kubeConfigPath: writeFileSyncAndReturnPath(
+            getCustomKubeConfigFilePath("foo"),
             kubeconfig,
           ),
         }, {
@@ -169,8 +134,8 @@ describe("cluster-store", () => {
           preferences: {
             clusterName: "prod",
           },
-          kubeConfigPath: embed(
-            getCustomKubeConfigDirectory("prod"),
+          kubeConfigPath: writeFileSyncAndReturnPath(
+            getCustomKubeConfigFilePath("prod"),
             kubeconfig,
           ),
         });
@@ -180,8 +145,8 @@ describe("cluster-store", () => {
           preferences: {
             clusterName: "dev",
           },
-          kubeConfigPath: embed(
-            getCustomKubeConfigDirectory("dev"),
+          kubeConfigPath: writeFileSyncAndReturnPath(
+            getCustomKubeConfigFilePath("dev"),
             kubeconfig,
           ),
         });
@@ -193,61 +158,49 @@ describe("cluster-store", () => {
       });
 
       it("check if cluster's kubeconfig file saved", () => {
-        const file = embed(getCustomKubeConfigDirectory("boo"), "kubeconfig");
+        const file = writeFileSyncAndReturnPath(getCustomKubeConfigFilePath("boo"), "kubeconfig");
 
-        expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
+        expect(readFileSync(file)).toBe("kubeconfig");
       });
     });
   });
 
   describe("config with existing clusters", () => {
     beforeEach(() => {
-      mockFs({
-        "temp-kube-config": kubeconfig,
-        "some-directory-for-user-data": {
-          "lens-cluster-store.json": JSON.stringify({
-            __internal__: {
-              migrations: {
-                version: "99.99.99",
-              },
-            },
-            clusters: [
-              {
-                id: "cluster1",
-                kubeConfigPath: "./temp-kube-config",
-                contextName: "foo",
-                preferences: { terminalCWD: "/foo" },
-                workspace: "default",
-              },
-              {
-                id: "cluster2",
-                kubeConfigPath: "./temp-kube-config",
-                contextName: "foo2",
-                preferences: { terminalCWD: "/foo2" },
-              },
-              {
-                id: "cluster3",
-                kubeConfigPath: "./temp-kube-config",
-                contextName: "foo",
-                preferences: { terminalCWD: "/foo" },
-                workspace: "foo",
-                ownerRef: "foo",
-              },
-            ],
-          }),
+      writeFileSync("/temp-kube-config", kubeconfig);
+      writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {
+        __internal__: {
+          migrations: {
+            version: "99.99.99",
+          },
         },
+        clusters: [
+          {
+            id: "cluster1",
+            kubeConfigPath: "/temp-kube-config",
+            contextName: "foo",
+            preferences: { terminalCWD: "/foo" },
+            workspace: "default",
+          },
+          {
+            id: "cluster2",
+            kubeConfigPath: "/temp-kube-config",
+            contextName: "foo2",
+            preferences: { terminalCWD: "/foo2" },
+          },
+          {
+            id: "cluster3",
+            kubeConfigPath: "/temp-kube-config",
+            contextName: "foo",
+            preferences: { terminalCWD: "/foo" },
+            workspace: "foo",
+            ownerRef: "foo",
+          },
+        ],
       });
-
-      createCluster = mainDi.inject(createClusterInjectionToken);
-
-      clusterStore = mainDi.inject(clusterStoreInjectable);
+      clusterStore = di.inject(clusterStoreInjectable);
       clusterStore.load();
     });
-
-    afterEach(() => {
-      mockFs.restore();
-    });
-
     it("allows to retrieve a cluster", () => {
       const storedCluster = clusterStore.getById("cluster1");
 
@@ -271,64 +224,33 @@ describe("cluster-store", () => {
 
   describe("config with invalid cluster kubeconfig", () => {
     beforeEach(() => {
-      const invalidKubeconfig = `
-apiVersion: v1
-clusters:
-- cluster:
-    server: https://localhost
-  name: test2
-contexts:
-- context:
-    cluster: test
-    user: test
-  name: test
-current-context: test
-kind: Config
-preferences: {}
-users:
-- name: test
-  user:
-    token: kubeconfig-user-q4lm4:xxxyyyy
-`;
-
-      mockFs({
-        "invalid-kube-config": invalidKubeconfig,
-        "valid-kube-config": kubeconfig,
-        "some-directory-for-user-data": {
-          "lens-cluster-store.json": JSON.stringify({
-            __internal__: {
-              migrations: {
-                version: "99.99.99",
-              },
-            },
-            clusters: [
-              {
-                id: "cluster1",
-                kubeConfigPath: "./invalid-kube-config",
-                contextName: "test",
-                preferences: { terminalCWD: "/foo" },
-                workspace: "foo",
-              },
-              {
-                id: "cluster2",
-                kubeConfigPath: "./valid-kube-config",
-                contextName: "foo",
-                preferences: { terminalCWD: "/foo" },
-                workspace: "default",
-              },
-            ],
-          }),
+      writeFileSync("/invalid-kube-config", invalidKubeconfig);
+      writeFileSync("/valid-kube-config", kubeconfig);
+      writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {
+        __internal__: {
+          migrations: {
+            version: "99.99.99",
+          },
         },
+        clusters: [
+          {
+            id: "cluster1",
+            kubeConfigPath: "/invalid-kube-config",
+            contextName: "test",
+            preferences: { terminalCWD: "/foo" },
+            workspace: "foo",
+          },
+          {
+            id: "cluster2",
+            kubeConfigPath: "/valid-kube-config",
+            contextName: "foo",
+            preferences: { terminalCWD: "/foo" },
+            workspace: "default",
+          },
+        ],
       });
-
-      createCluster = mainDi.inject(createClusterInjectionToken);
-
-      clusterStore = mainDi.inject(clusterStoreInjectable);
+      clusterStore = di.inject(clusterStoreInjectable);
       clusterStore.load();
-    });
-
-    afterEach(() => {
-      mockFs.restore();
     });
 
     it("does not enable clusters with invalid kubeconfig", () => {
@@ -340,54 +262,67 @@ users:
 
   describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     beforeEach(() => {
-      mockFs({
-        "some-directory-for-user-data": {
-          "lens-cluster-store.json": JSON.stringify({
-            __internal__: {
-              migrations: {
-                version: "3.5.0",
-              },
-            },
-            clusters: [
-              {
-                id: "cluster1",
-                kubeConfig: minimalValidKubeConfig,
-                contextName: "cluster",
-                preferences: {
-                  icon: "store://icon_path",
-                },
-              },
-            ],
-          }),
-          icon_path: testDataIcon,
+      writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {
+        __internal__: {
+          migrations: {
+            version: "3.5.0",
+          },
         },
+        clusters: [
+          {
+            id: "cluster1",
+            kubeConfig: minimalValidKubeConfig,
+            contextName: "cluster",
+            preferences: {
+              icon: "store://icon_path",
+            },
+          },
+        ],
       });
+      writeBufferSync("/some-directory-for-user-data/icon_path", testDataIcon);
 
-      mainDi.override(storeMigrationVersionInjectable, () => "3.6.0");
+      di.override(storeMigrationVersionInjectable, () => "3.6.0");
 
-      createCluster = mainDi.inject(createClusterInjectionToken);
-
-      clusterStore = mainDi.inject(clusterStoreInjectable);
+      clusterStore = di.inject(clusterStoreInjectable);
       clusterStore.load();
-    });
-
-    afterEach(() => {
-      mockFs.restore();
     });
 
     it("migrates to modern format with kubeconfig in a file", async () => {
       const config = clusterStore.clustersList[0].kubeConfigPath;
 
-      expect(fs.readFileSync(config, "utf8")).toBe(minimalValidKubeConfig);
+      expect(readFileSync(config)).toBe(minimalValidKubeConfig);
     });
 
     it("migrates to modern format with icon not in file", async () => {
-      const { icon } = clusterStore.clustersList[0].preferences;
-
-      assert(icon);
-      expect(icon.startsWith("data:;base64,")).toBe(true);
+      expect(clusterStore.clustersList[0].preferences.icon).toMatch(/data:;base64,/);
     });
   });
+});
+
+const invalidKubeconfig = JSON.stringify({
+  apiVersion: "v1",
+  clusters: [{
+    cluster: {
+      server: "https://localhost",
+    },
+    name: "test2",
+  }],
+  contexts: [{
+    context: {
+      cluster: "test",
+      user: "test",
+    },
+    name: "test",
+  }],
+  "current-context": "test",
+  kind: "Config",
+  preferences: {},
+  users: [{
+    user: {
+      token: "kubeconfig-user-q4lm4:xxxyyyy",
+    },
+    name: "test",
+  }],
 });
 
 const minimalValidKubeConfig = JSON.stringify({
