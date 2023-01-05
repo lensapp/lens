@@ -23,7 +23,6 @@ import showErrorNotificationInjectable from "../../../renderer/components/notifi
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
-import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-storage/storages-are-ready";
 
 describe("cluster/namespaces - edit namespace from new tab", () => {
   let builder: ApplicationBuilder;
@@ -31,7 +30,6 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
   let callForPatchResourceMock: AsyncFnMock<CallForPatchResource>;
   let showSuccessNotificationMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
-  let storagesAreReady: () => Promise<void>;
 
   beforeEach(() => {
     builder = getApplicationBuilder();
@@ -45,8 +43,6 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
       );
 
       windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
-
-      storagesAreReady = controlWhenStoragesAreReady(windowDi);
 
       showSuccessNotificationMock = jest.fn();
       windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
@@ -80,8 +76,6 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
 
     beforeEach(async () => {
       rendered = await builder.render();
-
-      await storagesAreReady();
 
       windowDi = builder.applicationWindow.only.di;
 
