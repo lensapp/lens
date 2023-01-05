@@ -20,7 +20,6 @@ import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-st
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
-import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
 import applicationInformationInjectable from "../common/vars/application-information-injectable";
@@ -82,8 +81,6 @@ export const getDiForUnitTesting = (
     di.override(hostedClusterIdInjectable, () => undefined);
 
     di.override(legacyOnChannelListenInjectable, () => () => noop);
-
-    di.override(storageSaveDelayInjectable, () => 0);
 
     di.override(requestAnimationFrameInjectable, () => (callback) => callback());
     di.override(lensResourcesDirInjectable, () => "/irrelevant");

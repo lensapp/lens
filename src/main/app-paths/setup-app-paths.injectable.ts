@@ -21,7 +21,7 @@ const setupAppPathsInjectable = getInjectable({
   instantiate: (di) => {
     const setElectronAppPath = di.inject(setElectronAppPathInjectable);
     const appName = di.inject(appNameInjectable);
-    const getAppPath = di.inject(getElectronAppPathInjectable);
+    const getElectronAppPath = di.inject(getElectronAppPathInjectable);
     const appPathsState = di.inject(appPathsStateInjectable);
     const directoryForIntegrationTesting = di.inject(directoryForIntegrationTestingInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
@@ -33,13 +33,13 @@ const setupAppPathsInjectable = getInjectable({
           setElectronAppPath("appData", directoryForIntegrationTesting);
         }
 
-        const appDataPath = getAppPath("appData");
+        const appDataPath = getElectronAppPath("appData");
 
         setElectronAppPath("userData", joinPaths(appDataPath, appName));
 
         const appPaths = pipeline(
           pathNames,
-          map(name => [name, getAppPath(name)]),
+          map(name => [name, getElectronAppPath(name)]),
           fromPairs,
         ) as AppPaths;
 
