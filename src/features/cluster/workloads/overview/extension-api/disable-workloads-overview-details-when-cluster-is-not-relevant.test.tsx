@@ -8,7 +8,6 @@ import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
 import type { KubernetesCluster } from "../../../../../common/catalog-entities";
 import { getApplicationBuilder } from "../../../../../renderer/components/test-utils/get-application-builder";
-import extensionShouldBeEnabledForClusterFrameInjectable from "../../../../../renderer/extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import navigateToWorkloadsOverviewInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/overview/navigate-to-workloads-overview.injectable";
 import React from "react";
 
@@ -23,9 +22,6 @@ describe("disable workloads overview details when cluster is not relevant", () =
     builder = getApplicationBuilder();
 
     builder.setEnvironmentToClusterFrame();
-    builder.beforeWindowStart((windowDi) => {
-      windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
-    });
 
     isEnabledForClusterMock = asyncFn();
 

@@ -19,8 +19,6 @@ import platformInjectable from "../common/vars/platform.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
-import extensionShouldBeEnabledForClusterFrameInjectable from "./extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
-import { asyncComputed } from "@ogre-tools/injectable-react";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import storageSaveDelayInjectable from "./utils/create-storage/storage-save-delay.injectable";
 import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
@@ -89,12 +87,6 @@ export const getDiForUnitTesting = (
 
     di.override(requestAnimationFrameInjectable, () => (callback) => callback());
     di.override(lensResourcesDirInjectable, () => "/irrelevant");
-
-    // TODO: Remove after "LensRendererExtension.isEnabledForCluster" is removed
-    di.override(extensionShouldBeEnabledForClusterFrameInjectable, () =>
-      asyncComputed({ getValueFromObservedPromise: async () => true, valueWhenPending: true }),
-    );
-
     di.override(environmentVariablesInjectable, () => ({}));
     di.override(watchHistoryStateInjectable, () => () => () => {});
 

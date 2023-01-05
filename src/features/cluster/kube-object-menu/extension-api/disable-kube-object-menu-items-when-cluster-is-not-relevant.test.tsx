@@ -15,7 +15,6 @@ import React from "react";
 import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../../renderer/routes/route-specific-component-injection-token";
 import { KubeObject } from "../../../../common/k8s-api/kube-object";
-import extensionShouldBeEnabledForClusterFrameInjectable from "../../../../renderer/extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import { KubeObjectMenu } from "../../../../renderer/components/kube-object-menu";
 
 describe("disable kube object menu items when cluster is not relevant", () => {
@@ -31,8 +30,6 @@ describe("disable kube object menu items when cluster is not relevant", () => {
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
-
       runInAction(() => {
         windowDi.register(testRouteInjectable, testRouteComponentInjectable);
       });

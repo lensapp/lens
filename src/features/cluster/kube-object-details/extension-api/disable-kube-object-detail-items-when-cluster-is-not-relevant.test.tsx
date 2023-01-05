@@ -15,7 +15,6 @@ import React from "react";
 import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../../renderer/routes/route-specific-component-injection-token";
 import { KubeObject } from "../../../../common/k8s-api/kube-object";
-import extensionShouldBeEnabledForClusterFrameInjectable from "../../../../renderer/extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import { KubeObjectDetails } from "../../../../renderer/components/kube-object-details";
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
@@ -45,8 +44,6 @@ describe("disable kube object detail items when cluster is not relevant", () => 
 
       apiManager.registerApi(api);
       apiManager.registerStore(store);
-
-      windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
 
       runInAction(() => {
         windowDi.register(testRouteInjectable, testRouteComponentInjectable);
