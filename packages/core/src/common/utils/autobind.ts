@@ -11,7 +11,7 @@ import React from "react";
 // Automatically bind methods to their class instance
 export function autoBind<T extends object>(obj: T, opts?: Options): T {
   if (obj instanceof React.Component) {
-    return autoBindReactClass(obj, opts);
+    return autoBindReactClass(obj as any, opts);
   }
 
   return autoBindClass(obj, opts);

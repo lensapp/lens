@@ -1,0 +1,14 @@
+packages/*/dist/
+node_modules/
+.DS_Store
+yarn-error.log
+coverage/
+tmp/
+lens.log
+static/build
+static/types
+binaries/client/
+binaries/server/
+docs/extensions/api
+site/
+build/webpack/

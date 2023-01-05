@@ -1,7 +1,7 @@
 {
   "readme": "docs/extensions/typedoc-readme.md.tpl",
   "name": "@k8slens/extensions",
-  "out": "docs/extensions/api",
+  "out": "../../docs/extensions/api",
   "excludePrivate": true,
   "includes": [
     "src/"

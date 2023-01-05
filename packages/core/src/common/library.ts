@@ -5,10 +5,12 @@
 import applicationInformationToken from "./vars/application-information-token";
 import type { ApplicationInformation } from "./vars/application-information-token";
 import { bundledExtensionInjectionToken } from "../extensions/extension-discovery/bundled-extension-token";
+import * as extensionApi from "../extensions/common-api";
 
 // @experimental
 export {
   applicationInformationToken,
   ApplicationInformation,
   bundledExtensionInjectionToken,
+  extensionApi,
 };
