@@ -31,7 +31,7 @@ const matchingRouteInjectable = getInjectable({
     const currentPath = di.inject(currentPathInjectable);
 
     return computed(() => (
-      iter.pipeline(routes.get().values())
+      iter.chain(routes.get().values())
         .map(getMatchDataForRouteFrom(currentPath.get()))
         .find(data => data.isMatching)
     ));
