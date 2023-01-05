@@ -14,7 +14,7 @@ import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import type { WebpackPluginInstance } from "webpack";
 import { DefinePlugin } from "webpack";
 import getTypescriptLoader from "./get-typescript-loader";
-import { assetsFolderName, isDevelopment, rendererDir, buildDir, appName, htmlTemplate, publicPath, sassCommonVars } from "./vars";
+import { assetsFolderName, isDevelopment, rendererDir, buildDir, appName, htmlTemplate, publicPath, sassCommonVars, additionalExternals } from "./vars";
 import { platform } from "process";
 
 export function webpackLensRenderer({ showVars = true } = {}): webpack.Configuration {
@@ -63,9 +63,12 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         ".ts", ".tsx",
       ],
     },
-    externals: {
-      "node-fetch": "commonjs node-fetch",
-    },
+    externals: [
+      {
+        "node-fetch": "commonjs node-fetch",
+      },
+      ...additionalExternals,
+    ],
     optimization: {
       minimize: false,
     },

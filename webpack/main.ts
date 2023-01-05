@@ -12,7 +12,7 @@ import CircularDependencyPlugin from "circular-dependency-plugin";
 import { iconsAndImagesWebpackRules } from "./renderer";
 import type { WebpackPluginInstance } from "webpack";
 import { DefinePlugin } from "webpack";
-import { buildDir, isDevelopment, mainDir } from "./vars";
+import { additionalExternals, buildDir, isDevelopment, mainDir } from "./vars";
 import { platform } from "process";
 
 const main = ({ showVars = true } = {}): webpack.Configuration => {
@@ -43,6 +43,7 @@ const main = ({ showVars = true } = {}): webpack.Configuration => {
     },
     externals: [
       nodeExternals(),
+      ...additionalExternals,
     ],
     module: {
       parser: {
