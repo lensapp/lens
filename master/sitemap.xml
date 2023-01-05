@@ -296,6 +296,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.IngressClassStore/</loc>
+         <lastmod>2023-01-05</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.IngressStore/</loc>
          <lastmod>2023-01-05</lastmod>
          <changefreq>daily</changefreq>
