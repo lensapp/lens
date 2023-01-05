@@ -267,7 +267,7 @@
     "js-yaml": "^4.1.0",
     "jsdom": "^16.7.0",
     "lodash": "^4.17.15",
-    "marked": "^4.2.4",
+    "marked": "^4.2.5",
     "md5-file": "^5.0.0",
     "mobx": "^6.7.0",
     "mobx-observable-history": "^2.0.3",
