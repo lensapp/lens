@@ -5,7 +5,7 @@
 
 import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import { KubeApi } from "../kube-api";
+import { KubeApi, ResourceDescriptor } from "../kube-api";
 
 export class IngressClassApi extends KubeApi<IngressClass> {
   constructor() {
@@ -13,6 +13,25 @@ export class IngressClassApi extends KubeApi<IngressClass> {
       objectConstructor: IngressClass,
       checkPreferredVersion: true,
       fallbackApiBases: ["/apis/extensions/v1beta1/ingressclasses"],
+    });
+  }
+
+  setAsDefault({ name }: ResourceDescriptor, isDefault: boolean = true) {
+    const reqUrl = this.formatUrlForNotListing({ name });
+
+    return this.request.patch(reqUrl, {
+      data: {
+        metadata: {
+          annotations: {
+            [IngressClass.ANNOTATION_IS_DEFAULT]: JSON.stringify(isDefault),
+          }
+        }
+      }
+    }, {
+      headers: {
+        "content-type": "application/strategic-merge-patch+json",
+        // "content-type": "application/merge-patch+json",
+      },
     });
   }
 }
@@ -50,6 +69,7 @@ export class IngressClass extends KubeObject<IngressClassMetadata, IngressClassS
   static readonly kind = "IngressClass";
   static readonly namespaced = false;
   static readonly apiBase = "/apis/networking.k8s.io/v1/ingressclasses";
+  static readonly ANNOTATION_IS_DEFAULT = "ingressclass.kubernetes.io/is-default-class";
 
   getController(): string {
     return this.spec.controller;
@@ -76,6 +96,6 @@ export class IngressClass extends KubeObject<IngressClassMetadata, IngressClassS
   }
 
   get isDefault() {
-    return this.metadata.annotations?.["ingressclass.kubernetes.io/is-default-class"] === "true";
+    return this.metadata.annotations?.[IngressClass.ANNOTATION_IS_DEFAULT] === "true";
   }
 }

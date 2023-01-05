@@ -7,10 +7,11 @@ import styles from "./ingress-class-details.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
+import { withInjectables } from "@ogre-tools/injectable-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { IngressClass } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { withInjectables } from "@ogre-tools/injectable-react";
+import { Badge } from "../badge";
 
 export interface IngressClassDetailsProps extends KubeObjectDetailsProps<IngressClass> {
 }
@@ -50,7 +51,7 @@ class NonInjectedIngressDetails extends React.Component<IngressClassDetailsProps
     return (
       <div className={styles.IngressClassDetails}>
         <DrawerItem name="Controller">
-          {ingressClass.getController()}
+          <Badge label={ingressClass.getController()} />
         </DrawerItem>
         {this.renderParameters()}
       </div>
