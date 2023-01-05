@@ -48,8 +48,8 @@ test: node_modules binaries/client
 integration: build
 	yarn integration
 
-.PHONY: build
-build: node_modules binaries/client
+.PHONY: build-impl
+build-impl: binaries/client
 	yarn run build:tray-icons
 	yarn run compile
 ifeq "$(DETECTED_OS)" "Windows"
@@ -57,6 +57,9 @@ ifeq "$(DETECTED_OS)" "Windows"
 	rm -rf node_modules/win-ca/pem
 endif
 	yarn run electron-builder --publish onTag $(ELECTRON_BUILDER_EXTRA_ARGS)
+
+.PHONY: build
+build: node_modules build-impl
 
 src/extensions/npm/extensions/__mocks__:
 	cp -r __mocks__ src/extensions/npm/extensions/
