@@ -4,9 +4,11 @@
  */
 
 import { observable, reaction } from "mobx";
-import { StorageHelper } from "../storageHelper";
-import { delay } from "../../../common/utils/delay";
-import { noop, toJS } from "../../../common/utils";
+import type { StorageHelper } from "../storage-helper";
+import { toJS } from "../../../common/utils";
+import type { CreateStorageHelper } from "../create-storage-helper.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import createStorageHelperInjectable from "../create-storage-helper.injectable";
 
 interface StorageModel {
   [prop: string]: any /*json-serializable*/;
@@ -15,27 +17,25 @@ interface StorageModel {
 }
 
 describe("renderer/utils/StorageHelper", () => {
+  let createStorageHelper: CreateStorageHelper;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    createStorageHelper = di.inject(createStorageHelperInjectable);
+  });
+
   describe("Using custom StorageAdapter", () => {
     const storageKey = "ui-settings";
     const remoteStorageMock = observable.map<string, StorageModel>();
     let storageHelper: StorageHelper<StorageModel>;
-    let storageHelperAsync: StorageHelper<StorageModel>;
 
     beforeEach(() => {
       remoteStorageMock.set(storageKey, {
         message: "saved-before", // pretending as previously saved data
       });
 
-      storageHelper = new StorageHelper<StorageModel>({
-        logger: {
-          debug: noop,
-          error: noop,
-          info: noop,
-          silly: noop,
-          warn: noop,
-        },
-      }, storageKey, {
-        autoInit: false,
+      storageHelper = createStorageHelper<StorageModel>(storageKey, {
         defaultValue: {
           message: "blabla",
           description: "default",
@@ -55,46 +55,14 @@ describe("renderer/utils/StorageHelper", () => {
           },
         },
       });
-
-      storageHelperAsync = new StorageHelper({
-        logger: {
-          debug: noop,
-          error: noop,
-          info: noop,
-          silly: noop,
-          warn: noop,
-        },
-      }, storageKey, {
-        autoInit: false,
-        defaultValue: storageHelper.defaultValue,
-        storage: {
-          ...storageHelper.storage,
-          async getItem(key: string): Promise<StorageModel> {
-            await delay(500); // fake loading timeout
-
-            return storageHelper.storage.getItem(key);
-          },
-        },
-      });
     });
 
     it("initialized with default value", async () => {
-      storageHelper.init();
       expect(storageHelper.key).toBe(storageKey);
       expect(storageHelper.get()).toEqual(storageHelper.defaultValue);
     });
 
-    it("async loading from storage supported too", async () => {
-      expect(storageHelperAsync.initialized).toBeFalsy();
-      storageHelperAsync.init();
-      await delay(300);
-      expect(storageHelperAsync.get()).toEqual(storageHelper.defaultValue);
-      await delay(200);
-      expect(storageHelperAsync.get().message).toBe("saved-before");
-    });
-
     it("set() fully replaces data in storage", () => {
-      storageHelper.init();
       storageHelper.set({ message: "msg" });
       storageHelper.get().description = "desc";
       expect(storageHelper.get().message).toBe("msg");
@@ -106,7 +74,6 @@ describe("renderer/utils/StorageHelper", () => {
     });
 
     it("merge() does partial data tree updates", () => {
-      storageHelper.init();
       storageHelper.merge({ message: "updated" });
 
       expect(storageHelper.get()).toEqual({ ...storageHelper.defaultValue, message: "updated" });
@@ -134,16 +101,7 @@ describe("renderer/utils/StorageHelper", () => {
     beforeEach(() => {
       observedChanges.length = 0;
 
-      storageHelper = new StorageHelper<typeof defaultValue>({
-        logger: {
-          debug: noop,
-          error: noop,
-          info: noop,
-          silly: noop,
-          warn: noop,
-        },
-      }, "some-key", {
-        autoInit: true,
+      storageHelper = createStorageHelper<typeof defaultValue>("some-key", {
         defaultValue,
         storage: {
           getItem: jest.fn(),

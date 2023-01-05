@@ -11,8 +11,6 @@ import asyncFn from "@async-fn/jest";
 import type { CallForResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
 import callForResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
-import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
-import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-storage/storages-are-ready";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 import { TabKind } from "../../../renderer/components/dock/dock/store";
 import { Namespace } from "../../../common/k8s-api/endpoints";
@@ -20,7 +18,6 @@ import { Namespace } from "../../../common/k8s-api/endpoints";
 describe("cluster/namespaces - edit namespaces from previously opened tab", () => {
   let builder: ApplicationBuilder;
   let callForNamespaceMock: AsyncFnMock<CallForResource>;
-  let storagesAreReady: () => Promise<void>;
 
   beforeEach(() => {
     builder = getApplicationBuilder();
@@ -34,10 +31,6 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
       );
-
-      windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
-
-      storagesAreReady = controlWhenStoragesAreReady(windowDi);
 
       windowDi.override(callForResourceInjectable, () => callForNamespaceMock);
     });
@@ -83,8 +76,6 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
       });
 
       rendered = await builder.render();
-
-      await storagesAreReady();
     });
 
     it("renders", () => {

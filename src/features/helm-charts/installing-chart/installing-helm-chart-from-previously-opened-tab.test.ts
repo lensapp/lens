@@ -9,13 +9,9 @@ import type { ApplicationBuilder } from "../../../renderer/components/test-utils
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import getRandomInstallChartTabIdInjectable from "../../../renderer/components/dock/install-chart/get-random-install-chart-tab-id.injectable";
-import namespaceStoreInjectable from "../../../renderer/components/+namespaces/store.injectable";
-import type { NamespaceStore } from "../../../renderer/components/+namespaces/store";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
-import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import { TabKind } from "../../../renderer/components/dock/dock/store";
-import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-storage/storages-are-ready";
 import requestCreateHelmReleaseInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-create.injectable";
 import type { RequestHelmChartVersions } from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
 import requestHelmChartVersionsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
@@ -26,7 +22,6 @@ describe("installing helm chart from previously opened tab", () => {
   let builder: ApplicationBuilder;
   let requestHelmChartVersionsMock: AsyncFnMock<RequestHelmChartVersions>;
   let requestHelmChartValuesMock: AsyncFnMock<RequestHelmChartValues>;
-  let storagesAreReady: () => Promise<void>;
 
   beforeEach(() => {
     builder = getApplicationBuilder();
@@ -36,28 +31,14 @@ describe("installing helm chart from previously opened tab", () => {
     requestHelmChartVersionsMock = asyncFn();
     requestHelmChartValuesMock = asyncFn();
 
-    builder.beforeWindowStart((windowDi) => {
-      storagesAreReady = controlWhenStoragesAreReady(windowDi);
+    builder.namespaces.add("default");
+    builder.namespaces.add("some-other-namespace");
 
+    builder.beforeWindowStart((windowDi) => {
       windowDi.override(directoryForLensLocalStorageInjectable, () => "/some-directory-for-lens-local-storage");
-      windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
       windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
       windowDi.override(requestHelmChartValuesInjectable, () => requestHelmChartValuesMock);
       windowDi.override(requestCreateHelmReleaseInjectable, () => jest.fn());
-
-      // TODO: Replace store mocking with mock for the actual side-effect (where the namespaces are coming from)
-      windowDi.override(
-        namespaceStoreInjectable,
-        () =>
-          ({
-            contextNamespaces: [],
-            items: [
-              { getName: () => "default" },
-              { getName: () => "some-other-namespace" },
-            ],
-            selectNamespaces: () => {},
-          } as unknown as NamespaceStore),
-      );
 
       windowDi.override(getRandomInstallChartTabIdInjectable, () =>
         jest
@@ -106,8 +87,6 @@ describe("installing helm chart from previously opened tab", () => {
       });
 
       rendered = await builder.render();
-
-      await storagesAreReady();
     });
 
     it("renders", () => {
