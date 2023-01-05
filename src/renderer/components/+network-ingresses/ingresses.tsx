@@ -13,11 +13,11 @@ import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import { computeRouteDeclarations } from "../../../common/k8s-api/endpoints";
 import { prevDefault } from "../../utils";
-import type { IngressStore } from "./store";
+import type { IngressStore } from "./ingress-store";
 import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
-import ingressStoreInjectable from "./store.injectable";
+import ingressStoreInjectable from "./ingress-store.injectable";
 
 enum columnId {
   name = "name",

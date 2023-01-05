@@ -8,7 +8,7 @@ import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manag
 import ingressApiInjectable from "../../../common/k8s-api/endpoints/ingress.api.injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
-import { IngressStore } from "./store";
+import { IngressStore } from "./ingress-store";
 
 const ingressStoreInjectable = getInjectable({
   id: "ingress-store",

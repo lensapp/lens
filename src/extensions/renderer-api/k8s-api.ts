@@ -115,7 +115,8 @@ export type { PodDisruptionBudgetStore as PodDisruptionBudgetsStore } from "../.
 export type { PriorityClassStore as PriorityClassStoreStore } from "../../renderer/components/+config-priority-classes/store";
 export type { ServiceStore } from "../../renderer/components/+network-services/store";
 export type { EndpointsStore as EndpointStore } from "../../renderer/components/+network-endpoints/store";
-export type { IngressStore } from "../../renderer/components/+network-ingresses/store";
+export type { IngressStore } from "../../renderer/components/+network-ingresses/ingress-store";
+export type { IngressClassStore } from "../../renderer/components/+network-ingresses/ingress-class-store";
 export type { NetworkPolicyStore } from "../../renderer/components/+network-policies/store";
 export type { PersistentVolumeStore as PersistentVolumesStore } from "../../renderer/components/+storage-volumes/store";
 export type { PersistentVolumeClaimStore as VolumeClaimStore } from "../../renderer/components/+storage-volume-claims/store";
