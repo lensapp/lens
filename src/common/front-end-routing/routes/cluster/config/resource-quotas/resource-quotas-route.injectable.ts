@@ -14,7 +14,7 @@ const resourceQuotasRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "resourcequotas",
-      group: "v1",
+      group: "",
     }),
   }),
 

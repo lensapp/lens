@@ -44,7 +44,7 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
 
     builder.allowKubeResource({
       apiName: "namespaces",
-      group: "v1",
+      group: "",
     });
   });
 
