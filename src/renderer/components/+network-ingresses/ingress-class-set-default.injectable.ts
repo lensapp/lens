@@ -12,17 +12,16 @@ export const ingressClassSetDefaultInjectable = getInjectable({
   id: "ingressClassSetDefaultInjectable",
 
   instantiate(di) {
-    return async (currentItem: IngressClass) => {
-      const api = di.inject(ingressClassApiInjectable);
-      const store = di.inject(ingressClassStoreInjectable);
+    const api = di.inject(ingressClassApiInjectable);
+    const store = di.inject(ingressClassStoreInjectable);
 
+    return async (currentItem: IngressClass) => {
       const defaultIngressClassesUpdate = store.items
         .filter((item: IngressClass) => item.isDefault && currentItem !== item)
         .map(item => api.setAsDefault({ name: item.getName() }, false));
 
       await Promise.all(defaultIngressClassesUpdate);
       await api.setAsDefault({ name: currentItem.getName() });
-      await store.reloadAll({ force: true });
     };
   },
 

@@ -19,27 +19,47 @@ import { MenuItem } from "../menu";
 import type { IngressClass } from "../../../common/k8s-api/endpoints/ingress-class.api";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { Icon } from "../icon";
+import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 
 export interface IngressClassMenuProps extends KubeObjectMenuProps<IngressClass> {
-  setDefault(item: IngressClass): void;
 }
 
-export function NonInjectedIngressClassMenu({ object, toolbar, ...props }: IngressClassMenuProps) {
+export interface Dependencies {
+  setDefault: (item: IngressClass) => void;
+  hideDetails: () => void;
+}
+
+export function NonInjectedIngressClassMenu(
+  {
+    object,
+    toolbar,
+    setDefault,
+    hideDetails,
+  }: IngressClassMenuProps & Dependencies) {
+
+  function markItemAsDefaultIngressClass() {
+    setDefault(object);
+    hideDetails();
+  }
+
   return (
-    <MenuItem onClick={() => props.setDefault(object)}>
-      <Icon
-        material="star"
-        tooltip="Set as default"
-        interactive={toolbar} />
-      <span className="title">Set as default</span>
-    </MenuItem>
+    <>
+      <MenuItem onClick={markItemAsDefaultIngressClass}>
+        <Icon
+          material="star"
+          tooltip="Set as default"
+          interactive={toolbar} />
+        <span className="title">Set as default</span>
+      </MenuItem>
+    </>
   );
 }
 
-export const IngressClassMenu = withInjectables<{}, IngressClassMenuProps>(NonInjectedIngressClassMenu, {
+export const IngressClassMenu = withInjectables<Dependencies, IngressClassMenuProps>(NonInjectedIngressClassMenu, {
   getProps: (di, props) => ({
     ...props,
     setDefault: di.inject(ingressClassSetDefaultInjectable),
+    hideDetails: di.inject(hideDetailsInjectable),
   }),
 });
 

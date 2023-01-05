@@ -31,7 +31,6 @@ export class IngressClassApi extends KubeApi<IngressClass> {
     }, {
       headers: {
         "content-type": "application/strategic-merge-patch+json",
-        // "content-type": "application/merge-patch+json",
       },
     });
   }
@@ -85,7 +84,7 @@ export class IngressClass extends KubeObject<IngressClassMetadata, IngressClassS
   }
 
   getCtrlNs() {
-    return this.spec?.parameters?.namespace as string;
+    return this.spec?.parameters?.namespace;
   }
 
   getCtrlKind() {

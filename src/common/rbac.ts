@@ -90,7 +90,7 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   ingressclasses: {
     kind: "IngressClass",
     group: "networking.k8s.io",
-    namespaced: true,
+    namespaced: false,
   },
   jobs: {
     kind: "Job",
