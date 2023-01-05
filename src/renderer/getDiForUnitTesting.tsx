@@ -11,16 +11,12 @@ import requestFromChannelInjectable from "./utils/channel/request-from-channel.i
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
-import lensResourcesDirInjectable from "../common/vars/lens-resources-dir.injectable";
 import { runInAction } from "mobx";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
-import getRandomIdInjectable from "../common/utils/get-random-id.injectable";
-import platformInjectable from "../common/vars/platform.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
-import environmentVariablesInjectable from "../common/utils/environment-variables.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
 import applicationInformationInjectable from "../common/vars/application-information-injectable";
 import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
@@ -65,9 +61,6 @@ export const getDiForUnitTesting = (
       di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
     }
 
-    di.override(getRandomIdInjectable, () => () => "some-irrelevant-random-id");
-    di.override(platformInjectable, () => "darwin");
-
     [
       startTopbarStateSyncInjectable,
     ].forEach((injectable) => {
@@ -83,8 +76,6 @@ export const getDiForUnitTesting = (
     di.override(legacyOnChannelListenInjectable, () => () => noop);
 
     di.override(requestAnimationFrameInjectable, () => (callback) => callback());
-    di.override(lensResourcesDirInjectable, () => "/irrelevant");
-    di.override(environmentVariablesInjectable, () => ({}));
     di.override(watchHistoryStateInjectable, () => () => () => {});
 
     di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));

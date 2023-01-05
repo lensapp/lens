@@ -28,6 +28,17 @@ export default getGlobalOverride(electronAppInjectable, () => {
       hasSwitch: (key) => chromiumArgs.has(key),
       removeSwitch: (key) => chromiumArgs.delete(key),
     },
+    disableHardwareAcceleration: () => {},
+    requestSingleInstanceLock: () => true,
+    getLoginItemSettings: () => ({
+      executableWillLaunchAtLogin: false,
+      openAtLogin: false,
+      openAsHidden: false,
+      wasOpenedAtLogin: false,
+      wasOpenedAsHidden: false,
+      restoreState: false,
+      launchItems: [],
+    }),
     exit: () => {},
   } as Partial<Electron.App> as Electron.App);
 
