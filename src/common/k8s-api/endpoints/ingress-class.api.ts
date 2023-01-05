@@ -5,7 +5,8 @@
 
 import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import { KubeApi, ResourceDescriptor } from "../kube-api";
+import type { ResourceDescriptor } from "../kube-api";
+import { KubeApi } from "../kube-api";
 
 export class IngressClassApi extends KubeApi<IngressClass> {
   constructor() {
@@ -16,7 +17,7 @@ export class IngressClassApi extends KubeApi<IngressClass> {
     });
   }
 
-  setAsDefault({ name }: ResourceDescriptor, isDefault: boolean = true) {
+  setAsDefault({ name }: ResourceDescriptor, isDefault = true) {
     const reqUrl = this.formatUrlForNotListing({ name });
 
     return this.request.patch(reqUrl, {
@@ -24,9 +25,9 @@ export class IngressClassApi extends KubeApi<IngressClass> {
         metadata: {
           annotations: {
             [IngressClass.ANNOTATION_IS_DEFAULT]: JSON.stringify(isDefault),
-          }
-        }
-      }
+          },
+        },
+      },
     }, {
       headers: {
         "content-type": "application/strategic-merge-patch+json",
