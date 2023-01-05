@@ -3,7 +3,7 @@
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given empty state for expanded sidebar items already exists, when rendered renders without errors 1`] = `
 <div>
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -579,7 +579,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
 exports[`cluster - sidebar and tab navigation for extensions given extension with cluster pages and cluster page menus given no initially persisted state for sidebar items, when rendered renders 1`] = `
 <div>
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div

@@ -2824,32 +2824,12 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               >
                 <span
                   class="icon"
-                  data-icon-name="keyboard_arrow_up"
+                  data-icon-name="keyboard_arrow_down"
                 >
-                  keyboard_arrow_up
+                  keyboard_arrow_down
                 </span>
               </i>
             </a>
-            <ul
-              class="subMenu"
-            >
-              <div
-                class="SidebarItem"
-                data-is-active-test="false"
-                data-parent-id-test="some-parent-id"
-                data-testid="sidebar-item-some-child-id"
-              >
-                <a
-                  class="navItem"
-                  data-testid="sidebar-item-link-for-some-child-id"
-                  href="/"
-                >
-                  <span>
-                    Some child
-                  </span>
-                </a>
-              </div>
-            </ul>
           </div>
           <div
             class="SidebarItem"
