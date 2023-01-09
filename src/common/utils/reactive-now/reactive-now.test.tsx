@@ -8,14 +8,14 @@ import type { IComputedValue } from "mobx";
 import { computed, observe } from "mobx";
 import React from "react";
 import { observer } from "mobx-react";
-import { advanceFakeTime, useFakeTime } from "../../test-utils/use-fake-time";
+import { advanceFakeTime, testUsingFakeTime } from "../../test-utils/use-fake-time";
 import { reactiveNow } from "./reactive-now";
 
 describe("reactiveNow", () => {
   let someComputed: IComputedValue<boolean>;
 
   beforeEach(() => {
-    useFakeTime("2015-10-21T07:28:00Z");
+    testUsingFakeTime("2015-10-21T07:28:00Z");
 
     someComputed = computed(() => {
       const currentTimestamp = reactiveNow();

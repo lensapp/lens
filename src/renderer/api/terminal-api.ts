@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { WebSocketEvents } from "./websocket-api";
+import type { WebSocketApiDependencies, WebSocketEvents } from "./websocket-api";
 import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
 import url from "url";
 import { makeObservable, observable } from "mobx";
 import { ipcRenderer } from "electron";
-import logger from "../../common/logger";
+import type { Logger } from "../../common/logger";
 import { once } from "lodash";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 
@@ -36,8 +36,9 @@ export interface TerminalEvents extends WebSocketEvents {
   connected: () => void;
 }
 
-export interface TerminalApiDependencies {
+export interface TerminalApiDependencies extends WebSocketApiDependencies {
   readonly hostedClusterId: string;
+  readonly logger: Logger;
 }
 
 export class TerminalApi extends WebSocketApi<TerminalEvents> {
@@ -46,7 +47,7 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
   @observable public isReady = false;
 
   constructor(protected readonly dependencies: TerminalApiDependencies, protected readonly query: TerminalApiQuery) {
-    super({
+    super(dependencies, {
       flushOnOpen: false,
       pingInterval: 30,
     });
@@ -145,11 +146,11 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
           this.emit("connected");
           break;
         default:
-          logger.warn(`[TERMINAL-API]: unknown or unhandleable message type`, message);
+          this.dependencies.logger.warn(`[TERMINAL-API]: unknown or unhandleable message type`, message);
           break;
       }
     } catch (error) {
-      logger.error(`[TERMINAL-API]: failed to handle message`, error);
+      this.dependencies.logger.error(`[TERMINAL-API]: failed to handle message`, error);
     }
   }
 

@@ -3,14 +3,33 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import { secretApi } from "../../../../../../common/k8s-api/endpoints";
+import type { SecretApi } from "../../../../../../common/k8s-api/endpoints";
+import secretApiInjectable from "../../../../../../common/k8s-api/endpoints/secret.api.injectable";
 import { DrawerItem } from "../../../../drawer";
-import type { VolumeVariantComponent } from "../variant-helpers";
+import type { PodVolumeVariantSpecificProps } from "../variant-helpers";
 import { LocalRef } from "../variant-helpers";
 
-export const CephFs: VolumeVariantComponent<"cephfs"> = (
-  ({ pod, variant: { monitors, path = "/", user = "admin", secretFile = "/etc/ceph/user.secret", secretRef, readOnly = false }}) => (
+interface Dependencies {
+  secretApi: SecretApi;
+}
+
+const NonInjectedCephFs = (props: PodVolumeVariantSpecificProps<"cephfs"> & Dependencies) => {
+  const {
+    pod,
+    variant: {
+      monitors,
+      path = "/",
+      user = "admin",
+      secretFile = "/etc/ceph/user.secret",
+      secretRef,
+      readOnly = false,
+    },
+    secretApi,
+  } = props;
+
+  return (
     <>
       <DrawerItem name="Monitors">
         <ul>
@@ -43,5 +62,12 @@ export const CephFs: VolumeVariantComponent<"cephfs"> = (
         {readOnly.toString()}
       </DrawerItem>
     </>
-  )
-);
+  );
+};
+
+export const CephFs = withInjectables<Dependencies, PodVolumeVariantSpecificProps<"cephfs">>(NonInjectedCephFs, {
+  getProps: (di, props) => ({
+    ...props,
+    secretApi: di.inject(secretApiInjectable),
+  }),
+});

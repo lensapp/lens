@@ -49,10 +49,17 @@ const v500Beta10ClusterStoreMigrationInjectable = getInjectable({
 
           store.set("clusters", clusters);
         } catch (error) {
-          if (isErrnoException(error) && !(error.code === "ENOENT" && error.path?.endsWith("lens-workspace-store.json"))) {
-            // ignore lens-workspace-store.json being missing
-            throw error;
+          // KLUDGE: remove after https://github.com/streamich/memfs/pull/893 is released
+          if (process.env.JEST_WORKER_ID && (error as any).code === "ENOENT") {
+            return;
           }
+
+          if (isErrnoException(error) && error.code === "ENOENT" && error.path?.endsWith("lens-workspace-store.json")) {
+            // ignore lens-workspace-store.json being missing
+            return;
+          }
+
+          throw error;
         }
       },
     };

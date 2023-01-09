@@ -4,25 +4,25 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { deleteRelease } from "../helm-release-manager";
 import loggerInjectable from "../../../common/logger.injectable";
+import type { DeleteHelmReleaseData } from "../delete-helm-release.injectable";
+import deleteHelmReleaseInjectable from "../delete-helm-release.injectable";
 
-const deleteHelmReleaseInjectable = getInjectable({
-  id: "delete-helm-release",
+const deleteClusterHelmReleaseInjectable = getInjectable({
+  id: "delete-cluster-helm-release",
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
+    const deleteHelmRelease = di.inject(deleteHelmReleaseInjectable);
 
-    return async (cluster: Cluster, releaseName: string, namespace: string) => {
+    return async (cluster: Cluster, data: DeleteHelmReleaseData) => {
       const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
 
-      logger.debug("Delete release");
+      logger.debug(`[CLUSTER]: Delete helm release`, data);
 
-      return deleteRelease(releaseName, namespace, proxyKubeconfig);
+      return deleteHelmRelease(proxyKubeconfig, data);
     };
   },
-
-  causesSideEffects: true,
 });
 
-export default deleteHelmReleaseInjectable;
+export default deleteClusterHelmReleaseInjectable;

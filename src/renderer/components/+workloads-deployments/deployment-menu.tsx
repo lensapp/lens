@@ -7,13 +7,14 @@ import type { KubeObjectMenuProps } from "../kube-object-menu";
 import type { Deployment, DeploymentApi } from "../../../common/k8s-api/endpoints";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { Notifications } from "../notifications";
 import type { OpenDeploymentScaleDialog } from "./scale/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import deploymentApiInjectable from "../../../common/k8s-api/endpoints/deployment.api.injectable";
 import openDeploymentScaleDialogInjectable from "./scale/open.injectable";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
+import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 
 export interface DeploymentMenuProps extends KubeObjectMenuProps<Deployment> {}
 
@@ -21,6 +22,7 @@ interface Dependencies {
   openDeploymentScaleDialog: OpenDeploymentScaleDialog;
   deploymentApi: DeploymentApi;
   openConfirmDialog: OpenConfirmDialog;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 const NonInjectedDeploymentMenu = ({
@@ -29,6 +31,7 @@ const NonInjectedDeploymentMenu = ({
   openDeploymentScaleDialog,
   toolbar,
   openConfirmDialog,
+  showCheckedErrorNotification,
 }: Dependencies & DeploymentMenuProps) => (
   <>
     <MenuItem onClick={() => openDeploymentScaleDialog(object)}>
@@ -49,7 +52,7 @@ const NonInjectedDeploymentMenu = ({
               name: object.getName(),
             });
           } catch (err) {
-            Notifications.checkedError(err, "Unknown error occured while restarting deployment");
+            showCheckedErrorNotification(err, "Unknown error occured while restarting deployment");
           }
         },
         labelOk: "Restart",
@@ -78,5 +81,6 @@ export const DeploymentMenu = withInjectables<Dependencies, DeploymentMenuProps>
     deploymentApi: di.inject(deploymentApiInjectable),
     openDeploymentScaleDialog: di.inject(openDeploymentScaleDialogInjectable),
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { ClusterScopedMetadata, KubeObjectMetadata, KubeObjectScope } from "../kube-object";
@@ -57,8 +57,8 @@ export class PriorityClass extends KubeObject<
 }
 
 export class PriorityClassApi extends KubeApi<PriorityClass, PriorityClassData> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       objectConstructor: PriorityClass,
       ...opts,
     });

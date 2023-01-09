@@ -2,13 +2,15 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
 import { Link } from "react-router-dom";
 import type { PodVolumeVariants, Pod, SecretReference } from "../../../../../common/k8s-api/endpoints";
 import type { KubeApiQueryParams, ResourceDescriptor } from "../../../../../common/k8s-api/kube-api";
 import type { LocalObjectReference } from "../../../../../common/k8s-api/kube-object";
 import { DrawerItem } from "../../../drawer";
-import { getDetailsUrl } from "../../../kube-detail-params";
+import type { GetDetailsUrl } from "../../../kube-detail-params/get-details-url.injectable";
+import getDetailsUrlInjectable from "../../../kube-detail-params/get-details-url.injectable";
 
 export interface PodVolumeVariantSpecificProps<Kind extends keyof PodVolumeVariants> {
   variant: PodVolumeVariants[Kind];
@@ -29,16 +31,35 @@ export interface LocalRefProps {
   api: LocalRefPropsApi;
 }
 
-export const LocalRef = ({ pod, title, kubeRef: ref, api }: LocalRefProps) => {
-  if (!ref) {
+interface Dependencies {
+  getDetailsUrl: GetDetailsUrl;
+}
+
+const NonInjectedLocalRef = (props: LocalRefProps & Dependencies) => {
+  const {
+    pod,
+    title,
+    kubeRef,
+    api,
+    getDetailsUrl,
+  } = props;
+
+  if (!kubeRef) {
     return null;
   }
 
   return (
     <DrawerItem name={title}>
-      <Link to={getDetailsUrl(api.getUrl({ namespace: pod.getNs(), ...ref }))}>
-        {ref.name}
+      <Link to={getDetailsUrl(api.getUrl({ namespace: pod.getNs(), ...kubeRef }))}>
+        {kubeRef.name}
       </Link>
     </DrawerItem>
   );
 };
+
+export const LocalRef = withInjectables<Dependencies, LocalRefProps>(NonInjectedLocalRef, {
+  getProps: (di, props) => ({
+    ...props,
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
+  }),
+});

@@ -3,16 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeObjectStatus, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { PodTemplateSpec } from "./types/pod-template-spec";
 
 export class ReplicaSetApi extends KubeApi<ReplicaSet> {
-  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
-    super({
-      ...opts,
+  constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
+    super(deps, {
+      ...opts ?? {},
       objectConstructor: ReplicaSet,
     });
   }

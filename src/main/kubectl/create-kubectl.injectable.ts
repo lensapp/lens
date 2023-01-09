@@ -17,6 +17,7 @@ import kubectlVersionMapInjectable from "./version-map.injectable";
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
+import loggerInjectable from "../../common/logger.injectable";
 
 const createKubectlInjectable = getInjectable({
   id: "create-kubectl",
@@ -32,6 +33,7 @@ const createKubectlInjectable = getInjectable({
       baseBundeledBinariesDirectory: di.inject(baseBundledBinariesDirectoryInjectable),
       bundledKubectlVersion: di.inject(bundledKubectlVersionInjectable),
       kubectlVersionMap: di.inject(kubectlVersionMapInjectable),
+      logger: di.inject(loggerInjectable),
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
       joinPaths: di.inject(joinPathsInjectable),
       getBasenameOfPath: di.inject(getBasenameOfPathInjectable),

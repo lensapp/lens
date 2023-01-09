@@ -9,18 +9,31 @@ import React from "react";
 import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { Notifications } from "../notifications";
+import type { ShowNotification } from "../notifications";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { clipboard } from "electron";
 import { kebabCase } from "lodash/fp";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
 
 export interface LogsDialogProps extends DialogProps {
   title: string;
   logs: string;
 }
 
-export function LogsDialog({ title, logs, ...dialogProps }: LogsDialogProps) {
+interface Dependencies {
+  showSuccessNotification: ShowNotification;
+}
+
+const NonInjectedLogsDialog = (props: LogsDialogProps & Dependencies) => {
+  const {
+    title,
+    logs,
+    showSuccessNotification,
+    ...dialogProps
+  } = props;
+
   return (
     <Dialog
       {...dialogProps}
@@ -39,7 +52,7 @@ export function LogsDialog({ title, logs, ...dialogProps }: LogsDialogProps) {
                 plain
                 onClick={() => {
                   clipboard.writeText(logs);
-                  Notifications.ok(`Logs copied to clipboard.`);
+                  showSuccessNotification(`Logs copied to clipboard.`);
                 }}
               >
                 <Icon material="assignment"/>
@@ -58,4 +71,11 @@ export function LogsDialog({ title, logs, ...dialogProps }: LogsDialogProps) {
       </Wizard>
     </Dialog>
   );
-}
+};
+
+export const LogsDialog = withInjectables<Dependencies, LogsDialogProps>(NonInjectedLogsDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    showSuccessNotification: di.inject(showSuccessNotificationInjectable),
+  }),
+});

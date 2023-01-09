@@ -3,16 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import environmentVariablesInjectable from "../../../common/utils/environment-variables.injectable";
 
 const directoryForIntegrationTestingInjectable = getInjectable({
   id: "directory-for-integration-testing",
-
-  instantiate: (di) => {
-    const environmentVariables = di.inject(environmentVariablesInjectable);
-
-    return environmentVariables.CICD;
-  },
+  instantiate: () => process.env.CICD,
+  causesSideEffects: true,
 });
 
 export default directoryForIntegrationTestingInjectable;

@@ -9,6 +9,7 @@ import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-cre
 import { kubeObjectStoreInjectionToken } from "../../../../common/k8s-api/api-manager/manager.injectable";
 import { ServiceAccountStore } from "./store";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../../cluster-frame-context/for-namespaced-resources.injectable";
+import loggerInjectable from "../../../../common/logger.injectable";
 
 const serviceAccountStoreInjectable = getInjectable({
   id: "service-account-store",
@@ -19,6 +20,7 @@ const serviceAccountStoreInjectable = getInjectable({
 
     return new ServiceAccountStore({
       context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+      logger: di.inject(loggerInjectable),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

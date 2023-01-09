@@ -11,7 +11,7 @@ import { cssNames } from "../../../utils";
 import type { Filter, PageFiltersStore } from "./store";
 import { FilterIcon } from "../filter-icon";
 import { Icon } from "../../icon";
-import type { PageParam } from "../../../navigation";
+import type { PageParam } from "../../../navigation/page-param";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import pageFiltersStoreInjectable from "./store.injectable";
 import searchUrlPageParamInjectable from "../../input/search-url-page-param.injectable";

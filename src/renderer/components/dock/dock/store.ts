@@ -108,19 +108,25 @@ export class DockStore implements DockStorageState {
   constructor(private readonly dependencies: Dependencies) {
     makeObservable(this);
     autoBind(this);
-    this.init();
+
+    // adjust terminal height if window size changes
+    window.addEventListener("resize", throttle(this.adjustHeight, 250));
+
+    for (const tab of this.tabs) {
+      const tabDataIsValid = this.dependencies.tabDataValidator[tab.kind] ?? (() => true);
+
+      if (!tabDataIsValid(tab.id)) {
+        this.closeTab(tab.id);
+      }
+    }
   }
 
   readonly minHeight = 100;
   @observable fullSize = false;
 
-  get whenReady() {
-    return this.dependencies.storage.whenReady;
-  }
-
   @computed
   get isOpen(): boolean {
-    return this.dependencies.storage.value.isOpen;
+    return this.dependencies.storage.get().isOpen;
   }
 
   set isOpen(isOpen: boolean) {
@@ -129,7 +135,7 @@ export class DockStore implements DockStorageState {
 
   @computed
   get height(): number {
-    return this.dependencies.storage.value.height;
+    return this.dependencies.storage.get().height;
   }
 
   set height(height: number) {
@@ -140,7 +146,7 @@ export class DockStore implements DockStorageState {
 
   @computed
   get tabs(): DockTab[] {
-    return this.dependencies.storage.value.tabs;
+    return this.dependencies.storage.get().tabs;
   }
 
   set tabs(tabs: DockTab[]) {
@@ -149,7 +155,7 @@ export class DockStore implements DockStorageState {
 
   @computed
   get selectedTabId(): TabId | undefined {
-    const storageData = this.dependencies.storage.value;
+    const storageData = this.dependencies.storage.get();
 
     return (
       storageData.selectedTabId ||
@@ -169,21 +175,6 @@ export class DockStore implements DockStorageState {
 
   @computed get selectedTab() {
     return this.tabs.find(tab => tab.id === this.selectedTabId);
-  }
-
-  private init() {
-    // adjust terminal height if window size changes
-    window.addEventListener("resize", throttle(this.adjustHeight, 250));
-
-    this.whenReady.then(action(() => {
-      for (const tab of this.tabs) {
-        const validator = this.dependencies.tabDataValidator[tab.kind];
-
-        if (validator && !validator(tab.id)) {
-          this.closeTab(tab.id);
-        }
-      }
-    }));
   }
 
   get maxHeight() {

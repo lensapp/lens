@@ -5,7 +5,7 @@
 
 import moment from "moment";
 
-import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
@@ -13,9 +13,9 @@ import type { PodTemplateSpec } from "./types/pod-template-spec";
 import type { PersistentVolumeClaimTemplateSpec } from "./types/persistent-volume-claim-template-spec";
 
 export class StatefulSetApi extends KubeApi<StatefulSet> {
-  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
-    super({
-      ...opts,
+  constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
+    super(deps, {
+      ...opts ?? {},
       objectConstructor: StatefulSet,
     });
   }

@@ -14,12 +14,13 @@ import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
 import { Icon } from "../../icon";
 import { Slider } from "../../slider";
-import { Notifications } from "../../notifications";
 import { cssNames } from "../../../utils";
 import type { ReplicaSet, ReplicaSetApi } from "../../../../common/k8s-api/endpoints";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import replicaSetApiInjectable from "../../../../common/k8s-api/endpoints/replica-set.api.injectable";
 import replicaSetScaleDialogStateInjectable from "./state.injectable";
+import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 
 export interface ReplicaSetScaleDialogProps extends Partial<DialogProps> {
 }
@@ -27,6 +28,7 @@ export interface ReplicaSetScaleDialogProps extends Partial<DialogProps> {
 interface Dependencies {
   replicaSetApi: ReplicaSetApi;
   state: IObservableValue<ReplicaSet | undefined>;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -82,7 +84,7 @@ class NonInjectedReplicaSetScaleDialog extends Component<ReplicaSetScaleDialogPr
       }
       close();
     } catch (err) {
-      Notifications.checkedError(err, "Unknown error occured while scaling ReplicaSet");
+      this.props.showCheckedErrorNotification(err, "Unknown error occured while scaling ReplicaSet");
     }
   };
 
@@ -178,5 +180,6 @@ export const ReplicaSetScaleDialog = withInjectables<Dependencies, ReplicaSetSca
     ...props,
     replicaSetApi: di.inject(replicaSetApiInjectable),
     state: di.inject(replicaSetScaleDialogStateInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

@@ -29,7 +29,7 @@ interface Dependencies {
   openAddNamespaceDialog: () => void;
 }
 
-export const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog }: Dependencies) => (
+const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog }: Dependencies) => (
   <TabLayout>
     <KubeObjectListLayout
       isConfigurable

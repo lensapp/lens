@@ -9,7 +9,6 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { podStore } from "./legacy-store";
 import type { Pod } from "../../../common/k8s-api/endpoints";
 import { autoBind, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
 import { LineProgress } from "../line-progress";
@@ -18,7 +17,11 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Spinner } from "../spinner";
 import { DrawerTitle } from "../drawer";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { showDetails } from "../kube-detail-params";
+import type { PodStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import podStoreInjectable from "./store.injectable";
+import type { ShowDetails } from "../kube-detail-params/show-details.injectable";
+import showDetailsInjectable from "../kube-detail-params/show-details.injectable";
 
 enum sortBy {
   name = "name",
@@ -35,15 +38,20 @@ export interface PodDetailsListProps {
   maxMemory?: number;
 }
 
+interface Dependencies {
+  podStore: PodStore;
+  showDetails: ShowDetails;
+}
+
 @observer
-export class PodDetailsList extends React.Component<PodDetailsListProps> {
-  constructor(props: PodDetailsListProps) {
+class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & Dependencies> {
+  constructor(props: PodDetailsListProps & Dependencies) {
     super(props);
     autoBind(this);
   }
 
   private metricsWatcher = interval(120, () => {
-    podStore.loadKubeMetrics(this.props.owner.getNs());
+    this.props.podStore.loadKubeMetrics(this.props.owner.getNs());
   });
 
   componentDidMount() {
@@ -107,7 +115,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
   }
 
   getTableRow(uid: string) {
-    const { pods } = this.props;
+    const { pods, podStore, showDetails } = this.props;
     const pod = pods.find(pod => pod.getId() == uid);
 
     if (!pod) {
@@ -138,7 +146,7 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
   }
 
   render() {
-    const { pods } = this.props;
+    const { pods, podStore } = this.props;
 
     if (!podStore.isLoaded) {
       return (
@@ -197,3 +205,11 @@ export class PodDetailsList extends React.Component<PodDetailsListProps> {
     );
   }
 }
+
+export const PodDetailsList = withInjectables<Dependencies, PodDetailsListProps>(NonInjectedPodDetailsList, {
+  getProps: (di, props) => ({
+    ...props,
+    podStore: di.inject(podStoreInjectable),
+    showDetails: di.inject(showDetailsInjectable),
+  }),
+});

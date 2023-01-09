@@ -3,13 +3,26 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { render } from "@testing-library/react";
 import React from "react";
 import type { CephfsSource } from "../../../../../../../common/k8s-api/endpoints";
 import { Pod } from "../../../../../../../common/k8s-api/endpoints";
+import { getDiForUnitTesting } from "../../../../../../getDiForUnitTesting";
+import storesAndApisCanBeCreatedInjectable from "../../../../../../stores-apis-can-be-created.injectable";
+import type { DiRender } from "../../../../../test-utils/renderFor";
+import { renderFor } from "../../../../../test-utils/renderFor";
 import { CephFs } from "../ceph-fs";
 
 describe("<CephFs />", () => {
+  let render: DiRender;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    render = renderFor(di);
+
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+  });
+
   it("should render 'false' for Readonly when not provided", () => {
     const cephfsName = "my-ceph";
     const cephfsVolume: CephfsSource = {

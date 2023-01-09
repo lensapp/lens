@@ -3863,20 +3863,6 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                 class="value"
               />
             </div>
-            <div
-              class="DrawerItem"
-            >
-              <span
-                class="name"
-              >
-                Id
-              </span>
-              <span
-                class="value"
-              >
-                some-entity-id
-              </span>
-            </div>
           </div>
         </div>
         <div
@@ -6588,20 +6574,6 @@ exports[`opening catalog entity details panel when navigated to the catalog when
               <span
                 class="value"
               />
-            </div>
-            <div
-              class="DrawerItem"
-            >
-              <span
-                class="name"
-              >
-                Id
-              </span>
-              <span
-                class="value"
-              >
-                some-weblink-id
-              </span>
             </div>
           </div>
         </div>

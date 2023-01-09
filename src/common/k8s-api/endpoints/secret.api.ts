@@ -7,7 +7,7 @@ import type { KubeObjectMetadata, KubeObjectScope, NamespaceScopedMetadata } fro
 import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
 import { autoBind } from "../../utils";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
 export enum SecretType {
@@ -72,8 +72,8 @@ export class Secret extends KubeObject<
 }
 
 export class SecretApi extends KubeApi<Secret, SecretData> {
-  constructor(options: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, options: DerivedKubeApiOptions = {}) {
+    super(deps, {
       ...options,
       objectConstructor: Secret,
     });

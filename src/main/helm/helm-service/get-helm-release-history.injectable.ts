@@ -4,25 +4,25 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { getHistory } from "../helm-release-manager";
 import loggerInjectable from "../../../common/logger.injectable";
+import type { GetHelmReleaseHistoryData } from "../get-helm-release-history.injectable";
+import getHelmReleaseHistoryInjectable from "../get-helm-release-history.injectable";
 
-const getHelmReleaseHistoryInjectable = getInjectable({
-  id: "get-helm-release-history",
+const getClusterHelmReleaseHistoryInjectable = getInjectable({
+  id: "get-cluster-helm-release-history",
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
+    const getHelmReleaseHistory = di.inject(getHelmReleaseHistoryInjectable);
 
-    return async (cluster: Cluster, releaseName: string, namespace: string) => {
+    return async (cluster: Cluster, data: GetHelmReleaseHistoryData) => {
       const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
 
-      logger.debug("Fetch release history");
+      logger.debug(`[CLUSTER]: Fetch release history for clusterId=${cluster.id}`, data);
 
-      return getHistory(releaseName, namespace, proxyKubeconfig);
+      return getHelmReleaseHistory(proxyKubeconfig, data);
     };
   },
-
-  causesSideEffects: true,
 });
 
-export default getHelmReleaseHistoryInjectable;
+export default getClusterHelmReleaseHistoryInjectable;

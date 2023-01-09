@@ -5,7 +5,7 @@
 
 import type { NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
 export enum LimitType {
@@ -62,8 +62,8 @@ export class LimitRange extends KubeObject<
 }
 
 export class LimitRangeApi extends KubeApi<LimitRange> {
-  constructor(opts?: DerivedKubeApiOptions) {
-    super({
+  constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
+    super(deps, {
       objectConstructor: LimitRange,
       ...opts ?? {},
     });

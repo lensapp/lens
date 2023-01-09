@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { JsonObject } from "type-fest";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { installChart } from "../helm-release-manager";
+import installHelmChartInjectable from "../install-helm-chart.injectable";
 
 export interface InstallChartArgs {
   chart: string;
@@ -15,16 +15,21 @@ export interface InstallChartArgs {
   version: string;
 }
 
-const installHelmChartInjectable = getInjectable({
-  id: "install-helm-chart",
+const installClusterHelmChartInjectable = getInjectable({
+  id: "install-cluster-helm-chart",
 
-  instantiate: () => async (cluster: Cluster, data: InstallChartArgs) => {
-    const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
+  instantiate: (di) => {
+    const installHelmChart = di.inject(installHelmChartInjectable);
 
-    return installChart(data.chart, data.values, data.name, data.namespace, data.version, proxyKubeconfig);
+    return async (cluster: Cluster, data: InstallChartArgs) => {
+      const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
+
+      return installHelmChart({
+        ...data,
+        kubeconfigPath: proxyKubeconfig,
+      });
+    };
   },
-
-  causesSideEffects: true,
 });
 
-export default installHelmChartInjectable;
+export default installClusterHelmChartInjectable;

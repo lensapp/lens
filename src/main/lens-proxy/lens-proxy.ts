@@ -19,14 +19,14 @@ import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injecta
 import type { Logger } from "../../common/logger";
 import type { SelfSignedCert } from "selfsigned";
 
-type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
-
+export type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
+export type LensProxyApiRequest = (args: ProxyApiRequestArgs) => void | Promise<void>;
 
 interface Dependencies {
   getClusterForRequest: GetClusterForRequest;
-  shellApiRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
-  kubeApiUpgradeRequest: (args: ProxyApiRequestArgs) => void | Promise<void>;
+  shellApiRequest: LensProxyApiRequest;
+  kubeApiUpgradeRequest: LensProxyApiRequest;
   emitAppEvent: EmitAppEvent;
   readonly router: Router;
   readonly proxy: httpProxy;

@@ -7,11 +7,14 @@ import autoRegistrationEmitterInjectable from "../../../common/k8s-api/api-manag
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import { CustomResourceStore } from "../../../common/k8s-api/api-manager/resource.store";
 import type { CustomResourceDefinition } from "../../../common/k8s-api/endpoints";
+import type { KubeApiDependencies } from "../../../common/k8s-api/kube-api";
 import { KubeApi } from "../../../common/k8s-api/kube-api";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { beforeClusterFrameStartsSecondInjectionToken } from "../tokens";
 import type { KubeObjectStoreDependencies } from "../../../common/k8s-api/kube-object.store";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
+import maybeKubeApiInjectable from "../../../common/k8s-api/maybe-kube-api.injectable";
 
 const setupAutoRegistrationInjectable = getInjectable({
   id: "setup-auto-registration",
@@ -21,8 +24,13 @@ const setupAutoRegistrationInjectable = getInjectable({
       const autoRegistrationEmitter = di.inject(autoRegistrationEmitterInjectable);
       const beforeApiManagerInitializationCrds: CustomResourceDefinition[] = [];
       const beforeApiManagerInitializationApis: KubeApi[] = [];
-      const deps: KubeObjectStoreDependencies = {
+      const kubeApiDependencies: KubeApiDependencies = {
+        logger: di.inject(loggerInjectable),
+        maybeKubeApi: di.inject(maybeKubeApiInjectable),
+      };
+      const kubeObjectStoreDependencies: KubeObjectStoreDependencies = {
         context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+        logger: di.inject(loggerInjectable),
       };
       let initialized = false;
 
@@ -40,7 +48,7 @@ const setupAutoRegistrationInjectable = getInjectable({
             return rawApi;
           }
 
-          const api = new KubeApi({ objectConstructor });
+          const api = new KubeApi(kubeApiDependencies, { objectConstructor });
 
           apiManager.registerApi(api);
 
@@ -48,7 +56,7 @@ const setupAutoRegistrationInjectable = getInjectable({
         })();
 
         if (!apiManager.getStore(api)) {
-          apiManager.registerStore(new CustomResourceStore(deps, api));
+          apiManager.registerStore(new CustomResourceStore(kubeObjectStoreDependencies, api));
         }
       };
       const autoInitKubeApi = (api: KubeApi) => {

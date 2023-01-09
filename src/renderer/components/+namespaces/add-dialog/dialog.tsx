@@ -15,13 +15,14 @@ import { Wizard, WizardStep } from "../../wizard";
 import type { Namespace } from "../../../../common/k8s-api/endpoints";
 import { Input } from "../../input";
 import { systemName } from "../../input/input_validators";
-import { Notifications } from "../../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "../store.injectable";
 import addNamespaceDialogStateInjectable
   from "./state.injectable";
 import type { NamespaceStore } from "../store";
 import { autoBind } from "../../../utils";
+import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 
 export interface AddNamespaceDialogProps extends DialogProps {
   onSuccess?(ns: Namespace): void;
@@ -31,6 +32,7 @@ export interface AddNamespaceDialogProps extends DialogProps {
 interface Dependencies {
   namespaceStore: NamespaceStore;
   state: IObservableValue<boolean>;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -63,7 +65,7 @@ class NonInjectedAddNamespaceDialog extends React.Component<AddNamespaceDialogPr
       onSuccess?.(created);
       this.close();
     } catch (err) {
-      Notifications.checkedError(err, "Unknown error occured while creating the namespace");
+      this.props.showCheckedErrorNotification(err, "Unknown error occured while creating the namespace");
       onError?.(err);
     }
   }
@@ -112,5 +114,6 @@ export const AddNamespaceDialog = withInjectables<Dependencies, AddNamespaceDial
     ...props,
     namespaceStore: di.inject(namespaceStoreInjectable),
     state: di.inject(addNamespaceDialogStateInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

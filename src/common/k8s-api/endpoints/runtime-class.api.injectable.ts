@@ -7,13 +7,18 @@ import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { RuntimeClassApi } from "./runtime-class.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
+import loggerInjectable from "../../logger.injectable";
+import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const runtimeClassApiInjectable = getInjectable({
   id: "runtime-class-api",
   instantiate: (di) => {
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "RuntimeClassApi is only available in certain environments");
 
-    return new RuntimeClassApi();
+    return new RuntimeClassApi({
+      logger: di.inject(loggerInjectable),
+      maybeKubeApi: di.inject(maybeKubeApiInjectable),
+    });
   },
 
   injectionToken: kubeApiInjectionToken,

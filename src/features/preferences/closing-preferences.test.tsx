@@ -13,12 +13,12 @@ import { computed, runInAction } from "mobx";
 import React from "react";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
 import observableHistoryInjectable from "../../renderer/navigation/observable-history.injectable";
-import { searchParamsOptions } from "../../renderer/navigation";
 import { createMemoryHistory } from "history";
 import { createObservableHistory } from "mobx-observable-history";
 import navigateToFrontPageInjectable from "../../common/front-end-routing/navigate-to-front-page.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import { preferenceItemInjectionToken } from "./renderer/preference-items/preference-item-injection-token";
+import { searchParamsOptions } from "../../renderer/navigation/search-params";
 
 describe("preferences - closing-preferences", () => {
   let builder: ApplicationBuilder;

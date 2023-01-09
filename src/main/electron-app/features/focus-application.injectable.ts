@@ -15,8 +15,6 @@ const focusApplicationInjectable = getInjectable({
       electronApp.focus({ steal: true });
     };
   },
-
-  causesSideEffects: true,
 });
 
 export default focusApplicationInjectable;

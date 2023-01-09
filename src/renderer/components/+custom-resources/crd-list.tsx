@@ -11,12 +11,11 @@ import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { iter, stopPropagation } from "../../utils";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { customResourceDefinitionStore } from "./legacy-store";
 import { Select } from "../select";
 import { Icon } from "../icon";
 import { KubeObjectAge } from "../kube-object/age";
 import { TabLayout } from "../layout/tab-layout-2";
-import type { PageParam } from "../../navigation";
+import type { PageParam } from "../../navigation/page-param";
 import type { CustomResourceDefinitionStore } from "./definition.store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import crdGroupsUrlParamInjectable from "./crd-groups-url-param.injectable";
@@ -87,7 +86,7 @@ class NonInjectedCustomResourceDefinitions extends React.Component<Dependencies>
           isConfigurable
           tableId="crd"
           className="CrdList"
-          store={customResourceDefinitionStore}
+          store={this.props.customResourceDefinitionStore}
           // Don't subscribe the `customResourceDefinitionStore` because <Sidebar> already has and is always mounted
           subscribeStores={false}
           items={this.items}

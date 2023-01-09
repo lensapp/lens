@@ -4,13 +4,13 @@
  */
 
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
 export class SelfSubjectRulesReviewApi extends KubeApi<SelfSubjectRulesReview> {
-  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
-    super({
-      ...opts,
+  constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
+    super(deps, {
+      ...opts ?? {},
       objectConstructor: SelfSubjectRulesReview,
     });
   }

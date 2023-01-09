@@ -23,7 +23,7 @@ import type { EventStore } from "../+events/store";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
 import nodeStoreInjectable from "../+nodes/store.injectable";
-import type { PageParam } from "../../navigation";
+import type { PageParam } from "../../navigation/page-param";
 import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details.injectable";
 import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
 import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";

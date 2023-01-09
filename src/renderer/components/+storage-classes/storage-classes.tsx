@@ -8,10 +8,12 @@ import "./storage-classes.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { storageClassStore } from "./legacy-store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
+import type { StorageClassStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import storageClassStoreInjectable from "./store.injectable";
 
 enum columnId {
   name = "name",
@@ -21,8 +23,12 @@ enum columnId {
   reclaimPolicy = "reclaim",
 }
 
+interface Dependencies {
+  storageClassStore: StorageClassStore;
+}
+
 @observer
-export class StorageClasses extends React.Component {
+class NonInjectedStorageClasses extends React.Component<Dependencies> {
   render() {
     return (
       <SiblingsInTabLayout>
@@ -30,7 +36,7 @@ export class StorageClasses extends React.Component {
           isConfigurable
           tableId="storage_classes"
           className="StorageClasses"
-          store={storageClassStore}
+          store={this.props.storageClassStore}
           sortingCallbacks={{
             [columnId.name]: storageClass => storageClass.getName(),
             [columnId.age]: storageClass => -storageClass.getCreationTimestamp(),
@@ -63,3 +69,10 @@ export class StorageClasses extends React.Component {
     );
   }
 }
+
+export const StorageClasses = withInjectables<Dependencies>(NonInjectedStorageClasses, {
+  getProps: (di, props) => ({
+    ...props,
+    storageClassStore: di.inject(storageClassStoreInjectable),
+  }),
+});

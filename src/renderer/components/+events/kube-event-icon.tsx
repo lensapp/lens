@@ -8,10 +8,12 @@ import "./kube-event-icon.scss";
 import React from "react";
 import { Icon } from "../icon";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { eventStore } from "./legacy-store";
 import { cssNames } from "../../utils";
 import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
 import { KubeObjectAge } from "../kube-object/age";
+import type { EventStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import eventStoreInjectable from "./store.injectable";
 
 export interface KubeEventIconProps {
   object: KubeObject;
@@ -19,22 +21,23 @@ export interface KubeEventIconProps {
   filterEvents?: (events: KubeEvent[]) => KubeEvent[];
 }
 
+interface Dependencies {
+  eventStore: EventStore;
+}
 
-const defaultProps: Partial<KubeEventIconProps> = {
-  showWarningsOnly: true,
-};
-
-export class KubeEventIcon extends React.Component<KubeEventIconProps> {
-  static defaultProps = defaultProps as object;
+class NonInjectedKubeEventIcon extends React.Component<KubeEventIconProps & Dependencies> {
+  get showWarningsOnly() {
+    return this.props.showWarningsOnly ?? true;
+  }
 
   render() {
-    const { object, showWarningsOnly, filterEvents } = this.props;
+    const { object, filterEvents, eventStore } = this.props;
     const events = eventStore.getEventsByObject(object);
     let warnings = events.filter(evt => evt.isWarning());
 
     if (filterEvents) warnings = filterEvents(warnings);
 
-    if (!events.length || (showWarningsOnly && !warnings.length)) {
+    if (!events.length || (this.showWarningsOnly && !warnings.length)) {
       return null;
     }
     const event = [...warnings, ...events][0]; // get latest event
@@ -58,3 +61,10 @@ export class KubeEventIcon extends React.Component<KubeEventIconProps> {
     );
   }
 }
+
+export const KubeEventIcon = withInjectables<Dependencies, KubeEventIconProps>(NonInjectedKubeEventIcon, {
+  getProps: (di, props) => ({
+    ...props,
+    eventStore: di.inject(eventStoreInjectable),
+  }),
+});

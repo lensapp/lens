@@ -17,7 +17,6 @@ import { routeSpecificComponentInjectionToken } from "../../../../renderer/route
 import { KubeObjectStatusIcon } from "../../../../renderer/components/kube-object-status-icon/kube-object-status-icon";
 import { KubeObject } from "../../../../common/k8s-api/kube-object";
 import { KubeObjectStatusLevel } from "../../../../common/k8s-api/kube-object-status";
-import extensionShouldBeEnabledForClusterFrameInjectable from "../../../../renderer/extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 
 describe("disable kube object statuses when cluster is not relevant", () => {
   let builder: ApplicationBuilder;
@@ -32,8 +31,6 @@ describe("disable kube object statuses when cluster is not relevant", () => {
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeWindowStart((windowDi) => {
-      windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
-
       runInAction(() => {
         windowDi.register(testRouteInjectable, testRouteComponentInjectable);
       });

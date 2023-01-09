@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
-import { Console } from "console";
 import type { Cluster } from "../../common/cluster/cluster";
 import { Kubectl } from "../kubectl/kubectl";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
@@ -24,8 +23,6 @@ import pathExistsSyncInjectable from "../../common/fs/path-exists-sync.injectabl
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonSyncInjectable from "../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
-
-console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("create clusters", () => {
   let cluster: Cluster;

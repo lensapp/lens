@@ -5,7 +5,7 @@
 
 import type { LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
 export interface IPolicyIpBlock {
@@ -124,8 +124,8 @@ export class NetworkPolicy extends KubeObject<
 }
 
 export class NetworkPolicyApi extends KubeApi<NetworkPolicy> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       objectConstructor: NetworkPolicy,
       ...opts,
     });

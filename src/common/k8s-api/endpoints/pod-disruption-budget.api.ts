@@ -5,7 +5,7 @@
 
 import type { LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
 export interface PodDisruptionBudgetSpec {
@@ -52,8 +52,8 @@ export class PodDisruptionBudget extends KubeObject<
 }
 
 export class PodDisruptionBudgetApi extends KubeApi<PodDisruptionBudget> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       objectConstructor: PodDisruptionBudget,
       ...opts,
     });

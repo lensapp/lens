@@ -7,7 +7,7 @@ import { RenderDelay } from "../render-delay";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import { advanceFakeTime, useFakeTime } from "../../../../common/test-utils/use-fake-time";
+import { advanceFakeTime, testUsingFakeTime } from "../../../../common/test-utils/use-fake-time";
 import cancelIdleCallbackInjectable from "../cancel-idle-callback.injectable";
 import requestIdleCallbackInjectable from "../request-idle-callback.injectable";
 import type { RenderResult } from "@testing-library/react";
@@ -21,7 +21,7 @@ describe("<RenderDelay/>", () => {
 
     render = renderFor(di);
 
-    useFakeTime("2020-01-17 12:18:19");
+    testUsingFakeTime("2020-01-17 12:18:19");
 
     di.override(cancelIdleCallbackInjectable, () => clearTimeout);
     di.override(requestIdleCallbackInjectable, () => (callback, opts) => setTimeout(callback, opts.timeout) as any);

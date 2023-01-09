@@ -4,6 +4,115 @@ exports[`reactively hide kube object detail item renders 1`] = `
 <body>
   <div>
     <div
+      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
+    >
+      <div
+        class="drawer-wrapper flex column"
+      >
+        <div
+          class="drawer-title flex align-center"
+        >
+          <div
+            class="drawer-title-text flex gaps align-center"
+          >
+            some-kind: some-name
+            <i
+              class="Icon material interactive focusable"
+              tabindex="0"
+            >
+              <span
+                class="icon"
+                data-icon-name="content_copy"
+              >
+                content_copy
+              </span>
+            </i>
+            <div>
+              Copy
+            </div>
+          </div>
+          <ul
+            class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+            id="menu-actions-for-kube-object-menu-for-some-uid"
+          />
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="close"
+            >
+              close
+            </span>
+          </i>
+          <div>
+            Close
+          </div>
+        </div>
+        <div
+          class="drawer-content flex column box grow"
+        >
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Created
+            </span>
+            <span
+              class="value"
+            >
+              &lt;unknown&gt;
+               ago 
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Name
+            </span>
+            <span
+              class="value"
+            >
+              some-name
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Namespace
+            </span>
+            <span
+              class="value"
+            >
+              some-namespace
+            </span>
+          </div>
+          <div>
+            <div
+              class="DrawerTitle flex gaps align-center title"
+            >
+              <span>
+                Events
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="ResizingAnchor horizontal leading"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -35,11 +144,12 @@ exports[`reactively hide kube object detail item renders 1`] = `
           >
             <div
               class="SidebarItem"
-              data-is-active-test="false"
+              data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="navItem"
+                aria-current="page"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -252,113 +362,130 @@ exports[`reactively hide kube object detail item renders 1`] = `
         class="contents"
       >
         <div
-          class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-          style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
+          class="TabLayout"
+          data-testid="tab-layout"
         >
           <div
-            class="drawer-wrapper flex column"
+            class="Tabs center scrollable"
           >
             <div
-              class="drawer-title flex align-center"
+              class="Tab flex gaps align-center active"
+              data-is-active-test="true"
+              data-testid="tab-link-for-overview"
+              role="tab"
+              tabindex="0"
             >
               <div
-                class="drawer-title-text flex gaps align-center"
+                class="label"
               >
-                some-kind: some-name
-                <i
-                  class="Icon material interactive focusable"
-                  tabindex="0"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="content_copy"
-                  >
-                    content_copy
-                  </span>
-                </i>
-                <div>
-                  Copy
-                </div>
-              </div>
-              <ul
-                class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
-                id="menu-actions-for-kube-object-menu-for-some-uid"
-              />
-              <i
-                class="Icon material interactive focusable"
-                tabindex="0"
-              >
-                <span
-                  class="icon"
-                  data-icon-name="close"
-                >
-                  close
-                </span>
-              </i>
-              <div>
-                Close
-              </div>
-            </div>
-            <div
-              class="drawer-content flex column box grow"
-            >
-              <div
-                class="DrawerItem"
-              >
-                <span
-                  class="name"
-                >
-                  Created
-                </span>
-                <span
-                  class="value"
-                >
-                  &lt;unknown&gt;
-                   ago 
-                </span>
-              </div>
-              <div
-                class="DrawerItem"
-              >
-                <span
-                  class="name"
-                >
-                  Name
-                </span>
-                <span
-                  class="value"
-                >
-                  some-name
-                </span>
-              </div>
-              <div
-                class="DrawerItem"
-              >
-                <span
-                  class="name"
-                >
-                  Namespace
-                </span>
-                <span
-                  class="value"
-                >
-                  some-namespace
-                </span>
-              </div>
-              <div>
-                <div
-                  class="DrawerTitle flex gaps align-center title"
-                >
-                  <span>
-                    Events
-                  </span>
-                </div>
+                Overview
               </div>
             </div>
           </div>
-          <div
-            class="ResizingAnchor horizontal leading"
-          />
+          <main
+            class="scrollable"
+          >
+            <div
+              class="WorkloadsOverview flex column gaps"
+              data-testid="page-for-workloads-overview"
+            >
+              <div
+                class="header flex gaps align-center"
+              >
+                <h5
+                  class="box grow"
+                >
+                  Overview
+                </h5>
+                <div
+                  class="NamespaceSelectFilterParent"
+                  data-testid="namespace-select-filter"
+                >
+                  <div
+                    class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
+                  >
+                    <span
+                      class="css-1f43avz-a11yText-A11yText"
+                      id="react-select-overview-namespace-select-filter-input-live-region"
+                    />
+                    <span
+                      aria-atomic="false"
+                      aria-live="polite"
+                      aria-relevant="additions text"
+                      class="css-1f43avz-a11yText-A11yText"
+                    />
+                    <div
+                      class="Select__control css-13cymwt-control"
+                    >
+                      <div
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
+                      >
+                        <div
+                          class="Select__placeholder css-1jqq78o-placeholder"
+                          id="react-select-overview-namespace-select-filter-input-placeholder"
+                        >
+                          All namespaces
+                        </div>
+                        <div
+                          class="Select__input-container css-qbdosj-Input"
+                          data-value=""
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            aria-describedby="react-select-overview-namespace-select-filter-input-placeholder"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            autocapitalize="none"
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="Select__input"
+                            id="overview-namespace-select-filter-input"
+                            role="combobox"
+                            spellcheck="false"
+                            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                            tabindex="0"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                      >
+                        <span
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
+                        />
+                        <div
+                          aria-hidden="true"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="css-tj5bde-Svg"
+                            focusable="false"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            width="20"
+                          >
+                            <path
+                              d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="OverviewStatuses"
+              >
+                <div
+                  class="workloads"
+                />
+              </div>
+            </div>
+          </main>
         </div>
       </div>
       <div
@@ -498,6 +625,120 @@ exports[`reactively hide kube object detail item when the item is shown renders 
 <body>
   <div>
     <div
+      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
+    >
+      <div
+        class="drawer-wrapper flex column"
+      >
+        <div
+          class="drawer-title flex align-center"
+        >
+          <div
+            class="drawer-title-text flex gaps align-center"
+          >
+            some-kind: some-name
+            <i
+              class="Icon material interactive focusable"
+              tabindex="0"
+            >
+              <span
+                class="icon"
+                data-icon-name="content_copy"
+              >
+                content_copy
+              </span>
+            </i>
+            <div>
+              Copy
+            </div>
+          </div>
+          <ul
+            class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+            id="menu-actions-for-kube-object-menu-for-some-uid"
+          />
+          <i
+            class="Icon material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="close"
+            >
+              close
+            </span>
+          </i>
+          <div>
+            Close
+          </div>
+        </div>
+        <div
+          class="drawer-content flex column box grow"
+        >
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Created
+            </span>
+            <span
+              class="value"
+            >
+              &lt;unknown&gt;
+               ago 
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Name
+            </span>
+            <span
+              class="value"
+            >
+              some-name
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Namespace
+            </span>
+            <span
+              class="value"
+            >
+              some-namespace
+            </span>
+          </div>
+          <div
+            data-testid="some-kube-object-detail-item"
+          >
+            Some detail
+          </div>
+          <div>
+            <div
+              class="DrawerTitle flex gaps align-center title"
+            >
+              <span>
+                Events
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="ResizingAnchor horizontal leading"
+      />
+    </div>
+    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -529,11 +770,12 @@ exports[`reactively hide kube object detail item when the item is shown renders 
           >
             <div
               class="SidebarItem"
-              data-is-active-test="false"
+              data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
               <a
-                class="navItem"
+                aria-current="page"
+                class="navItem active"
                 data-testid="sidebar-item-link-for-workloads"
                 href="/"
               >
@@ -746,118 +988,130 @@ exports[`reactively hide kube object detail item when the item is shown renders 
         class="contents"
       >
         <div
-          class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-          style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
+          class="TabLayout"
+          data-testid="tab-layout"
         >
           <div
-            class="drawer-wrapper flex column"
+            class="Tabs center scrollable"
           >
             <div
-              class="drawer-title flex align-center"
+              class="Tab flex gaps align-center active"
+              data-is-active-test="true"
+              data-testid="tab-link-for-overview"
+              role="tab"
+              tabindex="0"
             >
               <div
-                class="drawer-title-text flex gaps align-center"
+                class="label"
               >
-                some-kind: some-name
-                <i
-                  class="Icon material interactive focusable"
-                  tabindex="0"
-                >
-                  <span
-                    class="icon"
-                    data-icon-name="content_copy"
-                  >
-                    content_copy
-                  </span>
-                </i>
-                <div>
-                  Copy
-                </div>
-              </div>
-              <ul
-                class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
-                id="menu-actions-for-kube-object-menu-for-some-uid"
-              />
-              <i
-                class="Icon material interactive focusable"
-                tabindex="0"
-              >
-                <span
-                  class="icon"
-                  data-icon-name="close"
-                >
-                  close
-                </span>
-              </i>
-              <div>
-                Close
-              </div>
-            </div>
-            <div
-              class="drawer-content flex column box grow"
-            >
-              <div
-                class="DrawerItem"
-              >
-                <span
-                  class="name"
-                >
-                  Created
-                </span>
-                <span
-                  class="value"
-                >
-                  &lt;unknown&gt;
-                   ago 
-                </span>
-              </div>
-              <div
-                class="DrawerItem"
-              >
-                <span
-                  class="name"
-                >
-                  Name
-                </span>
-                <span
-                  class="value"
-                >
-                  some-name
-                </span>
-              </div>
-              <div
-                class="DrawerItem"
-              >
-                <span
-                  class="name"
-                >
-                  Namespace
-                </span>
-                <span
-                  class="value"
-                >
-                  some-namespace
-                </span>
-              </div>
-              <div
-                data-testid="some-kube-object-detail-item"
-              >
-                Some detail
-              </div>
-              <div>
-                <div
-                  class="DrawerTitle flex gaps align-center title"
-                >
-                  <span>
-                    Events
-                  </span>
-                </div>
+                Overview
               </div>
             </div>
           </div>
-          <div
-            class="ResizingAnchor horizontal leading"
-          />
+          <main
+            class="scrollable"
+          >
+            <div
+              class="WorkloadsOverview flex column gaps"
+              data-testid="page-for-workloads-overview"
+            >
+              <div
+                class="header flex gaps align-center"
+              >
+                <h5
+                  class="box grow"
+                >
+                  Overview
+                </h5>
+                <div
+                  class="NamespaceSelectFilterParent"
+                  data-testid="namespace-select-filter"
+                >
+                  <div
+                    class="Select theme-dark NamespaceSelect NamespaceSelectFilter css-b62m3t-container"
+                  >
+                    <span
+                      class="css-1f43avz-a11yText-A11yText"
+                      id="react-select-overview-namespace-select-filter-input-live-region"
+                    />
+                    <span
+                      aria-atomic="false"
+                      aria-live="polite"
+                      aria-relevant="additions text"
+                      class="css-1f43avz-a11yText-A11yText"
+                    />
+                    <div
+                      class="Select__control css-13cymwt-control"
+                    >
+                      <div
+                        class="Select__value-container Select__value-container--is-multi css-1fdsijx-ValueContainer"
+                      >
+                        <div
+                          class="Select__placeholder css-1jqq78o-placeholder"
+                          id="react-select-overview-namespace-select-filter-input-placeholder"
+                        >
+                          All namespaces
+                        </div>
+                        <div
+                          class="Select__input-container css-qbdosj-Input"
+                          data-value=""
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            aria-describedby="react-select-overview-namespace-select-filter-input-placeholder"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            autocapitalize="none"
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="Select__input"
+                            id="overview-namespace-select-filter-input"
+                            role="combobox"
+                            spellcheck="false"
+                            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                            tabindex="0"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+                      >
+                        <span
+                          class="Select__indicator-separator css-1u9des2-indicatorSeparator"
+                        />
+                        <div
+                          aria-hidden="true"
+                          class="Select__indicator Select__dropdown-indicator css-1xc3v61-indicatorContainer"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="css-tj5bde-Svg"
+                            focusable="false"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            width="20"
+                          >
+                            <path
+                              d="M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="OverviewStatuses"
+              >
+                <div
+                  class="workloads"
+                />
+              </div>
+            </div>
+          </main>
         </div>
       </div>
       <div

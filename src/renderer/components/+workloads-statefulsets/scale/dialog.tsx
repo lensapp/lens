@@ -15,11 +15,12 @@ import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
 import { Icon } from "../../icon";
 import { Slider } from "../../slider";
-import { Notifications } from "../../notifications";
 import { cssNames } from "../../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import statefulSetApiInjectable from "../../../../common/k8s-api/endpoints/stateful-set.api.injectable";
 import statefulSetDialogStateInjectable from "./dialog-state.injectable";
+import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 
 export interface StatefulSetScaleDialogProps extends Partial<DialogProps> {
 }
@@ -27,6 +28,7 @@ export interface StatefulSetScaleDialogProps extends Partial<DialogProps> {
 interface Dependencies {
   statefulSetApi: StatefulSetApi;
   state: IObservableValue<StatefulSet | undefined>;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 @observer
@@ -82,7 +84,7 @@ class NonInjectedStatefulSetScaleDialog extends Component<StatefulSetScaleDialog
       }
       close();
     } catch (error) {
-      Notifications.checkedError(error, "Unknown error occured while scaling StatefulSet");
+      this.props.showCheckedErrorNotification(error, "Unknown error occured while scaling StatefulSet");
     }
   };
 
@@ -178,5 +180,6 @@ export const StatefulSetScaleDialog = withInjectables<Dependencies, StatefulSetS
     ...props,
     statefulSetApi: di.inject(statefulSetApiInjectable),
     state: di.inject(statefulSetDialogStateInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

@@ -7,13 +7,18 @@ import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { PodSecurityPolicyApi } from "./pod-security-policy.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
+import loggerInjectable from "../../logger.injectable";
+import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const podSecurityPolicyApiInjectable = getInjectable({
   id: "pod-security-policy-api",
   instantiate: (di) => {
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "podSecurityPolicyApi is only available in certain environments");
 
-    return new PodSecurityPolicyApi();
+    return new PodSecurityPolicyApi({
+      logger: di.inject(loggerInjectable),
+      maybeKubeApi: di.inject(maybeKubeApiInjectable),
+    });
   },
 
   injectionToken: kubeApiInjectionToken,

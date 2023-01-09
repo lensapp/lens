@@ -10,19 +10,10 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
-import mockFs from "mock-fs";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
 import { computed } from "mobx";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
-import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
-
-jest.mock("electron", () => ({
-  ipcRenderer: {
-    on: jest.fn(),
-    invoke: jest.fn(),
-  },
-}));
 
 describe("<Select />", () => {
   let di: DiContainer;
@@ -32,16 +23,8 @@ describe("<Select />", () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
     render = renderFor(di);
 
-    mockFs();
-
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(rendererExtensionsInjectable, () => computed(() => [] as LensRendererExtension[]));
-
-    di.permitSideEffects(getConfigurationFileModelInjectable);
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it("should render the select", async () => {

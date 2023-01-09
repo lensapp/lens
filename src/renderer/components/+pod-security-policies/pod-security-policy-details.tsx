@@ -12,7 +12,9 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { PodSecurityPolicy } from "../../../common/k8s-api/endpoints";
 import { Badge } from "../badge";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface PodSecurityPolicyDetailsProps extends KubeObjectDetailsProps<PodSecurityPolicy> {
 }
@@ -25,8 +27,12 @@ interface RuleGroup {
   }[];
 }
 
+interface Dependencies {
+  logger: Logger;
+}
+
 @observer
-export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyDetailsProps> {
+class NonInjectedPodSecurityPolicyDetails extends React.Component<PodSecurityPolicyDetailsProps & Dependencies> {
   renderRuleGroup(title: React.ReactNode, group: RuleGroup | undefined) {
     if (!group) return null;
     const { rule, ranges } = group;
@@ -59,7 +65,7 @@ export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyD
     }
 
     if (!(psp instanceof PodSecurityPolicy)) {
-      logger.error("[PodSecurityPolicyDetails]: passed object that is not an instanceof PodSecurityPolicy", psp);
+      this.props.logger.error("[PodSecurityPolicyDetails]: passed object that is not an instanceof PodSecurityPolicy", psp);
 
       return null;
     }
@@ -225,3 +231,10 @@ export class PodSecurityPolicyDetails extends React.Component<PodSecurityPolicyD
     );
   }
 }
+
+export const PodSecurityPolicyDetails = withInjectables<Dependencies, PodSecurityPolicyDetailsProps>(NonInjectedPodSecurityPolicyDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+  }),
+});

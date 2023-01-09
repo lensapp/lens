@@ -3,8 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { asLegacyGlobalForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
-import loggerInjectable from "./logger.injectable";
 
 export interface Logger {
   info: (message: string, ...args: any) => void;
@@ -13,10 +11,3 @@ export interface Logger {
   warn: (message: string, ...args: any) => void;
   silly: (message: string, ...args: any) => void;
 }
-
-/**
- * @deprecated use `di.inject(loggerInjectable)` instead
- */
-const logger = asLegacyGlobalForExtensionApi(loggerInjectable);
-
-export default logger;

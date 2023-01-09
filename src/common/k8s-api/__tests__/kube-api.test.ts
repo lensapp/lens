@@ -4,9 +4,10 @@
  */
 import type { KubeApiWatchCallback } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { KubeJsonApi, KubeJsonApiData } from "../kube-json-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 import { PassThrough } from "stream";
-import { Deployment, DeploymentApi, NamespaceApi, Pod, PodApi } from "../endpoints";
+import type { DeploymentApi, NamespaceApi } from "../endpoints";
+import { Deployment, Pod, PodApi } from "../endpoints";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import type { Fetch } from "../../fetch/fetch.injectable";
 import fetchInjectable from "../../fetch/fetch.injectable";
@@ -26,6 +27,15 @@ import directoryForUserDataInjectable from "../../app-paths/directory-for-user-d
 import createClusterInjectable from "../../../main/create-cluster/create-cluster.injectable";
 import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
 import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
+import deploymentApiInjectable from "../endpoints/deployment.api.injectable";
+import podApiInjectable from "../endpoints/pod.api.injectable";
+import namespaceApiInjectable from "../endpoints/namespace.api.injectable";
+
+// NOTE: this is fine because we are testing something that only exported
+// eslint-disable-next-line no-restricted-imports
+import { PodsApi } from "../../../extensions/common-api/k8s-api";
 
 describe("createKubeApiForRemoteCluster", () => {
   let createKubeApiForRemoteCluster: CreateKubeApiForRemoteCluster;
@@ -78,7 +88,7 @@ describe("createKubeApiForRemoteCluster", () => {
         user: {
           token: "daa",
         },
-      }, Pod, PodApi);
+      }, Pod, PodsApi);
     });
 
     it("uses the constructor", () => {
@@ -131,17 +141,21 @@ describe("createKubeApiForRemoteCluster", () => {
 });
 
 describe("KubeApi", () => {
-  let request: KubeJsonApi;
   let fetchMock: AsyncFnMock<Fetch>;
+  let di: DiContainer;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
+    fetchMock = asyncFn();
+    di.override(fetchInjectable, () => fetchMock);
+
     const createCluster = di.inject(createClusterInjectable);
+    const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 
     di.override(hostedClusterInjectable, () => createCluster({
       contextName: "some-context-name",
@@ -151,15 +165,10 @@ describe("KubeApi", () => {
       clusterServerUrl: "https://localhost:8080",
     }));
 
-    fetchMock = asyncFn();
-    di.override(fetchInjectable, () => fetchMock);
-
-    const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
-
-    request = createKubeJsonApi({
+    di.override(apiKubeInjectable, () => createKubeJsonApi({
       serverAddress: `http://127.0.0.1:9999`,
       apiBase: "/api-kube",
-    });
+    }));
 
     const setupAutoRegistration = di.inject(setupAutoRegistrationInjectable);
 
@@ -170,9 +179,7 @@ describe("KubeApi", () => {
     let api: DeploymentApi;
 
     beforeEach(() => {
-      api = new DeploymentApi({
-        request,
-      });
+      api = di.inject(deploymentApiInjectable);
     });
 
     describe("when patching a resource without providing a strategy", () => {
@@ -337,9 +344,7 @@ describe("KubeApi", () => {
     let api: PodApi;
 
     beforeEach(() => {
-      api = new PodApi({
-        request,
-      });
+      api = di.inject(podApiInjectable);
     });
 
     describe("when deleting by just name", () => {
@@ -455,9 +460,7 @@ describe("KubeApi", () => {
     let api: NamespaceApi;
 
     beforeEach(() => {
-      api = new NamespaceApi({
-        request,
-      });
+      api = di.inject(namespaceApiInjectable);
     });
 
     describe("when deleting by just name", () => {
@@ -544,9 +547,7 @@ describe("KubeApi", () => {
     let stream: PassThrough;
 
     beforeEach(() => {
-      api = new PodApi({
-        request,
-      });
+      api = di.inject(podApiInjectable);
       stream = new PassThrough();
     });
 
@@ -873,9 +874,7 @@ describe("KubeApi", () => {
     let api: PodApi;
 
     beforeEach(() => {
-      api = new PodApi({
-        request,
-      });
+      api = di.inject(podApiInjectable);
     });
 
     describe("when creating a pod", () => {
@@ -988,9 +987,7 @@ describe("KubeApi", () => {
     let api: PodApi;
 
     beforeEach(() => {
-      api = new PodApi({
-        request,
-      });
+      api = di.inject(podApiInjectable);
     });
 
     describe("when updating a pod", () => {
@@ -1100,9 +1097,7 @@ describe("KubeApi", () => {
     let api: PodApi;
 
     beforeEach(() => {
-      api = new PodApi({
-        request,
-      });
+      api = di.inject(podApiInjectable);
     });
 
     describe("when listing pods with no descriptor", () => {

@@ -3,14 +3,26 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import { secretApi } from "../../../../../../common/k8s-api/endpoints";
+import type { SecretApi } from "../../../../../../common/k8s-api/endpoints";
+import secretApiInjectable from "../../../../../../common/k8s-api/endpoints/secret.api.injectable";
 import { DrawerItem } from "../../../../drawer";
-import type { VolumeVariantComponent } from "../variant-helpers";
+import type { PodVolumeVariantSpecificProps } from "../variant-helpers";
 import { LocalRef } from "../variant-helpers";
 
-export const StorageOs: VolumeVariantComponent<"storageos"> = (
-  ({ pod, variant: { volumeName, volumeNamespace, fsType = "ext4", readOnly = false, secretRef }}) => (
+interface Dependencies {
+  secretApi: SecretApi;
+}
+
+const NonInjectedStorageOs = (props: PodVolumeVariantSpecificProps<"storageos"> & Dependencies) => {
+  const {
+    pod,
+    variant: { volumeName, volumeNamespace, fsType = "ext4", readOnly = false, secretRef },
+    secretApi,
+  } = props;
+
+  return (
     <>
       <DrawerItem name="Volume Name">
         {volumeName}
@@ -35,5 +47,12 @@ export const StorageOs: VolumeVariantComponent<"storageos"> = (
         api={secretApi}
       />
     </>
-  )
-);
+  );
+};
+
+export const StorageOs = withInjectables<Dependencies, PodVolumeVariantSpecificProps<"storageos">>(NonInjectedStorageOs, {
+  getProps: (di, props) => ({
+    ...props,
+    secretApi: di.inject(secretApiInjectable),
+  }),
+});

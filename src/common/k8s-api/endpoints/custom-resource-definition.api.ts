@@ -8,7 +8,7 @@ import customResourcesRouteInjectable from "../../front-end-routing/routes/clust
 import { buildURL } from "../../utils/buildUrl";
 import type { BaseKubeObjectCondition, ClusterScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { JSONSchemaProps } from "./types/json-schema-props";
 
@@ -234,8 +234,8 @@ export class CustomResourceDefinition extends KubeObject<
 }
 
 export class CustomResourceDefinitionApi extends KubeApi<CustomResourceDefinition> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       objectConstructor: CustomResourceDefinition,
       checkPreferredVersion: true,
       ...opts,

@@ -3,39 +3,26 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { getValues } from "../helm-release-manager";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
+import type { GetHelmReleaseValuesData } from "../get-helm-release-values.injectable";
+import getHelmReleaseValuesInjectable from "../get-helm-release-values.injectable";
 
-interface GetReleaseValuesArgs {
-  cluster: Cluster;
-  namespace: string;
-  all: boolean;
-}
-
-const getHelmReleaseValuesInjectable = getInjectable({
-  id: "get-helm-release-values",
+const getClusterHelmReleaseValuesInjectable = getInjectable({
+  id: "get-cluster-helm-release-values",
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
+    const getHelmReleaseValues = di.inject(getHelmReleaseValuesInjectable);
 
-    return async (
-      releaseName: string,
-      { cluster, namespace, all }: GetReleaseValuesArgs,
-    ) => {
+    return async (cluster: Cluster, data: GetHelmReleaseValuesData) => {
       const pathToKubeconfig = await cluster.getProxyKubeconfigPath();
 
-      logger.debug("Fetch release values");
+      logger.debug(`[CLUSTER]: getting helm release values`, data);
 
-      return getValues(releaseName, {
-        namespace,
-        all,
-        kubeconfigPath: pathToKubeconfig,
-      });
+      return getHelmReleaseValues(pathToKubeconfig, data);
     };
   },
-
-  causesSideEffects: true,
 });
 
-export default getHelmReleaseValuesInjectable;
+export default getClusterHelmReleaseValuesInjectable;

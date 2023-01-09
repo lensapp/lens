@@ -11,6 +11,7 @@ import assert from "assert";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import clusterFrameContextForClusterScopedResourcesInjectable from "../../cluster-frame-context/for-cluster-scoped-resources.injectable";
 import clusterConfiguredAccessibleNamespacesInjectable from "../../cluster/accessible-namespaces.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 const namespaceStoreInjectable = getInjectable({
   id: "namespace-store",
@@ -25,6 +26,7 @@ const namespaceStoreInjectable = getInjectable({
       context: di.inject(clusterFrameContextForClusterScopedResourcesInjectable),
       storage: createStorage<string[] | undefined>("selected_namespaces", undefined),
       clusterConfiguredAccessibleNamespaces: di.inject(clusterConfiguredAccessibleNamespacesInjectable),
+      logger: di.inject(loggerInjectable),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

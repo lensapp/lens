@@ -7,17 +7,19 @@ import type { KubeObjectMenuProps } from "../kube-object-menu";
 import type { DaemonSet, DaemonSetApi } from "../../../common/k8s-api/endpoints";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { Notifications } from "../notifications";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import daemonSetApiInjectable from "../../../common/k8s-api/endpoints/daemon-set.api.injectable";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
+import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
+import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
 
 export interface DaemonSetMenuProps extends KubeObjectMenuProps<DaemonSet> {}
 
 interface Dependencies {
   daemonsetApi: DaemonSetApi;
   openConfirmDialog: OpenConfirmDialog;
+  showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 const NonInjectedDaemonSetMenu = ({
@@ -25,6 +27,7 @@ const NonInjectedDaemonSetMenu = ({
   object,
   toolbar,
   openConfirmDialog,
+  showCheckedErrorNotification,
 }: Dependencies & DaemonSetMenuProps) => (
   <>
     <MenuItem
@@ -37,7 +40,7 @@ const NonInjectedDaemonSetMenu = ({
               name: object.getName(),
             });
           } catch (err) {
-            Notifications.checkedError(err, "Unknown error occured while restarting daemonset");
+            showCheckedErrorNotification(err, "Unknown error occured while restarting daemonset");
           }
         },
         labelOk: "Restart",
@@ -65,5 +68,6 @@ export const DaemonSetMenu = withInjectables<Dependencies, DaemonSetMenuProps>(N
     ...props,
     daemonsetApi: di.inject(daemonSetApiInjectable),
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
+    showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
   }),
 });

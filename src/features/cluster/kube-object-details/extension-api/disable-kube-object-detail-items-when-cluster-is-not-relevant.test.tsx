@@ -8,16 +8,9 @@ import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import type { KubernetesCluster } from "../../../../common/catalog-entities";
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import { getInjectable } from "@ogre-tools/injectable";
-import { frontEndRouteInjectionToken } from "../../../../common/front-end-routing/front-end-route-injection-token";
-import { computed, runInAction } from "mobx";
 import React from "react";
-import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
-import { routeSpecificComponentInjectionToken } from "../../../../renderer/routes/route-specific-component-injection-token";
 import { KubeObject } from "../../../../common/k8s-api/kube-object";
-import extensionShouldBeEnabledForClusterFrameInjectable from "../../../../renderer/extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
-import { KubeObjectDetails } from "../../../../renderer/components/kube-object-details";
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import type { KubeApi } from "../../../../common/k8s-api/kube-api";
 import showDetailsInjectable from "../../../../renderer/components/kube-detail-params/show-details.injectable";
@@ -45,12 +38,6 @@ describe("disable kube object detail items when cluster is not relevant", () => 
 
       apiManager.registerApi(api);
       apiManager.registerStore(store);
-
-      windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
-
-      runInAction(() => {
-        windowDi.register(testRouteInjectable, testRouteComponentInjectable);
-      });
     });
 
     isEnabledForClusterMock = asyncFn();
@@ -81,12 +68,8 @@ describe("disable kube object detail items when cluster is not relevant", () => 
     rendered = await builder.render();
 
     const windowDi = builder.applicationWindow.only.di;
-
-    const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
     const showDetails = windowDi.inject(showDetailsInjectable);
-    const testRoute = windowDi.inject(testRouteInjectable);
 
-    navigateToRoute(testRoute);
     showDetails("/apis/some-api-version/namespaces/some-namespace/some-kind/some-name");
 
     builder.extensions.enable(testExtension);
@@ -135,30 +118,6 @@ describe("disable kube object detail items when cluster is not relevant", () => 
       expect(actual).toBeInTheDocument();
     });
   });
-});
-
-const testRouteInjectable = getInjectable({
-  id: "test-route",
-
-  instantiate: () => ({
-    path: "/test-route",
-    clusterFrame: true,
-    isEnabled: computed(() => true),
-  }),
-
-  injectionToken: frontEndRouteInjectionToken,
-});
-
-const testRouteComponentInjectable = getInjectable({
-  id: "test-route-component",
-
-  instantiate: (di) => ({
-    route: di.inject(testRouteInjectable),
-
-    Component: () => <KubeObjectDetails />,
-  }),
-
-  injectionToken: routeSpecificComponentInjectionToken,
 });
 
 const getKubeObjectStub = (kind: string, apiVersion: string) =>

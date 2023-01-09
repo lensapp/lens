@@ -5,7 +5,7 @@
 
 import type { NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
 export type IResourceQuotaValues = Partial<Record<string, string>> & {
@@ -65,8 +65,8 @@ export class ResourceQuota extends KubeObject<
 }
 
 export class ResourceQuotaApi extends KubeApi<ResourceQuota> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       objectConstructor: ResourceQuota,
       ...opts,
     });

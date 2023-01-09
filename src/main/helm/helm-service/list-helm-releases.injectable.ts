@@ -5,24 +5,23 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import loggerInjectable from "../../../common/logger.injectable";
-import { listReleases } from "../helm-release-manager";
+import listHelmReleasesInjectable from "../list-helm-releases.injectable";
 
-const listHelmReleasesInjectable = getInjectable({
-  id: "list-helm-releases",
+const listClusterHelmReleasesInjectable = getInjectable({
+  id: "list-cluster-helm-releases",
 
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
+    const listHelmReleases = di.inject(listHelmReleasesInjectable);
 
     return async (cluster: Cluster, namespace?: string) => {
       const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
 
-      logger.debug("list releases");
+      logger.debug(`[CLUSTER]: listing helm releases for clusterId=${cluster.id}`, { namespace });
 
-      return listReleases(proxyKubeconfig, namespace);
+      return listHelmReleases(proxyKubeconfig, namespace);
     };
   },
-
-  causesSideEffects: true,
 });
 
-export default listHelmReleasesInjectable;
+export default listClusterHelmReleasesInjectable;

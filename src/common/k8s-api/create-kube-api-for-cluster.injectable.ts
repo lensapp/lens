@@ -3,11 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import loggerInjectable from "../logger.injectable";
 import { apiKubePrefix } from "../vars";
 import isDevelopmentInjectable from "../vars/is-development.injectable";
 import apiBaseInjectable from "./api-base.injectable";
+import type { KubeApiConstructor } from "./create-kube-api-for-remote-cluster.injectable";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
-import type { KubeApiOptions } from "./kube-api";
 import { KubeApi } from "./kube-api";
 import type { KubeJsonApiDataFor, KubeObject, KubeObjectConstructor } from "./kube-object";
 
@@ -21,12 +22,12 @@ export interface CreateKubeApiForCluster {
   <Object extends KubeObject, Api extends KubeApi<Object>, Data extends KubeJsonApiDataFor<Object>>(
     cluster: CreateKubeApiForLocalClusterConfig,
     kubeClass: KubeObjectConstructor<Object, Data>,
-    apiClass: new (apiOpts: KubeApiOptions<Object>) => Api
+    apiClass: KubeApiConstructor<Object, Api>,
   ): Api;
   <Object extends KubeObject, Data extends KubeJsonApiDataFor<Object>>(
     cluster: CreateKubeApiForLocalClusterConfig,
     kubeClass: KubeObjectConstructor<Object, Data>,
-    apiClass?: new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object>
+    apiClass?: KubeApiConstructor<Object, KubeApi<Object>>,
   ): KubeApi<Object>;
 }
 
@@ -36,27 +37,42 @@ const createKubeApiForClusterInjectable = getInjectable({
     const apiBase = di.inject(apiBaseInjectable);
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
+    const logger = di.inject(loggerInjectable);
 
     return (
       cluster: CreateKubeApiForLocalClusterConfig,
       kubeClass: KubeObjectConstructor<KubeObject, KubeJsonApiDataFor<KubeObject>>,
-      apiClass = KubeApi,
-    ) => (
-      new apiClass({
-        objectConstructor: kubeClass,
-        request: createKubeJsonApi(
-          {
-            serverAddress: apiBase.config.serverAddress,
-            apiBase: apiKubePrefix,
-            debug: isDevelopment,
-          }, {
-            headers: {
-              "Host": `${cluster.metadata.uid}.lens.app:${new URL(apiBase.config.serverAddress).port}`,
-            },
+      apiClass?: KubeApiConstructor<KubeObject, KubeApi<KubeObject>>,
+    ) => {
+      const request = createKubeJsonApi(
+        {
+          serverAddress: apiBase.config.serverAddress,
+          apiBase: apiKubePrefix,
+          debug: isDevelopment,
+        }, {
+          headers: {
+            "Host": `${cluster.metadata.uid}.lens.app:${new URL(apiBase.config.serverAddress).port}`,
           },
-        ),
-      })
-    );
+        });
+
+      if (apiClass) {
+        return new apiClass({
+          objectConstructor: kubeClass,
+          request,
+        });
+      }
+
+      return new KubeApi(
+        {
+          logger,
+          maybeKubeApi: undefined,
+        },
+        {
+          objectConstructor: kubeClass,
+          request,
+        },
+      );
+    };
   },
 });
 

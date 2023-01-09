@@ -3,22 +3,25 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { PortForwardArgs } from "./port-forward";
+import type { PortForwardArgs, PortForwardDependencies } from "./port-forward";
 import { PortForward } from "./port-forward";
 import bundledKubectlInjectable from "../../../kubectl/bundled-kubectl.injectable";
+import getPortFromStreamInjectable from "../../../utils/get-port-from-stream.injectable";
+import loggerInjectable from "../../../../common/logger.injectable";
+
+export type CreatePortForward = (pathToKubeConfig: string, args: PortForwardArgs) => PortForward;
 
 const createPortForwardInjectable = getInjectable({
   id: "create-port-forward",
 
-  instantiate: (di) => {
-    const bundledKubectl = di.inject(bundledKubectlInjectable);
-
-    const dependencies = {
-      getKubectlBinPath: bundledKubectl.getPath,
+  instantiate: (di): CreatePortForward => {
+    const dependencies: PortForwardDependencies = {
+      getKubectlBinPath: di.inject(bundledKubectlInjectable).getPath,
+      getPortFromStream: di.inject(getPortFromStreamInjectable),
+      logger: di.inject(loggerInjectable),
     };
 
-    return (pathToKubeConfig: string, args: PortForwardArgs) =>
-      new PortForward(dependencies, pathToKubeConfig, args);
+    return (pathToKubeConfig, args) => new PortForward(dependencies, pathToKubeConfig, args);
   },
 });
 

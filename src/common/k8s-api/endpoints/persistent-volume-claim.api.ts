@@ -6,15 +6,15 @@
 import type { LabelSelector, NamespaceScopedMetadata, TypedLocalObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { Pod } from "./pod.api";
-import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { object } from "../../utils";
 import type { ResourceRequirements } from "./types/resource-requirements";
 
 export class PersistentVolumeClaimApi extends KubeApi<PersistentVolumeClaim> {
-  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
-    super({
-      ...opts,
+  constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
+    super(deps, {
+      ...opts ?? {},
       objectConstructor: PersistentVolumeClaim,
     });
   }

@@ -15,12 +15,13 @@ import { ServicePortComponent } from "./service-port-component";
 import type { EndpointsStore } from "../+network-endpoints/store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
 import type { PortForwardStore } from "../../port-forward";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import endpointsStoreInjectable from "../+network-endpoints/store.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface ServiceDetailsProps extends KubeObjectDetailsProps<Service> {
 }
@@ -29,6 +30,7 @@ interface Dependencies {
   subscribeStores: SubscribeStores;
   portForwardStore: PortForwardStore;
   endpointsStore: EndpointsStore;
+  logger: Logger;
 }
 
 @observer
@@ -59,7 +61,7 @@ class NonInjectedServiceDetails extends React.Component<ServiceDetailsProps & De
     }
 
     if (!(service instanceof Service)) {
-      logger.error("[ServiceDetails]: passed object that is not an instanceof Service", service);
+      this.props.logger.error("[ServiceDetails]: passed object that is not an instanceof Service", service);
 
       return null;
     }
@@ -155,5 +157,6 @@ export const ServiceDetails = withInjectables<Dependencies, ServiceDetailsProps>
     subscribeStores: di.inject(subscribeStoresInjectable),
     portForwardStore: di.inject(portForwardStoreInjectable),
     endpointsStore: di.inject(endpointsStoreInjectable),
+    logger: di.inject(loggerInjectable),
   }),
 });

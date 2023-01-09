@@ -7,13 +7,13 @@ import moment from "moment";
 import type { NamespaceScopedMetadata, ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
-import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { JobTemplateSpec } from "./types/job-template-spec";
 
 export class CronJobApi extends KubeApi<CronJob> {
-  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions) {
+    super(deps, {
       ...opts,
       objectConstructor: CronJob,
     });

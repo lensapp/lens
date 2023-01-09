@@ -9,7 +9,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
-import { AddRoleDialog } from "./add-dialog";
+import { AddRoleDialog } from "./add-dialog/view";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
 import type { RoleStore } from "./store";
@@ -18,6 +18,7 @@ import type { FilterByNamespace } from "../../+namespaces/namespace-select-filte
 import { withInjectables } from "@ogre-tools/injectable-react";
 import filterByNamespaceInjectable from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import roleStoreInjectable from "./store.injectable";
+import openAddRoleDialogInjectable from "./add-dialog/open.injectable";
 
 enum columnId {
   name = "name",
@@ -28,6 +29,7 @@ enum columnId {
 interface Dependencies {
   roleStore: RoleStore;
   filterByNamespace: FilterByNamespace;
+  openAddRoleDialog: () => void;
 }
 
 @observer
@@ -36,6 +38,7 @@ class NonInjectedRoles extends React.Component<Dependencies> {
     const {
       filterByNamespace,
       roleStore,
+      openAddRoleDialog,
     } = this.props;
 
     return (
@@ -73,7 +76,7 @@ class NonInjectedRoles extends React.Component<Dependencies> {
             <KubeObjectAge key="age" object={role} />,
           ]}
           addRemoveButtons={{
-            onAdd: () => AddRoleDialog.open(),
+            onAdd: () => openAddRoleDialog(),
             addTooltip: "Create new Role",
           }}
         />
@@ -88,5 +91,6 @@ export const Roles = withInjectables<Dependencies>(NonInjectedRoles, {
     ...props,
     filterByNamespace: di.inject(filterByNamespaceInjectable),
     roleStore: di.inject(roleStoreInjectable),
+    openAddRoleDialog: di.inject(openAddRoleDialogInjectable),
   }),
 });

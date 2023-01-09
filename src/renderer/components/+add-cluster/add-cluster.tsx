@@ -16,17 +16,19 @@ import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers"
 import { docsUrl } from "../../../common/vars";
 import { isDefined, iter } from "../../utils";
 import { Button } from "../button";
-import { Notifications } from "../notifications";
+import type { ShowNotification } from "../notifications";
 import { SettingLayout } from "../layout/setting-layout";
 import { MonacoEditor } from "../monaco-editor";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import getCustomKubeConfigDirectoryInjectable from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
+import getCustomKubeConfigFilePathInjectable from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import type { EmitAppEvent } from "../../../common/app-event-bus/emit-event.injectable";
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import type { GetDirnameOfPath } from "../../../common/path/get-dirname.injectable";
 import getDirnameOfPathInjectable from "../../../common/path/get-dirname.injectable";
+import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
+import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 
 interface Option {
   config: KubeConfig;
@@ -38,6 +40,8 @@ interface Dependencies {
   navigateToCatalog: NavigateToCatalog;
   getDirnameOfPath: GetDirnameOfPath;
   emitAppEvent: EmitAppEvent;
+  showSuccessNotification: ShowNotification;
+  showErrorNotification: ShowNotification;
 }
 
 function getContexts(config: KubeConfig): Map<string, Option> {
@@ -97,11 +101,11 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
       await fse.ensureDir(this.props.getDirnameOfPath(absPath));
       await fse.writeFile(absPath, this.customConfig.trim(), { encoding: "utf-8", mode: 0o600 });
 
-      Notifications.ok(`Successfully added ${this.kubeContexts.size} new cluster(s)`);
+      this.props.showSuccessNotification(`Successfully added ${this.kubeContexts.size} new cluster(s)`);
 
       return this.props.navigateToCatalog();
     } catch (error) {
-      Notifications.error(`Failed to add clusters: ${error}`);
+      this.props.showErrorNotification(`Failed to add clusters: ${error}`);
     }
   });
 
@@ -159,9 +163,11 @@ class NonInjectedAddCluster extends React.Component<Dependencies> {
 
 export const AddCluster = withInjectables<Dependencies>(NonInjectedAddCluster, {
   getProps: (di) => ({
-    getCustomKubeConfigDirectory: di.inject(getCustomKubeConfigDirectoryInjectable),
+    getCustomKubeConfigDirectory: di.inject(getCustomKubeConfigFilePathInjectable),
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
     getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
     emitAppEvent: di.inject(emitAppEventInjectable),
+    showSuccessNotification: di.inject(showSuccessNotificationInjectable),
+    showErrorNotification: di.inject(showErrorNotificationInjectable),
   }),
 });

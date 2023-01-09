@@ -9,10 +9,14 @@ import { observer } from "mobx-react";
 import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
-import { AddClusterRoleDialog } from "./add-dialog";
-import { clusterRoleStore } from "./legacy-store";
+import { AddClusterRoleDialog } from "./add-dialog/view";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
+import type { ClusterRoleStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import clusterRoleStoreInjectable from "./store.injectable";
+import type { OpenAddClusterRoleDialog } from "./add-dialog/open.injectable";
+import openAddClusterRoleDialogInjectable from "./add-dialog/open.injectable";
 
 enum columnId {
   name = "name",
@@ -20,9 +24,19 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  clusterRoleStore: ClusterRoleStore;
+  openAddClusterRoleDialog: OpenAddClusterRoleDialog;
+}
+
 @observer
-export class ClusterRoles extends React.Component {
+class NonInjectedClusterRoles extends React.Component<Dependencies> {
   render() {
+    const {
+      openAddClusterRoleDialog,
+      clusterRoleStore,
+    } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
@@ -49,7 +63,7 @@ export class ClusterRoles extends React.Component {
             <KubeObjectAge key="age" object={clusterRole} />,
           ]}
           addRemoveButtons={{
-            onAdd: () => AddClusterRoleDialog.open(),
+            onAdd: () => openAddClusterRoleDialog(),
             addTooltip: "Create new ClusterRole",
           }}
         />
@@ -58,3 +72,11 @@ export class ClusterRoles extends React.Component {
     );
   }
 }
+
+export const ClusterRoles = withInjectables<Dependencies>(NonInjectedClusterRoles, {
+  getProps: (di, props) => ({
+    ...props,
+    clusterRoleStore: di.inject(clusterRoleStoreInjectable),
+    openAddClusterRoleDialog: di.inject(openAddClusterRoleDialogInjectable),
+  }),
+});

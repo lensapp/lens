@@ -5,12 +5,12 @@
 
 import type { KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { ResourceDescriptor } from "../kube-api";
+import type { KubeApiDependencies, ResourceDescriptor } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
 export class IngressClassApi extends KubeApi<IngressClass> {
-  constructor() {
-    super({
+  constructor(dependencies: KubeApiDependencies) {
+    super(dependencies, {
       objectConstructor: IngressClass,
       checkPreferredVersion: true,
       fallbackApiBases: ["/apis/extensions/v1beta1/ingressclasses"],

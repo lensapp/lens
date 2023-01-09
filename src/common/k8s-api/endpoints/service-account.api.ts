@@ -5,7 +5,7 @@
 
 import type { KubeObjectMetadata, KubeObjectScope, LocalObjectReference, NamespaceScopedMetadata, ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 
@@ -50,8 +50,8 @@ export class ServiceAccount extends KubeObject<
 }
 
 export class ServiceAccountApi extends KubeApi<ServiceAccount, ServiceAccountData> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       ...opts,
       objectConstructor: ServiceAccount,
     });

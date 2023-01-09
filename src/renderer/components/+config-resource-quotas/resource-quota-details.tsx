@@ -13,7 +13,9 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ResourceQuota } from "../../../common/k8s-api/endpoints/resource-quota.api";
 import { LineProgress } from "../line-progress";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface ResourceQuotaDetailsProps extends KubeObjectDetailsProps<ResourceQuota> {
 }
@@ -75,8 +77,12 @@ function renderQuotas(quota: ResourceQuota): JSX.Element[] {
     });
 }
 
+interface Dependencies {
+  logger: Logger;
+}
+
 @observer
-export class ResourceQuotaDetails extends React.Component<ResourceQuotaDetailsProps> {
+class NonInjectedResourceQuotaDetails extends React.Component<ResourceQuotaDetailsProps & Dependencies> {
   render() {
     const { object: quota } = this.props;
 
@@ -85,7 +91,7 @@ export class ResourceQuotaDetails extends React.Component<ResourceQuotaDetailsPr
     }
 
     if (!(quota instanceof ResourceQuota)) {
-      logger.error("[ResourceQuotaDetails]: passed object that is not an instanceof ResourceQuota", quota);
+      this.props.logger.error("[ResourceQuotaDetails]: passed object that is not an instanceof ResourceQuota", quota);
 
       return null;
     }
@@ -125,3 +131,10 @@ export class ResourceQuotaDetails extends React.Component<ResourceQuotaDetailsPr
     );
   }
 }
+
+export const ResourceQuotaDetails = withInjectables<Dependencies, ResourceQuotaDetailsProps>(NonInjectedResourceQuotaDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+  }),
+});

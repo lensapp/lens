@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { AgentOptions } from "https";
 import { Agent } from "https";
 import type { RequestInit } from "node-fetch";
+import loggerInjectable from "../logger.injectable";
 import isDevelopmentInjectable from "../vars/is-development.injectable";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
 import type { KubeApiOptions } from "./kube-api";
@@ -32,16 +33,18 @@ export interface CreateKubeApiForRemoteClusterConfig {
    agent?: Agent;
 }
 
+export type KubeApiConstructor<Object extends KubeObject, Api extends KubeApi<Object>> = new (apiOpts: KubeApiOptions<Object>) => Api;
+
 export interface CreateKubeApiForRemoteCluster {
   <Object extends KubeObject, Api extends KubeApi<Object>, Data extends KubeJsonApiDataFor<Object>>(
     config: CreateKubeApiForRemoteClusterConfig,
     kubeClass: KubeObjectConstructor<Object, Data>,
-    apiClass: new (apiOpts: KubeApiOptions<Object>) => Api,
+    apiClass: KubeApiConstructor<Object, Api>,
   ): Api;
   <Object extends KubeObject, Data extends KubeJsonApiDataFor<Object>>(
     config: CreateKubeApiForRemoteClusterConfig,
     kubeClass: KubeObjectConstructor<Object, Data>,
-    apiClass?: new (apiOpts: KubeApiOptions<Object>) => KubeApi<Object>,
+    apiClass?: KubeApiConstructor<Object, KubeApi<Object>>,
   ): KubeApi<Object>;
 }
 
@@ -50,8 +53,13 @@ const createKubeApiForRemoteClusterInjectable = getInjectable({
   instantiate: (di): CreateKubeApiForRemoteCluster => {
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
+    const logger = di.inject(loggerInjectable);
 
-    return (config: CreateKubeApiForRemoteClusterConfig, kubeClass: KubeObjectConstructor<KubeObject, KubeJsonApiDataFor<KubeObject>>, apiClass = KubeApi) => {
+    return (
+      config: CreateKubeApiForRemoteClusterConfig,
+      kubeClass: KubeObjectConstructor<KubeObject, KubeJsonApiDataFor<KubeObject>>,
+      apiClass?: KubeApiConstructor<KubeObject, KubeApi<KubeObject>>,
+    ) => {
       const reqInit: RequestInit = {};
       const agentOptions: AgentOptions = {};
 
@@ -93,10 +101,23 @@ const createKubeApiForRemoteClusterInjectable = getInjectable({
         } : {}),
       }, reqInit);
 
-      return new apiClass({
-        objectConstructor: kubeClass,
-        request,
-      });
+      if (apiClass) {
+        return new apiClass({
+          objectConstructor: kubeClass,
+          request,
+        });
+      }
+
+      return new KubeApi(
+        {
+          logger,
+          maybeKubeApi: undefined,
+        },
+        {
+          objectConstructor: kubeClass,
+          request,
+        },
+      );
     };
   },
 });

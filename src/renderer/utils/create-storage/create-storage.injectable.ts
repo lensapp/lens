@@ -3,33 +3,29 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
-import { createStorage } from "./create-storage";
-import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
-import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
-import { observable } from "mobx";
-import loggerInjectable from "../../../common/logger.injectable";
-import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
-import storageSaveDelayInjectable from "./storage-save-delay.injectable";
-import joinPathsInjectable from "../../../common/path/join-paths.injectable";
+import { action } from "mobx";
+import lensLocalStorageStateInjectable from "./state.injectable";
+import createStorageHelperInjectable from "../create-storage-helper.injectable";
+import type { StorageLayer } from "../storage-helper";
+
+export type CreateStorage = <T>(key: string, defaultValue: T) => StorageLayer<T>;
 
 const createStorageInjectable = getInjectable({
   id: "create-storage",
 
-  instantiate: (di) => createStorage({
-    storage: observable({
-      initialized: false,
-      loaded: false,
-      data: {},
-    }),
-    readJsonFile: di.inject(readJsonFileInjectable),
-    writeJsonFile: di.inject(writeJsonFileInjectable),
-    logger: di.inject(loggerInjectable),
-    directoryForLensLocalStorage: di.inject(directoryForLensLocalStorageInjectable),
-    joinPaths: di.inject(joinPathsInjectable),
-    hostedClusterId: di.inject(hostedClusterIdInjectable),
-    saveDelay: di.inject(storageSaveDelayInjectable),
-  }),
+  instantiate: (di): CreateStorage => {
+    const lensLocalStorageState = di.inject(lensLocalStorageStateInjectable);
+    const createStorageHelper = di.inject(createStorageHelperInjectable);
+
+    return <T>(key: string, defaultValue: T) => createStorageHelper<T>(key, {
+      defaultValue,
+      storage: {
+        getItem: (key) => lensLocalStorageState[key] as T,
+        setItem: action((key, value) => lensLocalStorageState[key] = value),
+        removeItem: action((key) => delete lensLocalStorageState[key]),
+      },
+    });
+  },
 });
 
 export default createStorageInjectable;

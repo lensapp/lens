@@ -42,7 +42,7 @@ const setupKubernetesClusterContextMenuOpenInjectable = getInjectable({
                 if (result.error) {
                   logger.error("[KUBERNETES-CLUSTER]: failed to parse kubeconfig file", result.error);
                 } else {
-                  openDeleteClusterDialog({ cluster, config: result.config });
+                  openDeleteClusterDialog(result.config, cluster);
                 }
               },
             });

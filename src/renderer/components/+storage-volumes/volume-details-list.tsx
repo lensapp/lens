@@ -10,14 +10,17 @@ import { observer } from "mobx-react";
 import type { PersistentVolume } from "../../../common/k8s-api/endpoints/persistent-volume.api";
 import { TableRow } from "../table/table-row";
 import { cssNames, prevDefault } from "../../utils";
-import { showDetails } from "../kube-detail-params";
 import { TableCell } from "../table/table-cell";
 import { Spinner } from "../spinner/spinner";
 import { DrawerTitle } from "../drawer/drawer-title";
 import { Table } from "../table/table";
 import { TableHead } from "../table/table-head";
-import { persistentVolumeStore } from "./legacy-store";
 import kebabCase from "lodash/kebabCase";
+import type { PersistentVolumeStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import persistentVolumeStoreInjectable from "./store.injectable";
+import type { ShowDetails } from "../kube-detail-params/show-details.injectable";
+import showDetailsInjectable from "../kube-detail-params/show-details.injectable";
 
 export interface VolumeDetailsListProps {
   persistentVolumes: PersistentVolume[];
@@ -29,8 +32,13 @@ enum sortBy {
   capacity = "capacity",
 }
 
+interface Dependencies {
+  persistentVolumeStore: PersistentVolumeStore;
+  showDetails: ShowDetails;
+}
+
 @observer
-export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
+class NonInjectedVolumeDetailsList extends React.Component<VolumeDetailsListProps & Dependencies> {
   private sortingCallbacks = {
     [sortBy.name]: (volume: PersistentVolume) => volume.getName(),
     [sortBy.capacity]: (volume: PersistentVolume) => volume.getCapacity(),
@@ -38,7 +46,7 @@ export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
   };
 
   getTableRow = (uid: string) => {
-    const { persistentVolumes } = this.props;
+    const { persistentVolumes, showDetails } = this.props;
     const volume = persistentVolumes.find(volume => volume.getId() === uid);
 
     if (!volume) {
@@ -60,7 +68,7 @@ export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
   };
 
   render() {
-    const { persistentVolumes } = this.props;
+    const { persistentVolumes, persistentVolumeStore } = this.props;
     const virtual = persistentVolumes.length > 100;
 
     if (!persistentVolumes.length) {
@@ -94,3 +102,11 @@ export class VolumeDetailsList extends React.Component<VolumeDetailsListProps> {
     );
   }
 }
+
+export const VolumeDetailsList = withInjectables<Dependencies, VolumeDetailsListProps>(NonInjectedVolumeDetailsList, {
+  getProps: (di, props) => ({
+    ...props,
+    persistentVolumeStore: di.inject(persistentVolumeStoreInjectable),
+    showDetails: di.inject(showDetailsInjectable),
+  }),
+});

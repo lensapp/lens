@@ -7,7 +7,7 @@ import moment from "moment";
 import type { KubeObjectMetadata, KubeObjectScope, ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { formatDuration } from "../../utils/formatDuration";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 
@@ -132,8 +132,8 @@ export class KubeEvent extends KubeObject<KubeObjectMetadata<KubeObjectScope.Nam
 }
 
 export class KubeEventApi extends KubeApi<KubeEvent, KubeEventData> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       objectConstructor: KubeEvent,
       ...opts,
     });

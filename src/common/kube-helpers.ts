@@ -5,7 +5,6 @@
 
 import { KubeConfig } from "@kubernetes/client-node";
 import yaml from "js-yaml";
-import logger from "../main/logger";
 import type { Cluster, Context, User } from "@kubernetes/client-node/dist/config_types";
 import { newClusters, newContexts, newUsers } from "@kubernetes/client-node/dist/config_types";
 import { isDefined } from "./utils";
@@ -219,8 +218,6 @@ export function dumpConfigYaml(kubeConfig: PartialDeep<KubeConfig>): string {
     contexts,
     users,
   };
-
-  logger.debug("Dumping KubeConfig:", config);
 
   // skipInvalid: true makes dump ignore undefined values
   return yaml.dump(config, { skipInvalid: true });

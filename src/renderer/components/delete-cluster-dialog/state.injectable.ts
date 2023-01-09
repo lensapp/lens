@@ -10,6 +10,8 @@ import type { Cluster } from "../../../common/cluster/cluster";
 export interface DeleteClusterDialogState {
   config: KubeConfig;
   cluster: Cluster;
+  showContextSwitch: boolean;
+  newCurrentContext: string;
 }
 
 const deleteClusterDialogStateInjectable = getInjectable({

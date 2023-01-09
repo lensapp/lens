@@ -6,15 +6,17 @@ import { getInjectable } from "@ogre-tools/injectable";
 import directoryForKubeConfigsInjectable from "../directory-for-kube-configs/directory-for-kube-configs.injectable";
 import joinPathsInjectable from "../../path/join-paths.injectable";
 
-const getCustomKubeConfigDirectoryInjectable = getInjectable({
+export type GetCustomKubeConfigFilePath = (fileName: string) => string;
+
+const getCustomKubeConfigFilePathInjectable = getInjectable({
   id: "get-custom-kube-config-directory",
 
-  instantiate: (di) => {
+  instantiate: (di): GetCustomKubeConfigFilePath => {
     const directoryForKubeConfigs = di.inject(directoryForKubeConfigsInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
 
-    return (directoryName: string) => joinPaths(directoryForKubeConfigs, directoryName);
+    return (fileName) => joinPaths(directoryForKubeConfigs, fileName);
   },
 });
 
-export default getCustomKubeConfigDirectoryInjectable;
+export default getCustomKubeConfigFilePathInjectable;

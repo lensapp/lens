@@ -13,15 +13,21 @@ import { Badge } from "../badge";
 import { SubTitle } from "../layout/sub-title";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import type { LabelMatchExpression, LabelSelector } from "../../../common/k8s-api/kube-object";
 import { isEmpty } from "lodash";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface NetworkPolicyDetailsProps extends KubeObjectDetailsProps<NetworkPolicy> {
 }
 
+interface Dependencies {
+  logger: Logger;
+}
+
 @observer
-export class NetworkPolicyDetails extends React.Component<NetworkPolicyDetailsProps> {
+class NonInjectedNetworkPolicyDetails extends React.Component<NetworkPolicyDetailsProps & Dependencies> {
   renderIPolicyIpBlock(ipBlock: IPolicyIpBlock | undefined) {
     if (!ipBlock) {
       return null;
@@ -159,7 +165,7 @@ export class NetworkPolicyDetails extends React.Component<NetworkPolicyDetailsPr
     }
 
     if (!(policy instanceof NetworkPolicy)) {
-      logger.error("[NetworkPolicyDetails]: passed object that is not an instanceof NetworkPolicy", policy);
+      this.props.logger.error("[NetworkPolicyDetails]: passed object that is not an instanceof NetworkPolicy", policy);
 
       return null;
     }
@@ -204,3 +210,10 @@ export class NetworkPolicyDetails extends React.Component<NetworkPolicyDetailsPr
     );
   }
 }
+
+export const NetworkPolicyDetails = withInjectables<Dependencies, NetworkPolicyDetailsProps>(NonInjectedNetworkPolicyDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+  }),
+});

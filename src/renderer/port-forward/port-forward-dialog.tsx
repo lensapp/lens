@@ -18,18 +18,20 @@ import { Checkbox } from "../components/checkbox";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { PortForwardDialogData, PortForwardDialogModel } from "./port-forward-dialog-model/port-forward-dialog-model";
 import portForwardDialogModelInjectable from "./port-forward-dialog-model/port-forward-dialog-model.injectable";
-import logger from "../../common/logger";
+import type { Logger } from "../../common/logger";
 import portForwardStoreInjectable from "./port-forward-store/port-forward-store.injectable";
 import aboutPortForwardingInjectable from "./about-port-forwarding.injectable";
 import notifyErrorPortForwardingInjectable from "./notify-error-port-forwarding.injectable";
 import type { OpenPortForward } from "./open-port-forward.injectable";
 import openPortForwardInjectable from "./open-port-forward.injectable";
+import loggerInjectable from "../../common/logger.injectable";
 
 export interface PortForwardDialogProps extends Partial<DialogProps> {}
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
   model: PortForwardDialogModel;
+  logger: Logger;
   aboutPortForwarding: () => void;
   notifyErrorPortForwarding: (message: string) => void;
   openPortForward: OpenPortForward;
@@ -94,7 +96,7 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
         this.props.openPortForward(portForward);
       }
     } catch (error) {
-      logger.error(`[PORT-FORWARD-DIALOG]: ${error}`, portForward);
+      this.props.logger.error(`[PORT-FORWARD-DIALOG]: ${error}`, portForward);
     } finally {
       this.props.model.close();
     }
@@ -170,17 +172,14 @@ class NonInjectedPortForwardDialog extends Component<PortForwardDialogProps & De
   }
 }
 
-export const PortForwardDialog = withInjectables<Dependencies, PortForwardDialogProps>(
-  NonInjectedPortForwardDialog,
-
-  {
-    getProps: (di, props) => ({
-      portForwardStore: di.inject(portForwardStoreInjectable),
-      model: di.inject(portForwardDialogModelInjectable),
-      aboutPortForwarding: di.inject(aboutPortForwardingInjectable),
-      notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
-      openPortForward: di.inject(openPortForwardInjectable),
-      ...props,
-    }),
-  },
-);
+export const PortForwardDialog = withInjectables<Dependencies, PortForwardDialogProps>(NonInjectedPortForwardDialog, {
+  getProps: (di, props) => ({
+    ...props,
+    portForwardStore: di.inject(portForwardStoreInjectable),
+    model: di.inject(portForwardDialogModelInjectable),
+    aboutPortForwarding: di.inject(aboutPortForwardingInjectable),
+    notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
+    openPortForward: di.inject(openPortForwardInjectable),
+    logger: di.inject(loggerInjectable),
+  }),
+});

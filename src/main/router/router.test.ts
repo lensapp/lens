@@ -13,14 +13,12 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import parseRequestInjectable from "./parse-request.injectable";
 import { contentTypes } from "./router-content-types";
-import mockFs from "mock-fs";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { Route } from "./route";
 import type { SetRequired } from "type-fest";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
-import fsInjectable from "../../common/fs/fs.injectable";
 import { runInAction } from "mobx";
 
 describe("router", () => {
@@ -32,14 +30,11 @@ describe("router", () => {
 
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    mockFs();
-    di.permitSideEffects(fsInjectable);
-
     di.override(parseRequestInjectable, () => () => Promise.resolve({
       payload: "some-payload",
       mime: "some-mime",
     }));
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
@@ -61,10 +56,6 @@ describe("router", () => {
     });
 
     router = di.inject(routerInjectable);
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   describe("when navigating to the route", () => {

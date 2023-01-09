@@ -5,7 +5,7 @@
 
 import type { KubeObjectMetadata, KubeObjectScope, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { RoleRef } from "./types/role-ref";
@@ -44,8 +44,8 @@ export class RoleBinding extends KubeObject<
 }
 
 export class RoleBindingApi extends KubeApi<RoleBinding, RoleBindingData> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       ...opts,
       objectConstructor: RoleBinding,
     });

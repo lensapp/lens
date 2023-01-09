@@ -4,7 +4,7 @@
  */
 
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 
 export class ClusterApi extends KubeApi<Cluster> {
@@ -18,9 +18,9 @@ export class ClusterApi extends KubeApi<Cluster> {
    */
   static namespaced = true;
 
-  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
-    super({
-      ...opts,
+  constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
+    super(deps, {
+      ...opts ?? {},
       objectConstructor: Cluster,
     });
   }

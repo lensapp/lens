@@ -68,7 +68,6 @@ const setupShellInjectable = getInjectable({
   },
 
   injectionToken: onLoadOfApplicationInjectionToken,
-  causesSideEffects: true,
 });
 
 export default setupShellInjectable;

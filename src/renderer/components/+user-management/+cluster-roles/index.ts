@@ -4,4 +4,4 @@
  */
 export * from "./view";
 export * from "./details";
-export * from "./add-dialog";
+export * from "./add-dialog/view";

@@ -14,13 +14,14 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
 import { DurationAbsoluteTimestamp } from "./duration-absolute";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import { cssNames } from "../../utils";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface EventDetailsProps extends KubeObjectDetailsProps<KubeEvent> {
 }
@@ -28,6 +29,7 @@ export interface EventDetailsProps extends KubeObjectDetailsProps<KubeEvent> {
 interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
   apiManager: ApiManager;
+  logger: Logger;
 }
 
 const NonInjectedEventDetails = observer(({
@@ -35,6 +37,7 @@ const NonInjectedEventDetails = observer(({
   getDetailsUrl,
   object: event,
   className,
+  logger,
 }: Dependencies & EventDetailsProps) => {
   if (!event) {
     return null;
@@ -101,5 +104,6 @@ export const EventDetails = withInjectables<Dependencies, EventDetailsProps>(Non
     ...props,
     apiManager: di.inject(apiManagerInjectable),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
+    logger: di.inject(loggerInjectable),
   }),
 });

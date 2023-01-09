@@ -6,7 +6,7 @@
 import type { ClusterScopedMetadata, LabelSelector, ObjectReference, TypedLocalObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { unitsToBytes } from "../../utils";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { ResourceRequirements } from "./types/resource-requirements";
 
@@ -103,8 +103,8 @@ export class PersistentVolume extends KubeObject<
 }
 
 export class PersistentVolumeApi extends KubeApi<PersistentVolume> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       ...opts,
       objectConstructor: PersistentVolume,
     });

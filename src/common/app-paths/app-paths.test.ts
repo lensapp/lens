@@ -19,23 +19,23 @@ describe("app-paths", () => {
     builder = getApplicationBuilder();
 
     const defaultAppPathsStub: AppPaths = {
-      currentApp: "some-current-app",
-      appData: "some-app-data",
-      cache: "some-cache",
-      crashDumps: "some-crash-dumps",
-      desktop: "some-desktop",
-      documents: "some-documents",
-      downloads: "some-downloads",
-      exe: "some-exe",
-      home: "some-home-path",
-      logs: "some-logs",
-      module: "some-module",
-      music: "some-music",
-      pictures: "some-pictures",
-      recent: "some-recent",
-      temp: "some-temp",
-      videos: "some-videos",
-      userData: "some-irrelevant-user-data",
+      currentApp: "/some-current-app",
+      appData: "/some-app-data",
+      cache: "/some-cache",
+      crashDumps: "/some-crash-dumps",
+      desktop: "/some-desktop",
+      documents: "/some-documents",
+      downloads: "/some-downloads",
+      exe: "/some-exe",
+      home: "/some-home-path",
+      logs: "/some-logs",
+      module: "/some-module",
+      music: "/some-music",
+      pictures: "/some-pictures",
+      recent: "/some-recent",
+      temp: "/some-temp",
+      videos: "/some-videos",
+      userData: "/some-irrelevant-user-data",
     };
 
     builder.beforeApplicationStart((mainDi) => {
@@ -71,23 +71,23 @@ describe("app-paths", () => {
       const actual = windowDi.inject(appPathsInjectable);
 
       expect(actual).toEqual({
-        currentApp: "some-current-app",
-        appData: "some-app-data",
-        cache: "some-cache",
-        crashDumps: "some-crash-dumps",
-        desktop: "some-desktop",
-        documents: "some-documents",
-        downloads: "some-downloads",
-        exe: "some-exe",
-        home: "some-home-path",
-        logs: "some-logs",
-        module: "some-module",
-        music: "some-music",
-        pictures: "some-pictures",
-        recent: "some-recent",
-        temp: "some-temp",
-        videos: "some-videos",
-        userData: "some-app-data/some-product-name",
+        currentApp: "/some-current-app",
+        appData: "/some-app-data",
+        cache: "/some-cache",
+        crashDumps: "/some-crash-dumps",
+        desktop: "/some-desktop",
+        documents: "/some-documents",
+        downloads: "/some-downloads",
+        exe: "/some-exe",
+        home: "/some-home-path",
+        logs: "/some-logs",
+        module: "/some-module",
+        music: "/some-music",
+        pictures: "/some-pictures",
+        recent: "/some-recent",
+        temp: "/some-temp",
+        videos: "/some-videos",
+        userData: "/some-app-data/some-product-name",
       });
     });
 
@@ -95,23 +95,23 @@ describe("app-paths", () => {
       const actual = mainDi.inject(appPathsInjectable);
 
       expect(actual).toEqual({
-        currentApp: "some-current-app",
-        appData: "some-app-data",
-        cache: "some-cache",
-        crashDumps: "some-crash-dumps",
-        desktop: "some-desktop",
-        documents: "some-documents",
-        downloads: "some-downloads",
-        exe: "some-exe",
-        home: "some-home-path",
-        logs: "some-logs",
-        module: "some-module",
-        music: "some-music",
-        pictures: "some-pictures",
-        recent: "some-recent",
-        temp: "some-temp",
-        videos: "some-videos",
-        userData: "some-app-data/some-product-name",
+        currentApp: "/some-current-app",
+        appData: "/some-app-data",
+        cache: "/some-cache",
+        crashDumps: "/some-crash-dumps",
+        desktop: "/some-desktop",
+        documents: "/some-documents",
+        downloads: "/some-downloads",
+        exe: "/some-exe",
+        home: "/some-home-path",
+        logs: "/some-logs",
+        module: "/some-module",
+        music: "/some-music",
+        pictures: "/some-pictures",
+        recent: "/some-recent",
+        temp: "/some-temp",
+        videos: "/some-videos",
+        userData: "/some-app-data/some-product-name",
       });
     });
   });
@@ -123,7 +123,7 @@ describe("app-paths", () => {
       builder.beforeApplicationStart((mainDi) => {
         mainDi.override(
           directoryForIntegrationTestingInjectable,
-          () => "some-integration-testing-app-data",
+          () => "/some-integration-testing-app-data",
         );
       });
 
@@ -136,8 +136,8 @@ describe("app-paths", () => {
       const { appData, userData } = windowDi.inject(appPathsInjectable);
 
       expect({ appData, userData }).toEqual({
-        appData: "some-integration-testing-app-data",
-        userData: `some-integration-testing-app-data/some-product-name`,
+        appData: "/some-integration-testing-app-data",
+        userData: "/some-integration-testing-app-data/some-product-name",
       });
     });
 
@@ -145,8 +145,8 @@ describe("app-paths", () => {
       const { appData, userData } = windowDi.inject(appPathsInjectable);
 
       expect({ appData, userData }).toEqual({
-        appData: "some-integration-testing-app-data",
-        userData: "some-integration-testing-app-data/some-product-name",
+        appData: "/some-integration-testing-app-data",
+        userData: "/some-integration-testing-app-data/some-product-name",
       });
     });
   });

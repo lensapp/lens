@@ -23,26 +23,18 @@ import showErrorNotificationInjectable from "../../../renderer/components/notifi
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
-import { controlWhenStoragesAreReady } from "../../../renderer/utils/create-storage/storages-are-ready";
 
 describe("cluster/namespaces - edit namespace from new tab", () => {
   let builder: ApplicationBuilder;
-  let callForNamespaceMock: AsyncFnMock<CallForResource>;
-  let callForPatchNamespaceMock: AsyncFnMock<CallForPatchResource>;
+  let callForResourceMock: AsyncFnMock<CallForResource>;
+  let callForPatchResourceMock: AsyncFnMock<CallForPatchResource>;
   let showSuccessNotificationMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
-  let storagesAreReady: () => Promise<void>;
 
   beforeEach(() => {
     builder = getApplicationBuilder();
 
     builder.setEnvironmentToClusterFrame();
-
-    callForNamespaceMock = asyncFn();
-    callForPatchNamespaceMock = asyncFn();
-
-    showSuccessNotificationMock = jest.fn();
-    showErrorNotificationMock = jest.fn();
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.override(
@@ -52,17 +44,11 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
 
       windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
 
-      storagesAreReady = controlWhenStoragesAreReady(windowDi);
+      showSuccessNotificationMock = jest.fn();
+      windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
 
-      windowDi.override(
-        showSuccessNotificationInjectable,
-        () => showSuccessNotificationMock,
-      );
-
-      windowDi.override(
-        showErrorNotificationInjectable,
-        () => showErrorNotificationMock,
-      );
+      showErrorNotificationMock = jest.fn();
+      windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
 
       windowDi.override(getRandomIdForEditResourceTabInjectable, () =>
         jest
@@ -71,31 +57,11 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
           .mockReturnValueOnce("some-second-tab-id"),
       );
 
-      windowDi.override(callForResourceInjectable, () => async (selfLink: string) => {
-        if (
-          [
-            "/apis/some-api-version/namespaces/some-uid",
-            "/apis/some-api-version/namespaces/some-other-uid",
-          ].includes(selfLink)
-        ) {
-          return await callForNamespaceMock(selfLink);
-        }
+      callForResourceMock = asyncFn();
+      windowDi.override(callForResourceInjectable, () => callForResourceMock);
 
-        return undefined;
-      });
-
-      windowDi.override(callForPatchResourceInjectable, () => async (namespace, ...args) => {
-        if (
-          [
-            "/apis/some-api-version/namespaces/some-uid",
-            "/apis/some-api-version/namespaces/some-other-uid",
-          ].includes(namespace.selfLink)
-        ) {
-          return await callForPatchNamespaceMock(namespace, ...args);
-        }
-
-        return undefined;
-      });
+      callForPatchResourceMock = asyncFn();
+      windowDi.override(callForPatchResourceInjectable, () => callForPatchResourceMock);
     });
 
     builder.allowKubeResource({
@@ -111,17 +77,12 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
     beforeEach(async () => {
       rendered = await builder.render();
 
-      await storagesAreReady();
-
       windowDi = builder.applicationWindow.only.di;
 
-      const navigateToNamespaces = windowDi.inject(
-        navigateToNamespacesInjectable,
-      );
+      const navigateToNamespaces = windowDi.inject(navigateToNamespacesInjectable);
+      const dockStore = windowDi.inject(dockStoreInjectable);
 
       navigateToNamespaces();
-
-      const dockStore = windowDi.inject(dockStoreInjectable);
 
       // TODO: Make TerminalWindow unit testable to allow realistic behaviour
       dockStore.closeTab("terminal");
@@ -193,7 +154,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
           });
 
           it("calls for namespace", () => {
-            expect(callForNamespaceMock).toHaveBeenCalledWith(
+            expect(callForResourceMock).toHaveBeenCalledWith(
               "/apis/some-api-version/namespaces/some-uid",
             );
           });
@@ -216,7 +177,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
                 },
               });
 
-              await callForNamespaceMock.resolve({
+              await callForResourceMock.resolve({
                 callWasSuccessful: true,
                 response: someNamespace,
               });
@@ -263,7 +224,7 @@ metadata:
               });
 
               it("calls for save with empty values", () => {
-                expect(callForPatchNamespaceMock).toHaveBeenCalledWith(
+                expect(callForPatchResourceMock).toHaveBeenCalledWith(
                   someNamespace,
                   [],
                 );
@@ -293,7 +254,7 @@ metadata:
 
               describe("when saving resolves with success", () => {
                 beforeEach(async () => {
-                  await callForPatchNamespaceMock.resolve({
+                  await callForPatchResourceMock.resolve({
                     callWasSuccessful: true,
                     response: { name: "some-name", kind: "Namespace" },
                   });
@@ -342,7 +303,7 @@ metadata:
 
               describe("when saving resolves with failure", () => {
                 beforeEach(async () => {
-                  await callForPatchNamespaceMock.resolve({
+                  await callForPatchResourceMock.resolve({
                     callWasSuccessful: false,
                     error: "some-error",
                   });
@@ -411,7 +372,7 @@ metadata:
 
               describe("when saving resolves with success", () => {
                 beforeEach(async () => {
-                  await callForPatchNamespaceMock.resolve({
+                  await callForPatchResourceMock.resolve({
                     callWasSuccessful: true,
                     response: { name: "some-name", kind: "Namespace" },
                   });
@@ -430,7 +391,7 @@ metadata:
 
               describe("when saving resolves with failure", () => {
                 beforeEach(async () => {
-                  await callForPatchNamespaceMock.resolve({
+                  await callForPatchResourceMock.resolve({
                     callWasSuccessful: false,
                     error: "Some error",
                   });
@@ -558,7 +519,7 @@ metadata:
                 });
 
                 it("calls for save with changed configuration", () => {
-                  expect(callForPatchNamespaceMock).toHaveBeenCalledWith(
+                  expect(callForPatchResourceMock).toHaveBeenCalledWith(
                     someNamespace,
                     [
                       {
@@ -580,7 +541,7 @@ metadata:
                 });
 
                 it("given save resolves and another change in configuration, when saving, calls for save with changed configuration", async () => {
-                  await callForPatchNamespaceMock.resolve({
+                  await callForPatchResourceMock.resolve({
                     callWasSuccessful: true,
 
                     response: {
@@ -610,7 +571,7 @@ metadata:
                   });
 
 
-                  callForPatchNamespaceMock.mockClear();
+                  callForPatchResourceMock.mockClear();
 
                   const saveButton = rendered.getByTestId(
                     "save-edit-resource-from-tab-for-some-first-tab-id",
@@ -618,7 +579,7 @@ metadata:
 
                   fireEvent.click(saveButton);
 
-                  expect(callForPatchNamespaceMock).toHaveBeenCalledWith(
+                  expect(callForPatchResourceMock).toHaveBeenCalledWith(
                     someNamespace,
                     [
                       {
@@ -717,7 +678,7 @@ metadata:
 
             describe("given clicking the context menu for second namespace, when clicking to edit namespace", () => {
               beforeEach(() => {
-                callForNamespaceMock.mockClear();
+                callForResourceMock.mockClear();
 
                 // TODO: Make implementation match the description
                 const namespaceStub = new Namespace(someOtherNamespaceDataStub);
@@ -750,7 +711,7 @@ metadata:
               });
 
               it("calls for second namespace", () => {
-                expect(callForNamespaceMock).toHaveBeenCalledWith(
+                expect(callForResourceMock).toHaveBeenCalledWith(
                   "/apis/some-api-version/namespaces/some-other-uid",
                 );
               });
@@ -772,7 +733,7 @@ metadata:
                     },
                   });
 
-                  await callForNamespaceMock.resolve({
+                  await callForResourceMock.resolve({
                     callWasSuccessful: true,
                     response: someOtherNamespace,
                   });
@@ -798,7 +759,7 @@ metadata:
                 });
 
                 it("when selecting to save, calls for save of second namespace", () => {
-                  callForPatchNamespaceMock.mockClear();
+                  callForPatchResourceMock.mockClear();
 
                   const saveButton = rendered.getByTestId(
                     "save-edit-resource-from-tab-for-some-second-tab-id",
@@ -806,7 +767,7 @@ metadata:
 
                   fireEvent.click(saveButton);
 
-                  expect(callForPatchNamespaceMock).toHaveBeenCalledWith(
+                  expect(callForPatchResourceMock).toHaveBeenCalledWith(
                     someOtherNamespace,
                     [],
                   );
@@ -814,7 +775,7 @@ metadata:
 
                 describe("when clicking dock tab for the first namespace", () => {
                   beforeEach(() => {
-                    callForNamespaceMock.mockClear();
+                    callForResourceMock.mockClear();
 
                     const tab = rendered.getByTestId("dock-tab-for-some-first-tab-id");
 
@@ -844,7 +805,7 @@ metadata:
                   });
 
                   it("does not call for namespace", () => {
-                    expect(callForNamespaceMock).not.toHaveBeenCalled();
+                    expect(callForResourceMock).not.toHaveBeenCalledWith("/apis/some-api-version/namespaces/some-uid");
                   });
 
                   it("has configuration in the editor", () => {
@@ -865,7 +826,7 @@ metadata:
                   });
 
                   it("when selecting to save, calls for save of first namespace", () => {
-                    callForPatchNamespaceMock.mockClear();
+                    callForPatchResourceMock.mockClear();
 
                     const saveButton = rendered.getByTestId(
                       "save-edit-resource-from-tab-for-some-first-tab-id",
@@ -873,7 +834,7 @@ metadata:
 
                     fireEvent.click(saveButton);
 
-                    expect(callForPatchNamespaceMock).toHaveBeenCalledWith(
+                    expect(callForPatchResourceMock).toHaveBeenCalledWith(
                       someNamespace,
                       [],
                     );
@@ -885,7 +846,7 @@ metadata:
 
           describe("when call for namespace resolves without namespace", () => {
             beforeEach(async () => {
-              await callForNamespaceMock.resolve({
+              await callForResourceMock.resolve({
                 callWasSuccessful: true,
                 response: undefined,
               });
@@ -914,7 +875,7 @@ metadata:
 
           describe("when call for namespace resolves with failure", () => {
             beforeEach(async () => {
-              await callForNamespaceMock.resolve({
+              await callForResourceMock.resolve({
                 callWasSuccessful: false,
                 error: "some-error",
               });

@@ -3,11 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import processArchInjectable from "../../common/vars/process-arch.injectable";
 
 const kubectlDownloadingNormalizedArchInjectable = getInjectable({
   id: "kubectl-downloading-normalized-arch",
-  instantiate: () => {
-    switch (process.arch) {
+  instantiate: (di) => {
+    const processArch = di.inject(processArchInjectable);
+
+    switch (processArch) {
       case "arm64":
         return "arm64";
       case "x64":
@@ -18,10 +21,9 @@ const kubectlDownloadingNormalizedArchInjectable = getInjectable({
       case "ia32":
         return "386";
       default:
-        throw new Error(`arch=${process.arch} is unsupported`);
+        throw new Error(`arch=${processArch} is unsupported`);
     }
   },
-  causesSideEffects: true,
 });
 
 export default kubectlDownloadingNormalizedArchInjectable;

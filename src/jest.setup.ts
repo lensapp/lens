@@ -10,6 +10,16 @@ import glob from "glob";
 import path from "path";
 import { enableMapSet, setAutoFreeze } from "immer";
 
+declare global {
+  interface InjectablePaths {
+    paths: string[];
+    globalOverridePaths: string[];
+  }
+
+  // eslint-disable-next-line no-var
+  var injectablePaths: Record<"main" | "renderer", InjectablePaths>;
+}
+
 configure({
   // Needed because we want to use jest.spyOn()
   // ref https://github.com/mobxjs/mobx/issues/2784
@@ -57,7 +67,13 @@ const getInjectables = (environment: "renderer" | "main", filePathGlob: string) 
   }),
 ].map(x => path.resolve(__dirname, x));
 
-(global as any).rendererInjectablePaths = getInjectables("renderer", "*.{injectable,injectable.testing-env}.{ts,tsx}");
-(global as any).rendererGlobalOverridePaths = getInjectables("renderer", "*.global-override-for-injectable.{ts,tsx}");
-(global as any).mainInjectablePaths = getInjectables("main", "*.{injectable,injectable.testing-env}.{ts,tsx}");
-(global as any).mainGlobalOverridePaths = getInjectables("main", "*.global-override-for-injectable.{ts,tsx}");
+global.injectablePaths = {
+  renderer: {
+    globalOverridePaths: getInjectables("renderer", "*.global-override-for-injectable.{ts,tsx}"),
+    paths: getInjectables("renderer", "*.{injectable,injectable.testing-env}.{ts,tsx}"),
+  },
+  main: {
+    globalOverridePaths: getInjectables("main", "*.global-override-for-injectable.{ts,tsx}"),
+    paths: getInjectables("main", "*.{injectable,injectable.testing-env}.{ts,tsx}"),
+  },
+};

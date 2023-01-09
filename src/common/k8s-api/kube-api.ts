@@ -22,10 +22,7 @@ import type { PartialDeep } from "type-fest";
 import type { Logger } from "../logger";
 import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import autoRegistrationEmitterInjectable from "./api-manager/auto-registration-emitter.injectable";
-import { asLegacyGlobalForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
-import { apiKubeInjectionToken } from "./api-kube";
 import type AbortController from "abort-controller";
-import loggerInjectable from "../logger.injectable";
 import { matches } from "lodash/fp";
 
 /**
@@ -79,28 +76,6 @@ export interface DerivedKubeApiOptions {
    * @default apiKube
    */
   request?: KubeJsonApi;
-}
-
-/**
- * @deprecated This type is only present for backwards compatable typescript support
- */
-export interface IgnoredKubeApiOptions {
-  /**
-   * @deprecated this option is overridden and should not be used
-   */
-  objectConstructor?: any;
-  /**
-   * @deprecated this option is overridden and should not be used
-   */
-  kind?: any;
-  /**
-   * @deprecated this option is overridden and should not be used
-   */
-  isNamespaces?: any;
-  /**
-   * @deprecated this option is overridden and should not be used
-   */
-  apiBase?: any;
 }
 
 export interface KubeApiQueryParams {
@@ -257,6 +232,7 @@ function legacyRegisterApi(api: KubeApi<any, any>): void {
 
 export interface KubeApiDependencies {
   readonly logger: Logger;
+  readonly maybeKubeApi: KubeJsonApi | undefined;
 }
 
 export class KubeApi<
@@ -281,12 +257,10 @@ export class KubeApi<
   protected readonly fullApiPathname: string;
   protected readonly fallbackApiBases: string[] | undefined;
 
-  protected readonly dependencies: KubeApiDependencies;
-
-  constructor(opts: KubeApiOptions<Object, Data>) {
+  constructor(protected readonly dependencies: KubeApiDependencies, opts: KubeApiOptions<Object, Data>) {
     const {
       objectConstructor,
-      request = asLegacyGlobalForExtensionApi(apiKubeInjectionToken),
+      request = this.dependencies.maybeKubeApi,
       kind = objectConstructor.kind,
       isNamespaced,
       apiBase: fullApiPathname = objectConstructor.apiBase,
@@ -315,10 +289,6 @@ export class KubeApi<
     this.request = request;
     this.objectConstructor = objectConstructor;
     legacyRegisterApi(this);
-
-    this.dependencies = {
-      logger: asLegacyGlobalForExtensionApi(loggerInjectable),
-    };
   }
 
   get apiVersionWithGroup() {

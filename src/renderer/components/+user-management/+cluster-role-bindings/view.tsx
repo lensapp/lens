@@ -9,12 +9,18 @@ import { observer } from "mobx-react";
 import React from "react";
 import { KubeObjectListLayout } from "../../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
-import { ClusterRoleBindingDialog } from "./dialog";
-import { clusterRoleBindingStore } from "./legacy-store";
-import { clusterRoleStore } from "../+cluster-roles/legacy-store";
-import { serviceAccountStore } from "../+service-accounts/legacy-store";
+import { ClusterRoleBindingDialog } from "./dialog/view";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
+import type { ClusterRoleBindingStore } from "./store";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import clusterRoleBindingStoreInjectable from "./store.injectable";
+import type { ClusterRoleStore } from "../+cluster-roles/store";
+import type { ServiceAccountStore } from "../+service-accounts/store";
+import clusterRoleStoreInjectable from "../+cluster-roles/store.injectable";
+import serviceAccountStoreInjectable from "../+service-accounts/store.injectable";
+import type { OpenClusterRoleBindingDialog } from "./dialog/open.injectable";
+import openClusterRoleBindingDialogInjectable from "./dialog/open.injectable";
 
 enum columnId {
   name = "name",
@@ -23,9 +29,23 @@ enum columnId {
   age = "age",
 }
 
+interface Dependencies {
+  clusterRoleBindingStore: ClusterRoleBindingStore;
+  clusterRoleStore: ClusterRoleStore;
+  serviceAccountStore: ServiceAccountStore;
+  openClusterRoleBindingDialog: OpenClusterRoleBindingDialog;
+}
+
 @observer
-export class ClusterRoleBindings extends React.Component {
+class NonInjectedClusterRoleBindings extends React.Component<Dependencies> {
   render() {
+    const {
+      clusterRoleBindingStore,
+      clusterRoleStore,
+      serviceAccountStore,
+      openClusterRoleBindingDialog,
+    } = this.props;
+
     return (
       <SiblingsInTabLayout>
         <KubeObjectListLayout
@@ -57,7 +77,7 @@ export class ClusterRoleBindings extends React.Component {
             <KubeObjectAge key="age" object={binding} />,
           ]}
           addRemoveButtons={{
-            onAdd: () => ClusterRoleBindingDialog.open(),
+            onAdd: () => openClusterRoleBindingDialog(),
             addTooltip: "Create new ClusterRoleBinding",
           }}
         />
@@ -66,3 +86,13 @@ export class ClusterRoleBindings extends React.Component {
     );
   }
 }
+
+export const ClusterRoleBindings = withInjectables<Dependencies>(NonInjectedClusterRoleBindings, {
+  getProps: (di, props) => ({
+    ...props,
+    clusterRoleBindingStore: di.inject(clusterRoleBindingStoreInjectable),
+    clusterRoleStore: di.inject(clusterRoleStoreInjectable),
+    serviceAccountStore: di.inject(serviceAccountStoreInjectable),
+    openClusterRoleBindingDialog: di.inject(openClusterRoleBindingDialogInjectable),
+  }),
+});

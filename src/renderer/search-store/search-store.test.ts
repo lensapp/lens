@@ -4,20 +4,9 @@
  */
 
 import { SearchStore } from "./search-store";
-import { Console } from "console";
-import { stdout, stderr } from "process";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import directoryForUserDataInjectable
-  from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import searchStoreInjectable from "./search-store.injectable";
-
-jest.mock("electron", () => ({
-  app: {
-    getPath: () => "/foo",
-  },
-}));
-
-console = new Console(stdout, stderr);
 
 const logs = [
   "1:M 30 Oct 2020 16:17:41.553 # Connection with replica 172.17.0.12:6379 lost",
@@ -31,7 +20,7 @@ describe("search store tests", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 
     searchStore = di.inject(searchStoreInjectable);
   });

@@ -3,14 +3,35 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import { secretApi } from "../../../../../../common/k8s-api/endpoints";
+import type { SecretApi } from "../../../../../../common/k8s-api/endpoints";
+import secretApiInjectable from "../../../../../../common/k8s-api/endpoints/secret.api.injectable";
 import { DrawerItem } from "../../../../drawer";
-import type { VolumeVariantComponent } from "../variant-helpers";
+import type { PodVolumeVariantSpecificProps } from "../variant-helpers";
 import { LocalRef } from "../variant-helpers";
 
-export const RadosBlockDevice: VolumeVariantComponent<"rbd"> = (
-  ({ pod, variant: { monitors, image, fsType = "ext4", pool = "rbd", user = "admin", keyring = "/etc/ceph/keyright", secretRef, readOnly = false }}) => (
+interface Dependencies {
+  secretApi: SecretApi;
+}
+
+const NonInjectedRadosBlockDevice = (props: PodVolumeVariantSpecificProps<"rbd"> & Dependencies) => {
+  const {
+    pod,
+    variant: {
+      monitors,
+      image,
+      fsType = "ext4",
+      pool = "rbd",
+      user = "admin",
+      keyring = "/etc/ceph/keyright",
+      secretRef,
+      readOnly = false,
+    },
+    secretApi,
+  } = props;
+
+  return (
     <>
       <DrawerItem name="Ceph Monitors">
         <ul>
@@ -49,5 +70,12 @@ export const RadosBlockDevice: VolumeVariantComponent<"rbd"> = (
         {readOnly.toString()}
       </DrawerItem>
     </>
-  )
-);
+  );
+};
+
+export const RadosBlockDevice = withInjectables<Dependencies, PodVolumeVariantSpecificProps<"rbd">>(NonInjectedRadosBlockDevice, {
+  getProps: (di, props) => ({
+    ...props,
+    secretApi: di.inject(secretApiInjectable),
+  }),
+});

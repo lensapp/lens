@@ -17,7 +17,9 @@ import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/cust
 import { safeJSONPathValue } from "../../utils/jsonPath";
 import type { KubeObjectMetadata, KubeObjectStatus } from "../../../common/k8s-api/kube-object";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface CustomResourceDetailsProps extends KubeObjectDetailsProps<KubeObject> {
   crd?: CustomResourceDefinition;
@@ -59,8 +61,12 @@ function convertSpecValue(value: unknown): React.ReactNode {
   return null;
 }
 
+interface Dependencies {
+  logger: Logger;
+}
+
 @observer
-export class CustomResourceDetails extends React.Component<CustomResourceDetailsProps> {
+class NonInjectedCustomResourceDetails extends React.Component<CustomResourceDetailsProps & Dependencies> {
   renderAdditionalColumns(resource: KubeObject, columns: AdditionalPrinterColumnsV1[]) {
     return columns.map(({ name, jsonPath }) => (
       <DrawerItem key={name} name={name}>
@@ -106,7 +112,7 @@ export class CustomResourceDetails extends React.Component<CustomResourceDetails
   }
 
   render() {
-    const { props: { object, crd }} = this;
+    const { props: { object, crd, logger }} = this;
 
     if (!object || !crd) {
       return null;
@@ -134,3 +140,10 @@ export class CustomResourceDetails extends React.Component<CustomResourceDetails
     );
   }
 }
+
+export const CustomResourceDetails = withInjectables<Dependencies, CustomResourceDetailsProps>(NonInjectedCustomResourceDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+  }),
+});

@@ -5,12 +5,14 @@
 
 import AwaitLock from "await-lock";
 import child_process from "child_process";
-import logger from "../../main/logger";
+import type { Logger } from "../../common/logger";
 
 const logModule = "[EXTENSION-INSTALLER]";
 
 interface Dependencies {
-  extensionPackageRootDirectory: string;
+  readonly extensionPackageRootDirectory: string;
+  readonly logger: Logger;
+  readonly pathToNpmCli: string;
 }
 
 const baseNpmInstallArgs = [
@@ -27,13 +29,9 @@ const baseNpmInstallArgs = [
  * Installs dependencies for extensions
  */
 export class ExtensionInstaller {
-  private installLock = new AwaitLock();
+  private readonly installLock = new AwaitLock();
 
-  constructor(private dependencies: Dependencies) {}
-
-  get npmPath() {
-    return __non_webpack_require__.resolve("npm");
-  }
+  constructor(private readonly dependencies: Dependencies) {}
 
   /**
    * Install single package using npm
@@ -43,9 +41,9 @@ export class ExtensionInstaller {
     await this.installLock.acquireAsync();
 
     try {
-      logger.info(`${logModule} installing package from ${name} to ${this.dependencies.extensionPackageRootDirectory}`);
+      this.dependencies.logger.info(`${logModule} installing package from ${name} to ${this.dependencies.extensionPackageRootDirectory}`);
       await this.npm(...baseNpmInstallArgs, name);
-      logger.info(`${logModule} package ${name} installed to ${this.dependencies.extensionPackageRootDirectory}`);
+      this.dependencies.logger.info(`${logModule} package ${name} installed to ${this.dependencies.extensionPackageRootDirectory}`);
     } finally {
       this.installLock.release();
     }
@@ -53,7 +51,7 @@ export class ExtensionInstaller {
 
   private npm(...args: string[]): Promise<void> {
     return new Promise((resolve, reject) => {
-      const child = child_process.fork(this.npmPath, args, {
+      const child = child_process.fork(this.dependencies.pathToNpmCli, args, {
         cwd: this.dependencies.extensionPackageRootDirectory,
         silent: true,
         env: {},

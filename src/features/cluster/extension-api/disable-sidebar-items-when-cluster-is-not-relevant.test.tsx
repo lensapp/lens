@@ -9,7 +9,6 @@ import type { ApplicationBuilder } from "../../../renderer/components/test-utils
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import type { KubernetesCluster } from "../../../common/catalog-entities";
 import React from "react";
-import extensionShouldBeEnabledForClusterFrameInjectable from "../../../renderer/extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 
 describe("disable sidebar items when cluster is not relevant", () => {
   let builder: ApplicationBuilder;
@@ -20,10 +19,6 @@ describe("disable sidebar items when cluster is not relevant", () => {
     builder = getApplicationBuilder();
 
     builder.setEnvironmentToClusterFrame();
-
-    builder.beforeWindowStart((windowDi) => {
-      windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
-    });
 
     isEnabledForClusterMock = asyncFn();
 

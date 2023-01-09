@@ -12,7 +12,7 @@ export const IpcPrefix = Symbol();
 export abstract class IpcRegistrar extends Singleton {
   readonly [IpcPrefix]: string;
 
-  constructor(protected extension: LensExtension) {
+  constructor(protected readonly extension: LensExtension) {
     super();
     this[IpcPrefix] = createHash("sha256").update(extension.id).digest("hex");
   }

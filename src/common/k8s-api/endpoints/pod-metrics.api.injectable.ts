@@ -7,13 +7,18 @@ import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { PodMetricsApi } from "./pod-metrics.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
+import loggerInjectable from "../../logger.injectable";
+import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const podMetricsApiInjectable = getInjectable({
   id: "pod-metrics-api",
   instantiate: (di) => {
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "podMetricsApi is only available in certain environments");
 
-    return new PodMetricsApi();
+    return new PodMetricsApi({
+      logger: di.inject(loggerInjectable),
+      maybeKubeApi: di.inject(maybeKubeApiInjectable),
+    });
   },
 
   injectionToken: kubeApiInjectionToken,

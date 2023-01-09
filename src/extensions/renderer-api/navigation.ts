@@ -11,7 +11,7 @@ import isActiveRouteInjectable from "../../renderer/navigation/is-route-active.i
 import navigateInjectable from "../../renderer/navigation/navigate.injectable";
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 
-export type { PageParamInit, PageParam } from "../../renderer/navigation";
+export type { PageParamInit, PageParam } from "../../renderer/navigation/page-param";
 export type { URLParams } from "../../common/utils/buildUrl";
 
 export const getDetailsUrl = asLegacyGlobalFunctionForExtensionApi(getDetailsUrlInjectable);

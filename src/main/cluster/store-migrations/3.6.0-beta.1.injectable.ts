@@ -7,7 +7,7 @@
 // convert file path cluster icons to their base64 encoded versions
 
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import getCustomKubeConfigDirectoryInjectable from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
+import getCustomKubeConfigFilePathInjectable from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import type { ClusterModel } from "../../../common/cluster-types";
 import readFileSyncInjectable from "../../../common/fs/read-file-sync.injectable";
 import { loadConfigFromString } from "../../../common/kube-helpers";
@@ -27,7 +27,7 @@ const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
   id: "v3.6.0-beta.1-cluster-store-migration",
   instantiate: (di) => {
     const userDataPath = di.inject(directoryForUserDataInjectable);
-    const getCustomKubeConfigDirectory = di.inject(getCustomKubeConfigDirectoryInjectable);
+    const getCustomKubeConfigDirectory = di.inject(getCustomKubeConfigFilePathInjectable);
     const readFileSync = di.inject(readFileSyncInjectable);
     const readFileBufferSync = di.inject(readFileBufferSyncInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
@@ -44,8 +44,8 @@ const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
 
         for (const clusterModel of storedClusters) {
           /**
-       * migrate kubeconfig
-       */
+           * migrate kubeconfig
+           */
           try {
             const absPath = getCustomKubeConfigDirectory(clusterModel.id);
 
@@ -80,6 +80,7 @@ const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
               delete clusterModel.preferences?.icon;
             }
           } catch (error) {
+            console.log(error);
             logger.info(`Failed to migrate cluster icon for cluster "${clusterModel.id}"`, error);
             delete clusterModel.preferences?.icon;
           }

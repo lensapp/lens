@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
-import uninstallExtensionInjectable from "../uninstall-extension/uninstall-extension.injectable";
+import uninstallExtensionInjectable from "../uninstall-extension.injectable";
 import type { UnpackExtension } from "./unpack-extension.injectable";
 import unpackExtensionInjectable from "./unpack-extension.injectable";
 import type { GetExtensionDestFolder } from "./get-extension-dest-folder.injectable";
@@ -14,7 +14,7 @@ import createTempFilesAndValidateInjectable from "./create-temp-files-and-valida
 import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { Disposer } from "../../../../common/utils";
 import { disposer } from "../../../../common/utils";
-import { Notifications } from "../../notifications";
+import type { ShowNotification } from "../../notifications";
 import { Button } from "../../button";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import type { LensExtensionId } from "../../../../extensions/lens-extension";
@@ -23,6 +23,8 @@ import { remove as removeDir } from "fs-extra";
 import { shell } from "electron";
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import { ExtensionInstallationState } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
+import showInfoNotificationInjectable from "../../notifications/show-info-notification.injectable";
 
 export interface InstallRequest {
   fileName: string;
@@ -36,6 +38,8 @@ interface Dependencies {
   createTempFilesAndValidate: CreateTempFilesAndValidate;
   getExtensionDestFolder: GetExtensionDestFolder;
   installStateStore: ExtensionInstallationStateStore;
+  showErrorNotification: ShowNotification;
+  showInfoNotification: ShowNotification;
 }
 
 export type AttemptInstall = (request: InstallRequest, cleanup?: Disposer) => Promise<void>;
@@ -47,6 +51,8 @@ const attemptInstall = ({
   createTempFilesAndValidate,
   getExtensionDestFolder,
   installStateStore,
+  showErrorNotification,
+  showInfoNotification,
 }: Dependencies): AttemptInstall =>
   async (request, cleanup) => {
     const dispose = disposer(
@@ -66,7 +72,7 @@ const attemptInstall = ({
     if (curState !== ExtensionInstallationState.IDLE) {
       dispose();
 
-      return void Notifications.error(
+      return void showErrorNotification(
         <div className="flex column gaps">
           <b>Extension Install Collision:</b>
           <p>
@@ -86,7 +92,7 @@ const attemptInstall = ({
       const { version: oldVersion } = installedExtension.manifest;
 
       // confirm to uninstall old version before installing new version
-      const removeNotification = Notifications.info(
+      const removeNotification = showInfoNotification(
         <div className="InstallingExtensionNotification flex gaps align-center">
           <div className="flex column gaps">
             <p>
@@ -142,6 +148,8 @@ const attemptInstallInjectable = getInjectable({
     createTempFilesAndValidate: di.inject(createTempFilesAndValidateInjectable),
     getExtensionDestFolder: di.inject(getExtensionDestFolderInjectable),
     installStateStore: di.inject(extensionInstallationStateStoreInjectable),
+    showErrorNotification: di.inject(showErrorNotificationInjectable),
+    showInfoNotification: di.inject(showInfoNotificationInjectable),
   }),
 });
 

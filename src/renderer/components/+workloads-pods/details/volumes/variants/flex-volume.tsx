@@ -3,14 +3,32 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import { secretApi } from "../../../../../../common/k8s-api/endpoints";
+import type { SecretApi } from "../../../../../../common/k8s-api/endpoints";
+import secretApiInjectable from "../../../../../../common/k8s-api/endpoints/secret.api.injectable";
 import { DrawerItem } from "../../../../drawer";
-import type { VolumeVariantComponent } from "../variant-helpers";
+import type { PodVolumeVariantSpecificProps } from "../variant-helpers";
 import { LocalRef } from "../variant-helpers";
 
-export const FlexVolume: VolumeVariantComponent<"flexVolume"> = (
-  ({ pod, variant: { driver, fsType, secretRef, readOnly = false, options = {}}}) => (
+interface Dependencies {
+  secretApi: SecretApi;
+}
+
+const NonInjectedFlexVolume = (props: PodVolumeVariantSpecificProps<"flexVolume"> & Dependencies) => {
+  const {
+    pod,
+    variant: {
+      driver,
+      fsType,
+      secretRef,
+      readOnly = false,
+      options = {},
+    },
+    secretApi,
+  } = props;
+
+  return (
     <>
       <DrawerItem name="Driver">
         {driver}
@@ -36,5 +54,12 @@ export const FlexVolume: VolumeVariantComponent<"flexVolume"> = (
           ))
       }
     </>
-  )
-);
+  );
+};
+
+export const FlexVolume = withInjectables<Dependencies, PodVolumeVariantSpecificProps<"flexVolume">>(NonInjectedFlexVolume, {
+  getProps: (di, props) => ({
+    ...props,
+    secretApi: di.inject(secretApiInjectable),
+  }),
+});

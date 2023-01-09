@@ -10,7 +10,6 @@ import { getApplicationBuilder } from "../../../renderer/components/test-utils/g
 import type { TestExtensionRenderer } from "../../../renderer/components/test-utils/get-extension-fake";
 import type { KubernetesCluster } from "../../../common/catalog-entities";
 import React from "react";
-import extensionShouldBeEnabledForClusterFrameInjectable from "../../../renderer/extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 
 describe("disable-cluster-pages-when-cluster-is-not-relevant", () => {
   let builder: ApplicationBuilder;
@@ -22,10 +21,6 @@ describe("disable-cluster-pages-when-cluster-is-not-relevant", () => {
     builder = getApplicationBuilder();
 
     builder.setEnvironmentToClusterFrame();
-
-    builder.beforeWindowStart((windowDi) => {
-      windowDi.unoverride(extensionShouldBeEnabledForClusterFrameInjectable);
-    });
 
     isEnabledForClusterMock = asyncFn();
 

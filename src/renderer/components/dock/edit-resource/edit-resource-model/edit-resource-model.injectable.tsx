@@ -7,8 +7,8 @@ import type { CallForResource } from "./call-for-resource/call-for-resource.inje
 import callForResourceInjectable from "./call-for-resource/call-for-resource.injectable";
 import { waitUntilDefined } from "../../../../../common/utils";
 import editResourceTabStoreInjectable from "../store.injectable";
-import type { EditingResource, EditResourceTabStore } from "../store";
-import { action, computed, observable, runInAction } from "mobx";
+import type { EditResourceTabStore } from "../store";
+import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
 import yaml from "js-yaml";
 import assert from "assert";
@@ -24,18 +24,13 @@ const editResourceModelInjectable = getInjectable({
   id: "edit-resource-model",
 
   instantiate: async (di, tabId: string) => {
-    const store = di.inject(editResourceTabStoreInjectable);
-
     const model = new EditResourceModel({
       callForResource: di.inject(callForResourceInjectable),
       callForPatchResource: di.inject(callForPatchResourceInjectable),
       showSuccessNotification: di.inject(showSuccessNotificationInjectable),
       showErrorNotification: di.inject(showErrorNotificationInjectable),
-      store,
+      store: di.inject(editResourceTabStoreInjectable),
       tabId,
-
-      waitForEditingResource: () =>
-        waitUntilDefined(() => store.getData(tabId)),
     });
 
     await model.load();
@@ -53,15 +48,15 @@ export default editResourceModelInjectable;
 interface Dependencies {
   callForResource: CallForResource;
   callForPatchResource: CallForPatchResource;
-  waitForEditingResource: () => Promise<EditingResource>;
   showSuccessNotification: ShowNotification;
   showErrorNotification: ShowNotification;
-  store: EditResourceTabStore;
-  tabId: string;
+  readonly store: EditResourceTabStore;
+  readonly tabId: string;
 }
 
 export class EditResourceModel {
-  constructor(private dependencies: Dependencies) {
+  constructor(private readonly dependencies: Dependencies) {
+    makeObservable(this);
   }
 
   readonly configuration = {
@@ -81,103 +76,103 @@ export class EditResourceModel {
     },
   };
 
-   @observable private _resource: KubeObject | undefined;
+  @observable private _resource: KubeObject | undefined;
 
-   @computed get shouldShowErrorAboutNoResource() {
-     return !this._resource;
-   }
+  @computed get shouldShowErrorAboutNoResource() {
+    return !this._resource;
+  }
 
-   @computed get resource() {
-     assert(this._resource, "Resource does not have data");
+  @computed get resource() {
+    assert(this._resource, "Resource does not have data");
 
-     return this._resource;
-   }
+    return this._resource;
+  }
 
-   @computed get editingResource() {
-     const resource = this.dependencies.store.getData(this.dependencies.tabId);
+  @computed get editingResource() {
+    const resource = this.dependencies.store.getData(this.dependencies.tabId);
 
-     assert(resource, "Resource is not present in the store");
+    assert(resource, "Resource is not present in the store");
 
-     return resource;
-   }
+    return resource;
+  }
 
-   @computed private get selfLink() {
-     return this.editingResource.resource;
-   }
+  @computed private get selfLink() {
+    return this.editingResource.resource;
+  }
 
-   load = async () => {
-     await this.dependencies.waitForEditingResource();
+  load = async () => {
+    await waitUntilDefined(() => this.dependencies.store.getData(this.dependencies.tabId));
 
-     const result = await this.dependencies.callForResource(this.selfLink);
+    const result = await this.dependencies.callForResource(this.selfLink);
 
-     if (!result.callWasSuccessful) {
-       this.dependencies.showErrorNotification(
-         `Loading resource failed: ${result.error}`,
-       );
+    if (!result.callWasSuccessful) {
+      this.dependencies.showErrorNotification(
+        `Loading resource failed: ${result.error}`,
+      );
 
-       return;
-     }
+      return;
+    }
 
-     const resource = result.response;
+    runInAction(() => {
+      this._resource = result.response;
 
-     runInAction(() => {
-       this._resource = resource;
-     });
+      if (this._resource) {
+        this.editingResource.firstDraft = yaml.dump(
+          this._resource.toPlainObject(),
+        );
+      }
+    });
+  };
 
-     if (!resource) {
-       return;
-     }
+  get namespace() {
+    return this.resource.metadata.namespace || "default";
+  }
 
-     runInAction(() => {
-       this.editingResource.firstDraft = yaml.dump(resource.toPlainObject());
-     });
-   };
+  get name() {
+    return this.resource.metadata.name;
+  }
 
-   get namespace() {
-     return this.resource.metadata.namespace || "default";
-   }
+  get kind() {
+    return this.resource.kind;
+  }
 
-   get name() {
-     return this.resource.metadata.name;
-   }
+  save = async () => {
+    const currentValue = this.configuration.value.get();
+    const currentVersion = yaml.load(currentValue);
+    const firstVersion = yaml.load(
+      this.editingResource.firstDraft ?? currentValue,
+    );
+    const patches = createPatch(firstVersion, currentVersion);
 
-   get kind() {
-     return this.resource.kind;
-   }
+    const result = await this.dependencies.callForPatchResource(
+      this.resource,
+      patches,
+    );
 
-   save = async () => {
-     const currentValue = this.configuration.value.get();
-     const currentVersion = yaml.load(currentValue);
-     const firstVersion = yaml.load(this.editingResource.firstDraft ?? currentValue);
-     const patches = createPatch(firstVersion, currentVersion);
+    if (!result.callWasSuccessful) {
+      this.dependencies.showErrorNotification((
+        <p>
+          Failed to save resource:
+          {" "}
+          {result.error}
+        </p>
+      ));
 
-     const result = await this.dependencies.callForPatchResource(this.resource, patches);
+      return;
+    }
 
-     if (!result.callWasSuccessful) {
-       this.dependencies.showErrorNotification(
-         <p>
-           Failed to save resource:
-           {" "}
-           {result.error}
-         </p>,
-       );
+    const { kind, name } = result.response;
 
-       return;
-     }
+    this.dependencies.showSuccessNotification((
+      <p>
+        {`${kind} `}
+        <b>{name}</b>
+        {" updated."}
+      </p>
+    ));
 
-     const { kind, name } = result.response;
-
-     this.dependencies.showSuccessNotification(
-       <p>
-         {kind}
-         {" "}
-         <b>{name}</b>
-         {" updated."}
-       </p>,
-     );
-
-     runInAction(() => {
-       this.editingResource.firstDraft = currentValue;
-     });
-   };
+    runInAction(() => {
+      this.editingResource.firstDraft = currentValue;
+    });
+  };
 }

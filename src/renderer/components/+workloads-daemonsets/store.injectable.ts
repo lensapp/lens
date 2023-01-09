@@ -10,6 +10,7 @@ import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-create
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import { DaemonSetStore } from "./store";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 const daemonSetStoreInjectable = getInjectable({
   id: "daemon-set-store",
@@ -21,6 +22,7 @@ const daemonSetStoreInjectable = getInjectable({
     return new DaemonSetStore({
       getPodsByOwnerId: di.inject(getPodsByOwnerIdInjectable),
       context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+      logger: di.inject(loggerInjectable),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

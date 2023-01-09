@@ -17,8 +17,6 @@ const statefulsetScaleDialogClusterFrameChildComponentInjectable = getInjectable
   }),
 
   injectionToken: clusterFrameChildComponentInjectionToken,
-
-  causesSideEffects: true,
 });
 
 export default statefulsetScaleDialogClusterFrameChildComponentInjectable;

@@ -4,20 +4,15 @@
  */
 
 import type { ExtensionLoader } from "../extension-loader";
-import { Console } from "console";
-import { stdout, stderr } from "process";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 import { runInAction } from "mobx";
 import updateExtensionsStateInjectable from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
-import mockFs from "mock-fs";
 import { delay } from "../../renderer/utils";
 import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import currentlyInClusterFrameInjectable from "../../renderer/routes/currently-in-cluster-frame.injectable";
-
-console = new Console(stdout, stderr);
 
 const manifestPath = "manifest/path";
 const manifestPath2 = "manifest/path2";
@@ -111,17 +106,11 @@ describe("ExtensionLoader", () => {
       },
     }) as unknown as IpcRenderer);
 
-    mockFs();
-
     updateExtensionStateMock = jest.fn();
 
     di.override(updateExtensionsStateInjectable, () => updateExtensionStateMock);
 
     extensionLoader = di.inject(extensionLoaderInjectable);
-  });
-
-  afterEach(() => {
-    mockFs.restore();
   });
 
   it("renderer updates extension after ipc broadcast", async () => {

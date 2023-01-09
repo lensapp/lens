@@ -68,6 +68,7 @@ import shouldStartHiddenInjectable from "../../../main/electron-app/features/sho
 import fsInjectable from "../../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
+import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -166,6 +167,8 @@ export const getApplicationBuilder = () => {
   runInAction(() => {
     mainDi.register(mainExtensionsStateInjectable);
   });
+
+  testUsingFakeTime();
 
   const { overrideForWindow, sendToWindow } = overrideChannels(mainDi);
 
@@ -509,9 +512,10 @@ export const getApplicationBuilder = () => {
         );
 
         windowDi.override(hostedClusterIdInjectable, () => clusterStub.id);
+        windowDi.override(hostedClusterInjectable, () => clusterStub);
 
         // TODO: Figure out a way to remove this stub.
-        const namespaceStoreStub = {
+        windowDi.override(namespaceStoreInjectable, () => ({
           isLoaded: true,
           get contextNamespaces() {
             return Array.from(selectedNamespaces);
@@ -528,10 +532,7 @@ export const getApplicationBuilder = () => {
           pickOnlySelected: () => [],
           isSelectedAll: () => false,
           getTotalCount: () => namespaceItems.length,
-        } as Partial<NamespaceStore> as NamespaceStore;
-
-        windowDi.override(namespaceStoreInjectable, () => namespaceStoreStub);
-        windowDi.override(hostedClusterInjectable, () => clusterStub);
+        } as Partial<NamespaceStore> as NamespaceStore));
       });
 
       return builder;

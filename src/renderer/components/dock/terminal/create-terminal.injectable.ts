@@ -13,6 +13,7 @@ import terminalCopyOnSelectInjectable from "../../../../common/user-store/termin
 import isMacInjectable from "../../../../common/vars/is-mac.injectable";
 import openLinkInBrowserInjectable from "../../../../common/utils/open-link-in-browser.injectable";
 import xtermColorThemeInjectable from "../../../themes/terminal-colors.injectable";
+import loggerInjectable from "../../../../common/logger.injectable";
 
 export type CreateTerminal = (tabId: TabId, api: TerminalApi) => Terminal;
 
@@ -26,6 +27,7 @@ const createTerminalInjectable = getInjectable({
       isMac: di.inject(isMacInjectable),
       openLinkInBrowser: di.inject(openLinkInBrowserInjectable),
       xtermColorTheme: di.inject(xtermColorThemeInjectable),
+      logger: di.inject(loggerInjectable),
     };
 
     return (tabId, api) => new Terminal(dependencies, { tabId, api });

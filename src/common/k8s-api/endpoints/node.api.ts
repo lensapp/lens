@@ -6,14 +6,14 @@
 import type { BaseKubeObjectCondition, ClusterScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import { cpuUnitsToNumber, unitsToBytes, isObject } from "../../../renderer/utils";
-import type { DerivedKubeApiOptions, IgnoredKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { TypedRegEx } from "typed-regex";
 
 export class NodeApi extends KubeApi<Node> {
-  constructor(opts: DerivedKubeApiOptions & IgnoredKubeApiOptions = {}) {
-    super({
-      ...opts,
+  constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
+    super(deps, {
+      ...opts ?? {},
       objectConstructor: Node,
     });
   }

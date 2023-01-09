@@ -11,8 +11,8 @@ import type { CatalogEntityConstructor, CatalogEntitySpec } from "../catalog/cat
 import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
 import { requestClusterActivation, requestClusterDisconnection } from "../../renderer/ipc";
 import KubeClusterCategoryIcon from "./icons/kubernetes.svg";
-import { asLegacyGlobalFunctionForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import getClusterByIdInjectable from "../cluster-store/get-by-id.injectable";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -64,8 +64,6 @@ export function isKubernetesCluster(item: unknown): item is KubernetesCluster {
   return item instanceof KubernetesCluster;
 }
 
-const getClusterById = asLegacyGlobalFunctionForExtensionApi(getClusterByIdInjectable);
-
 export class KubernetesCluster<
   Metadata extends KubernetesClusterMetadata = KubernetesClusterMetadata,
   Status extends KubernetesClusterStatus = KubernetesClusterStatus,
@@ -79,6 +77,9 @@ export class KubernetesCluster<
 
   async connect(): Promise<void> {
     if (app) {
+      const di = getLegacyGlobalDiForExtensionApi();
+      const getClusterById = di.inject(getClusterByIdInjectable);
+
       await getClusterById(this.getId())?.activate();
     } else {
       await requestClusterActivation(this.getId(), false);
@@ -87,6 +88,9 @@ export class KubernetesCluster<
 
   async disconnect(): Promise<void> {
     if (app) {
+      const di = getLegacyGlobalDiForExtensionApi();
+      const getClusterById = di.inject(getClusterByIdInjectable);
+
       getClusterById(this.getId())?.disconnect();
     } else {
       await requestClusterDisconnection(this.getId(), false);

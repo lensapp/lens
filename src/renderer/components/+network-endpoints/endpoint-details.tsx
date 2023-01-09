@@ -11,13 +11,19 @@ import { DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Endpoints } from "../../../common/k8s-api/endpoints";
 import { EndpointSubsetList } from "./endpoint-subset-list";
-import logger from "../../../common/logger";
+import type { Logger } from "../../../common/logger";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export interface EndpointsDetailsProps extends KubeObjectDetailsProps<Endpoints> {
 }
 
+interface Dependencies {
+  logger: Logger;
+}
+
 @observer
-export class EndpointsDetails extends React.Component<EndpointsDetailsProps> {
+class NonInjectedEndpointsDetails extends React.Component<EndpointsDetailsProps & Dependencies> {
   render() {
     const { object: endpoint } = this.props;
 
@@ -26,7 +32,7 @@ export class EndpointsDetails extends React.Component<EndpointsDetailsProps> {
     }
 
     if (!(endpoint instanceof Endpoints)) {
-      logger.error("[EndpointDetails]: passed object that is not an instanceof Endpoint", endpoint);
+      this.props.logger.error("[EndpointDetails]: passed object that is not an instanceof Endpoint", endpoint);
 
       return null;
     }
@@ -47,3 +53,10 @@ export class EndpointsDetails extends React.Component<EndpointsDetailsProps> {
     );
   }
 }
+
+export const EndpointsDetails = withInjectables<Dependencies, EndpointsDetailsProps>(NonInjectedEndpointsDetails, {
+  getProps: (di, props) => ({
+    ...props,
+    logger: di.inject(loggerInjectable),
+  }),
+});

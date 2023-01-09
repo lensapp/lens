@@ -22,17 +22,19 @@ interface Dependencies {
   model: EditResourceModel;
 }
 
-const NonInjectedEditResource = observer(
-  ({ model, tabId }: EditResourceProps & Dependencies) => {
-    return (
-      <div className="EditResource flex column">
-        {model.shouldShowErrorAboutNoResource && (
+const NonInjectedEditResource = observer(({
+  model,
+  tabId,
+}: EditResourceProps & Dependencies) => (
+  <div className="EditResource flex column">
+    {
+      model.shouldShowErrorAboutNoResource
+        ? (
           <Notice>
             Resource not found
           </Notice>
-        )}
-
-        {!model.shouldShowErrorAboutNoResource && (
+        )
+        : (
           <>
             <InfoPanel
               tabId={tabId}
@@ -54,31 +56,25 @@ const NonInjectedEditResource = observer(
                   <span>Namespace:</span>
                   <Badge label={model.namespace} />
                 </div>
-              )}
-            />
+              )} />
             <EditorPanel
               tabId={tabId}
               value={model.configuration.value.get()}
               onChange={model.configuration.onChange}
-              onError={model.configuration.error.onChange}
-            />
+              onError={model.configuration.error.onChange} />
           </>
-        )}
-      </div>
-    );
-  },
+        )
+    }
+  </div>
+),
 );
 
-export const EditResource = withInjectables<Dependencies, EditResourceProps>(
-  NonInjectedEditResource,
-  {
-    getPlaceholder: () => (
-      <Spinner center data-testid="edit-resource-tab-spinner" />
-    ),
-
-    getProps: async (di, props) => ({
-      model: await di.inject(editResourceModelInjectable, props.tabId),
-      ...props,
-    }),
-  },
-);
+export const EditResource = withInjectables<Dependencies, EditResourceProps>(NonInjectedEditResource, {
+  getPlaceholder: () => (
+    <Spinner center data-testid="edit-resource-tab-spinner" />
+  ),
+  getProps: async (di, props) => ({
+    ...props,
+    model: await di.inject(editResourceModelInjectable, props.tabId),
+  }),
+});

@@ -11,7 +11,7 @@ import {
   EXTENSION_PUBLISHER_MATCH,
   LensProtocolRouter,
 } from "../../../common/protocol-handler";
-import { Notifications } from "../../components/notifications";
+import type { ShowNotification } from "../../components/notifications";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import type { NavigateToClusterView } from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
@@ -19,7 +19,6 @@ import assert from "assert";
 import type { AttemptInstallByInfo } from "../../components/+extensions/attempt-install-by-info.injectable";
 import type { GetClusterById } from "../../../common/cluster-store/get-by-id.injectable";
 
-// TODO: make it so that the handlers are type safe and we don't need to do the asserts
 interface Dependencies {
   attemptInstallByInfo: AttemptInstallByInfo;
   lensProtocolRouterRenderer: LensProtocolRouterRenderer;
@@ -31,6 +30,7 @@ interface Dependencies {
   navigateToPreferences: (tabId: string) => void;
   entityRegistry: CatalogEntityRegistry;
   getClusterById: GetClusterById;
+  showShortInfoNotification: ShowNotification;
 }
 
 export const bindProtocolAddRouteHandlers = ({
@@ -44,6 +44,7 @@ export const bindProtocolAddRouteHandlers = ({
   navigateToPreferences,
   entityRegistry,
   getClusterById,
+  showShortInfoNotification,
 }: Dependencies) => () => {
   lensProtocolRouterRenderer
     .addInternalHandler("/preferences", ({ search: { highlight: tabId }}) => {
@@ -53,7 +54,7 @@ export const bindProtocolAddRouteHandlers = ({
     })
     .addInternalHandler("/", ({ tail }) => {
       if (tail) {
-        Notifications.shortInfo(
+        showShortInfoNotification(
           <p>
             {"Unknown Action for "}
             <code>
@@ -83,7 +84,7 @@ export const bindProtocolAddRouteHandlers = ({
       if (entity) {
         navigateToEntitySettings(entityId);
       } else {
-        Notifications.shortInfo(
+        showShortInfoNotification(
           <p>
             {"Unknown catalog entity "}
             <code>{entityId}</code>
@@ -100,7 +101,7 @@ export const bindProtocolAddRouteHandlers = ({
       if (cluster) {
         navigateToClusterView(clusterId);
       } else {
-        Notifications.shortInfo(
+        showShortInfoNotification(
           <p>
             {"Unknown catalog entity "}
             <code>{clusterId}</code>
@@ -116,7 +117,7 @@ export const bindProtocolAddRouteHandlers = ({
       if (cluster) {
         navigateToEntitySettings(clusterId);
       } else {
-        Notifications.shortInfo(
+        showShortInfoNotification(
           <p>
             {"Unknown catalog entity "}
             <code>{clusterId}</code>

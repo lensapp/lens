@@ -9,7 +9,7 @@ import { autorun, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { InputProps } from "./input";
 import { SearchInput } from "./search-input";
-import type { PageParam } from "../../navigation";
+import type { PageParam } from "../../navigation/page-param";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import searchUrlPageParamInjectable from "./search-url-page-param.injectable";
 

@@ -6,7 +6,7 @@
 import { action, observable, reaction } from "mobx";
 import type { StorageLayer } from "../../../utils";
 import { autoBind, toJS } from "../../../utils";
-import type { CreateStorage } from "../../../utils/create-storage/create-storage";
+import type { CreateStorage } from "../../../utils/create-storage/create-storage.injectable";
 import type { TabId } from "../dock/store";
 
 export interface DockTabStoreOptions {
@@ -33,10 +33,8 @@ export class DockTabStore<T> {
     if (autoInit && storageKey) {
       const storage = this.storage = this.dependencies.createStorage(storageKey, {});
 
-      storage.whenReady.then(() => {
-        this.data.replace(storage.value);
-        reaction(() => this.toJSON(), data => storage.set(data));
-      });
+      this.data.replace(storage.get());
+      reaction(() => this.toJSON(), data => storage.set(data));
     }
   }
 

@@ -7,6 +7,7 @@ import assert from "assert";
 import getPodsByOwnerIdInjectable from "../+workloads-pods/get-pods-by-owner-id.injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/manager.injectable";
 import jobApiInjectable from "../../../common/k8s-api/endpoints/job.api.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { JobStore } from "./store";
@@ -21,6 +22,7 @@ const jobStoreInjectable = getInjectable({
     return new JobStore({
       getPodsByOwnerId: di.inject(getPodsByOwnerIdInjectable),
       context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+      logger: di.inject(loggerInjectable),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

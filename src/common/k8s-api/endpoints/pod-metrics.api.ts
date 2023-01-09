@@ -5,7 +5,7 @@
 
 import type { KubeObjectMetadata, KubeObjectScope, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import type { DerivedKubeApiOptions } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 
@@ -52,8 +52,8 @@ export class PodMetrics extends KubeObject<
 }
 
 export class PodMetricsApi extends KubeApi<PodMetrics, PodMetricsData> {
-  constructor(opts: DerivedKubeApiOptions = {}) {
-    super({
+  constructor(deps: KubeApiDependencies, opts: DerivedKubeApiOptions = {}) {
+    super(deps, {
       ...opts,
       objectConstructor: PodMetrics,
     });
