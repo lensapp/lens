@@ -123,9 +123,13 @@ export class ApiManager {
       : apiOrBase;
     const api = this.getApi(apiBase);
 
+    if (!api) {
+      return undefined;
+    }
+
     return chain(this.dependencies.stores.get().values())
       .concat(this.externalStores.values())
-      .find(store => store.api === api);
+      .find(store => store.api.apiBase === api.apiBase);
   }
 
   lookupApiLink(ref: ObjectReference, parentObject?: KubeObject): string {
