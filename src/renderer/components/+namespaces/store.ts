@@ -23,12 +23,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
     makeObservable(this);
     autoBind(this);
 
-    this.init();
-  }
-
-  private async init() {
-    await this.dependencies.storage.whenReady;
-
+    // initialize allowed namespaces
     const { allowedNamespaces } = this;
     const selectedNamespaces = this.dependencies.storage.get(); // raw namespaces, undefined on first load
 

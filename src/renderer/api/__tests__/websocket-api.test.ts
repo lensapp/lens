@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import defaultWebsocketApiParamsInjectable from "../default-websocket-api-params.injectable";
 import type { WebSocketEvents } from "../websocket-api";
 import { WebSocketApi } from "../websocket-api";
 
@@ -16,7 +18,11 @@ describe("WebsocketApi tests", () => {
   let api: TestWebSocketApi;
 
   beforeEach(() => {
-    api = new TestWebSocketApi({});
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    api = new TestWebSocketApi({
+      defaultParams: di.inject(defaultWebsocketApiParamsInjectable),
+    }, {});
   });
 
   describe("before connection", () => {

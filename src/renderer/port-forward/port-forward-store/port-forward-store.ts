@@ -34,8 +34,6 @@ export class PortForwardStore extends ItemStore<PortForwardItem> {
   }
 
   private async init() {
-    await this.dependencies.storage.whenReady;
-
     const savedPortForwards = this.dependencies.storage.get(); // undefined on first load
 
     if (Array.isArray(savedPortForwards) && savedPortForwards.length > 0) {

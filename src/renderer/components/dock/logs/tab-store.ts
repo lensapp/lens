@@ -6,7 +6,7 @@
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
 import type { TabId } from "../dock/store";
 import { logTabDataValidator } from "./log-tab-data.validator";
-import type { CreateStorage } from "../../../utils/create-storage/create-storage";
+import type { DockTabStoreDependencies } from  "../dock-tab-store/dock-tab.store";
 
 export interface LogTabOwnerRef {
   /**
@@ -56,12 +56,8 @@ export interface LogTabData {
   showPrevious: boolean;
 }
 
-interface Dependencies {
-  createStorage: CreateStorage;
-}
-
 export class LogTabStore extends DockTabStore<LogTabData> {
-  constructor(protected dependencies: Dependencies) {
+  constructor(dependencies: DockTabStoreDependencies) {
     super(dependencies, {
       storageKey: "pod_logs",
     });
