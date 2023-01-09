@@ -6,7 +6,8 @@
       "packages/*"
     ],
     "nohoist": [
-      "**"
+      "**/core",
+      "**/core/**"
     ]
   },
   "scripts": {
@@ -14,7 +15,11 @@
     "adr:change-status": "echo \"Decision number?:\"; read decision; adr status $decision",
     "adr:update-readme": "adr update",
     "adr:list": "adr list",
-    "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest"
+    "build": "lerna run build",
+    "clean:node_modules": "lerna clean -y && rm -rf node_modules",
+    "mkdocs:serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
+    "mkdocs:verify": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
+    "test": "lerna run test:unit"
   },
   "devDependencies": {
     "adr": "^1.4.3",

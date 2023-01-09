@@ -1,7 +1,6 @@
 {
   "name": "@k8slens/open-lens",
-  "productName": "OpenLens",
-  "description": "OpenLens - Open Source IDE for Kubernetes",
+  "description": "Lens Desktop Core",
   "homepage": "https://github.com/lensapp/lens",
   "version": "6.4.0-alpha.0",
   "repository": {
@@ -37,7 +36,6 @@
     "build/*.plist",
     "build/installer.nsh",
     "build/notarize.js",
-    "src/**/*",
     "static/build/library/**/*",
     "templates/**/*",
     "types/*",
@@ -47,37 +45,19 @@
   "license": "MIT",
   "author": "OpenLens Authors <info@k8slens.dev>",
   "scripts": {
-    "build": "yarn run compile-library",
-    "dev": "concurrently -i -k \"yarn run dev-run -C\" yarn:dev:*",
-    "dev-build": "concurrently yarn:compile:*",
-    "debug-build": "concurrently yarn:compile:main yarn:compile:extension-types",
-    "dev-run": "nodemon --watch ./static/build/main.js --exec \"electron --remote-debugging-port=9223 --inspect .\"",
-    "dev:main": "yarn run compile:main --watch --progress",
-    "dev:renderer": "yarn run ts-node webpack/dev-server.ts",
+    "build": "yarn run compile:library",
     "clean": "rm -rf dist/ static/build binaries/",
-    "compile-library": "env NODE_ENV=production yarn run webpack --config webpack/library-bundle.ts",
-    "compile": "env NODE_ENV=production concurrently yarn:compile:*",
-    "compile:main": "yarn run webpack --config webpack/main.ts",
-    "compile:renderer": "yarn run webpack --config webpack/renderer.ts",
-    "compile:extension-types": "yarn run webpack --config webpack/extensions.ts",
+    "compile:library": "env NODE_ENV=production yarn run webpack --config webpack/library-bundle.ts",
     "compile:node-fetch": "yarn run webpack --config ./webpack/node-fetch.ts",
     "prepare": "yarn run compile:node-fetch",
-    "npm:fix-extensions-package-version": "yarn run ts-node build/set_extensions_npm_version.ts",
-    "build:linux": "yarn run compile && electron-builder --linux --dir",
-    "build:mac": "yarn run compile && electron-builder --mac --dir",
-    "build:win": "yarn run compile && electron-builder --win --dir",
     "integration": "jest --runInBand --detectOpenHandles --forceExit integration",
     "test:unit": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
     "test:integration": "func() { jest ${1:-xyz} --watch --runInBand --detectOpenHandles --forceExit --modulePaths=[\"<rootDir>/integration/\"]; }; func",
-    "dist": "yarn run compile && electron-builder --publish onTag",
-    "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",
     "download:binaries": "yarn run ts-node build/download_binaries.ts",
     "build:tray-icons": "yarn run ts-node build/generate-tray-icons.ts",
     "build:theme-vars": "yarn run ts-node build/build_theme_vars.ts",
     "lint": "PROD=true yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
     "lint:fix": "yarn run lint --fix",
-    "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
-    "verify-docs": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
     "version-checkout": "cat package.json | jq '.version' -r | xargs printf \"release/v%s\" | xargs git checkout -b",
     "version-commit": "cat package.json | jq '.version' -r | xargs printf \"release v%s\" | git commit --no-edit -s -F -",
     "version": "yarn run version-checkout && git add package.json && yarn run version-commit",
@@ -124,105 +104,7 @@
     ],
     "runtime": "@side/jest-runtime"
   },
-  "build": {
-    "generateUpdatesFilesForAllChannels": true,
-    "files": [
-      "static/**/*"
-    ],
-    "afterSign": "build/notarize.js",
-    "extraResources": [
-      {
-        "from": "templates/",
-        "to": "./templates/",
-        "filter": "**/*.yaml"
-      },
-      "LICENSE"
-    ],
-    "linux": {
-      "executableName": "open-lens",
-      "category": "Network",
-      "artifactName": "${productName}-${version}.${arch}.${ext}",
-      "target": [
-        "deb",
-        "rpm",
-        "AppImage"
-      ],
-      "extraResources": [
-        {
-          "from": "binaries/client/linux/${arch}/kubectl",
-          "to": "./${arch}/kubectl"
-        },
-        {
-          "from": "binaries/client/linux/${arch}/lens-k8s-proxy",
-          "to": "./${arch}/lens-k8s-proxy"
-        },
-        {
-          "from": "binaries/client/linux/${arch}/helm",
-          "to": "./${arch}/helm"
-        }
-      ]
-    },
-    "rpm": {
-      "fpm": [
-        "--rpm-rpmbuild-define=%define _build_id_links none"
-      ]
-    },
-    "mac": {
-      "executableName": "OpenLens",
-      "hardenedRuntime": true,
-      "gatekeeperAssess": false,
-      "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.plist",
-      "extraResources": [
-        {
-          "from": "binaries/client/darwin/${arch}/kubectl",
-          "to": "./${arch}/kubectl"
-        },
-        {
-          "from": "binaries/client/darwin/${arch}/lens-k8s-proxy",
-          "to": "./${arch}/lens-k8s-proxy"
-        },
-        {
-          "from": "binaries/client/darwin/${arch}/helm",
-          "to": "./${arch}/helm"
-        }
-      ]
-    },
-    "win": {
-      "executableName": "OpenLens.exe",
-      "target": [
-        "nsis"
-      ],
-      "extraResources": [
-        {
-          "from": "binaries/client/windows/${arch}/kubectl.exe",
-          "to": "./${arch}/kubectl.exe"
-        },
-        {
-          "from": "binaries/client/windows/${arch}/lens-k8s-proxy.exe",
-          "to": "./${arch}/lens-k8s-proxy.exe"
-        },
-        {
-          "from": "binaries/client/windows/${arch}/helm.exe",
-          "to": "./${arch}/helm.exe"
-        }
-      ]
-    },
-    "nsis": {
-      "include": "build/installer.nsh",
-      "oneClick": false,
-      "allowElevation": true,
-      "createStartMenuShortcut": true,
-      "allowToChangeInstallationDirectory": true
-    },
-    "protocols": {
-      "name": "Lens Protocol Handler",
-      "schemes": [
-        "lens"
-      ],
-      "role": "Viewer"
-    }
-  },
+  "build": {},
   "resolutions": {
     "@astronautlabs/jsonpath/underscore": "^1.12.1"
   },
@@ -326,6 +208,7 @@
     "@types/dompurify": "^2.4.0",
     "@types/electron-devtools-installer": "^2.2.1",
     "@types/fs-extra": "^9.0.13",
+    "@types/glob": "^8.0.0",
     "@types/glob-to-regexp": "^0.4.1",
     "@types/gunzip-maybe": "^1.4.0",
     "@types/hapi__call": "^9.0.0",
@@ -382,8 +265,6 @@
     "deepdash": "^5.3.9",
     "dompurify": "^2.4.1",
     "electron": "^19.1.9",
-    "electron-builder": "^23.6.0",
-    "electron-notarize": "^0.3.0",
     "esbuild": "^0.16.13",
     "esbuild-loader": "^2.20.0",
     "eslint": "^8.30.0",
