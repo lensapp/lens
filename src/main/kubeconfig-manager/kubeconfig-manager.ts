@@ -110,7 +110,7 @@ export class KubeconfigManager {
       clusters: [
         {
           name: contextName,
-          server: `http://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`,
+          server: `https://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`,
           skipTLSVerify: false,
           caData: Buffer.from(certificate.cert).toString("base64"),
         },

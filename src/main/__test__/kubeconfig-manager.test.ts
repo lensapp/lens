@@ -31,6 +31,7 @@ import pathExistsSyncInjectable from "../../common/fs/path-exists-sync.injectabl
 import readJsonSyncInjectable from "../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
 import lensProxyPortInjectable from "../lens-proxy/lens-proxy-port.injectable";
+import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
 
 const clusterServerUrl = "https://192.168.64.3:8443";
 
@@ -57,6 +58,12 @@ describe("kubeconfig manager tests", () => {
     di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
     di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
     di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
+
+    di.inject(lensProxyCertificateInjectable).set({
+      public: "<public-data>",
+      private: "<private-data>",
+      cert: "<ca-data>",
+    });
 
     readFileMock = asyncFn();
     di.override(readFileInjectable, () => readFileMock);
