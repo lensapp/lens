@@ -134,7 +134,7 @@ describe("opening application window using tray", () => {
           });
 
           it("starts loading of content for the application window", () => {
-            expect(callForApplicationWindowHtmlMock).toHaveBeenCalledWith(matches((val) => val.startsWith("http://lens.app:")));
+            expect(callForApplicationWindowHtmlMock).toHaveBeenCalledWith(matches((val) => val.startsWith("https://lens.app:")));
           });
 
           describe("given static HTML of application window has not resolved yet, when opening from tray again", () => {
