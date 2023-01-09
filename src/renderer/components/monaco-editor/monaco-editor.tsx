@@ -19,6 +19,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import activeThemeInjectable from "../../themes/active.injectable";
 import getEditorHeightFromLinesCountInjectable from "./get-editor-height-from-lines-number.injectable";
+import type { Logger } from "../../../common/logger";
+import loggerInjectable from "../../../common/logger.injectable";
 
 export type MonacoEditorId = string;
 
@@ -45,6 +47,7 @@ interface Dependencies {
   userStore: UserStore;
   activeTheme: IComputedValue<LensTheme>;
   getEditorHeightFromLinesCount: (linesCount: number) => number;
+  logger: Logger;
 }
 
 export function createMonacoUri(id: MonacoEditorId): Uri {
@@ -98,7 +101,14 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
       return model; // already exists
     }
 
-    const { language, value } = this.props;
+    const { language, value: rawValue } = this.props;
+    const value = typeof rawValue === "string"
+      ? rawValue
+      : "";
+
+    if (typeof rawValue !== "string") {
+      this.props.logger.error(`[MONACO-EDITOR]: Passed a non-string default value`, { rawValue });
+    }
 
     return editor.createModel(value, language, uri);
   }
@@ -322,6 +332,7 @@ export const MonacoEditor = withInjectables<Dependencies, MonacoEditorProps, Mon
       userStore: di.inject(userStoreInjectable),
       activeTheme: di.inject(activeThemeInjectable),
       getEditorHeightFromLinesCount: di.inject(getEditorHeightFromLinesCountInjectable),
+      logger: di.inject(loggerInjectable),
     }),
   },
 );
