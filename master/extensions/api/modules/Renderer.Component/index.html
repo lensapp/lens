@@ -970,6 +970,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#notifications" class="md-nav__link">
+    Notifications
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cpuoptions" class="md-nav__link">
     cpuOptions
   </a>
@@ -1193,15 +1200,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#notifications" class="md-nav__link">
-    Notifications
+  <a href="#piechart" class="md-nav__link">
+    PieChart
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#piechart" class="md-nav__link">
-    PieChart
+  <a href="#poddetailslist" class="md-nav__link">
+    PodDetailsList
   </a>
   
 </li>
@@ -1380,7 +1387,6 @@
 <li><a href="../../classes/Renderer.Component.MenuItem/">MenuItem</a></li>
 <li><a href="../../classes/Renderer.Component.NotificationsStore/">NotificationsStore</a></li>
 <li><a href="../../classes/Renderer.Component.PageLayout/">PageLayout</a></li>
-<li><a href="../../classes/Renderer.Component.PodDetailsList/">PodDetailsList</a></li>
 <li><a href="../../classes/Renderer.Component.SettingLayout/">SettingLayout</a></li>
 <li><a href="../../classes/Renderer.Component.Slider/">Slider</a></li>
 <li><a href="../../classes/Renderer.Component.Spinner/">Spinner</a></li>
@@ -1499,6 +1505,7 @@
 <li><a href="./#commandoverlay">CommandOverlay</a></li>
 <li><a href="./#inputvalidators">InputValidators</a></li>
 <li><a href="./#menucontext">MenuContext</a></li>
+<li><a href="./#notifications">Notifications</a></li>
 <li><a href="./#cpuoptions">cpuOptions</a></li>
 <li><a href="./#logtabstore">logTabStore</a></li>
 <li><a href="./#memoryoptions">memoryOptions</a></li>
@@ -1532,8 +1539,8 @@
 <li><a href="./#monacoeditor">MonacoEditor</a></li>
 <li><a href="./#namespaceselect">NamespaceSelect</a></li>
 <li><a href="./#namespaceselectfilter">NamespaceSelectFilter</a></li>
-<li><a href="./#notifications">Notifications</a></li>
 <li><a href="./#piechart">PieChart</a></li>
+<li><a href="./#poddetailslist">PodDetailsList</a></li>
 <li><a href="./#radio">Radio</a></li>
 <li><a href="./#radiogroup">RadioGroup</a></li>
 <li><a href="./#searchinput">SearchInput</a></li>
@@ -1898,6 +1905,40 @@
 <h3 id="menucontext">MenuContext<a class="headerlink" href="#menucontext" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>MenuContext</strong>: <code>Context</code>&lt;<code>null</code> | <a href="../../interfaces/Renderer.Component.MenuContextValue/"><code>MenuContextValue</code></a>></p>
 <hr />
+<h3 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">#</a></h3>
+<p>• <code>Const</code> <strong>Notifications</strong>: <code>Object</code></p>
+<h4 id="type-declaration_6">Type declaration<a class="headerlink" href="#type-declaration_6" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>checkedError</code></td>
+<td align="left"><code>ShowCheckedErrorNotification</code></td>
+</tr>
+<tr>
+<td align="left"><code>error</code></td>
+<td align="left"><a href="./#shownotification"><code>ShowNotification</code></a></td>
+</tr>
+<tr>
+<td align="left"><code>info</code></td>
+<td align="left"><a href="./#shownotification"><code>ShowNotification</code></a></td>
+</tr>
+<tr>
+<td align="left"><code>ok</code></td>
+<td align="left"><a href="./#shownotification"><code>ShowNotification</code></a></td>
+</tr>
+<tr>
+<td align="left"><code>shortInfo</code></td>
+<td align="left"><a href="./#shownotification"><code>ShowNotification</code></a></td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h3 id="cpuoptions">cpuOptions<a class="headerlink" href="#cpuoptions" title="Permanent link">#</a></h3>
 <p>• <code>Const</code> <strong>cpuOptions</strong>: <code>ChartOptions</code></p>
 <hr />
@@ -1914,7 +1955,7 @@
 <p>• <code>Const</code> <strong>resizingAnchorProps</strong>: <code>Record</code>&lt;<a href="./#drawerposition"><code>DrawerPosition</code></a>, [<code>ResizeDirection</code>, <code>ResizeSide</code>, <code>ResizeGrowthDirection</code>]></p>
 <hr />
 <h3 id="terminalstore">terminalStore<a class="headerlink" href="#terminalstore" title="Permanent link">#</a></h3>
-<p>• <code>Const</code> <strong>terminalStore</strong>: <code>TerminalStore</code> &amp; { <code>sendCommand</code>: (<code>command</code>: <code>string</code>, <code>options</code>: <code>SendCommandOptions</code>) =&gt; <code>Promise</code>&lt;<code>void</code>>  }</p>
+<p>• <code>Const</code> <strong>terminalStore</strong>: <code>TerminalStore</code> &amp; { <code>sendCommand</code>: <code>SendCommand</code>  }</p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
 <h3 id="badge">Badge<a class="headerlink" href="#badge" title="Permanent link">#</a></h3>
 <p>▸ <strong>Badge</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
@@ -2255,7 +2296,7 @@
 </tr>
 <tr>
 <td align="left"><code>A</code></td>
-<td align="left">extends <a href="../../classes/Renderer.K8sApi.KubeApi/"><code>KubeApi</code></a>&lt;<code>K</code>, <code>D</code>, <code>A</code>></td>
+<td align="left">extends <code>KubeApi</code>&lt;<code>K</code>, <code>D</code>, <code>A</code>></td>
 </tr>
 <tr>
 <td align="left"><code>D</code></td>
@@ -2516,8 +2557,8 @@
 <h4 id="returns_28">Returns<a class="headerlink" href="#returns_28" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <hr />
-<h3 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">#</a></h3>
-<p>▸ <strong>Notifications</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<h3 id="piechart">PieChart<a class="headerlink" href="#piechart" title="Permanent link">#</a></h3>
+<p>▸ <strong>PieChart</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <h4 id="parameters_29">Parameters<a class="headerlink" href="#parameters_29" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2529,11 +2570,7 @@
 <tbody>
 <tr>
 <td align="left"><code>props</code></td>
-<td align="left"><code>Object</code></td>
-</tr>
-<tr>
-<td align="left"><code>props.children?</code></td>
-<td align="left"><code>ReactNode</code></td>
+<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.PieChartProps/"><code>PieChartProps</code></a>></td>
 </tr>
 <tr>
 <td align="left"><code>context?</code></td>
@@ -2544,8 +2581,8 @@
 <h4 id="returns_29">Returns<a class="headerlink" href="#returns_29" title="Permanent link">#</a></h4>
 <p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <hr />
-<h3 id="piechart">PieChart<a class="headerlink" href="#piechart" title="Permanent link">#</a></h3>
-<p>▸ <strong>PieChart</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
+<h3 id="poddetailslist">PodDetailsList<a class="headerlink" href="#poddetailslist" title="Permanent link">#</a></h3>
+<p>▸ <strong>PodDetailsList</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <h4 id="parameters_30">Parameters<a class="headerlink" href="#parameters_30" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2557,7 +2594,7 @@
 <tbody>
 <tr>
 <td align="left"><code>props</code></td>
-<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.PieChartProps/"><code>PieChartProps</code></a>></td>
+<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.PodDetailsListProps/"><code>PodDetailsListProps</code></a>></td>
 </tr>
 <tr>
 <td align="left"><code>context?</code></td>
@@ -2792,7 +2829,7 @@
 <p><code>Element</code></p>
 <hr />
 <h3 id="tablayout">TabLayout<a class="headerlink" href="#tablayout" title="Permanent link">#</a></h3>
-<p>▸ <strong>TabLayout</strong>(<code>__namedParameters</code>): <code>Element</code></p>
+<p>▸ <strong>TabLayout</strong>(<code>props</code>, <code>context?</code>): <code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <h4 id="parameters_39">Parameters<a class="headerlink" href="#parameters_39" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2803,13 +2840,17 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>__namedParameters</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Component.TabLayoutProps/"><code>TabLayoutProps</code></a></td>
+<td align="left"><code>props</code></td>
+<td align="left"><code>PropsWithChildren</code>&lt;<a href="../../interfaces/Renderer.Component.TabLayoutProps/"><code>TabLayoutProps</code></a>></td>
+</tr>
+<tr>
+<td align="left"><code>context?</code></td>
+<td align="left"><code>any</code></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_39">Returns<a class="headerlink" href="#returns_39" title="Permanent link">#</a></h4>
-<p><code>Element</code></p>
+<p><code>null</code> | <code>ReactElement</code>&lt;<code>any</code>, <code>any</code>></p>
 <hr />
 <h3 id="table">Table<a class="headerlink" href="#table" title="Permanent link">#</a></h3>
 <p>▸ <strong>Table</strong>&lt;<code>Item</code>>(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
@@ -2888,7 +2929,7 @@
 <h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
 <p>▸ <strong>getDetailsUrl</strong>(<code>selfLink</code>, <code>resetSelected?</code>, <code>mergeGlobals?</code>): <code>string</code></p>
 <p><strong><code>Deprecated</code></strong></p>
-<p>use <code>di.inject(getDetailsUrlInjectable)</code> instead</p>
+<p>Use <code>Renderer.Navigation.getDetailsUrl</code></p>
 <h4 id="parameters_43">Parameters<a class="headerlink" href="#parameters_43" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -3022,7 +3063,7 @@
 <h3 id="showdetails">showDetails<a class="headerlink" href="#showdetails" title="Permanent link">#</a></h3>
 <p>▸ <strong>showDetails</strong>(<code>selfLink</code>, <code>resetSelected?</code>): <code>void</code></p>
 <p><strong><code>Deprecated</code></strong></p>
-<p>use <code>di.inject(showDetailsInjectable)</code> instead</p>
+<p>Use <code>Renderer.Navigation.showDetails</code></p>
 <h4 id="parameters_48">Parameters<a class="headerlink" href="#parameters_48" title="Permanent link">#</a></h4>
 <table>
 <thead>

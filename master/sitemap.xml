@@ -106,11 +106,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.PodDetailsList/</loc>
-         <lastmod>2023-01-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.Component.SettingLayout/</loc>
          <lastmod>2023-01-09</lastmod>
          <changefreq>daily</changefreq>
@@ -251,11 +246,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.DeploymentApi/</loc>
-         <lastmod>2023-01-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.DeploymentStore/</loc>
          <lastmod>2023-01-09</lastmod>
          <changefreq>daily</changefreq>
@@ -291,11 +281,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.IngressApi/</loc>
-         <lastmod>2023-01-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.IngressClassStore/</loc>
          <lastmod>2023-01-09</lastmod>
          <changefreq>daily</changefreq>
@@ -312,11 +297,6 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.JobStore/</loc>
-         <lastmod>2023-01-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.KubeApi/</loc>
          <lastmod>2023-01-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -381,11 +361,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.NodesApi/</loc>
-         <lastmod>2023-01-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.NodesStore/</loc>
          <lastmod>2023-01-09</lastmod>
          <changefreq>daily</changefreq>
@@ -397,11 +372,6 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.PersistentVolumeClaim/</loc>
-         <lastmod>2023-01-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.PersistentVolumeClaimsApi/</loc>
          <lastmod>2023-01-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -422,11 +392,6 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.PodDisruptionBudgetsStore/</loc>
-         <lastmod>2023-01-09</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.PodsApi/</loc>
          <lastmod>2023-01-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -831,6 +796,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.K8sApi.IgnoredKubeApiOptions/</loc>
+         <lastmod>2023-01-09</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.AdditionalCategoryColumnRegistration/</loc>
          <lastmod>2023-01-09</lastmod>
          <changefreq>daily</changefreq>
@@ -1202,6 +1172,11 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.ISecretRef/</loc>
+         <lastmod>2023-01-09</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.IgnoredKubeApiOptions/</loc>
          <lastmod>2023-01-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
