@@ -5,13 +5,10 @@
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { platform } from "os";
 import path from "path";
-import type { WebpackPluginInstance } from "webpack";
 import { DefinePlugin, optimize } from "webpack";
 import main from "./main";
-import renderer from "./renderer";
+import renderer, { cssModulesWebpackRule, fontsLoaderWebpackRules, iconsAndImagesWebpackRules } from "./renderer";
 import { buildDir } from "./vars";
-import CircularDependencyPlugin from "circular-dependency-plugin";
-import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 
 const rendererConfig = renderer({ showVars: false });
 
@@ -30,16 +27,38 @@ const config = [
     optimization: {
       minimize: false,
     },
+    module: {
+      parser: {
+        javascript: {
+          commonjsMagicComments: true,
+        },
+      },
+      rules: [
+        {
+          test: /\.node$/,
+          use: "node-loader",
+        },
+        {
+          test: /\.ts$/,
+          exclude: /node_modules/,
+          use: {
+            loader: "ts-loader",
+            options: {
+              compilerOptions: {
+                declaration: true,
+                sourceMap: false,
+              },
+            }
+          },
+        },
+        ...iconsAndImagesWebpackRules(),
+      ],
+    },
     plugins: [
       new DefinePlugin({
         CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
         CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
       }),
-      new CircularDependencyPlugin({
-        cwd: __dirname,
-        exclude: /node_modules/,
-        failOnError: true,
-      }) as unknown as WebpackPluginInstance,
     ],
   },
   {
@@ -57,14 +76,7 @@ const config = [
     optimization: {
       minimize: false,
     },
-    plugins: [
-      new ForkTsCheckerPlugin(),
-      new CircularDependencyPlugin({
-        cwd: __dirname,
-        exclude: /node_modules/,
-        failOnError: true,
-      }) as unknown as WebpackPluginInstance,
-    ],
+    plugins: [],
   },
   {
     ...rendererConfig,
@@ -96,12 +108,6 @@ const config = [
       new optimize.LimitChunkCountPlugin({
         maxChunks: 1,
       }),
-      new ForkTsCheckerPlugin(),
-      new CircularDependencyPlugin({
-        cwd: __dirname,
-        exclude: /node_modules/,
-        failOnError: true,
-      }) as unknown as WebpackPluginInstance,
     ],
   },
 ];
