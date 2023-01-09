@@ -217,7 +217,7 @@ export class KubeApi<
   readonly kind: string;
   readonly apiVersion: string;
 
-  @observable apiBase: string;
+  @observable apiBase = "";
 
   apiPrefix: string;
   apiGroup: string;
