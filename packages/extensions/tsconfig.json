@@ -23,5 +23,10 @@
   "exclude": [
     "node_modules",
     "../core/src/"
+  ],
+  "references": [
+    {
+      "path": "../core"
+    }
   ]
 }

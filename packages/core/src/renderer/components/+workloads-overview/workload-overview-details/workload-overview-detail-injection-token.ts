@@ -6,7 +6,7 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 import type React from "react";
 
-interface WorkloadOverviewDetail {
+export interface WorkloadOverviewDetail {
   orderNumber: number;
   Component: React.ElementType<{}>;
   enabled: IComputedValue<boolean>;

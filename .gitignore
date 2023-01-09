@@ -5,3 +5,4 @@ yarn-error.log
 coverage/
 tmp/
 site/
+docs/extensions/api/

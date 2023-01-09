@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "yarn run webpack --config webpack/extensions.ts",
-    "build-docs": "yarn run typedoc src/extension-api.ts",
+    "build-docs": "yarn run typedoc",
     "clean": "rm -rf dist/"
   },
   "dependencies": {

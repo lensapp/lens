@@ -14,6 +14,9 @@ import * as Proxy from "./proxy";
 
 import logger from "../../common/logger";
 
+/**
+ * @module Common
+ */
 export {
   App,
   EventBus,

@@ -1,6 +1,8 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
+    "outDir": "static/build/library/",
     "paths": {
       "*": [
         "node_modules/*",
@@ -17,6 +19,8 @@
     ]
   },
   "include": [
+    "package.json",
+    "webpack/vars.ts",
     "src/**/*",
     "types/*.d.ts",
   ],
