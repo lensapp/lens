@@ -10,9 +10,14 @@
     ]
   },
   "scripts": {
+    "adr:create": "echo \"What is the title?\"; read title; adr new \"$title\"",
+    "adr:change-status": "echo \"Decision number?:\"; read decision; adr status $decision",
+    "adr:update-readme": "adr update",
+    "adr:list": "adr list",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest"
   },
   "devDependencies": {
+    "adr": "^1.4.3",
     "lerna": "^6.3.0"
   }
 }
