@@ -34,6 +34,7 @@ import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.inject
 import pathExistsInjectable from "../../../common/fs/path-exists.injectable";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
+import lensProxyCertificateInjectable from "../../../common/certificate/lens-proxy-certificate.injectable";
 
 describe("kubeconfig-sync.source tests", () => {
   let computeKubeconfigDiff: ComputeKubeconfigDiff;
@@ -51,6 +52,12 @@ describe("kubeconfig-sync.source tests", () => {
     di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
     di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
     di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
+
+    di.inject(lensProxyCertificateInjectable).set({
+      public: "<public-data>",
+      private: "<private-data>",
+      cert: "<ca-data>",
+    });
 
     clusters = new Map();
     di.override(getClusterByIdInjectable, () => id => clusters.get(id));

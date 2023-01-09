@@ -23,6 +23,7 @@ import pathExistsSyncInjectable from "../../common/fs/path-exists-sync.injectabl
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonSyncInjectable from "../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
+import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
 
 describe("create clusters", () => {
   let cluster: Cluster;
@@ -58,6 +59,12 @@ describe("create clusters", () => {
     di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
     di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
     di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
+
+    di.inject(lensProxyCertificateInjectable).set({
+      public: "<public-data>",
+      private: "<private-data>",
+      cert: "<ca-data>",
+    });
 
     createCluster = di.inject(createClusterInjectionToken);
 

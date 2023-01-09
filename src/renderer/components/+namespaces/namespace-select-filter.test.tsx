@@ -11,6 +11,7 @@ import { fireEvent } from "@testing-library/react";
 import React from "react";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import lensProxyCertificateInjectable from "../../../common/certificate/lens-proxy-certificate.injectable";
 import type { Fetch } from "../../../common/fetch/fetch.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
@@ -57,6 +58,12 @@ describe("<NamespaceSelectFilter />", () => {
 
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
+
+    di.inject(lensProxyCertificateInjectable).set({
+      public: "<public-data>",
+      private: "<private-data>",
+      cert: "<ca-data>",
+    });
 
     const createCluster = di.inject(createClusterInjectable);
 

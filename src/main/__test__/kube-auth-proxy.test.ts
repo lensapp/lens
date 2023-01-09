@@ -24,9 +24,10 @@ import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
-import ensureDirInjectable from "../../common/fs/ensure-dir.injectable";
+import ensureDirectoryInjectable from "../../common/fs/ensure-directory.injectable";
 import type { GetBasenameOfPath } from "../../common/path/get-basename.injectable";
 import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
+import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
 
 const clusterServerUrl = "https://192.168.64.3:8443";
 
@@ -45,7 +46,7 @@ describe("kube auth proxy tests", () => {
     di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
 
     const writeJsonSync = di.inject(writeJsonSyncInjectable);
-    const ensureDir = di.inject(ensureDirInjectable);
+    const ensureDirectory = di.inject(ensureDirectoryInjectable);
 
     getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
 
@@ -71,7 +72,13 @@ describe("kube auth proxy tests", () => {
       kind: "Config",
       preferences: {},
     });
-    await ensureDir("/tmp");
+    await ensureDirectory("/tmp");
+
+    di.inject(lensProxyCertificateInjectable).set({
+      public: "<public-data>",
+      private: "<private-data>",
+      cert: "<ca-data>",
+    });
 
     spawnMock = jest.fn();
     di.override(spawnInjectable, () => spawnMock);

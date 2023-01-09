@@ -32,6 +32,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import deploymentApiInjectable from "../endpoints/deployment.api.injectable";
 import podApiInjectable from "../endpoints/pod.api.injectable";
 import namespaceApiInjectable from "../endpoints/namespace.api.injectable";
+import lensProxyCertificateInjectable from "../../certificate/lens-proxy-certificate.injectable";
 
 // NOTE: this is fine because we are testing something that only exported
 // eslint-disable-next-line no-restricted-imports
@@ -47,6 +48,12 @@ describe("createKubeApiForRemoteCluster", () => {
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+
+    di.inject(lensProxyCertificateInjectable).set({
+      public: "<public-data>",
+      private: "<private-data>",
+      cert: "<ca-data>",
+    });
 
     const createCluster = di.inject(createClusterInjectable);
 
