@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { IObservableValue } from "mobx";
 import { runInAction } from "mobx";
 import { inspect } from "util";
 import { isDefined } from "./type-narrowing";
@@ -21,6 +22,21 @@ export function getOrInsert<K, V>(map: Map<K, V>, key: K, value: V): V {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return map.get(key)!;
+}
+
+export async function getOrInsertWithObservable<K>(box: IObservableValue<K | undefined>, getter: () => Promise<K>): Promise<K> {
+  const val = box.get();
+
+  if (val) {
+    return val;
+  }
+
+  const newVal = await getter();
+
+  runInAction(() => box.set(newVal));
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return box.get()!;
 }
 
 /**

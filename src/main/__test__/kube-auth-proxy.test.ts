@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import waitUntilPortIsUsedInjectable from "../kube-auth-proxy/wait-until-port-is-used/wait-until-port-is-used.injectable";
+import waitUntilPortIsUsedInjectable from "../../common/utils/wait-until-port-is-used/wait-until-port-is-used.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
 import type { ChildProcess } from "child_process";

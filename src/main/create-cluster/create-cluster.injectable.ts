@@ -19,12 +19,13 @@ import createVersionDetectorInjectable from "../cluster-detectors/create-version
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 import loadConfigfromFileInjectable from "../../common/kube-helpers/load-config-from-file.injectable";
 import requestNamespaceListPermissionsForInjectable from "../../common/cluster/request-namespace-list-permissions.injectable";
+import sendClusterConnectUpdateInjectable from "../../common/cluster/send-cluster-connect-update.injectable";
 
 const createClusterInjectable = getInjectable({
   id: "create-cluster",
 
   instantiate: (di) => {
-    const dependencies: ClusterDependencies = {
+    const dependencies: Omit<ClusterDependencies, "sendClusterConnectUpdate"> = {
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
       createKubeconfigManager: di.inject(createKubeconfigManagerInjectable),
       createKubectl: di.inject(createKubectlInjectable),
@@ -40,7 +41,10 @@ const createClusterInjectable = getInjectable({
       loadConfigfromFile: di.inject(loadConfigfromFileInjectable),
     };
 
-    return (model, configData) => new Cluster(dependencies, model, configData);
+    return (model, configData) => new Cluster({
+      ...dependencies,
+      sendClusterConnectUpdate: di.inject(sendClusterConnectUpdateInjectable, model.id),
+    }, model, configData);
   },
 
   injectionToken: createClusterInjectionToken,

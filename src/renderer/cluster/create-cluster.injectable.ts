@@ -32,6 +32,7 @@ const createClusterInjectable = getInjectable({
       requestApiResources: ()=> { throw new Error("Tried to access back-end feature in front-end."); },
       detectorRegistry: undefined as never,
       createVersionDetector: () => { throw new Error("Tried to access back-end feature in front-end."); },
+      sendClusterConnectUpdate: () => { throw new Error("Tried to access back-end feature in front-end."); },
     };
 
     return (model, configData) => new Cluster(dependencies, model, configData);

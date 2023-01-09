@@ -5,17 +5,12 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { shouldShowResourceInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
-import type { KubeApiResourceDescriptor } from "../../common/rbac";
-import { formatKubeApiResource } from "../../common/rbac";
 
-// TODO: Figure out implementation for this later.
 const allowedResourcesInjectable = getInjectable({
   id: "allowed-resources",
   instantiate: () => computed(() => false),
   injectionToken: shouldShowResourceInjectionToken,
-  lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, resource: KubeApiResourceDescriptor) => formatKubeApiResource(resource),
-  }),
+  lifecycle: lifecycleEnum.singleton,
 });
 
 export default allowedResourcesInjectable;

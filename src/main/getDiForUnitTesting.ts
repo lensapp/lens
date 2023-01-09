@@ -89,6 +89,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
         stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
         stdout: { on: jest.fn(), removeAllListeners: jest.fn() },
         on: jest.fn(),
+        off: jest.fn(),
       } as never;
     });
   }

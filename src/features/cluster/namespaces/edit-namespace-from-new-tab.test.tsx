@@ -64,6 +64,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
       windowDi.override(callForPatchResourceInjectable, () => callForPatchResourceMock);
     });
 
+    builder.namespaces.add("default");
     builder.allowKubeResource({
       apiName: "namespaces",
       group: "v1",

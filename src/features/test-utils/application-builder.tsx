@@ -369,7 +369,6 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
     ));
     mainDi.override(requestNamespaceListPermissionsForInjectable, () => () => async () => (resource) => allowedResourcesState.has(formatKubeApiResource(resource)));
 
-
     runInAction(() => {
       mainDi.register(getInjectable({
         id: "create-fake-cluster",
@@ -584,7 +583,7 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
       setEnvironmentToClusterFrame: () => {
         environment = environments.clusterFrame;
 
-        builder.beforeWindowStart((windowDi) => {
+        builder.beforeWindowStart(async (windowDi) => {
           windowDi.override(hostedClusterIdInjectable, () => clusterId);
 
           // TODO: Figure out a way to remove this stub.
@@ -606,6 +605,8 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
             isSelectedAll: () => false,
             getTotalCount: () => namespaceItems.length,
           } as Partial<NamespaceStore> as NamespaceStore));
+
+          await clusters.get(clusterId)?.activate();
         });
 
         builder.afterWindowStart(windowDi => {

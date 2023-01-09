@@ -3,37 +3,46 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { KubeAuthProxyDependencies } from "./kube-auth-proxy";
-import { KubeAuthProxy } from "./kube-auth-proxy";
 import type { Cluster } from "../../common/cluster/cluster";
-import spawnInjectable from "../child-process/spawn.injectable";
-import kubeAuthProxyCertificateInjectable from "./kube-auth-proxy-certificate.injectable";
-import loggerInjectable from "../../common/logger.injectable";
-import waitUntilPortIsUsedInjectable from "./wait-until-port-is-used/wait-until-port-is-used.injectable";
-import lensK8sProxyPathInjectable from "./lens-k8s-proxy-path.injectable";
-import getPortFromStreamInjectable from "../utils/get-port-from-stream.injectable";
+import type { KubeAuthProxyProcess } from "./spawn-proxy.injectable";
+import spawnKubeAuthProxyInjectable from "./spawn-proxy.injectable";
+import type { IObservableValue } from "mobx";
+import { observable } from "mobx";
+import { getOrInsertWithObservable } from "../../common/utils";
 
-export type CreateKubeAuthProxy = (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
+export interface KubeAuthProxy {
+  readonly proxyProcess: IObservableValue<KubeAuthProxyProcess | undefined>;
+  run(): Promise<KubeAuthProxyProcess>;
+  exit(): void;
+}
+
+export type CreateKubeAuthProxy = (cluster: Cluster) => KubeAuthProxy;
 
 const createKubeAuthProxyInjectable = getInjectable({
   id: "create-kube-auth-proxy",
 
   instantiate: (di): CreateKubeAuthProxy => {
-    const dependencies: Omit<KubeAuthProxyDependencies, "proxyCert"> = {
-      proxyBinPath: di.inject(lensK8sProxyPathInjectable),
-      spawn: di.inject(spawnInjectable),
-      logger: di.inject(loggerInjectable),
-      waitUntilPortIsUsed: di.inject(waitUntilPortIsUsedInjectable),
-      getPortFromStream: di.inject(getPortFromStreamInjectable),
-    };
+    const spawnKubeAuthProxy = di.inject(spawnKubeAuthProxyInjectable);
 
-    return (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => {
-      const clusterUrl = new URL(cluster.apiUrl);
+    return (cluster) => {
+      const proxyProcess = observable.box<KubeAuthProxyProcess>();
+      let controller = new AbortController();
 
-      return new KubeAuthProxy({
-        ...dependencies,
-        proxyCert: di.inject(kubeAuthProxyCertificateInjectable, clusterUrl.hostname),
-      }, cluster, environmentVariables);
+      return {
+        proxyProcess,
+        run: () => getOrInsertWithObservable(proxyProcess, async () => {
+          controller = new AbortController();
+
+          return spawnKubeAuthProxy(cluster, {
+            signal: controller.signal,
+          });
+        }),
+        exit: () => {
+          controller.abort();
+          proxyProcess.get()?.stop();
+          proxyProcess.set(undefined);
+        },
+      };
     };
   },
 });

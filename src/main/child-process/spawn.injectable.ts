@@ -9,7 +9,6 @@ export type Spawn = typeof spawn;
 
 const spawnInjectable = getInjectable({
   id: "spawn",
-
   instantiate: (): Spawn => spawn,
   causesSideEffects: true,
 });

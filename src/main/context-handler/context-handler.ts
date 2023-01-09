@@ -10,11 +10,12 @@ import type httpProxy from "http-proxy";
 import type { UrlWithStringQuery } from "url";
 import url from "url";
 import { CoreV1Api } from "@kubernetes/client-node";
-import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
-import type { CreateKubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
+import type { KubeAuthProxy, CreateKubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import type { GetPrometheusProviderByKind } from "../prometheus/get-by-kind.injectable";
 import type { IComputedValue } from "mobx";
 import type { Logger } from "../../common/logger";
+import type { KubeAuthProxyProcess } from "../kube-auth-proxy/spawn-proxy.injectable";
+import { waitUntilDefined } from "../../common/utils";
 
 export interface PrometheusDetails {
   prometheusPath: string;
@@ -181,22 +182,14 @@ export class ContextHandler implements ClusterContextHandler {
     };
   }
 
-  protected async ensureServerHelper(): Promise<KubeAuthProxy> {
+  protected async ensureServerHelper(): Promise<KubeAuthProxyProcess> {
     if (!this.kubeAuthProxy) {
-      const proxyEnv = Object.assign({}, process.env);
+      this.kubeAuthProxy = this.dependencies.createKubeAuthProxy(this.cluster);
 
-      if (this.cluster.preferences.httpsProxy) {
-        proxyEnv.HTTPS_PROXY = this.cluster.preferences.httpsProxy;
-      }
-      this.kubeAuthProxy = this.dependencies.createKubeAuthProxy(this.cluster, proxyEnv);
-      await this.kubeAuthProxy.run();
-
-      return this.kubeAuthProxy;
+      return this.kubeAuthProxy.run();
+    } else {
+      return waitUntilDefined(this.kubeAuthProxy.proxyProcess);
     }
-
-    await this.kubeAuthProxy.whenReady;
-
-    return this.kubeAuthProxy;
   }
 
   async ensureServer(): Promise<void> {
