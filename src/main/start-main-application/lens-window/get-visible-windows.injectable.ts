@@ -13,11 +13,10 @@ const getVisibleWindowsInjectable = getInjectable({
   instantiate: (di) => {
     const getAllLensWindows = () => di.injectMany(applicationWindowInjectionToken);
 
-    return () =>
-      pipeline(
-        getAllLensWindows(),
-        filter((lensWindow) => !!lensWindow.isVisible),
-      );
+    return () => pipeline(
+      getAllLensWindows(),
+      filter((lensWindow) => !!lensWindow.isVisible),
+    );
   },
 });
 

@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import FormData from "form-data";
 import type { Cluster } from "../common/cluster/cluster";
-import { withTimeout } from "../common/fetch/timeout-controller";
 import type { RequestMetricsParams } from "../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 import k8sRequestInjectable from "./k8s-request.injectable";
 
@@ -30,12 +29,10 @@ const getMetricsInjectable = getInjectable({
         body.append(key, value);
       }
 
-      const controller = withTimeout(60 * 1000); // 1 minute timeout
-
       return k8sRequest(cluster, metricsPath, {
-        signal: controller.signal,
         method: "POST",
         body,
+        timeout: 60 * 1000,
       });
     };
   },

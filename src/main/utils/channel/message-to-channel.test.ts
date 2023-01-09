@@ -29,6 +29,8 @@ describe("message-to-channel", () => {
         start: async () => {},
         close: () => {},
         isVisible: true,
+        canGoBack: () => false,
+        canGoForward: () => false,
       },
 
       {
@@ -40,6 +42,8 @@ describe("message-to-channel", () => {
         start: async () => {},
         close: () => {},
         isVisible: true,
+        canGoBack: () => false,
+        canGoForward: () => false,
       },
     ]);
 
