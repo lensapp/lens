@@ -129,7 +129,10 @@
     "setupFilesAfterEnv": [
       "<rootDir>/src/jest-after-env.setup.ts"
     ],
-    "runtime": "@side/jest-runtime"
+    "runtime": "@side/jest-runtime",
+    "watchPlugins": [
+      "jest-watch-suspend"
+    ]
   },
   "build": {
     "generateUpdatesFilesForAllChannels": true,
