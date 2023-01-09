@@ -29,7 +29,7 @@ ci-validate-dev: binaries/client compile-dev
 .PHONY: dev
 dev: binaries/client
 	rm -rf static/build/
-	yarn run build:tray-icons
+	yarn run generate-tray-icons
 	yarn dev
 
 .PHONY: lint
@@ -51,7 +51,7 @@ integration: build
 .PHONY: build-impl
 build-impl:
 	yarn run download:binaries
-	yarn run build:tray-icons
+	yarn run generate-tray-icons
 	yarn run compile
 ifeq "$(DETECTED_OS)" "Windows"
 # https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
