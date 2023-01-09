@@ -7,8 +7,8 @@ import type { SendMessageToChannel } from "../../../common/utils/channel/message
 import { sendMessageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
 import sendToMainInjectable from "./send-to-main.injectable";
 
-const messageToChannelInjectable = getInjectable({
-  id: "message-to-channel",
+const sendMessageToChannelInjectable = getInjectable({
+  id: "send-message-to-channel",
 
   instantiate: (di) => {
     const sendToMain = di.inject(sendToMainInjectable);
@@ -21,4 +21,4 @@ const messageToChannelInjectable = getInjectable({
   injectionToken: sendMessageToChannelInjectionToken,
 });
 
-export default messageToChannelInjectable;
+export default sendMessageToChannelInjectable;

@@ -8,8 +8,8 @@ import { sendMessageToChannelInjectionToken } from "../../../common/utils/channe
 import getVisibleWindowsInjectable from "../../start-main-application/lens-window/get-visible-windows.injectable";
 import clusterFramesInjectable from "../../../common/cluster-frames.injectable";
 
-const messageToChannelInjectable = getInjectable({
-  id: "message-to-channel",
+const sendMessageToChannelInjectable = getInjectable({
+  id: "send-message-to-channel",
 
   instantiate: (di) => {
     const getVisibleWindows = di.inject(getVisibleWindowsInjectable);
@@ -29,4 +29,4 @@ const messageToChannelInjectable = getInjectable({
   injectionToken: sendMessageToChannelInjectionToken,
 });
 
-export default messageToChannelInjectable;
+export default sendMessageToChannelInjectable;
