@@ -161,6 +161,12 @@ describe("KubeApi", () => {
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
 
+    di.inject(lensProxyCertificateInjectable).set({
+      public: "<public-data>",
+      private: "<private-data>",
+      cert: "<ca-data>",
+    });
+
     const createCluster = di.inject(createClusterInjectable);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 
