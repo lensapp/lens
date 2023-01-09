@@ -4,14 +4,16 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { generate } from "selfsigned";
-import lensProxyCertificateInjectable from "../../../common/certificate/lens-proxy-certificate.injectable";
-import { beforeElectronIsReadyInjectionToken } from "../runnable-tokens/before-electron-is-ready-injection-token";
+import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
+import { beforeElectronIsReadyInjectionToken } from "../start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
+import lensProxyCertificateLifespanInjectable from "./certificate-lifespan.injectable";
 
 const setupLensProxyCertificateInjectable = getInjectable({
   id: "setup-lens-proxy-certificate",
 
   instantiate: (di) => {
     const lensProxyCertificate = di.inject(lensProxyCertificateInjectable);
+    const lifespan = di.inject(lensProxyCertificateLifespanInjectable);
 
     return {
       id: "setup-lens-proxy-certificate",
@@ -22,7 +24,7 @@ const setupLensProxyCertificateInjectable = getInjectable({
         ], {
           keySize: 2048,
           algorithm: "sha256",
-          days: 365,
+          days: lifespan,
           extensions: [
             {
               name: "basicConstraints",
