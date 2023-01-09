@@ -311,7 +311,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                           >
                             <input
                               class="input box grow"
-                              placeholder="/some-electron-app-path-for-user-data/binaries"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries"
                               spellcheck="false"
                               value=""
                             />
@@ -350,7 +350,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             <input
                               class="input box grow"
                               disabled=""
-                              placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries/kubectl"
                               spellcheck="false"
                               value=""
                             />
@@ -1014,7 +1014,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                           >
                             <input
                               class="input box grow"
-                              placeholder="/some-electron-app-path-for-user-data/binaries"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries"
                               spellcheck="false"
                               value=""
                             />
@@ -1053,7 +1053,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             <input
                               class="input box grow"
                               disabled=""
-                              placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries/kubectl"
                               spellcheck="false"
                               value=""
                             />
@@ -1756,7 +1756,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                           >
                             <input
                               class="input box grow"
-                              placeholder="/some-electron-app-path-for-user-data/binaries"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries"
                               spellcheck="false"
                               value=""
                             />
@@ -1795,7 +1795,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             <input
                               class="input box grow"
                               disabled=""
-                              placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries/kubectl"
                               spellcheck="false"
                               value=""
                             />
@@ -2551,7 +2551,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                           >
                             <input
                               class="input box grow"
-                              placeholder="/some-electron-app-path-for-user-data/binaries"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries"
                               spellcheck="false"
                               value=""
                             />
@@ -2590,7 +2590,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             <input
                               class="input box grow"
                               disabled=""
-                              placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries/kubectl"
                               spellcheck="false"
                               value=""
                             />
@@ -3293,7 +3293,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                           >
                             <input
                               class="input box grow"
-                              placeholder="/some-electron-app-path-for-user-data/binaries"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries"
                               spellcheck="false"
                               value=""
                             />
@@ -3332,7 +3332,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             <input
                               class="input box grow"
                               disabled=""
-                              placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries/kubectl"
                               spellcheck="false"
                               value=""
                             />
@@ -4035,7 +4035,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                           >
                             <input
                               class="input box grow"
-                              placeholder="/some-electron-app-path-for-user-data/binaries"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries"
                               spellcheck="false"
                               value=""
                             />
@@ -4074,7 +4074,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             <input
                               class="input box grow"
                               disabled=""
-                              placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries/kubectl"
                               spellcheck="false"
                               value=""
                             />
@@ -4766,7 +4766,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                           >
                             <input
                               class="input box grow"
-                              placeholder="/some-electron-app-path-for-user-data/binaries"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries"
                               spellcheck="false"
                               value=""
                             />
@@ -4805,7 +4805,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             <input
                               class="input box grow"
                               disabled=""
-                              placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries/kubectl"
                               spellcheck="false"
                               value=""
                             />
@@ -5542,7 +5542,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                           >
                             <input
                               class="input box grow"
-                              placeholder="/some-electron-app-path-for-user-data/binaries"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries"
                               spellcheck="false"
                               value=""
                             />
@@ -5581,7 +5581,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             <input
                               class="input box grow"
                               disabled=""
-                              placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries/kubectl"
                               spellcheck="false"
                               value=""
                             />
@@ -6381,7 +6381,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                           >
                             <input
                               class="input box grow"
-                              placeholder="/some-electron-app-path-for-user-data/binaries"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries"
                               spellcheck="false"
                               value=""
                             />
@@ -6420,7 +6420,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             <input
                               class="input box grow"
                               disabled=""
-                              placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries/kubectl"
                               spellcheck="false"
                               value=""
                             />
@@ -7157,7 +7157,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                           >
                             <input
                               class="input box grow"
-                              placeholder="/some-electron-app-path-for-user-data/binaries"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries"
                               spellcheck="false"
                               value=""
                             />
@@ -7196,7 +7196,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
                             <input
                               class="input box grow"
                               disabled=""
-                              placeholder="/some-electron-app-path-for-user-data/binaries/kubectl"
+                              placeholder="/some-directory-for-app-data/some-product-name/binaries/kubectl"
                               spellcheck="false"
                               value=""
                             />
