@@ -7,7 +7,7 @@ import { platform } from "os";
 import path from "path";
 import { DefinePlugin, optimize } from "webpack";
 import main from "./main";
-import renderer, { cssModulesWebpackRule, fontsLoaderWebpackRules, iconsAndImagesWebpackRules } from "./renderer";
+import renderer, { iconsAndImagesWebpackRules } from "./renderer";
 import { buildDir } from "./vars";
 
 const rendererConfig = renderer({ showVars: false });
