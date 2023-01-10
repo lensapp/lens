@@ -103,7 +103,6 @@ class NonInjectedItemListLayoutContent<
       store, hasDetailsView, onDetails,
       copyClassNameFromHeadCells, customizeTableRowProps = () => ({}), detailsItem,
     } = this.props;
-    const { isSelected } = store;
 
     return (
       <TableRow
@@ -117,7 +116,7 @@ class NonInjectedItemListLayoutContent<
         {isSelectable && (
           <TableCell
             checkbox
-            isChecked={isSelected(item)}
+            isChecked={store.isSelected(item)}
             onClick={prevDefault(() => store.toggleSelection(item))}
           />
         )}

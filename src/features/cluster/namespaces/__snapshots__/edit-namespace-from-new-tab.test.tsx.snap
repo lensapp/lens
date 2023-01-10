@@ -7,7 +7,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -19,7 +19,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -356,7 +356,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -519,12 +519,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -705,7 +772,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -717,7 +784,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -1054,7 +1121,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -1217,12 +1284,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1408,7 +1542,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -1420,7 +1554,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -1757,7 +1891,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -1920,12 +2054,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2180,7 +2381,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -2192,7 +2393,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -2529,7 +2730,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -2692,12 +2893,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2930,7 +3198,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -2942,7 +3210,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -3279,7 +3547,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -3442,12 +3710,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -3752,7 +4087,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -3764,7 +4099,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -4101,7 +4436,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -4264,12 +4599,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -4576,7 +4978,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -4588,7 +4990,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -4925,7 +5327,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -5088,12 +5490,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -5362,7 +5831,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -5374,7 +5843,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -5711,7 +6180,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -5874,12 +6343,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -6086,7 +6622,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     class="Spinner singleColor"
                     data-testid="saving-edit-resource-from-tab-for-some-first-tab-id"
                   />
-
+                   
                   Applying...
                 </div>
                 <button
@@ -6143,7 +6679,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -6155,7 +6691,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -6492,7 +7028,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -6655,12 +7191,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -6915,7 +7518,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -6927,7 +7530,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -7264,7 +7867,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -7427,12 +8030,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -7687,7 +8357,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -7699,7 +8369,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -8036,7 +8706,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -8199,12 +8869,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -8459,7 +9196,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -8471,7 +9208,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -8808,7 +9545,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -8971,12 +9708,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -9066,7 +9870,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -9078,7 +9882,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -9415,7 +10219,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -9578,12 +10382,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -9790,7 +10661,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     class="Spinner singleColor"
                     data-testid="saving-edit-resource-from-tab-for-some-first-tab-id"
                   />
-
+                   
                   Applying...
                 </div>
                 <button
@@ -9847,7 +10718,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -9859,7 +10730,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -10196,7 +11067,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -10359,12 +11230,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -10454,7 +11392,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -10466,7 +11404,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -10803,7 +11741,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -10966,12 +11904,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -11061,7 +12066,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -11073,7 +12078,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -11410,7 +12415,7 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                 <div
                   class="info-panel box grow"
                 >
-                  0 items
+                  1 item
                 </div>
                 <div
                   class="Input SearchInput"
@@ -11573,12 +12578,79 @@ exports[`cluster/namespaces - edit namespace from new tab when navigating to nam
                     </div>
                   </div>
                   <div
-                    class="NoItems flex box grow"
+                    class="VirtualList KubeObjectListLayout Namespaces box grow dark"
                   >
-                    <div
-                      class="box center"
-                    >
-                      Item list is empty
+                    <div>
+                      <div
+                        class="list"
+                        style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                      >
+                        <div
+                          style="height: 33px; width: 100%;"
+                        >
+                          <div
+                            style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                          >
+                            <div
+                              class="TableRow nowrap"
+                            >
+                              <div
+                                class="TableCell checkbox"
+                              >
+                                <label
+                                  class="Checkbox flex align-center"
+                                >
+                                  <input
+                                    type="checkbox"
+                                  />
+                                  <i
+                                    class="box flex align-center"
+                                  />
+                                </label>
+                              </div>
+                              <div
+                                class="TableCell name"
+                              >
+                                default
+                              </div>
+                              <div
+                                class="TableCell warning"
+                              />
+                              <div
+                                class="TableCell labels scrollable"
+                              />
+                              <div
+                                class="TableCell age"
+                              >
+                                &lt;unknown&gt;
+                              </div>
+                              <div
+                                class="TableCell - status"
+                              >
+                                -
+                              </div>
+                              <div
+                                class="TableCell menu"
+                              >
+                                <div>
+                                  <i
+                                    class="Icon material interactive focusable"
+                                    id="menu-actions-for-kube-object-menu-for-namespace-default"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                      data-icon-name="more_vert"
+                                    >
+                                      more_vert
+                                    </span>
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

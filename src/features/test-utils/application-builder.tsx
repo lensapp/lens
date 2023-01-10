@@ -46,7 +46,6 @@ import { ClusterFrame } from "../../renderer/frames/cluster-frame/cluster-frame"
 import hostedClusterIdInjectable from "../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
 import namespaceStoreInjectable from "../../renderer/components/+namespaces/store.injectable";
 import createApplicationWindowInjectable from "../../main/start-main-application/lens-window/application-window/create-application-window.injectable";
-import type { CreateElectronWindow } from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import createElectronWindowInjectable from "../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import { applicationWindowInjectionToken } from "../../main/start-main-application/lens-window/application-window/application-window-injection-token";
 import closeAllWindowsInjectable from "../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
@@ -210,6 +209,57 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
     }
 
     let environment = environments.application;
+    let trayMenuIconPath: string;
+    const traySetMenuItemsMock = jest.fn<any, [MinimalTrayMenuItem[]]>();
+    let applicationHasStarted = false;
+    const namespaces = observable.set<string>();
+    const namespaceItems = observable.array<Namespace>();
+    const selectedNamespaces = observable.set<string>();
+    const clusters = observable.map<ClusterId, Cluster>();
+    const clusterId = "some-cluster-id";
+    const clusterKubeconfigPath = "/kube-config-path-for-some-cluster-id";
+    const clusterEntity = new KubernetesCluster({
+      metadata: {
+        labels: {},
+        name: "some-context-name",
+        uid: clusterId,
+      },
+      spec: {
+        kubeconfigContext: "some-context-name",
+        kubeconfigPath: clusterKubeconfigPath,
+      },
+      status: {
+        phase: LensKubernetesClusterStatus.DISCONNECTED,
+      },
+    });
+
+    // Set up kubeconfig path for cluster
+    {
+      const { writeJsonSync } = mainDi.inject(fsInjectable);
+
+      writeJsonSync(clusterKubeconfigPath, {
+        apiVersion: "v1",
+        clusters: [{
+          cluster: {
+            server: "https://localhost:8979",
+          },
+          name: "some-cluster-name",
+        }],
+        contexts: [{
+          context: {
+            cluster: "some-cluster-name",
+            user: "some-user-name",
+          },
+          name: "some-context-name",
+        }],
+        "current-context": "some-context-name",
+        kind: "Config",
+        preferences: {},
+        users: [{
+          name: "some-user-name",
+        }],
+      });
+    }
 
     mainDi.override(mainExtensionsInjectable, (di) => {
       const mainExtensionsState = di.inject(mainExtensionsStateInjectable);
@@ -218,10 +268,6 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
         [...mainExtensionsState.values()],
       );
     });
-
-    let trayMenuIconPath: string;
-
-    const traySetMenuItemsMock = jest.fn<any, [MinimalTrayMenuItem[]]>();
 
     mainDi.override(electronTrayInjectable, () => ({
       start: () => {},
@@ -235,7 +281,7 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
     const allowedResourcesState = observable.set<string>();
     const windowHelpers = new Map<string, { di: DiContainer; getRendered: () => RenderResult }>();
 
-    const createElectronWindowFake: CreateElectronWindow = (configuration) => {
+    mainDi.override(createElectronWindowInjectable, () => (configuration) => {
       const windowId = configuration.id;
       const windowDi = getRendererDi({ doGeneralOverrides: true });
       let rendered: RenderResult;
@@ -306,31 +352,8 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
           throw new Error("Tried to reload application window which is not implemented yet.");
         },
       };
-    };
-
-    mainDi.override(createElectronWindowInjectable, () => createElectronWindowFake);
-
-    let applicationHasStarted = false;
-
-    const namespaces = observable.set<string>();
-    const namespaceItems = observable.array<Namespace>();
-    const selectedNamespaces = observable.set<string>();
-    const clusters = observable.map<ClusterId, Cluster>();
-    const clusterId = "some-cluster-id";
-    const clusterEntity = new KubernetesCluster({
-      metadata: {
-        labels: {},
-        name: "some-context-name",
-        uid: clusterId,
-      },
-      spec: {
-        kubeconfigContext: "some-context-name",
-        kubeconfigPath: "/some-kube-config-path",
-      },
-      status: {
-        phase: LensKubernetesClusterStatus.DISCONNECTED,
-      },
     });
+
     const startMainApplication = mainDi.inject(startMainApplicationInjectable);
 
     const startApplication = async ({ shouldStartHidden }: { shouldStartHidden: boolean }) => {
@@ -387,7 +410,7 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
             const cluster = createCluster({
               contextName: "some-context-name",
               id: clusterId,
-              kubeConfigPath: "/some-kube-config-path",
+              kubeConfigPath: clusterKubeconfigPath,
             }, {
               clusterServerUrl: "https://some-url.com:8797",
             });
@@ -610,11 +633,16 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
             selectSingle: () => {},
             getByPath: () => undefined,
             pickOnlySelected: () => [],
+            isSelected: () => false,
             isSelectedAll: () => false,
             getTotalCount: () => namespaceItems.length,
           } as Partial<NamespaceStore> as NamespaceStore));
 
-          await clusters.get(clusterId)?.activate();
+          const cluster = clusters.get(clusterId);
+
+          assert(cluster, "When in cluster frame, cluster must exist");
+
+          await cluster.activate();
         });
 
         builder.afterWindowStart(windowDi => {
