@@ -323,8 +323,9 @@ exports[`navigate to extension page when extension navigates to child route rend
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -530,8 +531,9 @@ exports[`navigate to extension page when extension navigates to route with param
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -753,8 +755,9 @@ exports[`navigate to extension page when extension navigates to route without pa
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -976,8 +979,9 @@ exports[`navigate to extension page when extension navigates to route without pa
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"

@@ -49,8 +49,8 @@ describe("cluster - visibility of sidebar items", () => {
     });
 
     describe("when kube resource becomes allowed", () => {
-      beforeEach(() => {
-        builder.allowKubeResource({
+      beforeEach(async () => {
+        await builder.allowKubeResource({
           apiName: "namespaces",
           group: "v1",
         });

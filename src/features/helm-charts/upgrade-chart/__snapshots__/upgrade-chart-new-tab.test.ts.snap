@@ -7,7 +7,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -19,7 +19,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -727,7 +727,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -739,7 +739,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -1544,7 +1544,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -1556,7 +1556,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -2352,7 +2352,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
     </div>
   </div>
   <ul
-    class="Animate opacity Menu MenuActions flex HelmReleaseMenu right bottom portal enter"
+    class="Animate opacity Menu MenuActions flex HelmReleaseMenu right bottom portal"
     id="menu-actions-for-release-menu-for-my-second-namespace/some-name"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -4151,7 +4151,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     <span>
                       Release
                     </span>
-
+                     
                     <div
                       class="badge"
                     >
@@ -4160,7 +4160,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     <span>
                       Namespace
                     </span>
-
+                     
                     <div
                       class="badge"
                     >
@@ -4169,7 +4169,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     <span>
                       Version
                     </span>
-
+                     
                     <div
                       class="badge"
                     >
@@ -5160,7 +5160,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     <span>
                       Release
                     </span>
-
+                     
                     <div
                       class="badge"
                     >
@@ -5169,7 +5169,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     <span>
                       Namespace
                     </span>
-
+                     
                     <div
                       class="badge"
                     >
@@ -5178,7 +5178,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                     <span>
                       Version
                     </span>
-
+                     
                     <div
                       class="badge"
                     >

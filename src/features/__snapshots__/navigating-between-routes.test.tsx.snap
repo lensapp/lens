@@ -37,8 +37,9 @@ exports[`navigating between routes given route with optional path parameters whe
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -247,8 +248,9 @@ exports[`navigating between routes given route without path parameters when navi
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"

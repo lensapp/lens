@@ -31,7 +31,6 @@ describe("installing helm chart from previously opened tab", () => {
     requestHelmChartVersionsMock = asyncFn();
     requestHelmChartValuesMock = asyncFn();
 
-    builder.namespaces.add("default");
     builder.namespaces.add("some-other-namespace");
 
     builder.beforeWindowStart((windowDi) => {

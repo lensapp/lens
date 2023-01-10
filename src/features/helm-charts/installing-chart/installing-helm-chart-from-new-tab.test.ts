@@ -67,7 +67,6 @@ describe("installing helm chart from new tab", () => {
       );
     });
 
-    builder.namespaces.add("default");
     builder.namespaces.add("some-other-namespace");
   });
 

@@ -326,8 +326,9 @@ exports[`show-about-using-tray when navigating using tray renders 1`] = `
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"

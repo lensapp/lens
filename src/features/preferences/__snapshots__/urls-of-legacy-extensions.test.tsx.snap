@@ -38,8 +38,9 @@ exports[`preferences: URLs of legacy extensions given extension with both custom
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -470,8 +471,9 @@ exports[`preferences: URLs of legacy extensions given extension with both custom
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -902,8 +904,9 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -1296,8 +1299,9 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -1664,8 +1668,9 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"

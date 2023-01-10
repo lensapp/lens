@@ -38,8 +38,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -744,8 +745,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -1489,8 +1491,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -2194,7 +2197,7 @@ exports[`add custom helm repository in preferences when navigating to preference
     />
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
+    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -2345,8 +2348,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -3050,7 +3054,7 @@ exports[`add custom helm repository in preferences when navigating to preference
     />
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter leave"
+    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal leave"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -3098,8 +3102,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -3803,7 +3808,7 @@ exports[`add custom helm repository in preferences when navigating to preference
     />
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
+    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -3954,8 +3959,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -4659,7 +4665,7 @@ exports[`add custom helm repository in preferences when navigating to preference
     />
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
+    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -4992,8 +4998,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -5697,7 +5704,7 @@ exports[`add custom helm repository in preferences when navigating to preference
     />
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal enter"
+    class="Animate opacity-scale Dialog flex center AddHelmRepoDialog modal"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -5848,8 +5855,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -6886,8 +6894,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -7743,8 +7752,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -8496,8 +8506,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -9238,8 +9249,9 @@ exports[`add custom helm repository in preferences when navigating to preference
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"

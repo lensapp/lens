@@ -326,8 +326,9 @@ exports[`Showing correct entity settings when navigating to local cluster entity
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -691,8 +692,9 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -1044,8 +1046,9 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"

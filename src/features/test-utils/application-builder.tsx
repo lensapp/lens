@@ -126,7 +126,7 @@ export interface ApplicationBuilder {
     create: (id: string) => LensWindowWithHelpers;
   };
 
-  allowKubeResource: (resourceName: KubeApiResourceDescriptor) => ApplicationBuilder;
+  allowKubeResource: (resourceName: KubeApiResourceDescriptor) => Promise<ApplicationBuilder>;
   beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
   afterApplicationStart: (callback: Callback) => ApplicationBuilder;
   beforeWindowStart: (callback: Callback) => ApplicationBuilder;
@@ -212,7 +212,7 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
     let trayMenuIconPath: string;
     const traySetMenuItemsMock = jest.fn<any, [MinimalTrayMenuItem[]]>();
     let applicationHasStarted = false;
-    const namespaces = observable.set<string>();
+    const namespaces = observable.set<string>(["default"]);
     const namespaceItems = observable.array<Namespace>();
     const selectedNamespaces = observable.set<string>();
     const clusters = observable.map<ClusterId, Cluster>();
@@ -733,12 +733,19 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
         },
       },
 
-      allowKubeResource: (resource) => {
+      allowKubeResource: async (resource) => {
         environment.onAllowKubeResource();
 
         runInAction(() => {
           allowedResourcesState.add(formatKubeApiResource(resource));
         });
+
+        const cluster = clusters.get(clusterId);
+
+        if (cluster?.accessible) {
+          // Make sure that the cluster picks up these newly allowed resource immediately
+          await cluster.refreshAccessibilityAndMetadata();
+        }
 
         return builder;
       },

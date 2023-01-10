@@ -804,8 +804,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -1186,8 +1187,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -1580,8 +1582,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -1974,8 +1977,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -3938,8 +3942,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -4347,8 +4352,9 @@ exports[`preferences - navigation to extension specific preferences given in pre
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"

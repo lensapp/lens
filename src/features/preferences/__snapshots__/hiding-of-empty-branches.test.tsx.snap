@@ -37,8 +37,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -790,8 +791,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -1571,8 +1573,9 @@ exports[`preferences - hiding-of-empty-branches, given in preferences page given
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"

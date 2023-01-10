@@ -323,8 +323,9 @@ exports[`preferences - navigation using application menu when navigating to pref
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"

@@ -624,7 +624,7 @@ exports[`force user to update when too long since update was downloaded when app
     />
   </div>
   <div
-    class="Animate opacity-scale Dialog flex center modal pinned enter"
+    class="Animate opacity-scale Dialog flex center modal pinned"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div

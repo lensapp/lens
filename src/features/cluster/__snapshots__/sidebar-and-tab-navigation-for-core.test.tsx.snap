@@ -6,7 +6,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     id="terminal-init"
   />
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -18,7 +18,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
         <div
           class="drawer-title-text flex gaps align-center"
         >
-
+          
         </div>
         <i
           class="Icon material interactive focusable"
@@ -602,7 +602,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     id="terminal-init"
   />
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -614,7 +614,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
         <div
           class="drawer-title-text flex gaps align-center"
         >
-
+          
         </div>
         <i
           class="Icon material interactive focusable"
@@ -1198,7 +1198,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     id="terminal-init"
   />
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -1210,7 +1210,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
         <div
           class="drawer-title-text flex gaps align-center"
         >
-
+          
         </div>
         <i
           class="Icon material interactive focusable"
@@ -1814,7 +1814,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     id="terminal-init"
   />
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -1826,7 +1826,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
         <div
           class="drawer-title-text flex gaps align-center"
         >
-
+          
         </div>
         <i
           class="Icon material interactive focusable"
@@ -2308,7 +2308,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     id="terminal-init"
   />
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -2320,7 +2320,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
         <div
           class="drawer-title-text flex gaps align-center"
         >
-
+          
         </div>
         <i
           class="Icon material interactive focusable"
@@ -2781,7 +2781,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     id="terminal-init"
   />
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -2793,7 +2793,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
         <div
           class="drawer-title-text flex gaps align-center"
         >
-
+          
         </div>
         <i
           class="Icon material interactive focusable"
@@ -3397,7 +3397,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
     id="terminal-init"
   />
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -3409,7 +3409,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
         <div
           class="drawer-title-text flex gaps align-center"
         >
-
+          
         </div>
         <i
           class="Icon material interactive focusable"

@@ -38,8 +38,9 @@ exports[`add helm repository from list in preferences when navigating to prefere
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -744,8 +745,9 @@ exports[`add helm repository from list in preferences when navigating to prefere
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -1489,8 +1491,9 @@ exports[`add helm repository from list in preferences when navigating to prefere
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -2287,8 +2290,9 @@ exports[`add helm repository from list in preferences when navigating to prefere
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -3032,8 +3036,9 @@ exports[`add helm repository from list in preferences when navigating to prefere
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -3777,8 +3782,9 @@ exports[`add helm repository from list in preferences when navigating to prefere
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -4511,8 +4517,9 @@ exports[`add helm repository from list in preferences when navigating to prefere
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -5290,8 +5297,9 @@ exports[`add helm repository from list in preferences when navigating to prefere
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -6132,8 +6140,9 @@ exports[`add helm repository from list in preferences when navigating to prefere
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -6911,8 +6920,9 @@ exports[`add helm repository from list in preferences when navigating to prefere
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"

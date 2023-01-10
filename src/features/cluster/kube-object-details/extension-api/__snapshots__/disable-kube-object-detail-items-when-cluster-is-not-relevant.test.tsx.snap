@@ -7,7 +7,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -69,7 +69,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               class="value"
             >
               &lt;unknown&gt;
-               ago
+               ago 
             </span>
           </div>
           <div
@@ -653,7 +653,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -715,7 +715,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               class="value"
             >
               &lt;unknown&gt;
-               ago
+               ago 
             </span>
           </div>
           <div
@@ -1294,7 +1294,7 @@ exports[`disable kube object detail items when cluster is not relevant given not
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -1356,7 +1356,7 @@ exports[`disable kube object detail items when cluster is not relevant given not
               class="value"
             >
               &lt;unknown&gt;
-               ago
+               ago 
             </span>
           </div>
           <div

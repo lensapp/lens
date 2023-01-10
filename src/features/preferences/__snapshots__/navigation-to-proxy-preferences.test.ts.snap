@@ -790,8 +790,9 @@ exports[`preferences - navigation to proxy preferences given in preferences, whe
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"

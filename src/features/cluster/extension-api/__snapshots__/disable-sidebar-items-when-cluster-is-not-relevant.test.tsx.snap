@@ -7,7 +7,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -19,7 +19,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -595,7 +595,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -607,7 +607,7 @@ exports[`disable sidebar items when cluster is not relevant given extension shou
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -1165,7 +1165,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -1177,7 +1177,7 @@ exports[`disable sidebar items when cluster is not relevant given not yet known 
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"

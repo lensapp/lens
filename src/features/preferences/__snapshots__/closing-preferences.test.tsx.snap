@@ -1153,8 +1153,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -1362,8 +1363,9 @@ exports[`preferences - closing-preferences given accessing preferences directly 
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -1780,8 +1782,9 @@ exports[`preferences - closing-preferences given already in a page when navigate
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -2545,8 +2548,9 @@ exports[`preferences - closing-preferences given already in a page when navigate
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-back"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -2914,8 +2918,9 @@ exports[`preferences - closing-preferences given already in a page when navigate
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-forward"
+            tabindex="0"
           >
             <span
               class="icon"
@@ -3123,8 +3128,9 @@ exports[`preferences - closing-preferences given already in a page when navigate
           class="preventedDragging"
         >
           <i
-            class="Icon material interactive disabled focusable"
+            class="Icon material interactive focusable"
             data-testid="history-forward"
+            tabindex="0"
           >
             <span
               class="icon"

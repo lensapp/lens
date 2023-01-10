@@ -15,7 +15,7 @@ describe("workload overview", () => {
 
   beforeEach(async () => {
     builder.setEnvironmentToClusterFrame();
-    builder.allowKubeResource({
+    await builder.allowKubeResource({
       apiName: "pods",
       group: "v1",
     });

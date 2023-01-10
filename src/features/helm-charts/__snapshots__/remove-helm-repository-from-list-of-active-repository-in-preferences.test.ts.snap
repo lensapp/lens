@@ -38,8 +38,9 @@ exports[`remove helm repository from list of active repositories in preferences 
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -744,8 +745,9 @@ exports[`remove helm repository from list of active repositories in preferences 
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -1461,8 +1463,9 @@ exports[`remove helm repository from list of active repositories in preferences 
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -2178,8 +2181,9 @@ exports[`remove helm repository from list of active repositories in preferences 
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"

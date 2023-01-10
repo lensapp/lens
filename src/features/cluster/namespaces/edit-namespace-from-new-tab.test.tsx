@@ -33,7 +33,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
 
   setupInitializingApplicationBuilder(b => builder = b);
 
-  beforeEach(() => {
+  beforeEach(async () => {
     builder.setEnvironmentToClusterFrame();
 
     builder.beforeWindowStart((windowDi) => {
@@ -64,8 +64,7 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
       windowDi.override(callForPatchResourceInjectable, () => callForPatchResourceMock);
     });
 
-    builder.namespaces.add("default");
-    builder.allowKubeResource({
+    await builder.allowKubeResource({
       apiName: "namespaces",
       group: "v1",
     });

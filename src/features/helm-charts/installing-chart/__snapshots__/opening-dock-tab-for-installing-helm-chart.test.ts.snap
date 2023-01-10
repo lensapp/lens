@@ -7,7 +7,7 @@ exports[`opening dock tab for installing helm chart given application is started
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -19,7 +19,7 @@ exports[`opening dock tab for installing helm chart given application is started
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -564,7 +564,7 @@ exports[`opening dock tab for installing helm chart given application is started
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -576,7 +576,7 @@ exports[`opening dock tab for installing helm chart given application is started
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -1291,7 +1291,7 @@ exports[`opening dock tab for installing helm chart given application is started
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -1303,7 +1303,7 @@ exports[`opening dock tab for installing helm chart given application is started
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -2009,7 +2009,7 @@ exports[`opening dock tab for installing helm chart given application is started
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer HelmChartDetails right enter"
+    class="Animate slide-right Drawer HelmChartDetails right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -2075,7 +2075,7 @@ exports[`opening dock tab for installing helm chart given application is started
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -2087,7 +2087,7 @@ exports[`opening dock tab for installing helm chart given application is started
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -2793,7 +2793,7 @@ exports[`opening dock tab for installing helm chart given application is started
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer HelmChartDetails right enter"
+    class="Animate slide-right Drawer HelmChartDetails right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -3042,7 +3042,7 @@ exports[`opening dock tab for installing helm chart given application is started
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -3054,7 +3054,7 @@ exports[`opening dock tab for installing helm chart given application is started
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -3760,7 +3760,7 @@ exports[`opening dock tab for installing helm chart given application is started
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer HelmChartDetails right enter"
+    class="Animate slide-right Drawer HelmChartDetails right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -3998,7 +3998,7 @@ exports[`opening dock tab for installing helm chart given application is started
               <p>
                 some-readme
               </p>
-
+              
 
             </div>
           </div>
@@ -4019,7 +4019,7 @@ exports[`opening dock tab for installing helm chart given application is started
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -4031,7 +4031,7 @@ exports[`opening dock tab for installing helm chart given application is started
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -4737,7 +4737,7 @@ exports[`opening dock tab for installing helm chart given application is started
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer HelmChartDetails right enter"
+    class="Animate slide-right Drawer HelmChartDetails right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -4986,7 +4986,7 @@ exports[`opening dock tab for installing helm chart given application is started
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -4998,7 +4998,7 @@ exports[`opening dock tab for installing helm chart given application is started
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -5704,7 +5704,7 @@ exports[`opening dock tab for installing helm chart given application is started
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer HelmChartDetails right enter"
+    class="Animate slide-right Drawer HelmChartDetails right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -5957,7 +5957,7 @@ exports[`opening dock tab for installing helm chart given application is started
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -5969,7 +5969,7 @@ exports[`opening dock tab for installing helm chart given application is started
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -6675,7 +6675,7 @@ exports[`opening dock tab for installing helm chart given application is started
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer HelmChartDetails right enter"
+    class="Animate slide-right Drawer HelmChartDetails right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -6913,7 +6913,7 @@ exports[`opening dock tab for installing helm chart given application is started
               <p>
                 some-readme
               </p>
-
+              
 
             </div>
           </div>
@@ -6934,7 +6934,7 @@ exports[`opening dock tab for installing helm chart given application is started
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -6946,7 +6946,7 @@ exports[`opening dock tab for installing helm chart given application is started
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"

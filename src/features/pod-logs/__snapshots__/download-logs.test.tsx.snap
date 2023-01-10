@@ -7,7 +7,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -19,7 +19,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -586,7 +586,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                       <span>
                         Namespace
                       </span>
-
+                       
                       <div
                         class="badge"
                         data-testid="namespace-badge"
@@ -840,7 +840,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                 <div>
                   <span>
                     Logs from
-
+                     
                     <b>
                       Invalid Date
                     </b>
@@ -920,7 +920,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -932,7 +932,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -1499,7 +1499,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                       <span>
                         Namespace
                       </span>
-
+                       
                       <div
                         class="badge"
                         data-testid="namespace-badge"
@@ -1722,7 +1722,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                 class="LogList flex box grow align-center justify-center"
               >
                 There are no logs available for container
-
+                 
                 docker-exporter
               </div>
               <div

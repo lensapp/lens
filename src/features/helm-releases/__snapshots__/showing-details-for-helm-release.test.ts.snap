@@ -808,7 +808,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -820,7 +820,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -1614,7 +1614,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -1626,7 +1626,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -2598,7 +2598,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -2610,7 +2610,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -3573,7 +3573,7 @@ exports[`showing details for helm release given application is started when navi
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    class="Animate slide-right Drawer ReleaseDetails dark right"
     data-testid="helm-release-details-for-some-namespace/some-name"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -3643,7 +3643,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -3655,7 +3655,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -4618,7 +4618,7 @@ exports[`showing details for helm release given application is started when navi
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    class="Animate slide-right Drawer ReleaseDetails dark right"
     data-testid="helm-release-details-for-some-namespace/some-name"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -4688,7 +4688,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -4700,7 +4700,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -5663,7 +5663,7 @@ exports[`showing details for helm release given application is started when navi
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    class="Animate slide-right Drawer ReleaseDetails dark right"
     data-testid="helm-release-details-for-some-namespace/some-name"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -5926,7 +5926,7 @@ exports[`showing details for helm release given application is started when navi
               class="SubTitle"
             >
               some-kind
-
+               
             </div>
             <div
               class="Table flex column autoSize"
@@ -5978,7 +5978,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -5990,7 +5990,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -6953,7 +6953,7 @@ exports[`showing details for helm release given application is started when navi
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    class="Animate slide-right Drawer ReleaseDetails dark right"
     data-testid="helm-release-details-for-some-namespace/some-name"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -7216,7 +7216,7 @@ exports[`showing details for helm release given application is started when navi
               class="SubTitle"
             >
               some-kind
-
+               
             </div>
             <div
               class="Table flex column autoSize"
@@ -7268,7 +7268,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -7280,7 +7280,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -8243,7 +8243,7 @@ exports[`showing details for helm release given application is started when navi
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    class="Animate slide-right Drawer ReleaseDetails dark right"
     data-testid="helm-release-details-for-some-namespace/some-name"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -8506,7 +8506,7 @@ exports[`showing details for helm release given application is started when navi
               class="SubTitle"
             >
               some-kind
-
+               
             </div>
             <div
               class="Table flex column autoSize"
@@ -8558,7 +8558,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -8570,7 +8570,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -9350,7 +9350,7 @@ exports[`showing details for helm release given application is started when navi
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    class="Animate slide-right Drawer ReleaseDetails dark right"
     data-testid="helm-release-details-for-some-namespace/some-name"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -9613,7 +9613,7 @@ exports[`showing details for helm release given application is started when navi
               class="SubTitle"
             >
               some-kind
-
+               
             </div>
             <div
               class="Table flex column autoSize"
@@ -9665,7 +9665,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -9677,7 +9677,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -10457,7 +10457,7 @@ exports[`showing details for helm release given application is started when navi
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    class="Animate slide-right Drawer ReleaseDetails dark right"
     data-testid="helm-release-details-for-some-namespace/some-name"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -10722,7 +10722,7 @@ exports[`showing details for helm release given application is started when navi
               class="SubTitle"
             >
               some-kind
-
+               
             </div>
             <div
               class="Table flex column autoSize"
@@ -10774,7 +10774,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -10786,7 +10786,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -11749,7 +11749,7 @@ exports[`showing details for helm release given application is started when navi
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    class="Animate slide-right Drawer ReleaseDetails dark right"
     data-testid="helm-release-details-for-some-namespace/some-name"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -12012,7 +12012,7 @@ exports[`showing details for helm release given application is started when navi
               class="SubTitle"
             >
               some-kind
-
+               
             </div>
             <div
               class="Table flex column autoSize"
@@ -12064,7 +12064,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -12076,7 +12076,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -13109,7 +13109,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -13121,7 +13121,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -14084,7 +14084,7 @@ exports[`showing details for helm release given application is started when navi
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    class="Animate slide-right Drawer ReleaseDetails dark right"
     data-testid="helm-release-details-for-some-namespace/some-name"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -14138,7 +14138,7 @@ exports[`showing details for helm release given application is started when navi
           data-testid="helm-release-detail-error"
         >
           Failed to load release:
-
+           
           some-error
         </div>
       </div>
@@ -14157,7 +14157,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -14169,7 +14169,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -15141,7 +15141,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -15153,7 +15153,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -16116,7 +16116,7 @@ exports[`showing details for helm release given application is started when navi
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    class="Animate slide-right Drawer ReleaseDetails dark right"
     data-testid="helm-release-details-for-some-namespace/some-name"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
@@ -16186,7 +16186,7 @@ exports[`showing details for helm release given application is started when navi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -16198,7 +16198,7 @@ exports[`showing details for helm release given application is started when navi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -17161,7 +17161,7 @@ exports[`showing details for helm release given application is started when navi
     </div>
   </div>
   <div
-    class="Animate slide-right Drawer ReleaseDetails dark right enter"
+    class="Animate slide-right Drawer ReleaseDetails dark right"
     data-testid="helm-release-details-for-some-other-namespace/some-other-name"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >

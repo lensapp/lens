@@ -7,7 +7,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -19,7 +19,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -337,12 +337,12 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
               <div
                 class="status msg"
               >
-                - some-kube-object-status-text
+                - some-kube-object-status-text 
                 <span
                   class="age"
                 >
-                   .
-
+                   . 
+                  
                 </span>
               </div>
             </div>
@@ -489,7 +489,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -501,7 +501,7 @@ exports[`disable kube object statuses when cluster is not relevant given extensi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -931,7 +931,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
       id="terminal-init"
     />
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
+      class="Animate slide-right Drawer KubeObjectDetails flex column right leave"
       style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
     >
       <div
@@ -943,7 +943,7 @@ exports[`disable kube object statuses when cluster is not relevant given not yet
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"

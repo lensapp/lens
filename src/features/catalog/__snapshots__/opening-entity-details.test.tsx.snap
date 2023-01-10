@@ -326,8 +326,9 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -1150,8 +1151,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -1934,7 +1936,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
     />
   </div>
   <ul
-    class="Animate opacity Menu MenuActions flex right bottom portal enter"
+    class="Animate opacity Menu MenuActions flex right bottom portal"
     data-testid="menu-actions-for-catalog-for-some-entity-id"
     id="menu-actions-for-catalog-for-some-entity-id"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
@@ -2006,8 +2008,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -2790,7 +2793,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
     />
   </div>
   <ul
-    class="Animate opacity Menu MenuActions flex right bottom portal enter"
+    class="Animate opacity Menu MenuActions flex right bottom portal"
     data-testid="menu-actions-for-catalog-for-some-entity-id"
     id="menu-actions-for-catalog-for-some-entity-id"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
@@ -2862,8 +2865,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -3969,8 +3973,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -4753,7 +4758,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
     />
   </div>
   <ul
-    class="Animate opacity Menu MenuActions flex right bottom portal enter"
+    class="Animate opacity Menu MenuActions flex right bottom portal"
     data-testid="menu-actions-for-catalog-for-some-weblink-id"
     id="menu-actions-for-catalog-for-some-weblink-id"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
@@ -4813,8 +4818,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
@@ -5597,7 +5603,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
     />
   </div>
   <ul
-    class="Animate opacity Menu MenuActions flex right bottom portal enter"
+    class="Animate opacity Menu MenuActions flex right bottom portal"
     data-testid="menu-actions-for-catalog-for-some-weblink-id"
     id="menu-actions-for-catalog-for-some-weblink-id"
     style="--enter-duration: 100ms; --leave-duration: 100ms;"
@@ -5657,8 +5663,9 @@ exports[`opening catalog entity details panel when navigated to the catalog when
             class="preventedDragging"
           >
             <i
-              class="Icon material interactive disabled focusable"
+              class="Icon material interactive focusable"
               data-testid="history-back"
+              tabindex="0"
             >
               <span
                 class="icon"
