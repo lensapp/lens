@@ -23,6 +23,7 @@ import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kub
 import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import ingressApiInjectable from "../endpoints/ingress.api.injectable";
+import lensProxyCertificateInjectable from "../../certificate/lens-proxy-certificate.injectable";
 
 describe("KubeApi", () => {
   let di: DiContainer;
@@ -38,6 +39,12 @@ describe("KubeApi", () => {
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+
+    di.inject(lensProxyCertificateInjectable).set({
+      public: "<public-data>",
+      private: "<private-data>",
+      cert: "<ca-data>",
+    });
 
     const createCluster = di.inject(createClusterInjectable);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
