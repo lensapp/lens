@@ -16,7 +16,7 @@ exports[`installing helm chart from previously opened tab given tab for installi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -576,7 +576,7 @@ exports[`installing helm chart from previously opened tab given tab for installi
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"

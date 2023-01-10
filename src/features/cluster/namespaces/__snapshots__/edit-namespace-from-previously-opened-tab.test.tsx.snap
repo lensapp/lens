@@ -16,7 +16,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
@@ -601,7 +601,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
           <div
             class="drawer-title-text flex gaps align-center"
           >
-
+            
           </div>
           <i
             class="Icon material interactive focusable"
