@@ -3,7 +3,7 @@
 exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissions given no matching component given current url is starting url renders 1`] = `
 <div>
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -507,7 +507,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
 exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissions renders 1`] = `
 <div>
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
@@ -1018,7 +1018,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
 exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces permissions renders 1`] = `
 <div>
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
+    class="Animate slide-right Drawer KubeObjectDetails flex column right"
     style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
   >
     <div
