@@ -7,7 +7,7 @@ import { observable, makeObservable } from "mobx";
 import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
 import type { Defaulted } from "../utils";
-import type { DefaultWebsocketApiParams } from "./default-websocket-params.injectable";
+import type { DefaultWebsocketApiParams } from "./default-websocket-api-params.injectable";
 import type { Logger } from "../../common/logger";
 
 interface WebsocketApiParams {

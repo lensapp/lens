@@ -23,8 +23,8 @@ import installExtensionFromInputInjectable from "../install-extension-from-input
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import { observable, when } from "mobx";
-import type { RemovePath } from "../../../../common/fs/remove.injectable";
-import removePathInjectable from "../../../../common/fs/remove.injectable";
+import type { RemovePath } from "../../../../common/fs/remove-path.injectable";
+import removePathInjectable from "../../../../common/fs/remove-path.injectable";
 import type { DownloadBinary } from "../../../../common/fetch/download-binary.injectable";
 import downloadBinaryInjectable from "../../../../common/fetch/download-binary.injectable";
 import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";

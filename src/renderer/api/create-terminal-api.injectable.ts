@@ -8,7 +8,7 @@ import loggerInjectable from "../../common/logger.injectable";
 import requestShellApiTokenInjectable from "../../features/terminal/renderer/request-shell-api-token.injectable";
 import hostedClusterIdInjectable from "../cluster-frame-context/hosted-cluster-id.injectable";
 import currentLocationInjectable from "./current-location.injectable";
-import defaultWebsocketApiParamsInjectable from "./default-websocket-params.injectable";
+import defaultWebsocketApiParamsInjectable from "./default-websocket-api-params.injectable";
 import type { TerminalApiDependencies, TerminalApiQuery } from "./terminal-api";
 import { TerminalApi } from "./terminal-api";
 

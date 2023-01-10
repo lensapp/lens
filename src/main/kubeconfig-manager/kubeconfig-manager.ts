@@ -13,7 +13,7 @@ import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 import type { PathExists } from "../../common/fs/path-exists.injectable";
-import type { RemovePath } from "../../common/fs/remove.injectable";
+import type { RemovePath } from "../../common/fs/remove-path.injectable";
 import type { WriteFile } from "../../common/fs/write-file.injectable";
 import type { SelfSignedCert } from "selfsigned";
 

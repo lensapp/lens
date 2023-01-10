@@ -23,7 +23,7 @@ import copyFileInjectable from "../../common/fs/copy-file.injectable";
 import createWriteFileStreamInjectable from "../../common/fs/create-write-file-stream.injectable";
 import execFileInjectable from "../../common/fs/exec-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
-import removePathInjectable from "../../common/fs/remove.injectable";
+import removePathInjectable from "../../common/fs/remove-path.injectable";
 import writeFileInjectable from "../../common/fs/write-file.injectable";
 import ensureDirectoryInjectable from "../../common/fs/ensure-directory.injectable";
 import fetchInjectable from "../../common/fetch/fetch.injectable";

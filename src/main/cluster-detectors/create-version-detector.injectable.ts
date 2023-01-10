@@ -13,8 +13,7 @@ const createVersionDetectorInjectable = getInjectable({
   instantiate: (di) => {
     const k8sRequest = di.inject(k8sRequestInjectable);
 
-    return (cluster: Cluster) =>
-      new VersionDetector(cluster, k8sRequest);
+    return (cluster: Cluster) => new VersionDetector(cluster, k8sRequest);
   },
 });
 

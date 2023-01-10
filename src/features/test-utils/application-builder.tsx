@@ -65,6 +65,7 @@ import fsInjectable from "../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
 import type { ClusterId } from "../../common/cluster-types";
+import { ClusterMetadataKey } from "../../common/cluster-types";
 import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
 import createClusterInjectable from "../../main/create-cluster/create-cluster.injectable";
 import { onLoadOfApplicationInjectionToken } from "../../main/start-main-application/runnable-tokens/on-load-of-application-injection-token";
@@ -81,6 +82,8 @@ import type { MemoryHistory } from "history";
 import { object } from "../../common/utils";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
 import { testUsingFakeTime } from "../../common/test-utils/use-fake-time";
+import createVersionDetectorInjectable from "../../main/cluster-detectors/create-version-detector.injectable";
+import type { VersionDetector } from "../../main/cluster-detectors/version-detector";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -368,6 +371,13 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
         .map(([apiName, data]) => ({ apiName, ...data }))
     ));
     mainDi.override(requestNamespaceListPermissionsForInjectable, () => () => async () => (resource) => allowedResourcesState.has(formatKubeApiResource(resource)));
+    mainDi.override(createVersionDetectorInjectable, () => () => ({
+      detect: async () => ({
+        accuracy: 100,
+        value: "1.25",
+      }),
+      key: ClusterMetadataKey.VERSION,
+    } as VersionDetector));
 
     runInAction(() => {
       mainDi.register(getInjectable({

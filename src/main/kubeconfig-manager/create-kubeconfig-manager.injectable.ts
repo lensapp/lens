@@ -13,7 +13,7 @@ import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import writeFileInjectable from "../../common/fs/write-file.injectable";
-import removePathInjectable from "../../common/fs/remove.injectable";
+import removePathInjectable from "../../common/fs/remove-path.injectable";
 import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
 
 export interface KubeConfigManagerInstantiationParameter {

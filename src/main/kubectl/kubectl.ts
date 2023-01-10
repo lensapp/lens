@@ -21,7 +21,7 @@ import type { WriteFile } from "../../common/fs/write-file.injectable";
 import type { CopyFile } from "../../common/fs/copy-file.injectable";
 import type { CreateWriteFileStream } from "../../common/fs/create-write-file-stream.injectable";
 import type { Fetch } from  "../../common/fetch/fetch.injectable";
-import type { RemovePath } from "../../common/fs/remove.injectable";
+import type { RemovePath } from "../../common/fs/remove-path.injectable";
 
 const initScriptVersionString = "# lens-initscript v3";
 const pipeline = promisify(stream.pipeline);

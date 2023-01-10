@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
-import removePathInjectable from "../../common/fs/remove.injectable";
+import removePathInjectable from "../../common/fs/remove-path.injectable";
 import execFileInjectable from "../../common/fs/exec-file.injectable";
 import writeFileInjectable from "../../common/fs/write-file.injectable";
 import loggerInjectable from "../../common/logger.injectable";
