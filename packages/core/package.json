@@ -92,7 +92,8 @@
     },
     "modulePathIgnorePatterns": [
       "<rootDir>/dist",
-      "<rootDir>/packages"
+      "<rootDir>/packages",
+      "<rootDir>/static/build"
     ],
     "setupFiles": [
       "<rootDir>/src/jest.setup.ts",
@@ -156,7 +157,7 @@
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.40",
     "node-fetch": "^3.3.0",
-    "node-pty": "0.10.1",
+    "node-pty": "0.11.0-beta27",
     "npm": "^8.19.3",
     "p-limit": "^3.1.0",
     "path-to-regexp": "^6.2.0",
@@ -290,7 +291,7 @@
     "mock-http": "^1.1.0",
     "monaco-editor": "^0.29.1",
     "monaco-editor-webpack-plugin": "^5.0.0",
-    "node-gyp": "^8.3.0",
+    "node-gyp": "^9.3.1",
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.20",
     "playwright": "^1.29.1",

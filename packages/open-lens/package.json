@@ -18,6 +18,7 @@
   "license": "MIT",
   "author": "OpenLens Authors <info@k8slens.dev>",
   "scripts": {
+    "clean": "rm -rf binaries/ dist/ static/build",
     "build": "npm run compile && electron-builder",
     "build:mac": "npm run compile && electron-builder --mac --dir",
     "compile": "env NODE_ENV=production webpack --config webpack/webpack.ts --progress",

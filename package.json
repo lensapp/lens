@@ -1,15 +1,6 @@
 {
   "name": "lens-monorepo",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "**/core",
-      "**/core/**"
-    ]
-  },
   "scripts": {
     "adr:create": "echo \"What is the title?\"; read title; adr new \"$title\"",
     "adr:change-status": "echo \"Decision number?:\"; read decision; adr status $decision",
