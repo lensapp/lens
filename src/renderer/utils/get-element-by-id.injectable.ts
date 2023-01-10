@@ -15,7 +15,6 @@ const getElementByIdInjectable = getInjectable({
 
     return elem;
   },
-  causesSideEffects: true,
 });
 
 export default getElementByIdInjectable;
