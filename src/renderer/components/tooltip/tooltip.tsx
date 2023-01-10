@@ -11,6 +11,9 @@ import { observer } from "mobx-react";
 import type { IClassName } from "../../utils";
 import { cssNames, autoBind } from "../../utils";
 import { observable, makeObservable, action } from "mobx";
+import type { RequestAnimationFrame } from "../animate/request-animation-frame.injectable";
+import { withInjectables } from "@ogre-tools/injectable-react";
+import requestAnimationFrameInjectable from "../animate/request-animation-frame.injectable";
 
 export enum TooltipPosition {
   TOP = "top",
@@ -49,8 +52,12 @@ const defaultProps: Partial<TooltipProps> = {
   offset: 10,
 };
 
+interface Dependencies {
+  requestAnimationFrame: RequestAnimationFrame;
+}
+
 @observer
-export class Tooltip extends React.Component<TooltipProps> {
+class NonInjectedTooltip extends React.Component<TooltipProps & Dependencies> {
   static defaultProps = defaultProps as object;
 
   @observable.ref elem: HTMLDivElement | null = null;
@@ -58,7 +65,7 @@ export class Tooltip extends React.Component<TooltipProps> {
   @observable isVisible = false;
   @observable isContentVisible = false; // animation manager
 
-  constructor(props: TooltipProps) {
+  constructor(props: TooltipProps & Dependencies) {
     super(props);
     makeObservable(this);
     autoBind(this);
@@ -94,7 +101,7 @@ export class Tooltip extends React.Component<TooltipProps> {
   @action
   protected onEnterTarget() {
     this.isVisible = true;
-    requestAnimationFrame(action(() => this.isContentVisible = true));
+    this.props.requestAnimationFrame(action(() => this.isContentVisible = true));
   }
 
   @action
@@ -240,3 +247,10 @@ export class Tooltip extends React.Component<TooltipProps> {
     return tooltip;
   }
 }
+
+export const Tooltip = withInjectables<Dependencies, TooltipProps>(NonInjectedTooltip, {
+  getProps: (di, props) => ({
+    ...props,
+    requestAnimationFrame: di.inject(requestAnimationFrameInjectable),
+  }),
+});

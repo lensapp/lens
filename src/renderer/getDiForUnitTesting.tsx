@@ -11,7 +11,6 @@ import requestFromChannelInjectable from "./utils/channel/request-from-channel.i
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
 import { runInAction } from "mobx";
-import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
@@ -61,8 +60,6 @@ export const getDiForUnitTesting = (
     di.override(hostedClusterIdInjectable, () => undefined);
 
     di.override(legacyOnChannelListenInjectable, () => () => noop);
-
-    di.override(requestAnimationFrameInjectable, () => (callback) => callback());
 
     di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));
 

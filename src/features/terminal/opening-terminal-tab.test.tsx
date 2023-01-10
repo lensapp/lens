@@ -27,12 +27,6 @@ describe("test for opening terminal tab within cluster frame", () => {
 
   setupInitializingApplicationBuilder(b => builder = b);
 
-  beforeAll(() => {
-    jest.spyOn(window, "requestAnimationFrame").mockImplementation(function IAmAMockRequestAnimationFrame(cb) {
-      return window.setTimeout(() => cb(Date.now()));
-    });
-  });
-
   beforeEach(async () => {
     builder.mainDi.override(createKubeconfigManagerInjectable, () => (cluster) => {
       return {

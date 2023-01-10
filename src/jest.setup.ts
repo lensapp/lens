@@ -74,6 +74,13 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
+/**
+ * This is needed for getting XTermJs to work in tests
+ */
+jest.spyOn(window, "requestAnimationFrame").mockImplementation(function (cb) {
+  return window.setTimeout(() => cb(Date.now()));
+});
+
 const getInjectables = (environment: "renderer" | "main", filePathGlob: string) => [
   ...glob.sync(`./{common,extensions,${environment}}/**/${filePathGlob}`, {
     cwd: __dirname,
