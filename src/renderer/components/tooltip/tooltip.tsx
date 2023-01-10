@@ -226,7 +226,7 @@ class NonInjectedTooltip extends React.Component<TooltipProps & Dependencies> {
     }
 
     const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
-      visible: this.isContentVisible || this.props.visible,
+      visible: this.isContentVisible || visible,
       formatter: !!formatters,
     });
     const tooltip = (

@@ -3,13 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import assert from "assert";
 import React from "react";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import type { DiRender } from "../test-utils/renderFor";
+import { renderFor } from "../test-utils/renderFor";
 import { Tooltip } from "./tooltip";
 
 describe("<Tooltip />", () => {
+  let render: DiRender;
+
+  beforeEach(() => {
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+
+    render = renderFor(di);
+  });
+
   it("does not render to DOM if not visibile", () => {
     const result = render((
       <>
