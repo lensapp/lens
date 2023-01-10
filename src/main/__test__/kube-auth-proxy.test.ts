@@ -5,7 +5,7 @@
 
 import waitUntilPortIsUsedInjectable from "../../common/utils/wait-until-port-is-used/wait-until-port-is-used.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
-import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
+import type { KubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import type { ChildProcess } from "child_process";
 import { Kubectl } from "../kubectl/kubectl";
 import type { DeepMockProxy } from "jest-mock-extended";

@@ -24,12 +24,12 @@ import { SearchAddon } from "xterm-addon-search";
 import { WebglAddon } from "xterm-addon-webgl";
 
 export interface TerminalDependencies {
-  readonly spawningPool: HTMLElement;
   readonly terminalConfig: IComputedValue<TerminalConfig>;
   readonly terminalCopyOnSelect: IComputedValue<boolean>;
   readonly isMac: boolean;
   readonly xtermColorTheme: IComputedValue<Record<string, string>>;
   readonly logger: Logger;
+  spawningPool: () => HTMLElement;
   openLinkInBrowser: OpenLinkInBrowser;
   createTerminalRenderer: CreateTerminalRenderer;
 }
@@ -73,7 +73,7 @@ export class Terminal {
     const { elem } = this;
 
     if (elem) {
-      this.dependencies.spawningPool.appendChild(elem);
+      this.dependencies.spawningPool().appendChild(elem);
     }
   }
 
@@ -106,7 +106,7 @@ export class Terminal {
     this.xterm.loadAddon(new WebLinksAddon());
     this.xterm.loadAddon(new SearchAddon());
 
-    this.xterm.open(this.dependencies.spawningPool);
+    this.xterm.open(this.dependencies.spawningPool());
 
     try {
       const webgl = new WebglAddon();

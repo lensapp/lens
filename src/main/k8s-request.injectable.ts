@@ -2,7 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { apiKubePrefix } from "../common/vars";
 import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RequestInit } from "node-fetch";
@@ -23,8 +22,7 @@ const k8sRequestInjectable = getInjectable({
 
     return async (cluster, path, { timeout = 30_000, ...init } = {}) => {
       const controller = withTimeout(timeout);
-
-      const response = await lensFetch(`/${cluster.id}${apiKubePrefix}${path}`, {
+      const response = await lensFetch(`/${cluster.id}${path}`, {
         ...init,
         signal: controller.signal,
       });

@@ -17,7 +17,7 @@ import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
 import type { SelfSignedCert } from "selfsigned";
-import type { GetClusterForRequest } from "../cluster/get-cluster-for-request.injectable";
+import type { GetClusterForRequest } from "./get-cluster-for-request.injectable";
 
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
 export type ProxyRequestHandler = (args: ProxyApiRequestArgs) => void | Promise<void>;

@@ -81,9 +81,10 @@ import { runManySyncFor } from "../../common/runnable/run-many-sync-for";
 import type { MemoryHistory } from "history";
 import { object } from "../../common/utils";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
-import { testUsingFakeTime } from "../../common/test-utils/use-fake-time";
 import createVersionDetectorInjectable from "../../main/cluster-detectors/create-version-detector.injectable";
 import type { VersionDetector } from "../../main/cluster-detectors/version-detector";
+import getElementByIdInjectable from "../../renderer/utils/get-element-by-id.injectable";
+import { testUsingFakeTime } from "../../common/test-utils/use-fake-time";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -237,8 +238,8 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
 
     const createElectronWindowFake: CreateElectronWindow = (configuration) => {
       const windowId = configuration.id;
-
       const windowDi = getRendererDi({ doGeneralOverrides: true });
+      let rendered: RenderResult;
 
       overrideForWindow(windowDi, windowId);
       overrideFsWithFakes(windowDi);
@@ -258,7 +259,15 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
         return computed(() => [...rendererExtensionState.values()]);
       });
 
-      let rendered: RenderResult;
+      windowDi.override(getElementByIdInjectable, () => (id) => {
+        const elem = rendered?.container.querySelector(`#${id}`);
+
+        if (!elem) {
+          throw new Error(`Missing #${id} in DOM`);
+        }
+
+        return elem;
+      });
 
       windowHelpers.set(windowId, { di: windowDi, getRendered: () => rendered });
 
@@ -357,7 +366,7 @@ export const setupInitializingApplicationBuilder = (init: (builder: ApplicationB
       windowDi.override(currentLocationInjectable, () => ({
         hostname: "localhost",
         port: `${mainDi.inject(lensProxyPortInjectable).get()}`,
-        protocol: "http",
+        protocol: "https",
       }));
     });
 

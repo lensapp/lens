@@ -18,6 +18,8 @@ import type { ApplicationBuilder } from "../test-utils/application-builder";
 import { setupInitializingApplicationBuilder } from "../test-utils/application-builder";
 import type { FindByTextWithMarkup } from "../../test-utils/findByTextWithMarkup";
 import { findByTextWithMarkupFor } from "../../test-utils/findByTextWithMarkup";
+import terminalStoreInjectable from "../../renderer/components/dock/terminal/store.injectable";
+import { flushPromises } from "../../common/test-utils/flush-promises";
 
 describe("test for opening terminal tab within cluster frame", () => {
   let builder: ApplicationBuilder;
@@ -113,8 +115,21 @@ describe("test for opening terminal tab within cluster frame", () => {
         });
 
         describe("when the next data is sent", () => {
-          beforeEach(() => {
+          beforeEach(async () => {
+            const terminalStore = builder.applicationWindow.only.di.inject(terminalStoreInjectable);
+            const terminalApi = terminalStore.getTerminalApi("terminal");
+
+            assert(terminalApi);
+
+            const waitForData = new Promise<void>(resolve => terminalApi.on("data", (message) => {
+              if (message) {
+                resolve();
+              }
+            }));
+
+            await flushPromises();
             sendData("I am a prompt");
+            await waitForData;
           });
 
           it("renders the new data", async () => {

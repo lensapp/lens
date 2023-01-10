@@ -13,6 +13,7 @@ import { type TerminalMessage, TerminalChannels } from "../../common/terminal/ch
 import type { RequestShellApiToken } from "../../features/terminal/renderer/request-shell-api-token.injectable";
 import type { CurrentLocation } from "./current-location.injectable";
 import type { ClusterId } from "../../common/cluster-types";
+import type { CloseEvent, Event, MessageEvent } from "ws";
 
 enum TerminalColor {
   RED = "\u001b[31m",
@@ -127,7 +128,9 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
     }
   }
 
-  protected _onMessage({ data, ...evt }: MessageEvent<string>): void {
+  protected _onMessage(event: MessageEvent): void {
+    const data = event.data as string;
+
     try {
       const message = JSON.parse(data) as TerminalMessage;
 
@@ -138,7 +141,7 @@ export class TerminalApi extends WebSocketApi<TerminalEvents> {
            * don't want this data to survive if the app is closed
            */
           window.localStorage.setItem(`${this.query.id}:last-data`, message.data);
-          super._onMessage({ data: message.data, ...evt });
+          super._onMessage({ ...event, data: message.data });
           break;
         case TerminalChannels.CONNECTED:
           this.emit("connected");

@@ -9,6 +9,9 @@ import type TypedEventEmitter from "typed-emitter";
 import type { Defaulted } from "../utils";
 import type { DefaultWebsocketApiParams } from "./default-websocket-api-params.injectable";
 import type { Logger } from "../../common/logger";
+import type { CloseEvent, Event, MessageEvent } from "ws";
+import { WebSocket } from "ws";
+import type { Agent } from "https";
 
 interface WebsocketApiParams {
   /**
@@ -66,6 +69,7 @@ export interface WebSocketEvents {
 export interface WebSocketApiDependencies {
   readonly defaultParams: DefaultWebsocketApiParams;
   readonly logger: Logger;
+  readonly websocketAgent: Agent;
 }
 
 export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter as { new<T>(): TypedEventEmitter<T> })<Events> {
@@ -100,7 +104,9 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     this.socket?.close();
 
     // start new connection
-    this.socket = new WebSocket(url);
+    this.socket = new WebSocket(url, {
+      agent: this.dependencies.websocketAgent,
+    });
     this.socket.addEventListener("open", ev => this._onOpen(ev));
     this.socket.addEventListener("message", ev => this._onMessage(ev));
     this.socket.addEventListener("error", ev => this._onError(ev));
@@ -164,7 +170,9 @@ export class WebSocketApi<Events extends WebSocketEvents> extends (EventEmitter 
     this.writeLog("%cOPEN", "color:green;font-weight:bold;", evt);
   }
 
-  protected _onMessage({ data }: MessageEvent<string>): void {
+  protected _onMessage(event: MessageEvent): void {
+    const data = event.data as string;
+
     (this as TypedEventEmitter<WebSocketEvents>).emit("data", data);
     this.writeLog("%cMESSAGE", "color:black;font-weight:bold;", data);
   }

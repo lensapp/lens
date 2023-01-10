@@ -3,16 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import assert from "assert";
+import { memoize } from "lodash";
+import getElementByIdInjectable from "../../../utils/get-element-by-id.injectable";
 
+/**
+ * It is necessary to have this a function because in a testing environment the DOM isn't
+ * available until after first render
+ */
 const terminalSpawningPoolInjectable = getInjectable({
   id: "terminal-spawning-pool",
-  instantiate: () => {
-    const pool = document.getElementById("terminal-init");
+  instantiate: (di) => {
+    const getElementById = di.inject(getElementByIdInjectable);
 
-    assert(pool, "DOM MUST contain #terminal-init element");
-
-    return pool;
+    return memoize(() => getElementById("terminal-init"));
   },
 });
 
