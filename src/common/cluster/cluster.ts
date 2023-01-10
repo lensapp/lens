@@ -394,14 +394,12 @@ export class Cluster implements ClusterModel {
       this.bindEvents();
     }
 
-    console.log("before reconnect");
 
     if (this.disconnected || !this.accessible) {
       try {
         this.broadcastConnectUpdate("Starting connection ...");
         await this.reconnect();
       } catch (error) {
-        console.log(error);
         this.broadcastConnectUpdate(`Failed to start connection: ${error}`, true);
 
         return;
@@ -515,7 +513,6 @@ export class Cluster implements ClusterModel {
    * @internal
    */
   private async refreshAccessibility(): Promise<void> {
-    console.log("in refreshAccessibility");
     this.dependencies.logger.info(`[CLUSTER]: refreshAccessibility`, this.getMeta());
     const proxyConfig = await this.getProxyKubeconfig();
     const canI = this.dependencies.createAuthorizationReview(proxyConfig);
@@ -579,7 +576,6 @@ export class Cluster implements ClusterModel {
 
       return ClusterStatus.AccessGranted;
     } catch (error) {
-      console.log(error);
       this.dependencies.logger.error(`[CLUSTER]: Failed to connect to "${this.contextName}": ${error}`);
 
       if (isRequestError(error)) {
@@ -746,11 +742,6 @@ export class Cluster implements ClusterModel {
   }
 
   shouldShowResource(resource: KubeApiResourceDescriptor): boolean {
-    // console.log({
-    //   resource,
-    //   allowed: toJS([...this.allowedResources]),
-    // });
-
     return this.allowedResources.has(formatKubeApiResource(resource));
   }
 
