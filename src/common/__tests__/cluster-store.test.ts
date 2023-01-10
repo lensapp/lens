@@ -27,6 +27,7 @@ import type { WriteFileSync } from "../fs/write-file-sync.injectable";
 import writeFileSyncInjectable from "../fs/write-file-sync.injectable";
 import type { WriteBufferSync } from "../fs/write-buffer-sync.injectable";
 import writeBufferSyncInjectable from "../fs/write-buffer-sync.injectable";
+import lensProxyCertificateInjectable from "../certificate/lens-proxy-certificate.injectable";
 
 // NOTE: this is intended to read the actual file system
 const testDataIcon = readFileSync("test-data/cluster-store-migration-icon.png");
@@ -74,6 +75,13 @@ describe("cluster-store", () => {
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
+
+    di.inject(lensProxyCertificateInjectable).set({
+      public: "<public-data>",
+      private: "<private-data>",
+      cert: "<ca-data>",
+    });
+
     createCluster = di.inject(createClusterInjectionToken);
     getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
     writeJsonSync = di.inject(writeJsonSyncInjectable);
