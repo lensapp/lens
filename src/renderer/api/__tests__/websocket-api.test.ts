@@ -6,6 +6,7 @@
 import loggerInjectable from "../../../common/logger.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import defaultWebsocketApiParamsInjectable from "../default-websocket-api-params.injectable";
+import websocketAgentInjectable from "../websocket-agent.injectable";
 import type { WebSocketEvents } from "../websocket-api";
 import { WebSocketApi } from "../websocket-api";
 
@@ -24,6 +25,7 @@ describe("WebsocketApi tests", () => {
     api = new TestWebSocketApi({
       defaultParams: di.inject(defaultWebsocketApiParamsInjectable),
       logger: di.inject(loggerInjectable),
+      websocketAgent: di.inject(websocketAgentInjectable),
     }, {});
   });
 
