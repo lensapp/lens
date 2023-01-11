@@ -51,7 +51,7 @@ jobs:
           timeout_minutes: 10
           max_attempts: 3
           retry_on: error
-          command: yarn ci
+          command: yarn install --frozen-lockfile && yarn lerna bootstrap
 
       - run: make test
         name: Run tests

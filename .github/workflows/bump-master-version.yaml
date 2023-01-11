@@ -19,7 +19,8 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         run: |
-          yarn ci
+          yarn install --frozen-lockfile
+          yarn lerna bootstrap
       - name: Bump version to first alpha of next minor version
         run: |
           yarn bump-version preminor
