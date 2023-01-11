@@ -49,10 +49,10 @@
       ".ts", ".tsx",
     ],
   },
-  externals: {
-    "node-fetch": "commonjs node-fetch",
-    "npm": "commonjs npm",
-  },
+  externals: [
+    "node-fetch",
+    "npm",
+  ],
   optimization: {
     minimize: false,
   },

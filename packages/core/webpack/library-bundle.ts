@@ -48,7 +48,7 @@ const config = [
                 declaration: true,
                 sourceMap: false,
               },
-            }
+            },
           },
         },
         ...iconsAndImagesWebpackRules(),
@@ -62,12 +62,13 @@ const config = [
     ],
   },
   {
-    ...rendererConfig,
+    ...main(),
     name: "lens-app-common",
     entry: {
       common: path.resolve(__dirname, "..", "src", "common", "library.ts"),
     },
     output: {
+      publicPath: "",
       library: {
         type: "commonjs2",
       },

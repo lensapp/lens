@@ -19,9 +19,9 @@
   "author": "OpenLens Authors <info@k8slens.dev>",
   "scripts": {
     "clean": "rm -rf binaries/ dist/ static/build",
-    "build": "npm run compile && electron-builder",
+    "build": "npm run compile",
     "build:app": "electron-builder --publish onTag",
-    "build:mac": "npm run compile && electron-builder --mac --dir",
+    "build:dir": "npm run compile && electron-builder --dir",
     "compile": "env NODE_ENV=production webpack --config webpack/webpack.ts --progress",
     "postcompile": "npm run build:tray-icons && npm run download:binaries",
     "predev": "rm -rf static/build/ && npm run build:tray-icons && npm run download:binaries",
@@ -74,7 +74,9 @@
   "build": {
     "generateUpdatesFilesForAllChannels": true,
     "files": [
-      "static/**/*"
+      "static/**/*",
+      "!node_modules/@k8slens/open-lens/node_modules/**/*",
+      "!node_modules/@k8slens/open-lens/src"
     ],
     "afterSign": "../core/build/notarize.js",
     "extraResources": [

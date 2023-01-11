@@ -11,7 +11,7 @@ module.exports = {
     "**/dist/**/*",
     "**/static/**/*",
     "**/site/**/*",
-    "build/webpack/**/*",
+    "**/build/webpack/**/*",
   ],
   settings: {
     react: {
@@ -50,7 +50,7 @@ module.exports = {
       ],
       rules: {
         "no-constant-condition": ["error", { "checkLoops": false }],
-        "header/header": [2, "./license-header"],
+        "header/header": [2, "../../license-header"],
         "comma-dangle": ["error", "always-multiline"],
         "comma-spacing": "error",
         "indent": ["error", 2, {
@@ -123,7 +123,7 @@ module.exports = {
         "no-constant-condition": ["error", {
           "checkLoops": false,
         }],
-        "header/header": [2, "./license-header"],
+        "header/header": [2, "../../license-header"],
         "react/prop-types": "off",
         "no-invalid-this": "off",
         "@typescript-eslint/no-invalid-this": ["error"],

@@ -12,5 +12,5 @@ export {
   applicationInformationToken,
   ApplicationInformation,
   bundledExtensionInjectionToken,
-  extensionApi
+  extensionApi,
 };

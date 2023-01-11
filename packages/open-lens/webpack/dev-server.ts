@@ -20,7 +20,7 @@ const server = new WebpackDevServer({
   headers: {
     "Access-Control-Allow-Origin": "*",
   },
-  allowedHosts: "127.0.0.1",
+  allowedHosts: ".lens.app",
   host: "localhost",
   port: webpackDevServerPort,
   static: buildDir, // aka `devServer.contentBase` in webpack@4
