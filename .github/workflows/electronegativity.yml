@@ -18,7 +18,7 @@ jobs:
 
       - uses: doyensec/electronegativity-action@v1.1
         with:
-          input: src/
+          input: packages/core/src/
           electron-version: "19.0.4"
           severity: medium
 

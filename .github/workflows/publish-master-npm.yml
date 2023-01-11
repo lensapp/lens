@@ -25,13 +25,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Generate NPM package
+      - name: Generate NPM packages
         run: |
-          make build-extensions-npm
+          yarn ci
+          yarn run build
 
-      - name: publish new release
+      - name: Publish NPM package
         run: |
-          make publish-extensions-npm
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_RELEASE_TAG: master
+          yarn lerna publish from-package --dist-tag master --no-push --no-git-tag-version --yes
