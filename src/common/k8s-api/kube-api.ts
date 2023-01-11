@@ -217,7 +217,7 @@ export class KubeApi<
   readonly kind: string;
   readonly apiVersion: string;
 
-  @observable apiBase = "";
+  @observable apiBase: string;
 
   apiPrefix: string;
   apiGroup: string;
@@ -245,7 +245,6 @@ export class KubeApi<
       fallbackApiBases,
     } = opts;
 
-    makeObservable(this);
     assert(fullApiPathname, "apiBase MUST be provied either via KubeApiOptions.apiBase or KubeApiOptions.objectConstructor.apiBase");
     assert(request, "request MUST be provided if not in a cluster page frame context");
 
@@ -266,6 +265,7 @@ export class KubeApi<
     this.apiResource = resource;
     this.request = request;
     this.objectConstructor = objectConstructor;
+    makeObservable(this);
   }
 
   get apiVersionWithGroup() {
