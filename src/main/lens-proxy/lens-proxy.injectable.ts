@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { LensProxy } from "./lens-proxy";
 import { kubeApiUpgradeRequest } from "./proxy-functions";
-import routerInjectable from "../router/router.injectable";
 import httpProxy from "http-proxy";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request.injectable";
 import lensProxyPortInjectable from "./lens-proxy-port.injectable";
@@ -14,12 +13,13 @@ import emitAppEventInjectable from "../../common/app-event-bus/emit-event.inject
 import loggerInjectable from "../../common/logger.injectable";
 import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
 import getClusterForRequestInjectable from "./get-cluster-for-request.injectable";
+import routeRequestInjectable from "../router/route-request.injectable";
 
 const lensProxyInjectable = getInjectable({
   id: "lens-proxy",
 
   instantiate: (di) => new LensProxy({
-    router: di.inject(routerInjectable),
+    routeRequest: di.inject(routeRequestInjectable),
     proxy: httpProxy.createProxy(),
     kubeApiUpgradeRequest,
     shellApiRequest: di.inject(shellApiRequestInjectable),

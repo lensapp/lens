@@ -35,6 +35,7 @@ export interface LensApiRequest<Path extends string> {
   params: InferParamFromPath<Path>;
   cluster: Cluster | undefined;
   query: URLSearchParams;
+  getHeader: (key: string) => string | string[] | undefined;
   raw: {
     req: http.IncomingMessage;
     res: http.ServerResponse;

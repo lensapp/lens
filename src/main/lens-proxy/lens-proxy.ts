@@ -8,7 +8,6 @@ import https from "https";
 import type http from "http";
 import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
-import type { Router } from "../router/router";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
@@ -18,6 +17,7 @@ import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
 import type { SelfSignedCert } from "selfsigned";
+import type { RouteRequest } from "../router/route-request.injectable";
 
 export type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
@@ -28,7 +28,7 @@ interface Dependencies {
   shellApiRequest: LensProxyApiRequest;
   kubeApiUpgradeRequest: LensProxyApiRequest;
   emitAppEvent: EmitAppEvent;
-  readonly router: Router;
+  routeRequest: RouteRequest;
   readonly proxy: httpProxy;
   readonly lensProxyPort: { set: (portNumber: number) => void };
   readonly contentSecurityPolicy: string;
@@ -247,6 +247,6 @@ export class LensProxy {
     }
 
     res.setHeader("Content-Security-Policy", this.dependencies.contentSecurityPolicy);
-    await this.dependencies.router.route(cluster, req, res);
+    await this.dependencies.routeRequest(cluster, req, res);
   }
 }
