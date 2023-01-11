@@ -1,0 +1,94 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.SidebarCluster {
+  display: flex;
+  align-items: center;
+  padding: calc(var(--padding) * 1.2);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--sidebarLogoBackground);
+  }
+
+  &:focus-visible {
+    .dropdown {
+      box-shadow: 0 0 0 2px var(--focus-color);
+    }
+  }
+
+  .dropdown {
+    border-radius: 3px;
+    margin-left: var(--margin);
+  }
+}
+
+.clusterName {
+  font-weight: bold;
+  overflow: hidden;
+  word-break: break-word;
+  color: var(--textColorAccent);
+  display: -webkit-box;
+  /* Simulate text-overflow:ellipsis styles but for multiple text lines */
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.menu {
+  width: 200px;
+  margin-top: -10px;
+}
+
+.avatar {
+  font-weight: 500;
+  margin-right: calc(var(--margin) * 1.5);
+}
+
+.loadingAvatar {
+  position: relative;
+  pointer-events: none;
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: transparentize(white, .85);
+    animation: waiting 1.5s infinite linear;
+  }
+}
+
+.loadingClusterName {
+  position: relative;
+  pointer-events: none;
+  width: 80%;
+  height: 16px;
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: transparentize(white, .85);
+    animation: waiting 1.5s infinite linear;
+  }
+}
+
+@keyframes waiting {
+  0% {
+    left: 0;
+    width: 0;
+  }
+  50% {
+    left: 25%;
+    width: 75%;
+  }
+  75% {
+    left: 100%;
+    width: 0;
+  }
+}

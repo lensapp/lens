@@ -1,0 +1,20 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.AddRemoveButtons {
+  position: absolute;
+  margin: $padding * 2;
+  margin-right: $padding * 4;
+  bottom: 0;
+  right: 0;
+  z-index: 99;
+
+  .Button {
+    &.remove-button {
+      background-color: var(--borderFaintColor);
+      color: var(--textColorPrimary);
+    }
+  }
+}

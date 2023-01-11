@@ -1,0 +1,71 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.LogList {
+  --overlay-bg: #8cc474b8;
+  --overlay-active-bg: orange;
+
+  // fix for `this.logsElement.scrollTop = this.logsElement.scrollHeight`
+  // `overflow: overlay` don't allow scroll to the last line
+  overflow: auto;
+
+  position: relative;
+  color: var(--logsForeground);
+  background: var(--logsBackground);
+  flex-grow: 1;
+
+  .VirtualList {
+    height: 100%;
+
+    .list {
+      overflow-x: scroll!important;
+
+      .LogRow {
+        padding: 2px 16px;
+        height: 18px;  // Must be equal to lineHeight variable in pod-log-list.tsx
+        font-family: var(--font-monospace);
+        font-size: smaller;
+        white-space: nowrap;
+
+        &:hover {
+          background: var(--logRowHoverBackground);
+        }
+
+        span {
+          -webkit-font-smoothing: auto; // Better readability on non-retina screens
+          white-space: pre;
+        }
+
+        span.overlay {
+          border-radius: 2px;
+          -webkit-font-smoothing: auto;
+          background-color: var(--overlay-bg);
+
+          span {
+            background-color: var(--overlay-bg)!important; // Rewriting inline styles from AnsiUp library
+          }
+
+          &.active {
+            background-color: var(--overlay-active-bg);
+
+            span {
+              background-color: var(--overlay-active-bg)!important; // Rewriting inline styles from AnsiUp library
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.isLoading {
+    cursor: wait;
+  }
+
+  &.isScrollHidden {
+    .VirtualList .list {
+      overflow-x: hidden!important; // fixing scroll to bottom issues in PodLogs
+    }
+  }
+}

@@ -1,0 +1,44 @@
+.table {
+  border-spacing: 0;
+  border-top: thin solid var(--hrColor);
+}
+
+.thead {
+  @apply overflow-hidden font-bold;
+  border-bottom: thin solid var(--hrColor);
+  color: var(--textColorAccent);
+  padding-top: 7px;
+  height: 33px;
+}
+
+.thead .tr {
+  margin: 0 var(--margin);
+}
+
+.tr {
+  @apply flex;
+  margin: calc(var(--margin) * 1.6) var(--margin);
+}
+
+.th {
+  @apply relative whitespace-nowrap;
+  padding: 0 var(--padding);
+}
+
+.headIcon {
+  font-weight: normal;
+  color: var(--textColorAccent);
+}
+
+.disabledArrow {
+  opacity: 0.3;
+}
+
+.td {
+  @apply flex items-center;
+  padding: 0 var(--padding);
+}
+
+.actions {
+  @apply justify-end;
+}

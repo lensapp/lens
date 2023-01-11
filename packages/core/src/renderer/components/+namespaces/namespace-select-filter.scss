@@ -1,0 +1,78 @@
+@include theme-light {
+  .NamespaceSelectFilter {
+    --gradientColor: white;
+  }
+}
+
+.NamespaceSelectFilterParent {
+  max-width: 300px;
+}
+
+.NamespaceSelectFilter {
+  --gradientColor: var(--select-menu-bgc);
+
+  .Select {
+    &__placeholder {
+      white-space: nowrap;
+      overflow: scroll hidden!important;
+      text-overflow: unset!important;
+      margin-left: -8px;
+      padding-left: 8px;
+      margin-right: -8px;
+      padding-right: 8px;
+      line-height: 1.1;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    &__value-container {
+      position: relative;
+
+      &::before, &::after {
+        content: ' ';
+        position: absolute;
+        z-index: 20;
+        display: block;
+        width: 8px;
+        height: var(--font-size);
+      }
+
+      &::before {
+        left: 0;
+        background: linear-gradient(to right, var(--gradientColor) 0px, transparent);
+      }
+
+      &::after {
+        right: 0;
+        background: linear-gradient(to left, var(--gradientColor) 0px, transparent);
+      }
+    }
+  }
+}
+
+.NamespaceSelectFilterMenu {
+  right: 0;
+
+  .Select {
+    &__menu-list {
+      max-width: 400px;
+    }
+
+    &__option {
+      white-space: normal;
+      word-break: break-all;
+      padding: 4px 8px;
+      border-radius: 3px;
+
+      &--is-selected:not(&--is-focused) {
+        background: transparent;
+      }
+    }
+  }
+
+  .Icon {
+    margin-right: $margin * 0.5;
+  }
+}

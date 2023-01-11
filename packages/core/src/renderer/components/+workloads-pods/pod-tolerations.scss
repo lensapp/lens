@@ -1,0 +1,19 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.PodTolerations {
+  .TableHead {
+    background-color: var(--drawerSubtitleBackground);
+  }
+
+  .TableCell {
+    white-space: normal;
+    word-break: normal;
+
+    &.key {
+      flex-grow: 3;
+    }
+  }
+}

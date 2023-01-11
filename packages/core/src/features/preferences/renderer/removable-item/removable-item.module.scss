@@ -1,0 +1,8 @@
+.item {
+  --flex-gap: 0.5rem;
+
+  background: var(--inputControlBackground);
+  min-height: 65px;
+  border-radius: 3px;
+  padding: calc(var(--padding) * 1.5);
+}

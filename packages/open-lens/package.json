@@ -1,0 +1,237 @@
+{
+  "name": "open-lens",
+  "private": true,
+  "productName": "OpenLens",
+  "description": "OpenLens - Open Source IDE for Kubernetes",
+  "homepage": "https://github.com/lensapp/lens",
+  "version": "6.4.0-alpha.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/lensapp/lens/issues"
+  },
+  "main": "static/build/main.js",
+  "copyright": "© 2023 OpenLens Authors",
+  "license": "MIT",
+  "author": "OpenLens Authors <info@k8slens.dev>",
+  "scripts": {
+    "clean": "rm -rf binaries/ dist/ static/build",
+    "build": "npm run compile && electron-builder",
+    "build:mac": "npm run compile && electron-builder --mac --dir",
+    "compile": "env NODE_ENV=production webpack --config webpack/webpack.ts --progress",
+    "postcompile": "npm run build:tray-icons && npm run download:binaries",
+    "predev": "rm -rf static/build/ && npm run build:tray-icons && npm run download:binaries",
+    "dev": "concurrently -i -k \"yarn run dev-run -C\" yarn:dev:*",
+    "dev-run": "nodemon --watch ./static/build/main.js --exec \"electron --remote-debugging-port=9223 --inspect .\"",
+    "dev:main": "env NODE_ENV=development webpack --config webpack/main.ts --progress --watch",
+    "dev:renderer": "env NODE_ENV=development ts-node ./webpack/dev-server.ts",
+    "build:tray-icons": "ts-node ../core/build/generate-tray-icons.ts",
+    "download:binaries": "ts-node ../core/build/download_binaries.ts"
+  },
+  "config": {
+    "k8sProxyVersion": "0.3.0",
+    "bundledKubectlVersion": "1.23.3",
+    "bundledHelmVersion": "3.7.2",
+    "sentryDsn": "",
+    "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src https://*.lens.app:*/; img-src * data:",
+    "welcomeRoute": "/welcome"
+  },
+  "engines": {
+    "node": ">=16 <17"
+  },
+  "jest": {
+    "collectCoverage": false,
+    "verbose": true,
+    "transform": {
+      "^.+\\.(t|j)sx?$": [
+        "@swc/jest"
+      ]
+    },
+    "testEnvironment": "jsdom",
+    "resolver": "<rootDir>/src/jest-28-resolver.js",
+    "moduleNameMapper": {
+      "\\.(css|scss)$": "identity-obj-proxy",
+      "\\.(svg|png|jpg|eot|woff2?|ttf)$": "<rootDir>/__mocks__/assetMock.ts"
+    },
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist",
+      "<rootDir>/packages"
+    ],
+    "setupFiles": [
+      "<rootDir>/src/jest.setup.ts",
+      "jest-canvas-mock"
+    ],
+    "globalSetup": "<rootDir>/src/jest.timezone.ts",
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/jest-after-env.setup.ts"
+    ],
+    "runtime": "@side/jest-runtime"
+  },
+  "build": {
+    "generateUpdatesFilesForAllChannels": true,
+    "files": [
+      "static/**/*"
+    ],
+    "afterSign": "../core/build/notarize.js",
+    "extraResources": [
+      {
+        "from": "templates/",
+        "to": "./templates/",
+        "filter": "**/*.yaml"
+      },
+      "LICENSE"
+    ],
+    "linux": {
+      "category": "Network",
+      "artifactName": "${productName}-${version}.${arch}.${ext}",
+      "target": [
+        "deb",
+        "rpm",
+        "AppImage"
+      ],
+      "extraResources": [
+        {
+          "from": "binaries/client/linux/${arch}/kubectl",
+          "to": "./${arch}/kubectl"
+        },
+        {
+          "from": "binaries/client/linux/${arch}/lens-k8s-proxy",
+          "to": "./${arch}/lens-k8s-proxy"
+        },
+        {
+          "from": "binaries/client/linux/${arch}/helm",
+          "to": "./${arch}/helm"
+        }
+      ]
+    },
+    "rpm": {
+      "fpm": [
+        "--rpm-rpmbuild-define=%define _build_id_links none"
+      ]
+    },
+    "mac": {
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "../core/build/entitlements.mac.plist",
+      "entitlementsInherit": "../core/build/entitlements.mac.plist",
+      "extraResources": [
+        {
+          "from": "binaries/client/darwin/${arch}/kubectl",
+          "to": "./${arch}/kubectl"
+        },
+        {
+          "from": "binaries/client/darwin/${arch}/lens-k8s-proxy",
+          "to": "./${arch}/lens-k8s-proxy"
+        },
+        {
+          "from": "binaries/client/darwin/${arch}/helm",
+          "to": "./${arch}/helm"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "extraResources": [
+        {
+          "from": "binaries/client/windows/${arch}/kubectl.exe",
+          "to": "./${arch}/kubectl.exe"
+        },
+        {
+          "from": "binaries/client/windows/${arch}/lens-k8s-proxy.exe",
+          "to": "./${arch}/lens-k8s-proxy.exe"
+        },
+        {
+          "from": "binaries/client/windows/${arch}/helm.exe",
+          "to": "./${arch}/helm.exe"
+        }
+      ]
+    },
+    "nsis": {
+      "include": "../core/build/installer.nsh",
+      "oneClick": false,
+      "allowElevation": true,
+      "createStartMenuShortcut": true,
+      "allowToChangeInstallationDirectory": true
+    },
+    "protocols": {
+      "name": "Lens Protocol Handler",
+      "schemes": [
+        "lens"
+      ],
+      "role": "Viewer"
+    }
+  },
+  "dependencies": {
+    "@k8slens/open-lens": "^6.4.0-alpha.0",
+    "@ogre-tools/fp": "^12.0.1",
+    "@ogre-tools/injectable": "^12.0.1",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^12.0.1",
+    "@ogre-tools/injectable-extension-for-mobx": "^12.0.1",
+    "@ogre-tools/injectable-react": "^12.0.1",
+    "mobx": "^6.7.0"
+  },
+  "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
+    "@types/node": "^16.18.6",
+    "@types/webpack": "^5.28.0",
+    "@types/webpack-dev-server": "^4.7.2",
+    "@types/webpack-env": "^1.18.0",
+    "@types/webpack-node-externals": "2.5.3",
+    "autoprefixer": "^10.4.13",
+    "circular-dependency-plugin": "^5.2.2",
+    "cli-progress": "^3.11.2",
+    "concurrently": "^7.6.0",
+    "css-loader": "^6.7.2",
+    "electron": "^19.1.9",
+    "electron-builder": "^23.6.0",
+    "electron-notarize": "^0.3.0",
+    "esbuild-loader": "^2.20.0",
+    "fork-ts-checker-webpack-plugin": "^7.2.14",
+    "gunzip-maybe": "^1.4.2",
+    "html-webpack-plugin": "^5.5.0",
+    "jsdom": "^20.0.3",
+    "jsonfile": "^6.1.0",
+    "mini-css-extract-plugin": "^2.7.1",
+    "monaco-editor-webpack-plugin": "^5.0.0",
+    "node-loader": "^2.0.0",
+    "nodemon": "^2.0.20",
+    "react-refresh": "^0.14.0",
+    "react-refresh-typescript": "^2.0.7",
+    "sharp": "^0.31.2",
+    "style-loader": "^3.3.1",
+    "tailwindcss": "^3.2.4",
+    "ts-loader": "^9.4.2",
+    "ts-node": "^10.9.1",
+    "type-fest": "^2.14.0",
+    "typescript": "^4.9.4",
+    "typescript-plugin-css-modules": "^4.1.1",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.11.1",
+    "webpack-node-externals": "^3.0.0",
+    "@types/byline": "^4.2.33",
+    "@types/chart.js": "^2.9.36",
+    "@types/color": "^3.0.3",
+    "@types/crypto-js": "^3.1.47",
+    "@types/lodash": "^4.14.191",
+    "@types/proper-lockfile": "^4.1.2",
+    "@types/react-dom": "^17.0.16",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/react-virtualized-auto-sizer": "^1.0.1",
+    "@types/react-window": "^1.8.5",
+    "@types/request-promise-native": "^1.0.18",
+    "@types/tar": "^6.1.3",
+    "@types/tcp-port-used": "^1.0.1",
+    "@types/url-parse": "^1.4.8",
+    "@types/uuid": "^8.3.4",
+    "monaco-editor": "^0.29.1",
+    "react-select": "^5.7.0",
+    "typed-emitter": "^1.4.0",
+    "xterm-addon-fit": "^0.5.0"
+  }
+}

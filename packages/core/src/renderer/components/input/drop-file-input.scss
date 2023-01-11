@@ -1,0 +1,11 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.DropFileInput {
+  &.droppable {
+    box-shadow: inset 0 0 0 6px var(--primary);
+    transition: all 0.3s;
+  }
+}

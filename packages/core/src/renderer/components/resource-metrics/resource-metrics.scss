@@ -1,0 +1,43 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.ResourceMetrics {
+  $metricsHeight: 200px;
+
+  position: relative;
+  margin-bottom: $margin * 2;
+
+  .switchers {
+    margin-bottom: $margin * 2;
+    text-align: center;
+  }
+
+  .graph {
+    &:empty + .loader {
+      display: flex;
+      height: #{$metricsHeight + $unit * 2.75};
+      align-items: center;
+      justify-content: center;
+    }
+
+    .Chart {
+      .chart-container {
+        min-height: $metricsHeight;
+      }
+
+      .legend {
+        justify-content: center;
+
+        > * {
+          margin-right: $margin * 2;
+        }
+      }
+    }
+  }
+
+  .loader {
+    display: none;
+  }
+}

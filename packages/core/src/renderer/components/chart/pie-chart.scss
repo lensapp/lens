@@ -1,0 +1,24 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.PieChart {
+  .chart-container {
+    width: 120px;
+    min-height: 150px;
+  }
+
+  .legend {
+    margin-top: $margin;
+    flex-direction: column;
+
+    > * {
+      &.LegendBadge:hover {
+        background-color: transparent;
+      }
+
+      margin-bottom: $margin;
+    }
+  }
+}

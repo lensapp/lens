@@ -1,0 +1,46 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.HotbarSelector {
+  display: flex;
+  align-items: center;
+  height: 25px;
+  background-color: var(--layoutBackground);
+  position: relative;
+  justify-content: center;
+
+  &:before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(0deg, var(--clusterMenuBackground), transparent);
+    top: -20px;
+  }
+
+  .HotbarIndex {
+    display: flex;
+    width: 3ch;
+  }
+
+  .Badge {
+    cursor: pointer;
+    background: var(--secondaryBackground);
+    width: 100%;
+    color: var(--settingsColor);
+    padding: 0px calc(var(--padding) / 2);
+  }
+
+  .Icon {
+    &:hover {
+      box-shadow: none;
+      background-color: transparent;
+    }
+
+    &:focus-visible {
+      z-index: 1;
+    }
+  }
+}

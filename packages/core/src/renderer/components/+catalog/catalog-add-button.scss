@@ -1,0 +1,30 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.CatalogAddButton {
+  position: absolute;
+  right: 40px;
+  bottom: 30px;
+
+  .MuiFab-primary {
+    background-color: var(--blue);
+    border-radius: 50%;
+
+    &:hover {
+      background-color: #317bb3;
+    }
+ }
+}
+
+.catalogSpeedDialPopper  {
+  .MuiTooltip-tooltip {
+    background-color: #222;
+    font-size: 12px
+  }
+
+  .MuiTooltip-arrow {
+    color: #222;
+  }
+}

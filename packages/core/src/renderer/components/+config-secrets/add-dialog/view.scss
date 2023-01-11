@@ -1,0 +1,24 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.AddSecretDialog {
+  --flex-gap: #{$margin * 1.5};
+
+  .Icon {
+    --color-active: black;
+  }
+
+  .remove-icon {
+    flex: 0 0;
+    width: 18px; // icon size
+  }
+
+  .fields-title {
+    display: grid;
+    grid-template-columns: min-content auto;
+    align-items: center;
+    gap: $margin * 0.5;
+  }
+}

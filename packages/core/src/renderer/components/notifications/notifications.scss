@@ -1,0 +1,52 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.Notifications {
+  @include hidden-scrollbar;
+
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: $padding * 2;
+  max-height: 100vh;
+  z-index: 100000;
+  height: min-content!important;
+
+  &:empty {
+    display: none;
+  }
+
+  .notification {
+    flex: 0 0;
+    padding: $padding * 1.5;
+    border-radius: 3px;
+    min-width: 350px;
+    max-width: 35vw;
+    word-break: break-word;
+
+    &:not(:last-child) {
+      margin-bottom: $margin * 2;
+    }
+
+    > .message {
+      white-space: pre-line;
+      padding-left: $padding;
+      padding-right: $padding * 2;
+      align-self: center;
+
+      a {
+        color: inherit;
+      }
+    }
+
+    @each $status, $color in (ok: var(--colorOk), error: var(--colorError), info: var(--colorInfo)) {
+      &.#{$status} {
+        background: $color;
+        color: $color-white;
+        box-shadow: 0 0 20px var(--boxShadow);
+      }
+    }
+  }
+}

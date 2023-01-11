@@ -1,0 +1,23 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+ .ClusterMetrics {
+  position: relative;
+  min-height: 280px;
+  padding: calc(var(--margin) * 2);
+  background: var(--contentColor);
+
+  .chart {
+    :global(.chart-container) {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .empty {
+    text-align: center;
+    padding-bottom: 45px;
+  }
+}

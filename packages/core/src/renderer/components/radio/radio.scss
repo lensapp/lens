@@ -1,0 +1,120 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.RadioGroup {
+  &.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  &.buttonsView {
+    display: inline-flex;
+
+    .Radio {
+      display: inline-block;
+      border: 1px solid var(--borderFaintColor);
+      border-radius: $radius;
+      text-align: center;
+      padding: round($padding * .7) $padding;
+      white-space: nowrap;
+      transition: 250ms color;
+
+      &.disabled {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      &:not(.checked):not(.disabled) {
+        cursor: pointer;
+        &:not(:active):focus {
+          position: relative;
+          border-color: var(--primary);
+          box-shadow: inset 0 0 0 1px var(--primary);
+        }
+      }
+
+      &.checked {
+        background-color: var(--radioActiveBackground);
+        color: var(--textColorAccent);
+        * {
+          cursor: default;
+        }
+      }
+
+      &:hover {
+        color: var(--textColorAccent)
+      }
+
+      + .Radio {
+        margin-left: -1px;
+      }
+
+      .tick {
+        display: none;
+
+        + * {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
+.Radio {
+  $tickSize: round(1.8 * $unit);
+  $tickColor: currentColor;
+  $tickColorActive: var(--colorInfo);
+  $tickColorFocus: var(--colorInfo);
+  $labelColorActive: var(--textColorAccent);
+
+  input[type="radio"] {
+    display: none;
+    &:checked {
+      ~ .tick {
+        color: $tickColorActive;
+        &:after {
+          content: "radio_button_checked";
+        }
+      }
+    }
+    &:disabled {
+      ~ .tick {
+        color: $tickColor;
+      }
+      ~ * {
+        opacity: .5;
+        pointer-events: none;
+      }
+    }
+    &:not(:disabled) ~ * {
+      cursor: pointer;
+    }
+  }
+
+  &:focus {
+    .tick {
+      color: $tickColorActive;
+    }
+  }
+
+  &.checked {
+    .label {
+      color: $labelColorActive;
+    }
+  }
+
+  .tick {
+    color: $tickColor;
+    font: calc($font-size * 1.3) "Material Icons";
+
+    &:after {
+      content: "radio_button_unchecked";
+    }
+
+    + * {
+      margin-left: .5em;
+    }
+  }
+}

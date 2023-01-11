@@ -1,0 +1,177 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.SettingLayout {
+  --nav-column-width: 30vw;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  color: var(--settingsColor);
+  position: fixed;
+  z-index: 13!important;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: unset;
+  background-color: var(--settingsBackground);
+
+  &.showNavigation {
+    grid-template-columns: var(--nav-column-width) 1fr;
+
+    > .contentRegion {
+      justify-content: flex-start;
+    }
+  }
+
+  > .sidebarRegion {
+    display: flex;
+    justify-content: flex-end;
+    overflow-y: auto;
+    background-color: var(--secondaryBackground);
+
+    .sidebar {
+      width: 218px;
+      padding: 60px 10px 60px 20px;
+
+      h2 {
+        font-size: 15px;
+        overflow-wrap: anywhere;
+        color: var(--textColorAccent);
+        font-weight: 600;
+        padding-right: 20px;
+        word-break: break-word;
+      }
+
+      hr {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 20px;
+        height: 1px;
+        border-top: thin solid var(--hrColor);
+      }
+
+      .Tabs {
+        .header {
+          padding: 6px 10px;
+          font-size: 13px;
+          font-weight: 800;
+          text-transform: uppercase;
+          color: var(--textColorPrimary);
+
+          &:first-child {
+            padding-top: 0;
+          }
+        }
+
+        .Tab {
+          padding: 6px 10px;
+          margin-bottom: 2px;
+          border-radius: 4px;
+          font-size: 15px;
+          line-height: 20px;
+          cursor: pointer;
+          white-space: normal;
+
+          &::after {
+            content: none;
+          }
+
+          &:hover {
+            background-color: var(--navSelectedBackground);
+            color: var(--navHoverColor);
+          }
+
+          &.active {
+            background-color: var(--navSelectedBackground);
+          }
+
+          > .label {
+            width: 100%;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+
+  > .contentRegion {
+    display: flex;
+    overflow: auto;
+    justify-content: center;
+
+    > .content {
+      width: 100%;
+      max-width: 740px;
+      min-width: 460px;
+      padding: 60px 40px 0;
+      height: max-content;
+      margin-bottom: 60px;
+    }
+
+    > .toolsRegion {
+      width: 45px;
+    }
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+
+    h1, h2 {
+      color: var(--textColorAccent);
+    }
+
+    h1 {
+      color: var(--textColorAccent);
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 18px;
+      line-height: 20px;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+
+    a {
+      color: var(--colorInfo);
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .SubTitle {
+      margin-top: 0;
+      margin-bottom: 8px;
+      padding-bottom: 0;
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    hr {
+      margin-top: 40px;
+      margin-bottom: 40px;
+
+      height: 1px;
+      border-top: thin solid var(--hrColor);
+
+      &.small {
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+    }
+
+    .Checkbox .label {
+      color: var(--textColorTertiary);
+    }
+  }
+}

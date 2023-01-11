@@ -1,0 +1,112 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.topBar {
+  background-color: var(--layoutBackground);
+  z-index: 2;
+  grid-area: topbar;
+  height: var(--main-layout-header);
+
+  /* Use topbar as draggable region */
+  user-select: none;
+  -webkit-app-region: drag;
+}
+
+.topBar .items {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  height: 100%;
+  padding-left: calc(var(--padding) * 2);
+  padding-right: calc(var(--padding) * 2);
+}
+
+.preventedDragging {
+  -webkit-app-region: no-drag;
+}
+
+.separator {
+  flex-grow: 1;
+}
+
+:global(.is-mac) .topBar {
+  padding-left: var(--hotbar-width);
+}
+
+.winMenu {
+  width: var(--hotbar-width);
+
+  > div {
+    @apply flex items-center justify-center;
+    width: 40px;
+    height: 40px;
+
+    &:hover {
+      background-color: var(--borderFaintColor);
+    }
+
+    &:active {
+      background-color: var(--borderColor);
+    }
+  }
+}
+
+.windowButtons {
+  display: flex;
+  margin-right: calc(var(--padding) * -2);
+
+  > div {
+    @apply flex items-center justify-center;
+    width: 40px;
+    height: 40px;
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  &.linuxButtons {
+    > div {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      margin-right: var(--padding);
+      color: var(--textColorAccent);
+
+      svg {
+        width: 8px;
+        height: 8px;
+      }
+    }
+
+    .close {
+      color: white;
+      background-color: #e63e02; /* Standard close button bg color on ubuntu */
+    }
+
+    .close:hover {
+      background-color: #ff5a23;
+    }
+  }
+}
+
+.minimize,
+.maximize {
+  &:hover {
+    background-color: var(--borderFaintColor);
+  }
+
+  &:active {
+    background-color: var(--borderColor);
+  }
+}
+
+.close {
+  &:hover {
+    color: white;
+    background-color: #ef4b4e;
+  }
+}

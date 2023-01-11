@@ -1,0 +1,58 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+
+.ConfirmDialog {
+  $spacing: $padding * 3;
+
+  &.warning {
+    .Button.ok {
+      background: var(--colorSoftError);
+    }
+  }
+
+  > .box {
+    max-width: 50vw;
+    min-width: 45 * $unit;
+    background-color: white;
+    border-radius: $radius;
+    line-height: 1.5;
+  }
+
+  .confirm-content {
+    padding: $spacing;
+    display: flex;
+    align-items: center;
+    word-break: break-word;
+
+    > .Icon {
+      margin-left: inherit;
+      margin-right: $margin * 2;
+      color: var(--colorSoftError);
+    }
+
+    > :not(.Icon) {
+      flex: 1;
+    }
+
+    .warning {
+      font-size: small;
+      margin-top: $margin;
+    }
+  }
+
+  .confirm-buttons {
+    background: #f4f4f4;
+    padding: $padding * 2.5;
+    display: flex;
+    justify-content: flex-end;
+    border-bottom-left-radius: $radius;
+    border-bottom-right-radius: $radius;
+
+    > * {
+      margin-left: $margin
+    }
+  }
+}

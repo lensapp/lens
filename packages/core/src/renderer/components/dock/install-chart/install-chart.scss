@@ -1,0 +1,21 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.InstallChart {
+  .Select {
+    &.NamespaceSelect {
+      min-width: 130px;
+    }
+
+    &.chart-version {
+      min-width: 130px;
+    }
+  }
+}
+
+.InstallChartDone {
+  --flex-gap: #{$padding * 1.5};
+  padding: $padding * 2;
+}

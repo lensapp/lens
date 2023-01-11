@@ -1,0 +1,24 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.entityName {
+  @apply font-bold overflow-hidden;
+  word-break: break-word;
+  color: var(--textColorAccent);
+  display: -webkit-box;
+  /* Simulate text-overflow:ellipsis styles but for multiple text lines */
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.settingsAvatar {
+  margin: 0 10px;
+}
+
+.avatarAndName {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--margin);
+}

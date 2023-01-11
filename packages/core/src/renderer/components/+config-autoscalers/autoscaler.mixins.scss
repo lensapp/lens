@@ -1,0 +1,19 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+$hpa-status-colors: (
+  abletoscale: var(--colorOk),
+  scalingactive: var(--colorInfo),
+  scalinglimited: var(--colorSoftError),
+);
+
+@mixin hpa-status-bgc {
+  @each $status, $color in $hpa-status-colors {
+    &.#{$status} {
+      background: $color;
+      color: white;
+    }
+  }
+}

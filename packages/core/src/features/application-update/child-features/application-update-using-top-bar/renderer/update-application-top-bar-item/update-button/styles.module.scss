@@ -1,0 +1,52 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.updateButton {
+  --accent-color: var(--colorOk);
+
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  padding: calc(var(--padding) / 4) var(--padding);
+  gap: 6px;
+  cursor: default;
+  position: relative;
+
+  &:hover::before{
+    opacity: 0.25;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px var(--blue);
+    border-color: transparent;
+  }
+
+  &::before {
+    content: " ";
+    position: absolute;
+    background: var(--accent-color);
+    width: 100%;
+    height: 100%;
+    left: 0;
+    opacity: 0.15;
+    z-index: -1;
+    transition: opacity 0.1s;
+  }
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.warningMedium {
+  --accent-color: var(--colorWarning);
+}
+
+.warningHigh {
+  --accent-color: var(--colorSoftError);
+}

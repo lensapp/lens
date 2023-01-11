@@ -1,0 +1,25 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.ClusterOverview {
+  position: relative;
+  height: 100%;
+  min-height: 650px;
+  display: grid;
+  grid-gap: calc(var(--margin) * 2);
+  grid-template-areas:
+    "barcharts piechars"
+    "issues issues";
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  grid-template-rows:
+          [row1-start] 1fr
+          [row2-start] 1fr;
+
+  @media (max-width: 1150px) {
+    grid-template-columns: minmax(500px, 1fr);
+    grid-template-rows: 1fr;
+    grid-template-areas: none;
+  }
+}

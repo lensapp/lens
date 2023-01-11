@@ -1,0 +1,33 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+$node-status-color-list: (
+  out-of-disk: #ce3933,
+  network-unavailable: #812727,
+  memory-pressure: #901995,
+  disk-pressure: #CC8D00,
+  pid-pressure: #068DBF,
+  ready: #4caf50,
+  scheduling-disabled: #ff9800,
+  invalid-license: #ce3933,
+  cordoned: var(--colorWarning)
+);
+
+@mixin node-status-bgs {
+  @each $status, $color in $node-status-color-list {
+    .#{$status} {
+      background: $color;
+      color: white;
+    }
+  }
+}
+
+@mixin node-status-colors {
+  @each $status, $color in $node-status-color-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}

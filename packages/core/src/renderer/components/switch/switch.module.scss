@@ -1,0 +1,107 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+@import "../../components/mixins.scss";
+
+.Switch {
+  --thumb-size: 20px;
+  --thumb-color: hsl(0 0% 100%);
+  --thumb-color-highlight: hsl(0 0% 100% / 25%);
+
+  --track-size: calc(var(--thumb-size) * 2);
+  --track-padding: 2px;
+  --track-color-inactive: hsl(80 0% 35%);
+  --track-color-active: hsl(110, 60%, 60%);
+
+  --thumb-position: 0%;
+  --thumb-transition-duration: .25s;
+
+  --hover-highlight-size: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 2ch;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  color: var(--textColorAccent);
+  font-weight: 500;
+
+  & > input {
+    padding: var(--track-padding);
+    background: var(--track-color-inactive);
+    inline-size: var(--track-size);
+    block-size: var(--thumb-size);
+    border-radius: var(--track-size);
+
+    appearance: none;
+    pointer-events: none;
+    border: none;
+    outline-offset: 5px;
+    box-sizing: content-box;
+
+    flex-shrink: 0;
+    display: grid;
+    align-items: center;
+    grid: [track] 1fr / [track] 1fr;
+
+    transition: background-color .25s ease;
+
+    &::before {
+      content: "";
+      cursor: pointer;
+      pointer-events: auto;
+      grid-area: track;
+      inline-size: var(--thumb-size);
+      block-size: var(--thumb-size);
+      background: var(--thumb-color);
+      box-shadow: 0 0 0 var(--hover-highlight-size) var(--thumb-color-highlight);
+      border-radius: 50%;
+      transform: translateX(var(--thumb-position));
+      transition:
+        transform var(--thumb-transition-duration) ease,
+        box-shadow .25s ease;
+    }
+
+    &:not(:disabled):hover::before {
+      --hover-highlight-size: .3rem;
+    }
+
+    &:checked {
+      background: var(--track-color-active);
+      --thumb-position: 100%;
+    }
+
+    &:disabled {
+      --track-color-inactive: hsl(80 0% 30%);
+      --thumb-color: transparent;
+
+      &::before {
+        cursor: not-allowed;
+        box-shadow: inset 0 0 0 2px hsl(0 0% 0% / 40%);
+      }
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px var(--blue);
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+  }
+}
+
+@include theme-light {
+  .Switch {
+    --thumb-color-highlight: hsl(0 0% 0% / 25%);
+
+    & > input {
+      &:disabled {
+        --track-color-inactive: hsl(80 0% 80%);
+      }
+    }
+  }
+}

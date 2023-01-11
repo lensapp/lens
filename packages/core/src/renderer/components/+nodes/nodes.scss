@@ -1,0 +1,61 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+@import "nodes-mixins";
+
+.Nodes {
+  .TableCell {
+    &.name {
+      flex: 2;
+      text-overflow: ellipsis;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.cpu {
+      flex: 1.0;
+      align-self: center;
+
+      .LineProgress {
+        color: var(--blue);
+      }
+    }
+
+    &.memory {
+      flex: 1.0;
+      align-self: center;
+
+      .LineProgress {
+        color: var(--magenta);
+      }
+    }
+
+    &.disk {
+      flex: 1.0;
+      align-self: center;
+
+      .LineProgress {
+        color: var(--golden);
+      }
+    }
+
+    &.taints {
+      flex: 0.6;
+    }
+
+    &.conditions {
+      flex: 1.7;
+
+      .condition {
+        display: inline-block;
+        margin-right: $margin;
+
+        @include node-status-colors;
+      }
+    }
+  }
+}

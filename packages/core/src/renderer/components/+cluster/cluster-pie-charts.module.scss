@@ -1,0 +1,22 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.empty {
+  background: var(--contentColor);
+  min-height: 280px;
+  text-align: center;
+  padding: calc(var(--padding) * 2);
+}
+
+.chart {
+  --flex-gap: calc(var(--padding) * 2);
+  background: var(--contentColor);
+  padding: calc(var(--padding) * 2) var(--padding);
+}
+
+.noMetrics {
+  display: flex;
+  flex-grow: 1;
+}

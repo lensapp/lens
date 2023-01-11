@@ -1,0 +1,43 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.ItemListLayout {
+  background: var(--contentColor);
+  height: 100%;
+
+  > .header {
+    --flex-gap: #{$padding * 2};
+    padding: var(--flex-gap);
+
+    .title {
+      color: var(--textColorTertiary);
+    }
+
+    .info-panel {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .NamespaceSelect {
+      .Select {
+        &__value-container {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  > .items {
+    position: relative;
+    min-height: 130px;
+  }
+}
+
+.ItemListLayoutVisibilityMenu {
+  .Checkbox {
+    --checkbox-color: inherit;
+    color: var(--checkbox-color);
+  }
+}

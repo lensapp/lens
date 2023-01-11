@@ -1,0 +1,163 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+import type { CatalogCategoryMetadata, CatalogCategorySpec } from "../../../../common/catalog";
+import { CatalogEntity, categoryVersion } from "../../../../common/catalog";
+import { CatalogCategory } from "../../../api/catalog-entity";
+import { noop } from "../../../utils";
+import type { CatalogEntityStore } from "../catalog-entity-store/catalog-entity.store";
+import { catalogEntityStore } from "../catalog-entity-store/catalog-entity.store";
+
+class TestEntityOne extends CatalogEntity {
+  public static readonly apiVersion: string = "entity.k8slens.dev/v1alpha1";
+  public static readonly kind: string = "TestEntityOne";
+
+  public readonly apiVersion = TestEntityOne.apiVersion;
+  public readonly kind = TestEntityOne.kind;
+}
+
+class TestEntityTwo extends CatalogEntity {
+  public static readonly apiVersion: string = "entity.k8slens.dev/v1alpha1";
+  public static readonly kind: string = "TestEntityTwo";
+
+  public readonly apiVersion = TestEntityTwo.apiVersion;
+  public readonly kind = TestEntityTwo.kind;
+}
+
+class TestCategoryOne extends CatalogCategory {
+  apiVersion = "catalog.k8slens.dev/v1alpha1";
+  kind = "CatalogCategory";
+  metadata: CatalogCategoryMetadata = {
+    icon: "dash",
+    name: "test-one",
+  };
+  spec: CatalogCategorySpec = {
+    group: "entity.k8slens.dev",
+    versions: [
+      categoryVersion("v1alpha1", TestEntityOne),
+    ],
+    names: {
+      kind: "KubernetesCluster",
+    },
+  };
+}
+
+class TestCategoryTwo extends CatalogCategory {
+  apiVersion = "catalog.k8slens.dev/v1alpha1";
+  kind = "CatalogCategory";
+  metadata: CatalogCategoryMetadata = {
+    icon: "dash",
+    name: "test-two",
+  };
+  spec: CatalogCategorySpec = {
+    group: "entity.k8slens.dev",
+    versions: [
+      categoryVersion("v1alpha1", TestEntityTwo),
+    ],
+    names: {
+      kind: "KubernetesCluster",
+    },
+  };
+}
+
+describe("CatalogEntityStore", () => {
+  describe("getTotalCount", () => {
+    let store: CatalogEntityStore;
+    let testCategoryOne: TestCategoryOne;
+    let testCategoryTwo: TestCategoryTwo;
+
+    beforeEach(() => {
+      const entityItems = [
+        new TestEntityOne({
+          metadata: {
+            labels: {},
+            name: "my-test-one",
+            uid: "1",
+          },
+          spec: {},
+          status: {
+            phase: "unknown",
+          },
+        }),
+        new TestEntityOne({
+          metadata: {
+            labels: {},
+            name: "my-test-two",
+            uid: "2",
+          },
+          spec: {},
+          status: {
+            phase: "unknown",
+          },
+        }),
+        new TestEntityTwo({
+          metadata: {
+            labels: {},
+            name: "my-test-three",
+            uid: "3",
+          },
+          spec: {},
+          status: {
+            phase: "unknown",
+          },
+        }),
+        new TestEntityTwo({
+          metadata: {
+            labels: {},
+            name: "my-test-four",
+            uid: "4",
+          },
+          spec: {},
+          status: {
+            phase: "unknown",
+          },
+        }),
+        new TestEntityTwo({
+          metadata: {
+            labels: {},
+            name: "my-test-five",
+            uid: "5",
+          },
+          spec: {},
+          status: {
+            phase: "unknown",
+          },
+        }),
+      ];
+
+      testCategoryOne = new TestCategoryOne();
+      testCategoryTwo = new TestCategoryTwo();
+      store = catalogEntityStore({
+        catalogRegistry: {
+          items: [
+            testCategoryOne,
+            testCategoryTwo,
+          ],
+        },
+        entityRegistry: {
+          onRun: noop,
+          filteredItems: entityItems,
+          getItemsForCategory: <T extends CatalogEntity>(category: CatalogCategory): T[] => {
+            return entityItems.filter(item => category.spec.versions.some(version => item instanceof version.entityClass)) as T[];
+          },
+        },
+      });
+    });
+
+    it("given no active category, returns count of all kinds", () => {
+      expect(store.getTotalCount()).toBe(5);
+    });
+
+    it("given active category is TestCategoryOne, only returns count for those declared kinds", () => {
+      store.activeCategory.set(testCategoryOne);
+      expect(store.getTotalCount()).toBe(2);
+    });
+
+    it("given active category is TestCategoryTwo, only returns count for those declared kinds", () => {
+      store.activeCategory.set(testCategoryTwo);
+      expect(store.getTotalCount()).toBe(3);
+    });
+  });
+});

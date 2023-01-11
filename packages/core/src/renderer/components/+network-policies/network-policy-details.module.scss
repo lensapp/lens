@@ -1,0 +1,25 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.NetworkPolicyDetails {
+  .networkPolicyPeerTitle {
+    text-transform: none
+  }
+
+  .networkPolicyPeer {
+    &:not(:last-of-type) {
+      padding-bottom: 16px;
+    }
+  }
+
+  ul.policySelectorList {
+    list-style: disc;
+  }
+
+  .policySelectorList ul {
+    list-style: circle;
+    list-style-position: inside;
+  }
+}

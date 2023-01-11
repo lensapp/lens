@@ -1,0 +1,61 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+/* This file overwrites basic Material UI TreeView styles. Can contain only following
+  classnames: root, expanded, selected, content, iconContainer, label, group
+*/
+
+.root {
+  color: var(--textColorTertiary);
+}
+
+.label {
+  font-size: var(--font-size)!important;
+  background-color: transparent!important;
+
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+.content {
+  min-height: 26px;
+  line-height: 1.3;
+  padding: 2px var(--padding) 2px 0;
+
+  &:hover {
+    background-color: var(--sidebarItemHoverBackground);
+    border-radius: 2px;
+  }
+
+  &:active {
+    color: white;
+    background-color: var(--blue);
+  }
+}
+
+.group {
+  margin-left: 0px;
+
+  .iconContainer {
+    margin-left: 28px;
+    margin-top: 2px;
+    align-self: flex-start;
+  }
+}
+
+.selected {
+  & > *:first-child {
+    background-color: var(--blue);
+    color: white;
+    border-radius: 2px;
+  }
+}
+
+.iconContainer {
+  width: 21px;
+  margin-left: 5px;
+  margin-right: 0;
+}

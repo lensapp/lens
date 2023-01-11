@@ -1,0 +1,90 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+
+.Tooltip {
+  --bgc: var(--mainBackground);
+  --radius: #{$radius};
+  --color: var(--textColorAccent);
+  --border: 1px solid var(--borderColor);
+
+  // use positioning relative to viewport (window)
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/position
+  position: fixed;
+  margin: 0 !important;
+  background: var(--bgc);
+  font-size: small;
+  font-weight: normal;
+  border-radius: var(--radius);
+  color: var(--color);
+  white-space: normal;
+  padding: .5em;
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 150ms 150ms ease-in-out;
+  z-index: 100000;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.24);
+  left: 0;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &:empty {
+    display: none;
+  }
+
+  &.formatter {
+    &.nowrap {
+      &, * {
+        white-space: nowrap;
+      }
+    }
+
+    &.narrow {
+      max-width: 300px;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      text-align: left;
+    }
+
+    &.small {
+      font-size: $font-size-small;
+    }
+
+    &.warning {
+      color: var(--colorError);
+    }
+
+    &.tableView {
+      min-width: 200px;
+
+      > :not(:last-child) {
+        margin-bottom: var(--flex-gap);
+      }
+
+      .title {
+        color: var(--textColorAccent);
+        text-align: center;
+      }
+
+      .name {
+        color: var(--textColorAccent);
+        text-align: right;
+        flex: 0 0 35%;
+      }
+
+      .value {
+        text-align: left;
+        max-width: 300px;
+        word-break: break-word;
+      }
+    }
+  }
+}

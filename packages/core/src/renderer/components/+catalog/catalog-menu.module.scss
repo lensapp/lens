@@ -1,0 +1,22 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.bordered {
+  border-top: 1px solid var(--inputControlBorder);
+}
+
+.parent {
+  color: var(--textColorAccent);
+  font-size: small;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.catalog {
+  font-size: medium;
+  padding: var(--padding) calc(var(--padding) * 1.5);
+  font-weight: bold;
+  color: var(--textColorAccent);
+}

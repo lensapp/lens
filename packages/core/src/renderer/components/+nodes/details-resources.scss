@@ -1,0 +1,32 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.NodeDetailsResources {
+  .Table {
+    margin: 0 (-$margin * 3);
+  }
+
+  .TableCell {
+    &:first-child {
+      margin-left: $margin;
+    }
+
+    &:last-child {
+      margin-right: $margin;
+    }
+
+    &.pods {
+      flex-grow: 0.5;
+    }
+
+    &.memory {
+      flex-grow: 0.5;
+    }
+
+    &.cpu {
+      flex-grow:0.5;
+    }
+  }
+}

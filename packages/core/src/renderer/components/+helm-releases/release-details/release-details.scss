@@ -1,0 +1,79 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+@import "../release.mixins";
+
+.ReleaseDetails {
+  .DrawerItem {
+    align-items: center;
+  }
+
+  .loading-error {
+    color: red;
+    text-align: center;
+  }
+
+  .status {
+    @include release-status-bgs;
+  }
+
+  .chart {
+    .upgrade {
+      min-width: 150px;
+    }
+  }
+
+  .resources {
+    .SubTitle {
+      text-transform: none;
+      padding-left: 0;
+    }
+
+    .Table {
+      margin-bottom: $margin * 4;
+      border: 1px solid var(--drawerSubtitleBackground);
+      border-radius: $radius;
+      overflow: auto;
+
+      .TableHead {
+        border-bottom: none;
+
+        .TableCell {
+          background-color: var(--drawerSubtitleBackground);
+          word-break: unset;
+        }
+      }
+
+      .TableCell {
+        text-overflow: unset;
+        word-break: break-word;
+
+        &.name {
+          flex-grow: 3;
+        }
+
+        &.namespace {
+          flex-grow: 1;
+        }
+
+        &.age {
+          flex-basis: 100px;
+          flex-grow: 0;
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+
+  .notes {
+    white-space: pre-line;
+    font-family: var(--font-monospace);
+    font-size: small;
+  }
+
+  .values + .Button {
+    align-self: flex-start;
+  }
+}

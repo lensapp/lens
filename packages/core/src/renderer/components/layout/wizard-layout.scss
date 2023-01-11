@@ -1,0 +1,68 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.WizardLayout {
+  $spacing: $padding * 2;
+
+  position: relative;
+  padding: $padding * 2;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 40%;
+
+  > * {
+    --flex-gap: #{$spacing};
+    overflow: auto;
+    padding: $spacing;
+  }
+
+  > .head-col {
+    position: sticky;
+    justify-content: space-between;
+    background-color: var(--clusterMenuBackground);
+  }
+
+  > .content-col {
+    margin-right: $spacing;
+    background-color: var(--contentColor);
+    border-radius: $radius;
+
+    > div {
+      flex: 1;
+    }
+
+    > .error {
+      border-radius: $radius;
+      padding: $padding;
+      background-color: pink;
+    }
+  }
+
+  > .info-col {
+    background-color: var(--contentColor);
+  }
+
+  p {
+    line-height: 140%;
+  }
+
+  a {
+    color: var(--colorInfo);
+  }
+
+  &.centered {
+    .content-col {
+      margin: 0;
+
+      > div {
+        margin: 0 auto;
+        width: 60%;
+        min-width: 570px;
+        max-width: 1000px;
+      }
+    }
+  }
+}

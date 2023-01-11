@@ -1,0 +1,18 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.SubHeader {
+  color: var(--textColorAccent);
+  font-weight: $font-weight-bold;
+  text-align: center;
+
+  &:not(.compact) {
+    padding: $padding * 2;
+  }
+
+  &.withLine {
+    border-bottom: 1px solid var(--borderColor);
+  }
+}

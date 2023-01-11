@@ -1,0 +1,30 @@
+<svg xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:cc="http://creativecommons.org/ns#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+  xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docname="notice.svg" inkscape:version="1.0 (4035a4f, 2020-05-01)" id="notice" version="1.1" viewBox="0 0 135.46666 135.46666" height="512" width="512">
+  <defs id="defs2">
+    <rect id="rect2785" height="134.1693" width="135.23837" y="0.26726951" x="-0.53453903" />
+    <linearGradient osb:paint="solid" id="linearGradient837">
+      <stop id="stop835" offset="0" style="stop-color:#000000;stop-opacity:1;" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview inkscape:window-maximized="0" inkscape:window-y="0" inkscape:window-x="0" inkscape:window-height="1080" inkscape:window-width="1920" inkscape:pagecheckerboard="true" units="px" showgrid="false" inkscape:document-rotation="0" inkscape:current-layer="layer1" inkscape:document-units="px" inkscape:cy="263.00246" inkscape:cx="240.74335" inkscape:zoom="2.0359339" inkscape:pageshadow="2" inkscape:pageopacity="0.0" borderopacity="1.0" bordercolor="#666666" pagecolor="#ffffff" id="base" />
+  <metadata id="metadata5">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g id="layer1" inkscape:groupmode="layer" inkscape:label="Layer 1">
+    <ellipse ry="59.764721" rx="59.764713" cy="67.73333" cx="67.733345" id="path10" style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:15.9372;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path id="path2807" d="M 58.707956,29.522524 H 76.674473 L 76.739452,43.330427 73.23062,71.076192 62.054343,71.043701 58.740444,43.427894 Z" style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <rect y="83.204803" x="59.292759" height="14.815064" width="16.861885" id="rect2809" style="fill:#000000;fill-opacity:1;stroke:none;" />
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.FilePicker {
+  input[type="file"] {
+    display: none;
+  }
+
+  label {
+    display: inline-flex;
+    cursor: pointer;
+    color: var(--blue);
+  }
+}

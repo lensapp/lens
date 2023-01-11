@@ -1,0 +1,18 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+@mixin namespaceSelectCommon {
+  .Icon {
+    margin-right: $margin * 0.5;
+  }
+}
+
+.NamespaceSelect {
+  @include namespaceSelectCommon;
+}
+
+.NamespaceSelectMenu {
+  @include namespaceSelectCommon;
+}

@@ -1,0 +1,229 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Projected /> renders 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        Sources
+      </span>
+      <span
+        class="value"
+      />
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<Projected /> renders a secret source including overriding mode 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        Default Mount Mode
+      </span>
+      <span
+        class="value"
+      >
+        0o777
+      </span>
+    </div>
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        Sources
+      </span>
+      <span
+        class="value"
+      >
+        <div
+          class="DrawerTitle sub-title"
+        >
+          Secret
+        </div>
+        <div
+          class="DrawerItem"
+        >
+          <span
+            class="name"
+          >
+            Name
+          </span>
+          <span
+            class="value"
+          >
+            my-projected-secret
+          </span>
+        </div>
+        <div
+          class="DrawerItem"
+        >
+          <span
+            class="name"
+          >
+            Items
+          </span>
+          <span
+            class="value"
+          >
+            <ul>
+              <li>
+                foo⇢/bar
+                 (0o666)
+              </li>
+            </ul>
+          </span>
+        </div>
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<Projected /> renders a secret source, when provided 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        Default Mount Mode
+      </span>
+      <span
+        class="value"
+      >
+        0o777
+      </span>
+    </div>
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        Sources
+      </span>
+      <span
+        class="value"
+      >
+        <div
+          class="DrawerTitle sub-title"
+        >
+          Secret
+        </div>
+        <div
+          class="DrawerItem"
+        >
+          <span
+            class="name"
+          >
+            Name
+          </span>
+          <span
+            class="value"
+          >
+            my-projected-secret
+          </span>
+        </div>
+        <div
+          class="DrawerItem"
+        >
+          <span
+            class="name"
+          >
+            Items
+          </span>
+          <span
+            class="value"
+          >
+            <ul>
+              <li>
+                foo⇢/bar
+              </li>
+            </ul>
+          </span>
+        </div>
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<Projected /> renders default mount mode in octal when provided 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        Default Mount Mode
+      </span>
+      <span
+        class="value"
+      >
+        0o777
+      </span>
+    </div>
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        Sources
+      </span>
+      <span
+        class="value"
+      />
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<Projected /> renders when no sources array provided 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        Default Mount Mode
+      </span>
+      <span
+        class="value"
+      >
+        0o777
+      </span>
+    </div>
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        Sources
+      </span>
+      <span
+        class="value"
+      />
+    </div>
+  </div>
+</body>
+`;

@@ -1,0 +1,21 @@
+.RoleDetails {
+  .rule {
+    display: grid;
+    grid-template-columns: min-content auto;
+    gap: $margin;
+
+    border: 1px solid var(--borderColor);
+    border-radius: $radius;
+    padding: $padding * 1.5;
+
+    > .name {
+      color: var(--textColorSecondary);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: $margin * 2;
+    }
+  }
+}

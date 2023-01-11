@@ -1,0 +1,46 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.PageFiltersList {
+  $bgc: var(--filterAreaBackground);
+  $spacing: $padding * 1.5;
+
+  position: relative;
+  top: 1px;
+  border-top: 1px solid var(--borderFaintColor);
+  background: $bgc;
+  padding: $spacing $padding * 2;
+  font-size: $font-size-small;
+
+  &:empty {
+    background: none;
+    padding: 0;
+  }
+
+  &:not(:empty) {
+    border-bottom: 1px solid var(--borderFaintColor);
+  }
+
+  > .header {
+    --flex-gap: #{$padding};
+    margin-bottom: $padding * 0.5;
+    text-transform: uppercase;
+  }
+
+  > .labels {
+    $gap: $padding * 0.33333;
+    margin-left: -$gap;
+    margin-right: -$gap;
+
+    > .Badge {
+      --flex-gap: .25em;
+      display: inline-flex;
+      margin: $gap;
+      padding: $padding * 0.33333;
+      vertical-align: middle;
+      overflow: visible;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.OverviewWorkloadStatus {
+  --workload-status-running: #{$pod-status-running-color};
+  --workload-status-pending: #{$pod-status-pending-color};
+  --workload-status-evicted: #{$pod-status-evicted-color};
+  --workload-status-succeeded: #{$pod-status-succeeded-color};
+  --workload-status-scheduled: #{$cronjob-scheduled};
+  --workload-status-suspended: #{$cronjob-suspended};
+  --workload-status-failed: #{$pod-status-failed-color};
+  --workload-status-terminated: #{$pod-status-terminated-color};
+  --workload-status-unknown: #{$pod-status-unknown-color};
+}

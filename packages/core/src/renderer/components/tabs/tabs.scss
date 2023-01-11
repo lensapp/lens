@@ -1,0 +1,82 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.Tabs {
+  display: flex;
+  user-select: none;
+  -webkit-user-select: none; /* safari */
+  -moz-user-select: none; /* firefox */
+
+  &.withBorder {
+    border-bottom: 1px solid var(--borderFaintColor);
+  }
+
+  &.wrap {
+    flex-wrap: wrap;
+  }
+
+  &.center {
+    > :first-child {
+      margin-left: auto;
+    }
+
+    > :last-child {
+      margin-right: auto;
+    }
+  }
+
+  &.scrollable {
+    @include hidden-scrollbar;
+  }
+}
+
+.Tab {
+  --color-active: var(--layoutTabsActiveColor);
+  --line-color-active: var(--primary);
+  --line-color-focus: currentColor;
+
+  position: relative;
+  padding: $padding $padding * 2;
+  white-space: nowrap;
+
+  &.disabled {
+    pointer-events: none;
+    opacity: .5;
+  }
+
+  &:not(.disabled) {
+    cursor: pointer;
+
+    &:after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      transition: opacity 150ms;
+      background: currentColor;
+      opacity: 0;
+    }
+
+    &:focus {
+      &:after {
+        color: var(--line-color-focus);
+      }
+    }
+
+    &:hover,
+    &.active {
+      color: var(--color-active);
+
+      &:after {
+        width: 100%;
+        left: 0;
+        right: auto;
+        color: var(--line-color-active);
+        opacity: 1;
+      }
+    }
+  }
+}

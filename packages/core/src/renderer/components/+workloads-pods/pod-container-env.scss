@@ -1,0 +1,25 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.ContainerEnvironment {
+  .secret-button {
+    &.loading {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  .variable {
+    padding-bottom: $padding;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+
+    .var-name {
+      color: var(--textColorPrimary)
+    }
+  }
+}

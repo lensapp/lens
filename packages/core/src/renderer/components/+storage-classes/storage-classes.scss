@@ -1,0 +1,16 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.StorageClasses {
+  .TableCell {
+    &.is-default {
+      flex: .5;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+  }
+}

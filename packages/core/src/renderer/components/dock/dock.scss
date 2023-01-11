@@ -1,0 +1,82 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.Dock {
+  position: relative;
+  background: var(--dockHeadBackground);
+  display: flex;
+  flex-direction: column;
+
+  &:not(:focus-within) .DockTab.active {
+    &::after {
+      color: var(--halfGray);
+    }
+
+    &:hover::after {
+      color: var(--line-color-active);
+    }
+  }
+
+  &.isOpen {
+    &.fullSize {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+    }
+  }
+
+  &:not(.isOpen) {
+    height: auto !important;
+
+    .Tab {
+      --color-active: var(--colorVague);
+      --color-text-active: inherit;
+      --color-border-active: transparent;
+
+      &:not(:focus):after {
+        display: none;
+      }
+    }
+  }
+
+  .tabs-container {
+    padding: 0 $padding * 2;
+    border-top: 1px solid var(--borderColor);
+    flex-shrink: 0;
+
+    .Tabs:empty + .toolbar {
+      padding-left: 0;
+    }
+
+    .toolbar {
+      min-height: $unit * 4;
+      padding-left: $padding;
+      user-select: none;
+
+      &.pl-0 {
+        padding-left: 0;
+      }
+    }
+  }
+
+  .tab-content {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    transition: flex-basis 25ms ease-in;
+    background: var(--dockInfoBackground);
+
+    > *:not(.Spinner) {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+}

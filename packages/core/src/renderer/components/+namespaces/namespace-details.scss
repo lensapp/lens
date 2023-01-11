@@ -1,0 +1,16 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.NamespaceDetails {
+  .status {
+    @include namespaceStatus;
+  }
+
+  .quotas {
+    .value a {
+      margin-right: $margin;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.PodDetailsTolerations {
+  grid-template-columns: auto;
+
+  .PodTolerations {
+    margin-top: var(--margin);
+  }
+
+  // Expanding value cell to cover 2 columns (whole Drawer width)
+
+  > .name {
+    grid-row-start: 1;
+    grid-column-start: 1;
+  }
+
+  > .value {
+    grid-row-start: 1;
+    grid-column-start: 1;
+  }
+
+  .DrawerParamToggler > .params {
+    margin-left: var(--drawer-item-title-width);
+  }
+}

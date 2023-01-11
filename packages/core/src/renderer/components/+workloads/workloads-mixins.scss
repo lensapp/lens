@@ -1,0 +1,98 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+// Pods
+$pod-status-running-color: var(--colorOk);
+$pod-status-pending-color: var(--colorWarning);
+$pod-status-evicted-color: var(--colorError);
+$pod-status-succeeded-color: var(--colorSuccess);
+$pod-status-failed-color: var(--colorError);
+$pod-status-terminated-color: var(--colorTerminated);
+$pod-status-terminating-color: var(--colorTerminated);
+$pod-status-unknown-color: var(--colorVague);
+$pod-status-complete-color: var(--colorSuccess);
+$pod-status-crash-loop-color: var(--colorError);
+$pod-scheduled: var(--colorOk);
+$pod-ready: var(--colorOk);
+$pod-initialized: var(--colorOk);
+$pod-unschedulable: var(--colorError);
+$pod-containers-ready: var(--colorInfo);
+$pod-error: var(--colorError);
+$pod-container-creating: var(--colorInfo);
+
+// Deployments
+$deployment-available: var(--colorOk);
+$deployment-progressing: var(--colorInfo);
+$deployment-replicafailure: var(--colorError);
+
+// Jobs
+$job-complete: var(--colorSuccess);
+$job-failed: var(--colorError);
+
+// Cronjob
+$cronjob-scheduled: var(--colorSuccess);
+$cronjob-suspended: var(--colorTerminated);
+
+// Pod Statuses
+$pod-status-color-list: (
+  running: $pod-status-running-color,
+  pending: $pod-status-pending-color,
+  evicted: $pod-status-evicted-color,
+  waiting: $pod-status-pending-color,
+  succeeded: $pod-status-succeeded-color,
+  failed: $pod-status-failed-color,
+  terminating: $pod-status-terminating-color,
+  terminated: $pod-status-terminated-color,
+  completed: $pod-status-complete-color,
+  crash-loop-back-off: $pod-status-crash-loop-color,
+  error: $pod-error,
+  container-creating: $pod-container-creating,
+);
+
+// Job Conditions
+$job-condition-color-list: (
+  complete: $job-complete,
+  failed: $job-failed,
+);
+
+// Cronjob Conditions
+$cronjob-condition-color-list: (
+  scheduled: $cronjob-scheduled,
+  suspended: $cronjob-suspended,
+);
+
+@mixin pod-status-bgs {
+  @each $status, $color in $pod-status-color-list {
+    &.#{$status} {
+      color: white;
+      background: $color;
+    }
+  }
+}
+
+@mixin pod-status-colors {
+  @each $status, $color in $pod-status-color-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}
+
+@mixin job-condition-bgs {
+  @each $condition, $color in $job-condition-color-list {
+    .#{$condition} {
+      color: white;
+      background: $color;
+    }
+  }
+}
+
+@mixin job-condition-colors {
+  @each $condition, $color in $job-condition-color-list {
+    &.#{$condition} {
+      color: $color;
+    }
+  }
+}

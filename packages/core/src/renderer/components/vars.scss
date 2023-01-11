@@ -1,0 +1,36 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+@import "colors", "media";
+
+// Dimensions
+$unit: 8px;
+$padding: $unit;
+$margin: $unit;
+$radius: var(--border-radius);
+
+// Fonts
+$font-main: var(--font-main);
+$font-monospace: var(--font-monospace);
+$font-size-small: var(--font-size-small);
+$font-size: var(--font-size);
+$font-size-big: var(--font-size-big);
+$font-weight-thin: var(--font-weight-thin);
+$font-weight-normal: var(--font-weight-normal);
+$font-weight-bold: var(--font-weight-bold);
+
+// Z-index correlations
+$zIndex-sidebar-hover: 500;
+$zIndex-select-portal: 300;
+$zIndex-dialog: 200;
+$zIndex-drawer: 100;
+
+// Animation timing functions
+$animation-curve-fast-out-slow-in: cubic-bezier(0.4, 0, 0.2, 1);
+$animation-curve-linear-out-slow-in: cubic-bezier(0, 0, 0.2, 1);
+$animation-curve-fast-out-linear-in: cubic-bezier(0.4, 0, 1, 1);
+
+// Import other common vars & mixins
+@import "mixins";

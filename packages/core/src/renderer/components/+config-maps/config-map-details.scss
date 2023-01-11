@@ -1,0 +1,20 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.ConfigMapDetails {
+  .data {
+    margin-bottom: $margin * 2;
+
+    .name {
+      color: var(--textColorSecondary);
+      font-weight: $font-weight-bold;
+      padding-bottom: $padding * 0.5;
+    }
+  }
+
+  .save-btn {
+    margin-top: $margin;
+  }
+}

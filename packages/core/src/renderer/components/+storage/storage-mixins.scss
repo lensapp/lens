@@ -1,0 +1,45 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+// PersistentVolumes
+$pv-bound: var(--colorOk);
+$pv-available: var(--colorSuccess);
+$pv-released: var(--colorWarning);
+$pv-failed: var(--colorError);
+
+// PersistentVolumeClaims
+$pvc-bound: var(--colorOk);
+$pvc-pending: var(--colorWarning);
+$pvc-lost: var(--colorError);
+
+// PersistentVolume Statuses
+$pv-status-color-list: (
+  bound: $pv-bound,
+  available: $pv-available,
+  released: $pv-released,
+  failed: $pv-failed
+);
+
+$pvc-status-color-list: (
+  bound: $pvc-bound,
+  pending: $pvc-pending,
+  lost: $pvc-lost
+);
+
+@mixin pv-status-colors {
+  @each $condition, $color in $pv-status-color-list {
+    &.#{$condition} {
+      color: $color;
+    }
+  }
+}
+
+@mixin pvc-status-colors {
+  @each $condition, $color in $pvc-status-color-list {
+    &.#{$condition} {
+      color: $color;
+    }
+  }
+}

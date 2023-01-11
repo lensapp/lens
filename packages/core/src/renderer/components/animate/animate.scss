@@ -1,0 +1,73 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+// Animations
+
+@mixin animate-opacity($enterDuration: var(--enter-duration), $leaveDuration: var(--leave-duration)) {
+  opacity: 0;
+
+  &.enter {
+    transition-property: opacity;
+    transition-duration: $enterDuration;
+    opacity: 1;
+  }
+
+  &.leave {
+    transition-duration: $leaveDuration;
+    transition-timing-function: ease-out;
+    opacity: 0;
+  }
+}
+
+@mixin animate-slide-right($enterDuration: var(--enter-duration), $leaveDuration: var(--leave-duration)) {
+  transform: translateX(100%);
+  will-change: transform;
+
+  &.enter {
+    transform: translateX(0);
+    transition: transform $enterDuration;
+    transition-timing-function: ease-in-out;
+  }
+
+  &.leave {
+    transform: translateX(100%);
+    transition: transform $leaveDuration;
+  }
+}
+
+@mixin animate-opacity-scale($enterDuration: var(--enter-duration), $leaveDuration: var(--leave-duration)) {
+  opacity: 0;
+
+  &.enter {
+    transition: opacity $enterDuration;
+    opacity: 1;
+  }
+
+  &.leave {
+    will-change: opacity, transform;
+    opacity: 0;
+    transform: scale(1.25);
+    transition: transform $leaveDuration ease-in, opacity $leaveDuration ease-out;
+  }
+}
+
+.Animate {
+  &:empty {
+    display: none;
+  }
+
+  // Animation name
+  &.opacity {
+    @include animate-opacity;
+  }
+
+  &.slide-right {
+    @include animate-slide-right;
+  }
+
+  &.opacity-scale {
+    @include animate-opacity-scale;
+  }
+}

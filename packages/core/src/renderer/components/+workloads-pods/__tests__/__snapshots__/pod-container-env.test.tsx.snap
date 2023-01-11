@@ -1,0 +1,182 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ContainerEnv /> renders both env and configMapRef envFrom 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem ContainerEnvironment"
+    >
+      <span
+        class="name"
+      >
+        Environment
+      </span>
+      <span
+        class="value"
+      >
+        <div
+          class="variable"
+        >
+          <span
+            class="var-name"
+          >
+            foobar
+          </span>
+           : 
+          https://localhost:12345
+        </div>
+        <div
+          class="variable"
+        >
+          <span
+            class="var-name"
+          >
+            configFoo
+          </span>
+           : 
+          configBar
+        </div>
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<ContainerEnv /> renders env 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem ContainerEnvironment"
+    >
+      <span
+        class="name"
+      >
+        Environment
+      </span>
+      <span
+        class="value"
+      >
+        <div
+          class="variable"
+        >
+          <span
+            class="var-name"
+          >
+            foobar
+          </span>
+           : 
+          https://localhost:12345
+        </div>
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<ContainerEnv /> renders env 2`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem ContainerEnvironment"
+    >
+      <span
+        class="name"
+      >
+        Environment
+      </span>
+      <span
+        class="value"
+      >
+        <div
+          class="variable"
+        >
+          <span
+            class="var-name"
+          >
+            foobar
+          </span>
+           : 
+          https://localhost:12345
+        </div>
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<ContainerEnv /> renders envFrom when given a configMapRef 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem ContainerEnvironment"
+    >
+      <span
+        class="name"
+      >
+        Environment
+      </span>
+      <span
+        class="value"
+      >
+        <div
+          class="variable"
+        >
+          <span
+            class="var-name"
+          >
+            configFoo
+          </span>
+           : 
+          configBar
+        </div>
+      </span>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<ContainerEnv /> renders envFrom when given a secretRef 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerItem ContainerEnvironment"
+    >
+      <span
+        class="name"
+      >
+        Environment
+      </span>
+      <span
+        class="value"
+      >
+        <div
+          class="variable"
+        >
+          <span
+            class="var-name"
+          >
+            bar
+          </span>
+           : 
+          secretKeyRef(my-secret.bar)
+           
+          <i
+            class="Icon secret-button material interactive focusable"
+            tabindex="0"
+          >
+            <span
+              class="icon"
+              data-icon-name="visibility"
+            >
+              visibility
+            </span>
+          </i>
+          <div>
+            Show
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+</body>
+`;

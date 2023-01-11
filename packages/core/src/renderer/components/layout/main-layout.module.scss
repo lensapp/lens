@@ -1,0 +1,33 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.mainLayout {
+  display: grid;
+  grid-template-areas:
+    "sidebar contents"
+    "sidebar footer";
+  grid-template-rows: [contents] 1fr [footer] auto;
+  grid-template-columns: [sidebar] var(--sidebar-width) [contents] 1fr;
+  width: 100%;
+  z-index: 1;
+  height: 100%;
+}
+
+.sidebar {
+  grid-area: sidebar;
+  display: flex;
+  position: relative;
+  background: var(--sidebarBackground);
+}
+
+.contents {
+  overflow: hidden;
+}
+
+.footer {
+  position: relative;
+  grid-area: footer;
+  min-width: 0; /* restrict size when overflow content (e.g. <Dock> tabs scrolling) */
+}

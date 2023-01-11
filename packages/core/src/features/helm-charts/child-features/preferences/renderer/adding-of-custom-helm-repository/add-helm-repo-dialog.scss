@@ -1,0 +1,27 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.AddHelmRepoDialog {
+  --flex-gap: #{$margin * 1.5};
+
+  .accordion {
+    font-weight: bold;
+    align-self: flex-start;
+    padding: 0;
+    &:focus:not(:active) {
+      box-shadow: none;
+    }
+  }
+  .Icon {
+    --color-active: black;
+  }
+
+  .fields-title {
+    display: grid;
+    grid-template-columns: min-content auto;
+    align-items: center;
+    gap: $margin * 0.5;
+  }
+}

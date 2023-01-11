@@ -1,0 +1,36 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.HotbarIcon {
+  --corner: 0px 0px 0px 1px var(--clusterMenuBackground);
+  --iconActiveShadow: var(--corner), var(--corner), 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px var(--textColorAccent);
+  --iconHoverShadow: 0 0 0px 3px var(--clusterMenuBackground), 0 0 0px 6px #ffffff50;
+
+  display: flex;
+  cursor: pointer;
+  position: relative;
+  border-radius: 6px;
+  transition: box-shadow 0.1s ease-in-out;
+
+  &:not(.active):hover {
+    box-shadow: var(--iconHoverShadow);
+  }
+}
+
+.contextMenuAvailable {
+  cursor: context-menu;
+}
+
+.avatar {
+  border-radius: 6px;
+
+  &.hasImage {
+    background-color: var(--clusterMenuCellBackground);
+  }
+}
+
+.active {
+  box-shadow: var(--iconActiveShadow);
+}

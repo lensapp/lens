@@ -1,0 +1,40 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.led {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  background-color: var(--layoutBackground);
+  border: 1px solid var(--clusterMenuBackground);
+  border-radius: 50%;
+  padding: 0px;
+  width: 8px;
+  height: 8px;
+
+  &.online {
+    background-color: var(--primary);
+    box-shadow: 0 0 5px var(--clusterMenuBackground), 0 0 5px var(--primary);
+  }
+}
+
+.badge {
+  position: absolute;
+  right: -2px;
+  bottom: -3px;
+  margin: -8px;
+  font-size: var(--font-size-small);
+  background: var(--clusterMenuBackground);
+  color: var(--textColorAccent);
+  padding: 0px;
+  border-radius: 50%;
+  border: 2px solid var(--clusterMenuBackground);
+  width: 15px;
+  height: 15px;
+
+  svg {
+    width: 13px;
+  }
+}

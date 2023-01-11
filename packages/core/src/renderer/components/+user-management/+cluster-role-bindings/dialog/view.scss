@@ -1,0 +1,11 @@
+.AddClusterRoleBindingDialog {
+  .Select + .Select {
+    margin-top: $margin *0.5;
+  }
+  .Checkbox {
+    margin-top: $margin;
+  }
+  .name {
+    color: #a0a0a0;
+  }
+}

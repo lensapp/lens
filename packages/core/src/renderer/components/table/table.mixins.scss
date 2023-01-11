@@ -1,0 +1,36 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+@mixin table-cell-action {
+  display: flex;
+  padding: 0 !important;
+  flex: 0 0 55px !important;
+
+  > * {
+    margin: 6px auto;
+  }
+}
+
+@mixin table-cell-warning {
+  display: flex;
+  align-items: center;
+  flex-grow: 0.3;
+  padding: 0;
+}
+
+@mixin table-cell-labels {
+  .TableRow {
+    .TableCell {
+      &.labels {
+        @include table-cell-labels-offsets;
+      }
+    }
+  }
+}
+
+@mixin table-cell-labels-offsets {
+  padding-top: $padding * 0.5;
+  padding-bottom: 0;
+}

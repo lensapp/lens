@@ -1,0 +1,22 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.Slider {
+  .track {
+    background: var(--blue);
+  }
+
+  .thumb {
+    background: var(--blue);
+
+    &.activated, &.jumped, &.focused {
+      box-shadow: 0 0 0 #{$unit * 2} var(--blue) !important;
+    }
+
+    &:hover{
+      box-shadow: 0 0 0 $unit var(--blue);
+    }
+  }
+}

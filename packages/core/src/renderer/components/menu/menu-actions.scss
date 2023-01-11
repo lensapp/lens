@@ -1,0 +1,71 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.MenuActions {
+  &.toolbar {
+    --flex-gap: var(--padding);
+
+    position: static;
+    padding: 0;
+    background: none;
+    border: none;
+    flex-direction: row;
+    margin-right: var(--flex-gap) !important;
+
+    .Icon {
+      width: 21px;
+      height: 21px;
+    }
+
+    .title, .arrow {
+      display: none;
+    }
+
+    > .MenuItem {
+      background: none !important;
+      padding: 0;
+      margin-bottom: 0;
+      border: none;
+      width: 21px;
+      height: 21px;
+
+      > .SubMenu {
+        $offset: $margin;
+
+        margin-top: $offset;
+        top: 100%;
+        right: $padding;
+
+        &:before {
+          position: absolute;
+          width: 100%;
+          top: -$offset;
+          height: $offset;
+          content: "";
+        }
+      }
+    }
+  }
+
+  .MenuItem {
+    position: relative;
+
+    &:hover > .SubMenu {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    > .SubMenu {
+      margin: 0;
+      transition: visibility, opacity 150ms ease-in-out;
+      transition-delay: 150ms;
+      opacity: 0;
+      visibility: hidden;
+      right: 100%;
+      top: -1px;
+      margin-right: 2px;
+    }
+  }
+}

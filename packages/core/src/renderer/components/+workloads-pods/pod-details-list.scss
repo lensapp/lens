@@ -1,0 +1,66 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.PodDetailsList {
+  position: relative;
+
+  .Table {
+    margin: 0 (-$margin * 3);
+
+    &.virtual {
+      height: 500px;
+    }
+
+    .TableHead.sticky {
+      top: calc(var(--spacing) * -1);
+    }
+  }
+
+  .TableCell {
+    &:first-child {
+      margin-left: $margin;
+    }
+
+    &:last-child {
+      margin-right: $margin;
+    }
+
+    &.name {
+      flex-grow: 2;
+    }
+
+    &.node {
+      flex-grow: 2;
+    }
+
+    &.namespace {
+      flex-grow: 1.2;
+    }
+
+    &.cpu {
+      align-self: center;
+
+      .LineProgress {
+        color: var(--blue);
+      }
+    }
+
+    &.memory {
+      align-self: center;
+
+      .LineProgress {
+        color: var(--magenta);
+      }
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.status {
+      @include pod-status-colors;
+    }
+  }
+}

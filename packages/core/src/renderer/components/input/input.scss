@@ -1,0 +1,144 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+
+.Input {
+  position: relative;
+  text-align: left;
+
+  &.invalid.dirty:not(.validating) {
+    label:after {
+      width: 100%;
+      background: var(--colorError);
+    }
+  }
+
+  &.focused:not(.validating) {
+    label:after {
+      width: 100%;
+    }
+  }
+
+  &.validatingLine {
+    label:after {
+      width: 100%;
+      @include stripeLinesAnimation;
+    }
+  }
+
+  label {
+    --flex-gap: $padding * 0.6667;
+    position: relative;
+    padding: $padding * 0.75 0;
+    border-bottom: 1px solid var(--halfGray);
+    line-height: 1;
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: calc(100% - 1px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+    }
+  }
+
+  input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none; // hide browser controls (top/bottom arrows)
+  }
+
+  input, textarea {
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    text-transform: inherit;
+
+    &:invalid {
+      box-shadow: none;
+    }
+
+    &::placeholder {
+      color: inherit;
+      opacity: .75;
+    }
+  }
+
+  textarea {
+    @include hidden-scrollbar;
+    line-height: 1.2;
+    resize: none;
+  }
+
+  fieldset:disabled &,
+  &.disabled {
+    opacity: .5;
+    pointer-events: none;
+  }
+
+  .input-info {
+    .errors {
+      color: var(--colorError);
+      font-size: $font-size-small;
+    }
+
+    .maxLengthIndicator {
+      text-align: right;
+      font-size: 80%;
+      padding: $padding * 0.33333;
+    }
+  }
+
+  //- Themes
+
+  &.theme {
+    &.round {
+      &.invalid.dirty {
+        label {
+          border-color: var(--colorSoftError);
+        }
+      }
+      label {
+        border-radius: $radius;
+        border: 1px solid var(--halfGray);
+        color: inherit;
+        padding: $padding * 0.25 * 3 $padding * 0.25 * 3;
+
+        &:focus-within {
+          border-color: var(--colorInfo);
+        }
+
+        &:after {
+          display: none;
+        }
+      }
+      &.black {
+        label {
+          background: var(--inputControlBackground);
+          border-color: var(--inputControlBorder);
+          color: var(--textColorTertiary);
+          padding: $padding;
+          transition: border-color 0.1s;
+
+          &:hover {
+            border-color: var(--inputControlHoverBorder);
+          }
+
+          &:focus-within {
+            border-color: var(--colorInfo);
+          }
+        }
+      }
+    }
+  }
+}
+
+.Tooltip.InputTooltipError {
+  --bgc: var(--colorError);
+  --border: none;
+  --color: white;
+}

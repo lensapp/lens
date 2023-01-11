@@ -1,0 +1,18 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.LogSearch {
+  .SearchInput {
+    min-width: 150px;
+
+    .find-count {
+      margin-left: 2px;
+    }
+
+    label {
+      padding-bottom: 7px;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.TableRow {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+
+  &.disabled {
+    opacity: .5;
+    pointer-events: none;
+  }
+
+  &.nowrap {
+    white-space: nowrap;
+  }
+}

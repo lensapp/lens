@@ -1,0 +1,11 @@
+.ClusterRoleBindings {
+  .help-icon {
+    margin-left: $margin * 0.5;
+  }
+
+  .TableCell {
+    &.warning {
+      @include table-cell-warning;
+    }
+  }
+}

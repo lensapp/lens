@@ -1,0 +1,30 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+$release-status-color-list: (
+  deployed: var(--colorSuccess),
+  failed: var(--colorError),
+  deleting: var(--colorWarning),
+  pendingInstall: var(--colorInfo),
+  pendingUpgrade: var(--colorInfo),
+  pendingRollback: var(--colorInfo),
+);
+
+@mixin release-status-bgs {
+  @each $status, $color in $release-status-color-list {
+    &.#{$status} {
+      color: white;
+      background: $color;
+    }
+  }
+}
+
+@mixin release-status-colors {
+  @each $status, $color in $release-status-color-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}

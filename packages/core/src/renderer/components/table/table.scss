@@ -1,0 +1,57 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.Table {
+  &.autoSize {
+    .TableCell {
+      flex: 1 0;
+    }
+  }
+
+  &.scrollable {
+    overflow: auto;
+  }
+
+  &.scrollable.virtual {
+    overflow: unset;
+  }
+
+  &.selectable {
+    .TableHead, .TableRow {
+      padding: 0 $padding;
+    }
+
+    .TableRow {
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--tableBgcSelected) !important;
+      }
+
+      &.selected {
+        background-color: var(--tableBgcSelected);
+        color: var(--tableSelectedRowColor);
+
+        &:before {
+          content: "";
+          background: var(--primary);
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 4px;
+          height: 100%;
+        }
+      }
+    }
+  }
+
+  &.striped {
+    .TableRow {
+      &:nth-child(odd) {
+        background-color: var(--tableBgcStripe);
+      }
+    }
+  }
+}

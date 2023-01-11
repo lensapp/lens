@@ -1,0 +1,20 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.StatusBrick {
+  $brickSize: 8px;
+
+  display: inline-block;
+  width: $brickSize;
+  height: $brickSize;
+  margin-right: $margin;
+  background: var(--colorOk);
+  border-radius: 2px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+

@@ -1,0 +1,17 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.LimitRangeDetails {
+
+  .DrawerItem {
+    > .name {
+      font-weight: $font-weight-normal;
+      padding-left: 4px;
+    }
+    .DrawerItem {
+      padding-top: 4px;
+    }
+  }
+}

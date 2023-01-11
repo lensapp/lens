@@ -1,0 +1,22 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.KubeEventIcon {
+  &.warning {
+    color: var(--golden);
+  }
+}
+
+.KubeEventTooltip {
+  white-space: normal;
+
+  .age {
+    margin-top: $margin;
+
+    .Icon {
+      margin-right: $margin;
+    }
+  }
+}

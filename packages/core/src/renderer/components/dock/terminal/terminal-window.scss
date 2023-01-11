@@ -1,0 +1,17 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+@import "~xterm";
+
+.TerminalWindow {
+  --spacing: calc(var(--unit) * 2);
+
+  flex: 1;
+  overflow: hidden;
+
+  .terminal.xterm {
+    padding: calc(var(--padding) * 2);
+  }
+}

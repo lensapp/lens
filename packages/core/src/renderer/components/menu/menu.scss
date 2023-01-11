@@ -1,0 +1,110 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.Menu {
+  --bgc: var(--layoutBackground);
+
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: var(--bgc);
+  list-style: none;
+  border: 1px solid var(--borderColor);
+  z-index: 101;
+  box-shadow: rgb(0 0 0 / 17%) 0px 6px 9px 0px;
+  border-radius: 4px;
+
+  &.portal {
+    left: -1000px;
+    top: -1000px;
+  }
+
+  &:not(.portal) {
+    margin: $margin 0;
+
+    &.left {
+      left: 0;
+    }
+
+    &.right {
+      right: 0;
+    }
+
+    &.top {
+      bottom: 100%;
+    }
+
+    &.bottom {
+      top: 100%;
+    }
+  }
+
+  &:empty {
+    display: none;
+  }
+}
+
+.MenuItem {
+  --color: var(--textColorPrimary);
+  --color-active: white;
+  --bgc-active: var(--menuActiveBackground);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: var(--color);
+  padding: calc(var(--padding) / 2) var(--padding);
+  margin-bottom: -3px;
+  white-space: nowrap;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  border-radius: 6px;
+  border: 3px solid var(--bgc);
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  &:not(.disabled) {
+    cursor: pointer;
+  }
+
+  &:hover:not(.disabled) {
+    color: var(--color-active);
+    background: var(--bgc-active);
+    cursor: pointer;
+  }
+
+  &.active, &:focus {
+    color: var(--color-active);
+    background-color: var(--bgc-active);
+  }
+
+  &.disabled {
+    pointer-events: none;
+    opacity: .5;
+  }
+
+  &.spacer {
+    padding: 0;
+    height: 0;
+    overflow: hidden;
+    border-top: 1px solid var(--contentColor);
+    pointer-events: none;
+  }
+
+  .Icon {
+    &:first-child {
+      margin-left: 0;
+      margin-right: $padding;
+    }
+  }
+}
+
+@include theme-light {
+  .Menu {
+    border: 1px solid var(--borderColor);
+  }
+}

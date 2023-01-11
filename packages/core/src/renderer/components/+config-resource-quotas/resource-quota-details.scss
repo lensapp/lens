@@ -1,0 +1,21 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.ResourceQuotaDetails {
+  .quota-list {
+    .param {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding-bottom: $padding * 2;
+
+      .LineProgress {
+        margin-top: 3px;
+        width: 100%;
+        color: var(--colorInfo);
+      }
+    }
+  }
+}

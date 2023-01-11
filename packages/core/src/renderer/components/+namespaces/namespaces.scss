@@ -1,0 +1,25 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.Namespaces {
+  .TableCell {
+    &.name {
+      flex: 2;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.labels {
+      flex: 4;
+      @include table-cell-labels-offsets;
+    }
+
+    &.status {
+      @include namespaceStatus;
+    }
+  }
+}

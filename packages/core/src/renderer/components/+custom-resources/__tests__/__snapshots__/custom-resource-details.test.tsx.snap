@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CustomResourceDetails /> with a CRD with a boolean field should display false in an additionalPrinterColumn as 'false' 1`] = `
+<div>
+  <div
+    class="CrdResourceDetails MyCrd"
+  >
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        MyField
+      </span>
+      <span
+        class="value"
+      >
+        false
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<CustomResourceDetails /> with a CRD with a boolean field should display true in an additionalPrinterColumn as 'true' 1`] = `
+<div>
+  <div
+    class="CrdResourceDetails MyCrd"
+  >
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        MyField
+      </span>
+      <span
+        class="value"
+      >
+        true
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<CustomResourceDetails /> with a CRD with a number field should display 0 in an additionalPrinterColumn as '0' 1`] = `
+<div>
+  <div
+    class="CrdResourceDetails MyCrd"
+  >
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        MyField
+      </span>
+      <span
+        class="value"
+      >
+        0
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<CustomResourceDetails /> with a CRD with a number field should display 1234 in an additionalPrinterColumn as '1234' 1`] = `
+<div>
+  <div
+    class="CrdResourceDetails MyCrd"
+  >
+    <div
+      class="DrawerItem"
+    >
+      <span
+        class="name"
+      >
+        MyField
+      </span>
+      <span
+        class="value"
+      >
+        1234
+      </span>
+    </div>
+  </div>
+</div>
+`;

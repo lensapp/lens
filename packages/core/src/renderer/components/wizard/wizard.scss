@@ -1,0 +1,95 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+
+.Wizard {
+  --wizard-width: #{65 * $unit};
+  --wizard-content-height: auto;
+  --wizard-content-max-height: #{40 * $unit};
+  --wizard-spacing: #{$padding * 3};
+  --wizard-step-bgc: var(--dialogBackground);
+
+  width: var(--wizard-width);
+  color: var(--dialogTextColor);
+
+  &.small {
+    --wizard-width: #{45 * $unit};
+    --wizard-content-height: auto;
+  }
+
+  @mixin scrollableContent() {
+    overflow: auto;
+    padding: var(--wizard-spacing);
+    height: var(--wizard-content-height);
+    max-height: var(--wizard-content-max-height);
+  }
+
+  > .header {
+    text-align: center;
+    color: white;
+    background: var(--dialogHeaderBackground);
+    padding: var(--wizard-spacing);
+    border-top-left-radius: $radius;
+    border-top-right-radius: $radius;
+
+    b {
+      font-weight: $font-weight-normal;
+    }
+
+    > * {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+
+  .Stepper {
+    color: silver;
+    --stepper-color-point: black;
+    --stepper-color-text: currentColor;
+    margin-top: var(--wizard-spacing);
+  }
+
+  .Checkbox {
+    padding: 0;
+  }
+
+  .Select {
+    width: 100%;
+  }
+
+  .step-loading {
+    padding: var(--wizard-spacing);
+  }
+
+  .WizardStep {
+    background: var(--wizard-step-bgc);
+    border-bottom-left-radius: $radius;
+    border-bottom-right-radius: $radius;
+
+    > .step-content.scrollable {
+      @include scrollableContent();
+
+      > * {
+        flex-shrink: 0;
+      }
+    }
+
+    // buttons
+    > :last-child {
+      padding: var(--wizard-spacing);
+      background: var(--dialogFooterBackground);
+      border-bottom-left-radius: $radius;
+      border-bottom-right-radius: $radius;
+
+      .back-btn {
+        margin-left: auto;
+      }
+
+      .Button[type="submit"] {
+        min-width: 10 * $unit;
+      }
+    }
+  }
+}

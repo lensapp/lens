@@ -1,0 +1,20 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.LogsDialog {
+  .Wizard {
+    --wizard-width: 70vw;
+  }
+
+  .WizardStep {
+    .step-content {
+      padding: var(--wizard-spacing);
+    }
+
+    code {
+      max-height: 50vh;
+    }
+  }
+}

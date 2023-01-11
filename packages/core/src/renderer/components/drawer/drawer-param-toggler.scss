@@ -1,0 +1,27 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.DrawerParamToggler {
+  .param-label {
+    flex-grow: 2
+  }
+
+  .param-link {
+    cursor: pointer;
+
+    .param-link-text {
+      color: var(--blue);
+      text-decoration: underline;
+    }
+  }
+
+  .param-content {
+    &.open {
+      display: block;
+    }
+
+    display: none;
+  }
+}

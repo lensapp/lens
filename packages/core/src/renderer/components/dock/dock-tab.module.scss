@@ -1,0 +1,98 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.DockTab {
+  --color-active: var(--dockTabActiveBackground);
+  --color-text-active: var(--textColorAccent);
+  --color-border-active: var(--primary);
+
+  padding: var(--padding);
+  height: 32px;
+  position: relative;
+  border-right: 1px solid var(--dockTabBorderColor);
+  background-size: 1px 3ch;
+  overflow: hidden;
+
+  /* Allow tabs to shrink and take all parent space */
+  min-width: var(--min-tab-width);
+  flex-grow: 1;
+  flex-basis: 0;
+  max-width: fit-content;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &.pinned {
+    padding-right: var(--padding);
+  }
+
+  &:last-child {
+    padding-right: var(--padding);
+  }
+
+  &:global(.active) {
+    background-color: var(--color-active);
+    background-image: none;
+    border-bottom: 1px solid var(--color-border-active);
+    color: var(--color-text-active)!important;
+
+    .close {
+      opacity: 1;
+    }
+
+    &::before {
+      display: none;
+    }
+  }
+
+  &::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 8px;
+    height: 100%;
+    right: 0;
+    background: linear-gradient(90deg, transparent 0%, var(--dockHeadBackground) 65%);
+  }
+
+  &::after {
+    display: none;
+  }
+
+  &:not(:global(.active)):hover {
+    background-color: var(--dockTabActiveBackground);
+    background-image: none;
+    color: var(--textColorAccent);
+
+    .close {
+      opacity: 1;
+      background: linear-gradient(90deg, transparent 0%, var(--dockTabActiveBackground) 25%);
+    }
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+.close {
+  position: absolute;
+  right: 0px;
+  width: 4ch;
+  opacity: 0;
+  text-align: center;
+  background: linear-gradient(90deg, transparent 0%, var(--color-active) 25%);
+}
+
+.tabIcon {
+  opacity: 0;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: calc(var(--margin) * 3);
+}

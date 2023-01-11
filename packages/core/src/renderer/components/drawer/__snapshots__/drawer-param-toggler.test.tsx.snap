@@ -1,0 +1,134 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<DrawerParamToggler /> after clicking the toggle after clicking the toggle again renders 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerParamToggler"
+    >
+      <div
+        class="flex gaps align-center params"
+      >
+        <div
+          class="param-label"
+        >
+          Foo
+        </div>
+        <div
+          class="param-link"
+          data-testid="drawer-param-toggler"
+        >
+          <span
+            class="param-link-text"
+          >
+            Show
+          </span>
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="param-content"
+      />
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<DrawerParamToggler /> after clicking the toggle renders 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerParamToggler"
+    >
+      <div
+        class="flex gaps align-center params"
+      >
+        <div
+          class="param-label"
+        >
+          Foo
+        </div>
+        <div
+          class="param-link"
+          data-testid="drawer-param-toggler"
+        >
+          <span
+            class="param-link-text"
+          >
+            Hide
+          </span>
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_up"
+            >
+              arrow_drop_up
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="param-content open"
+      >
+        <div
+          data-testid="drawer-child"
+        />
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<DrawerParamToggler /> renders 1`] = `
+<body>
+  <div>
+    <div
+      class="DrawerParamToggler"
+    >
+      <div
+        class="flex gaps align-center params"
+      >
+        <div
+          class="param-label"
+        >
+          Foo
+        </div>
+        <div
+          class="param-link"
+          data-testid="drawer-param-toggler"
+        >
+          <span
+            class="param-link-text"
+          >
+            Show
+          </span>
+          <i
+            class="Icon material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
+        </div>
+      </div>
+      <div
+        class="param-content"
+      />
+    </div>
+  </div>
+</body>
+`;

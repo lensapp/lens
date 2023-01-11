@@ -1,0 +1,33 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.entityDetails {
+  /* Move Details panel under TopBar line */
+  height: calc(100% - var(--main-layout-header));
+  margin-top: var(--main-layout-header);
+}
+
+.metadata {
+  margin-right: var(--margin);
+}
+
+.entityIcon {
+  margin-right: calc(var(--margin) * 3);
+
+  .avatar {
+    font-size: 3ch;
+    cursor: pointer;
+  }
+
+  .hint {
+    text-align: center;
+    font-size: var(--font-size-small);
+    text-transform: uppercase;
+    margin-top: var(--margin);
+    cursor: default;
+    user-select: none;
+    opacity: 0.5;
+  }
+}

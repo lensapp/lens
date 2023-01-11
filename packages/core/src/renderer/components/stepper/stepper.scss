@@ -1,0 +1,58 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+
+.Stepper {
+  --stepper-color: var(--contentColor);
+  --stepper-color-text: var(--textColorPrimary);
+  --stepper-color-active: var(--color-primary);
+  --stepper-color-point: var(--stepper-color);
+
+  $pointSize: $unit * 2.5;
+  font-size: $font-size-small;
+
+  .step {
+    position: relative;
+    text-align: center;
+    &.active, &.done {
+      .point {
+        color: var(--textColorAccent);
+        background: var(--stepper-color-active);
+      }
+    }
+    &.active {
+      .step-title {
+        color: var(--textColorAccent);
+      }
+    }
+    &.done > .line {
+      background: var(--stepper-color-active);
+    }
+    .step-title {
+      font-size: 120%
+    }
+  }
+
+  .point {
+    position: relative;
+    display: block;
+    margin: auto;
+    width: $pointSize;
+    height: $pointSize;
+    line-height: $pointSize;
+    background: var(--stepper-color-point);
+    color: var(--stepper-color-text);
+    font-size: $font-size-small;
+    border-radius: 50%;
+  }
+
+  .line {
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    top: $pointSize * 0.5;
+    background: var(--stepper-color-point);
+  }
+}

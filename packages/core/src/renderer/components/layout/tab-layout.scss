@@ -1,0 +1,31 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+
+.TabLayout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  > .Tabs {
+    background: var(--layoutTabsBackground);
+    flex-shrink: 0;
+    height: 34px;
+  }
+
+  main {
+    $spacing: $margin * 2;
+
+    flex-grow: 1;
+    overflow-y: hidden;
+    overflow-x: auto;
+    margin: $spacing;
+
+    &.scrollable {
+      overflow-y: scroll;
+      margin-right: 0;
+    }
+  }
+}

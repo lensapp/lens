@@ -1,0 +1,61 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.PortForwardDialog {
+  .Wizard {
+    .header {
+      span {
+        color: #a0a0a0;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .WizardStep {
+      .step-content {
+        min-height: 90px;
+        overflow: hidden;
+      }
+    }
+
+    .current-scale {
+      font-weight: bold
+    }
+
+    .desired-scale {
+      flex: 1.1 0;
+    }
+
+    .slider-container {
+      flex: 1 0;
+    }
+
+    .plus-minus-container {
+      margin-left: $margin * 2;
+      .Icon {
+        --color-active: black;
+      }
+    }
+
+    .warning {
+      color: var(--colorSoftError);
+      font-size: small;
+      display: flex;
+      align-items: center;
+
+      .Icon {
+        margin: 0;
+        margin-right: $margin;
+      }
+    }
+
+    .portInput {
+      display: inline-block !important;
+      width: 70px;
+      margin-left: 10px;
+      margin-right: 10px;
+    }  }
+
+}

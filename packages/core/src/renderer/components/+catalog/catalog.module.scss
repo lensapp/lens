@@ -1,0 +1,138 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.Catalog {
+  :global(.TableRow):hover .pinIcon {
+    opacity: 1;
+  }
+
+  flex-grow: 1;
+}
+
+.entityName {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--padding);
+  padding-bottom: 0;
+  padding-right: 24px; // + reserved space for .pinIcon
+  flex-grow: 2.5!important;
+
+  > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: var(--padding);
+  }
+
+  :global(.HotbarIcon){
+    align-self: center;
+
+    div {
+      /* icons with plain text */
+      font-size: var(--unit);
+    }
+
+    .Icon {
+      /* icons with font-icon */
+      font-size: var(--small-size);
+    }
+  }
+
+  .pinIcon {
+    --color-active: var(--textColorAccent);
+
+    transition: none;
+    opacity: 0;
+    margin-left: var(--padding);
+    width: calc(var(--unit) * 2);
+
+    &:hover {
+      /* Drop styles defined for <Icon/>  */
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+}
+
+.sourceCell {
+  max-width: 100px;
+}
+
+.statusCell {
+  max-width: 100px;
+
+  :global {
+    .connected, .available {
+      color: var(--colorSuccess);
+    }
+
+    .disconnected, .deleting, .unavailable {
+      color: var(--halfGray);
+    }
+  }
+}
+
+.labelsCell {
+  overflow-x: scroll;
+  text-overflow: unset;
+}
+
+.labelsCell::-webkit-scrollbar {
+  display: none;
+}
+
+.badge {
+  overflow: unset;
+  text-overflow: unset;
+  max-width: unset;
+}
+
+.badge:hover {
+  color: var(--textColorAccent);
+}
+
+.badge:not(:first-child) {
+  margin-left: 0.5em;
+}
+
+.catalogIcon {
+  font-size: 10px;
+  -webkit-font-smoothing: auto;
+}
+
+.tabs {
+  @apply flex flex-grow flex-col;
+}
+
+.tab {
+  @apply px-8 py-4;
+}
+
+.tab:hover {
+  background-color: var(--sidebarItemHoverBackground);
+  --color-active: var(--textColorTertiary);
+}
+
+.tab::after {
+  display: none;
+}
+
+.activeTab, .activeTab:hover {
+  background-color: var(--blue);
+  --color-active: white;
+}
+
+.catalogAvatar {
+  font-size: 1.2ch;
+}
+
+.views {
+  padding: calc(var(--padding) * 2);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
