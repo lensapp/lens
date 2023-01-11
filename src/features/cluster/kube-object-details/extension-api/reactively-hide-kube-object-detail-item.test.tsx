@@ -13,6 +13,7 @@ import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import type { KubeApi } from "../../../../common/k8s-api/kube-api";
 import showDetailsInjectable from "../../../../renderer/components/kube-detail-params/show-details.injectable";
+import assert from "assert";
 
 describe("reactively hide kube object detail item", () => {
   let builder: ApplicationBuilder;
@@ -89,6 +90,10 @@ describe("reactively hide kube object detail item", () => {
       runInAction(() => {
         someObservable.set(true);
       });
+
+      const apiManager = builder.applicationWindow.only.di.inject(apiManagerInjectable);
+
+      assert(apiManager.getStore("/apis/some-api-version/some-kind"));
     });
 
     it("renders", () => {

@@ -2,29 +2,28 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
-import type { KubeObjectStore } from "../kube-object.store";
 import { ApiManager } from "./api-manager";
-
-export const kubeObjectStoreInjectionToken = getInjectionToken<KubeObjectStore<any, any, any>>({
-  id: "kube-object-store-token",
-});
+import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
+import { kubeObjectStoreInjectionToken } from "./kube-object-store-token";
+import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
+import { computed } from "mobx";
 
 const apiManagerInjectable = getInjectable({
   id: "api-manager",
   instantiate: (di) => {
-    const apiManager = new ApiManager();
+    const computedInjectMany = di.inject(computedInjectManyInjectable);
+    const storesAndApisCanBeCreated = di.inject(storesAndApisCanBeCreatedInjectionToken);
 
-    if (di.inject(storesAndApisCanBeCreatedInjectionToken)) {
-      const stores = di.injectMany(kubeObjectStoreInjectionToken);
-
-      for (const store of stores) {
-        apiManager.registerStore(store);
-      }
-    }
-
-    return apiManager;
+    return new ApiManager({
+      apis: storesAndApisCanBeCreated
+        ? computedInjectMany(kubeApiInjectionToken)
+        : computed(() => []),
+      stores: storesAndApisCanBeCreated
+        ? computedInjectMany(kubeObjectStoreInjectionToken)
+        : computed(() => []),
+    });
   },
 });
 
