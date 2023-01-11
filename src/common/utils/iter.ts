@@ -239,12 +239,10 @@ export function every<T>(src: Iterable<T>, fn: (val: T) => any): boolean {
   return true;
 }
 
-export function* concat<T>(src1: IterableIterator<T>, src2: IterableIterator<T>): IterableIterator<T> {
-  for (const val of src1) {
-    yield val;
-  }
-
-  for (const val of src2) {
-    yield val;
+export function* concat<T>(...sources: IterableIterator<T>[]): IterableIterator<T> {
+  for (const source of sources) {
+    for (const val of source) {
+      yield val;
+    }
   }
 }
