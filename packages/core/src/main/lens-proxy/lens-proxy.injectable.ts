@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { LensProxy } from "./lens-proxy";
-import routerInjectable from "../router/router.injectable";
+import routeRequestInjectable from "../router/route-request.injectable";
 import httpProxy from "http-proxy";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request.injectable";
 import lensProxyPortInjectable from "./lens-proxy-port.injectable";
@@ -20,7 +20,7 @@ const lensProxyInjectable = getInjectable({
   id: "lens-proxy",
 
   instantiate: (di) => new LensProxy({
-    router: di.inject(routerInjectable),
+    routeRequest: di.inject(routeRequestInjectable),
     proxy: httpProxy.createProxy(),
     kubeApiUpgradeRequest: di.inject(kubeApiUpgradeRequestInjectable),
     shellApiRequest: di.inject(shellApiRequestInjectable),

@@ -8,7 +8,7 @@ import https from "https";
 import type http from "http";
 import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
-import type { Router } from "../router/router";
+import type { RouteRequest } from "../router/route-request.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
 import { getBoolean } from "../utils/parse-query";
@@ -29,7 +29,7 @@ interface Dependencies {
   kubeApiUpgradeRequest: LensProxyApiRequest;
   emitAppEvent: EmitAppEvent;
   getKubeAuthProxyServer: (cluster: Cluster) => KubeAuthProxyServer;
-  readonly router: Router;
+  routeRequest: RouteRequest;
   readonly proxy: httpProxy;
   readonly lensProxyPort: { set: (portNumber: number) => void };
   readonly contentSecurityPolicy: string;
@@ -243,6 +243,6 @@ export class LensProxy {
     }
 
     res.setHeader("Content-Security-Policy", this.dependencies.contentSecurityPolicy);
-    await this.dependencies.router.route(cluster, req, res);
+    await this.dependencies.routeRequest(cluster, req, res);
   }
 }
