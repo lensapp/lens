@@ -72,26 +72,26 @@ export type HorizontalPodAutoscalerMetricSpec =
   | OptionVarient<HpaMetricType.Pods, BaseHorizontalPodAutoscalerMetricSpec, "pods">
   | OptionVarient<HpaMetricType.ContainerResource, BaseHorizontalPodAutoscalerMetricSpec, "containerResource">;
 
-type HorizontalPodAutoscalerBehavior = {
-  scaleUp?: HPAScalingRules,
-  scaleDown?: HPAScalingRules,
+interface HorizontalPodAutoscalerBehavior {
+  scaleUp?: HPAScalingRules;
+  scaleDown?: HPAScalingRules;
 }
 
-type HPAScalingRules = {
-	stabilizationWindowSecond?: number,
-	selectPolicy?: ScalingPolicySelect,
-	policies?: HPAScalingPolicy[],
+interface HPAScalingRules {
+	stabilizationWindowSecond?: number;
+	selectPolicy?: ScalingPolicySelect;
+	policies?: HPAScalingPolicy[];
 }
 
-type ScalingPolicySelect = string
+type ScalingPolicySelect = string;
 
-type HPAScalingPolicy = {
-	type: HPAScalingPolicyType,
-	value: number,
-	periodSeconds: number
+interface HPAScalingPolicy {
+	type: HPAScalingPolicyType;
+	value: number;
+	periodSeconds: number;
 }
 
-type HPAScalingPolicyType = string
+type HPAScalingPolicyType = string;
 
 export interface ContainerResourceMetricStatus {
   container: string;
