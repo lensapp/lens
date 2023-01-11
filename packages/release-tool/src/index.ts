@@ -51,9 +51,9 @@ const validPreidValues = [
 
 const errorMessages = {
   noReleaseType: `No release type provided. Valid options are: ${[...validReleaseValues, ...validPrereleaseValues].join(", ")}`,
-  invalidRelease: (invalid) => `Invalid release type was provided (value was "${invalid}"). Valid options are: ${[...validReleaseValues, ...validPrereleaseValues].join(", ")}`,
+  invalidRelease: (invalid: string) => `Invalid release type was provided (value was "${invalid}"). Valid options are: ${[...validReleaseValues, ...validPrereleaseValues].join(", ")}`,
   noPreid: `No preid was provided. Use '--preid' to specify. Valid options are: ${validPreidValues.join(", ")}`,
-  invalidPreid: (invalid) => `Invalid preid was provided (value was "${invalid}"). Valid options are: ${validPreidValues.join(", ")}`,
+  invalidPreid: (invalid: string) => `Invalid preid was provided (value was "${invalid}"). Valid options are: ${validPreidValues.join(", ")}`,
   wrongCwd: "It looks like you are running this script from the 'scripts' directory. This script assumes it is run from the root of the git repo",
 };
 
@@ -92,9 +92,9 @@ const newVersion = currentVersion.inc(options.type, options.preid);
 const newVersionMilestone = `${newVersion.major}.${newVersion.minor}.${newVersion.patch}`;
 const prBranch = `release/v${newVersion.format()}`;
 
-await fse.writeJson("./package.json", { ...packageJson, version: newVersion.format() }, { spaces: 2 });
+await exec(`yarn version ${newVersion.format()}`);
 await exec(`git checkout -b ${prBranch}`);
-await exec("git add package.json");
+await exec("git add lerna.json packages/*/package.json");
 await exec(`git commit -sm "Release ${newVersion.format()}"`);
 
 console.log(`new version: ${newVersion.format()}`);

@@ -61,13 +61,7 @@
     "build:tray-icons": "yarn run ts-node build/generate-tray-icons.ts",
     "build:theme-vars": "yarn run ts-node build/build_theme_vars.ts",
     "lint": "PROD=true yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
-    "lint:fix": "yarn run lint --fix",
-    "version-checkout": "cat package.json | jq '.version' -r | xargs printf \"release/v%s\" | xargs git checkout -b",
-    "version-commit": "cat package.json | jq '.version' -r | xargs printf \"release v%s\" | git commit --no-edit -s -F -",
-    "version": "yarn run version-checkout && git add package.json && yarn run version-commit",
-    "postversion": "git push --set-upstream ${GIT_REMOTE:-origin} release/v$npm_package_version",
-    "precreate-release-pr": "npx swc ./scripts/create-release-pr.ts -o ./scripts/create-release-pr.mjs",
-    "create-release-pr": "node ./scripts/create-release-pr.mjs"
+    "lint:fix": "yarn run lint --fix"
   },
   "config": {
     "k8sProxyVersion": "0.3.0",
