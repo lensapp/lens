@@ -92,7 +92,7 @@ const newVersion = currentVersion.inc(options.type, options.preid);
 const newVersionMilestone = `${newVersion.major}.${newVersion.minor}.${newVersion.patch}`;
 const prBranch = `release/v${newVersion.format()}`;
 
-await exec(`yarn version ${newVersion.format()}`);
+await exec(`yarn run bump-version --yes ${newVersion.format()}`);
 await exec(`git checkout -b ${prBranch}`);
 await exec("git add lerna.json packages/*/package.json");
 await exec(`git commit -sm "Release ${newVersion.format()}"`);
