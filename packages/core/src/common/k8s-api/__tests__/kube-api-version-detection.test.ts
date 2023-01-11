@@ -4,7 +4,7 @@
  */
 import type { ApiManager } from "../api-manager";
 import type { IngressApi } from "../endpoints";
-import { Ingress } from "../endpoints";
+import { Ingress, HorizontalPodAutoscalerApi } from "../endpoints";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import type { Fetch } from "../../fetch/fetch.injectable";
 import fetchInjectable from "../../fetch/fetch.injectable";
@@ -21,6 +21,8 @@ import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kub
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import ingressApiInjectable from "../endpoints/ingress.api.injectable";
+import loggerInjectable from "../../logger.injectable";
+import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 describe("KubeApi", () => {
   let fetchMock: AsyncFnMock<Fetch>;
@@ -702,6 +704,127 @@ describe("KubeApi", () => {
             });
           });
         });
+      });
+    });
+  });
+
+  describe("on first call to HorizontalPodAutoscalerApi.get()", () => {
+    let horizontalPodAutoscalerApi: HorizontalPodAutoscalerApi;
+
+    beforeEach(async () => {
+      horizontalPodAutoscalerApi = new HorizontalPodAutoscalerApi({
+        logger: di.inject(loggerInjectable),
+        maybeKubeApi: di.inject(maybeKubeApiInjectable),
+      }, {
+        allowedUsableVersions: {
+          autoscaling: [
+            "v2",
+            "v2beta2",
+            "v2beta1",
+            "v1",
+          ],
+        },
+      });
+      horizontalPodAutoscalerApi.get({
+        name: "foo",
+        namespace: "default",
+      });
+
+      // This is needed because of how JS promises work
+      await flushPromises();
+    });
+
+    it("requests version list from the api group from the initial apiBase", () => {
+      expect(fetchMock.mock.lastCall).toMatchObject([
+        "http://127.0.0.1:9999/api-kube/apis/autoscaling",
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+          method: "get",
+        },
+      ]);
+    });
+
+    describe("when the version list from the api group resolves with preferredVersion in allowed version", () => {
+      beforeEach(async () => {
+        await fetchMock.resolveSpecific(
+          ["http://127.0.0.1:9999/api-kube/apis/autoscaling"],
+          createMockResponseFromString("http://127.0.0.1:9999/api-kube/apis/autoscaling", JSON.stringify({
+            apiVersion: "v1",
+            kind: "APIGroup",
+            name: "autoscaling",
+            versions: [
+              {
+                groupVersion: "autoscaling/v1",
+                version: "v1",
+              },
+              {
+                groupVersion: "autoscaling/v1beta1",
+                version: "v2beta1",
+              },
+            ],
+            preferredVersion: {
+              groupVersion: "autoscaling/v1",
+              version: "v1",
+            },
+          })),
+        );
+      });
+
+      it("requests resources from the preferred version api group from the initial apiBase", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/apis/autoscaling/v1",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
+      });
+    });
+
+    describe("when the version list from the api group resolves with preferredVersion not allowed version", () => {
+      beforeEach(async () => {
+        await fetchMock.resolveSpecific(
+          ["http://127.0.0.1:9999/api-kube/apis/autoscaling"],
+          createMockResponseFromString("http://127.0.0.1:9999/api-kube/apis/autoscaling", JSON.stringify({
+            apiVersion: "v1",
+            kind: "APIGroup",
+            name: "autoscaling",
+            versions: [
+              {
+                groupVersion: "autoscaling/v2",
+                version: "v2",
+              },
+              {
+                groupVersion: "autoscaling/v2beta1",
+                version: "v2beta1",
+              },
+              {
+                groupVersion: "autoscaling/v3",
+                version: "v3",
+              },
+            ],
+            preferredVersion: {
+              groupVersion: "autoscaling/v3",
+              version: "v3",
+            },
+          })),
+        );
+      });
+
+      it("requests resources from the non preferred version from the initial apiBase", () => {
+        expect(fetchMock.mock.lastCall).toMatchObject([
+          "http://127.0.0.1:9999/api-kube/apis/autoscaling/v2",
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+            method: "get",
+          },
+        ]);
       });
     });
   });

@@ -58,14 +58,32 @@ export interface DerivedKubeApiOptions {
   /**
    * If the API uses a different API endpoint (e.g. apiBase) depending on the cluster version,
    * fallback API bases can be listed individually.
+   *
    * The first (existing) API base is used in the requests, if apiBase is not found.
-   * This option only has effect if checkPreferredVersion is true.
+   *
+   * This option only has effect if {@link DerivedKubeApiOptions.checkPreferredVersion} is `true`.
    */
   fallbackApiBases?: string[];
 
   /**
+   * This option is useful for protecting against newer versions on the same apiBase from being
+   * used. So that if a certain type only supports `v1`, or `v2` of some kind and then the `v3`
+   * version becomes the `preferredVersion` on the server but still has `v2` then the `v2` version
+   * will be used instead.
+   *
+   * This can help to prevent crashes in the future if the shape of a kind sufficently changes.
+   *
+   * The order is important. It should be sorted and the first entry should be the most preferable.
+   *
+   * This option only has effect if {@link DerivedKubeApiOptions.checkPreferredVersion} is `true`
+   */
+  allowedUsableVersions?: Partial<Record<string, [string, ...string[]]>>;
+
+  /**
    * If `true` then will check all declared apiBases against the kube api server
    * for the first accepted one.
+   *
+   * @default false
    */
   checkPreferredVersion?: boolean;
 
@@ -133,10 +151,10 @@ export interface KubeApiResourceVersionList {
 
 const not = <T>(fn: (val: T) => boolean) => (val: T) => !(fn(val));
 
-const getOrderedVersions = (list: KubeApiResourceVersionList): KubeApiResourceVersion[] => [
+const getOrderedVersions = (list: KubeApiResourceVersionList, allowedUsableVersions: string[] | undefined): KubeApiResourceVersion[] => [
   list.preferredVersion,
   ...list.versions.filter(not(matches(list.preferredVersion))),
-];
+].filter(({ version }) => !allowedUsableVersions || allowedUsableVersions.includes(version));
 
 export type PropagationPolicy = undefined | "Orphan" | "Foreground" | "Background";
 
@@ -233,6 +251,7 @@ export class KubeApi<
   protected readonly doCheckPreferredVersion: boolean;
   protected readonly fullApiPathname: string;
   protected readonly fallbackApiBases: string[] | undefined;
+  protected readonly allowedUsableVersions: Partial<Record<string, string[]>> | undefined;
 
   constructor(protected readonly dependencies: KubeApiDependencies, opts: KubeApiOptions<Object, Data>) {
     const {
@@ -243,6 +262,7 @@ export class KubeApi<
       apiBase: fullApiPathname = objectConstructor.apiBase,
       checkPreferredVersion: doCheckPreferredVersion = false,
       fallbackApiBases,
+      allowedUsableVersions,
     } = opts;
 
     assert(fullApiPathname, "apiBase MUST be provied either via KubeApiOptions.apiBase or KubeApiOptions.objectConstructor.apiBase");
@@ -255,6 +275,7 @@ export class KubeApi<
 
     this.doCheckPreferredVersion = doCheckPreferredVersion;
     this.fallbackApiBases = fallbackApiBases;
+    this.allowedUsableVersions = allowedUsableVersions;
     this.fullApiPathname = fullApiPathname;
     this.kind = kind;
     this.isNamespaced = isNamespaced ?? objectConstructor.namespaced ?? false;
@@ -291,7 +312,7 @@ export class KubeApi<
       try {
         const { apiPrefix, apiGroup, resource } = parseKubeApi(apiUrl);
         const list = await this.request.get(`${apiPrefix}/${apiGroup}`) as KubeApiResourceVersionList;
-        const resourceVersions = getOrderedVersions(list);
+        const resourceVersions = getOrderedVersions(list, this.allowedUsableVersions?.[apiGroup]);
 
         for (const resourceVersion of resourceVersions) {
           const { resources } = await this.request.get(`${apiPrefix}/${resourceVersion.groupVersion}`) as KubeApiResourceList;
@@ -313,7 +334,7 @@ export class KubeApi<
   }
 
   protected async checkPreferredVersion() {
-    if (this.fallbackApiBases && !this.doCheckPreferredVersion) {
+    if (!this.doCheckPreferredVersion && (this.fallbackApiBases || this.allowedUsableVersions)) {
       throw new Error("checkPreferredVersion must be enabled if fallbackApiBases is set in KubeApi");
     }
 
