@@ -47,6 +47,7 @@
   "author": "OpenLens Authors <info@k8slens.dev>",
   "scripts": {
     "build": "env NODE_ENV=production yarn run webpack --config webpack/library-bundle.ts",
+    "clean": "rm -rf dist webpack/build/ static/build",
     "compile:node-fetch": "yarn run webpack --config webpack/node-fetch.ts",
     "prepare": "yarn run compile:node-fetch",
     "build:linux": "yarn run compile && electron-builder --linux --dir",
@@ -246,6 +247,7 @@
     "@types/uuid": "^8.3.4",
     "@types/webpack": "^5.28.0",
     "@types/webpack-dev-server": "^4.7.2",
+    "@types/webpack-env": "^1.18.0",
     "@types/webpack-node-externals": "^2.5.3",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
