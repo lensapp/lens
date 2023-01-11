@@ -72,6 +72,27 @@ export type HorizontalPodAutoscalerMetricSpec =
   | OptionVarient<HpaMetricType.Pods, BaseHorizontalPodAutoscalerMetricSpec, "pods">
   | OptionVarient<HpaMetricType.ContainerResource, BaseHorizontalPodAutoscalerMetricSpec, "containerResource">;
 
+type HorizontalPodAutoscalerBehavior = {
+  scaleUp?: HPAScalingRules,
+  scaleDown?: HPAScalingRules,
+}
+
+type HPAScalingRules = {
+	stabilizationWindowSecond?: number,
+	selectPolicy?: ScalingPolicySelect,
+	policies?: HPAScalingPolicy[],
+}
+
+type ScalingPolicySelect = string
+
+type HPAScalingPolicy = {
+	type: HPAScalingPolicyType,
+	value: number,
+	periodSeconds: number
+}
+
+type HPAScalingPolicyType = string
+
 export interface ContainerResourceMetricStatus {
   container: string;
   currentAverageUtilization?: number;
@@ -132,6 +153,7 @@ export interface HorizontalPodAutoscalerSpec {
   minReplicas?: number;
   maxReplicas: number;
   metrics?: HorizontalPodAutoscalerMetricSpec[];
+  behavior?: HorizontalPodAutoscalerBehavior;
 }
 
 export interface HorizontalPodAutoscalerStatus {
