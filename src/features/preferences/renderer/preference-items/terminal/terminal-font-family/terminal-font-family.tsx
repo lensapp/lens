@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import React from "react";
+import React, { useEffect } from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { UserStore } from "../../../../../../common/user-store";
@@ -13,26 +13,35 @@ import { Select } from "../../../../../../renderer/components/select";
 import type { Logger } from "../../../../../../common/logger";
 import { action } from "mobx";
 import loggerInjectable from "../../../../../../common/logger.injectable";
+import {
+  preloadAllTerminalFontsInjectable,
+  terminalFontsInjectable,
+} from "../../../../../../renderer/components/dock/terminal/terminal-fonts.injectable";
 
 interface Dependencies {
   userStore: UserStore;
   logger: Logger;
+  terminalFonts: Map<string, string>;
+  preloadFonts: () => Promise<void>;
 }
 
 const NonInjectedTerminalFontFamily = observer(
-  ({ userStore, logger }: Dependencies) => {
+  ({ userStore, logger, terminalFonts, preloadFonts }: Dependencies) => {
+    useEffect(() => {
+      preloadFonts(); // preload all fonts to show preview in select-box
+    }, []);
 
-    // fonts must be declared in `fonts.scss` and at `template.html` (if early-preloading required)
-    const supportedCustomFonts: SelectOption<string>[] = [
-      "RobotoMono", "Anonymous Pro", "IBM Plex Mono", "JetBrains Mono", "Red Hat Mono",
-      "Source Code Pro", "Space Mono", "Ubuntu Mono",
-    ].map(customFont => {
+    const bundledFonts: SelectOption<string>[] = Array.from(terminalFonts.keys()).map(font => {
       const { fontFamily, fontSize } = userStore.terminalConfig;
 
       return {
-        label: <span style={{ fontFamily: customFont, fontSize }}>{customFont}</span>,
-        value: customFont,
-        isSelected: fontFamily === customFont,
+        label: (
+          <span style={{ fontFamily: `${font}, var(--font-terminal)`, fontSize }}>
+            {font}
+          </span>
+        ),
+        value: font,
+        isSelected: fontFamily === font,
       };
     });
 
@@ -50,7 +59,7 @@ const NonInjectedTerminalFontFamily = observer(
           themeName="lens"
           controlShouldRenderValue
           value={userStore.terminalConfig.fontFamily}
-          options={supportedCustomFonts}
+          options={bundledFonts}
           onChange={onFontFamilyChange as any}
         />
       </section>
@@ -65,6 +74,8 @@ export const TerminalFontFamily = withInjectables<Dependencies>(
     getProps: (di) => ({
       userStore: di.inject(userStoreInjectable),
       logger: di.inject(loggerInjectable),
+      terminalFonts: di.inject(terminalFontsInjectable),
+      preloadFonts: di.inject(preloadAllTerminalFontsInjectable),
     }),
   },
 );
