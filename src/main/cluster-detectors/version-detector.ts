@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { BaseClusterDetector } from "./base-cluster-detector";
+import { BaseClusterDetector } from "./token";
 import { ClusterMetadataKey } from "../../common/cluster-types";
 
 export class VersionDetector extends BaseClusterDetector {

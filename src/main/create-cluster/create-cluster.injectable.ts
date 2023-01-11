@@ -14,11 +14,11 @@ import authorizationReviewInjectable from "../../common/cluster/authorization-re
 import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import createListApiResourcesInjectable from "../cluster/request-api-resources.injectable";
 import loggerInjectable from "../../common/logger.injectable";
-import detectorRegistryInjectable from "../cluster-detectors/detector-registry.injectable";
-import createVersionDetectorInjectable from "../cluster-detectors/create-version-detector.injectable";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 import loadConfigfromFileInjectable from "../../common/kube-helpers/load-config-from-file.injectable";
 import requestNamespaceListPermissionsForInjectable from "../../common/cluster/request-namespace-list-permissions.injectable";
+import detectClusterMetadataInjectable from "../cluster-detectors/detect-cluster-metadata.injectable";
+import clusterVersionDetectorInjectable from "../cluster-detectors/cluster-version-detector.injectable";
 
 const createClusterInjectable = getInjectable({
   id: "create-cluster",
@@ -26,6 +26,8 @@ const createClusterInjectable = getInjectable({
   instantiate: (di) => {
     const dependencies: ClusterDependencies = {
       directoryForKubeConfigs: di.inject(directoryForKubeConfigsInjectable),
+      logger: di.inject(loggerInjectable),
+      clusterVersionDetector: di.inject(clusterVersionDetectorInjectable),
       createKubeconfigManager: di.inject(createKubeconfigManagerInjectable),
       createKubectl: di.inject(createKubectlInjectable),
       createContextHandler: di.inject(createContextHandlerInjectable),
@@ -33,11 +35,9 @@ const createClusterInjectable = getInjectable({
       requestNamespaceListPermissionsFor: di.inject(requestNamespaceListPermissionsForInjectable),
       requestApiResources: di.inject(createListApiResourcesInjectable),
       createListNamespaces: di.inject(listNamespacesInjectable),
-      logger: di.inject(loggerInjectable),
-      detectorRegistry: di.inject(detectorRegistryInjectable),
-      createVersionDetector: di.inject(createVersionDetectorInjectable),
       broadcastMessage: di.inject(broadcastMessageInjectable),
       loadConfigfromFile: di.inject(loadConfigfromFileInjectable),
+      detectClusterMetadata: di.inject(detectClusterMetadataInjectable),
     };
 
     return (model, configData) => new Cluster(dependencies, model, configData);
