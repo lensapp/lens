@@ -78,17 +78,17 @@ interface HorizontalPodAutoscalerBehavior {
 }
 
 interface HPAScalingRules {
-	stabilizationWindowSecond?: number;
-	selectPolicy?: ScalingPolicySelect;
-	policies?: HPAScalingPolicy[];
+  stabilizationWindowSecond?: number;
+  selectPolicy?: ScalingPolicySelect;
+  policies?: HPAScalingPolicy[];
 }
 
 type ScalingPolicySelect = string;
 
 interface HPAScalingPolicy {
-	type: HPAScalingPolicyType;
-	value: number;
-	periodSeconds: number;
+  type: HPAScalingPolicyType;
+  value: number;
+  periodSeconds: number;
 }
 
 type HPAScalingPolicyType = string;
