@@ -3,7 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { MenuItemConstructorOptions } from "electron";
+import type { IComputedValue } from "mobx";
 
-export interface MenuRegistration extends MenuItemConstructorOptions {
+export type MenuRegistration = {
   parentId: string;
-}
+  visible?: IComputedValue<boolean> | boolean;
+} & Omit<MenuItemConstructorOptions, "visible">;
