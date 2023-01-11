@@ -13,7 +13,7 @@ const configMapsRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "configmaps",
-      group: "v1",
+      group: "",
     }),
   }),
   injectionToken: frontEndRouteInjectionToken,

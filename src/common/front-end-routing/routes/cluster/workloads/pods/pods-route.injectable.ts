@@ -14,7 +14,7 @@ const podsRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "pods",
-      group: "v1",
+      group: "",
     }),
   }),
 
