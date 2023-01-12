@@ -41,8 +41,10 @@ export interface KubeObjectListLayoutProps<
   dependentStores?: SubscribableStore[];
   subscribeStores?: boolean;
 
-  // Customize resource name for e.g. search input ("Search <ResourceName>..."")
-  // If not provided, ResourceNames is used instead with a fallback to resource kind.
+  /**
+   * Customize resource name for e.g. search input ("Search <ResourceName>..."")
+   * If not provided, ResourceNames is used instead with a fallback to resource kind.
+   */
   resourceName?: string;
 }
 
