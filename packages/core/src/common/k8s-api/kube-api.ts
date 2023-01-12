@@ -335,7 +335,7 @@ export class KubeApi<
 
   protected async checkPreferredVersion() {
     if (!this.doCheckPreferredVersion && (this.fallbackApiBases || this.allowedUsableVersions)) {
-      throw new Error("checkPreferredVersion must be enabled if fallbackApiBases is set in KubeApi");
+      throw new Error("checkPreferredVersion must be enabled if either fallbackApiBases or allowedUsableVersions are set in KubeApi");
     }
 
     if (this.doCheckPreferredVersion && this.apiVersionPreferred === undefined) {
