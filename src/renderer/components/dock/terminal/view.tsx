@@ -34,14 +34,14 @@ class NonInjectedTerminalWindow extends React.Component<TerminalWindowProps & De
   public elem: HTMLElement | null = null;
   public terminal!: Terminal;
 
-  async componentDidMount() {
+  componentDidMount() {
     this.props.terminalStore.connect(this.props.tab);
     const terminal = this.props.terminalStore.getTerminal(this.props.tab.id);
 
     assert(terminal, "Terminal must be created for tab before mounting");
     this.terminal = terminal;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await this.terminal.attachTo(this.elem!);
+    this.terminal.attachTo(this.elem!);
 
     disposeOnUnmount(this, [
       // refresh terminal available space (cols/rows) when <Dock/> resized
@@ -51,7 +51,7 @@ class NonInjectedTerminalWindow extends React.Component<TerminalWindowProps & De
     ]);
   }
 
-  async componentDidUpdate() {
+  componentDidUpdate(): void {
     this.terminal.detach();
     this.props.terminalStore.connect(this.props.tab);
     const terminal = this.props.terminalStore.getTerminal(this.props.tab.id);
@@ -59,7 +59,7 @@ class NonInjectedTerminalWindow extends React.Component<TerminalWindowProps & De
     assert(terminal, "Terminal must be created for tab before mounting");
     this.terminal = terminal;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    await this.terminal.attachTo(this.elem!);
+    this.terminal.attachTo(this.elem!);
   }
 
   componentWillUnmount(): void {

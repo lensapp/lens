@@ -4,6 +4,7 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
+import { beforeFrameStartsFirstInjectionToken } from "../../../before-frame-starts/tokens";
 import RobotoMono from "../../../fonts/Roboto-Mono-nerd.ttf"; // patched font with icons
 import AnonymousPro from "../../../fonts/AnonymousPro-Regular.ttf";
 import IBMPlexMono from "../../../fonts/IBMPlexMono-Regular.ttf";
@@ -60,12 +61,18 @@ export const preloadAllTerminalFontsInjectable = getInjectable({
     const terminalFonts = di.inject(terminalFontsInjectable);
     const preloadFont = di.inject(preloadTerminalFontInjectable);
 
-    return async function (): Promise<any> {
-      return Promise.allSettled(
-        Array.from(terminalFonts.keys()).map(preloadFont),
-      );
+    return {
+      id: "preload-all-terminal-fonts",
+
+      async run() {
+        await Promise.allSettled(
+          Array.from(terminalFonts.keys()).map(preloadFont),
+        );
+      },
     };
   },
+
+  injectionToken: beforeFrameStartsFirstInjectionToken,
 
   causesSideEffects: true,
 });

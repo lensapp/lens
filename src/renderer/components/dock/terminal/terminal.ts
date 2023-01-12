@@ -28,7 +28,6 @@ export interface TerminalDependencies {
   readonly xtermColorTheme: IComputedValue<Record<string, string>>;
   readonly logger: Logger;
   openLinkInBrowser: OpenLinkInBrowser;
-  preloadFont: (fontFamily: string) => Promise<void>;
 }
 
 export interface TerminalArguments {
@@ -54,8 +53,7 @@ export class Terminal {
     return this.elem.querySelector(".xterm-viewport")!;
   }
 
-  async attachTo(parentElem: HTMLElement) {
-    await this.dependencies.preloadFont(this.fontFamily);
+  attachTo(parentElem: HTMLElement) {
     assert(this.elem, "Terminal should always be mounted somewhere");
     parentElem.appendChild(this.elem);
     this.onActivate();
@@ -208,10 +206,9 @@ export class Terminal {
     this.fit();
   };
 
-  setFontFamily = async (fontFamily: string) => {
+  setFontFamily = (fontFamily: string) => {
     this.dependencies.logger.info(`[TERMINAL]: set fontFamily to ${fontFamily}`);
 
-    await this.dependencies.preloadFont(fontFamily);
     this.xterm.options.fontFamily = fontFamily;
     this.fit();
 

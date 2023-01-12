@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import React, { useEffect } from "react";
+import React from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { UserStore } from "../../../../../../common/user-store";
@@ -14,7 +14,6 @@ import type { Logger } from "../../../../../../common/logger";
 import { action } from "mobx";
 import loggerInjectable from "../../../../../../common/logger.injectable";
 import {
-  preloadAllTerminalFontsInjectable,
   terminalFontsInjectable,
 } from "../../../../../../renderer/components/dock/terminal/terminal-fonts.injectable";
 
@@ -22,15 +21,10 @@ interface Dependencies {
   userStore: UserStore;
   logger: Logger;
   terminalFonts: Map<string, string>;
-  preloadFonts: () => Promise<void>;
 }
 
 const NonInjectedTerminalFontFamily = observer(
-  ({ userStore, logger, terminalFonts, preloadFonts }: Dependencies) => {
-    useEffect(() => {
-      preloadFonts(); // preload all fonts to show preview in select-box
-    }, []);
-
+  ({ userStore, logger, terminalFonts }: Dependencies) => {
     const bundledFonts: SelectOption<string>[] = Array.from(terminalFonts.keys()).map(font => {
       const { fontFamily, fontSize } = userStore.terminalConfig;
 
@@ -67,15 +61,10 @@ const NonInjectedTerminalFontFamily = observer(
   },
 );
 
-export const TerminalFontFamily = withInjectables<Dependencies>(
-  NonInjectedTerminalFontFamily,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-      logger: di.inject(loggerInjectable),
-      terminalFonts: di.inject(terminalFontsInjectable),
-      preloadFonts: di.inject(preloadAllTerminalFontsInjectable),
-    }),
-  },
-);
+export const TerminalFontFamily = withInjectables<Dependencies>(NonInjectedTerminalFontFamily, {
+  getProps: (di) => ({
+    userStore: di.inject(userStoreInjectable),
+    logger: di.inject(loggerInjectable),
+    terminalFonts: di.inject(terminalFontsInjectable),
+  }),
+});
