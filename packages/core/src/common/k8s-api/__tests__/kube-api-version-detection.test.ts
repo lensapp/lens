@@ -736,7 +736,7 @@ describe("KubeApi", () => {
 
     it("requests version list from the api group from the initial apiBase", () => {
       expect(fetchMock.mock.lastCall).toMatchObject([
-        "http://127.0.0.1:9999/api-kube/apis/autoscaling",
+        "https://127.0.0.1:12345/api-kube/apis/autoscaling",
         {
           headers: {
             "content-type": "application/json",
@@ -749,8 +749,8 @@ describe("KubeApi", () => {
     describe("when the version list from the api group resolves with preferredVersion in allowed version", () => {
       beforeEach(async () => {
         await fetchMock.resolveSpecific(
-          ["http://127.0.0.1:9999/api-kube/apis/autoscaling"],
-          createMockResponseFromString("http://127.0.0.1:9999/api-kube/apis/autoscaling", JSON.stringify({
+          ["https://127.0.0.1:12345/api-kube/apis/autoscaling"],
+          createMockResponseFromString("https://127.0.0.1:12345/api-kube/apis/autoscaling", JSON.stringify({
             apiVersion: "v1",
             kind: "APIGroup",
             name: "autoscaling",
@@ -774,7 +774,7 @@ describe("KubeApi", () => {
 
       it("requests resources from the preferred version api group from the initial apiBase", () => {
         expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/apis/autoscaling/v1",
+          "https://127.0.0.1:12345/api-kube/apis/autoscaling/v1",
           {
             headers: {
               "content-type": "application/json",
@@ -788,8 +788,8 @@ describe("KubeApi", () => {
     describe("when the version list from the api group resolves with preferredVersion not allowed version", () => {
       beforeEach(async () => {
         await fetchMock.resolveSpecific(
-          ["http://127.0.0.1:9999/api-kube/apis/autoscaling"],
-          createMockResponseFromString("http://127.0.0.1:9999/api-kube/apis/autoscaling", JSON.stringify({
+          ["https://127.0.0.1:12345/api-kube/apis/autoscaling"],
+          createMockResponseFromString("https://127.0.0.1:12345/api-kube/apis/autoscaling", JSON.stringify({
             apiVersion: "v1",
             kind: "APIGroup",
             name: "autoscaling",
@@ -817,7 +817,7 @@ describe("KubeApi", () => {
 
       it("requests resources from the non preferred version from the initial apiBase", () => {
         expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/apis/autoscaling/v2",
+          "https://127.0.0.1:12345/api-kube/apis/autoscaling/v2",
           {
             headers: {
               "content-type": "application/json",
