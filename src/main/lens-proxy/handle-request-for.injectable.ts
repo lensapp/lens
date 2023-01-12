@@ -15,7 +15,7 @@ import type HttpProxyServer from "http-proxy";
 const watchParam = "watch";
 const followParam = "follow";
 
-const isLongRunningRequest = (reqUrl: string) => {
+export const isLongRunningRequest = (reqUrl: string) => {
   const url = new URL(reqUrl, "http://localhost");
 
   return getBoolean(url.searchParams, watchParam) || getBoolean(url.searchParams, followParam);
