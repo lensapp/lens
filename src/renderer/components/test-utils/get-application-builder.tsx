@@ -13,7 +13,7 @@ import type { RenderResult } from "@testing-library/react";
 import { fireEvent, queryByText } from "@testing-library/react";
 import type { KubeApiResourceDescriptor } from "../../../common/rbac";
 import { formatKubeApiResource } from "../../../common/rbac";
-import type { DiContainer, Injectable } from "@ogre-tools/injectable";
+import type { DiContainer, DiContainerForInjection, Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import { pipeline } from "@ogre-tools/fp";
@@ -69,6 +69,7 @@ import fsInjectable from "../../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
 import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
+import type { LensFetch } from "../../../common/fetch/lens-fetch.injectable";
 import lensFetchInjectable from "../../../common/fetch/lens-fetch.injectable";
 import handleLensRequestInjectable from "../../../main/lens-proxy/handle-lens-request.injectable";
 import httpMocks from "node-mocks-http";
@@ -218,34 +219,34 @@ export const getApplicationBuilder = () => {
     },
   }));
 
-  mainDi.override(lensFetchInjectable, (di) => {
-    return async (pathnameAndQuery, init) => {
-      const handleLensRequest = di.inject(handleLensRequestInjectable);
-      const { Headers, Response } = di.inject(nodeFetchModuleInjectable);
+  const getLensFetchOverride = (di: DiContainerForInjection): LensFetch => async (pathnameAndQuery, init) => {
+    const handleLensRequest = mainDi.inject(handleLensRequestInjectable);
+    const { Headers, Response } = di.inject(nodeFetchModuleInjectable);
 
-      const url = new URL(pathnameAndQuery, "https://127.0.0.1");
-      const req = httpMocks.createRequest({
-        method: (init?.method ?? "get").toUpperCase() as any,
-        url: url.pathname,
-        params: url.searchParams,
-        body: (init?.body ?? undefined) as any,
-        headers: new Headers(init?.headers) as any,
-      });
-      const duplex = new stream.Duplex();
-      const res = httpMocks.createResponse({
-        req,
-        writableStream: duplex,
-      });
+    const url = new URL(pathnameAndQuery, "https://127.0.0.1");
+    const req = httpMocks.createRequest({
+      method: (init?.method ?? "get").toUpperCase() as any,
+      url: url.pathname,
+      params: url.searchParams,
+      body: (init?.body ?? undefined) as any,
+      headers: new Headers(init?.headers) as any,
+    });
+    const duplex = new stream.Duplex();
+    const res = httpMocks.createResponse({
+      req,
+      writableStream: duplex,
+    });
 
-      await handleLensRequest.handle(req, res);
+    await handleLensRequest.handle(req, res);
 
-      return new Response(duplex, {
-        headers: new Headers(res._getHeaders() as Record<string, string>),
-        status: res._getStatusCode(),
-        statusText: res._getStatusMessage(),
-      });
-    };
-  });
+    return new Response(duplex, {
+      headers: new Headers(res._getHeaders() as Record<string, string>),
+      status: res._getStatusCode(),
+      statusText: res._getStatusMessage(),
+    });
+  };
+
+  mainDi.override(lensFetchInjectable, getLensFetchOverride);
 
   const allowedResourcesState = observable.set<string>();
 
@@ -258,6 +259,8 @@ export const getApplicationBuilder = () => {
 
     overrideForWindow(windowDi, windowId);
     overrideFsWithFakes(windowDi);
+
+    windowDi.override(lensFetchInjectable, getLensFetchOverride);
 
     runInAction(() => {
       windowDi.register(rendererExtensionsStateInjectable);
