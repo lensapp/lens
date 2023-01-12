@@ -12,6 +12,7 @@ import URLParse from "url-parse";
 import getPrometheusProviderByKindInjectable from "../prometheus/get-by-kind.injectable";
 import prometheusProvidersInjectable from "../prometheus/providers.injectable";
 import loggerInjectable from "../../common/logger.injectable";
+import makeApiClientInjectable from "../../common/cluster/make-api-client.injectable";
 
 const createContextHandlerInjectable = getInjectable({
   id: "create-context-handler",
@@ -22,6 +23,7 @@ const createContextHandlerInjectable = getInjectable({
       getPrometheusProviderByKind: di.inject(getPrometheusProviderByKindInjectable),
       prometheusProviders: di.inject(prometheusProvidersInjectable),
       logger: di.inject(loggerInjectable),
+      makeApiClient: di.inject(makeApiClientInjectable),
     };
 
     return (cluster: Cluster): ClusterContextHandler => {

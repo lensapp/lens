@@ -66,6 +66,7 @@ export interface RouteHandler<TResponse, Path extends string>{
 export interface BaseRoutePaths<Path extends string> {
   path: Path;
   method: "get" | "post" | "put" | "patch" | "delete";
+  requireAuthentication?: boolean;
 }
 
 export interface PayloadValidator<Payload> {
@@ -78,18 +79,21 @@ export interface ValidatorBaseRoutePaths<Path extends string, Payload> extends B
 
 export interface Route<TResponse, Path extends string> extends BaseRoutePaths<Path> {
   handler: RouteHandler<TResponse, Path>;
+  readonly requireAuthentication: boolean;
 }
 
 export interface BindHandler<Path extends string> {
   <TResponse>(handler: RouteHandler<TResponse, Path>): Route<TResponse, Path>;
 }
 
-export function route<Path extends string>(parts: BaseRoutePaths<Path>): BindHandler<Path> {
-  return (handler) => ({
+export const route = <Path extends string>({
+  requireAuthentication = true,
+  ...parts
+}: BaseRoutePaths<Path>): BindHandler<Path> => (handler) => ({
     ...parts,
     handler,
+    requireAuthentication,
   });
-}
 
 export interface ClusterRouteHandler<Response, Path extends string>{
   (request: ClusterLensApiRequest<Path>): RouteResponse<Response> | Promise<RouteResponse<Response>>;
@@ -99,8 +103,10 @@ export interface BindClusterHandler<Path extends string> {
   <TResponse>(handler: ClusterRouteHandler<TResponse, Path>): Route<TResponse, Path>;
 }
 
-export function clusterRoute<Path extends string>(parts: BaseRoutePaths<Path>): BindClusterHandler<Path> {
-  return (handler) => ({
+export const clusterRoute = <Path extends string>({
+  requireAuthentication = true,
+  ...parts
+}: BaseRoutePaths<Path>): BindClusterHandler<Path> => (handler) => ({
     ...parts,
     handler: ({ cluster, ...rest }) => {
       if (!cluster) {
@@ -112,8 +118,8 @@ export function clusterRoute<Path extends string>(parts: BaseRoutePaths<Path>): 
 
       return handler({ cluster, ...rest });
     },
+    requireAuthentication,
   });
-}
 
 export interface ValidatedClusterLensApiRequest<Path extends string, Payload> extends ClusterLensApiRequest<Path> {
   payload: Payload;

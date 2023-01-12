@@ -5,6 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ServerResponse } from "http";
 import loggerInjectable from "../../common/logger.injectable";
+import authHeaderValueInjectable from "../../features/auth-header/common/header-value.injectable";
+import { lensAuthHeaderName } from "../../features/auth-header/common/vars";
 import type { LensApiRequest, Route } from "./route";
 import { contentTypes } from "./router-content-types";
 import { writeServerResponseFor } from "./write-server-response";
@@ -16,9 +18,23 @@ const createHandlerForRouteInjectable = getInjectable({
   id: "create-handler-for-route",
   instantiate: (di): CreateHandlerForRoute => {
     const logger = di.inject(loggerInjectable);
+    const authHeaderValue = di.inject(authHeaderValueInjectable);
 
     return (route) => async (request, response) => {
       const writeServerResponse = writeServerResponseFor(response);
+
+      if (route.requireAuthentication) {
+        const authHeader = request.getHeader(lensAuthHeaderName);
+
+        if (authHeader !== authHeaderValue) {
+          writeServerResponse(contentTypes.txt.resultMapper({
+            statusCode: 401,
+            response: "Missing authorization",
+          }));
+
+          return;
+        }
+      }
 
       try {
         const result = await route.handler(request);

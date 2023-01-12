@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import authHeaderValueInjectable from "../../features/auth-header/common/header-value.injectable";
+import { lensAuthHeaderName } from "../../features/auth-header/common/vars";
 import { apiPrefix } from "../vars";
 import isDebuggingInjectable from "../vars/is-debugging.injectable";
 import isDevelopmentInjectable from "../vars/is-development.injectable";
@@ -17,6 +19,7 @@ const apiBaseInjectable = getInjectable({
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const serverAddress = di.inject(apiBaseServerAddressInjectionToken);
     const hostHeaderValue = di.inject(apiBaseHostHeaderInjectionToken);
+    const authHeaderValue = di.inject(authHeaderValueInjectable);
 
     return createJsonApi({
       serverAddress,
@@ -25,6 +28,7 @@ const apiBaseInjectable = getInjectable({
     }, {
       headers: {
         "Host": hostHeaderValue,
+        [lensAuthHeaderName]: authHeaderValue,
       },
     });
   },

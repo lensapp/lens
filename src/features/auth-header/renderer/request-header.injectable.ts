@@ -5,7 +5,7 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 import requestFromChannelInjectable from "../../../renderer/utils/channel/request-from-channel.injectable";
-import { authHeaderChannel } from "../common/channel";
+import { authHeaderChannel } from "../common/vars";
 
 const requestAuthHeaderValueInjectable = getInjectable({
   id: "request-auth-header-value",

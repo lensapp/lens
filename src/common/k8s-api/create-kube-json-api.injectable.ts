@@ -28,13 +28,13 @@ const createKubeJsonApiInjectable = getInjectable({
           const agent = new Agent({
             ca: lensProxyCert.get().cert,
           });
-  
+
           return {
             agent,
           };
         };
       }
-      
+
       return new KubeJsonApi(dependencies, config, reqInit);
     };
   },

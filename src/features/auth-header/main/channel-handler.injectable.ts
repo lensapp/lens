@@ -4,7 +4,7 @@
  */
 
 import { getRequestChannelListenerInjectable } from "../../../main/utils/channel/channel-listeners/listener-tokens";
-import { authHeaderChannel } from "../common/channel";
+import { authHeaderChannel } from "../common/vars";
 import authHeaderStateInjectable from "../common/header-state.injectable";
 
 const authHeaderRequestListenerInjectable = getRequestChannelListenerInjectable({

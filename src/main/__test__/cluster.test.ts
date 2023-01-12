@@ -10,7 +10,7 @@ import type { CreateCluster } from "../../common/cluster/create-cluster-injectio
 import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import authorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
 import requestNamespaceListPermissionsForInjectable from "../../common/cluster/request-namespace-list-permissions.injectable";
-import listNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
+import listNamespacesForInjectable from "../../common/cluster/list-namespaces.injectable";
 import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
 import { parse } from "url";
@@ -42,7 +42,7 @@ describe("create clusters", () => {
     di.override(broadcastMessageInjectable, () => async () => {});
     di.override(authorizationReviewInjectable, () => () => () => Promise.resolve(true));
     di.override(requestNamespaceListPermissionsForInjectable, () => () => async () => () => true);
-    di.override(listNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
+    di.override(listNamespacesForInjectable, () => () => () => Promise.resolve([ "default" ]));
     di.override(createContextHandlerInjectable, () => (cluster) => ({
       restartServer: jest.fn(),
       stopServer: jest.fn(),

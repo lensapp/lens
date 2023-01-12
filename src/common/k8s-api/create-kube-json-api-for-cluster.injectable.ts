@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import authHeaderValueInjectable from "../../features/auth-header/common/header-value.injectable";
+import { lensAuthHeaderName } from "../../features/auth-header/common/vars";
 import { apiKubePrefix } from "../vars";
 import isDebuggingInjectable from "../vars/is-debugging.injectable";
 import { apiBaseHostHeaderInjectionToken, apiBaseServerAddressInjectionToken } from "./api-base-configs";
@@ -16,6 +18,7 @@ const createKubeJsonApiForClusterInjectable = getInjectable({
   instantiate: (di): CreateKubeJsonApiForCluster => {
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
     const isDebugging = di.inject(isDebuggingInjectable);
+    const authHeaderValue = di.inject(authHeaderValueInjectable);
 
     return (clusterId) => createKubeJsonApi(
       {
@@ -26,6 +29,7 @@ const createKubeJsonApiForClusterInjectable = getInjectable({
       {
         headers: {
           "Host": `${clusterId}.${di.inject(apiBaseHostHeaderInjectionToken)}`,
+          [lensAuthHeaderName]: authHeaderValue,
         },
       },
     );

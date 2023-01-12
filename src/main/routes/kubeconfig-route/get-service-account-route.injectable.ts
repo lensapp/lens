@@ -10,15 +10,18 @@ import type { V1Secret } from "@kubernetes/client-node";
 import { CoreV1Api } from "@kubernetes/client-node";
 import { clusterRoute } from "../../router/route";
 import { dump } from "js-yaml";
+import makeApiClientInjectable from "../../../common/cluster/make-api-client.injectable";
 
 const getServiceAccountRouteInjectable = getRouteInjectable({
   id: "get-service-account-route",
 
-  instantiate: () => clusterRoute({
+  instantiate: (di) => clusterRoute({
     method: "get",
     path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}`,
   })(async ({ params, cluster }) => {
-    const client = (await cluster.getProxyKubeconfig()).makeApiClient(CoreV1Api);
+    const makeApiClient = di.inject(makeApiClientInjectable);
+    const config = await cluster.getProxyKubeconfig();
+    const client = makeApiClient(config, CoreV1Api);
     const secretList = await client.listNamespacedSecret(params.namespace);
 
     const secret = secretList.body.items.find(secret => {

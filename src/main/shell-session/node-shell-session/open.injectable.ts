@@ -20,6 +20,7 @@ import buildVersionInjectable from "../../vars/build-version/build-version.injec
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import statInjectable from "../../../common/fs/stat.injectable";
 import createKubeApiInjectable from "../../../common/k8s-api/create-kube-api.injectable";
+import makeApiClientInjectable from "../../../common/cluster/make-api-client.injectable";
 
 export interface NodeShellSessionArgs {
   websocket: WebSocket;
@@ -47,6 +48,7 @@ const openNodeShellSessionInjectable = getInjectable({
       emitAppEvent: di.inject(emitAppEventInjectable),
       stat: di.inject(statInjectable),
       createKubeApi: di.inject(createKubeApiInjectable),
+      makeApiClient: di.inject(makeApiClientInjectable),
     };
 
     return async (args) => {

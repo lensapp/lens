@@ -6,24 +6,28 @@ import type { KubeConfig } from "@kubernetes/client-node";
 import { CoreV1Api } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
 import { isDefined } from "../utils";
+import makeApiClientInjectable from "./make-api-client.injectable";
 
 export type ListNamespaces = () => Promise<string[]>;
+export type ListNamespacesFor = (config: KubeConfig) => ListNamespaces;
 
-export function listNamespaces(config: KubeConfig): ListNamespaces {
-  const coreApi = config.makeApiClient(CoreV1Api);
+const listNamespacesForInjectable = getInjectable({
+  id: "list-namespaces-for",
+  instantiate: (di): ListNamespacesFor => {
+    const makeApiClient = di.inject(makeApiClientInjectable);
 
-  return async () => {
-    const { body: { items }} = await coreApi.listNamespace();
+    return (config) => {
+      const coreApi = makeApiClient(config, CoreV1Api);
 
-    return items
-      .map(ns => ns.metadata?.name)
-      .filter(isDefined);
-  };
-}
+      return async () => {
+        const { body: { items }} = await coreApi.listNamespace();
 
-const listNamespacesInjectable = getInjectable({
-  id: "list-namespaces",
-  instantiate: () => listNamespaces,
+        return items
+          .map(ns => ns.metadata?.name)
+          .filter(isDefined);
+      };
+    };
+  },
 });
 
-export default listNamespacesInjectable;
+export default listNamespacesForInjectable;

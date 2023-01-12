@@ -8,6 +8,7 @@ import { AuthorizationV1Api } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../logger.injectable";
 import type { KubeApiResource } from "../rbac";
+import makeApiClientInjectable from "./make-api-client.injectable";
 
 export type CanListResource = (resource: KubeApiResource) => boolean;
 
@@ -26,9 +27,10 @@ const requestNamespaceListPermissionsForInjectable = getInjectable({
   id: "request-namespace-list-permissions-for",
   instantiate: (di): RequestNamespaceListPermissionsFor => {
     const logger = di.inject(loggerInjectable);
+    const makeApiClient = di.inject(makeApiClientInjectable);
 
     return (proxyConfig) => {
-      const api = proxyConfig.makeApiClient(AuthorizationV1Api);
+      const api = makeApiClient(proxyConfig, AuthorizationV1Api);
 
       return async (namespace) => {
         try {

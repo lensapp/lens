@@ -6,3 +6,5 @@
 import { getRequestChannel } from "../../../common/utils/channel/get-request-channel";
 
 export const authHeaderChannel = getRequestChannel<void, string>("auth-header-value");
+
+export const lensAuthHeaderName = "Authorization";
