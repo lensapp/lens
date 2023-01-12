@@ -3,23 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ProxyApiRequestArgs } from "./proxy-functions";
-import { kubeApiUpgradeRequest } from "./proxy-functions";
-import shellApiRequestInjectable from "./proxy-functions/shell-api-request.injectable";
 import lensProxyPortInjectable from "./lens-proxy-port.injectable";
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
-import getClusterForRequestInjectable from "./get-cluster-for-request.injectable";
-import type { IncomingMessage } from "http";
 import type net from "net";
-import type { Cluster } from "../../common/cluster/cluster";
-import { apiPrefix } from "../../common/vars";
 import { createServer } from "https";
 import handleLensRequestInjectable from "./handle-lens-request.injectable";
-
-export type GetClusterForRequest = (req: IncomingMessage) => Cluster | undefined;
-export type LensProxyApiRequest = (args: ProxyApiRequestArgs) => void | Promise<void>;
+import routeUpgradeRequestInjectable from "./upgrade-router/router.injectable";
 
 export interface LensProxy {
   listen: () => Promise<void>;
@@ -48,13 +39,12 @@ const lensProxyInjectable = getInjectable({
   id: "lens-proxy",
 
   instantiate: (di): LensProxy => {
-    const shellApiRequest = di.inject(shellApiRequestInjectable);
-    const getClusterForRequest = di.inject(getClusterForRequestInjectable);
     const lensProxyPort = di.inject(lensProxyPortInjectable);
     const emitAppEvent = di.inject(emitAppEventInjectable);
     const logger = di.inject(loggerInjectable);
     const certificate = di.inject(lensProxyCertificateInjectable).get();
     const handleLensRequest = di.inject(handleLensRequestInjectable);
+    const routeUpgradeRequest = di.inject(routeUpgradeRequestInjectable);
 
     const proxyServer = createServer(
       {
@@ -63,25 +53,7 @@ const lensProxyInjectable = getInjectable({
       },
       handleLensRequest.handle,
     )
-      .on("upgrade", (req, socket, head) => {
-        const cluster = getClusterForRequest(req);
-
-        if (!cluster || !req.url) {
-          logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
-          socket.destroy();
-        } else {
-          const isInternal = req.url.startsWith(`${apiPrefix}?`);
-          const reqHandler = isInternal ? shellApiRequest : kubeApiUpgradeRequest;
-
-          (async () => {
-            try {
-              await reqHandler({ req, socket, head, cluster });
-            } catch (error) {
-              logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error);
-            }
-          })();
-        }
-      });
+      .on("upgrade", routeUpgradeRequest);
 
     const attemptToListen = () => new Promise<number>((resolve, reject) => {
       proxyServer.listen(0, "127.0.0.1");

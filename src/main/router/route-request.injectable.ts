@@ -50,9 +50,7 @@ const routeRequestInjectable = getInjectable({
       }
 
       const url = new URL(req.url, "https://localhost");
-      const path = url.pathname;
-      const method = req.method.toLowerCase();
-      const matchingRoute = router.route(method, path);
+      const matchingRoute = router.route(req.method, url.pathname);
 
       if (matchingRoute instanceof Error) {
         return false;

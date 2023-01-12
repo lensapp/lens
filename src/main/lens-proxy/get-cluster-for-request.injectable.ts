@@ -6,7 +6,10 @@ import { getInjectable } from "@ogre-tools/injectable";
 import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
 import { getClusterIdFromHost } from "../../common/utils";
 import { apiKubePrefix } from "../../common/vars";
-import type { GetClusterForRequest } from "./lens-proxy";
+import type { IncomingMessage } from "http";
+import type { Cluster } from "../../common/cluster/cluster";
+
+export type GetClusterForRequest = (req: IncomingMessage) => Cluster | undefined;
 
 const getClusterForRequestInjectable = getInjectable({
   id: "get-cluster-for-request",
