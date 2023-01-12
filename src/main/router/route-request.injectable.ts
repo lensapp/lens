@@ -8,10 +8,9 @@ import type { Route, LensApiRequest } from "./route";
 import createHandlerForRouteInjectable from "./create-handler-for-route.injectable";
 import Call from "@hapi/call";
 import Subtext from "@hapi/subtext";
-import type http from "http";
 import type { Cluster } from "../../common/cluster/cluster";
-import type { ServerIncomingMessage } from "../lens-proxy/lens-proxy";
 import type { RouteHandler } from "./create-handler-for-route.injectable";
+import type { IncomingMessage, ServerResponse } from "http";
 
 export const routeInjectionToken = getInjectionToken<Route<unknown, string>>({
   id: "route-injection-token",
@@ -26,7 +25,7 @@ export function getRouteInjectable<T, Path extends string>(
   });
 }
 
-export type RouteRequest = (cluster: Cluster | undefined, req: ServerIncomingMessage, res: http.ServerResponse) => Promise<boolean>;
+export type RouteRequest = (cluster: Cluster | undefined, req: IncomingMessage, res: ServerResponse) => Promise<boolean>;
 
 const createRouter = (di: DiContainerForInjection) => {
   const routes = di.injectMany(routeInjectionToken);
@@ -46,6 +45,10 @@ const routeRequestInjectable = getInjectable({
     const router = createRouter(di);
 
     return async (cluster, req, res) => {
+      if (!req.url || !req.method) {
+        return false;
+      }
+
       const url = new URL(req.url, "https://localhost");
       const path = url.pathname;
       const method = req.method.toLowerCase();
