@@ -4,7 +4,7 @@
  */
 
 import { apiPrefix } from "../../../common/vars";
-import { getRouteInjectable } from "../../router/router.injectable";
+import { getRouteInjectable } from "../../router/route-request.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { V1Secret } from "@kubernetes/client-node";
 import { CoreV1Api } from "@kubernetes/client-node";

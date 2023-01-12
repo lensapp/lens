@@ -4,7 +4,7 @@
  */
 
 import { apiPrefix } from "../../../common/vars";
-import { getRouteInjectable } from "../../router/router.injectable";
+import { getRouteInjectable } from "../../router/route-request.injectable";
 import { route } from "../../router/route";
 import prometheusProvidersInjectable from "../../prometheus/providers.injectable";
 

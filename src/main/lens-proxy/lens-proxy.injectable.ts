@@ -5,23 +5,18 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
 import { kubeApiUpgradeRequest } from "./proxy-functions";
-import httpProxy from "http-proxy";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request.injectable";
 import lensProxyPortInjectable from "./lens-proxy-port.injectable";
-import contentSecurityPolicyInjectable from "../../common/vars/content-security-policy.injectable";
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
 import getClusterForRequestInjectable from "./get-cluster-for-request.injectable";
-import routeRequestInjectable from "../router/route-request.injectable";
-import type { IncomingMessage, ServerResponse } from "http";
-import assert from "assert";
-import net from "net";
+import type { IncomingMessage } from "http";
+import type net from "net";
 import type { Cluster } from "../../common/cluster/cluster";
-import { getBoolean } from "../utils/parse-query";
-import type { ClusterContextHandler } from "../context-handler/context-handler";
-import { apiKubePrefix, apiPrefix } from "../../common/vars";
+import { apiPrefix } from "../../common/vars";
 import { createServer } from "https";
+import handleLensRequestInjectable from "./handle-lens-request.injectable";
 
 export type GetClusterForRequest = (req: IncomingMessage) => Cluster | undefined;
 export type LensProxyApiRequest = (args: ProxyApiRequestArgs) => void | Promise<void>;
@@ -30,21 +25,6 @@ export interface LensProxy {
   listen: () => Promise<void>;
   close: () => void;
 }
-
-const getRequestId = (req: IncomingMessage) => {
-  assert(req.headers.host);
-
-  return req.headers.host + req.url;
-};
-
-const watchParam = "watch";
-const followParam = "follow";
-
-const isLongRunningRequest = (reqUrl: string) => {
-  const url = new URL(reqUrl, "http://localhost");
-
-  return getBoolean(url.searchParams, watchParam) || getBoolean(url.searchParams, followParam);
-};
 
 /**
  * This is the list of ports that chrome considers unsafe to allow HTTP
@@ -68,97 +48,20 @@ const lensProxyInjectable = getInjectable({
   id: "lens-proxy",
 
   instantiate: (di): LensProxy => {
-    const routeRequest = di.inject(routeRequestInjectable);
     const shellApiRequest = di.inject(shellApiRequestInjectable);
     const getClusterForRequest = di.inject(getClusterForRequestInjectable);
     const lensProxyPort = di.inject(lensProxyPortInjectable);
-    const contentSecurityPolicy = di.inject(contentSecurityPolicyInjectable);
     const emitAppEvent = di.inject(emitAppEventInjectable);
     const logger = di.inject(loggerInjectable);
     const certificate = di.inject(lensProxyCertificateInjectable).get();
-
-    const retryCounters = new Map<string, number>();
-    let closed = false;
-
-    const proxy = httpProxy.createProxy()
-      .on("proxyRes", (proxyRes, req, res) => {
-        retryCounters.delete(getRequestId(req));
-
-        proxyRes.on("aborted", () => { // happens when proxy target aborts connection
-          res.end();
-        });
-      })
-      .on("error", (error, req, res, target) => {
-        if (closed || res instanceof net.Socket) {
-          return;
-        }
-
-        logger.error(`[LENS-PROXY]: http proxy errored for cluster: ${error}`, { url: req.url });
-
-        if (target) {
-          logger.debug(`Failed proxy to target: ${JSON.stringify(target, null, 2)}`);
-
-          if (req.method === "GET" && (!res.statusCode || res.statusCode >= 500)) {
-            const reqId = getRequestId(req);
-            const retryCount = retryCounters.get(reqId) || 0;
-            const timeoutMs = retryCount * 250;
-
-            if (retryCount < 20) {
-              logger.debug(`Retrying proxy request to url: ${reqId}`);
-              setTimeout(() => {
-                retryCounters.set(reqId, retryCount + 1);
-
-                (async () => {
-                  try {
-                    await handleRequest(req, res);
-                  } catch (error) {
-                    logger.error(`[LENS-PROXY]: failed to handle request on proxy error: ${error}`);
-                  }
-                })();
-              }, timeoutMs);
-            }
-          }
-        }
-
-        try {
-          res.writeHead(500).end(`Oops, something went wrong.\n${error}`);
-        } catch (e) {
-          logger.error(`[LENS-PROXY]: Failed to write headers: `, e);
-        }
-      });
-
-    const getProxyTarget = async (req: IncomingMessage, contextHandler: ClusterContextHandler) => {
-      if (req.url?.startsWith(apiKubePrefix)) {
-        delete req.headers.authorization;
-        req.url = req.url.replace(apiKubePrefix, "");
-
-        return contextHandler.getApiTarget(isLongRunningRequest(req.url));
-      }
-
-      return undefined;
-    };
-
-    const handleRequest = async (req: IncomingMessage, res: ServerResponse) => {
-      const cluster = getClusterForRequest(req);
-
-      if (cluster) {
-        const proxyTarget = await getProxyTarget(req, cluster.contextHandler);
-
-        if (proxyTarget) {
-          return proxy.web(req, res, proxyTarget);
-        }
-      }
-
-      res.setHeader("Content-Security-Policy", contentSecurityPolicy);
-      await routeRequest(cluster, req, res);
-    };
+    const handleLensRequest = di.inject(handleLensRequestInjectable);
 
     const proxyServer = createServer(
       {
         key: certificate.private,
         cert: certificate.cert,
       },
-      handleRequest,
+      handleLensRequest.handle,
     )
       .on("upgrade", (req, socket, head) => {
         const cluster = getClusterForRequest(req);
@@ -238,7 +141,7 @@ const lensProxyInjectable = getInjectable({
       logger.info("[LENS-PROXY]: Closing server");
 
       proxyServer.close();
-      closed = true;
+      handleLensRequest.stopHandling();
     };
 
     return { close, listen };
