@@ -40,6 +40,12 @@ export interface KubeObjectListLayoutProps<
   store: KubeObjectStore<K, A, D>;
   dependentStores?: SubscribableStore[];
   subscribeStores?: boolean;
+
+  /**
+   * Customize resource name for e.g. search input ("Search <ResourceName>..."")
+   * If not provided, ResourceNames is used instead with a fallback to resource kind.
+   */
+  resourceName?: string;
 }
 
 interface Dependencies {
@@ -132,7 +138,7 @@ class NonInjectedKubeObjectListLayout<
       onDetails,
       ...layoutProps
     } = this.props;
-    const placeholderString = ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
+    const resourceName = this.props.resourceName || ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
 
     return (
       <ItemListLayout<K, false>
@@ -151,7 +157,7 @@ class NonInjectedKubeObjectListLayout<
             ),
             searchProps: {
               ...searchProps,
-              placeholder: `Search ${placeholderString}...`,
+              placeholder: `Search ${resourceName}...`,
             },
             info: (
               <>
