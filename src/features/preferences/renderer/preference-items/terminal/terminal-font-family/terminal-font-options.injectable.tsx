@@ -27,8 +27,8 @@ const terminalFontPreferenceModelInjectable = getInjectable({
     return {
       options: computed(() => terminalFonts.map(font => ({
         label: (
-          <span style={{ fontFamily: `${font}, var(--font-terminal)`, fontSize: userStore.terminalConfig.fontSize }}>
-            {font}
+          <span style={{ fontFamily: `${font.name}, var(--font-terminal)`, fontSize: userStore.terminalConfig.fontSize }}>
+            {font.name}
           </span>
         ),
         value: font.name,
