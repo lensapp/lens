@@ -13,7 +13,7 @@ export default getGlobalOverride(lensProxyInjectable, (di) => {
   return ({
     close: () => { },
     listen: async () => {
-      lensProxyPort.set(12345);
+      lensProxyPort.set(23456);
     },
   });
 });

@@ -35,7 +35,6 @@ import { overrideChannels } from "../../../test-utils/channel-fakes/override-cha
 import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
-import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
 import type { Route } from "../../../common/front-end-routing/front-end-route-injection-token";
 import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
@@ -72,9 +71,8 @@ import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
 import type { LensFetch } from "../../../common/fetch/lens-fetch.injectable";
 import lensFetchInjectable from "../../../common/fetch/lens-fetch.injectable";
 import handleLensRequestInjectable from "../../../main/lens-proxy/handle-lens-request.injectable";
-import httpMocks from "node-mocks-http";
 import nodeFetchModuleInjectable from "../../../common/fetch/fetch-module.injectable";
-import stream from "stream";
+import * as Shot from "@hapi/shot";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -223,26 +221,28 @@ export const getApplicationBuilder = () => {
     const handleLensRequest = mainDi.inject(handleLensRequestInjectable);
     const { Headers, Response } = di.inject(nodeFetchModuleInjectable);
 
-    const url = new URL(pathnameAndQuery, "https://127.0.0.1");
-    const req = httpMocks.createRequest({
-      method: (init?.method ?? "get").toUpperCase() as any,
-      url: url.pathname,
-      params: url.searchParams,
-      body: (init?.body ?? undefined) as any,
-      headers: new Headers(init?.headers) as any,
-    });
-    const duplex = new stream.Duplex();
-    const res = httpMocks.createResponse({
-      req,
-      writableStream: duplex,
-    });
+    const response = await Shot.inject(
+      handleLensRequest.handle as Shot.MaybeInjectionListener,
+      {
+        url: pathnameAndQuery,
+        headers: new Headers(init?.headers).raw(),
+        method: init?.method,
+        payload: init?.body ?? undefined,
+      },
+    );
 
-    await handleLensRequest.handle(req, res);
-
-    return new Response(duplex, {
-      headers: new Headers(res._getHeaders() as Record<string, string>),
-      status: res._getStatusCode(),
-      statusText: res._getStatusMessage(),
+    return new Response(response.rawPayload, {
+      headers: Object.entries(response.headers).map(([key, value]) => {
+        if (value === undefined) {
+          return [key];
+        } else if (Array.isArray(value)) {
+          return [key, value.join(",")];
+        } else {
+          return [key, value.toString()];
+        }
+      }),
+      status: response.statusCode,
+      statusText: response.statusMessage,
     });
   };
 
@@ -329,8 +329,6 @@ export const getApplicationBuilder = () => {
   const startMainApplication = mainDi.inject(startMainApplicationInjectable);
 
   const startApplication = async ({ shouldStartHidden }: { shouldStartHidden: boolean }) => {
-    mainDi.inject(lensProxyPortInjectable).set(42);
-
     for (const callback of beforeApplicationStartCallbacks) {
       await callback(mainDi);
     }

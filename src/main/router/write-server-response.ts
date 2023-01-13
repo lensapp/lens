@@ -8,10 +8,8 @@ import { object } from "../../common/utils";
 
 export interface LensServerResponse {
   statusCode: number;
-  content: any;
-  headers: {
-    [name: string]: string;
-  };
+  content: unknown;
+  headers: Partial<Record<string, string | string[]>>;
 }
 
 export const writeServerResponseFor = (serverResponse: ServerResponse) => ({

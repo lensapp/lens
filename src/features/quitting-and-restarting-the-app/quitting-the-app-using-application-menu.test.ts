@@ -64,14 +64,10 @@ describe("quitting the app using application menu", () => {
         expect(exitAppMock).not.toHaveBeenCalled();
       });
 
-      describe("after sufficient time passes", () => {
-        beforeEach(() => {
-          advanceFakeTime(1000);
-        });
+      it("after sufficient time passes, terminates application", () => {
+        advanceFakeTime(1000);
 
-        it("terminates application", () => {
-          expect(exitAppMock).toHaveBeenCalled();
-        });
+        expect(exitAppMock).toHaveBeenCalled();
       });
     });
   });

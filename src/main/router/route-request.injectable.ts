@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { DiContainerForInjection, Injectable, InjectionToken } from "@ogre-tools/injectable";
+import type { Injectable, InjectionToken } from "@ogre-tools/injectable";
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import type { Route, LensApiRequest } from "./route";
 import createHandlerForRouteInjectable from "./create-handler-for-route.injectable";
@@ -27,22 +27,16 @@ export function getRouteInjectable<T, Path extends string>(
 
 export type RouteRequest = (cluster: Cluster | undefined, req: IncomingMessage, res: ServerResponse) => Promise<boolean>;
 
-const createRouter = (di: DiContainerForInjection) => {
-  const routes = di.injectMany(routeInjectionToken);
-  const createHandlerForRoute = di.inject(createHandlerForRouteInjectable);
-  const router = new Call.Router<RouteHandler>();
-
-  for (const route of routes) {
-    router.add({ method: route.method, path: route.path }, createHandlerForRoute(route));
-  }
-
-  return router;
-};
-
 const routeRequestInjectable = getInjectable({
   id: "route-request",
   instantiate: (di): RouteRequest => {
-    const router = createRouter(di);
+    const routes = di.injectMany(routeInjectionToken);
+    const createHandlerForRoute = di.inject(createHandlerForRouteInjectable);
+    const router = new Call.Router<RouteHandler>();
+
+    for (const route of routes) {
+      router.add({ method: route.method, path: route.path }, createHandlerForRoute(route));
+    }
 
     return async (cluster, req, res) => {
       if (!req.url || !req.method) {
@@ -50,7 +44,7 @@ const routeRequestInjectable = getInjectable({
       }
 
       const url = new URL(req.url, "https://localhost");
-      const matchingRoute = router.route(req.method, url.pathname);
+      const matchingRoute = router.route(req.method?.toLowerCase() ?? "get", url.pathname);
 
       if (matchingRoute instanceof Error) {
         return false;

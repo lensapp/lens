@@ -304,6 +304,7 @@
   },
   "devDependencies": {
     "@async-fn/jest": "1.6.4",
+    "@hapi/shot": "^6.0.0",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
@@ -406,7 +407,6 @@
     "memfs": "^3.4.13",
     "memorystream": "^0.3.1",
     "mini-css-extract-plugin": "^2.7.2",
-    "mock-http": "^1.1.0",
     "monaco-editor": "^0.29.1",
     "monaco-editor-webpack-plugin": "^5.0.0",
     "node-gyp": "^8.3.0",
