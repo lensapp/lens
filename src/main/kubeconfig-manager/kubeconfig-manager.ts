@@ -21,12 +21,13 @@ export interface KubeconfigManagerDependencies {
   readonly directoryForTemp: string;
   readonly logger: Logger;
   readonly lensProxyPort: { get: () => number };
+  readonly certificate: SelfSignedCert;
+  readonly authHeaderToken: string;
   joinPaths: JoinPaths;
   getDirnameOfPath: GetDirnameOfPath;
   pathExists: PathExists;
   removePath: RemovePath;
   writeFile: WriteFile;
-  certificate: SelfSignedCert;
 }
 
 export class KubeconfigManager {
@@ -87,10 +88,6 @@ export class KubeconfigManager {
     }
   }
 
-  get resolveProxyUrl() {
-    return `https://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`;
-  }
-
   /**
    * Creates new "temporary" kubeconfig that point to the kubectl-proxy.
    * This way any user of the config does not need to know anything about the auth etc. details.
@@ -98,24 +95,36 @@ export class KubeconfigManager {
   protected async createProxyKubeconfig(): Promise<string> {
     const { cluster } = this;
     const { contextName, id } = cluster;
-    const tempFile = this.dependencies.joinPaths(
-      this.dependencies.directoryForTemp,
+    const {
+      certificate,
+      authHeaderToken,
+      joinPaths,
+      lensProxyPort,
+      writeFile,
+      directoryForTemp,
+      logger,
+    } = this.dependencies;
+
+    const tempFile = joinPaths(
+      directoryForTemp,
       `kubeconfig-${id}`,
     );
     const kubeConfig = await cluster.getKubeconfig();
-    const { certificate } = this.dependencies;
     const proxyConfig: PartialDeep<KubeConfig> = {
       currentContext: contextName,
       clusters: [
         {
           name: contextName,
-          server: this.resolveProxyUrl,
+          server: `https://127.0.0.1:${lensProxyPort.get()}/${cluster.id}`,
           skipTLSVerify: false,
           caData: Buffer.from(certificate.cert).toString("base64"),
         },
       ],
       users: [
-        { name: "proxy", username: "lens", password: "fake" },
+        {
+          name: "proxy",
+          token: authHeaderToken,
+        },
       ],
       contexts: [
         {
@@ -129,8 +138,8 @@ export class KubeconfigManager {
     // write
     const configYaml = dumpConfigYaml(proxyConfig);
 
-    await this.dependencies.writeFile(tempFile, configYaml, { mode: 0o600 });
-    this.dependencies.logger.debug(`[KUBECONFIG-MANAGER]: Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
+    await writeFile(tempFile, configYaml, { mode: 0o600 });
+    logger.debug(`[KUBECONFIG-MANAGER]: Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
 
     return tempFile;
   }

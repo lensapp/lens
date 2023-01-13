@@ -15,6 +15,7 @@ import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import writeFileInjectable from "../../common/fs/write-file.injectable";
 import removePathInjectable from "../../common/fs/remove.injectable";
 import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
+import authHeaderStateInjectable from "../../features/auth-header/common/header-state.injectable";
 
 export interface KubeConfigManagerInstantiationParameter {
   cluster: Cluster;
@@ -30,12 +31,13 @@ const createKubeconfigManagerInjectable = getInjectable({
       directoryForTemp: di.inject(directoryForTempInjectable),
       logger: di.inject(loggerInjectable),
       lensProxyPort: di.inject(lensProxyPortInjectable),
+      certificate: di.inject(lensProxyCertificateInjectable).get(),
+      authHeaderToken: di.inject(authHeaderStateInjectable).get(),
       joinPaths: di.inject(joinPathsInjectable),
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
       removePath: di.inject(removePathInjectable),
       pathExists: di.inject(pathExistsInjectable),
       writeFile: di.inject(writeFileInjectable),
-      certificate: di.inject(lensProxyCertificateInjectable).get(),
     };
 
     return (cluster) => new KubeconfigManager(dependencies, cluster);
