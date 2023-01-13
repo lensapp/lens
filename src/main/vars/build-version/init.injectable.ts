@@ -8,14 +8,14 @@ import buildVersionInjectable from "./build-version.injectable";
 
 const initializeBuildVersionInjectable = getInjectable({
   id: "initialize-build-version",
-  instantiate: (di) => {
-    const buildVersion = di.inject(buildVersionInjectable);
+  instantiate: (di) => ({
+    id: "initialize-build-version",
+    run: async () => {
+      const buildVersion = di.inject(buildVersionInjectable);
 
-    return {
-      id: "initialize-build-version",
-      run: () => buildVersion.init(),
-    };
-  },
+      await buildVersion.init();
+    },
+  }),
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });
 

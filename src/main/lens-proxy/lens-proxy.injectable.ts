@@ -10,7 +10,7 @@ import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-
 import type net from "net";
 import { createServer } from "https";
 import handleLensRequestInjectable from "./handle-lens-request.injectable";
-import routeUpgradeRequestInjectable from "./upgrade-router/router.injectable";
+import routeUpgradeRequestInjectable from "./upgrade-router/route-upgrade-request.injectable";
 
 export interface LensProxy {
   listen: () => Promise<void>;

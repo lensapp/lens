@@ -9,15 +9,15 @@ import initializeBuildVersionInjectable from "../build-version/init.injectable";
 
 const initSemanticBuildVersionInjectable = getInjectable({
   id: "init-semantic-build-version",
-  instantiate: (di) => {
-    const buildSemanticVersion = di.inject(buildSemanticVersionInjectable);
+  instantiate: (di) => ({
+    id: "init-semantic-build-version",
+    run: async () => {
+      const buildSemanticVersion = di.inject(buildSemanticVersionInjectable);
 
-    return {
-      id: "init-semantic-build-version",
-      run: () => buildSemanticVersion.init(),
-      runAfter: di.inject(initializeBuildVersionInjectable),
-    };
-  },
+      return buildSemanticVersion.init();
+    },
+    runAfter: di.inject(initializeBuildVersionInjectable),
+  }),
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });
 

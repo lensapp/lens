@@ -10,19 +10,17 @@ import initDefaultUpdateChannelInjectable from "../vars/default-update-channel/i
 
 const initUserStoreInjectable = getInjectable({
   id: "init-user-store",
-  instantiate: (di) => {
-    const userStore = di.inject(userStoreInjectable);
-    const userStoreFileNameMigration = di.inject(userStoreFileNameMigrationInjectable);
+  instantiate: (di) => ({
+    id: "init-user-store",
+    run: async () => {
+      const userStore = di.inject(userStoreInjectable);
+      const userStoreFileNameMigration = di.inject(userStoreFileNameMigrationInjectable);
 
-    return {
-      id: "init-user-store",
-      run: async () => {
-        await userStoreFileNameMigration();
-        userStore.load();
-      },
-      runAfter: di.inject(initDefaultUpdateChannelInjectable),
-    };
-  },
+      await userStoreFileNameMigration();
+      userStore.load();
+    },
+    runAfter: di.inject(initDefaultUpdateChannelInjectable),
+  }),
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });
 
