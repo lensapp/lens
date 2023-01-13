@@ -34,6 +34,10 @@ export class CatalogCategoryRegistry {
     };
   }
 
+  getById(id: string) {
+    return iter.find(this.categories.values(), (category) => category.getId() === id);
+  }
+
   @computed get items() {
     return Array.from(this.categories);
   }
