@@ -26,10 +26,12 @@ import loggerInjectable from "../../common/logger.injectable";
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import maybeKubeApiInjectable from "../../common/k8s-api/maybe-kube-api.injectable";
 import { DeploymentApi as InternalDeploymentApi, IngressApi as InternalIngressApi, NodeApi, PersistentVolumeClaimApi, PodApi } from "../../common/k8s-api/endpoints";
+import { storesAndApisCanBeCreatedInjectionToken } from "../../common/k8s-api/stores-apis-can-be-created.token";
 
 export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);
 export const forCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForClusterInjectable);
 export const forRemoteCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForRemoteClusterInjectable);
+export const createResourceStack = asLegacyGlobalFunctionForExtensionApi(createResourceStackInjectable);
 
 const getKubeApiDeps = (): KubeApiDependencies => {
   const di = getLegacyGlobalDiForExtensionApi();
@@ -45,15 +47,22 @@ function KubeApiCstr<
   Object extends KubeObject = KubeObject,
   Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
 >(opts: KubeApiOptions<Object, Data>) {
-  return new InternalKubeApi(getKubeApiDeps(), opts);
+  const api = new InternalKubeApi(getKubeApiDeps(), opts);
+
+  const di = getLegacyGlobalDiForExtensionApi();
+  const storesAndApisCanBeCreated = di.inject(storesAndApisCanBeCreatedInjectionToken);
+
+  if (storesAndApisCanBeCreated) {
+    apiManager.registerApi(api);
+  }
+
+  return api;
 }
 
 export const KubeApi = KubeApiCstr as unknown as new<
   Object extends KubeObject = KubeObject,
   Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
 >(opts: KubeApiOptions<Object, Data>) => InternalKubeApi<Object, Data>;
-
-export const createResourceStack = asLegacyGlobalFunctionForExtensionApi(createResourceStackInjectable);
 
 /**
  * @deprecated Switch to using `Common.createResourceStack` instead
@@ -174,31 +183,31 @@ export interface IgnoredKubeApiOptions {
 
 // NOTE: these *Constructor functions MUST be `function` to work with `new X()`
 function PodsApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) {
-  return new PodApi(getKubeApiDeps(), opts ?? {});
+  return new PodApi(getKubeApiDeps(), opts);
 }
 
 export const PodsApi = PodsApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => PodApi;
 
 function NodesApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) {
-  return new NodeApi(getKubeApiDeps(), opts ?? {});
+  return new NodeApi(getKubeApiDeps(), opts);
 }
 
 export const NodesApi = NodesApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => NodeApi;
 
 function DeploymentApiConstructor(opts?: DerivedKubeApiOptions) {
-  return new InternalDeploymentApi(getKubeApiDeps(), opts ?? {});
+  return new InternalDeploymentApi(getKubeApiDeps(), opts);
 }
 
 export const DeploymentApi = DeploymentApiConstructor as unknown as new (opts?: DerivedKubeApiOptions) => InternalDeploymentApi;
 
 function IngressApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) {
-  return new InternalIngressApi(getKubeApiDeps(), opts ?? {});
+  return new InternalIngressApi(getKubeApiDeps(), opts);
 }
 
 export const IngressApi = IngressApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => InternalIngressApi;
 
 function PersistentVolumeClaimsApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) {
-  return new PersistentVolumeClaimApi(getKubeApiDeps(), opts ?? {});
+  return new PersistentVolumeClaimApi(getKubeApiDeps(), opts);
 }
 
 export const PersistentVolumeClaimsApi = PersistentVolumeClaimsApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => PersistentVolumeClaimApi;

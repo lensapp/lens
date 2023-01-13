@@ -72,6 +72,27 @@ export type HorizontalPodAutoscalerMetricSpec =
   | OptionVarient<HpaMetricType.Pods, BaseHorizontalPodAutoscalerMetricSpec, "pods">
   | OptionVarient<HpaMetricType.ContainerResource, BaseHorizontalPodAutoscalerMetricSpec, "containerResource">;
 
+interface HorizontalPodAutoscalerBehavior {
+  scaleUp?: HPAScalingRules;
+  scaleDown?: HPAScalingRules;
+}
+
+interface HPAScalingRules {
+  stabilizationWindowSecond?: number;
+  selectPolicy?: ScalingPolicySelect;
+  policies?: HPAScalingPolicy[];
+}
+
+type ScalingPolicySelect = string;
+
+interface HPAScalingPolicy {
+  type: HPAScalingPolicyType;
+  value: number;
+  periodSeconds: number;
+}
+
+type HPAScalingPolicyType = string;
+
 export interface ContainerResourceMetricStatus {
   container: string;
   currentAverageUtilization?: number;
@@ -132,6 +153,7 @@ export interface HorizontalPodAutoscalerSpec {
   minReplicas?: number;
   maxReplicas: number;
   metrics?: HorizontalPodAutoscalerMetricSpec[];
+  behavior?: HorizontalPodAutoscalerBehavior;
 }
 
 export interface HorizontalPodAutoscalerStatus {
@@ -153,7 +175,7 @@ export class HorizontalPodAutoscaler extends KubeObject<
 > {
   static readonly kind = "HorizontalPodAutoscaler";
   static readonly namespaced = true;
-  static readonly apiBase = "/apis/autoscaling/v2beta1/horizontalpodautoscalers";
+  static readonly apiBase = "/apis/autoscaling/v2/horizontalpodautoscalers";
 
   getMaxPods() {
     return this.spec.maxReplicas ?? 0;
@@ -204,8 +226,15 @@ export class HorizontalPodAutoscaler extends KubeObject<
 export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
-      objectConstructor: HorizontalPodAutoscaler,
       ...opts ?? {},
+      objectConstructor: HorizontalPodAutoscaler,
+      checkPreferredVersion: true,
+      // Kubernetes < 1.26
+      fallbackApiBases: [
+        "/apis/autoscaling/v2beta2/horizontalpodautoscalers",
+        "/apis/autoscaling/v2beta1/horizontalpodautoscalers",
+        "/apis/autoscaling/v1/horizontalpodautoscalers",
+      ],
     });
   }
 }

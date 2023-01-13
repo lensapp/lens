@@ -34,7 +34,7 @@ export const WorkloadEvents = withInjectables<Dependencies, WorkloadEventsProps>
   getProps: (di, props) => ({
     workloadEventsAreAllowed: di.inject(shouldShowResourceInjectionToken, {
       apiName: "events",
-      group: "v1",
+      group: "",
     }),
     ...props,
   }),

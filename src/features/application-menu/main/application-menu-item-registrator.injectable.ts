@@ -2,6 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { computed } from "mobx";
 import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
@@ -25,11 +26,15 @@ const applicationMenuItemRegistratorInjectable = getInjectable({
     const toRecursedInjectables = toRecursedInjectablesFor(logError);
 
     return (ext: LensExtension) => {
-      const extension = ext as LensMainExtension;
+      const mainExtension = ext as LensMainExtension;
 
-      return extension.appMenus.flatMap(
-        toRecursedInjectables([extension.sanitizedExtensionId]),
-      );
+      return computed(() => {
+        const appMenus = Array.isArray(mainExtension.appMenus) ? mainExtension.appMenus : mainExtension.appMenus.get();
+
+        return appMenus.flatMap(
+          toRecursedInjectables([mainExtension.sanitizedExtensionId]),
+        );
+      });
     };
   },
 

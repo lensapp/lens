@@ -14,7 +14,7 @@ const limitRangesRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "limitranges",
-      group: "v1",
+      group: "",
     }),
   }),
 

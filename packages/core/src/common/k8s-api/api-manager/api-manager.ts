@@ -5,11 +5,12 @@
 
 import type { KubeObjectStore } from "../kube-object.store";
 
-import { action, observable, makeObservable } from "mobx";
-import { autoBind, isDefined, iter } from "../../utils";
+import type { IComputedValue } from "mobx";
+import { autorun,  action, observable } from "mobx";
 import type { KubeApi } from "../kube-api";
-import type { KubeJsonApiDataFor, KubeObject, ObjectReference } from "../kube-object";
+import type { KubeObject, ObjectReference } from "../kube-object";
 import { parseKubeApi, createKubeApiURL } from "../kube-api-parse";
+import { chain, find } from "../../utils/iter";
 
 export type RegisterableStore<Store> = Store extends KubeObjectStore<any, any, any>
   ? Store
@@ -21,25 +22,53 @@ export type KubeObjectStoreFrom<Api> = Api extends KubeApi<infer KubeObj, infer 
   ? KubeObjectStore<KubeObj, Api, ApiData>
   : never;
 
-export class ApiManager {
-  private readonly apis = observable.map<string, KubeApi>();
-  private readonly stores = observable.map<string, KubeObjectStore>();
+export type FindApiCallback = (api: KubeApi<KubeObject>) => boolean;
 
-  constructor() {
-    makeObservable(this);
-    autoBind(this);
+interface Dependencies {
+  readonly apis: IComputedValue<KubeApi[]>;
+  readonly stores: IComputedValue<KubeObjectStore[]>;
+}
+
+export class ApiManager {
+  private readonly externalApis = observable.array<KubeApi>();
+  private readonly externalStores = observable.array<KubeObjectStore>();
+
+  private readonly apis = observable.map<string, KubeApi>();
+
+  constructor(private readonly dependencies: Dependencies) {
+    // NOTE: this is done to preserve the old behaviour of an API being discoverable using all previous apiBases
+    autorun(() => {
+      const apis = chain(this.dependencies.apis.get().values())
+        .concat(this.externalApis.values());
+      const removedApis = new Set(this.apis.values());
+
+      for (const api of apis) {
+        removedApis.delete(api);
+        this.apis.set(api.apiBase, api);
+      }
+
+      for (const api of removedApis) {
+        for (const [apiBase, storedApi] of this.apis) {
+          if (storedApi === api) {
+            this.apis.delete(apiBase);
+          }
+        }
+      }
+    });
   }
 
-  getApi(pathOrCallback: string | ((api: KubeApi<KubeObject>) => boolean)) {
-    if (typeof pathOrCallback === "string") {
-      return this.apis.get(pathOrCallback) || this.apis.get(parseKubeApi(pathOrCallback).apiBase);
+  getApi(pathOrCallback: string | FindApiCallback) {
+    if (typeof pathOrCallback === "function") {
+      return find(this.apis.values(), pathOrCallback);
     }
 
-    return iter.find(this.apis.values(), pathOrCallback ?? (() => true));
+    const { apiBase } = parseKubeApi(pathOrCallback);
+
+    return this.apis.get(apiBase);
   }
 
   getApiByKind(kind: string, apiVersion: string) {
-    return iter.find(this.apis.values(), api => api.kind === kind && api.apiVersionWithGroup === apiVersion);
+    return this.getApi(api => api.kind === kind && api.apiVersionWithGroup === apiVersion);
   }
 
   registerApi<Api>(api: RegisterableApi<Api>): void;
@@ -47,45 +76,23 @@ export class ApiManager {
    * @deprecated Just register the `api` by itself
    */
   registerApi<Api>(apiBase: string, api: RegisterableApi<Api>): void;
-  registerApi<Api>(apiBaseRaw: string | RegisterableApi<Api>, apiRaw?: RegisterableApi<Api>) {
-    const api = typeof apiBaseRaw === "string"
-      ? apiRaw
-      : apiBaseRaw;
-
-    if (!api?.apiBase) {
-      return;
-    }
-
-    if (!this.apis.has(api.apiBase)) {
-      this.stores.forEach((store) => {
-        if (store.api === api) {
-          this.stores.set(api.apiBase, store);
-        }
-      });
-
-      this.apis.set(api.apiBase, api);
+  registerApi<Api>(...args: [RegisterableApi<Api>] | [string, RegisterableApi<Api>]) {
+    if (args.length === 1) {
+      this.externalApis.push(args[0]);
+    } else {
+      this.externalApis.push(args[1]);
     }
   }
 
-  protected resolveApi(api: undefined | string | KubeApi): KubeApi | undefined {
-    if (!api) {
-      return undefined;
-    }
+  unregisterApi(apiOrBase: string | KubeApi<KubeObject>) {
+    if (typeof apiOrBase === "string") {
+      const api = this.externalApis.find(api => api.apiBase === apiOrBase);
 
-    if (typeof api === "string") {
-      return this.getApi(api);
-    }
-
-    return api;
-  }
-
-  unregisterApi(api: string | KubeApi<KubeObject>) {
-    if (typeof api === "string") this.apis.delete(api);
-    else {
-      const apis = Array.from(this.apis.entries());
-      const entry = apis.find(entry => entry[1] === api);
-
-      if (entry) this.unregisterApi(entry[0]);
+      if (api) {
+        this.externalApis.remove(api);
+      }
+    } else {
+      this.unregisterApi(apiOrBase.apiBase);
     }
   }
 
@@ -93,15 +100,11 @@ export class ApiManager {
   /**
    * @deprecated KubeObjectStore's should only every be about a single KubeApi type
    */
-  registerStore<KubeObj extends KubeObject>(store: KubeObjectStore<KubeObj, KubeApi<KubeObj>, KubeJsonApiDataFor<KubeObj>>, apis: KubeApi<KubeObj>[]): void;
+  registerStore<KubeObj>(store: RegisterableStore<KubeObj>, apis: KubeApi<KubeObject>[]): void;
 
   @action
-  registerStore<KubeObj extends KubeObject>(store: KubeObjectStore<KubeObj, KubeApi<KubeObj>, KubeJsonApiDataFor<KubeObj>>, apis: KubeApi<KubeObj>[] = [store.api]): void {
-    for (const api of apis.filter(isDefined)) {
-      if (api.apiBase) {
-        this.stores.set(api.apiBase, store as never);
-      }
-    }
+  registerStore<KubeObj>(store: RegisterableStore<KubeObj>): void {
+    this.externalStores.push(store);
   }
 
   getStore(api: string | undefined): KubeObjectStore | undefined;
@@ -110,14 +113,23 @@ export class ApiManager {
    * @deprecated use an actual cast instead of hiding it with this unused type param
    */
   getStore<Store extends KubeObjectStore>(api: string | KubeApi): Store | undefined ;
-  getStore(api: string | KubeApi | undefined): KubeObjectStore | undefined {
-    const { apiBase } = this.resolveApi(api) ?? {};
-
-    if (apiBase) {
-      return this.stores.get(apiBase);
+  getStore(apiOrBase: string | KubeApi | undefined): KubeObjectStore | undefined {
+    if (!apiOrBase) {
+      return undefined;
     }
 
-    return undefined;
+    const { apiBase } = typeof apiOrBase === "string"
+      ? parseKubeApi(apiOrBase)
+      : apiOrBase;
+    const api = this.getApi(apiBase);
+
+    if (!api) {
+      return undefined;
+    }
+
+    return chain(this.dependencies.stores.get().values())
+      .concat(this.externalStores.values())
+      .find(store => store.api.apiBase === api.apiBase);
   }
 
   lookupApiLink(ref: ObjectReference, parentObject?: KubeObject): string {
@@ -132,7 +144,7 @@ export class ApiManager {
     const api = this.getApi(api => api.kind === kind && api.apiVersionWithGroup == apiVersion);
 
     if (api) {
-      return api.getUrl({ namespace, name });
+      return api.formatUrlForNotListing({ namespace, name });
     }
 
     // lookup api by generated resource link
@@ -151,7 +163,7 @@ export class ApiManager {
     const apiByKind = this.getApi(api => api.kind === kind);
 
     if (apiByKind) {
-      return apiByKind.getUrl({ name, namespace });
+      return apiByKind.formatUrlForNotListing({ name, namespace });
     }
 
     // otherwise generate link with default prefix
