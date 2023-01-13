@@ -37,6 +37,7 @@ const lensFetchInjectable = getInjectable({
       return fetch(`https://127.0.0.1:${lensProxyPort.get()}${pathnameAndQuery}`, {
         ...init,
         agent,
+        headers,
       });
     };
   },
