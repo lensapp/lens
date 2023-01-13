@@ -3,8 +3,26 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { JsonValue } from "type-fest";
+import type { Result } from "./result";
 
-export function parse(input: string): JsonValue {
-  return JSON.parse(input);
+export interface JsonParseError {
+  cause: SyntaxError;
+  text: string;
+}
+
+export function parse(text: string): Result<unknown, JsonParseError> {
+  try {
+    return {
+      isOk: true,
+      value: JSON.parse(text),
+    };
+  } catch (error) {
+    return {
+      isOk: false,
+      error: {
+        cause: error as SyntaxError,
+        text,
+      },
+    };
+  }
 }

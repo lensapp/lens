@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { JsonObject } from "type-fest";
-import { json } from "../../../../../common/utils";
 import yaml from "js-yaml";
 import execFileWithInputInjectable from "./exec-file-with-input/exec-file-with-input.injectable";
 import { getErrorMessage } from "../../../../../common/utils/get-error-message";
@@ -60,7 +59,7 @@ const callForKubeResourcesByManifestInjectable = getInjectable({
         throw new Error(errorMessage);
       }
 
-      const output = json.parse(result.response) as { items: JsonObject[] };
+      const output = JSON.parse(result.response) as { items: JsonObject[] };
 
       return output.items;
     };

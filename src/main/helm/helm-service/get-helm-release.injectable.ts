@@ -22,7 +22,7 @@ const getHelmReleaseInjectable = getInjectable({
 
       logger.debug("Fetch release");
 
-      const result = await execHelm([
+      const helmResult = await execHelm([
         "status",
         releaseName,
         "--namespace",
@@ -33,15 +33,21 @@ const getHelmReleaseInjectable = getInjectable({
         "json",
       ]);
 
-      if (!result.callWasSuccessful) {
-        logger.warn(`Failed to exectute helm: ${result.error}`);
+      if (!helmResult.callWasSuccessful) {
+        logger.warn(`Failed to exectute helm: ${helmResult.error}`);
 
         return undefined;
       }
 
-      const release = json.parse(result.response);
+      const { isOk, error, value } = json.parse(helmResult.response);
 
-      if (!isObject(release) || Array.isArray(release)) {
+      if (!isOk) {
+        logger.warn(`Failed to get helm release resources: ${error.cause}`);
+
+        return undefined;
+      }
+
+      if (!isObject(value) || Array.isArray(value)) {
         return undefined;
       }
 
@@ -58,7 +64,7 @@ const getHelmReleaseInjectable = getInjectable({
       }
 
       return {
-        ...release,
+        ...value,
         resources: resourcesResult.response,
       };
     };

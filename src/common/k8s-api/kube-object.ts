@@ -7,7 +7,7 @@
 
 import moment from "moment";
 import type { KubeJsonApiData, KubeJsonApiDataList, KubeJsonApiListMetadata } from "./kube-json-api";
-import { autoBind, formatDuration, hasOptionalTypedProperty, hasTypedProperty, isObject, isString, isNumber, bindPredicate, isTypedArray, isRecord, json } from "../utils";
+import { autoBind, formatDuration, hasOptionalTypedProperty, hasTypedProperty, isObject, isString, isNumber, bindPredicate, isTypedArray, isRecord } from "../utils";
 import type { ItemObject } from "../item.store";
 import type { Patch } from "rfc6902";
 import assert from "assert";
@@ -624,7 +624,7 @@ export class KubeObject<
   }
 
   toPlainObject() {
-    return json.parse(JSON.stringify(this)) as JsonObject;
+    return JSON.parse(JSON.stringify(this)) as JsonObject;
   }
 
   /**

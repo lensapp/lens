@@ -16,7 +16,6 @@ import { EventEmitter } from "../../common/event-emitter";
 import type { Logger } from "../../common/logger";
 import type { Fetch } from "../fetch/fetch.injectable";
 import type { Defaulted } from "../utils";
-import { json } from "../utils";
 
 export interface JsonApiData {}
 
@@ -194,7 +193,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
     let data: any;
 
     try {
-      data = text ? json.parse(text) : ""; // DELETE-requests might not have response-body
+      data = text ? JSON.parse(text) : ""; // DELETE-requests might not have response-body
     } catch (e) {
       data = text;
     }
