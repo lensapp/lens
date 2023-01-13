@@ -20,7 +20,6 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install --frozen-lockfile
-          yarn lerna bootstrap
       - name: Bump version to first alpha of next minor version
         id: bump
         run: |

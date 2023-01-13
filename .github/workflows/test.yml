@@ -51,7 +51,7 @@ jobs:
           timeout_minutes: 10
           max_attempts: 3
           retry_on: error
-          command: yarn install --frozen-lockfile && yarn lerna bootstrap
+          command: yarn install --frozen-lockfile
 
       - run: make test
         name: Run tests
@@ -72,14 +72,14 @@ jobs:
         name: Run Linux integration tests
         if: ${{ runner.os == 'Linux' && matrix.type == 'smoke' }}
 
-      - run: make integration
+      - run: yarn run test:integration
         name: Run macOS integration tests
         shell: bash
         env:
           ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --arm64"
         if: ${{ runner.os == 'macOS' && matrix.type == 'smoke' }}
 
-      - run: make integration
+      - run: yarn run test:integration
         name: Run Windows integration tests
         shell: bash
         env:

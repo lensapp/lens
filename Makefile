@@ -5,15 +5,9 @@ CMD_ARGS = $(filter-out $@,$(MAKECMDGOALS))
 
 ELECTRON_BUILDER_EXTRA_ARGS ?=
 
-ifeq ($(OS),Windows_NT)
-    DETECTED_OS := Windows
-else
-    DETECTED_OS := $(shell uname)
-endif
-
-node_modules: yarn.lock
-	yarn install --check-files --frozen-lockfile --network-timeout=100000
-	yarn lerna bootstrap
+.PHONY: bootstrap
+bootstrap:
+	yarn install
 
 .PHONY: lint
 lint: node_modules
@@ -29,13 +23,7 @@ integration: build
 
 .PHONY: build
 build:
-	yarn run build
-ifeq "$(DETECTED_OS)" "Windows"
-# https://github.com/ukoloff/win-ca#clear-pem-folder-on-publish
-	rm -rf packages/core/node_modules/win-ca/pem
-endif
-	yarn lerna run build:app --publish onTag $(ELECTRON_BUILDER_EXTRA_ARGS)
-
+	yarn lerna run build:app
 
 .PHONY: clean
 clean:

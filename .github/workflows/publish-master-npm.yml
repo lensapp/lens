@@ -28,7 +28,6 @@ jobs:
       - name: Generate NPM packages
         run: |
           yarn install --frozen-lockfile
-          yarn lerna bootstrap
           yarn run build
 
       - name: Publish NPM package

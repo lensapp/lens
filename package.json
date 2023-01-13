@@ -7,6 +7,7 @@
     "adr:update-readme": "adr update",
     "adr:list": "adr list",
     "build": "lerna run --stream build",
+    "build:app": "lerna run --stream build:app",
     "build:docs": "lerna run --stream build:docs",
     "clean": "lerna run clean --stream",
     "clean:node_modules": "lerna clean -y && rm -rf node_modules",
@@ -17,7 +18,8 @@
     "test:integration": "lerna run --stream test:integration",
     "bump-version": "lerna version --no-git-tag-version --no-push",
     "precreate-release-pr": "lerna run build --no-progress --scope @k8slens/release-tool",
-    "create-release-pr": "node ./packages/release-tool/dist/index.mjs"
+    "create-release-pr": "node ./packages/release-tool/dist/index.mjs",
+    "postinstall": "lerna bootstrap"
   },
   "devDependencies": {
     "adr": "^1.4.3",
