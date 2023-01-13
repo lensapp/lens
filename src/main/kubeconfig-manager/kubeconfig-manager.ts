@@ -50,11 +50,15 @@ export class KubeconfigManager {
    * @returns The path to the temporary kubeconfig
    */
   async getPath(): Promise<string> {
-    if (this.tempFilePath === null || !(await this.dependencies.pathExists(this.tempFilePath))) {
+    if (!this.tempFilePath) {
       return await this.ensureFile();
     }
 
-    return this.tempFilePath;
+    if (await this.dependencies.pathExists(this.tempFilePath)) {
+      return this.tempFilePath;
+    }
+
+    return await this.ensureFile();
   }
 
   /**
