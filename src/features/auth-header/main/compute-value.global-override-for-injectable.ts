@@ -6,4 +6,4 @@
 import { getGlobalOverride } from "../../../common/test-utils/get-global-override";
 import computeAuthHeaderValueInjectable from "./compute-value.injectable";
 
-export default getGlobalOverride(computeAuthHeaderValueInjectable, () => async () => "some-auth-header-value");
+export default getGlobalOverride(computeAuthHeaderValueInjectable, () => () => "some-auth-header-value");
