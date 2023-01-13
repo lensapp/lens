@@ -16,7 +16,6 @@ const setupKubernetesClusterCatalogAddMenuListenerInjectable = getInjectable({
   instantiate: (di) => ({
     id: "setup-kubernetes-cluster-catalog-add-menu-listener",
     run: () => {
-      // NOTE: these have to be here so that they are initialized only after the `runAfter` is ran
       const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
       const addSyncEntries = di.inject(addSyncEntriesInjectable);
       const kubernetesClusterCategory = di.inject(kubernetesClusterCategoryInjectable);
