@@ -15,7 +15,7 @@ import type { HelmRepo } from "../../common/helm/helm-repo";
 import requestPublicHelmRepositoriesInjectable from "./child-features/preferences/renderer/adding-of-public-helm-repository/public-helm-repositories/request-public-helm-repositories.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
-import type { AsyncResult } from "../../common/utils/async-result";
+import type { AsyncResult } from "../../common/utils/result";
 
 describe("add helm repository from list in preferences", () => {
   let builder: ApplicationBuilder;

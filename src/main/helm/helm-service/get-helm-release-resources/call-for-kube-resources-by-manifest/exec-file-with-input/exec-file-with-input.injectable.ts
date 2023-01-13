@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { AsyncResult } from "../../../../../../common/utils/async-result";
+import type { AsyncResult } from "../../../../../../common/utils/result";
 import nonPromiseExecFileInjectable from "./non-promise-exec-file.injectable";
 import { isNumber } from "../../../../../../common/utils";
 import assert from "assert";

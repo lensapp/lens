@@ -11,7 +11,7 @@ import loggerInjectable from "../../../common/logger.injectable";
 import processExecPathInjectable from "./execPath.injectable";
 import processEnvInjectable from "./env.injectable";
 import { object } from "../../../common/utils";
-import type { AsyncResult } from "../../../common/utils/async-result";
+import type { AsyncResult } from "../../../common/utils/result";
 
 export interface UnixShellEnvOptions {
   signal: AbortSignal;

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { urlBuilderFor } from "../../../utils/buildUrl";
-import type { AsyncResult } from "../../../utils/async-result";
+import type { AsyncResult } from "../../../utils/result";
 import apiBaseInjectable from "../../api-base.injectable";
 
 interface HelmReleaseUpdatePayload {

@@ -5,7 +5,7 @@
 import { getDiForUnitTesting } from "../../../../../getDiForUnitTesting";
 import type { ExecFileWithInput } from "./exec-file-with-input.injectable";
 import execFileWithInputInjectable from "./exec-file-with-input.injectable";
-import type { AsyncResult } from "../../../../../../common/utils/async-result";
+import type { AsyncResult } from "../../../../../../common/utils/result";
 import nonPromiseExecFileInjectable from "./non-promise-exec-file.injectable";
 import { getPromiseStatus } from "../../../../../../common/test-utils/get-promise-status";
 import EventEmitter from "events";

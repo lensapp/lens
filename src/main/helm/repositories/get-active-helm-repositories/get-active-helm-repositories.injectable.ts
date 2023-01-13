@@ -9,7 +9,7 @@ import readYamlFileInjectable from "../../../../common/fs/read-yaml-file.injecta
 import getHelmEnvInjectable from "../../get-helm-env/get-helm-env.injectable";
 import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
-import type { AsyncResult } from "../../../../common/utils/async-result";
+import type { AsyncResult } from "../../../../common/utils/result";
 
 interface HelmRepositoryFromYaml {
   name: string;

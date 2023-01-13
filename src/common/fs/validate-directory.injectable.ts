@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { AsyncResult } from "../utils/async-result";
+import type { AsyncResult } from "../utils/result";
 import { isErrnoException } from "../utils";
 import type { Stats } from "fs-extra";
 import { lowerFirst } from "lodash/fp";

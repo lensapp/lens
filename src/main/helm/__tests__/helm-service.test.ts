@@ -6,7 +6,7 @@
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import listHelmChartsInjectable from "../helm-service/list-helm-charts.injectable";
 import getActiveHelmRepositoriesInjectable from "../repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
-import type { AsyncResult } from "../../../common/utils/async-result";
+import type { AsyncResult } from "../../../common/utils/result";
 import type { HelmRepo } from "../../../common/helm/helm-repo";
 import { sortBySemverVersion } from "../../../common/utils";
 import helmChartManagerInjectable from "../helm-chart-manager.injectable";

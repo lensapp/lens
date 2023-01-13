@@ -13,7 +13,7 @@ import releasesInjectable from "../../+helm-releases/releases.injectable";
 import updateReleaseInjectable from "../../+helm-releases/update-release/update-release.injectable";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import requestHelmReleaseConfigurationInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
-import type { AsyncResult } from "../../../../common/utils/async-result";
+import type { AsyncResult } from "../../../../common/utils/result";
 import { waitUntilDefined } from "../../../utils";
 import type { SelectOption } from "../../select";
 import type { DockTab } from "../dock/store";

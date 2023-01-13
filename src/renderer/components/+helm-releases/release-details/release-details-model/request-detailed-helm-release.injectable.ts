@@ -7,7 +7,7 @@ import type { HelmReleaseDto } from "../../../../../common/k8s-api/endpoints/hel
 import requestHelmReleasesInjectable from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
 import type { HelmReleaseDetails } from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-details.injectable";
 import requestHelmReleaseDetailsInjectable from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-details.injectable";
-import type { AsyncResult } from "../../../../../common/utils/async-result";
+import type { AsyncResult } from "../../../../../common/utils/result";
 
 export interface DetailedHelmRelease {
   release: HelmReleaseDto;

@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
 import type { HelmRepo } from "../../../../common/helm/helm-repo";
 import loggerInjectable from "../../../../common/logger.injectable";
-import type { AsyncResult } from "../../../../common/utils/async-result";
+import type { AsyncResult } from "../../../../common/utils/result";
 
 const removeHelmRepositoryInjectable = getInjectable({
   id: "remove-helm-repository",

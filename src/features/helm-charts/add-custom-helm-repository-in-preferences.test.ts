@@ -17,7 +17,7 @@ import requestPublicHelmRepositoriesInjectable from "./child-features/preference
 import isPathInjectable from "../../renderer/components/input/validators/is-path.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
-import type { AsyncResult } from "../../common/utils/async-result";
+import type { AsyncResult } from "../../common/utils/result";
 
 describe("add custom helm repository in preferences", () => {
   let builder: ApplicationBuilder;

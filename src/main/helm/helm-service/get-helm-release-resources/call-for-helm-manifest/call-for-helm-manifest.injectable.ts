@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { AsyncResult } from "../../../../../common/utils/async-result";
+import type { AsyncResult } from "../../../../../common/utils/result";
 import execHelmInjectable from "../../../exec-helm/exec-helm.injectable";
 import yaml from "js-yaml";
 import type { KubeJsonApiData, KubeJsonApiDataList } from "../../../../../common/k8s-api/kube-json-api";

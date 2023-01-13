@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import apiBaseInjectable from "../../api-base.injectable";
-import type { AsyncResult } from "../../../utils/async-result";
+import type { AsyncResult } from "../../../utils/result";
 import type { KubeJsonApiData } from "../../kube-json-api";
 
 export type RequestKubeObjectCreation = (resourceDescriptor: string) => Promise<AsyncResult<KubeJsonApiData, string>>;

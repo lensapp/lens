@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import execFileInjectable from "../fs/exec-file.injectable";
 import loggerInjectable from "../logger.injectable";
-import type { AsyncResult } from "../utils/async-result";
+import type { AsyncResult } from "../utils/result";
 import { requestSystemCAsInjectionToken } from "./request-system-cas-token";
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet#other_assertions

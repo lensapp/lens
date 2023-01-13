@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RequestInit, Response } from "node-fetch";
-import type { AsyncResult } from "../utils/async-result";
+import type { AsyncResult } from "../utils/result";
 import fetchInjectable from "./fetch.injectable";
 
 export interface DownloadBinaryOptions {

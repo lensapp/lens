@@ -14,7 +14,7 @@ import type { WriteFile } from "../../common/fs/write-file.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
-import type { AsyncResult } from "../../common/utils/async-result";
+import type { AsyncResult } from "../../common/utils/result";
 
 export interface ResourceApplierDependencies {
   emitAppEvent: EmitAppEvent;

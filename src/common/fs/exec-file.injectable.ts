@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ExecFileException, ExecFileOptions } from "child_process";
 import { execFile } from "child_process";
-import type { AsyncResult } from "../utils/async-result";
+import type { AsyncResult } from "../utils/result";
 
 export type ExecFileError = ExecFileException & { stderr: string };
 
