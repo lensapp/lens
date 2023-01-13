@@ -18,7 +18,8 @@
   "scripts": {
     "build": "yarn run webpack --config webpack/extensions.ts",
     "build-docs": "yarn run typedoc",
-    "clean": "rm -rf dist/"
+    "clean": "rm -rf dist/",
+    "prepare:dev": "yarn run build"
   },
   "dependencies": {
     "@k8slens/open-lens": "^6.4.0-alpha.2"

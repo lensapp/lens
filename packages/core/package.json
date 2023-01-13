@@ -49,6 +49,7 @@
     "build": "env NODE_ENV=production yarn run webpack --config webpack/library-bundle.ts",
     "clean": "rm -rf dist webpack/build/ static/build",
     "compile:node-fetch": "yarn run webpack --config webpack/node-fetch.ts",
+    "prepare:dev": "env NODE_ENV=development yarn run webpack --config webpack/library-bundle.ts --progress",
     "dev": "env NODE_ENV=development yarn run webpack --config webpack/library-bundle.ts --watch",
     "prepare": "yarn run compile:node-fetch",
     "test:unit": "func() { jest ${1} --testPathIgnorePatterns integration; }; func",

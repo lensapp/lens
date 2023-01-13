@@ -4,7 +4,8 @@
       "runner": "nx/tasks-runners/default",
       "options": {
         "cacheableOperations": [
-          "build"
+          "build",
+          "prepare:dev"
         ]
       }
     }
@@ -13,19 +14,21 @@
     "build": {
       "dependsOn": [
         "^build"
-      ],
-      "outputs": [
-        "{workspaceRoot}/dist"
       ]
     },
     "build:app": {
       "dependsOn": [
-        "build"
+        "^build"
+      ]
+    },
+    "dev": {
+      "dependsOn": [
+        "prepare:dev"
       ]
     },
     "test:integration": {
       "dependsOn": [
-        "build:app"
+        "^build:app"
       ]
     }
   }
