@@ -4,14 +4,14 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IpcMainEvent } from "electron";
-import ipcMainInjectable from "../ipc-main/ipc-main.injectable";
 import { enlistMessageChannelListenerInjectionToken } from "../../../../common/utils/channel/enlist-message-channel-listener-injection-token";
+import ipcMainInjectionToken from "../../../../common/ipc/ipc-main-injection-token";
 
 const enlistMessageChannelListenerInjectable = getInjectable({
   id: "enlist-message-channel-listener-for-main",
 
   instantiate: (di) => {
-    const ipcMain = di.inject(ipcMainInjectable);
+    const ipcMain = di.inject(ipcMainInjectionToken);
 
     return ({ channel, handler }) => {
       const nativeOnCallback = (_: IpcMainEvent, message: unknown) => {
