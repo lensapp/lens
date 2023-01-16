@@ -8,7 +8,7 @@ import { observable } from "mobx";
 import React, { useState } from "react";
 import { broadcastMessage } from "../../../common/ipc";
 import type { CatalogEntity, CatalogEntityContextMenu } from "../../api/catalog-entity";
-import { IpcRendererNavigationEvents } from "../../navigation/events";
+import { IpcRendererNavigationEvents } from "../../../common/ipc/navigation-events";
 import { Avatar } from "../avatar";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";

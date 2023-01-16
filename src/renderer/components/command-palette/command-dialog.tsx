@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import commandOverlayInjectable from "./command-overlay.injectable";
 import type { CatalogEntity } from "../../../common/catalog";
 import { broadcastMessage } from "../../../common/ipc";
-import { IpcRendererNavigationEvents } from "../../navigation/events";
+import { IpcRendererNavigationEvents } from "../../../common/ipc/navigation-events";
 import type { RegisteredCommand } from "./registered-commands/commands";
 import { iter } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
