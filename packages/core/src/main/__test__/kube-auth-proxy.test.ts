@@ -4,7 +4,7 @@
  */
 
 import waitUntilPortIsUsedInjectable from "../kube-auth-proxy/wait-until-port-is-used/wait-until-port-is-used.injectable";
-import type { Cluster } from "../../common/cluster/cluster";
+import { Cluster } from "../../common/cluster/cluster";
 import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
 import type { ChildProcess } from "child_process";
 import { Kubectl } from "../kubectl/kubectl";
@@ -14,8 +14,6 @@ import type { Readable } from "stream";
 import { EventEmitter } from "stream";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
-import type { CreateCluster } from "../../common/cluster/create-cluster-injection-token";
-import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
 import spawnInjectable from "../child-process/spawn.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
@@ -31,7 +29,6 @@ import getBasenameOfPathInjectable from "../../common/path/get-basename.injectab
 const clusterServerUrl = "https://192.168.64.3:8443";
 
 describe("kube auth proxy tests", () => {
-  let createCluster: CreateCluster;
   let createKubeAuthProxy: (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
   let spawnMock: jest.Mock;
   let waitUntilPortIsUsedMock: jest.Mock;
@@ -86,12 +83,11 @@ describe("kube auth proxy tests", () => {
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
 
-    createCluster = di.inject(createClusterInjectionToken);
     createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
   });
 
   it("calling exit multiple times shouldn't throw", async () => {
-    const cluster = createCluster({
+    const cluster = new Cluster({
       id: "foobar",
       kubeConfigPath: "minikube-config.yml",
       contextName: "minikube",
@@ -114,8 +110,11 @@ describe("kube auth proxy tests", () => {
     beforeEach(async () => {
       mockedCP = mockDeep<ChildProcess>();
       listeners = new EventEmitter();
-      const stderr = mockedCP.stderr = mock<Readable>();
-      const stdout = mockedCP.stdout = mock<Readable>();
+      const stderr = mock<Readable>();
+      const stdout = mock<Readable>();
+
+      mockedCP.stderr = stderr as any;
+      mockedCP.stdout = stdout as any;
 
       jest.spyOn(Kubectl.prototype, "checkBinary").mockReturnValueOnce(Promise.resolve(true));
       jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValueOnce(Promise.resolve(false));
@@ -124,32 +123,32 @@ describe("kube auth proxy tests", () => {
 
         return mockedCP;
       });
-      mockedCP.stderr.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stderr.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
         listeners.on(`stderr/${String(event)}`, listener);
 
         return stderr;
       });
-      mockedCP.stderr.off.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stderr.off.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
         listeners.off(`stderr/${String(event)}`, listener);
 
         return stderr;
       });
-      mockedCP.stderr.removeListener.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stderr.removeListener.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
         listeners.off(`stderr/${String(event)}`, listener);
 
         return stderr;
       });
-      mockedCP.stderr.once.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stderr.once.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
         listeners.once(`stderr/${String(event)}`, listener);
 
         return stderr;
       });
-      mockedCP.stderr.removeAllListeners.mockImplementation((event?: string | symbol): Readable => {
+      stderr.removeAllListeners.mockImplementation((event?: string | symbol): Readable => {
         listeners.removeAllListeners(event ?? `stderr/${String(event)}`);
 
         return stderr;
       });
-      mockedCP.stdout.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stdout.on.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
         listeners.on(`stdout/${String(event)}`, listener);
 
         if (event === "data") {
@@ -158,22 +157,22 @@ describe("kube auth proxy tests", () => {
 
         return stdout;
       });
-      mockedCP.stdout.once.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stdout.once.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
         listeners.once(`stdout/${String(event)}`, listener);
 
         return stdout;
       });
-      mockedCP.stdout.off.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stdout.off.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
         listeners.off(`stdout/${String(event)}`, listener);
 
         return stdout;
       });
-      mockedCP.stdout.removeListener.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
+      stdout.removeListener.mockImplementation((event: string | symbol, listener: (message: any, sendHandle: any) => void): Readable => {
         listeners.off(`stdout/${String(event)}`, listener);
 
         return stdout;
       });
-      mockedCP.stdout.removeAllListeners.mockImplementation((event?: string | symbol): Readable => {
+      stdout.removeAllListeners.mockImplementation((event?: string | symbol): Readable => {
         listeners.removeAllListeners(event ?? `stdout/${String(event)}`);
 
         return stdout;
@@ -185,7 +184,7 @@ describe("kube auth proxy tests", () => {
       });
       waitUntilPortIsUsedMock.mockReturnValueOnce(Promise.resolve());
 
-      const cluster = createCluster({
+      const cluster = new Cluster({
         id: "foobar",
         kubeConfigPath: "minikube-config.yml",
         contextName: "minikube",
@@ -194,37 +193,38 @@ describe("kube auth proxy tests", () => {
       });
 
       proxy = createKubeAuthProxy(cluster, {});
+      await proxy.run();
     });
 
-    it("should call spawn and broadcast errors", async () => {
-      await proxy.run();
+    it("should call spawn and broadcast errors", () => {
       listeners.emit("error", { message: "foobarbat" });
 
       expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "foobarbat", level: "error" });
     });
 
-    it("should call spawn and broadcast exit", async () => {
-      await proxy.run();
-      listeners.emit("exit", 0);
+    it("should call spawn and broadcast exit as error when exitCode != 0", () => {
+      listeners.emit("exit", 1);
 
-      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "proxy exited with code: 0", level: "info" });
+      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "proxy exited with code: 1", level: "error" });
     });
 
-    it("should call spawn and broadcast errors from stderr", async () => {
-      await proxy.run();
+    it("should call spawn and broadcast exit as info when exitCode == 0", () => {
+      listeners.emit("exit", 0);
+
+      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "proxy exited successfully", level: "info" });
+    });
+
+    it("should call spawn and broadcast errors from stderr", () => {
       listeners.emit("stderr/data", "an error");
 
       expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "an error", level: "error" });
     });
 
-    it("should call spawn and broadcast stdout serving info", async () => {
-      await proxy.run();
-
+    it("should call spawn and broadcast stdout serving info", () => {
       expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "Authentication proxy started", level: "info" });
     });
 
-    it("should call spawn and broadcast stdout other info", async () => {
-      await proxy.run();
+    it("should call spawn and broadcast stdout other info", () => {
       listeners.emit("stdout/data", "some info");
 
       expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "some info", level: "info" });

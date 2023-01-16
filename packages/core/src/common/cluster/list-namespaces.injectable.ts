@@ -9,21 +9,21 @@ import { isDefined } from "../utils";
 
 export type ListNamespaces = () => Promise<string[]>;
 
-export function listNamespaces(config: KubeConfig): ListNamespaces {
-  const coreApi = config.makeApiClient(CoreV1Api);
+export type CreateListNamespaces = (config: KubeConfig) => ListNamespaces;
 
-  return async () => {
-    const { body: { items }} = await coreApi.listNamespace();
+const createListNamespacesInjectable = getInjectable({
+  id: "create-list-namespaces",
+  instantiate: (): CreateListNamespaces => (config) => {
+    const coreApi = config.makeApiClient(CoreV1Api);
 
-    return items
-      .map(ns => ns.metadata?.name)
-      .filter(isDefined);
-  };
-}
+    return async () => {
+      const { body: { items }} = await coreApi.listNamespace();
 
-const listNamespacesInjectable = getInjectable({
-  id: "list-namespaces",
-  instantiate: () => listNamespaces,
+      return items
+        .map(ns => ns.metadata?.name)
+        .filter(isDefined);
+    };
+  },
 });
 
-export default listNamespacesInjectable;
+export default createListNamespacesInjectable;

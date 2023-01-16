@@ -9,20 +9,24 @@ import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/c
 
 describe("workload overview", () => {
   let rendered: RenderResult;
-  let applicationBuilder: ApplicationBuilder;
+  let builder: ApplicationBuilder;
 
   beforeEach(async () => {
-    applicationBuilder = getApplicationBuilder().setEnvironmentToClusterFrame();
-    applicationBuilder.allowKubeResource({
-      apiName: "pods",
-      group: "",
+    builder = getApplicationBuilder().setEnvironmentToClusterFrame();
+
+    builder.afterWindowStart(() => {
+      builder.allowKubeResource({
+        apiName: "pods",
+        group: "",
+      });
     });
-    rendered = await applicationBuilder.render();
+
+    rendered = await builder.render();
   });
 
   describe("when navigating to workload overview", () => {
     beforeEach(() => {
-      applicationBuilder.navigateWith(navigateToWorkloadsOverviewInjectable);
+      builder.navigateWith(navigateToWorkloadsOverviewInjectable);
     });
 
     it("renders", () => {

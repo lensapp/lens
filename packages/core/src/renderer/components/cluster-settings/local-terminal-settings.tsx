@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { Input } from "../input";
@@ -20,6 +20,10 @@ import Gutter from "../gutter/gutter";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import type { OpenPathPickingDialog } from "../../../features/path-picking-dialog/renderer/pick-paths.injectable";
 import openPathPickingDialogInjectable from "../../../features/path-picking-dialog/renderer/pick-paths.injectable";
+import type { LocalTerminalSettingPresenter } from "./local-terminal-setting-presenter.injectable";
+import localTerminalSettingPresenterInjectable from "./local-terminal-setting-presenter.injectable";
+import { Spinner } from "../spinner";
+import { action, runInAction } from "mobx";
 
 export interface ClusterLocalTerminalSettingProps {
   cluster: Cluster;
@@ -30,70 +34,57 @@ interface Dependencies {
   resolveTilde: ResolveTilde;
   openPathPickingDialog: OpenPathPickingDialog;
   isWindows: boolean;
+  presenter: LocalTerminalSettingPresenter;
 }
 
-const NonInjectedClusterLocalTerminalSetting = observer(({
-  cluster,
-  showErrorNotification,
-  validateDirectory,
-  resolveTilde,
-  isWindows,
-  openPathPickingDialog,
-}: Dependencies & ClusterLocalTerminalSettingProps) => {
-  if (!cluster) {
-    return null;
-  }
-
-  const [directory, setDirectory] = useState<string>(cluster.preferences?.terminalCWD || "");
-  const [defaultNamespace, setDefaultNamespaces] = useState<string>(cluster.preferences?.defaultNamespace || "");
-  const [placeholderDefaultNamespace, setPlaceholderDefaultNamespace] = useState("default");
-
-  useEffect(() => {
-    (async () => {
-      const kubeconfig = await cluster.getKubeconfig();
-      const { namespace } = kubeconfig.getContextObject(cluster.contextName) ?? {};
-
-      if (namespace) {
-        setPlaceholderDefaultNamespace(namespace);
-      }
-    })();
-    setDirectory(cluster.preferences?.terminalCWD || "");
-    setDefaultNamespaces(cluster.preferences?.defaultNamespace || "");
-  }, [cluster]);
-
+const NonInjectedClusterLocalTerminalSetting = observer((props: Dependencies & ClusterLocalTerminalSettingProps) => {
+  const {
+    cluster,
+    showErrorNotification,
+    validateDirectory,
+    resolveTilde,
+    isWindows,
+    openPathPickingDialog,
+    presenter,
+  } = props;
   const commitDirectory = async (directory: string) => {
-    cluster.preferences ??= {};
-
     if (!directory) {
-      cluster.preferences.terminalCWD = undefined;
-    } else {
-      const dir = resolveTilde(directory);
-      const result = await validateDirectory(dir);
+      runInAction(() => {
+        cluster.preferences.terminalCWD = undefined;
+      });
 
-      if (!result.callWasSuccessful) {
-        showErrorNotification(
-          <>
-            <b>Terminal Working Directory</b>
-            <p>
-              {"Your changes were not saved because "}
-              {result.error}
-            </p>
-          </>,
-        );
-      } else {
-        cluster.preferences.terminalCWD = dir;
-        setDirectory(dir);
-      }
+      return;
     }
+
+    const dir = resolveTilde(directory);
+    const result = await validateDirectory(dir);
+
+    if (result.callWasSuccessful) {
+      runInAction(() => {
+        cluster.preferences.terminalCWD = dir;
+        presenter.directory.set(dir);
+      });
+
+      return;
+    }
+
+    showErrorNotification(
+      <>
+        <b>Terminal Working Directory</b>
+        <p>
+          {"Your changes were not saved because "}
+          {result.error}
+        </p>
+      </>,
+    );
   };
 
-  const commitDefaultNamespace = () => {
-    cluster.preferences ??= {};
-    cluster.preferences.defaultNamespace = defaultNamespace || undefined;
-  };
+  const commitDefaultNamespace = action(() => {
+    cluster.preferences.defaultNamespace = presenter.defaultNamespace.get() || undefined;
+  });
 
   const setAndCommitDirectory = (newPath: string) => {
-    setDirectory(newPath);
+    presenter.directory.set(newPath);
     commitDirectory(newPath);
   };
 
@@ -112,15 +103,15 @@ const NonInjectedClusterLocalTerminalSetting = observer(({
         <SubTitle title="Working Directory"/>
         <Input
           theme="round-black"
-          value={directory}
+          value={presenter.directory.get()}
           data-testid="working-directory"
-          onChange={setDirectory}
-          onBlur={() => commitDirectory(directory)}
+          onChange={value => presenter.directory.set(value)}
+          onBlur={() => commitDirectory(presenter.directory.get())}
           placeholder={isWindows ? "$USERPROFILE" : "$HOME"}
           iconRight={(
             <>
               {
-                directory && (
+                presenter.directory.get() && (
                   <Icon
                     material="close"
                     title="Clear"
@@ -151,10 +142,10 @@ const NonInjectedClusterLocalTerminalSetting = observer(({
         <Input
           theme="round-black"
           data-testid="default-namespace"
-          value={defaultNamespace}
-          onChange={setDefaultNamespaces}
+          value={presenter.defaultNamespace.get()}
+          onChange={value => presenter.defaultNamespace.set(value)}
           onBlur={commitDefaultNamespace}
-          placeholder={placeholderDefaultNamespace}
+          placeholder={presenter.placeholderDefaultNamespace}
         />
         <small className="hint">
           Default namespace used for kubectl.
@@ -165,12 +156,14 @@ const NonInjectedClusterLocalTerminalSetting = observer(({
 });
 
 export const ClusterLocalTerminalSetting = withInjectables<Dependencies, ClusterLocalTerminalSettingProps>(NonInjectedClusterLocalTerminalSetting, {
-  getProps: (di, props) => ({
+  getPlaceholder: () => <Spinner center />,
+  getProps: async (di, props) => ({
     ...props,
     showErrorNotification: di.inject(showErrorNotificationInjectable),
     validateDirectory: di.inject(validateDirectoryInjectable),
     resolveTilde: di.inject(resolveTildeInjectable),
     isWindows: di.inject(isWindowsInjectable),
     openPathPickingDialog: di.inject(openPathPickingDialogInjectable),
+    presenter: await di.inject(localTerminalSettingPresenterInjectable, props.cluster),
   }),
 });

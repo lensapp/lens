@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import { toJS } from "mobx";
 import type { KubernetesCluster } from "../../common/catalog-entities";
 import { ClusterMetadataKey } from "../../common/cluster-types";
 import type { Cluster } from "../../common/cluster/cluster";
@@ -17,10 +18,10 @@ const updateEntityMetadataInjectable =  getInjectable({
     return (entity, cluster) => {
       entity.metadata.labels = {
         ...entity.metadata.labels,
-        ...cluster.labels,
+        ...toJS(cluster.labels),
       };
-      entity.metadata.distro = cluster.distribution;
-      entity.metadata.kubeVersion = cluster.version;
+      entity.metadata.distro = cluster.distribution.get();
+      entity.metadata.kubeVersion = cluster.version.get();
 
       enumKeys(ClusterMetadataKey).forEach((key) => {
         const metadataKey = ClusterMetadataKey[key];

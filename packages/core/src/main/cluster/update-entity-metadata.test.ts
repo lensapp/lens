@@ -7,8 +7,8 @@ import appPathsStateInjectable from "../../common/app-paths/app-paths-state.inje
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { KubernetesCluster } from "../../common/catalog-entities";
 import { ClusterMetadataKey } from "../../common/cluster-types";
-import type { Cluster } from "../../common/cluster/cluster";
-import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
+import { Cluster } from "../../common/cluster/cluster";
+import { replaceObservableObject } from "../../common/utils/replace-observable-object";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import type { UpdateEntityMetadata } from "./update-entity-metadata.injectable";
 import updateEntityMetadataInjectable from "./update-entity-metadata.injectable";
@@ -27,11 +27,10 @@ describe("update-entity-metadata", () => {
       get: () => ({} as AppPaths),
       set: () => {},
     }));
-    const createCluster = di.inject(createClusterInjectionToken);
 
     updateEntityMetadata = di.inject(updateEntityMetadataInjectable);
 
-    cluster = createCluster({
+    cluster = new Cluster({
       id: "some-id",
       contextName: "some-context",
       kubeConfigPath: "minikube-config.yml",
@@ -48,10 +47,6 @@ describe("update-entity-metadata", () => {
       [ClusterMetadataKey.PROMETHEUS]: {
         "some-parameter": "some-value",
       },
-    };
-
-    cluster.metadata = {
-      ...cluster.metadata,
     };
 
     entity = new KubernetesCluster({
@@ -125,9 +120,9 @@ describe("update-entity-metadata", () => {
   });
 
   it("given cluster has labels, updates entity metadata with labels", () => {
-    cluster.labels = {
+    replaceObservableObject(cluster.labels, {
       "some-label": "some-value",
-    };
+    });
     entity.metadata.labels = {
       "some-other-label": "some-other-value",
     };
@@ -139,9 +134,9 @@ describe("update-entity-metadata", () => {
   });
 
   it("given cluster has labels, overwrites entity metadata with cluster labels", () => {
-    cluster.labels = {
+    replaceObservableObject(cluster.labels, {
       "some-label": "some-cluster-value",
-    };
+    });
     entity.metadata.labels = {
       "some-label": "some-entity-value",
     };

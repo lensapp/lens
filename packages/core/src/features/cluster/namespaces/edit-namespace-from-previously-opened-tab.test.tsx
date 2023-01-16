@@ -35,9 +35,11 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
       windowDi.override(callForResourceInjectable, () => callForNamespaceMock);
     });
 
-    builder.allowKubeResource({
-      apiName: "namespaces",
-      group: "",
+    builder.afterWindowStart(() => {
+      builder.allowKubeResource({
+        apiName: "namespaces",
+        group: "",
+      });
     });
   });
 

@@ -39,10 +39,6 @@ export const updateClusterModelChecker = Joi.object<UpdateClusterModel>({
   contextName: Joi.string()
     .required()
     .min(1),
-  workspace: Joi.string()
-    .optional(),
-  workspaces: Joi.array()
-    .items(Joi.string()),
   preferences: Joi.object(),
   metadata: Joi.object(),
   accessibleNamespaces: Joi.array()
@@ -70,18 +66,6 @@ export interface ClusterModel {
   /** Path to cluster kubeconfig */
   kubeConfigPath: string;
 
-  /**
-   * Workspace id
-   *
-   * @deprecated
-   */
-  workspace?: string;
-
-  /**
-   * @deprecated this is used only for hotbar migrations from 4.2.X
-   */
-  workspaces?: string[];
-
   /** User context in kubeconfig  */
   contextName: string;
 
@@ -97,7 +81,7 @@ export interface ClusterModel {
   /**
    * Labels for the catalog entity
    */
-  labels?: Record<string, string>;
+  labels?: Partial<Record<string, string>>;
 }
 
 /**
@@ -206,6 +190,6 @@ export interface ClusterState {
   ready: boolean;
   isAdmin: boolean;
   allowedNamespaces: string[];
-  allowedResources: string[];
+  resourcesToShow: string[];
   isGlobalWatchEnabled: boolean;
 }

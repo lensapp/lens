@@ -4,7 +4,7 @@
  */
 
 import type { Cluster } from "../../../common/cluster/cluster";
-import { makeObservable, observable } from "mobx";
+import { makeObservable, observable, runInAction } from "mobx";
 import { SubTitle } from "../layout/sub-title";
 import React from "react";
 import { Input } from "../input/input";
@@ -28,9 +28,10 @@ export class ClusterNodeShellSetting extends React.Component<ClusterNodeShellSet
   }
 
   componentWillUnmount() {
-    this.props.cluster.preferences ??= {};
-    this.props.cluster.preferences.nodeShellImage = this.nodeShellImage || undefined;
-    this.props.cluster.preferences.imagePullSecret = this.imagePullSecret || undefined;
+    runInAction(() => {
+      this.props.cluster.preferences.nodeShellImage = this.nodeShellImage || undefined;
+      this.props.cluster.preferences.imagePullSecret = this.imagePullSecret || undefined;
+    });
   }
 
   render() {

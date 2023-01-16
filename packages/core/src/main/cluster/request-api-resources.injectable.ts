@@ -12,6 +12,7 @@ import { withConcurrencyLimit } from "../../common/utils/with-concurrency-limit"
 import requestKubeApiResourcesForInjectable from "./request-kube-api-resources-for.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
 import { backoffCaller } from "../../common/utils/backoff-caller";
+import broadcastConnectionUpdateInjectable from "./broadcast-connection-update.injectable";
 
 export type RequestApiResources = (cluster: Cluster) => Promise<AsyncResult<KubeApiResource[], Error>>;
 
@@ -29,6 +30,7 @@ const requestApiResourcesInjectable = getInjectable({
 
     return async (...args) => {
       const [cluster] = args;
+      const broadcastConnectionUpdate = di.inject(broadcastConnectionUpdateInjectable, cluster);
       const requestKubeApiResources = withConcurrencyLimit(5)(requestKubeApiResourcesFor(cluster));
 
       const groupLists: KubeResourceListGroup[] = [];
@@ -36,7 +38,10 @@ const requestApiResourcesInjectable = getInjectable({
       for (const apiVersionRequester of apiVersionRequesters) {
         const result = await backoffCaller(() => apiVersionRequester(cluster), {
           onIntermediateError: (error, attempt) => {
-            cluster.broadcastConnectUpdate(`Failed to list kube API resource kinds, attempt ${attempt}: ${error}`, "warning");
+            broadcastConnectionUpdate({
+              message: `Failed to list kube API resource kinds, attempt ${attempt}: ${error}`,
+              level: "warning",
+            });
             logger.warn(`[LIST-API-RESOURCES]: failed to list kube api resources: ${error}`, { attempt, clusterId: cluster.id });
           },
         });
@@ -56,7 +61,10 @@ const requestApiResourcesInjectable = getInjectable({
 
       for (const result of results) {
         if (!result.callWasSuccessful) {
-          cluster.broadcastConnectUpdate(`Kube APIs under "${result.listGroup.path}" may not be displayed`, "warning");
+          broadcastConnectionUpdate({
+            message: `Kube APIs under "${result.listGroup.path}" may not be displayed`,
+            level: "warning",
+          });
           continue;
         }
 

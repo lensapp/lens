@@ -158,7 +158,7 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
     return (
       <div className={cssNames(styles.status, "flex column box center align-center justify-center", this.props.className)}>
         <div className="flex items-center column gaps">
-          <h2>{this.entity?.getName() ?? this.cluster.name}</h2>
+          <h2>{this.entity?.getName() ?? this.cluster.name.get()}</h2>
           {this.renderStatusIcon()}
           {this.renderAuthenticationOutput()}
           {this.renderReconnectionHelp()}

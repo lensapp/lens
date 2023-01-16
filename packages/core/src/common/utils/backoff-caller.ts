@@ -25,7 +25,7 @@ export interface BackoffCallerOptions<E> {
   maxAttempts?: number;
 
   /**
-   * In miliseconds
+   * In milliseconds
    * @default 1000
    */
   initialTimeout?: number;

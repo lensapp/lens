@@ -5,8 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
-import readFileInjectable from "../../../common/fs/read-file.injectable";
-import { loadConfigFromString } from "../../../common/kube-helpers";
+import loadKubeconfigInjectable from "../../../common/cluster/load-kubeconfig.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import openDeleteClusterDialogInjectable from "../../components/delete-cluster-dialog/open.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../tokens";
@@ -18,7 +17,6 @@ const setupKubernetesClusterContextMenuOpenInjectable = getInjectable({
     run: () => {
       const catalogCategoryRegistry = di.inject(catalogCategoryRegistryInjectable);
       const openDeleteClusterDialog = di.inject(openDeleteClusterDialogInjectable);
-      const readFile = di.inject(readFileInjectable);
       const getClusterById = di.inject(getClusterByIdInjectable);
       const logger = di.inject(loggerInjectable);
 
@@ -37,7 +35,9 @@ const setupKubernetesClusterContextMenuOpenInjectable = getInjectable({
                   return logger.warn("[KUBERNETES-CLUSTER]: cannot delete cluster, does not exist in store", { clusterId });
                 }
 
-                const result = loadConfigFromString(await readFile(cluster.kubeConfigPath));
+                const loadKubeconfig = di.inject(loadKubeconfigInjectable, cluster);
+
+                const result = await loadKubeconfig(true);
 
                 if (result.error) {
                   logger.error("[KUBERNETES-CLUSTER]: failed to parse kubeconfig file", result.error);

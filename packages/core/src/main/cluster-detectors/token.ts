@@ -11,7 +11,7 @@ export interface ClusterDetectionResult {
   accuracy: number;
 }
 
-export interface FalibleOnlyClusterMetadataDetector {
+export interface FallibleOnlyClusterMetadataDetector {
   readonly key: string;
   detect(cluster: Cluster): Promise<ClusterDetectionResult>;
 }

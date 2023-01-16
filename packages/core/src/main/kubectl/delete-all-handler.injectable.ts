@@ -5,7 +5,7 @@
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
 import { kubectlDeleteAllChannel } from "../../common/kube-helpers/channels";
-import createResourceApplierInjectable from "../resource-applier/create-resource-applier.injectable";
+import resourceApplierInjectable from "../resource-applier/create-resource-applier.injectable";
 import { getRequestChannelListenerInjectable } from "../utils/channel/channel-listeners/listener-tokens";
 
 const kubectlDeleteAllChannelHandlerInjectable = getRequestChannelListenerInjectable({
@@ -13,7 +13,6 @@ const kubectlDeleteAllChannelHandlerInjectable = getRequestChannelListenerInject
   handler: (di) => {
     const emitAppEvent = di.inject(emitAppEventInjectable);
     const getClusterById = di.inject(getClusterByIdInjectable);
-    const createResourceApplier = di.inject(createResourceApplierInjectable);
 
     return async ({
       clusterId,
@@ -31,7 +30,9 @@ const kubectlDeleteAllChannelHandlerInjectable = getRequestChannelListenerInject
         };
       }
 
-      return createResourceApplier(cluster).kubectlDeleteAll(resources, extraArgs);
+      const resourceApplier = di.inject(resourceApplierInjectable, cluster);
+
+      return resourceApplier.kubectlDeleteAll(resources, extraArgs);
     };
   },
 });

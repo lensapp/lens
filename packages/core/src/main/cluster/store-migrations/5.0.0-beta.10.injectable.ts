@@ -17,6 +17,10 @@ interface Pre500WorkspaceStoreModel {
   }[];
 }
 
+interface Pre500ClusterModel extends ClusterModel {
+  workspace?: string;
+}
+
 const v500Beta10ClusterStoreMigrationInjectable = getInjectable({
   id: "v5.0.0-beta.10-cluster-store-migration",
   instantiate: (di) => {
@@ -35,7 +39,7 @@ const v500Beta10ClusterStoreMigrationInjectable = getInjectable({
             workspaces.set(id, name);
           }
 
-          const clusters = (store.get("clusters") ?? []) as ClusterModel[];
+          const clusters = (store.get("clusters") ?? []) as Pre500ClusterModel[];
 
           for (const cluster of clusters) {
             if (cluster.workspace) {

@@ -35,7 +35,7 @@ import namespaceApiInjectable from "../endpoints/namespace.api.injectable";
 // NOTE: this is fine because we are testing something that only exported
 // eslint-disable-next-line no-restricted-imports
 import { PodsApi } from "../../../extensions/common-api/k8s-api";
-import { createClusterInjectionToken } from "../../cluster/create-cluster-injection-token";
+import { Cluster } from "../../cluster/cluster";
 
 describe("createKubeApiForRemoteCluster", () => {
   let createKubeApiForRemoteCluster: CreateKubeApiForRemoteCluster;
@@ -48,9 +48,7 @@ describe("createKubeApiForRemoteCluster", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    const createCluster = di.inject(createClusterInjectionToken);
-
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
@@ -154,10 +152,9 @@ describe("KubeApi", () => {
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
 
-    const createCluster = di.inject(createClusterInjectionToken);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",

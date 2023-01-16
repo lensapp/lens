@@ -11,6 +11,7 @@ import applicationMenuItemCompositeInjectable from "../../../../features/applica
 import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
 import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
 import pushCatalogToRendererInjectable from "../../../catalog-sync-to-renderer/push-catalog-to-renderer.injectable";
+import clusterConnectionInjectable from "../../../cluster/cluster-connection.injectable";
 
 const setupIpcMainHandlersInjectable = getInjectable({
   id: "setup-ipc-main-handlers",
@@ -34,6 +35,7 @@ const setupIpcMainHandlersInjectable = getInjectable({
           clusterStore,
           emitAppEvent,
           getClusterById,
+          getClusterConnection: (cluster) => di.inject(clusterConnectionInjectable, cluster),
         });
       },
     };

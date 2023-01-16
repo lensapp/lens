@@ -241,7 +241,7 @@ export interface CatalogEntityMetadata extends EntityMetadataObject {
   shortName?: string;
   description?: string;
   source?: string;
-  labels: Record<string, string>;
+  labels: Partial<Record<string, string>>;
 }
 
 export interface CatalogEntityStatus {

@@ -7,6 +7,7 @@ import clusterStoreInjectable from "../../common/cluster-store/cluster-store.inj
 import loggerInjectable from "../../common/logger.injectable";
 import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
 import clustersThatAreBeingDeletedInjectable from "./are-being-deleted.injectable";
+import clusterConnectionInjectable from "./cluster-connection.injectable";
 import { ClusterManager } from "./manager";
 import updateEntityMetadataInjectable from "./update-entity-metadata.injectable";
 import updateEntitySpecInjectable from "./update-entity-spec.injectable";
@@ -23,6 +24,7 @@ const clusterManagerInjectable = getInjectable({
     logger: di.inject(loggerInjectable),
     updateEntityMetadata: di.inject(updateEntityMetadataInjectable),
     updateEntitySpec: di.inject(updateEntitySpecInjectable),
+    getClusterConnection: (cluster) => di.inject(clusterConnectionInjectable, cluster),
   }),
 });
 

@@ -13,6 +13,7 @@ import { requestClusterActivation, requestClusterDisconnection } from "../../ren
 import KubeClusterCategoryIcon from "./icons/kubernetes.svg";
 import getClusterByIdInjectable from "../cluster-store/get-by-id.injectable";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import clusterConnectionInjectable from "../../main/cluster/cluster-connection.injectable";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -79,8 +80,15 @@ export class KubernetesCluster<
     if (app) {
       const di = getLegacyGlobalDiForExtensionApi();
       const getClusterById = di.inject(getClusterByIdInjectable);
+      const cluster = getClusterById(this.getId());
 
-      await getClusterById(this.getId())?.activate();
+      if (!cluster) {
+        return;
+      }
+
+      const connectionCluster = di.inject(clusterConnectionInjectable, cluster);
+
+      await connectionCluster.activate();
     } else {
       await requestClusterActivation(this.getId(), false);
     }
@@ -90,8 +98,15 @@ export class KubernetesCluster<
     if (app) {
       const di = getLegacyGlobalDiForExtensionApi();
       const getClusterById = di.inject(getClusterByIdInjectable);
+      const cluster = getClusterById(this.getId());
 
-      getClusterById(this.getId())?.disconnect();
+      if (!cluster) {
+        return;
+      }
+
+      const connectionCluster = di.inject(clusterConnectionInjectable, cluster);
+
+      connectionCluster.disconnect();
     } else {
       await requestClusterDisconnection(this.getId(), false);
     }

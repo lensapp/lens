@@ -15,6 +15,8 @@ import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
+import type { CreateKubectl } from "../kubectl/create-kubectl.injectable";
+import type { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
 
 export interface ResourceApplierDependencies {
   emitAppEvent: EmitAppEvent;
@@ -22,11 +24,24 @@ export interface ResourceApplierDependencies {
   deleteFile: RemovePath;
   execFile: ExecFile;
   joinPaths: JoinPaths;
+  createKubectl: CreateKubectl;
+  readonly proxyKubeconfigManager: KubeconfigManager;
   readonly logger: Logger;
 }
 
 export class ResourceApplier {
-  constructor(protected readonly dependencies: ResourceApplierDependencies, protected readonly cluster: Cluster) {}
+  constructor(
+    protected readonly dependencies: ResourceApplierDependencies,
+    protected readonly cluster: Cluster,
+  ) {}
+
+  private async getKubectlPath() {
+    const kubectl = this.dependencies.createKubectl(this.cluster.version.get());
+
+    await kubectl.ensureKubectl();
+
+    return kubectl.getPath();
+  }
 
   /**
    * Patch a kube resource's manifest, throwing any error that occurs.
@@ -38,9 +53,8 @@ export class ResourceApplier {
   async patch(name: string, kind: string, patch: Patch, ns?: string): Promise<string> {
     this.dependencies.emitAppEvent({ name: "resource", action: "patch" });
 
-    const kubectl = await this.cluster.ensureKubectl();
-    const kubectlPath = await kubectl.getPath();
-    const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
+    const kubectlPath = await this.getKubectlPath();
+    const proxyKubeconfigPath = await this.dependencies.proxyKubeconfigManager.ensurePath();
     const args = [
       "--kubeconfig", proxyKubeconfigPath,
       "patch",
@@ -74,9 +88,8 @@ export class ResourceApplier {
   }
 
   protected async kubectlApply(content: string): Promise<AsyncResult<string, string>> {
-    const kubectl = await this.cluster.ensureKubectl();
-    const kubectlPath = await kubectl.getPath();
-    const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
+    const kubectlPath = await this.getKubectlPath();
+    const proxyKubeconfigPath = await this.dependencies.proxyKubeconfigManager.ensurePath();
     const fileName = tempy.file({ name: "resource.yaml" });
     const args = [
       "apply",
@@ -121,9 +134,8 @@ export class ResourceApplier {
   }
 
   protected async kubectlCmdAll(subCmd: string, resources: string[], parentArgs: string[] = []): Promise<AsyncResult<string, string>> {
-    const kubectl = await this.cluster.ensureKubectl();
-    const kubectlPath = await kubectl.getPath();
-    const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
+    const kubectlPath = await this.getKubectlPath();
+    const proxyKubeconfigPath = await this.dependencies.proxyKubeconfigManager.ensurePath();
     const tmpDir = tempy.directory();
 
     await Promise.all(resources.map((resource, index) => this.dependencies.writeFile(
