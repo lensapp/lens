@@ -13,17 +13,21 @@ export type KubeResource =
 
 export interface KubeApiResource {
   kind: string;
-  group: string;
+  group: string; // api-group, if empty then "core"
   apiName: string;
   namespaced: boolean;
 }
 
 export interface KubeApiResourceDescriptor {
   apiName: string;
-  group: string;
+  group: string; // api-group, if empty then "core"
 }
 
-export const formatKubeApiResource = (res: KubeApiResourceDescriptor) => `${res.group}/${res.apiName}`;
+export const formatKubeApiResource = (desc: KubeApiResourceDescriptor) => (
+  desc.group
+    ? `${desc.group}/${desc.apiName}`
+    : desc.apiName
+);
 
 export interface KubeApiResourceData {
   kind: string; // resource type (e.g. "Namespace")
@@ -44,7 +48,7 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   },
   configmaps: {
     kind: "ConfigMap",
-    group: "v1",
+    group: "",
     namespaced: true,
   },
   cronjobs: {
@@ -69,12 +73,12 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   },
   endpoints: {
     kind: "Endpoint",
-    group: "v1",
+    group: "",
     namespaced: true,
   },
   events: {
     kind: "Event",
-    group: "v1",
+    group: "",
     namespaced: true,
   },
   horizontalpodautoscalers: {
@@ -99,17 +103,17 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   },
   namespaces: {
     kind: "Namespace",
-    group: "v1",
+    group: "",
     namespaced: false,
   },
   limitranges: {
     kind: "LimitRange",
-    group: "v1",
+    group: "",
     namespaced: true,
   },
   leases: {
     kind: "Lease",
-    group: "v1",
+    group: "",
     namespaced: true,
   },
   networkpolicies: {
@@ -119,22 +123,22 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   },
   nodes: {
     kind: "Node",
-    group: "v1",
+    group: "",
     namespaced: false,
   },
   persistentvolumes: {
     kind: "PersistentVolume",
-    group: "v1",
+    group: "",
     namespaced: false,
   },
   persistentvolumeclaims: {
     kind: "PersistentVolumeClaim",
-    group: "v1",
+    group: "",
     namespaced: true,
   },
   pods: {
     kind: "Pod",
-    group: "v1",
+    group: "",
     namespaced: true,
   },
   poddisruptionbudgets: {
@@ -159,7 +163,7 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   },
   resourcequotas: {
     kind: "ResourceQuota",
-    group: "v1",
+    group: "",
     namespaced: true,
   },
   replicasets: {
@@ -179,17 +183,17 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   },
   secrets: {
     kind: "Secret",
-    group: "v1",
+    group: "",
     namespaced: true,
   },
   serviceaccounts: {
     kind: "ServiceAccount",
-    group: "v1",
+    group: "",
     namespaced: true,
   },
   services: {
     kind: "Service",
-    group: "v1",
+    group: "",
     namespaced: true,
   },
   statefulsets: {

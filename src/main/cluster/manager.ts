@@ -145,31 +145,31 @@ export class ClusterManager {
     } else {
       entity.status.phase = (() => {
         if (!cluster) {
-          this.dependencies.logger.debug(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="no cluster"`);
+          this.dependencies.logger.silly(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="no cluster"`);
 
           return LensKubernetesClusterStatus.DISCONNECTED;
         }
 
         if (cluster.accessible) {
-          this.dependencies.logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTED, reason="cluster is accessible"`);
+          this.dependencies.logger.silly(`${logPrefix} setting entity ${entity.getName()} to CONNECTED, reason="cluster is accessible"`);
 
           return LensKubernetesClusterStatus.CONNECTED;
         }
 
         if (!cluster.disconnected) {
-          this.dependencies.logger.debug(`${logPrefix} setting entity ${entity.getName()} to CONNECTING, reason="cluster is not disconnected"`);
+          this.dependencies.logger.silly(`${logPrefix} setting entity ${entity.getName()} to CONNECTING, reason="cluster is not disconnected"`);
 
           return LensKubernetesClusterStatus.CONNECTING;
         }
 
         // Extensions are not allowed to use the Lens specific status phases
         if (!lensSpecificClusterStatuses.has(entity?.status?.phase)) {
-          this.dependencies.logger.debug(`${logPrefix} not clearing entity ${entity.getName()} status, reason="custom string"`);
+          this.dependencies.logger.silly(`${logPrefix} not clearing entity ${entity.getName()} status, reason="custom string"`);
 
           return entity.status.phase;
         }
 
-        this.dependencies.logger.debug(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="fallthrough"`);
+        this.dependencies.logger.silly(`${logPrefix} setting entity ${entity.getName()} to DISCONNECTED, reason="fallthrough"`);
 
         return LensKubernetesClusterStatus.DISCONNECTED;
       })();

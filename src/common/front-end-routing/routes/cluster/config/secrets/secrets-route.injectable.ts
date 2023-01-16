@@ -14,7 +14,7 @@ const secretsRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "secrets",
-      group: "v1",
+      group: "",
     }),
   }),
 

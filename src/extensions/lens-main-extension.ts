@@ -12,7 +12,7 @@ import type { ShellEnvModifier } from "../main/shell-session/shell-env-modifier/
 import type { LensMainExtensionDependencies } from "./lens-extension-set-dependencies";
 
 export class LensMainExtension extends LensExtension<LensMainExtensionDependencies> {
-  appMenus: MenuRegistration[] = [];
+  appMenus: MenuRegistration[] | IComputedValue<MenuRegistration[]> = [];
   trayMenus: TrayMenuRegistration[] | IComputedValue<TrayMenuRegistration[]> = [];
 
   /**

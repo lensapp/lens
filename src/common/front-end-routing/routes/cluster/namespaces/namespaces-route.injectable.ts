@@ -14,7 +14,7 @@ const namespacesRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "namespaces",
-      group: "v1",
+      group: "",
     }),
   }),
 

@@ -21,7 +21,7 @@ const podsWorkloadInjectable = getInjectable({
     return {
       resource: {
         apiName: "pods",
-        group: "v1",
+        group: "",
       },
       open: navigate,
 

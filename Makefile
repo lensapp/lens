@@ -72,11 +72,11 @@ packages/extensions/node_modules: packages/extensions/package.json
 	cd packages/extensions/ && ../../node_modules/.bin/npm install --no-audit --no-fund --no-save
 
 .PHONY: build-extensions-npm
-build-extensions-npm: build-extension-types packages/extensions/__mocks__
+build-extensions-npm: build-extension-types
 	yarn npm:fix-extensions-package-version
 
 .PHONY: build-library-npm
-build-library-npm:
+build-library-npm: node_modules
 	yarn compile-library
 
 .PHONY: build-extension-types

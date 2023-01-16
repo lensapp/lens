@@ -7,7 +7,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { ClusterOverviewStorageState } from "./cluster-overview-store";
 import { ClusterOverviewStore, MetricNodeRole, MetricType } from "./cluster-overview-store";
 import createStorageInjectable from "../../../utils/create-storage/create-storage.injectable";
-import { kubeObjectStoreInjectionToken } from "../../../../common/k8s-api/api-manager/manager.injectable";
+import { kubeObjectStoreInjectionToken } from "../../../../common/k8s-api/api-manager/kube-object-store-token";
 import clusterApiInjectable from "../../../../common/k8s-api/endpoints/cluster.api.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
 import assert from "assert";
