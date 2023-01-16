@@ -94,6 +94,7 @@ export interface ResourceMetricSource {
   // autoscaling/v2
   target?: {
     averageUtilization?: number;
+    averageValue?: string;
     type?: string;
   }
 }
@@ -151,9 +152,18 @@ export interface ExternalMetricStatus {
 export interface ObjectMetricStatus {
   averageValue?: string;
   currentValue?: string;
-  metricName: string;
+  metricName?: string;
   selector?: LabelSelector;
-  target: CrossVersionObjectReference;
+
+  // autoscaling/v2
+  metric?: {
+    name?: string;
+  },
+  current: {
+    type?: string;
+    value?: string;
+  };
+  describedObject?: CrossVersionObjectReference;
 }
 
 export interface PodsMetricStatus {
@@ -164,8 +174,14 @@ export interface PodsMetricStatus {
 
 export interface ResourceMetricStatus {
   currentAverageUtilization?: number;
-  currentAverageValue: string;
+  currentAverageValue?: string;
   name: string;
+
+  // autoscaling/v2
+  current?: {
+    averageUtilization?: number;
+    averageValue?: string;
+  }
 }
 
 export interface BaseHorizontalPodAutoscalerMetricStatus {
@@ -325,23 +341,15 @@ function getMetricName(metric: HorizontalPodAutoscalerMetricSpec | HorizontalPod
 }
 
 function getResourceMetricValue(currentMetric: ResourceMetricStatus | undefined, targetMetric: ResourceMetricSource): MetricCurrentTarget {
-  let target = "unknown";
-
-  if (targetMetric.target) {
-    target = targetMetric.target.averageUtilization ? `${targetMetric.target.averageUtilization}%` : "unknown";
-  } else {
-    target = typeof targetMetric?.targetAverageUtilization === "number"
-      ? `${targetMetric.targetAverageUtilization}%`
-      : targetMetric?.targetAverageValue ?? "unknown";
-  }
-
   return {
     current: (
-      typeof currentMetric?.currentAverageUtilization === "number"
-        ? `${currentMetric.currentAverageUtilization}%`
-        : currentMetric?.currentAverageValue
+      typeof currentMetric?.current?.averageUtilization === "number"
+        ? `${currentMetric.current?.averageUtilization}%`
+        : currentMetric?.current?.averageValue
     ),
-    target,
+    target: typeof targetMetric?.target?.averageUtilization === "number"
+    ? `${targetMetric.target.averageUtilization}%`
+    : targetMetric?.target?.averageValue ?? "unknown"
   };
 }
 

@@ -51,6 +51,45 @@ describe("HorizontalPodAutoscalerApi", () => {
       expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 50%");
     });
 
+    it("should return correct resource metrics with current metrics", () => {
+      const hpa = new HorizontalPodAutoscaler({
+        ...hpaV2,
+        spec: {
+          ...hpaV2.spec,
+          metrics: [
+            {
+              type: HpaMetricType.Resource,
+              resource: {
+                name: "cpu",
+                target: {
+                  type: "Utilization",
+                  averageUtilization: 50
+                }
+              }
+            }
+          ]
+        },
+        status: {
+          currentReplicas: 1,
+          desiredReplicas: 10,
+          currentMetrics: [
+            {
+              type: HpaMetricType.Resource,
+              resource: {
+                name: "cpu",
+                current: {
+                  averageValue: "100m",
+                  averageUtilization: 10
+                }
+              }
+            }
+          ],
+        }
+      });
+
+      expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("10% / 50%");
+    });
+
     it("should return correct container resource metrics", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
