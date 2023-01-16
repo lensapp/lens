@@ -25,19 +25,19 @@ const server = new WebpackDevServer({
   host: "localhost",
   port: webpackDevServerPort,
   static: buildDir, // aka `devServer.contentBase` in webpack@4
-  hot: "only", // use HMR only without errors
+  hot: true,
   liveReload: false,
+  historyApiFallback: true,
+  compress: true, // enable gzip for everything served
   devMiddleware: {
     writeToDisk: false,
     index: "OpenLensDev.html",
     publicPath: "/build",
   },
-  proxy: {
-    "^/$": "/build/",
-  },
   client: {
+    reconnect: true,
     overlay: false, // don't show warnings and errors on top of rendered app view
-    logging: "error",
+    logging: "info",
   },
 }, compiler);
 
