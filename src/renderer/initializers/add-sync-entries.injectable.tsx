@@ -6,8 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import React from "react";
 import navigateToKubernetesPreferencesInjectable from "../../features/preferences/common/navigate-to-kubernetes-preferences.injectable";
-import discoverAllKubeconfigSyncKindsInjectable from "../../features/preferences/renderer/preference-items/kubernetes/kubeconfig-sync/discover-all-sync-kinds.injectable";
-import { action } from "mobx";
+import { runInAction } from "mobx";
 import showSuccessNotificationInjectable from "../components/notifications/show-success-notification.injectable";
 
 const addSyncEntriesInjectable = getInjectable({
@@ -16,14 +15,11 @@ const addSyncEntriesInjectable = getInjectable({
   instantiate: (di) => {
     const userStore = di.inject(userStoreInjectable);
     const navigateToKubernetesPreferences = di.inject(navigateToKubernetesPreferencesInjectable);
-    const discoverAllKubeconfigSyncKinds = di.inject(discoverAllKubeconfigSyncKindsInjectable);
     const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
 
-    return async (filePaths: string[]) => {
-      const kinds = await discoverAllKubeconfigSyncKinds(filePaths);
-
-      action(() => {
-        for (const [path] of kinds) {
+    return async (paths: string[]) => {
+      runInAction(() => {
+        for (const path of paths) {
           userStore.syncKubeconfigEntries.set(path, {});
         }
       });

@@ -13,26 +13,29 @@ import { Select } from "../../../../../../renderer/components/select";
 import type { Logger } from "../../../../../../common/logger";
 import { action } from "mobx";
 import loggerInjectable from "../../../../../../common/logger.injectable";
+import {
+  terminalFontsInjectable,
+} from "../../../../../../renderer/components/dock/terminal/terminal-fonts.injectable";
 
 interface Dependencies {
   userStore: UserStore;
   logger: Logger;
+  terminalFonts: Map<string, string>;
 }
 
 const NonInjectedTerminalFontFamily = observer(
-  ({ userStore, logger }: Dependencies) => {
-
-    // fonts must be declared in `fonts.scss` and at `template.html` (if early-preloading required)
-    const supportedCustomFonts: SelectOption<string>[] = [
-      "RobotoMono", "Anonymous Pro", "IBM Plex Mono", "JetBrains Mono", "Red Hat Mono",
-      "Source Code Pro", "Space Mono", "Ubuntu Mono",
-    ].map(customFont => {
+  ({ userStore, logger, terminalFonts }: Dependencies) => {
+    const bundledFonts: SelectOption<string>[] = Array.from(terminalFonts.keys()).map(font => {
       const { fontFamily, fontSize } = userStore.terminalConfig;
 
       return {
-        label: <span style={{ fontFamily: customFont, fontSize }}>{customFont}</span>,
-        value: customFont,
-        isSelected: fontFamily === customFont,
+        label: (
+          <span style={{ fontFamily: `${font}, var(--font-terminal)`, fontSize }}>
+            {font}
+          </span>
+        ),
+        value: font,
+        isSelected: fontFamily === font,
       };
     });
 
@@ -50,7 +53,7 @@ const NonInjectedTerminalFontFamily = observer(
           themeName="lens"
           controlShouldRenderValue
           value={userStore.terminalConfig.fontFamily}
-          options={supportedCustomFonts}
+          options={bundledFonts}
           onChange={onFontFamilyChange as any}
         />
       </section>
@@ -58,13 +61,10 @@ const NonInjectedTerminalFontFamily = observer(
   },
 );
 
-export const TerminalFontFamily = withInjectables<Dependencies>(
-  NonInjectedTerminalFontFamily,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-      logger: di.inject(loggerInjectable),
-    }),
-  },
-);
+export const TerminalFontFamily = withInjectables<Dependencies>(NonInjectedTerminalFontFamily, {
+  getProps: (di) => ({
+    userStore: di.inject(userStoreInjectable),
+    logger: di.inject(loggerInjectable),
+    terminalFonts: di.inject(terminalFontsInjectable),
+  }),
+});

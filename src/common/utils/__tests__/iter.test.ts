@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { join, nth, reduce } from "../iter";
+import { join, nth, reduce, concat } from "../iter";
 
 describe("iter", () => {
   describe("reduce", () => {
@@ -37,6 +37,32 @@ describe("iter", () => {
 
     it("should by 0-indexing the index", () => {
       expect(nth(["a", "b"], 0)).toBe("a");
+    });
+  });
+
+  describe("concat", () => {
+    it("should yield undefined for empty args", () => {
+      const iter = concat();
+
+      expect(iter.next()).toEqual({ done: true });
+    });
+
+    it("should yield undefined for only empty args", () => {
+      const iter = concat([].values(), [].values(), [].values(), [].values());
+
+      expect(iter.next()).toEqual({ done: true });
+    });
+
+    it("should yield all of the first and then all of the second", () => {
+      const iter = concat([1, 2, 3].values(), [4, 5, 6].values());
+
+      expect(iter.next()).toEqual({ done: false, value: 1 });
+      expect(iter.next()).toEqual({ done: false, value: 2 });
+      expect(iter.next()).toEqual({ done: false, value: 3 });
+      expect(iter.next()).toEqual({ done: false, value: 4 });
+      expect(iter.next()).toEqual({ done: false, value: 5 });
+      expect(iter.next()).toEqual({ done: false, value: 6 });
+      expect(iter.next()).toEqual({ done: true });
     });
   });
 });

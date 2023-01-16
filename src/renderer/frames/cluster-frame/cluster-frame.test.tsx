@@ -69,7 +69,7 @@ describe("<ClusterFrame />", () => {
   describe("given cluster with list nodes and namespaces permissions", () => {
     beforeEach(() => {
       // TODO: replace with not using private info
-      (cluster as any).allowedResources.replace(["v1/nodes", "v1/namespaces"]);
+      (cluster as unknown as { readonly allowedResources: Cluster["allowedResources"] }).allowedResources.replace(["nodes", "namespaces"]);
     });
 
     it("renders", () => {
@@ -110,7 +110,7 @@ describe("<ClusterFrame />", () => {
 
   describe("given cluster without list nodes, but with namespaces permissions", () => {
     beforeEach(() => {
-      (cluster as any).allowedResources.replace(["v1/namespaces"]);
+      (cluster as unknown as { readonly allowedResources: Cluster["allowedResources"] }).allowedResources.replace(["namespaces"]);
     });
 
     it("renders", () => {

@@ -14,7 +14,7 @@ const eventsRouteInjectable = getInjectable({
     clusterFrame: true,
     isEnabled: di.inject(shouldShowResourceInjectionToken, {
       apiName: "events",
-      group: "v1",
+      group: "",
     }),
   }),
 
