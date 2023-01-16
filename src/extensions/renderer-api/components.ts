@@ -72,7 +72,16 @@ export * from "../../renderer/components/drawer";
 export * from "../../renderer/components/dialog";
 export * from "../../renderer/components/line-progress";
 export * from "../../renderer/components/menu";
-export * from "../../renderer/components/notifications";
+
+export {
+  NotificationStatus,
+  type CreateNotificationOptions,
+  type Notification,
+  type NotificationId,
+  type NotificationMessage,
+  type ShowNotification,
+  type NotificationsStore,
+} from "../../renderer/components/notifications";
 
 export const Notifications = {
   ok: asLegacyGlobalFunctionForExtensionApi(showSuccessNotificationInjectable),
