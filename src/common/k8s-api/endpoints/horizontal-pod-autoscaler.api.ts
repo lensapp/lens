@@ -37,10 +37,21 @@ export interface ContainerResourceMetricSource {
 }
 
 export interface ExternalMetricSource {
-  metricName: string;
+  metricName?: string;
   metricSelector?: LabelSelector;
   targetAverageValue?: string;
   targetValue?: string;
+
+  // autoscaling/v2
+  metric?: {
+    name?: string;
+    selector?: LabelSelector;
+  },
+  target?: {
+    type: string;
+    value?: string;
+    averageValue?: string;
+  }
 }
 
 export interface ObjectMetricSource {
@@ -364,8 +375,8 @@ function getExternalMetricValue(currentMetric: ExternalMetricStatus | undefined,
         ?? currentMetric?.currentAverageValue
     ),
     target: (
-      targetMetric?.targetValue
-        ?? targetMetric?.targetAverageValue
+      targetMetric?.target?.value
+        ?? `${targetMetric?.target?.averageValue} (avg)`
     ),
   };
 }

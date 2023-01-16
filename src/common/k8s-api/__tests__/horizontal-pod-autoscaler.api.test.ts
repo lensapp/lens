@@ -130,5 +130,65 @@ describe("HorizontalPodAutoscalerApi", () => {
 
       expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 10k");
     });
+
+    it("should return correct external metrics with average value", () => {
+      const hpa = new HorizontalPodAutoscaler(
+        {
+          ...hpaV2,
+          spec: {
+            ...hpaV2.spec,
+            metrics: [
+              {
+                type: HpaMetricType.External,
+                external: {
+                  metric: {
+                    name: "queue_messages_ready",
+                    selector: {
+                      matchLabels: {queue: 'worker_tasks'}
+                    }
+                  },
+                  target: {
+                    type: "AverageValue",
+                    averageValue: "30"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      );
+
+      expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 30 (avg)");
+    });
+
+    it("should return correct external metrics with value", () => {
+      const hpa = new HorizontalPodAutoscaler(
+        {
+          ...hpaV2,
+          spec: {
+            ...hpaV2.spec,
+            metrics: [
+              {
+                type: HpaMetricType.External,
+                external: {
+                  metric: {
+                    name: "queue_messages_ready",
+                    selector: {
+                      matchLabels: {queue: 'worker_tasks'}
+                    }
+                  },
+                  target: {
+                    type: "Value",
+                    value: "30"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      );
+
+      expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 30");
+    });
   });
 });
