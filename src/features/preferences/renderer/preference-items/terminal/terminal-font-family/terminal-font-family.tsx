@@ -7,11 +7,11 @@ import { SubTitle } from "../../../../../../renderer/components/layout/sub-title
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import { Select } from "../../../../../../renderer/components/select";
-import type { TerminalFontPreferenceModel } from "./terminal-font-options.injectable";
-import terminalFontPreferenceModelInjectable from "./terminal-font-options.injectable";
+import type { TerminalFontPreferencePresenter } from "./terminal-font-options.injectable";
+import terminalFontPreferencePresenterInjectable from "./terminal-font-options.injectable";
 
 interface Dependencies {
-  model: TerminalFontPreferenceModel;
+  model: TerminalFontPreferencePresenter;
 }
 
 const NonInjectedTerminalFontFamily = observer(({ model }: Dependencies) => (
@@ -22,14 +22,13 @@ const NonInjectedTerminalFontFamily = observer(({ model }: Dependencies) => (
       controlShouldRenderValue
       value={model.current.get()}
       options={model.options.get()}
-      onChange={model.set}
+      onChange={model.onSelection}
     />
   </section>
-),
-);
+));
 
 export const TerminalFontFamily = withInjectables<Dependencies>(NonInjectedTerminalFontFamily, {
   getProps: (di) => ({
-    model: di.inject(terminalFontPreferenceModelInjectable),
+    model: di.inject(terminalFontPreferencePresenterInjectable),
   }),
 });
