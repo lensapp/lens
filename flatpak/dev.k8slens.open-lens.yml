@@ -1,0 +1,54 @@
+app-id: dev.k8slens.open-lens
+runtime: org.freedesktop.Platform
+runtime-version: '21.08'
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '21.08'
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.node16
+command: run.sh
+separate-locales: false
+finish-args:
+  - --device=dri
+  - --filesystem=~/.k8slens
+  - --filesystem=~/.kube
+  - --share=ipc
+  - --share=network
+  - --socket=x11
+  - --system-talk-name=org.freedesktop.login1
+build-options:
+  append-path: /usr/lib/sdk/node16/bin
+  env:
+    NPM_CONFIG_LOGLEVEL: info
+modules:
+  - name: open-lens
+    buildsystem: simple
+    build-options:
+      env:
+        # DEBUG: electron-builder
+        XDG_CACHE_HOME: /run/build/open-lens/flatpak-node/cache
+        npm_config_cache: /run/build/open-lens/flatpak-node/npm-cache
+        npm_config_nodedir: /run/build/open-lens/flatpak-node/cache/node-gyp/19.0.4
+        npm_config_offline: 'true'
+    build-commands:
+      # Install dependencies
+      - yarn install --offline
+      # Build the app
+      - |
+        . ../flatpak-node/electron-builder-arch-args.sh
+        yarn run --offline build:linux $ELECTRON_BUILDER_ARCH_ARGS --linux --dir
+      # Bundle app and dependencies
+      - cp -a dist/linux*unpacked /app/main
+      # Install app wrapper
+      - install -Dm755 -t /app/bin/ ../run.sh
+    subdir: main
+    sources:
+      - type: dir
+        path: ..
+        dest: main
+      - generated-sources.json
+      # Wrapper to launch the app
+      - type: script
+        dest-filename: run.sh
+        commands:
+          - zypak-wrapper.sh /app/main/open-lens "$@"

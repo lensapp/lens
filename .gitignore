@@ -13,3 +13,6 @@ binaries/server/
 docs/extensions/api
 site/
 build/webpack/
+flatpak/.flatpak-builder/
+flatpak/builder/
+flatpak/generated-sources.json
