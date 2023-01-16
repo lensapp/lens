@@ -21,7 +21,7 @@ const hpaV2 = {
 }
 
 describe("HorizontalPodAutoscalerApi", () => {
-  describe("HPA v1", () => {
+  describe("HPA v2", () => {
     it("should return correct empty metrics", () => {
       const hpa = new HorizontalPodAutoscaler(hpaV2);
 
@@ -102,6 +102,33 @@ describe("HorizontalPodAutoscalerApi", () => {
       );
 
       expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 1k");
+    });
+
+    it("should return correct object metrics", () => {
+      const hpa = new HorizontalPodAutoscaler(
+        {
+          ...hpaV2,
+          spec: {
+            ...hpaV2.spec,
+            metrics: [
+              {
+                type: HpaMetricType.Object,
+                object: {
+                  metric: {
+                    name: "requests-per-second"
+                  },
+                  target: {
+                    type: "Value",
+                    value: "10k"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      );
+
+      expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 10k");
     });
   });
 });

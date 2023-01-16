@@ -45,10 +45,19 @@ export interface ExternalMetricSource {
 
 export interface ObjectMetricSource {
   averageValue?: string;
-  metricName: string;
+  metricName?: string;
   selector?: LabelSelector;
-  target: CrossVersionObjectReference;
-  targetValue: string;
+  targetValue?: string;
+
+  // autoscaling/v2
+  metric?: {
+    name?: string;
+  },
+  target: {
+    type?: string;
+    value?: string;
+  };
+  describedObject?: CrossVersionObjectReference;
 }
 
 export interface PodsMetricSource {
@@ -344,10 +353,7 @@ function getObjectMetricValue(currentMetric: ObjectMetricStatus | undefined, tar
       currentMetric?.currentValue
         ?? currentMetric?.averageValue
     ),
-    target: (
-      targetMetric?.targetValue
-        ?? targetMetric?.averageValue
-    ),
+    target: targetMetric?.target?.value
   };
 }
 
