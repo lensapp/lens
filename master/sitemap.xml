@@ -306,11 +306,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.KubeJsonApi/</loc>
-         <lastmod>2023-01-16</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.K8sApi.KubeObject/</loc>
          <lastmod>2023-01-16</lastmod>
          <changefreq>daily</changefreq>
