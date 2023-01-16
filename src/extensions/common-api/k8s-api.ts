@@ -27,6 +27,10 @@ import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-exten
 import maybeKubeApiInjectable from "../../common/k8s-api/maybe-kube-api.injectable";
 import { DeploymentApi as InternalDeploymentApi, IngressApi as InternalIngressApi, NodeApi, PersistentVolumeClaimApi, PodApi } from "../../common/k8s-api/endpoints";
 import { storesAndApisCanBeCreatedInjectionToken } from "../../common/k8s-api/stores-apis-can-be-created.token";
+import type { JsonApiConfig } from "../../common/k8s-api/json-api";
+import type { KubeJsonApi as InternalKubeJsonApi } from "../../common/k8s-api/kube-json-api";
+import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-api.injectable";
+import type { RequestInit } from "node-fetch";
 
 export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);
 export const forCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForClusterInjectable);
@@ -107,10 +111,23 @@ export {
   type KubeStatusData,
 } from "../../common/k8s-api/kube-object";
 
-export {
-  KubeJsonApi,
-  type KubeJsonApiData,
+export type {
+  KubeJsonApiData,
 } from "../../common/k8s-api/kube-json-api";
+
+function KubeJsonApiCstr(config: JsonApiConfig, reqInit?: RequestInit) {
+  const di = getLegacyGlobalDiForExtensionApi();
+  const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
+
+  return createKubeJsonApi(config, reqInit);
+}
+
+export const KubeJsonApi = Object.assign(
+  KubeJsonApiCstr as unknown as new (config: JsonApiConfig, reqInit?: RequestInit) => InternalKubeJsonApi,
+  {
+    forCluster,
+  },
+);
 
 export abstract class KubeObjectStore<
   K extends KubeObject = KubeObject,
