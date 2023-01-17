@@ -560,6 +560,8 @@ export class Cluster implements ClusterModel {
         const message = String(error.error || error.message) || String(error);
 
         this.broadcastConnectUpdate(message, true);
+      } else if (error instanceof Error || typeof error === "string") {
+        this.broadcastConnectUpdate(`${error}`, true);
       } else {
         this.broadcastConnectUpdate("Unknown error has occurred", true);
       }
