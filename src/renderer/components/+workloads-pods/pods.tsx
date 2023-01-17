@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { NodeApi, Pod } from "../../../common/k8s-api/endpoints";
 import { StatusBrick } from "../status-brick";
-import { cssNames, getConvertedParts, object, prevDefault, stopPropagation } from "../../utils";
+import { cssNames, getConvertedParts, object, stopPropagation } from "../../utils";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
@@ -28,8 +28,7 @@ import type { PodStore } from "./store";
 import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
 import podStoreInjectable from "./store.injectable";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -45,7 +44,6 @@ enum columnId {
 
 interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
-  filterByNamespace: FilterByNamespace;
   apiManager: ApiManager;
   eventStore: EventStore;
   podStore: PodStore;
@@ -111,7 +109,7 @@ class NonInjectedPods extends React.Component<Dependencies> {
           className="Pods"
           store={podStore}
           dependentStores={[eventStore]} // status icon component uses event store
-          tableId = "workloads_pods"
+          tableId="workloads_pods"
           isConfigurable
           sortingCallbacks={{
             [columnId.name]: pod => getConvertedParts(pod.getName()),
@@ -134,10 +132,30 @@ class NonInjectedPods extends React.Component<Dependencies> {
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
             { className: "warning", showWithColumn: columnId.name },
-            { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
-            { title: "Containers", className: "containers", sortBy: columnId.containers, id: columnId.containers },
-            { title: "Restarts", className: "restarts", sortBy: columnId.restarts, id: columnId.restarts },
-            { title: "Controlled By", className: "owners", sortBy: columnId.owners, id: columnId.owners },
+            {
+              title: "Namespace",
+              className: "namespace",
+              sortBy: columnId.namespace,
+              id: columnId.namespace,
+            },
+            {
+              title: "Containers",
+              className: "containers",
+              sortBy: columnId.containers,
+              id: columnId.containers,
+            },
+            {
+              title: "Restarts",
+              className: "restarts",
+              sortBy: columnId.restarts,
+              id: columnId.restarts,
+            },
+            {
+              title: "Controlled By",
+              className: "owners",
+              sortBy: columnId.owners,
+              id: columnId.owners,
+            },
             { title: "Node", className: "node", sortBy: columnId.node, id: columnId.node },
             { title: "QoS", className: "qos", sortBy: columnId.qos, id: columnId.qos },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
@@ -152,13 +170,10 @@ class NonInjectedPods extends React.Component<Dependencies> {
               expandable={false}
             />,
             <KubeObjectStatusIcon key="icon" object={pod} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(pod.getNs()))}
-            >
-              {pod.getNs()}
-            </a>,
+              namespace={pod.getNs()}
+            />,
             this.renderContainersStatus(pod),
             pod.getRestartsCount(),
             pod.getOwnerRefs().map(ref => {
@@ -186,7 +201,9 @@ class NonInjectedPods extends React.Component<Dependencies> {
                 tooltip={pod.getNodeName()}
                 expandable={false}
               >
-                <Link to={getDetailsUrl(nodeApi.getUrl({ name: pod.getNodeName() }))} onClick={stopPropagation}>
+                <Link
+                  to={getDetailsUrl(nodeApi.getUrl({ name: pod.getNodeName() }))}
+                  onClick={stopPropagation}>
                   {pod.getNodeName()}
                 </Link>
               </Badge>
@@ -210,6 +227,5 @@ export const Pods = withInjectables<Dependencies>(NonInjectedPods, {
     nodeApi: di.inject(nodeApiInjectable),
     eventStore: di.inject(eventStoreInjectable),
     podStore: di.inject(podStoreInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });

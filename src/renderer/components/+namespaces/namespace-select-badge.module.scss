@@ -3,16 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-.ReplicaSets {
-  .TableCell {
-    &.name {
-      flex-grow: 2;
-    }
-
-    &.warning {
-      @include table-cell-warning;
-    }
-
-
-  }
+.NamespaceSelectBadge {
+  @include pseudo-link;
+  border-bottom: unset;
 }

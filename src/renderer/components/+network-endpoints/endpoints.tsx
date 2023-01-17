@@ -11,12 +11,10 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
-import { prevDefault } from "../../utils";
 import type { EndpointsStore } from "./store";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import endpointsStoreInjectable from "./store.injectable";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -27,7 +25,6 @@ enum columnId {
 
 interface Dependencies {
   endpointsStore: EndpointsStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 @observer
@@ -59,13 +56,10 @@ class NonInjectedEndpoints extends React.Component<Dependencies> {
           renderTableContents={endpoint => [
             endpoint.getName(),
             <KubeObjectStatusIcon key="icon" object={endpoint} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(endpoint.getNs()))}
-            >
-              {endpoint.getNs()}
-            </a>,
+              namespace={endpoint.getNs()}
+            />,
             endpoint.toString(),
             <KubeObjectAge key="age" object={endpoint} />,
           ]}
@@ -86,6 +80,5 @@ export const Endpoints = withInjectables<Dependencies>(NonInjectedEndpoints, {
   getProps: (di, props) => ({
     ...props,
     endpointsStore: di.inject(endpointsStoreInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });

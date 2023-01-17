@@ -12,13 +12,11 @@ import { AddQuotaDialog } from "./add-dialog/view";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
-import { prevDefault } from "../../utils";
 import type { ResourceQuotaStore } from "./store";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import resourceQuotaStoreInjectable from "./store.injectable";
 import openAddQuotaDialogInjectable from "./add-dialog/open.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -28,7 +26,6 @@ enum columnId {
 
 interface Dependencies {
   resourceQuotaStore: ResourceQuotaStore;
-  filterByNamespace: FilterByNamespace;
   openAddQuotaDialog: () => void;
 }
 
@@ -61,13 +58,10 @@ class NonInjectedResourceQuotas extends React.Component<Dependencies> {
           renderTableContents={resourceQuota => [
             resourceQuota.getName(),
             <KubeObjectStatusIcon key="icon" object={resourceQuota}/>,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(resourceQuota.getNs()))}
-            >
-              {resourceQuota.getNs()}
-            </a>,
+              namespace={resourceQuota.getNs()}
+            />,
             <KubeObjectAge key="age" object={resourceQuota} />,
           ]}
           addRemoveButtons={{
@@ -84,7 +78,6 @@ class NonInjectedResourceQuotas extends React.Component<Dependencies> {
 export const ResourceQuotas = withInjectables<Dependencies>(NonInjectedResourceQuotas, {
   getProps: (di, props) => ({
     ...props,
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     resourceQuotaStore: di.inject(resourceQuotaStoreInjectable),
     openAddQuotaDialog: di.inject(openAddQuotaDialogInjectable),
   }),

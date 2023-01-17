@@ -13,12 +13,10 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
-import { prevDefault } from "../../utils";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import type { PodDisruptionBudgetStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import podDisruptionBudgetStoreInjectable from "./store.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -34,7 +32,6 @@ export interface PodDisruptionBudgetsProps extends KubeObjectDetailsProps<PodDis
 }
 
 interface Dependencies {
-  filterByNamespace: FilterByNamespace;
   podDisruptionBudgetStore: PodDisruptionBudgetStore;
 }
 
@@ -74,13 +71,10 @@ class NonInjectedPodDisruptionBudgets extends React.Component<PodDisruptionBudge
           renderTableContents={pdb => [
             pdb.getName(),
             <KubeObjectStatusIcon key="icon" object={pdb} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(pdb.getNs()))}
-            >
-              {pdb.getNs()}
-            </a>,
+              namespace={pdb.getNs()}
+            />,
             pdb.getMinAvailable(),
             pdb.getMaxUnavailable(),
             pdb.getCurrentHealthy(),
@@ -96,7 +90,6 @@ class NonInjectedPodDisruptionBudgets extends React.Component<PodDisruptionBudge
 export const PodDisruptionBudgets = withInjectables<Dependencies, PodDisruptionBudgetsProps>(NonInjectedPodDisruptionBudgets, {
   getProps: (di, props) => ({
     ...props,
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     podDisruptionBudgetStore: di.inject(podDisruptionBudgetStoreInjectable),
   }),
 });
