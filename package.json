@@ -87,7 +87,8 @@
     "postversion": "git push --set-upstream ${GIT_REMOTE:-origin} release/v$npm_package_version",
     "precreate-release-pr": "npx swc ./scripts/create-release-pr.ts -o ./scripts/create-release-pr.mjs",
     "create-release-pr": "node ./scripts/create-release-pr.mjs",
-    "flatpak:install": "cd flatpak && flatpak-node-generator yarn ../yarn.lock && flatpak-builder builder dev.k8slens.open-lens.yml --install --force-clean --user",
+    "flatpak:generate-sources": "cd flatpak && flatpak-node-generator yarn ../yarn.lock",
+    "flatpak:install": "cd flatpak && flatpak-builder builder dev.k8slens.open-lens.yml --install --force-clean --user",
     "flatpak:run": "flatpak run dev.k8slens.open-lens"
   },
   "config": {
