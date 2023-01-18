@@ -4,15 +4,16 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { SemVer } from "semver";
-import applicationInformationToken from "./application-information-token";
+import packageJson from "../../../package.json";
 
 const extensionApiVersionInjectable = getInjectable({
   id: "extension-api-version",
-  instantiate: (di) => {
-    const { major, minor, patch } = new SemVer(di.inject(applicationInformationToken).version);
+  instantiate: () => {
+    const { major, minor, patch } = new SemVer(packageJson.version);
 
     return `${major}.${minor}.${patch}`;
   },
+  causesSideEffects: true,
 });
 
 export default extensionApiVersionInjectable;
