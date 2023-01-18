@@ -86,7 +86,7 @@ const computeKubeconfigDiffInjectable = getInjectable({
 
             logger.debug(`Added new cluster from sync`, { filePath, contextName });
           } catch (error) {
-            logger.warn(`Failed to create cluster from model: ${error}`, { filePath, contextName });
+            logger.warn(`Failed to create cluster with context="${contextName}" from path="${filePath}"`, error);
           }
         }
       } catch (error) {

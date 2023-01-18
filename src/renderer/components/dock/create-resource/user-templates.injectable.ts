@@ -9,7 +9,7 @@ import { readFile } from "fs/promises";
 import { hasCorrectExtension } from "./has-correct-extension";
 import type { RawTemplates } from "./create-resource-templates.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
-import watchInjectable from "../../../../common/fs/watch/watch.injectable";
+import watchInjectable from "../../../../common/fs/watch.injectable";
 import getRelativePathInjectable from "../../../../common/path/get-relative-path.injectable";
 import homeDirectoryPathInjectable from "../../../../common/os/home-directory-path.injectable";
 import getDirnameOfPathInjectable from "../../../../common/path/get-dirname.injectable";

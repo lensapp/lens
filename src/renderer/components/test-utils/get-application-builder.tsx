@@ -192,7 +192,7 @@ export const getApplicationBuilder = ({ useFakeTime = true }: ApplicationBuilder
 
   const overrideFsWithFakes = getOverrideFsWithFakes();
 
-  overrideFsWithFakes(mainDi);
+  overrideFsWithFakes(mainDi, true);
 
   // Set up ~/.kube as existing as a folder
   {

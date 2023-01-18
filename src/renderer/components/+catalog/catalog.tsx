@@ -307,6 +307,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
         getItems={() => catalogEntityStore.entities.get()}
         customizeTableRowProps={entity => ({
           disabled: !entity.isEnabled(),
+          testId: `catalog-entity-row-for-${entity.getId()}`,
         })}
         {...getCategoryColumns({ activeCategory })}
         onDetails={this.onDetails}

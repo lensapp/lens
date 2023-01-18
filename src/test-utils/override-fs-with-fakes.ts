@@ -10,6 +10,9 @@ import type {
   readJsonSync as readJsonSyncImpl,
   writeJsonSync as writeJsonSyncImpl,
 } from "fs-extra";
+import createKubeSyncWatcherInjectable from "../main/catalog-sources/kubeconfig-sync/create-watcher.injectable";
+import { isErrnoException } from "../common/utils";
+import joinPathsInjectable from "../common/path/join-paths.injectable";
 
 export const getOverrideFsWithFakes = () => {
   const root = createFsFromVolume(Volume.fromJSON({}));
@@ -41,7 +44,7 @@ export const getOverrideFsWithFakes = () => {
     root.mkdirpSync(path, mode);
   }) as typeof ensureDirSyncImpl;
 
-  return (di: DiContainer) => {
+  return (di: DiContainer, overrideWatches = false) => {
     di.override(fsInjectable, () => ({
       pathExists: async (path) => root.existsSync(path),
       pathExistsSync: root.existsSync,
@@ -63,5 +66,76 @@ export const getOverrideFsWithFakes = () => {
       createReadStream: root.createReadStream as any,
       stat: root.promises.stat as any,
     }));
+
+    if (overrideWatches) {
+      di.override(createKubeSyncWatcherInjectable, (di) => {
+        const joinPaths = di.inject(joinPathsInjectable);
+
+        return ((path, options) => {
+          const watcher = root.watch( path, {
+            recursive: options.isDirectorySync,
+          });
+          const seenPaths = new Set<string>();
+
+          console.log("watching", path);
+
+          watcher.addListener("rename", (eventType, filename: string) => {
+            try {
+              const stats = root.statSync(filename);
+
+              options.onAdd(filename, stats);
+            } catch (error) {
+              if (isErrnoException(error) && error.code === "ENOENT") {
+                options.onRemove(filename);
+              } else {
+                options.onError(error as Error);
+              }
+            }
+          });
+          watcher.addListener("change", (...args) => {
+            const [,filename] = args;
+
+            if (options.isDirectorySync) {
+              // For testing purposes just emit change events for all files
+              for (const entry of root.readdirSync(filename) as string[]) {
+                const path = joinPaths(filename, entry);
+
+                try {
+                  const stats = root.statSync(path);
+
+                  if (seenPaths.has(path)) {
+                    options.onChange(path, stats);
+                  } else {
+                    seenPaths.add(path);
+                    options.onAdd(path, stats);
+                  }
+                } catch (error) {
+                  options.onError(error as Error);
+                }
+              }
+            } else {
+              try {
+                const stats = root.statSync(filename);
+
+                if (seenPaths.has(filename)) {
+                  options.onChange(filename, stats);
+                } else {
+                  seenPaths.add(filename);
+                  options.onAdd(filename, stats);
+                }
+              } catch (error) {
+                options.onError(error as Error);
+              }
+            }
+          });
+
+          return {
+            stop: () => {
+              watcher.close();
+            },
+          };
+        });
+      });
+    }
   };
 };

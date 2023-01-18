@@ -17,7 +17,7 @@ import { requestInitialExtensionDiscovery } from "../../renderer/ipc";
 import type { ReadJson } from "../../common/fs/read-json-file.injectable";
 import type { Logger } from "../../common/logger";
 import type { PathExists } from "../../common/fs/path-exists.injectable";
-import type { Watch } from "../../common/fs/watch/watch.injectable";
+import type { Watch } from "../../common/fs/watch.injectable";
 import type { Stats } from "fs";
 import type { LStat } from "../../common/fs/lstat.injectable";
 import type { ReadDirectory } from "../../common/fs/read-directory.injectable";

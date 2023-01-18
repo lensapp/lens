@@ -13,7 +13,7 @@ import { delay } from "../../renderer/utils";
 import { observable, runInAction, when } from "mobx";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
-import watchInjectable from "../../common/fs/watch/watch.injectable";
+import watchInjectable from "../../common/fs/watch.injectable";
 import extensionApiVersionInjectable from "../../common/vars/extension-api-version.injectable";
 import removePathInjectable from "../../common/fs/remove.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";

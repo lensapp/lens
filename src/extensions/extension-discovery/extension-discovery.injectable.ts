@@ -13,7 +13,7 @@ import extensionPackageRootDirectoryInjectable from "../extension-installer/exte
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
-import watchInjectable from "../../common/fs/watch/watch.injectable";
+import watchInjectable from "../../common/fs/watch.injectable";
 import accessPathInjectable from "../../common/fs/access-path.injectable";
 import copyInjectable from "../../common/fs/copy.injectable";
 import ensureDirInjectable from "../../common/fs/ensure-dir.injectable";
