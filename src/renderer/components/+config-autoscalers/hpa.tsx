@@ -43,7 +43,7 @@ class NonInjectedHorizontalPodAutoscalers extends React.Component<Dependencies> 
   getTargets(hpa: HorizontalPodAutoscaler) {
     const metrics = hpa.getMetrics();
 
-    if (metrics.length === 0) {
+    if (metrics.length === 0 && !hpa.spec?.targetCPUUtilizationPercentage) {
       return <p>--</p>;
     }
 

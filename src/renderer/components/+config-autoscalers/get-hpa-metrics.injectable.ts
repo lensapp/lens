@@ -11,15 +11,27 @@ const getHorizontalPodAutoscalerMetrics = getInjectable({
     const hpaV2Parser = di.inject(horizonalPodAutoscalerV2MetricParser);
     const metrics = hpa.spec?.metrics ?? [];
     const currentMetrics = hpa.status?.currentMetrics ?? [];
+    const cpuUtilization = hpa.spec?.targetCPUUtilizationPercentage;
+
+    if (cpuUtilization) {
+      const utilizationCurrent = hpa.status?.currentCPUUtilizationPercentage ? `${hpa.status.currentCPUUtilizationPercentage}%` : "unknown";
+      const utilizationTarget = cpuUtilization ? `${cpuUtilization}%` : "unknown";
+      return [`${utilizationCurrent} / ${utilizationTarget}`];
+    }
 
     return metrics.map((metric) => {
       const currentMetric = currentMetrics.find(current =>
         current.type === metric.type
         && getMetricName(current) === getMetricName(metric)
       );
-      const parser = hpa.apiVersion.includes("v2") ? hpaV2Parser : hpaV1Parser;
 
-      const values = getMetricValues(parser, currentMetric, metric);
+      const hpaV2ParserValues = getMetricValues(hpaV2Parser, currentMetric, metric);
+      const hpaV1ParserValues = getMetricValues(hpaV1Parser, currentMetric, metric);
+      let values = hpaV1ParserValues;
+
+      if (hpaV2ParserValues.current || hpaV2ParserValues.target) {
+        values = hpaV2ParserValues;
+      }
 
       return `${values.current ?? "unknown"} / ${values.target ?? "unknown"}`;
     });

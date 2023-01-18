@@ -224,6 +224,7 @@ export interface HorizontalPodAutoscalerSpec {
   maxReplicas: number;
   metrics?: HorizontalPodAutoscalerMetricSpec[];
   behavior?: HorizontalPodAutoscalerBehavior;
+  targetCPUUtilizationPercentage?: number; // used only in autoscaling/v1
 }
 
 export interface HorizontalPodAutoscalerStatus {
@@ -231,6 +232,7 @@ export interface HorizontalPodAutoscalerStatus {
   currentReplicas: number;
   desiredReplicas: number;
   currentMetrics?: HorizontalPodAutoscalerMetricStatus[];
+  currentCPUUtilizationPercentage?: number; // used only in autoscaling/v1
 }
 
 export class HorizontalPodAutoscaler extends KubeObject<
@@ -284,13 +286,13 @@ export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler>
     super(deps, {
       ...opts ?? {},
       objectConstructor: HorizontalPodAutoscaler,
-      // checkPreferredVersion: true,
-      // // Kubernetes < 1.26
-      // fallbackApiBases: [
-      //   "/apis/autoscaling/v2beta2/horizontalpodautoscalers",
-      //   "/apis/autoscaling/v2beta1/horizontalpodautoscalers",
-      //   "/apis/autoscaling/v1/horizontalpodautoscalers",
-      // ],
+      checkPreferredVersion: true,
+      // Kubernetes < 1.26
+      fallbackApiBases: [
+        "/apis/autoscaling/v2beta2/horizontalpodautoscalers",
+        "/apis/autoscaling/v2beta1/horizontalpodautoscalers",
+        "/apis/autoscaling/v1/horizontalpodautoscalers",
+      ],
     });
   }
 }
