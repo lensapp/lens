@@ -1,3 +1,6 @@
+import type { DiContainer } from "@ogre-tools/injectable";
+import getHorizontalPodAutoscalerMetrics from "../../../renderer/components/+config-autoscalers/get-hpa-metrics.injectable";
+import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import { HorizontalPodAutoscaler, HpaMetricType } from "../endpoints";
 
 const hpaV2 = {
@@ -20,12 +23,21 @@ const hpaV2 = {
   }
 }
 
-describe("HorizontalPodAutoscalerApi", () => {
+describe("getHorizontalPodAutoscalerMetrics", () => {
+  let di: DiContainer;
+  let getMetrics: (hpa: HorizontalPodAutoscaler) => string[];
+
+  beforeEach(() => {
+    di = getDiForUnitTesting();
+
+    getMetrics = di.inject(getHorizontalPodAutoscalerMetrics);
+  });
+
   describe("HPA v2", () => {
     it("should return correct empty metrics", () => {
       const hpa = new HorizontalPodAutoscaler(hpaV2);
 
-      expect(hpa.getMetrics()).toHaveLength(0);
+      expect(getMetrics(hpa)).toHaveLength(0);
     });
 
     it("should return correct resource metrics", () => {
@@ -48,7 +60,7 @@ describe("HorizontalPodAutoscalerApi", () => {
         }
       });
 
-      expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 50%");
+      expect(getMetrics(hpa)[0]).toEqual("unknown / 50%");
     });
 
     it("should return correct resource metrics with current metrics", () => {
@@ -87,7 +99,7 @@ describe("HorizontalPodAutoscalerApi", () => {
         }
       });
 
-      expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("10% / 50%");
+      expect(getMetrics(hpa)[0]).toEqual("10% / 50%");
     });
 
     it("should return correct container resource metrics", () => {
@@ -113,7 +125,7 @@ describe("HorizontalPodAutoscalerApi", () => {
         }
       );
 
-      expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 60%");
+      expect(getMetrics(hpa)[0]).toEqual("unknown / 60%");
     });
 
     it("should return correct pod metrics", () => {
@@ -140,7 +152,7 @@ describe("HorizontalPodAutoscalerApi", () => {
         }
       );
 
-      expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 1k");
+      expect(getMetrics(hpa)[0]).toEqual("unknown / 1k");
     });
 
     it("should return correct object metrics", () => {
@@ -167,7 +179,7 @@ describe("HorizontalPodAutoscalerApi", () => {
         }
       );
 
-      expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 10k");
+      expect(getMetrics(hpa)[0]).toEqual("unknown / 10k");
     });
 
     it("should return correct external metrics with average value", () => {
@@ -197,7 +209,7 @@ describe("HorizontalPodAutoscalerApi", () => {
         }
       );
 
-      expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 30 (avg)");
+      expect(getMetrics(hpa)[0]).toEqual("unknown / 30 (avg)");
     });
 
     it("should return correct external metrics with value", () => {
@@ -227,7 +239,7 @@ describe("HorizontalPodAutoscalerApi", () => {
         }
       );
 
-      expect(hpa.getMetricValues(hpa.getMetrics()[0])).toEqual("unknown / 30");
+      expect(getMetrics(hpa)[0]).toEqual("unknown / 30");
     });
   });
 });
