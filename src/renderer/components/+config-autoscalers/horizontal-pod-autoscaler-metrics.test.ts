@@ -47,11 +47,6 @@ const hpaV2Beta1 = {
   },
 };
 
-// const hpaV2Beta2 = {
-//   ...hpaV2Beta1,
-//   apiVersion: "autoscaling/v2beta2",
-// }
-
 describe("getHorizontalPodAutoscalerMetrics", () => {
   let di: DiContainer;
   let getMetrics: (hpa: HorizontalPodAutoscaler) => string[];
