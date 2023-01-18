@@ -88,7 +88,15 @@ export class ClusterFrameHandler {
           () => {
             this.dependencies.logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
             this.views.delete(clusterId);
-            parentElem.removeChild(iframe);
+
+            // Must only remove iframe from DOM after it unloads old code. Else it crashes
+            iframe.addEventListener("load", () => parentElem.removeChild(iframe), {
+              once: true,
+            });
+
+            // This causes the old code to be unloaded.
+            iframe.setAttribute("src", "");
+
             dispose();
           },
         );
