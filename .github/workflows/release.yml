@@ -34,5 +34,6 @@ jobs:
     uses: ./.github/workflows/publish-release-npm.yml
     needs: release
     if: ${{ needs.release.outputs.version != '' }}
+    secrets: inherit
     with:
       version: ${{ needs.release.outputs.version }}

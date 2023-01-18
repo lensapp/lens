@@ -37,7 +37,7 @@ jobs:
 
           echo "status=create" >> $GITHUB_OUTPUT
       - uses: peter-evans/create-pull-request@v4
-        if: ${{ steps.bump.outputs.status == "create" }}
+        if: ${{ steps.bump.outputs.status == 'create' }}
         with:
           add-paths: package.json
           commit-message: Update package.json version to next preminor because of recent release
