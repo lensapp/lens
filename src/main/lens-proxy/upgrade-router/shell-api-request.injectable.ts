@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import authenticateShellRequestInjectable from "./shell-request-authenticator.injectable";
 import openShellSessionInjectable from "../../shell-session/create-shell-session.injectable";
-import URLParse from "url-parse";
 import { Server as WebSocketServer } from "ws";
 import loggerInjectable from "../../../common/logger.injectable";
 import getClusterForRequestInjectable from "../get-cluster-for-request.injectable";
@@ -24,7 +23,10 @@ const shellApiUpgradeRouteInjectable = getInjectable({
     return {
       handler: ({ req, socket, head }) => {
         const cluster = getClusterForRequest(req);
-        const { query: { node: nodeName, shellToken, id: tabId }} = new URLParse(req.url, true);
+        const { searchParams } = new URL(req.url, "https://lens.app");
+        const nodeName = searchParams.get("node") ?? undefined;
+        const shellToken = searchParams.get("shellToken") ?? undefined;
+        const tabId = searchParams.get("id");
 
         if (!tabId || !cluster || !authenticateShellRequest(cluster.id, tabId, shellToken)) {
           socket.write("Invalid shell request");

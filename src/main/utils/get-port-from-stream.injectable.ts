@@ -4,7 +4,6 @@
  */
 
 import type { Readable } from "stream";
-import URLParse from "url-parse";
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../common/logger.injectable";
 
@@ -53,7 +52,7 @@ const getPortFromStreamInjectable = getInjectable({
 
           if (match.matched) {
             // use unknown protocol so that there is no default port
-            const addr = new URLParse(`s://${match.groups?.address?.trim()}`);
+            const addr = new URL(`s://${match.groups?.address?.trim()}`);
 
             args.onFind?.();
             stream.off("data", handler);

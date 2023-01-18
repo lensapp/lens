@@ -5,7 +5,6 @@
 import { isObject } from "../../../common/utils";
 import React from "react";
 import { SemVer } from "semver";
-import URLParse from "url-parse";
 import { getInjectable } from "@ogre-tools/injectable";
 import attemptInstallInjectable from "./attempt-install/attempt-install.injectable";
 import getBaseRegistryUrlInjectable from "./get-base-registry-url/get-base-registry-url.injectable";
@@ -58,7 +57,7 @@ const attemptInstallByInfoInjectable = getInjectable({
       const { name, version: versionOrTagName, requireConfirmation = false } = info;
       const disposer = extensionInstallationStateStore.startPreInstall();
       const baseUrl = await getBaseRegistryUrl();
-      const registryUrl = new URLParse(baseUrl).set("pathname", name).toString();
+      const registryUrl = new URL(name, baseUrl).toString();
       let json: NpmRegistryPackageDescriptor;
 
       try {

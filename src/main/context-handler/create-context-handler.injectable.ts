@@ -8,7 +8,6 @@ import type { ClusterContextHandler, ContextHandlerDependencies } from "./contex
 import { ContextHandler } from "./context-handler";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import kubeAuthProxyCertificateInjectable from "../kube-auth-proxy/kube-auth-proxy-certificate.injectable";
-import URLParse from "url-parse";
 import getPrometheusProviderByKindInjectable from "../prometheus/get-by-kind.injectable";
 import prometheusProvidersInjectable from "../prometheus/providers.injectable";
 import loggerInjectable from "../../common/logger.injectable";
@@ -27,7 +26,7 @@ const createContextHandlerInjectable = getInjectable({
     };
 
     return (cluster: Cluster): ClusterContextHandler => {
-      const clusterUrl = new URLParse(cluster.apiUrl);
+      const clusterUrl = new URL(cluster.apiUrl);
 
       return new ContextHandler({
         ...dependencies,
