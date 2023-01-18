@@ -17,6 +17,11 @@ export enum HpaMetricType {
   ContainerResource = "ContainerResource",
 }
 
+export interface MetricCurrentTarget {
+  current?: string;
+  target?: string;
+}
+
 export interface HorizontalPodAutoscalerMetricTarget {
   kind: string;
   name: string;

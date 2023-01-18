@@ -19,6 +19,7 @@ import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-m
 import { withInjectables } from "@ogre-tools/injectable-react";
 import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import horizontalPodAutoscalerStoreInjectable from "./store.injectable";
+import getHorizontalPodAutoscalerMetrics from "./get-hpa-metrics.injectable";
 
 enum columnId {
   name = "name",
@@ -34,6 +35,7 @@ enum columnId {
 interface Dependencies {
   horizontalPodAutoscalerStore: HorizontalPodAutoscalerStore;
   filterByNamespace: FilterByNamespace;
+  getMetrics: (hpa: HorizontalPodAutoscaler) => string[];
 }
 
 @observer
@@ -49,7 +51,7 @@ class NonInjectedHorizontalPodAutoscalers extends React.Component<Dependencies> 
 
     return (
       <p>
-        {hpa.getMetricValues(metrics[0])}
+        {this.props.getMetrics(hpa)[0]}
         {" "}
         {metricsRemain}
       </p>
@@ -126,5 +128,6 @@ export const HorizontalPodAutoscalers = withInjectables<Dependencies>(NonInjecte
     ...props,
     filterByNamespace: di.inject(filterByNamespaceInjectable),
     horizontalPodAutoscalerStore: di.inject(horizontalPodAutoscalerStoreInjectable),
+    getMetrics: di.inject(getHorizontalPodAutoscalerMetrics),
   }),
 });
