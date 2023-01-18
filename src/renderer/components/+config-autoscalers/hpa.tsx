@@ -10,15 +10,14 @@ import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { HorizontalPodAutoscaler } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
 import { Badge } from "../badge";
-import { cssNames, prevDefault } from "../../utils";
+import { cssNames } from "../../utils";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import type { HorizontalPodAutoscalerStore } from "./store";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import horizontalPodAutoscalerStoreInjectable from "./store.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -33,7 +32,6 @@ enum columnId {
 
 interface Dependencies {
   horizontalPodAutoscalerStore: HorizontalPodAutoscalerStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 @observer
@@ -90,13 +88,10 @@ class NonInjectedHorizontalPodAutoscalers extends React.Component<Dependencies> 
           renderTableContents={hpa => [
             hpa.getName(),
             <KubeObjectStatusIcon key="icon" object={hpa} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(hpa.getNs()))}
-            >
-              {hpa.getNs()}
-            </a>,
+              namespace={hpa.getNs()}
+            />,
             this.getTargets(hpa),
             hpa.getMinPods(),
             hpa.getMaxPods(),
@@ -124,7 +119,6 @@ class NonInjectedHorizontalPodAutoscalers extends React.Component<Dependencies> 
 export const HorizontalPodAutoscalers = withInjectables<Dependencies>(NonInjectedHorizontalPodAutoscalers, {
   getProps: (di, props) => ({
     ...props,
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     horizontalPodAutoscalerStore: di.inject(horizontalPodAutoscalerStoreInjectable),
   }),
 });
