@@ -38,7 +38,7 @@ export class HorizontalPodAutoscalerV2MetricParser {
     return {
       current: (
         current?.current?.value
-          ?? current?.current?.averageValue ? `${current?.current?.averageValue} (avg)` : undefined
+          ?? current?.current?.averageValue
       ),
       target: (
         target?.target?.value
