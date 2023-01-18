@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import type { DiContainer } from "@ogre-tools/injectable";
 import getHorizontalPodAutoscalerMetrics from "./get-hpa-metrics.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -19,9 +23,9 @@ const hpaV2 = {
       kind: "Deployment",
       name: "hpav2deployment",
       apiVersion: "apps/v1",
-    }
-  }
-}
+    },
+  },
+};
 
 const hpaV2Beta1 = {
   apiVersion: "autoscaling/v2beta1",
@@ -41,7 +45,7 @@ const hpaV2Beta1 = {
       apiVersion: "apps/v1",
     },
   },
-}
+};
 
 // const hpaV2Beta2 = {
 //   ...hpaV2Beta1,
@@ -77,12 +81,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 name: "cpu",
                 target: {
                   type: "Utilization",
-                  averageUtilization: 50
-                }
-              }
-            }
-          ]
-        }
+                  averageUtilization: 50,
+                },
+              },
+            },
+          ],
+        },
       });
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 50%");
@@ -100,11 +104,11 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 name: "cpu",
                 target: {
                   type: "Utilization",
-                  averageUtilization: 50
-                }
-              }
-            }
-          ]
+                  averageUtilization: 50,
+                },
+              },
+            },
+          ],
         },
         status: {
           currentReplicas: 1,
@@ -116,12 +120,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 name: "cpu",
                 current: {
                   averageValue: "100m",
-                  averageUtilization: 10
-                }
-              }
-            }
+                  averageUtilization: 10,
+                },
+              },
+            },
           ],
-        }
+        },
       });
 
       expect(getMetrics(hpa)[0]).toEqual("10% / 50%");
@@ -139,11 +143,11 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 name: "cpu",
                 target: {
                   type: "Value",
-                  averageValue: "100m"
-                }
-              }
-            }
-          ]
+                  averageValue: "100m",
+                },
+              },
+            },
+          ],
         },
         status: {
           currentReplicas: 1,
@@ -155,11 +159,11 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 name: "cpu",
                 current: {
                   averageValue: "500m",
-                }
-              }
-            }
+                },
+              },
+            },
           ],
-        }
+        },
       });
 
       expect(getMetrics(hpa)[0]).toEqual("500m / 100m");
@@ -180,12 +184,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                   target: {
                     type: "Utilization",
                     averageUtilization: 60,
-                  }
-                }
-              }
-            ]
-          }
-        }
+                  },
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 60%");
@@ -205,11 +209,11 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                   container: "nginx",
                   target: {
                     type: "Utilization",
-                    averageUtilization: 60
-                  }
-                }
-              }
-            ]
+                    averageUtilization: 60,
+                  },
+                },
+              },
+            ],
           },
           status: {
             currentReplicas: 1,
@@ -220,13 +224,13 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 containerResource: {
                   name: "cpu",
                   current: {
-                    averageUtilization: 10
-                  }
-                }
-              }
+                    averageUtilization: 10,
+                  },
+                },
+              },
             ],
-          }
-        }
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("10% / 60%");
@@ -243,17 +247,17 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Pods,
                 pods: {
                   metric: {
-                    name: "packets-per-second"
+                    name: "packets-per-second",
                   },
                   target: {
                     type: "AverageValue",
-                    averageValue: "1k"
-                  }
-                }
-              }
-            ]
-          }
-        }
+                    averageValue: "1k",
+                  },
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 1k");
@@ -270,15 +274,15 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Pods,
                 pods: {
                   metric: {
-                    name: "packets-per-second"
+                    name: "packets-per-second",
                   },
                   target: {
                     type: "AverageValue",
-                    averageValue: "1k"
-                  }
-                }
-              }
-            ]
+                    averageValue: "1k",
+                  },
+                },
+              },
+            ],
           },
           status: {
             currentReplicas: 1,
@@ -291,13 +295,13 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                     name: "packets-per-second",
                   },
                   current: {
-                    averageValue: "10"
-                  }
-                }
-              }
+                    averageValue: "10",
+                  },
+                },
+              },
             ],
-          }
-        }
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("10 / 1k");
@@ -314,17 +318,17 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Object,
                 object: {
                   metric: {
-                    name: "requests-per-second"
+                    name: "requests-per-second",
                   },
                   target: {
                     type: "Value",
-                    value: "10k"
-                  }
-                }
-              }
-            ]
-          }
-        }
+                    value: "10k",
+                  },
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 10k");
@@ -341,17 +345,17 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Object,
                 object: {
                   metric: {
-                    name: "requests-per-second"
+                    name: "requests-per-second",
                   },
                   target: {
                     type: "AverageValue",
-                    averageValue: "5k"
-                  }
-                }
-              }
-            ]
-          }
-        }
+                    averageValue: "5k",
+                  },
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 5k");
@@ -368,15 +372,15 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Object,
                 object: {
                   metric: {
-                    name: "requests-per-second"
+                    name: "requests-per-second",
                   },
                   target: {
                     type: "Value",
-                    value: "5k"
-                  }
-                }
-              }
-            ]
+                    value: "5k",
+                  },
+                },
+              },
+            ],
           },
           status: {
             currentReplicas: 1,
@@ -389,13 +393,13 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                     name: "requests-per-second",
                   },
                   current: {
-                    value: "10k"
-                  }
-                }
-              }
+                    value: "10k",
+                  },
+                },
+              },
             ],
-          }
-        }
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("10k / 5k");
@@ -414,18 +418,18 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                   metric: {
                     name: "queue_messages_ready",
                     selector: {
-                      matchLabels: {queue: 'worker_tasks'}
-                    }
+                      matchLabels: { queue: "worker_tasks" },
+                    },
                   },
                   target: {
                     type: "AverageValue",
-                    averageValue: "30"
-                  }
-                }
-              }
-            ]
-          }
-        }
+                    averageValue: "30",
+                  },
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 30 (avg)");
@@ -444,18 +448,18 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                   metric: {
                     name: "queue_messages_ready",
                     selector: {
-                      matchLabels: {queue: 'worker_tasks'}
-                    }
+                      matchLabels: { queue: "worker_tasks" },
+                    },
                   },
                   target: {
                     type: "Value",
-                    value: "30"
-                  }
-                }
-              }
-            ]
-          }
-        }
+                    value: "30",
+                  },
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 30");
@@ -474,16 +478,16 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                   metric: {
                     name: "queue_messages_ready",
                     selector: {
-                      matchLabels: {queue: 'worker_tasks'}
-                    }
+                      matchLabels: { queue: "worker_tasks" },
+                    },
                   },
                   target: {
                     type: "Value",
-                    value: "30"
-                  }
-                }
-              }
-            ]
+                    value: "30",
+                  },
+                },
+              },
+            ],
           },
           status: {
             currentReplicas: 1,
@@ -496,13 +500,13 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                     name: "queue_messages_ready",
                   },
                   current: {
-                    value: "10"
-                  }
-                }
-              }
+                    value: "10",
+                  },
+                },
+              },
             ],
-          }
-        }
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("10 / 30");
@@ -521,16 +525,16 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                   metric: {
                     name: "queue_messages_ready",
                     selector: {
-                      matchLabels: {queue: 'worker_tasks'}
-                    }
+                      matchLabels: { queue: "worker_tasks" },
+                    },
                   },
                   target: {
                     type: "AverageValue",
-                    averageValue: "30"
-                  }
-                }
-              }
-            ]
+                    averageValue: "30",
+                  },
+                },
+              },
+            ],
           },
           status: {
             currentReplicas: 1,
@@ -543,13 +547,13 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                     name: "queue_messages_ready",
                   },
                   current: {
-                    averageValue: "10"
-                  }
-                }
-              }
+                    averageValue: "10",
+                  },
+                },
+              },
             ],
-          }
-        }
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("10 (avg) / 30 (avg)");
@@ -568,16 +572,16 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                   metric: {
                     name: "queue_messages_ready",
                     selector: {
-                      matchLabels: {queue: 'worker_tasks'}
-                    }
+                      matchLabels: { queue: "worker_tasks" },
+                    },
                   },
                   target: {
                     type: "AverageValue",
-                    averageValue: "30"
-                  }
-                }
-              }
-            ]
+                    averageValue: "30",
+                  },
+                },
+              },
+            ],
           },
           status: {
             currentReplicas: 1,
@@ -590,13 +594,13 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                     name: "queue_messages_NOT_ready",
                   },
                   current: {
-                    averageValue: "10"
-                  }
-                }
-              }
+                    averageValue: "10",
+                  },
+                },
+              },
             ],
-          }
-        }
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 30 (avg)");
@@ -620,11 +624,11 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
               type: HpaMetricType.Resource,
               resource: {
                 name: "cpu",
-                targetAverageUtilization: 50
-              }
-            }
-          ]
-        }
+                targetAverageUtilization: 50,
+              },
+            },
+          ],
+        },
       });
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 50%");
@@ -640,10 +644,10 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
               type: HpaMetricType.Resource,
               resource: {
                 name: "cpu",
-                targetAverageUtilization: 50
-              }
-            }
-          ]
+                targetAverageUtilization: 50,
+              },
+            },
+          ],
         },
         status: {
           currentReplicas: 1,
@@ -653,11 +657,11 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
               type: HpaMetricType.Resource,
               resource: {
                 name: "cpu",
-                currentAverageUtilization: 10
-              }
-            }
+                currentAverageUtilization: 10,
+              },
+            },
           ],
-        }
+        },
       });
   
       expect(getMetrics(hpa)[0]).toEqual("10% / 50%");
@@ -673,10 +677,10 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
               type: HpaMetricType.Resource,
               resource: {
                 name: "cpu",
-                targetAverageValue: "100m"
-              }
-            }
-          ]
+                targetAverageValue: "100m",
+              },
+            },
+          ],
         },
         status: {
           currentReplicas: 1,
@@ -686,11 +690,11 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
               type: HpaMetricType.Resource,
               resource: {
                 name: "cpu",
-                currentAverageValue: "500m"
-              }
-            }
+                currentAverageValue: "500m",
+              },
+            },
           ],
-        }
+        },
       });
   
       expect(getMetrics(hpa)[0]).toEqual("500m / 100m");
@@ -708,12 +712,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 containerResource: {
                   name: "cpu",
                   container: "nginx",
-                  targetAverageUtilization: 60
-                }
-              }
-            ]
-          }
-        }
+                  targetAverageUtilization: 60,
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 60%");
@@ -731,10 +735,10 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 containerResource: {
                   name: "cpu",
                   container: "nginx",
-                  targetAverageUtilization: 60
-                }
-              }
-            ]
+                  targetAverageUtilization: 60,
+                },
+              },
+            ],
           },
           status: {
             currentReplicas: 1,
@@ -744,12 +748,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.ContainerResource,
                 containerResource: {
                   name: "cpu",
-                  currentAverageUtilization: 10
-                }
-              }
+                  currentAverageUtilization: 10,
+                },
+              },
             ],
-          }
-        }
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("10% / 60%");
@@ -766,12 +770,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Pods,
                 pods: {
                   metricName: "packets-per-second",
-                  targetAverageValue: "1k"
-                }
-              }
-            ]
-          }
-        }
+                  targetAverageValue: "1k",
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 1k");
@@ -789,10 +793,10 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 pods: {
                   metricName: "packets-per-second",
                   
-                  targetAverageValue: "1k"
-                }
-              }
-            ]
+                  targetAverageValue: "1k",
+                },
+              },
+            ],
           },
           status: {
             currentReplicas: 1,
@@ -802,12 +806,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Pods,
                 pods: {
                   metricName: "packets-per-second",
-                  currentAverageValue: "10"
-                }
-              }
+                  currentAverageValue: "10",
+                },
+              },
             ],
-          }
-        }
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("10 / 1k");
@@ -824,12 +828,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Object,
                 object: {
                   metricName: "packets-per-second",
-                  targetValue: "10k"
-                }
-              }
-            ]
-          }
-        }
+                  targetValue: "10k",
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 10k");
@@ -846,12 +850,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Object,
                 object: {
                   metricName: "packets-per-second",
-                  averageValue: "5k"
-                }
-              }
-            ]
-          }
-        }
+                  averageValue: "5k",
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 5k");
@@ -868,10 +872,10 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Object,
                 object: {
                   metricName: "packets-per-second",
-                  targetValue: "5k"
-                }
-              }
-            ]
+                  targetValue: "5k",
+                },
+              },
+            ],
           },
           status: {
             currentReplicas: 1,
@@ -881,12 +885,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.Object,
                 object: {
                   metricName: "packets-per-second",
-                  currentValue: "10k"
-                }
-              }
+                  currentValue: "10k",
+                },
+              },
             ],
-          }
-        }
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("10k / 5k");
@@ -903,13 +907,13 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.External,
                 external: {
                   metricName: "queue_messages_ready",
-                  metricSelector: { matchLabels: {queue: 'worker_tasks'} },
-                  targetAverageValue: "30"
-                }
-              }
-            ]
-          }
-        }
+                  metricSelector: { matchLabels: { queue: "worker_tasks" }},
+                  targetAverageValue: "30",
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 30");
@@ -926,13 +930,13 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.External,
                 external: {
                   metricName: "queue_messages_ready",
-                  metricSelector: { matchLabels: {queue: 'worker_tasks'} },
-                  targetValue: "30"
-                }
-              }
-            ]
-          }
-        }
+                  metricSelector: { matchLabels: { queue: "worker_tasks" }},
+                  targetValue: "30",
+                },
+              },
+            ],
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 30");
@@ -949,11 +953,11 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.External,
                 external: {
                   metricName: "queue_messages_ready",
-                  metricSelector: { matchLabels: {queue: 'worker_tasks'} },
-                  targetValue: "30"
-                }
-              }
-            ]
+                  metricSelector: { matchLabels: { queue: "worker_tasks" }},
+                  targetValue: "30",
+                },
+              },
+            ],
           },
           status: {
             currentReplicas: 1,
@@ -963,12 +967,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.External,
                 external: {
                   metricName: "queue_messages_ready",
-                  currentValue: "10"
-                }
-              }
+                  currentValue: "10",
+                },
+              },
             ],
-          }
-        }
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("10 / 30");
@@ -985,11 +989,11 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.External,
                 external: {
                   metricName: "queue_messages_ready",
-                  metricSelector: { matchLabels: {queue: 'worker_tasks'} },
-                  targetAverageValue: "30"
-                }
-              }
-            ]
+                  metricSelector: { matchLabels: { queue: "worker_tasks" }},
+                  targetAverageValue: "30",
+                },
+              },
+            ],
           },
           status: {
             currentReplicas: 1,
@@ -999,12 +1003,12 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
                 type: HpaMetricType.External,
                 external: {
                   metricName: "queue_messages_ready",
-                  currentAverageValue: "10"
-                }
-              }
+                  currentAverageValue: "10",
+                },
+              },
             ],
-          }
-        }
+          },
+        },
       );
 
       expect(getMetrics(hpa)[0]).toEqual("10 / 30");
@@ -1020,10 +1024,10 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
               type: HpaMetricType.Resource,
               resource: {
                 name: "cpu",
-                targetAverageUtilization: 50
-              }
-            }
-          ]
+                targetAverageUtilization: 50,
+              },
+            },
+          ],
         },
         status: {
           currentReplicas: 1,
@@ -1033,11 +1037,11 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
               type: HpaMetricType.Resource,
               resource: {
                 name: "memory",
-                currentAverageUtilization: 10
-              }
-            }
+                currentAverageUtilization: 10,
+              },
+            },
           ],
-        }
+        },
       });
   
       expect(getMetrics(hpa)[0]).toEqual("unknown / 50%");
@@ -1063,8 +1067,8 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             name: "hpav1deployment",
             apiVersion: "apps/v1",
           },
-          targetCPUUtilizationPercentage: 80
-        }
+          targetCPUUtilizationPercentage: 80,
+        },
       });
 
       expect(getMetrics(hpa)[0]).toEqual("unknown / 80%");
@@ -1088,13 +1092,13 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             name: "hpav1deployment",
             apiVersion: "apps/v1",
           },
-          targetCPUUtilizationPercentage: 80
+          targetCPUUtilizationPercentage: 80,
         },
         status: {
           currentReplicas: 1,
           desiredReplicas: 10,
-          currentCPUUtilizationPercentage: 10
-        }
+          currentCPUUtilizationPercentage: 10,
+        },
       });
 
       expect(getMetrics(hpa)[0]).toEqual("10% / 80%");

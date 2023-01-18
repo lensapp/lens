@@ -1,7 +1,11 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import type { ContainerResourceMetricSource, ContainerResourceMetricStatus, ExternalMetricSource, ExternalMetricStatus, MetricCurrentTarget, ObjectMetricSource, ObjectMetricStatus, PodsMetricSource, PodsMetricStatus, ResourceMetricSource, ResourceMetricStatus } from "../../../common/k8s-api/endpoints";
 
 export class HorizontalPodAutoscalerV1MetricParser {
-  public getResource({ current, target }: { current: ResourceMetricStatus | undefined, target: ResourceMetricSource }): MetricCurrentTarget {
+  public getResource({ current, target }: { current: ResourceMetricStatus | undefined; target: ResourceMetricSource }): MetricCurrentTarget {
     return {
       current: (
         typeof current?.currentAverageUtilization === "number"
@@ -16,14 +20,14 @@ export class HorizontalPodAutoscalerV1MetricParser {
     };
   }
   
-  public getPods({ current, target }: { current: PodsMetricStatus | undefined, target: PodsMetricSource }): MetricCurrentTarget {
+  public getPods({ current, target }: { current: PodsMetricStatus | undefined; target: PodsMetricSource }): MetricCurrentTarget {
     return {
       current: current?.currentAverageValue,
       target: target?.targetAverageValue,
     };
   }
   
-  public getObject({ current, target }: { current: ObjectMetricStatus | undefined, target: ObjectMetricSource }): MetricCurrentTarget {
+  public getObject({ current, target }: { current: ObjectMetricStatus | undefined; target: ObjectMetricSource }): MetricCurrentTarget {
     return {
       current: (
         current?.currentValue
@@ -36,7 +40,7 @@ export class HorizontalPodAutoscalerV1MetricParser {
     };
   }
   
-  public getExternal({ current, target }: { current: ExternalMetricStatus | undefined, target: ExternalMetricSource }): MetricCurrentTarget {
+  public getExternal({ current, target }: { current: ExternalMetricStatus | undefined; target: ExternalMetricSource }): MetricCurrentTarget {
     return {
       current: (
         current?.currentValue
@@ -49,7 +53,7 @@ export class HorizontalPodAutoscalerV1MetricParser {
     };
   }
   
-  public getContainerResource({ current, target }: { current: ContainerResourceMetricStatus | undefined, target: ContainerResourceMetricSource }): MetricCurrentTarget {
+  public getContainerResource({ current, target }: { current: ContainerResourceMetricStatus | undefined; target: ContainerResourceMetricSource }): MetricCurrentTarget {
     return {
       current: (
         typeof current?.currentAverageUtilization === "number"

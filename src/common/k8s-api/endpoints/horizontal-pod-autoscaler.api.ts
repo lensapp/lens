@@ -37,7 +37,7 @@ export interface ContainerResourceMetricSource {
     averageUtilization?: number;
     averageValue?: string;
     type?: string;
-  }
+  };
 }
 
 export interface ExternalMetricSource {
@@ -48,12 +48,12 @@ export interface ExternalMetricSource {
   metric?: {
     name?: string;
     selector?: LabelSelector;
-  },
+  };
   target?: {
     type: string;
     value?: string;
     averageValue?: string;
-  }
+  };
 }
 
 export interface ObjectMetricSource {
@@ -63,13 +63,13 @@ export interface ObjectMetricSource {
   targetValue?: string;
   metric?: {
     name?: string;
-  },
+  };
   target?: {
     type?: string;
     value?: string;
     averageValue?: string;
   };
-  describedObject?: CrossVersionObjectReference
+  describedObject?: CrossVersionObjectReference;
 }
 
 export interface PodsMetricSource {
@@ -78,11 +78,11 @@ export interface PodsMetricSource {
   targetAverageValue?: string;
   metric?: {
     name?: string;
-  }
+  };
   target?: {
     averageValue?: string;
     type?: string;
-  }
+  };
 }
 
 export interface ResourceMetricSource {
@@ -93,7 +93,7 @@ export interface ResourceMetricSource {
     averageUtilization?: number;
     averageValue?: string;
     type?: string;
-  }
+  };
 }
 
 export interface BaseHorizontalPodAutoscalerMetricSpec {
@@ -140,7 +140,7 @@ export interface ContainerResourceMetricStatus {
   current?: {
     averageUtilization?: number;
     averageValue?: string;
-  }
+  };
 }
 
 export interface ExternalMetricStatus {
@@ -151,11 +151,11 @@ export interface ExternalMetricStatus {
   metric?: {
     name?: string;
     selector?: LabelSelector;
-  },
+  };
   current?: {
     averageValue?: string;
     value?: string;
-  }
+  };
 }
 
 export interface ObjectMetricStatus {
@@ -166,7 +166,7 @@ export interface ObjectMetricStatus {
   metric?: {
     name?: string;
     selector?: LabelSelector;
-  },
+  };
   current?: {
     type?: string;
     value?: string;
@@ -181,10 +181,10 @@ export interface PodsMetricStatus {
   selector?: LabelSelector;
   metric?: {
     name?: string;
-  }
+  };
   current?: {
     averageValue?: string;
-  }
+  };
 }
 
 export interface ResourceMetricStatus {
@@ -194,7 +194,7 @@ export interface ResourceMetricStatus {
   current?: {
     averageUtilization?: number;
     averageValue?: string;
-  }
+  };
 }
 
 export interface BaseHorizontalPodAutoscalerMetricStatus {

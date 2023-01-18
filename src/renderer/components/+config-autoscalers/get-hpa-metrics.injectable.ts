@@ -1,5 +1,10 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import { getInjectable } from "@ogre-tools/injectable";
-import { HorizontalPodAutoscaler, HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricStatus, HpaMetricType } from "../../../common/k8s-api/endpoints";
+import type { HorizontalPodAutoscaler, HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricStatus } from "../../../common/k8s-api/endpoints";
+import { HpaMetricType } from "../../../common/k8s-api/endpoints";
 import horizonalPodAutoscalerV1MetricParser from "./hpa-v1-metric-parser.injectable";
 import type { HorizontalPodAutoscalerV2MetricParser } from "./hpa-v2-metric-parser";
 import horizonalPodAutoscalerV2MetricParser from "./hpa-v2-metric-parser.injectable";
@@ -16,13 +21,14 @@ const getHorizontalPodAutoscalerMetrics = getInjectable({
     if (cpuUtilization) {
       const utilizationCurrent = hpa.status?.currentCPUUtilizationPercentage ? `${hpa.status.currentCPUUtilizationPercentage}%` : "unknown";
       const utilizationTarget = cpuUtilization ? `${cpuUtilization}%` : "unknown";
+
       return [`${utilizationCurrent} / ${utilizationTarget}`];
     }
 
     return metrics.map((metric) => {
       const currentMetric = currentMetrics.find(current =>
         current.type === metric.type
-        && getMetricName(current) === getMetricName(metric)
+        && getMetricName(current) === getMetricName(metric),
       );
 
       const h2Values = getMetricValues(hpaV2Parser, currentMetric, metric);
@@ -36,12 +42,12 @@ const getHorizontalPodAutoscalerMetrics = getInjectable({
       return `${values.current ?? "unknown"} / ${values.target ?? "unknown"}`;
     });
   },
-})
+});
 
 function getMetricValues(parser: HorizontalPodAutoscalerV2MetricParser, current: HorizontalPodAutoscalerMetricStatus | undefined, target: HorizontalPodAutoscalerMetricSpec) {
   switch (target.type) {
     case HpaMetricType.Resource:
-      return parser.getResource({ current: current?.resource, target: target.resource});
+      return parser.getResource({ current: current?.resource, target: target.resource });
     case HpaMetricType.Pods:
       return parser.getPods({ current: current?.pods, target: target.pods });
     case HpaMetricType.Object:
