@@ -43,6 +43,31 @@ const hpaV1 = {
   }
 }
 
+const hpaV2Beta1 = {
+  apiVersion: "autoscaling/v2beta1",
+  kind: "HorizontalPodAutoscaler",
+  metadata: {
+    name: "hpav2beta1",
+    resourceVersion: "1",
+    uid: "hpav1",
+    namespace: "default",
+    selfLink: "/apis/autoscaling/v2beta1/namespaces/default/horizontalpodautoscalers/hpav2beta1",
+  },
+  spec: {
+    maxReplicas: 10,
+    scaleTargetRef: {
+      kind: "Deployment",
+      name: "hpav1deployment",
+      apiVersion: "apps/v1",
+    },
+  },
+}
+
+const hpaV2Beta2 = {
+  ...hpaV2Beta1,
+  apiVersion: "autoscaling/v2beta2",
+}
+
 describe("getHorizontalPodAutoscalerMetrics", () => {
   let di: DiContainer;
   let getMetrics: (hpa: HorizontalPodAutoscaler) => string[];
@@ -1035,6 +1060,76 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
         }
       });
   
+      expect(getMetrics(hpa)[0]).toEqual("unknown / 50%");
+    });
+  });
+
+  describe("HPA v2beta1", () => {
+    it("should use metric parser for hpa autoscaling/v2", () => {
+      const hpa = new HorizontalPodAutoscaler({
+        ...hpaV2Beta1,
+        spec: {
+          ...hpaV2Beta1.spec,
+          metrics: [
+            {
+              type: HpaMetricType.Resource,
+              resource: {
+                name: "cpu",
+                target: {
+                  type: "Utilization",
+                  averageUtilization: 50
+                }
+              }
+            }
+          ]
+        }
+      });
+
+      expect(getMetrics(hpa)[0]).toEqual("unknown / 50%");
+    });
+
+    it("should return unknown metrics for invalid v2 metric format", () => {
+      const hpa = new HorizontalPodAutoscaler({
+        ...hpaV2Beta1,
+        spec: {
+          ...hpaV2Beta1.spec,
+          metrics: [
+            {
+              type: HpaMetricType.Resource,
+              resource: {
+                name: "cpu",
+                targetAverageUtilization: 50
+              }
+            }
+          ]
+        }
+      });
+
+      expect(getMetrics(hpa)[0]).toEqual("unknown / unknown");
+    });
+  });
+
+  describe("HPA v2beta2", () => {
+    it("should use metric parser for hpa autoscaling/v2", () => {
+      const hpa = new HorizontalPodAutoscaler({
+        ...hpaV2Beta2,
+        spec: {
+          ...hpaV2Beta2.spec,
+          metrics: [
+            {
+              type: HpaMetricType.Resource,
+              resource: {
+                name: "cpu",
+                target: {
+                  type: "Utilization",
+                  averageUtilization: 50
+                }
+              }
+            }
+          ]
+        }
+      });
+
       expect(getMetrics(hpa)[0]).toEqual("unknown / 50%");
     });
   });
