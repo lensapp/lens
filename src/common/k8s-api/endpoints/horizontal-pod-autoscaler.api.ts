@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { BaseKubeObjectCondition, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
-import { KubeObject } from "../kube-object";
+import type { OptionVarient } from "../../utils";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { OptionVarient } from "../../utils";
+import type { BaseKubeObjectCondition, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
+import { KubeObject } from "../kube-object";
 
 export enum HpaMetricType {
   Resource = "Resource",
@@ -28,10 +28,9 @@ export interface ContainerResourceMetricSource {
   name: string;
   targetAverageUtilization?: number;
   targetAverageValue?: string;
-
-  // autscaling/v2
   target?: {
     averageUtilization?: number;
+    averageValue?: string;
     type?: string;
   }
 }
@@ -41,8 +40,6 @@ export interface ExternalMetricSource {
   metricSelector?: LabelSelector;
   targetAverageValue?: string;
   targetValue?: string;
-
-  // autoscaling/v2
   metric?: {
     name?: string;
     selector?: LabelSelector;
@@ -59,24 +56,21 @@ export interface ObjectMetricSource {
   metricName?: string;
   selector?: LabelSelector;
   targetValue?: string;
-
-  // autoscaling/v2
   metric?: {
     name?: string;
   },
-  target: {
+  target?: {
     type?: string;
     value?: string;
+    averageValue?: string;
   };
-  describedObject?: CrossVersionObjectReference;
+  describedObject?: CrossVersionObjectReference
 }
 
 export interface PodsMetricSource {
   metricName?: string;
   selector?: LabelSelector;
   targetAverageValue?: string;
-
-  // autoscaling/v2
   metric?: {
     name?: string;
   }
@@ -90,8 +84,6 @@ export interface ResourceMetricSource {
   name: string;
   targetAverageUtilization?: number;
   targetAverageValue?: string;
-
-  // autoscaling/v2
   target?: {
     averageUtilization?: number;
     averageValue?: string;
@@ -136,17 +128,29 @@ interface HPAScalingPolicy {
 type HPAScalingPolicyType = string;
 
 export interface ContainerResourceMetricStatus {
-  container: string;
+  container?: string;
   currentAverageUtilization?: number;
-  currentAverageValue: string;
+  currentAverageValue?: string;
   name: string;
+  current?: {
+    averageUtilization?: number;
+    averageValue?: string;
+  }
 }
 
 export interface ExternalMetricStatus {
   currentAverageValue?: string;
-  currentValue: string;
-  metricName: string;
+  currentValue?: string;
+  metricName?: string;
   metricSelector?: LabelSelector;
+  metric?: {
+    name?: string;
+    selector?: LabelSelector;
+  },
+  current?: {
+    averageValue?: string;
+    value?: string;
+  }
 }
 
 export interface ObjectMetricStatus {
@@ -154,30 +158,34 @@ export interface ObjectMetricStatus {
   currentValue?: string;
   metricName?: string;
   selector?: LabelSelector;
-
-  // autoscaling/v2
   metric?: {
     name?: string;
+    selector?: LabelSelector;
   },
-  current: {
+  current?: {
     type?: string;
     value?: string;
+    averageValue?: string;
   };
   describedObject?: CrossVersionObjectReference;
 }
 
 export interface PodsMetricStatus {
-  currentAverageValue: string;
-  metricName: string;
+  currentAverageValue?: string;
+  metricName?: string;
   selector?: LabelSelector;
+  metric?: {
+    name?: string;
+  }
+  current?: {
+    averageValue?: string;
+  }
 }
 
 export interface ResourceMetricStatus {
   currentAverageUtilization?: number;
   currentAverageValue?: string;
   name: string;
-
-  // autoscaling/v2
   current?: {
     averageUtilization?: number;
     averageValue?: string;
@@ -220,11 +228,6 @@ export interface HorizontalPodAutoscalerStatus {
   currentMetrics?: HorizontalPodAutoscalerMetricStatus[];
 }
 
-interface MetricCurrentTarget {
-  current?: string;
-  target?: string;
-}
-
 export class HorizontalPodAutoscaler extends KubeObject<
   NamespaceScopedMetadata,
   HorizontalPodAutoscalerStatus,
@@ -263,47 +266,11 @@ export class HorizontalPodAutoscaler extends KubeObject<
   }
 
   getMetrics() {
-    // console.log(this.spec)
     return this.spec.metrics ?? [];
   }
 
   getCurrentMetrics() {
-    // console.log(this.status)
     return this.status?.currentMetrics ?? [];
-  }
-
-  getMetricValues(metric: HorizontalPodAutoscalerMetricSpec): string {
-    const {
-      current = "unknown",
-      target = "unknown",
-    } = this.getMetricsCurrentAndTarget(metric);
-
-    return `${current} / ${target}`;
-  }
-
-  getMetricsCurrentAndTarget(spec: HorizontalPodAutoscalerMetricSpec): MetricCurrentTarget {
-    const currentMetrics = this.getCurrentMetrics();
-    const currentMetric = currentMetrics.find(m => (
-      m.type === spec.type
-        && getMetricName(m) === getMetricName(spec)
-    ));
-
-    console.log(spec, currentMetrics)
-  
-    switch (spec.type) {
-      case HpaMetricType.Resource:
-        return getResourceMetricValue(currentMetric?.resource, spec.resource);
-      case HpaMetricType.Pods:
-        return getPodsMetricValue(currentMetric?.pods, spec.pods);
-      case HpaMetricType.Object:
-        return getObjectMetricValue(currentMetric?.object, spec.object);
-      case HpaMetricType.External:
-        return getExternalMetricValue(currentMetric?.external, spec.external);
-      case HpaMetricType.ContainerResource:
-        return getContainerResourceMetricValue(currentMetric?.containerResource, spec.containerResource);
-      default:
-        return {};
-    }
   }
 }
 
@@ -322,92 +289,3 @@ export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler>
     });
   }
 }
-
-function getMetricName(metric: HorizontalPodAutoscalerMetricSpec | HorizontalPodAutoscalerMetricStatus): string | undefined {
-  switch (metric.type) {
-    case HpaMetricType.Resource:
-      return metric.resource.name;
-    case HpaMetricType.Pods:
-      return metric.pods.metricName;
-    case HpaMetricType.Object:
-      return metric.object.metricName;
-    case HpaMetricType.External:
-      return metric.external.metricName;
-    case HpaMetricType.ContainerResource:
-      return metric.containerResource.name;
-    default:
-      return undefined;
-  }
-}
-
-function getResourceMetricValue(currentMetric: ResourceMetricStatus | undefined, targetMetric: ResourceMetricSource): MetricCurrentTarget {
-  return {
-    current: (
-      typeof currentMetric?.current?.averageUtilization === "number"
-        ? `${currentMetric.current?.averageUtilization}%`
-        : currentMetric?.current?.averageValue
-    ),
-    target: typeof targetMetric?.target?.averageUtilization === "number"
-    ? `${targetMetric.target.averageUtilization}%`
-    : targetMetric?.target?.averageValue ?? "unknown"
-  };
-}
-
-function getPodsMetricValue(currentMetric: PodsMetricStatus | undefined, targetMetric: PodsMetricSource): MetricCurrentTarget {
-  return {
-    current: currentMetric?.currentAverageValue,
-    target: targetMetric?.target?.averageValue,
-  }
-
-  // v1
-  // return {
-  //   current: currentMetric?.currentAverageValue,
-  //   target: targetMetric?.targetAverageValue,
-  // };
-}
-
-function getObjectMetricValue(currentMetric: ObjectMetricStatus | undefined, targetMetric: ObjectMetricSource): MetricCurrentTarget {
-  return {
-    current: (
-      currentMetric?.currentValue
-        ?? currentMetric?.averageValue
-    ),
-    target: targetMetric?.target?.value
-  };
-}
-
-function getExternalMetricValue(currentMetric: ExternalMetricStatus | undefined, targetMetric: ExternalMetricSource): MetricCurrentTarget {
-  return {
-    current: (
-      currentMetric?.currentValue
-        ?? currentMetric?.currentAverageValue
-    ),
-    target: (
-      targetMetric?.target?.value
-        ?? `${targetMetric?.target?.averageValue} (avg)`
-    ),
-  };
-}
-
-function getContainerResourceMetricValue(currentMetric: ContainerResourceMetricStatus | undefined, targetMetric: ContainerResourceMetricSource): MetricCurrentTarget {
-  let target = "unknown";
-
-  if (targetMetric.target) {
-    // v2
-    target = targetMetric.target.averageUtilization ? `${targetMetric.target.averageUtilization}%` : "unknown";
-  } else {
-    target = typeof targetMetric?.targetAverageUtilization === "number"
-      ? `${targetMetric.targetAverageUtilization}%`
-      : targetMetric?.targetAverageValue ?? "unknown";
-  }
-  
-  return {
-    current: (
-      typeof currentMetric?.currentAverageUtilization === "number"
-        ? `${currentMetric.currentAverageUtilization}%`
-        : currentMetric?.currentAverageValue
-    ),
-    target,
-  };
-}
-
