@@ -25,12 +25,12 @@ const getHorizontalPodAutoscalerMetrics = getInjectable({
         && getMetricName(current) === getMetricName(metric)
       );
 
-      const hpaV2ParserValues = getMetricValues(hpaV2Parser, currentMetric, metric);
-      const hpaV1ParserValues = getMetricValues(hpaV1Parser, currentMetric, metric);
-      let values = hpaV1ParserValues;
+      const h2Values = getMetricValues(hpaV2Parser, currentMetric, metric);
+      const h1Values = getMetricValues(hpaV1Parser, currentMetric, metric);
+      let values = h1Values;
 
-      if (hpaV2ParserValues.current || hpaV2ParserValues.target) {
-        values = hpaV2ParserValues;
+      if (h2Values.current || h2Values.target) {
+        values = h2Values;
       }
 
       return `${values.current ?? "unknown"} / ${values.target ?? "unknown"}`;
