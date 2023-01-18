@@ -287,12 +287,6 @@ export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler>
       ...opts ?? {},
       objectConstructor: HorizontalPodAutoscaler,
       checkPreferredVersion: true,
-      // Kubernetes < 1.26
-      fallbackApiBases: [
-        "/apis/autoscaling/v2beta2/horizontalpodautoscalers",
-        "/apis/autoscaling/v2beta1/horizontalpodautoscalers",
-        "/apis/autoscaling/v1/horizontalpodautoscalers",
-      ],
     });
   }
 }
