@@ -35,14 +35,16 @@ export class HorizontalPodAutoscalerV2MetricParser {
   }
   
   public getExternal({ current, target }: { current: ExternalMetricStatus | undefined, target: ExternalMetricSource }): MetricCurrentTarget {
+    const currentAverage = current?.current?.averageValue ? `${current?.current?.averageValue} (avg)` : undefined;
+    const targetAverage = target?.target?.averageValue ? `${target?.target?.averageValue} (avg)` : undefined;
     return {
       current: (
         current?.current?.value
-          ?? current?.current?.averageValue
+          ?? currentAverage
       ),
       target: (
         target?.target?.value
-          ?? `${target?.target?.averageValue ?? "unknown"} (avg)`
+          ?? targetAverage
       ),
     };
   }
@@ -51,11 +53,11 @@ export class HorizontalPodAutoscalerV2MetricParser {
     return {
       current: (
         current?.current?.averageValue
-          ?? current?.current?.averageUtilization ? `${current?.current?.averageUtilization}%` : "unknown"
+          ?? current?.current?.averageUtilization ? `${current?.current?.averageUtilization}%` : undefined
       ),
       target: (
         target?.target?.averageValue
-          ?? target?.target?.averageUtilization ? `${target?.target?.averageUtilization}%` : "unknown"
+          ?? target?.target?.averageUtilization ? `${target?.target?.averageUtilization}%` : undefined
       ),
     };
   }

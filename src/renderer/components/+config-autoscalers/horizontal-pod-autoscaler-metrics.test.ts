@@ -1,7 +1,7 @@
 import type { DiContainer } from "@ogre-tools/injectable";
-import getHorizontalPodAutoscalerMetrics from "../../../renderer/components/+config-autoscalers/get-hpa-metrics.injectable";
-import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
-import { HorizontalPodAutoscaler, HpaMetricType } from "../endpoints";
+import getHorizontalPodAutoscalerMetrics from "./get-hpa-metrics.injectable";
+import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints";
 
 const hpaV2 = {
   apiVersion: "autoscaling/v2",
@@ -18,26 +18,6 @@ const hpaV2 = {
     scaleTargetRef: {
       kind: "Deployment",
       name: "hpav2deployment",
-      apiVersion: "apps/v1",
-    }
-  }
-}
-
-const hpaV1 = {
-  apiVersion: "autoscaling/v1",
-  kind: "HorizontalPodAutoscaler",
-  metadata: {
-    name: "hpav1",
-    resourceVersion: "1",
-    uid: "hpav1",
-    namespace: "default",
-    selfLink: "/apis/autoscaling/v1/namespaces/default/horizontalpodautoscalers/hpav1",
-  },
-  spec: {
-    maxReplicas: 10,
-    scaleTargetRef: {
-      kind: "Deployment",
-      name: "hpav1deployment",
       apiVersion: "apps/v1",
     }
   }
@@ -63,10 +43,10 @@ const hpaV2Beta1 = {
   },
 }
 
-const hpaV2Beta2 = {
-  ...hpaV2Beta1,
-  apiVersion: "autoscaling/v2beta2",
-}
+// const hpaV2Beta2 = {
+//   ...hpaV2Beta1,
+//   apiVersion: "autoscaling/v2beta2",
+// }
 
 describe("getHorizontalPodAutoscalerMetrics", () => {
   let di: DiContainer;
@@ -572,7 +552,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
         }
       );
 
-      expect(getMetrics(hpa)[0]).toEqual("10 / 30 (avg)");
+      expect(getMetrics(hpa)[0]).toEqual("10 (avg) / 30 (avg)");
     });
 
     it("should return unknown current metrics if names are different", () => {
@@ -623,18 +603,18 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     });
   });
 
-  describe("HPA v1", () => {
+  describe("HPA v2beta1", () => {
     it("should return correct empty metrics", () => {
-      const hpa = new HorizontalPodAutoscaler(hpaV1);
+      const hpa = new HorizontalPodAutoscaler(hpaV2Beta1);
 
       expect(getMetrics(hpa)).toHaveLength(0);
     });
 
     it("should return correct resource metrics", () => {
       const hpa = new HorizontalPodAutoscaler({
-        ...hpaV1,
+        ...hpaV2Beta1,
         spec: {
-          ...hpaV1.spec,
+          ...hpaV2Beta1.spec,
           metrics: [
             {
               type: HpaMetricType.Resource,
@@ -652,9 +632,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
 
     it("should return correct resource metrics with current metrics", () => {
       const hpa = new HorizontalPodAutoscaler({
-        ...hpaV1,
+        ...hpaV2Beta1,
         spec: {
-          ...hpaV1.spec,
+          ...hpaV2Beta1.spec,
           metrics: [
             {
               type: HpaMetricType.Resource,
@@ -685,9 +665,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
   
     it("should return correct resource metrics with current value", () => {
       const hpa = new HorizontalPodAutoscaler({
-        ...hpaV1,
+        ...hpaV2Beta1,
         spec: {
-          ...hpaV1.spec,
+          ...hpaV2Beta1.spec,
           metrics: [
             {
               type: HpaMetricType.Resource,
@@ -719,9 +699,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     it("should return correct container resource metrics", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
-          ...hpaV1,
+          ...hpaV2Beta1,
           spec: {
-            ...hpaV1.spec,
+            ...hpaV2Beta1.spec,
             metrics: [
               {
                 type: HpaMetricType.ContainerResource,
@@ -742,9 +722,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     it("should return correct container resource metrics with current utilization value", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
-          ...hpaV1,
+          ...hpaV2Beta1,
           spec: {
-            ...hpaV1.spec,
+            ...hpaV2Beta1.spec,
             metrics: [
               {
                 type: HpaMetricType.ContainerResource,
@@ -778,9 +758,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     it("should return correct pod metrics", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
-          ...hpaV1,
+          ...hpaV2Beta1,
           spec: {
-            ...hpaV1.spec,
+            ...hpaV2Beta1.spec,
             metrics: [
               {
                 type: HpaMetricType.Pods,
@@ -800,9 +780,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     it("should return correct pod metrics with current values", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
-          ...hpaV1,
+          ...hpaV2Beta1,
           spec: {
-            ...hpaV1.spec,
+            ...hpaV2Beta1.spec,
             metrics: [
               {
                 type: HpaMetricType.Pods,
@@ -836,9 +816,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     it("should return correct object metrics", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
-          ...hpaV1,
+          ...hpaV2Beta1,
           spec: {
-            ...hpaV1.spec,
+            ...hpaV2Beta1.spec,
             metrics: [
               {
                 type: HpaMetricType.Object,
@@ -858,9 +838,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     it("should return correct object metrics with average value", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
-          ...hpaV1,
+          ...hpaV2Beta1,
           spec: {
-            ...hpaV1.spec,
+            ...hpaV2Beta1.spec,
             metrics: [
               {
                 type: HpaMetricType.Object,
@@ -880,9 +860,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     it("should return correct object metrics with current value", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
-          ...hpaV1,
+          ...hpaV2Beta1,
           spec: {
-            ...hpaV1.spec,
+            ...hpaV2Beta1.spec,
             metrics: [
               {
                 type: HpaMetricType.Object,
@@ -915,9 +895,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     it("should return correct external metrics with average value", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
-          ...hpaV1,
+          ...hpaV2Beta1,
           spec: {
-            ...hpaV1.spec,
+            ...hpaV2Beta1.spec,
             metrics: [
               {
                 type: HpaMetricType.External,
@@ -938,9 +918,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     it("should return correct external metrics with value", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
-          ...hpaV1,
+          ...hpaV2Beta1,
           spec: {
-            ...hpaV1.spec,
+            ...hpaV2Beta1.spec,
             metrics: [
               {
                 type: HpaMetricType.External,
@@ -961,9 +941,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     it("should return correct external metrics with current value", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
-          ...hpaV1,
+          ...hpaV2Beta1,
           spec: {
-            ...hpaV1.spec,
+            ...hpaV2Beta1.spec,
             metrics: [
               {
                 type: HpaMetricType.External,
@@ -997,9 +977,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     it("should return correct external metrics with current average value", () => {
       const hpa = new HorizontalPodAutoscaler(
         {
-          ...hpaV1,
+          ...hpaV2Beta1,
           spec: {
-            ...hpaV1.spec,
+            ...hpaV2Beta1.spec,
             metrics: [
               {
                 type: HpaMetricType.External,
@@ -1032,9 +1012,9 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
 
     it("should return unknown current metrics if metric names are different", () => {
       const hpa = new HorizontalPodAutoscaler({
-        ...hpaV1,
+        ...hpaV2Beta1,
         spec: {
-          ...hpaV1.spec,
+          ...hpaV2Beta1.spec,
           metrics: [
             {
               type: HpaMetricType.Resource,
@@ -1064,73 +1044,60 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
     });
   });
 
-  describe("HPA v2beta1", () => {
-    it("should use metric parser for hpa autoscaling/v2", () => {
+  describe("HPA v1", () => {
+    it("should show target cpu utilization percentage", () => {
       const hpa = new HorizontalPodAutoscaler({
-        ...hpaV2Beta1,
+        apiVersion: "autoscaling/v1",
+        kind: "HorizontalPodAutoscaler",
+        metadata: {
+          name: "hpav1",
+          resourceVersion: "1",
+          uid: "hpav1",
+          namespace: "default",
+          selfLink: "/apis/autoscaling/v1/namespaces/default/horizontalpodautoscalers/hpav1",
+        },
         spec: {
-          ...hpaV2Beta1.spec,
-          metrics: [
-            {
-              type: HpaMetricType.Resource,
-              resource: {
-                name: "cpu",
-                target: {
-                  type: "Utilization",
-                  averageUtilization: 50
-                }
-              }
-            }
-          ]
+          maxReplicas: 10,
+          scaleTargetRef: {
+            kind: "Deployment",
+            name: "hpav1deployment",
+            apiVersion: "apps/v1",
+          },
+          targetCPUUtilizationPercentage: 80
         }
       });
 
-      expect(getMetrics(hpa)[0]).toEqual("unknown / 50%");
+      expect(getMetrics(hpa)[0]).toEqual("unknown / 80%");
     });
 
-    it("should return unknown metrics for invalid v2 metric format", () => {
+    it("should show current and target cpu utilization percentage", () => {
       const hpa = new HorizontalPodAutoscaler({
-        ...hpaV2Beta1,
+        apiVersion: "autoscaling/v1",
+        kind: "HorizontalPodAutoscaler",
+        metadata: {
+          name: "hpav1",
+          resourceVersion: "1",
+          uid: "hpav1",
+          namespace: "default",
+          selfLink: "/apis/autoscaling/v1/namespaces/default/horizontalpodautoscalers/hpav1",
+        },
         spec: {
-          ...hpaV2Beta1.spec,
-          metrics: [
-            {
-              type: HpaMetricType.Resource,
-              resource: {
-                name: "cpu",
-                targetAverageUtilization: 50
-              }
-            }
-          ]
+          maxReplicas: 10,
+          scaleTargetRef: {
+            kind: "Deployment",
+            name: "hpav1deployment",
+            apiVersion: "apps/v1",
+          },
+          targetCPUUtilizationPercentage: 80
+        },
+        status: {
+          currentReplicas: 1,
+          desiredReplicas: 10,
+          currentCPUUtilizationPercentage: 10
         }
       });
 
-      expect(getMetrics(hpa)[0]).toEqual("unknown / unknown");
-    });
-  });
-
-  describe("HPA v2beta2", () => {
-    it("should use metric parser for hpa autoscaling/v2", () => {
-      const hpa = new HorizontalPodAutoscaler({
-        ...hpaV2Beta2,
-        spec: {
-          ...hpaV2Beta2.spec,
-          metrics: [
-            {
-              type: HpaMetricType.Resource,
-              resource: {
-                name: "cpu",
-                target: {
-                  type: "Utilization",
-                  averageUtilization: 50
-                }
-              }
-            }
-          ]
-        }
-      });
-
-      expect(getMetrics(hpa)[0]).toEqual("unknown / 50%");
+      expect(getMetrics(hpa)[0]).toEqual("10% / 80%");
     });
   });
 });
