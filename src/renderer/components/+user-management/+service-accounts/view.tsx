@@ -12,14 +12,12 @@ import { KubeObjectStatusIcon } from "../../kube-object-status-icon";
 import { CreateServiceAccountDialog } from "./create-dialog/view";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
-import { prevDefault } from "../../../utils";
 import type { ServiceAccountStore } from "./store";
-import type { FilterByNamespace } from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import serviceAccountStoreInjectable from "./store.injectable";
 import type { OpenCreateServiceAccountDialog } from "./create-dialog/open.injectable";
 import openCreateServiceAccountDialogInjectable from "./create-dialog/open.injectable";
+import { NamespaceSelectBadge } from "../../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -29,7 +27,6 @@ enum columnId {
 
 interface Dependencies {
   serviceAccountStore: ServiceAccountStore;
-  filterByNamespace: FilterByNamespace;
   openCreateServiceAccountDialog: OpenCreateServiceAccountDialog;
 }
 
@@ -37,7 +34,6 @@ interface Dependencies {
 class NonInjectedServiceAccounts extends React.Component<Dependencies> {
   render() {
     const {
-      filterByNamespace,
       serviceAccountStore,
       openCreateServiceAccountDialog,
     } = this.props;
@@ -67,13 +63,10 @@ class NonInjectedServiceAccounts extends React.Component<Dependencies> {
           renderTableContents={account => [
             account.getName(),
             <KubeObjectStatusIcon key="icon" object={account} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => filterByNamespace(account.getNs()))}
-            >
-              {account.getNs()}
-            </a>,
+              namespace={account.getNs()}
+            />,
             <KubeObjectAge key="age" object={account} />,
           ]}
           addRemoveButtons={{
@@ -90,7 +83,6 @@ class NonInjectedServiceAccounts extends React.Component<Dependencies> {
 export const ServiceAccounts = withInjectables<Dependencies>(NonInjectedServiceAccounts, {
   getProps: (di, props) => ({
     ...props,
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     serviceAccountStore: di.inject(serviceAccountStoreInjectable),
     openCreateServiceAccountDialog: di.inject(openCreateServiceAccountDialogInjectable),
   }),

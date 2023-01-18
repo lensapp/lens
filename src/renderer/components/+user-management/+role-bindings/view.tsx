@@ -14,17 +14,15 @@ import { KubeObjectAge } from "../../kube-object/age";
 import type { RoleStore } from "../+roles/store";
 import type { ServiceAccountStore } from "../+service-accounts/store";
 import type { RoleBindingStore } from "./store";
-import { prevDefault } from "../../../utils";
 import type { ClusterRoleStore } from "../+cluster-roles/store";
-import type { FilterByNamespace } from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import clusterRoleStoreInjectable from "../+cluster-roles/store.injectable";
-import filterByNamespaceInjectable from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import roleBindingStoreInjectable from "./store.injectable";
 import roleStoreInjectable from "../+roles/store.injectable";
 import serviceAccountStoreInjectable from "../+service-accounts/store.injectable";
 import type { OpenRoleBindingDialog } from "./dialog/open.injectable";
 import openRoleBindingDialogInjectable from "./dialog/open.injectable";
+import { NamespaceSelectBadge } from "../../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -38,7 +36,6 @@ interface Dependencies {
   roleStore: RoleStore;
   clusterRoleStore: ClusterRoleStore;
   serviceAccountStore: ServiceAccountStore;
-  filterByNamespace: FilterByNamespace;
   openRoleBindingDialog: OpenRoleBindingDialog;
 }
 
@@ -50,7 +47,6 @@ class NonInjectedRoleBindings extends React.Component<Dependencies> {
       roleBindingStore,
       roleStore,
       serviceAccountStore,
-      filterByNamespace,
       openRoleBindingDialog,
     } = this.props;
 
@@ -83,13 +79,10 @@ class NonInjectedRoleBindings extends React.Component<Dependencies> {
           renderTableContents={binding => [
             binding.getName(),
             <KubeObjectStatusIcon key="icon" object={binding} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => filterByNamespace(binding.getNs()))}
-            >
-              {binding.getNs()}
-            </a>,
+              namespace={binding.getNs()}
+            />,
             binding.getSubjectNames(),
             <KubeObjectAge key="age" object={binding} />,
           ]}
@@ -108,7 +101,6 @@ export const RoleBindings = withInjectables<Dependencies>(NonInjectedRoleBinding
   getProps: (di, props) => ({
     ...props,
     clusterRoleStore: di.inject(clusterRoleStoreInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     roleBindingStore: di.inject(roleBindingStoreInjectable),
     roleStore: di.inject(roleStoreInjectable),
     serviceAccountStore: di.inject(serviceAccountStoreInjectable),

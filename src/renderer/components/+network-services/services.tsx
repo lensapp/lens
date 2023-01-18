@@ -12,13 +12,11 @@ import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
-import { prevDefault } from "../../utils";
 import type { ServiceStore } from "./store";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import type { Service } from "../../../common/k8s-api/endpoints";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import serviceStoreInjectable from "./store.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -48,7 +46,6 @@ const formatExternalIps = (service: Service) => {
 
 interface Dependencies {
   serviceStore: ServiceStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 @observer
@@ -92,13 +89,10 @@ class NonInjectedServices extends React.Component<Dependencies> {
           renderTableContents={service => [
             service.getName(),
             <KubeObjectStatusIcon key="icon" object={ service } />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={ prevDefault(() => this.props.filterByNamespace(service.getNs())) }
-            >
-              { service.getNs() }
-            </a>,
+              namespace={service.getNs()}
+            />,
             service.getType(),
             service.getClusterIp(),
             service.getPorts().join(", "),
@@ -116,7 +110,6 @@ class NonInjectedServices extends React.Component<Dependencies> {
 export const Services = withInjectables<Dependencies>(NonInjectedServices, {
   getProps: (di, props) => ({
     ...props,
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     serviceStore: di.inject(serviceStoreInjectable),
   }),
 });

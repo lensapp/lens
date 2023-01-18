@@ -13,13 +13,11 @@ import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
-import { prevDefault } from "../../utils";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import type { SecretStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import secretStoreInjectable from "./store.injectable";
 import openAddSecretDialogInjectable from "./add-dialog/open.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -31,7 +29,6 @@ enum columnId {
 }
 
 interface Dependencies {
-  filterByNamespace: FilterByNamespace;
   secretStore: SecretStore;
   openAddSecretDialog: () => void;
 }
@@ -71,13 +68,10 @@ class NonInjectedSecrets extends React.Component<Dependencies> {
           renderTableContents={secret => [
             secret.getName(),
             <KubeObjectStatusIcon key="icon" object={secret} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(secret.getNs()))}
-            >
-              {secret.getNs()}
-            </a>,
+              namespace={secret.getNs()}
+            />,
             secret.getLabels().map(label => (
               <Badge
                 scrollable
@@ -104,7 +98,6 @@ class NonInjectedSecrets extends React.Component<Dependencies> {
 export const Secrets = withInjectables<Dependencies>(NonInjectedSecrets, {
   getProps: (di, props) => ({
     ...props,
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     secretStore: di.inject(secretStoreInjectable),
     openAddSecretDialog: di.inject(openAddSecretDialogInjectable),
   }),

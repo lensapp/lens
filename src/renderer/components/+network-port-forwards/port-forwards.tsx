@@ -19,9 +19,7 @@ import { computed, makeObservable } from "mobx";
 import portForwardsRouteParametersInjectable from "./port-forwards-route-parameters.injectable";
 import type { NavigateToPortForwards } from "../../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
 import navigateToPortForwardsInjectable from "../../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
-import { prevDefault } from "../../utils";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -37,7 +35,6 @@ interface Dependencies {
   portForwardStore: PortForwardStore;
   forwardport: IComputedValue<string>;
   navigateToPortForwards: NavigateToPortForwards;
-  filterByNamespace: FilterByNamespace;
 }
 
 @observer
@@ -132,13 +129,10 @@ class NonInjectedPortForwards extends React.Component<Dependencies> {
           ]}
           renderTableContents={item => [
             item.getName(),
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(item.getNs()))}
-            >
-              {item.getNs()}
-            </a>,
+              namespace={item.getNs()}
+            />,
             item.getKind(),
             item.getPort(),
             item.getForwardPort(),
@@ -173,7 +167,6 @@ export const PortForwards = withInjectables<Dependencies>(NonInjectedPortForward
     portForwardStore: di.inject(portForwardStoreInjectable),
     ...di.inject(portForwardsRouteParametersInjectable),
     navigateToPortForwards: di.inject(navigateToPortForwardsInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });
 

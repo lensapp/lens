@@ -12,12 +12,10 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import { computeRouteDeclarations } from "../../../common/k8s-api/endpoints";
-import { prevDefault } from "../../utils";
 import type { IngressStore } from "./ingress-store";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import ingressStoreInjectable from "./ingress-store.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -29,13 +27,11 @@ enum columnId {
 
 interface Dependencies {
   ingressStore: IngressStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 const NonInjectedIngresses = observer((props: Dependencies) => {
   const {
     ingressStore,
-    filterByNamespace,
   } = props;
 
   return (
@@ -66,13 +62,7 @@ const NonInjectedIngresses = observer((props: Dependencies) => {
         renderTableContents={ ingress => [
           ingress.getName(),
           <KubeObjectStatusIcon key="icon" object={ ingress } />,
-          <a
-            key="namespace"
-            className="filterNamespace"
-            onClick={prevDefault(() => filterByNamespace(ingress.getNs()))}
-          >
-            {ingress.getNs()}
-          </a>,
+          <NamespaceSelectBadge key="namespace" namespace={ingress.getNs()} />,
           ingress.getLoadBalancers().map(lb => <p key={ lb }>{ lb }</p>),
           computeRouteDeclarations(ingress).map(decl => (
             decl.displayAsLink
@@ -112,6 +102,5 @@ export const Ingresses = withInjectables<Dependencies>(NonInjectedIngresses, {
   getProps: (di, props) => ({
     ...props,
     ingressStore: di.inject(ingressStoreInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });
