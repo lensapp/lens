@@ -104,11 +104,16 @@ exports[`disable kube object detail items when cluster is not relevant given ext
           </div>
           <div>
             <div
-              class="DrawerTitle flex gaps align-center title"
+              class="DrawerTitle title"
             >
               <span>
                 Events
               </span>
+            </div>
+            <div
+              class="empty"
+            >
+              No events found
             </div>
           </div>
         </div>
@@ -725,11 +730,16 @@ exports[`disable kube object detail items when cluster is not relevant given ext
           </div>
           <div>
             <div
-              class="DrawerTitle flex gaps align-center title"
+              class="DrawerTitle title"
             >
               <span>
                 Events
               </span>
+            </div>
+            <div
+              class="empty"
+            >
+              No events found
             </div>
           </div>
         </div>
@@ -1346,11 +1356,16 @@ exports[`disable kube object detail items when cluster is not relevant given not
           </div>
           <div>
             <div
-              class="DrawerTitle flex gaps align-center title"
+              class="DrawerTitle title"
             >
               <span>
                 Events
               </span>
+            </div>
+            <div
+              class="empty"
+            >
+              No events found
             </div>
           </div>
         </div>
