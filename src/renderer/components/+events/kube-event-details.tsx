@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./kube-event-details.scss";
+import styles from "./kube-event-details.module.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -57,14 +57,14 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
 
     return (
       <div>
-        <DrawerTitle className="flex gaps align-center">
+        <DrawerTitle>
           <span>Events</span>
         </DrawerTitle>
         {events.length > 0 && (
-          <div className="KubeEventDetails">
+          <div className={styles.KubeEventDetails}>
             {events.map(event => (
-              <div className="event" key={event.getId()}>
-                <div className={cssNames("title", { warning: event.isWarning() })}>
+              <div className={styles.event} key={event.getId()}>
+                <div className={cssNames(styles.title, { [styles.warning]: event.isWarning() })}>
                   {event.message}
                 </div>
                 <DrawerItem name="Source">
@@ -83,6 +83,11 @@ class NonInjectedKubeEventDetails extends React.Component<KubeEventDetailsProps 
                 )}
               </div>
             ))}
+          </div>
+        )}
+        {events.length === 0 && (
+          <div className={styles.empty}>
+            No events found
           </div>
         )}
       </div>
