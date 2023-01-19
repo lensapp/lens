@@ -12,6 +12,7 @@ import type { Cluster } from "../../common/cluster/cluster";
 import type { RouteHandler } from "./create-handler-for-route.injectable";
 import type { IncomingMessage, ServerResponse } from "http";
 import loggerInjectable from "../../common/logger.injectable";
+import { writeServerResponseFor } from "./write-server-response";
 
 export const routeInjectionToken = getInjectionToken<Route<unknown, string>>({
   id: "route-injection-token",
@@ -51,6 +52,11 @@ const routeRequestInjectable = getInjectable({
       if (matchingRoute instanceof Error) {
         logger.warn(`[ROUTE-REQUEST]: ${matchingRoute}`, { url: url.pathname });
 
+        writeServerResponseFor(res)({
+          statusCode: 404,
+          content: "Not found",
+        });
+
         return;
       }
 
@@ -71,8 +77,6 @@ const routeRequestInjectable = getInjectable({
       };
 
       await matchingRoute.route(request, res);
-
-      return;
     };
   },
 });

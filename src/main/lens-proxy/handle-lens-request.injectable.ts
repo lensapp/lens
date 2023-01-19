@@ -4,18 +4,33 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import type { IncomingMessage } from "http";
+import type { IncomingMessage, ServerResponse } from "http";
 import HttpProxyServer from "http-proxy";
 import { Socket } from "net";
 import loggerInjectable from "../../common/logger.injectable";
-import type { HandleRequest } from "./handle-request-for.injectable";
-import handleRequestForInjectable from "./handle-request-for.injectable";
+import { apiKubePrefix } from "../../common/vars";
+import contentSecurityPolicyInjectable from "../../common/vars/content-security-policy.injectable";
+import type { ClusterContextHandler } from "../context-handler/context-handler";
+import routeRequestInjectable from "../router/route-request.injectable";
+import { getBoolean } from "../utils/parse-query";
+import getClusterForRequestInjectable from "./get-cluster-for-request.injectable";
 
 const getRequestId = (req: IncomingMessage) => {
   assert(req.headers.host);
 
   return req.headers.host + req.url;
 };
+
+const watchParam = "watch";
+const followParam = "follow";
+
+export const isLongRunningRequest = (reqUrl: string) => {
+  const url = new URL(reqUrl, "http://localhost");
+
+  return getBoolean(url.searchParams, watchParam) || getBoolean(url.searchParams, followParam);
+};
+
+export type HandleRequest = (req: IncomingMessage, res: ServerResponse) => Promise<void>;
 
 export interface HandleLensRequest {
   handle: HandleRequest;
@@ -26,10 +41,23 @@ const handleLensRequestInjectable = getInjectable({
   id: "handle-lens-request",
   instantiate: (di): HandleLensRequest => {
     const logger = di.inject(loggerInjectable);
-    const handleRequestFor = di.inject(handleRequestForInjectable);
+    const getClusterForRequest = di.inject(getClusterForRequestInjectable);
+    const contentSecurityPolicy = di.inject(contentSecurityPolicyInjectable);
+    const routeRequest = di.inject(routeRequestInjectable);
 
     const retryCounters = new Map<string, number>();
     let closed = false;
+
+    const getProxyTarget = async (req: IncomingMessage, contextHandler: ClusterContextHandler) => {
+      if (req.url?.startsWith(apiKubePrefix)) {
+        delete req.headers.authorization;
+        req.url = req.url.replace(apiKubePrefix, "");
+
+        return contextHandler.getApiTarget(isLongRunningRequest(req.url));
+      }
+
+      return undefined;
+    };
 
     const proxy = HttpProxyServer.createProxy()
       .on("proxyRes", (proxyRes, req, res) => {
@@ -78,7 +106,20 @@ const handleLensRequestInjectable = getInjectable({
         }
       });
 
-    const handleRequest = handleRequestFor(proxy);
+    const handleRequest: HandleRequest = async (req, res) => {
+      const cluster = getClusterForRequest(req);
+
+      if (cluster) {
+        const proxyTarget = await getProxyTarget(req, cluster.contextHandler);
+
+        if (proxyTarget) {
+          return proxy.web(req, res, proxyTarget);
+        }
+      }
+
+      res.setHeader("Content-Security-Policy", contentSecurityPolicy);
+      await routeRequest(cluster, req, res);
+    };
 
     return {
       handle: handleRequest,

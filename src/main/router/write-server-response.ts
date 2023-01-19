@@ -9,7 +9,7 @@ import { object } from "../../common/utils";
 export interface LensServerResponse {
   statusCode: number;
   content: unknown;
-  headers: Partial<Record<string, string | string[]>>;
+  headers?: Partial<Record<string, string | string[]>>;
 }
 
 export const writeServerResponseFor = (serverResponse: ServerResponse) => ({

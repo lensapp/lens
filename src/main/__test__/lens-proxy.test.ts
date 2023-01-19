@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { isLongRunningRequest } from "../lens-proxy/handle-request-for.injectable";
+import { isLongRunningRequest } from "../lens-proxy/handle-lens-request.injectable";
 
 describe("isLongRunningRequest", () => {
   it("returns true on watches", () => {
