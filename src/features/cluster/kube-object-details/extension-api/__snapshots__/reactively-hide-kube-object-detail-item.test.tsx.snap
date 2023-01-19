@@ -60,21 +60,6 @@ exports[`reactively hide kube object detail item renders 1`] = `
             <span
               class="name"
             >
-              Created
-            </span>
-            <span
-              class="value"
-            >
-              &lt;unknown&gt;
-               ago 
-            </span>
-          </div>
-          <div
-            class="DrawerItem"
-          >
-            <span
-              class="name"
-            >
               Name
             </span>
             <span
@@ -680,21 +665,6 @@ exports[`reactively hide kube object detail item when the item is shown renders 
         <div
           class="drawer-content flex column box grow"
         >
-          <div
-            class="DrawerItem"
-          >
-            <span
-              class="name"
-            >
-              Created
-            </span>
-            <span
-              class="value"
-            >
-              &lt;unknown&gt;
-               ago 
-            </span>
-          </div>
           <div
             class="DrawerItem"
           >
