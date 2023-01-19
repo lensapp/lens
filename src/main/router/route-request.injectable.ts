@@ -11,6 +11,7 @@ import Subtext from "@hapi/subtext";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { RouteHandler } from "./create-handler-for-route.injectable";
 import type { IncomingMessage, ServerResponse } from "http";
+import loggerInjectable from "../../common/logger.injectable";
 
 export const routeInjectionToken = getInjectionToken<Route<unknown, string>>({
   id: "route-injection-token",
@@ -25,7 +26,7 @@ export function getRouteInjectable<T, Path extends string>(
   });
 }
 
-export type RouteRequest = (cluster: Cluster | undefined, req: IncomingMessage, res: ServerResponse) => Promise<boolean>;
+export type RouteRequest = (cluster: Cluster | undefined, req: IncomingMessage, res: ServerResponse) => Promise<void>;
 
 const routeRequestInjectable = getInjectable({
   id: "route-request",
@@ -33,6 +34,7 @@ const routeRequestInjectable = getInjectable({
     const routes = di.injectMany(routeInjectionToken);
     const createHandlerForRoute = di.inject(createHandlerForRouteInjectable);
     const router = new Call.Router<RouteHandler>();
+    const logger = di.inject(loggerInjectable);
 
     for (const route of routes) {
       router.add({ method: route.method, path: route.path }, createHandlerForRoute(route));
@@ -40,14 +42,16 @@ const routeRequestInjectable = getInjectable({
 
     return async (cluster, req, res) => {
       if (!req.url || !req.method) {
-        return false;
+        return;
       }
 
       const url = new URL(req.url, "https://localhost");
       const matchingRoute = router.route(req.method?.toLowerCase() ?? "get", url.pathname);
 
       if (matchingRoute instanceof Error) {
-        return false;
+        logger.warn(`[ROUTE-REQUEST]: ${matchingRoute}`, { url: url.pathname });
+
+        return;
       }
 
       const { payload } = await Subtext.parse(req, null, {
@@ -68,7 +72,7 @@ const routeRequestInjectable = getInjectable({
 
       await matchingRoute.route(request, res);
 
-      return true;
+      return;
     };
   },
 });
