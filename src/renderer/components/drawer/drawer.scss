@@ -86,9 +86,5 @@
   .drawer-content {
     overflow: auto;
     padding: var(--spacing);
-
-    .Table .TableHead {
-      border-bottom: 1px solid var(--borderFaintColor);
-    }
   }
 }

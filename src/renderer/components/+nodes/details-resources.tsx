@@ -38,7 +38,7 @@ export function NodeDetailsResources({ type, node: { status = {}}}: NodeDetailsR
         selectable
         scrollable={false}
       >
-        <TableHead sticky={false}>
+        <TableHead sticky={false} flat>
           <TableCell className="cpu">CPU</TableCell>
           <TableCell className="memory">Memory</TableCell>
           <TableCell className="ephemeral-storage">Ephemeral Storage</TableCell>
