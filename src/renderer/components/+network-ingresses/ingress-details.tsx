@@ -37,7 +37,7 @@ class NonInjectedIngressDetails extends React.Component<IngressDetailsProps & De
           )}
           {rule.http && (
             <Table className="paths">
-              <TableHead>
+              <TableHead flat>
                 <TableCell className="path">Path</TableCell>
                 <TableCell className="link">Link</TableCell>
                 <TableCell className="backends">Backends</TableCell>
