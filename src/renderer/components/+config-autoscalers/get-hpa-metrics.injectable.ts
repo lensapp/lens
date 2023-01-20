@@ -5,15 +5,14 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { HorizontalPodAutoscaler, HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricStatus } from "../../../common/k8s-api/endpoints";
 import { HpaMetricType } from "../../../common/k8s-api/endpoints";
-import horizonalPodAutoscalerV1MetricParser from "./hpa-v1-metric-parser.injectable";
-import type { HorizontalPodAutoscalerV2MetricParser } from "./hpa-v2-metric-parser";
-import horizonalPodAutoscalerV2MetricParser from "./hpa-v2-metric-parser.injectable";
+import { HorizontalPodAutoscalerV1MetricParser } from "./hpa-v1-metric-parser";
+import { HorizontalPodAutoscalerV2MetricParser } from "./hpa-v2-metric-parser";
 
 const getHorizontalPodAutoscalerMetrics = getInjectable({
   id: "get-horizontal-pod-autoscaler-metrics",
-  instantiate: (di) => (hpa: HorizontalPodAutoscaler) => {
-    const hpaV1Parser = di.inject(horizonalPodAutoscalerV1MetricParser);
-    const hpaV2Parser = di.inject(horizonalPodAutoscalerV2MetricParser);
+  instantiate: () => (hpa: HorizontalPodAutoscaler) => {
+    const hpaV1Parser = new HorizontalPodAutoscalerV1MetricParser();
+    const hpaV2Parser = new HorizontalPodAutoscalerV2MetricParser();
     const metrics = hpa.spec?.metrics ?? [];
     const currentMetrics = hpa.status?.currentMetrics ?? [];
     const cpuUtilization = hpa.spec?.targetCPUUtilizationPercentage;
