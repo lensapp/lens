@@ -20,6 +20,12 @@ const podDisruptionBudgetApiInjectable = getInjectable({
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     }, {
       checkPreferredVersion: true,
+      allowedUsableVersions: {
+        policy: [
+          "v1",
+          "v1beta1",
+        ],
+      },
     });
   },
 
