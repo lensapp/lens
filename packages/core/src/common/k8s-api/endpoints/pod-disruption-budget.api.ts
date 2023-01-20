@@ -7,19 +7,44 @@ import type { LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
+import type { Condition } from "./types/condition";
 
-export interface PodDisruptionBudgetSpec {
+export interface V1Beta1PodDisruptionBudgetSpec {
   minAvailable: string;
   maxUnavailable: string;
   selector: LabelSelector;
 }
 
-export interface PodDisruptionBudgetStatus {
+export interface V1PodDisruptionBudgetSpec {
+  maxUnavailable?: string | number;
+  minAvailable?: string | number;
+  selector?: LabelSelector;
+}
+
+export type PodDisruptionBudgetSpec =
+  | V1Beta1PodDisruptionBudgetSpec
+  | V1PodDisruptionBudgetSpec;
+
+export interface V1Beta1PodDisruptionBudgetStatus {
   currentHealthy: number;
   desiredHealthy: number;
   disruptionsAllowed: number;
   expectedPods: number;
 }
+
+export interface V1PodDisruptionBudgetStatus {
+  conditions?: Condition[];
+  currentHealthy: number;
+  desiredHealthy: number;
+  disruptedPods?: Partial<Record<string, string>>;
+  disruptionsAllowed: number;
+  expectedPods: number;
+  observedGeneration?: number;
+}
+
+export type PodDisruptionBudgetStatus =
+  | V1Beta1PodDisruptionBudgetStatus
+  | V1PodDisruptionBudgetStatus;
 
 export class PodDisruptionBudget extends KubeObject<
   NamespaceScopedMetadata,
@@ -31,7 +56,7 @@ export class PodDisruptionBudget extends KubeObject<
   static readonly apiBase = "/apis/policy/v1beta1/poddisruptionbudgets";
 
   getSelectors() {
-    return KubeObject.stringifyLabels(this.spec.selector.matchLabels);
+    return KubeObject.stringifyLabels(this.spec.selector?.matchLabels);
   }
 
   getMinAvailable() {
