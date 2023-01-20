@@ -18,7 +18,6 @@ import isPathInjectable from "../../renderer/components/input/validators/is-path
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
-import { testUsingFakeTime } from "../../common/test-utils/use-fake-time";
 
 describe("add custom helm repository in preferences", () => {
   let builder: ApplicationBuilder;
@@ -29,11 +28,11 @@ describe("add custom helm repository in preferences", () => {
   let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
 
   beforeEach(async () => {
-    jest.useFakeTimers();
-
-    builder = getApplicationBuilder();
-
-    testUsingFakeTime("2021-01-01 12:00:00");
+    builder = getApplicationBuilder({
+      useFakeTime: {
+        dateTime: "2021-01-01 12:00:00",
+      },
+    });
 
     execFileMock = asyncFn();
     getActiveHelmRepositoriesMock = asyncFn();

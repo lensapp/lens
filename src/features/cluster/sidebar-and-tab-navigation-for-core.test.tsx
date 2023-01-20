@@ -20,7 +20,7 @@ import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable"
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
-import { advanceFakeTime, testUsingFakeTime } from "../../common/test-utils/use-fake-time";
+import { advanceFakeTime } from "../../common/test-utils/use-fake-time";
 import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
 import { flushPromises } from "../../common/test-utils/flush-promises";
 
@@ -29,9 +29,11 @@ describe("cluster - sidebar and tab navigation for core", () => {
   let rendered: RenderResult;
 
   beforeEach(() => {
-    testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    builder = getApplicationBuilder();
+    builder = getApplicationBuilder({
+      useFakeTime: {
+        dateTime: "2015-10-21T07:28:00Z",
+      },
+    });
 
     builder.setEnvironmentToClusterFrame();
 

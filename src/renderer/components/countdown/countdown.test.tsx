@@ -20,7 +20,9 @@ describe("countdown", () => {
   let render: DiRender;
 
   beforeEach(() => {
-    testUsingFakeTime("2015-10-21T07:28:00Z");
+    testUsingFakeTime({
+      dateTime: "2015-10-21T07:28:00Z",
+    });
 
     di = createContainer("irrelevant");
 

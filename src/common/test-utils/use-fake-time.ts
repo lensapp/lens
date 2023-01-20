@@ -15,17 +15,21 @@ export const advanceFakeTime = (milliseconds: number) => {
     jest.advanceTimersByTime(milliseconds);
   });
 };
+export interface TestUsingFakeTimeOptions {
+  dateTime?: string;
+  autoAdvance?: boolean;
+}
 
-export const testUsingFakeTime = (dateTime = "2015-10-21T07:28:00Z") => {
+export const testUsingFakeTime = ({ autoAdvance = true, dateTime = "2015-10-21T07:28:00Z" }: TestUsingFakeTimeOptions = {}) => {
   usingFakeTime = true;
 
-  jest.useFakeTimers({
-    doNotFake: [
-      "nextTick",
-      "setImmediate",
-      "clearImmediate",
-    ],
-  });
+  const setInterval = global.setInterval;
+
+  jest.useFakeTimers();
+
+  if (autoAdvance) {
+    setInterval(() => advanceFakeTime(20), 20);
+  }
 
   jest.setSystemTime(new Date(dateTime));
 };

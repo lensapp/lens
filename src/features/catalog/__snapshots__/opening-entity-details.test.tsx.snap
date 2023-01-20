@@ -3630,38 +3630,6 @@ exports[`opening catalog entity details panel when navigated to the catalog when
       class="Notifications flex column align-flex-end"
     />
   </div>
-  <ul
-    class="Animate opacity Menu MenuActions flex bottom right portal enter leave"
-    data-testid="menu-actions-for-catalog-for-some-entity-id"
-    id="menu-actions-for-catalog-for-some-entity-id"
-    style="--enter-duration: 100ms; --leave-duration: 100ms; left: 0px; top: 8px;"
-  >
-    <li
-      class="MenuItem"
-      data-testid="open-details-menu-item-for-some-entity-id"
-      tabindex="0"
-    >
-      View Details
-    </li>
-    <li
-      class="MenuItem"
-      tabindex="0"
-    >
-      Settings
-    </li>
-    <li
-      class="MenuItem"
-      tabindex="0"
-    >
-      Disconnect
-    </li>
-    <li
-      class="MenuItem"
-      tabindex="0"
-    >
-      Add to Hotbar
-    </li>
-  </ul>
   <div
     class="Animate slide-right Drawer entityDetails right enter"
     data-testid="catalog-entity-details-drawer"
@@ -6416,26 +6384,6 @@ exports[`opening catalog entity details panel when navigated to the catalog when
       class="Notifications flex column align-flex-end"
     />
   </div>
-  <ul
-    class="Animate opacity Menu MenuActions flex bottom right portal enter leave"
-    data-testid="menu-actions-for-catalog-for-some-weblink-id"
-    id="menu-actions-for-catalog-for-some-weblink-id"
-    style="--enter-duration: 100ms; --leave-duration: 100ms; left: 0px; top: 8px;"
-  >
-    <li
-      class="MenuItem"
-      data-testid="open-details-menu-item-for-some-weblink-id"
-      tabindex="0"
-    >
-      View Details
-    </li>
-    <li
-      class="MenuItem"
-      tabindex="0"
-    >
-      Add to Hotbar
-    </li>
-  </ul>
   <div
     class="Animate slide-right Drawer entityDetails right enter"
     data-testid="catalog-entity-details-drawer"

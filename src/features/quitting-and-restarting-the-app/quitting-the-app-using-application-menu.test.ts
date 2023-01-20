@@ -9,7 +9,7 @@ import type { ClusterManager } from "../../main/cluster/manager";
 import exitAppInjectable from "../../main/electron-app/features/exit-app.injectable";
 import clusterManagerInjectable from "../../main/cluster/manager.injectable";
 import stopServicesAndExitAppInjectable from "../../main/stop-services-and-exit-app.injectable";
-import { advanceFakeTime, testUsingFakeTime } from "../../common/test-utils/use-fake-time";
+import { advanceFakeTime } from "../../common/test-utils/use-fake-time";
 
 describe("quitting the app using application menu", () => {
   describe("given application has started", () => {
@@ -18,9 +18,11 @@ describe("quitting the app using application menu", () => {
     let exitAppMock: jest.Mock;
 
     beforeEach(async () => {
-      testUsingFakeTime("2015-10-21T07:28:00Z");
-
-      builder = getApplicationBuilder();
+      builder = getApplicationBuilder({
+        useFakeTime: {
+          dateTime: "2015-10-21T07:28:00Z",
+        },
+      });
 
       builder.beforeApplicationStart(
         (mainDi) => {
