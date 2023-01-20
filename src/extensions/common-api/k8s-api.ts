@@ -64,6 +64,11 @@ function KubeApiCstr<
   return api;
 }
 
+export type KubeApi<
+  Object extends KubeObject = KubeObject,
+  Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
+> = InternalKubeApi<Object, Data>;
+
 export const KubeApi = KubeApiCstr as unknown as new<
   Object extends KubeObject = KubeObject,
   Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
@@ -122,6 +127,8 @@ function KubeJsonApiCstr(config: JsonApiConfig, reqInit?: RequestInit) {
 
   return createKubeJsonApi(config, reqInit);
 }
+
+export type KubeJsonApi = InternalKubeJsonApi;
 
 export const KubeJsonApi = Object.assign(
   KubeJsonApiCstr as unknown as new (config: JsonApiConfig, reqInit?: RequestInit) => InternalKubeJsonApi,
@@ -204,30 +211,35 @@ function PodsApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions
   return new PodApi(getKubeApiDeps(), opts);
 }
 
+export type PodsApi = PodApi;
 export const PodsApi = PodsApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => PodApi;
 
 function NodesApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) {
   return new NodeApi(getKubeApiDeps(), opts);
 }
 
+export type NodesApi = NodeApi;
 export const NodesApi = NodesApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => NodeApi;
 
 function DeploymentApiConstructor(opts?: DerivedKubeApiOptions) {
   return new InternalDeploymentApi(getKubeApiDeps(), opts);
 }
 
+export type DeploymentApi = InternalDeploymentApi;
 export const DeploymentApi = DeploymentApiConstructor as unknown as new (opts?: DerivedKubeApiOptions) => InternalDeploymentApi;
 
 function IngressApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) {
   return new InternalIngressApi(getKubeApiDeps(), opts);
 }
 
+export type IngressApi = InternalIngressApi;
 export const IngressApi = IngressApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => InternalIngressApi;
 
 function PersistentVolumeClaimsApiConstructor(opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) {
   return new PersistentVolumeClaimApi(getKubeApiDeps(), opts);
 }
 
+export type PersistentVolumeClaimsApi = PersistentVolumeClaimApi;
 export const PersistentVolumeClaimsApi = PersistentVolumeClaimsApiConstructor as unknown as new (opts?: DerivedKubeApiOptions & IgnoredKubeApiOptions) => PersistentVolumeClaimApi;
 
 export {
