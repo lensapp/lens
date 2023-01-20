@@ -90,7 +90,7 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
 
     return (
       <Table>
-        <TableHead>
+        <TableHead flat>
           <TableCell className="name">Name</TableCell>
           <TableCell className="metrics">Current / Target</TableCell>
         </TableHead>

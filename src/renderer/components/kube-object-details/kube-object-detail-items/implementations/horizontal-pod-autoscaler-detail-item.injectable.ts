@@ -27,7 +27,7 @@ const horizontalPodAutoscalerDetailItemInjectable = getInjectable({
 
 export const isHorizontalPodAutoscaler = kubeObjectMatchesToKindAndApiVersion(
   "HorizontalPodAutoscaler",
-  ["autoscaling/v2beta1"],
+  ["autoscaling/v2", "autoscaling/v2beta2", "autoscaling/v2beta1", "autoscaling/v1"],
 );
 
 export default horizontalPodAutoscalerDetailItemInjectable;
