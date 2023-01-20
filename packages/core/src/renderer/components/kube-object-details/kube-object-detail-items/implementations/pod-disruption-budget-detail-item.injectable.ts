@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
 import { computed } from "mobx";
 import { PodDisruptionBudgetDetails } from "../../../+config-pod-disruption-budgets";
-import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
+import { PodDisruptionBudget } from "../../../../../common/k8s-api/endpoints";
 
 const podDisruptionBudgetDetailItemInjectable = getInjectable({
   id: "pod-disruption-budget-detail-item",
@@ -17,17 +17,12 @@ const podDisruptionBudgetDetailItemInjectable = getInjectable({
 
     return {
       Component: PodDisruptionBudgetDetails,
-      enabled: computed(() => isPodDisruptionBudget(kubeObject.value.get()?.object)),
+      enabled: computed(() => kubeObject.value.get()?.object instanceof PodDisruptionBudget),
       orderNumber: 10,
     };
   },
 
   injectionToken: kubeObjectDetailItemInjectionToken,
 });
-
-const isPodDisruptionBudget = kubeObjectMatchesToKindAndApiVersion(
-  "PodDisruptionBudget",
-  ["policy/v1beta1"],
-);
 
 export default podDisruptionBudgetDetailItemInjectable;
