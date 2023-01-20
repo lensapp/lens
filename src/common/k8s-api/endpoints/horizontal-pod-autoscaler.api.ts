@@ -70,7 +70,7 @@ export interface V2Beta1ExternalMetricSource {
   targetValue?: string;
   metric?: {
     selector?: LabelSelector;
-  }
+  };
 }
 
 export type ExternalMetricSource = 

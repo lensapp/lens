@@ -23,6 +23,7 @@ import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.in
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import getHorizontalPodAutoscalerMetrics from "./get-hpa-metrics.injectable";
+import { getMetricName } from "./get-hpa-metric-name";
 
 export interface HpaDetailsProps extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 }
@@ -59,32 +60,31 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
     const { object: hpa } = this.props;
 
     const renderName = (metric: HorizontalPodAutoscalerMetricSpec) => {
+      const metricName = getMetricName(metric);
+
       switch (metric.type) {
         case HpaMetricType.ContainerResource:
 
         // fallthrough
         case HpaMetricType.Resource: {
           const metricSpec = metric.resource ?? metric.containerResource;
-          const addition = metricSpec.targetAverageUtilization
-            ? " (as a percentage of request)"
-            : "";
 
-          return `Resource ${metricSpec.name} on Pods${addition}`;
+          return `Resource ${metricSpec.name} on Pods`;
         }
         case HpaMetricType.Pods:
-          return `${metric.pods.metricName ?? metric.pods.metric?.name} on Pods`;
+          return `${metricName} on Pods`;
 
         case HpaMetricType.Object: {
           return (
             <>
-              {metric.object.metricName || metric.object.metric?.name}
+              {metricName}
               {" "}
-              {this.renderTargetLink(metric.object.describedObject)}
+              {this.renderTargetLink(metric.object?.describedObject)}
             </>
           );
         }
         case HpaMetricType.External:
-          return `${metric.external.metricName ?? metric.external.metric?.name} on ${JSON.stringify(metric.external.metricSelector ?? metric.external.metric?.selector)}`;
+          return `${metricName} on ${JSON.stringify(metric.external.metricSelector ?? metric.external.metric?.selector)}`;
       }
     };
 
