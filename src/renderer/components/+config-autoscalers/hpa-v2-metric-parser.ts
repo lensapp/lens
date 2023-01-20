@@ -2,10 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ContainerResourceMetricSource, ContainerResourceMetricStatus, ExternalMetricSource, ExternalMetricStatus, MetricCurrentTarget, ObjectMetricSource, ObjectMetricStatus, PodsMetricSource, PodsMetricStatus, ResourceMetricSource, ResourceMetricStatus } from "../../../common/k8s-api/endpoints";
+import type { MetricCurrentTarget, V2ContainerResourceMetricSource, V2ContainerResourceMetricStatus, V2ExternalMetricSource, V2ExternalMetricStatus, V2ObjectMetricSource, V2ObjectMetricStatus, V2PodsMetricSource, V2PodsMetricStatus, V2ResourceMetricSource, V2ResourceMetricStatus } from "../../../common/k8s-api/endpoints";
 
 export class HorizontalPodAutoscalerV2MetricParser {
-  public getResource({ current, target }: { current: ResourceMetricStatus | undefined; target: ResourceMetricSource }): MetricCurrentTarget {
+  public getResource({ current, target }: { current: V2ResourceMetricStatus | undefined; target: V2ResourceMetricSource }): MetricCurrentTarget {
     return {
       current: (
         typeof current?.current?.averageUtilization === "number"
@@ -18,14 +18,14 @@ export class HorizontalPodAutoscalerV2MetricParser {
     };
   }
   
-  public getPods({ current, target }: { current: PodsMetricStatus | undefined; target: PodsMetricSource }): MetricCurrentTarget {
+  public getPods({ current, target }: { current: V2PodsMetricStatus | undefined; target: V2PodsMetricSource }): MetricCurrentTarget {
     return {
       current: current?.current?.averageValue,
       target: target?.target?.averageValue,
     };
   }
   
-  public getObject({ current, target }: { current: ObjectMetricStatus | undefined; target: ObjectMetricSource }): MetricCurrentTarget {
+  public getObject({ current, target }: { current: V2ObjectMetricStatus | undefined; target: V2ObjectMetricSource }): MetricCurrentTarget {
     return {
       current: (
         current?.current?.value
@@ -38,7 +38,7 @@ export class HorizontalPodAutoscalerV2MetricParser {
     };
   }
   
-  public getExternal({ current, target }: { current: ExternalMetricStatus | undefined; target: ExternalMetricSource }): MetricCurrentTarget {
+  public getExternal({ current, target }: { current: V2ExternalMetricStatus | undefined; target: V2ExternalMetricSource }): MetricCurrentTarget {
     const currentAverage = current?.current?.averageValue ? `${current?.current?.averageValue} (avg)` : undefined;
     const targetAverage = target?.target?.averageValue ? `${target?.target?.averageValue} (avg)` : undefined;
 
@@ -54,7 +54,7 @@ export class HorizontalPodAutoscalerV2MetricParser {
     };
   }
   
-  public getContainerResource({ current, target }: { current: ContainerResourceMetricStatus | undefined; target: ContainerResourceMetricSource }): MetricCurrentTarget {
+  public getContainerResource({ current, target }: { current: V2ContainerResourceMetricStatus | undefined; target: V2ContainerResourceMetricSource }): MetricCurrentTarget {
     return {
       current: (
         current?.current?.averageValue

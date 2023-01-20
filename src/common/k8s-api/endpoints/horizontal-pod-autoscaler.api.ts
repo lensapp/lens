@@ -28,11 +28,9 @@ export interface HorizontalPodAutoscalerMetricTarget {
   apiVersion: string;
 }
 
-export interface ContainerResourceMetricSource {
+export interface V2ContainerResourceMetricSource {
   container: string;
   name: string;
-  targetAverageUtilization?: number;
-  targetAverageValue?: string;
   target?: {
     averageUtilization?: number;
     averageValue?: string;
@@ -40,11 +38,20 @@ export interface ContainerResourceMetricSource {
   };
 }
 
-export interface ExternalMetricSource {
+export interface V2Beta1ContainerResourceMetricSource {
+  container: string;
+  name: string;
+  targetAverageUtilization?: number;
+  targetAverageValue?: string;
+}
+
+export type ContainerResourceMetricSource = 
+  | V2ContainerResourceMetricSource
+  | V2Beta1ContainerResourceMetricSource;
+
+export interface V2ExternalMetricSource {
   metricName?: string;
   metricSelector?: LabelSelector;
-  targetAverageValue?: string;
-  targetValue?: string;
   metric?: {
     name?: string;
     selector?: LabelSelector;
@@ -56,13 +63,24 @@ export interface ExternalMetricSource {
   };
 }
 
-export interface ObjectMetricSource {
-  averageValue?: string;
+export interface V2Beta1ExternalMetricSource {
   metricName?: string;
-  selector?: LabelSelector;
+  metricSelector?: LabelSelector;
+  targetAverageValue?: string;
   targetValue?: string;
   metric?: {
+    selector?: LabelSelector;
+  }
+}
+
+export type ExternalMetricSource = 
+  | V2Beta1ExternalMetricSource
+  | V2ExternalMetricSource;
+
+export interface V2ObjectMetricSource {
+  metric?: {
     name?: string;
+    selector?: LabelSelector;
   };
   target?: {
     type?: string;
@@ -72,12 +90,22 @@ export interface ObjectMetricSource {
   describedObject?: CrossVersionObjectReference;
 }
 
-export interface PodsMetricSource {
+export interface V2Beta1ObjectMetricSource {
+  averageValue?: string;
   metricName?: string;
   selector?: LabelSelector;
-  targetAverageValue?: string;
+  targetValue?: string;
+  describedObject?: CrossVersionObjectReference;
+}
+
+export type ObjectMetricSource =
+  | V2ObjectMetricSource
+  | V2Beta1ObjectMetricSource;
+
+export interface V2PodsMetricSource {
   metric?: {
     name?: string;
+    selector?: LabelSelector;
   };
   target?: {
     averageValue?: string;
@@ -85,16 +113,34 @@ export interface PodsMetricSource {
   };
 }
 
-export interface ResourceMetricSource {
-  name: string;
-  targetAverageUtilization?: number;
+export interface V2Beta1PodsMetricSource {
+  metricName?: string;
+  selector?: LabelSelector;
   targetAverageValue?: string;
+}
+
+export type PodsMetricSource =
+  | V2PodsMetricSource
+  | V2Beta1PodsMetricSource;
+
+export interface V2ResourceMetricSource {
+  name: string;
   target?: {
     averageUtilization?: number;
     averageValue?: string;
     type?: string;
   };
 }
+
+export interface V2Beta1ResourceMetricSource {
+  name: string;
+  targetAverageUtilization?: number;
+  targetAverageValue?: string;
+}
+
+export type ResourceMetricSource =
+  | V2ResourceMetricSource
+  | V2Beta1ResourceMetricSource;
 
 export interface BaseHorizontalPodAutoscalerMetricSpec {
   containerResource: ContainerResourceMetricSource;
@@ -132,10 +178,8 @@ interface HPAScalingPolicy {
 
 type HPAScalingPolicyType = string;
 
-export interface ContainerResourceMetricStatus {
+export interface V2ContainerResourceMetricStatus {
   container?: string;
-  currentAverageUtilization?: number;
-  currentAverageValue?: string;
   name: string;
   current?: {
     averageUtilization?: number;
@@ -143,11 +187,18 @@ export interface ContainerResourceMetricStatus {
   };
 }
 
-export interface ExternalMetricStatus {
+export interface V2Beta1ContainerResourceMetricStatus {
+  container?: string;
+  currentAverageUtilization?: number;
   currentAverageValue?: string;
-  currentValue?: string;
-  metricName?: string;
-  metricSelector?: LabelSelector;
+  name: string;
+}
+
+export type ContainerResourceMetricStatus =
+  | V2ContainerResourceMetricStatus
+  | V2Beta1ContainerResourceMetricStatus;
+
+export interface V2ExternalMetricStatus {
   metric?: {
     name?: string;
     selector?: LabelSelector;
@@ -158,11 +209,18 @@ export interface ExternalMetricStatus {
   };
 }
 
-export interface ObjectMetricStatus {
-  averageValue?: string;
+export interface V2Beta1ExternalMetricStatus {
+  currentAverageValue?: string;
   currentValue?: string;
   metricName?: string;
-  selector?: LabelSelector;
+  metricSelector?: LabelSelector;
+}
+
+export type ExternalMetricStatus =
+  | V2Beta1ExternalMetricStatus
+  | V2ExternalMetricStatus;
+
+export interface V2ObjectMetricStatus {
   metric?: {
     name?: string;
     selector?: LabelSelector;
@@ -175,27 +233,56 @@ export interface ObjectMetricStatus {
   describedObject?: CrossVersionObjectReference;
 }
 
-export interface PodsMetricStatus {
-  currentAverageValue?: string;
+export interface V2Beta1ObjectMetricStatus {
+  averageValue?: string;
+  currentValue?: string;
   metricName?: string;
+  selector?: LabelSelector;
+  describedObject?: CrossVersionObjectReference;
+}
+
+export type ObjectMetricStatus =
+  | V2Beta1ObjectMetricStatus
+  | V2ObjectMetricStatus;
+
+export interface V2PodsMetricStatus {
   selector?: LabelSelector;
   metric?: {
     name?: string;
+    selector?: LabelSelector;
   };
   current?: {
     averageValue?: string;
   };
 }
 
-export interface ResourceMetricStatus {
-  currentAverageUtilization?: number;
+export interface V2Beta1PodsMetricStatus {
   currentAverageValue?: string;
+  metricName?: string;
+  selector?: LabelSelector;
+}
+
+export type PodsMetricStatus =
+  | V2Beta1PodsMetricStatus
+  | V2PodsMetricStatus;
+
+export interface V2ResourceMetricStatus {
   name: string;
   current?: {
     averageUtilization?: number;
     averageValue?: string;
   };
 }
+
+export interface V2Beta1ResourceMetricStatus {
+  currentAverageUtilization?: number;
+  currentAverageValue?: string;
+  name: string;
+}
+
+export type ResourceMetricStatus =
+  | V2Beta1ResourceMetricStatus
+  | V2ResourceMetricStatus;
 
 export interface BaseHorizontalPodAutoscalerMetricStatus {
   containerResource: ContainerResourceMetricStatus;
