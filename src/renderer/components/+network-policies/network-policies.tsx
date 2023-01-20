@@ -12,11 +12,9 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import type { NetworkPolicyStore } from "./store";
-import { prevDefault } from "../../utils";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import networkPolicyStoreInjectable from "./store.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -27,7 +25,6 @@ enum columnId {
 
 interface Dependencies {
   networkPolicyStore: NetworkPolicyStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 @observer
@@ -59,13 +56,10 @@ class NonInjectedNetworkPolicies extends React.Component<Dependencies> {
           renderTableContents={networkPolicy => [
             networkPolicy.getName(),
             <KubeObjectStatusIcon key="icon" object={networkPolicy} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(networkPolicy.getNs()))}
-            >
-              {networkPolicy.getNs()}
-            </a>,
+              namespace={networkPolicy.getNs()}
+            />,
             networkPolicy.getTypes().join(", "),
             <KubeObjectAge key="age" object={networkPolicy} />,
           ]}
@@ -78,7 +72,6 @@ class NonInjectedNetworkPolicies extends React.Component<Dependencies> {
 export const NetworkPolicies = withInjectables<Dependencies>(NonInjectedNetworkPolicies, {
   getProps: (di, props) => ({
     ...props,
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     networkPolicyStore: di.inject(networkPolicyStoreInjectable),
   }),
 });

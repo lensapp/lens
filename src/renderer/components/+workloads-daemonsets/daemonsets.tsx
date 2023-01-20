@@ -15,12 +15,10 @@ import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import type { DaemonSetStore } from "./store";
 import type { EventStore } from "../+events/store";
-import { prevDefault } from "../../utils";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import daemonSetStoreInjectable from "./store.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -33,14 +31,12 @@ enum columnId {
 interface Dependencies {
   daemonSetStore: DaemonSetStore;
   eventStore: EventStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 const NonInjectedDaemonSets = observer((props: Dependencies) => {
   const {
     daemonSetStore,
     eventStore,
-    filterByNamespace,
   } = props;
 
   const getPodsLength = (daemonSet: DaemonSet) => daemonSetStore.getChildPods(daemonSet).length;
@@ -66,7 +62,12 @@ const NonInjectedDaemonSets = observer((props: Dependencies) => {
         renderHeaderTitle="Daemon Sets"
         renderTableHeader={[
           { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
-          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          {
+            title: "Namespace",
+            className: "namespace",
+            sortBy: columnId.namespace,
+            id: columnId.namespace,
+          },
           { title: "Pods", className: "pods", sortBy: columnId.pods, id: columnId.pods },
           { className: "warning", showWithColumn: columnId.pods },
           { title: "Node Selector", className: "labels scrollable", id: columnId.labels },
@@ -74,13 +75,10 @@ const NonInjectedDaemonSets = observer((props: Dependencies) => {
         ]}
         renderTableContents={daemonSet => [
           daemonSet.getName(),
-          <a
+          <NamespaceSelectBadge
             key="namespace"
-            className="filterNamespace"
-            onClick={prevDefault(() => filterByNamespace(daemonSet.getNs()))}
-          >
-            {daemonSet.getNs()}
-          </a>,
+            namespace={daemonSet.getNs()}
+          />,
           getPodsLength(daemonSet),
           <KubeObjectStatusIcon key="icon" object={daemonSet} />,
           daemonSet.getNodeSelectors().map(selector => (
@@ -102,6 +100,5 @@ export const DaemonSets = withInjectables<Dependencies>(NonInjectedDaemonSets, {
     ...props,
     daemonSetStore: di.inject(daemonSetStoreInjectable),
     eventStore: di.inject(eventStoreInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });

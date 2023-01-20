@@ -3,7 +3,6 @@ CMD_ARGS = $(filter-out $@,$(MAKECMDGOALS))
 %:
   @:
 
-NPM_RELEASE_TAG ?= latest
 ELECTRON_BUILDER_EXTRA_ARGS ?=
 
 ifeq ($(OS),Windows_NT)
@@ -84,13 +83,11 @@ build-extension-types: node_modules packages/extensions/dist
 
 .PHONY: publish-extensions-npm
 publish-extensions-npm: node_modules build-extensions-npm
-	./node_modules/.bin/npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-	cd packages/extensions && npm publish --access=public --tag=$(NPM_RELEASE_TAG) && git restore package.json
+	./scripts/publish-extensions-npm.sh
 
 .PHONY: publish-library-npm
 publish-library-npm: node_modules build-library-npm
-	./node_modules/.bin/npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-	npm publish --access=public --tag=$(NPM_RELEASE_TAG)
+	./scripts/publish-library-npm.sh
 
 .PHONY: build-docs
 build-docs:

@@ -46,7 +46,7 @@ class NonInjectedServiceDetailsEndpoint extends React.Component<ServiceDetailsEn
           scrollable={false}
           className="box grow"
         >
-          <TableHead>
+          <TableHead flat>
             <TableCell className="name" >Name</TableCell>
             <TableCell className="endpoints">Endpoints</TableCell>
           </TableHead>

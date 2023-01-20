@@ -14,12 +14,10 @@ import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import type { JobStore } from "./store";
 import type { EventStore } from "../+events/store";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
-import { prevDefault } from "../../utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import eventStoreInjectable from "../+events/store.injectable";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import jobStoreInjectable from "./store.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -32,13 +30,11 @@ enum columnId {
 interface Dependencies {
   jobStore: JobStore;
   eventStore: EventStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 const NonInjectedJobs = observer((props: Dependencies) => {
   const {
     eventStore,
-    filterByNamespace,
     jobStore,
   } = props;
 
@@ -73,13 +69,10 @@ const NonInjectedJobs = observer((props: Dependencies) => {
 
           return [
             job.getName(),
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => filterByNamespace(job.getNs()))}
-            >
-              {job.getNs()}
-            </a>,
+              namespace={job.getNs()}
+            />,
             `${job.getCompletions()} / ${job.getDesiredCompletions()}`,
             <KubeObjectStatusIcon key="icon" object={job} />,
             <KubeObjectAge key="age" object={job} />,
@@ -98,7 +91,6 @@ export const Jobs = withInjectables<Dependencies>(NonInjectedJobs, {
   getProps: (di, props) => ({
     ...props,
     eventStore: di.inject(eventStoreInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     jobStore: di.inject(jobStoreInjectable),
   }),
 });
