@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { BaseKubeObjectCondition, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
-import { KubeObject } from "../kube-object";
+import type { OptionVarient } from "../../utils";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { OptionVarient } from "../../utils";
+import type { BaseKubeObjectCondition, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
+import { KubeObject } from "../kube-object";
 
 export enum HpaMetricType {
   Resource = "Resource",
@@ -17,45 +17,130 @@ export enum HpaMetricType {
   ContainerResource = "ContainerResource",
 }
 
+export interface MetricCurrentTarget {
+  current?: string;
+  target?: string;
+}
+
 export interface HorizontalPodAutoscalerMetricTarget {
   kind: string;
   name: string;
   apiVersion: string;
 }
 
-export interface ContainerResourceMetricSource {
+export interface V2ContainerResourceMetricSource {
+  container: string;
+  name: string;
+  target?: {
+    averageUtilization?: number;
+    averageValue?: string;
+    type?: string;
+  };
+}
+
+export interface V2Beta1ContainerResourceMetricSource {
   container: string;
   name: string;
   targetAverageUtilization?: number;
   targetAverageValue?: string;
 }
 
-export interface ExternalMetricSource {
-  metricName: string;
+export type ContainerResourceMetricSource = 
+  | V2ContainerResourceMetricSource
+  | V2Beta1ContainerResourceMetricSource;
+
+export interface V2ExternalMetricSource {
+  metricName?: string;
+  metricSelector?: LabelSelector;
+  metric?: {
+    name?: string;
+    selector?: LabelSelector;
+  };
+  target?: {
+    type: string;
+    value?: string;
+    averageValue?: string;
+  };
+}
+
+export interface V2Beta1ExternalMetricSource {
+  metricName?: string;
   metricSelector?: LabelSelector;
   targetAverageValue?: string;
   targetValue?: string;
+  metric?: {
+    selector?: LabelSelector;
+  };
 }
 
-export interface ObjectMetricSource {
+export type ExternalMetricSource = 
+  | V2Beta1ExternalMetricSource
+  | V2ExternalMetricSource;
+
+export interface V2ObjectMetricSource {
+  metric?: {
+    name?: string;
+    selector?: LabelSelector;
+  };
+  target?: {
+    type?: string;
+    value?: string;
+    averageValue?: string;
+  };
+  describedObject?: CrossVersionObjectReference;
+}
+
+export interface V2Beta1ObjectMetricSource {
   averageValue?: string;
-  metricName: string;
+  metricName?: string;
   selector?: LabelSelector;
-  target: CrossVersionObjectReference;
-  targetValue: string;
+  targetValue?: string;
+  describedObject?: CrossVersionObjectReference;
 }
 
-export interface PodsMetricSource {
-  metricName: string;
-  selector?: LabelSelector;
-  targetAverageValue: string;
+export type ObjectMetricSource =
+  | V2ObjectMetricSource
+  | V2Beta1ObjectMetricSource;
+
+export interface V2PodsMetricSource {
+  metric?: {
+    name?: string;
+    selector?: LabelSelector;
+  };
+  target?: {
+    averageValue?: string;
+    type?: string;
+  };
 }
 
-export interface ResourceMetricSource {
+export interface V2Beta1PodsMetricSource {
+  metricName?: string;
+  selector?: LabelSelector;
+  targetAverageValue?: string;
+}
+
+export type PodsMetricSource =
+  | V2PodsMetricSource
+  | V2Beta1PodsMetricSource;
+
+export interface V2ResourceMetricSource {
+  name: string;
+  target?: {
+    averageUtilization?: number;
+    averageValue?: string;
+    type?: string;
+  };
+}
+
+export interface V2Beta1ResourceMetricSource {
   name: string;
   targetAverageUtilization?: number;
   targetAverageValue?: string;
 }
+
+export type ResourceMetricSource =
+  | V2ResourceMetricSource
+  | V2Beta1ResourceMetricSource;
 
 export interface BaseHorizontalPodAutoscalerMetricSpec {
   containerResource: ContainerResourceMetricSource;
@@ -93,39 +178,111 @@ interface HPAScalingPolicy {
 
 type HPAScalingPolicyType = string;
 
-export interface ContainerResourceMetricStatus {
-  container: string;
+export interface V2ContainerResourceMetricStatus {
+  container?: string;
+  name: string;
+  current?: {
+    averageUtilization?: number;
+    averageValue?: string;
+  };
+}
+
+export interface V2Beta1ContainerResourceMetricStatus {
+  container?: string;
   currentAverageUtilization?: number;
-  currentAverageValue: string;
+  currentAverageValue?: string;
   name: string;
 }
 
-export interface ExternalMetricStatus {
+export type ContainerResourceMetricStatus =
+  | V2ContainerResourceMetricStatus
+  | V2Beta1ContainerResourceMetricStatus;
+
+export interface V2ExternalMetricStatus {
+  metric?: {
+    name?: string;
+    selector?: LabelSelector;
+  };
+  current?: {
+    averageValue?: string;
+    value?: string;
+  };
+}
+
+export interface V2Beta1ExternalMetricStatus {
   currentAverageValue?: string;
-  currentValue: string;
-  metricName: string;
+  currentValue?: string;
+  metricName?: string;
   metricSelector?: LabelSelector;
 }
 
-export interface ObjectMetricStatus {
+export type ExternalMetricStatus =
+  | V2Beta1ExternalMetricStatus
+  | V2ExternalMetricStatus;
+
+export interface V2ObjectMetricStatus {
+  metric?: {
+    name?: string;
+    selector?: LabelSelector;
+  };
+  current?: {
+    type?: string;
+    value?: string;
+    averageValue?: string;
+  };
+  describedObject?: CrossVersionObjectReference;
+}
+
+export interface V2Beta1ObjectMetricStatus {
   averageValue?: string;
   currentValue?: string;
-  metricName: string;
+  metricName?: string;
   selector?: LabelSelector;
-  target: CrossVersionObjectReference;
+  describedObject?: CrossVersionObjectReference;
 }
 
-export interface PodsMetricStatus {
-  currentAverageValue: string;
-  metricName: string;
+export type ObjectMetricStatus =
+  | V2Beta1ObjectMetricStatus
+  | V2ObjectMetricStatus;
+
+export interface V2PodsMetricStatus {
+  selector?: LabelSelector;
+  metric?: {
+    name?: string;
+    selector?: LabelSelector;
+  };
+  current?: {
+    averageValue?: string;
+  };
+}
+
+export interface V2Beta1PodsMetricStatus {
+  currentAverageValue?: string;
+  metricName?: string;
   selector?: LabelSelector;
 }
 
-export interface ResourceMetricStatus {
+export type PodsMetricStatus =
+  | V2Beta1PodsMetricStatus
+  | V2PodsMetricStatus;
+
+export interface V2ResourceMetricStatus {
+  name: string;
+  current?: {
+    averageUtilization?: number;
+    averageValue?: string;
+  };
+}
+
+export interface V2Beta1ResourceMetricStatus {
   currentAverageUtilization?: number;
-  currentAverageValue: string;
+  currentAverageValue?: string;
   name: string;
 }
+
+export type ResourceMetricStatus =
+  | V2Beta1ResourceMetricStatus
+  | V2ResourceMetricStatus;
 
 export interface BaseHorizontalPodAutoscalerMetricStatus {
   containerResource: ContainerResourceMetricStatus;
@@ -154,6 +311,7 @@ export interface HorizontalPodAutoscalerSpec {
   maxReplicas: number;
   metrics?: HorizontalPodAutoscalerMetricSpec[];
   behavior?: HorizontalPodAutoscalerBehavior;
+  targetCPUUtilizationPercentage?: number; // used only in autoscaling/v1
 }
 
 export interface HorizontalPodAutoscalerStatus {
@@ -161,11 +319,7 @@ export interface HorizontalPodAutoscalerStatus {
   currentReplicas: number;
   desiredReplicas: number;
   currentMetrics?: HorizontalPodAutoscalerMetricStatus[];
-}
-
-interface MetricCurrentTarget {
-  current?: string;
-  target?: string;
+  currentCPUUtilizationPercentage?: number; // used only in autoscaling/v1
 }
 
 export class HorizontalPodAutoscaler extends KubeObject<
@@ -212,15 +366,6 @@ export class HorizontalPodAutoscaler extends KubeObject<
   getCurrentMetrics() {
     return this.status?.currentMetrics ?? [];
   }
-
-  getMetricValues(metric: HorizontalPodAutoscalerMetricSpec): string {
-    const {
-      current = "unknown",
-      target = "unknown",
-    } = getMetricCurrentTarget(metric, this.getCurrentMetrics());
-
-    return `${current} / ${target}`;
-  }
 }
 
 export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler> {
@@ -229,114 +374,6 @@ export class HorizontalPodAutoscalerApi extends KubeApi<HorizontalPodAutoscaler>
       ...opts ?? {},
       objectConstructor: HorizontalPodAutoscaler,
       checkPreferredVersion: true,
-      // Kubernetes < 1.26
-      fallbackApiBases: [
-        "/apis/autoscaling/v2beta2/horizontalpodautoscalers",
-        "/apis/autoscaling/v2beta1/horizontalpodautoscalers",
-        "/apis/autoscaling/v1/horizontalpodautoscalers",
-      ],
     });
-  }
-}
-
-function getMetricName(metric: HorizontalPodAutoscalerMetricSpec | HorizontalPodAutoscalerMetricStatus): string | undefined {
-  switch (metric.type) {
-    case HpaMetricType.Resource:
-      return metric.resource.name;
-    case HpaMetricType.Pods:
-      return metric.pods.metricName;
-    case HpaMetricType.Object:
-      return metric.object.metricName;
-    case HpaMetricType.External:
-      return metric.external.metricName;
-    case HpaMetricType.ContainerResource:
-      return metric.containerResource.name;
-    default:
-      return undefined;
-  }
-}
-
-function getResourceMetricValue(currentMetric: ResourceMetricStatus | undefined, targetMetric: ResourceMetricSource): MetricCurrentTarget {
-  return {
-    current: (
-      typeof currentMetric?.currentAverageUtilization === "number"
-        ? `${currentMetric.currentAverageUtilization}%`
-        : currentMetric?.currentAverageValue
-    ),
-    target: (
-      typeof targetMetric?.targetAverageUtilization === "number"
-        ? `${targetMetric.targetAverageUtilization}%`
-        : targetMetric?.targetAverageValue
-    ),
-  };
-}
-
-function getPodsMetricValue(currentMetric: PodsMetricStatus | undefined, targetMetric: PodsMetricSource): MetricCurrentTarget {
-  return {
-    current: currentMetric?.currentAverageValue,
-    target: targetMetric?.targetAverageValue,
-  };
-}
-
-function getObjectMetricValue(currentMetric: ObjectMetricStatus | undefined, targetMetric: ObjectMetricSource): MetricCurrentTarget {
-  return {
-    current: (
-      currentMetric?.currentValue
-        ?? currentMetric?.averageValue
-    ),
-    target: (
-      targetMetric?.targetValue
-        ?? targetMetric?.averageValue
-    ),
-  };
-}
-
-function getExternalMetricValue(currentMetric: ExternalMetricStatus | undefined, targetMetric: ExternalMetricSource): MetricCurrentTarget {
-  return {
-    current: (
-      currentMetric?.currentValue
-        ?? currentMetric?.currentAverageValue
-    ),
-    target: (
-      targetMetric?.targetValue
-        ?? targetMetric?.targetAverageValue
-    ),
-  };
-}
-
-function getContainerResourceMetricValue(currentMetric: ContainerResourceMetricStatus | undefined, targetMetric: ContainerResourceMetricSource): MetricCurrentTarget {
-  return {
-    current: (
-      typeof currentMetric?.currentAverageUtilization === "number"
-        ? `${currentMetric.currentAverageUtilization}%`
-        : currentMetric?.currentAverageValue
-    ),
-    target: (
-      typeof targetMetric?.targetAverageUtilization === "number"
-        ? `${targetMetric.targetAverageUtilization}%`
-        : targetMetric?.targetAverageValue
-    ),
-  };
-}
-
-function getMetricCurrentTarget(spec: HorizontalPodAutoscalerMetricSpec, status: HorizontalPodAutoscalerMetricStatus[]): MetricCurrentTarget {
-  const currentMetric = status.find(m => (
-    m.type === spec.type
-      && getMetricName(m) === getMetricName(spec)
-  ));
-
-  switch (spec.type) {
-    case HpaMetricType.Resource:
-      return getResourceMetricValue(currentMetric?.resource, spec.resource);
-    case HpaMetricType.Pods:
-      return getPodsMetricValue(currentMetric?.pods, spec.pods);
-    case HpaMetricType.Object:
-      return getObjectMetricValue(currentMetric?.object, spec.object);
-    case HpaMetricType.External:
-      return getExternalMetricValue(currentMetric?.external, spec.external);
-    case HpaMetricType.ContainerResource:
-      return getContainerResourceMetricValue(currentMetric?.containerResource, spec.containerResource);
-    default:
-      return {};
   }
 }
