@@ -20,6 +20,7 @@
   "scripts": {
     "clean": "rm -rf binaries/ dist/ static/build",
     "build": "npm run compile",
+    "postbuild": "npm run build:tray-icons && npm run download:binaries",
     "build:app": "electron-builder --publish onTag $ELECTRON_BUILDER_EXTRA_ARGS",
     "prebuild:app": "run-script-os",
     "prebuild:app:default": "exit 0",
@@ -32,7 +33,7 @@
     "dev-run": "nodemon --watch ./static/build/main.js --exec \"electron --remote-debugging-port=9223 --inspect .\"",
     "dev:main": "env NODE_ENV=development webpack --config webpack/main.ts --progress --watch",
     "dev:renderer": "env NODE_ENV=development ts-node ./webpack/dev-server.ts",
-    "test:integration": "func() { jest ${1:-xyz} --runInBand --detectOpenHandles --forceExit --modulePaths=[\"<rootDir>/integration/\"]; }; func",
+    "test:integration": "jest -xyz --runInBand --detectOpenHandles --forceExit --modulePaths=[\"<rootDir>/integration/\"];",
     "build:tray-icons": "ts-node build/generate-tray-icons.ts",
     "download:binaries": "ts-node build/download_binaries.ts"
   },
@@ -71,6 +72,16 @@
       "dev": {
         "dependsOn": [
           "^prepare:dev"
+        ],
+        "outputs": [
+          "{workspaceRoot}/dist/",
+          "{workspaceRoot}/binaries/",
+          "{workspaceRoot}/static/build/"
+        ]
+      },
+      "build:app": {
+        "dependsOn": [
+          "build"
         ],
         "outputs": [
           "{workspaceRoot}/dist/",
