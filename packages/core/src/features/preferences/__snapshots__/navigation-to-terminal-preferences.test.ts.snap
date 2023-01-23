@@ -1141,7 +1141,7 @@ exports[`preferences - navigation to terminal preferences given in preferences, 
                           class="Select__single-value css-1dimb5e-singleValue"
                         >
                           <span
-                            style="font-family: RobotoMono; font-size: 12px;"
+                            style="font-family: RobotoMono, var(--font-terminal); font-size: 12px;"
                           >
                             RobotoMono
                           </span>

@@ -11,12 +11,10 @@ import React from "react";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
-import { prevDefault } from "../../utils";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import type { LimitRangeStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import limitRangeStoreInjectable from "./store.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -25,7 +23,6 @@ enum columnId {
 }
 
 interface Dependencies {
-  filterByNamespace: FilterByNamespace;
   limitRangeStore: LimitRangeStore;
 }
 
@@ -58,13 +55,10 @@ class NonInjectedLimitRanges extends React.Component<Dependencies> {
           renderTableContents={limitRange => [
             limitRange.getName(),
             <KubeObjectStatusIcon key="icon" object={limitRange}/>,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(limitRange.getNs()))}
-            >
-              {limitRange.getNs()}
-            </a>,
+              namespace={limitRange.getNs()}
+            />,
             <KubeObjectAge key="age" object={limitRange} />,
           ]}
         />
@@ -76,7 +70,6 @@ class NonInjectedLimitRanges extends React.Component<Dependencies> {
 export const LimitRanges = withInjectables<Dependencies>(NonInjectedLimitRanges, {
   getProps: (di, props) => ({
     ...props,
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     limitRangeStore: di.inject(limitRangeStoreInjectable),
   }),
 });

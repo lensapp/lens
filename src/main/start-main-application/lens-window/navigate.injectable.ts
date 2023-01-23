@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { iter } from "../../../common/utils";
 import clusterFramesInjectable from "../../../common/cluster-frames.injectable";
-import { IpcRendererNavigationEvents } from "../../../renderer/navigation/events";
+import { IpcRendererNavigationEvents } from "../../../common/ipc/navigation-events";
 import showApplicationWindowInjectable from "./show-application-window.injectable";
 import getCurrentApplicationWindowInjectable from "./application-window/get-current-application-window.injectable";
 import assert from "assert";

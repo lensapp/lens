@@ -73,14 +73,14 @@ export * from "../../renderer/components/dialog";
 export * from "../../renderer/components/line-progress";
 export * from "../../renderer/components/menu";
 
-export type {
-  CreateNotificationOptions,
-  Notification,
-  NotificationId,
-  NotificationMessage,
+export {
   NotificationStatus,
-  ShowNotification,
-  NotificationsStore,
+  type CreateNotificationOptions,
+  type Notification,
+  type NotificationId,
+  type NotificationMessage,
+  type ShowNotification,
+  type NotificationsStore,
 } from "../../renderer/components/notifications";
 
 export const Notifications = {

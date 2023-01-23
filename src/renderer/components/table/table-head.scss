@@ -36,4 +36,9 @@
       }
     }
   }
+
+  &.flat {
+    background-color: transparent;
+    font-weight: 600;
+  }
 }

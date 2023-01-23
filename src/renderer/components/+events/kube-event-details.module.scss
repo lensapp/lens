@@ -1,0 +1,29 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.KubeEventDetails {
+  .event {
+    margin-bottom: $margin * 4;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .title {
+      margin-top: $margin * 2;
+      margin-bottom: $margin;
+      font-weight: bold;
+      word-break: break-word;
+
+      &.warning {
+        color: var(--colorError);
+      }
+    }
+  }
+}
+
+.empty {
+  opacity: 0.6;
+}

@@ -1375,11 +1375,17 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   my-second-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    my-second-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -2172,11 +2178,17 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   my-second-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    my-second-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -2985,11 +2997,17 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   my-second-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    my-second-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -3834,11 +3852,17 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   my-second-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    my-second-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -4823,11 +4847,17 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   my-second-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    my-second-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -5814,11 +5844,17 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   my-second-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    my-second-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"

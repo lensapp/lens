@@ -78,7 +78,7 @@ const NonInjectedEventDetails = observer(({
 
       <DrawerTitle>Involved object</DrawerTitle>
       <Table>
-        <TableHead>
+        <TableHead flat>
           <TableCell>Name</TableCell>
           <TableCell>Namespace</TableCell>
           <TableCell>Kind</TableCell>

@@ -2242,11 +2242,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -2328,11 +2334,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -3206,11 +3218,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -3292,11 +3310,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -4231,11 +4255,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -4317,11 +4347,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -5256,11 +5292,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -5342,11 +5384,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -6526,11 +6574,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -6612,11 +6666,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -7796,11 +7856,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -7882,11 +7948,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -11242,11 +11314,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -11328,11 +11406,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -12512,11 +12596,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -12598,11 +12688,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -13537,11 +13633,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -13623,11 +13725,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -14565,11 +14673,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -14651,11 +14765,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -15529,11 +15649,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -15615,11 +15741,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -16554,11 +16686,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"
@@ -16640,11 +16778,17 @@ exports[`showing details for helm release given application is started when navi
                               <div
                                 class="TableCell namespace"
                               >
-                                <a
-                                  class="filterNamespace"
+                                <div
+                                  class="badge NamespaceSelectBadge flat clickable"
                                 >
                                   some-other-namespace
-                                </a>
+                                </div>
+                                <div>
+                                  Set global namespace filter to:
+                                  <b>
+                                    some-other-namespace
+                                  </b>
+                                </div>
                               </div>
                               <div
                                 class="TableCell chart"

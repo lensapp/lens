@@ -11,12 +11,10 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
-import { prevDefault } from "../../utils";
 import type { ConfigMapStore } from "./store";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import configMapStoreInjectable from "./store.injectable";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -27,7 +25,6 @@ enum columnId {
 
 interface Dependencies {
   configMapStore: ConfigMapStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 @observer
@@ -61,13 +58,10 @@ class NonInjectedConfigMaps extends React.Component<Dependencies> {
           renderTableContents={configMap => [
             configMap.getName(),
             <KubeObjectStatusIcon key="icon" object={configMap} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(configMap.getNs()))}
-            >
-              {configMap.getNs()}
-            </a>,
+              namespace={configMap.getNs()}
+            />,
             configMap.getKeys().join(", "),
             <KubeObjectAge key="age" object={configMap} />,
           ]}
@@ -81,6 +75,5 @@ export const ConfigMaps = withInjectables<Dependencies>(NonInjectedConfigMaps, {
   getProps: (di, props) => ({
     ...props,
     configMapStore: di.inject(configMapStoreInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });

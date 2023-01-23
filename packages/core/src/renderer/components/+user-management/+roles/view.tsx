@@ -13,12 +13,10 @@ import { AddRoleDialog } from "./add-dialog/view";
 import { SiblingsInTabLayout } from "../../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../../kube-object/age";
 import type { RoleStore } from "./store";
-import { prevDefault } from "../../../utils";
-import type { FilterByNamespace } from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import roleStoreInjectable from "./store.injectable";
 import openAddRoleDialogInjectable from "./add-dialog/open.injectable";
+import { NamespaceSelectBadge } from "../../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -28,7 +26,6 @@ enum columnId {
 
 interface Dependencies {
   roleStore: RoleStore;
-  filterByNamespace: FilterByNamespace;
   openAddRoleDialog: () => void;
 }
 
@@ -36,7 +33,6 @@ interface Dependencies {
 class NonInjectedRoles extends React.Component<Dependencies> {
   render() {
     const {
-      filterByNamespace,
       roleStore,
       openAddRoleDialog,
     } = this.props;
@@ -66,13 +62,10 @@ class NonInjectedRoles extends React.Component<Dependencies> {
           renderTableContents={role => [
             role.getName(),
             <KubeObjectStatusIcon key="icon" object={role} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => filterByNamespace(role.getNs()))}
-            >
-              {role.getNs()}
-            </a>,
+              namespace={role.getNs()}
+            />,
             <KubeObjectAge key="age" object={role} />,
           ]}
           addRemoveButtons={{
@@ -89,7 +82,6 @@ class NonInjectedRoles extends React.Component<Dependencies> {
 export const Roles = withInjectables<Dependencies>(NonInjectedRoles, {
   getProps: (di, props) => ({
     ...props,
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     roleStore: di.inject(roleStoreInjectable),
     openAddRoleDialog: di.inject(openAddRoleDialogInjectable),
   }),

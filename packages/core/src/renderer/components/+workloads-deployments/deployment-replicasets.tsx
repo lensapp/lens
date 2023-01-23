@@ -78,7 +78,7 @@ class NonInjectedDeploymentReplicaSets extends React.Component<DeploymentReplica
           sortSyncWithUrl={false}
           className="box grow"
         >
-          <TableHead>
+          <TableHead flat>
             <TableCell className="name" sortBy={sortBy.name}>Name</TableCell>
             <TableCell className="warning"/>
             <TableCell className="namespace" sortBy={sortBy.namespace}>Namespace</TableCell>

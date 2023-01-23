@@ -60,21 +60,6 @@ exports[`disable kube object detail items when cluster is not relevant given ext
             <span
               class="name"
             >
-              Created
-            </span>
-            <span
-              class="value"
-            >
-              &lt;unknown&gt;
-               ago 
-            </span>
-          </div>
-          <div
-            class="DrawerItem"
-          >
-            <span
-              class="name"
-            >
               Name
             </span>
             <span
@@ -104,11 +89,16 @@ exports[`disable kube object detail items when cluster is not relevant given ext
           </div>
           <div>
             <div
-              class="DrawerTitle flex gaps align-center title"
+              class="DrawerTitle title"
             >
               <span>
                 Events
               </span>
+            </div>
+            <div
+              class="empty"
+            >
+              No events found
             </div>
           </div>
         </div>
@@ -686,21 +676,6 @@ exports[`disable kube object detail items when cluster is not relevant given ext
             <span
               class="name"
             >
-              Created
-            </span>
-            <span
-              class="value"
-            >
-              &lt;unknown&gt;
-               ago 
-            </span>
-          </div>
-          <div
-            class="DrawerItem"
-          >
-            <span
-              class="name"
-            >
               Name
             </span>
             <span
@@ -725,11 +700,16 @@ exports[`disable kube object detail items when cluster is not relevant given ext
           </div>
           <div>
             <div
-              class="DrawerTitle flex gaps align-center title"
+              class="DrawerTitle title"
             >
               <span>
                 Events
               </span>
+            </div>
+            <div
+              class="empty"
+            >
+              No events found
             </div>
           </div>
         </div>
@@ -1307,21 +1287,6 @@ exports[`disable kube object detail items when cluster is not relevant given not
             <span
               class="name"
             >
-              Created
-            </span>
-            <span
-              class="value"
-            >
-              &lt;unknown&gt;
-               ago 
-            </span>
-          </div>
-          <div
-            class="DrawerItem"
-          >
-            <span
-              class="name"
-            >
               Name
             </span>
             <span
@@ -1346,11 +1311,16 @@ exports[`disable kube object detail items when cluster is not relevant given not
           </div>
           <div>
             <div
-              class="DrawerTitle flex gaps align-center title"
+              class="DrawerTitle title"
             >
               <span>
                 Events
               </span>
+            </div>
+            <div
+              class="empty"
+            >
+              No events found
             </div>
           </div>
         </div>

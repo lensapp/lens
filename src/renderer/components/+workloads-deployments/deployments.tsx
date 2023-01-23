@@ -9,7 +9,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { Deployment } from "../../../common/k8s-api/endpoints";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { cssNames, prevDefault } from "../../utils";
+import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -17,11 +17,10 @@ import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import type { DeploymentStore } from "./store";
 import type { EventStore } from "../+events/store";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import deploymentStoreInjectable from "./store.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -35,7 +34,6 @@ enum columnId {
 interface Dependencies {
   deploymentStore: DeploymentStore;
   eventStore: EventStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 @observer
@@ -64,7 +62,6 @@ class NonInjectedDeployments extends React.Component<Dependencies> {
     const {
       deploymentStore,
       eventStore,
-      filterByNamespace,
     } = this.props;
 
     return (
@@ -90,22 +87,34 @@ class NonInjectedDeployments extends React.Component<Dependencies> {
           renderTableHeader={[
             { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
             { className: "warning", showWithColumn: columnId.name },
-            { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+            {
+              title: "Namespace",
+              className: "namespace",
+              sortBy: columnId.namespace,
+              id: columnId.namespace,
+            },
             { title: "Pods", className: "pods", id: columnId.pods },
-            { title: "Replicas", className: "replicas", sortBy: columnId.replicas, id: columnId.replicas },
+            {
+              title: "Replicas",
+              className: "replicas",
+              sortBy: columnId.replicas,
+              id: columnId.replicas,
+            },
             { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
-            { title: "Conditions", className: "conditions", sortBy: columnId.condition, id: columnId.condition },
+            {
+              title: "Conditions",
+              className: "conditions",
+              sortBy: columnId.condition,
+              id: columnId.condition,
+            },
           ]}
           renderTableContents={deployment => [
             deployment.getName(),
             <KubeObjectStatusIcon key="icon" object={deployment} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => filterByNamespace(deployment.getNs()))}
-            >
-              {deployment.getNs()}
-            </a>,
+              namespace={deployment.getNs()}
+            />,
             this.renderPods(deployment),
             deployment.getReplicas(),
             <KubeObjectAge key="age" object={deployment} />,
@@ -122,6 +131,5 @@ export const Deployments = withInjectables<Dependencies>(NonInjectedDeployments,
     ...props,
     deploymentStore: di.inject(deploymentStoreInjectable),
     eventStore: di.inject(eventStoreInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });

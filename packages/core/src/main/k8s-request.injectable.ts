@@ -2,35 +2,49 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { RequestPromiseOptions } from "request-promise-native";
-import request from "request-promise-native";
 import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";
-import lensProxyPortInjectable from "./lens-proxy/lens-proxy-port.injectable";
-import lensProxyCertificateInjectable from "../common/certificate/lens-proxy-certificate.injectable";
+import type { LensRequestInit } from "../common/fetch/lens-fetch.injectable";
+import lensFetchInjectable from "../common/fetch/lens-fetch.injectable";
+import { withTimeout } from "../common/fetch/timeout-controller";
 
-export type K8sRequest = (cluster: Cluster, path: string, options?: RequestPromiseOptions) => Promise<any>;
+export interface K8sRequestInit extends LensRequestInit {
+  timeout?: number;
+}
+
+export type K8sRequest = (cluster: Cluster, pathnameAndQuery: string, init?: K8sRequestInit) => Promise<unknown>;
 
 const k8sRequestInjectable = getInjectable({
   id: "k8s-request",
 
-  instantiate: (di) => {
-    const lensProxyPort = di.inject(lensProxyPortInjectable);
-    const lensProxyCertificate = di.inject(lensProxyCertificateInjectable);
+  instantiate: (di): K8sRequest => {
+    const lensFetch = di.inject(lensFetchInjectable);
 
     return async (
-      cluster: Cluster,
-      path: string,
-      options: RequestPromiseOptions = {},
+      cluster,
+      pathnameAndQuery,
+      {
+        timeout = 30_000,
+        signal,
+        ...init
+      } = {},
     ) => {
-      const kubeProxyUrl = `https://127.0.0.1:${lensProxyPort.get()}/${cluster.id}`;
+      const controller = timeout ? withTimeout(timeout) : undefined;
 
-      options.ca = lensProxyCertificate.get().cert;
-      options.headers ??= {};
-      options.json ??= true;
-      options.timeout ??= 30000;
+      if (controller) {
+        signal?.addEventListener("abort", () => controller.abort());
+      }
 
-      return request(kubeProxyUrl + path, options);
+      const response = await lensFetch(`/${cluster.id}${pathnameAndQuery}`, {
+        ...init,
+        signal: controller?.signal ?? signal,
+      });
+
+      if (response.status < 200 || response.status >= 300) {
+        throw new Error(`Failed to ${init.method ?? "get"} ${pathnameAndQuery} for clusterId=${cluster.id}: ${response.statusText}`, { cause: response });
+      }
+
+      return response.json();
     };
   },
 });

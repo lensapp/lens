@@ -23,9 +23,7 @@ import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import helmReleasesRouteParametersInjectable from "./helm-releases-route-parameters.injectable";
 import type { NavigateToHelmReleases } from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
 import navigateToHelmReleasesInjectable from "../../../common/front-end-routing/routes/cluster/helm/releases/navigate-to-helm-releases.injectable";
-import { prevDefault } from "../../utils";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -43,19 +41,9 @@ interface Dependencies {
   releasesArePending: IComputedValue<boolean>;
   namespace: IComputedValue<string>;
   navigateToHelmReleases: NavigateToHelmReleases;
-  filterByNamespace: FilterByNamespace;
 }
 
 class NonInjectedHelmReleases extends Component<Dependencies> {
-  // TODO: This side-effect in mount must go.
-  componentDidMount() {
-    const namespace = this.props.namespace.get();
-
-    if (namespace) {
-      this.props.filterByNamespace(namespace);
-    }
-  }
-
   onDetails = (item: HelmRelease) => {
     this.showDetails(item);
   };
@@ -188,13 +176,10 @@ class NonInjectedHelmReleases extends Component<Dependencies> {
           ]}
           renderTableContents={release => [
             release.getName(),
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(release.getNs()))}
-            >
-              {release.getNs()}
-            </a>,
+              namespace={release.getNs()}
+            />,
             release.getChart(),
             release.getRevision(),
             release.getVersion(),
@@ -226,7 +211,6 @@ export const HelmReleases = withInjectables<Dependencies>(NonInjectedHelmRelease
     releases: di.inject(removableReleasesInjectable),
     releasesArePending: di.inject(releasesInjectable).pending,
     navigateToHelmReleases: di.inject(navigateToHelmReleasesInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     ...di.inject(helmReleasesRouteParametersInjectable),
   }),
 });

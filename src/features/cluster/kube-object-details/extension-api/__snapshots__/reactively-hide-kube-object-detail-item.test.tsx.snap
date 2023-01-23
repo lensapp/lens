@@ -60,21 +60,6 @@ exports[`reactively hide kube object detail item renders 1`] = `
             <span
               class="name"
             >
-              Created
-            </span>
-            <span
-              class="value"
-            >
-              &lt;unknown&gt;
-               ago 
-            </span>
-          </div>
-          <div
-            class="DrawerItem"
-          >
-            <span
-              class="name"
-            >
               Name
             </span>
             <span
@@ -99,11 +84,16 @@ exports[`reactively hide kube object detail item renders 1`] = `
           </div>
           <div>
             <div
-              class="DrawerTitle flex gaps align-center title"
+              class="DrawerTitle title"
             >
               <span>
                 Events
               </span>
+            </div>
+            <div
+              class="empty"
+            >
+              No events found
             </div>
           </div>
         </div>
@@ -681,21 +671,6 @@ exports[`reactively hide kube object detail item when the item is shown renders 
             <span
               class="name"
             >
-              Created
-            </span>
-            <span
-              class="value"
-            >
-              &lt;unknown&gt;
-               ago 
-            </span>
-          </div>
-          <div
-            class="DrawerItem"
-          >
-            <span
-              class="name"
-            >
               Name
             </span>
             <span
@@ -725,11 +700,16 @@ exports[`reactively hide kube object detail item when the item is shown renders 
           </div>
           <div>
             <div
-              class="DrawerTitle flex gaps align-center title"
+              class="DrawerTitle title"
             >
               <span>
                 Events
               </span>
+            </div>
+            <div
+              class="empty"
+            >
+              No events found
             </div>
           </div>
         </div>

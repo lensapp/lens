@@ -14,12 +14,10 @@ import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import type { StatefulSetStore } from "./store";
 import type { EventStore } from "../+events/store";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import eventStoreInjectable from "../+events/store.injectable";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import statefulSetStoreInjectable from "./store.injectable";
-import { prevDefault } from "../../utils";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -32,7 +30,6 @@ enum columnId {
 interface Dependencies {
   statefulSetStore: StatefulSetStore;
   eventStore: EventStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 const renderPodCounts = (statefulSet: StatefulSet) => {
@@ -44,7 +41,6 @@ const renderPodCounts = (statefulSet: StatefulSet) => {
 const NonInjectedStatefulSets = observer((props: Dependencies) => {
   const {
     eventStore,
-    filterByNamespace,
     statefulSetStore,
   } = props;
 
@@ -68,21 +64,28 @@ const NonInjectedStatefulSets = observer((props: Dependencies) => {
         renderHeaderTitle="Stateful Sets"
         renderTableHeader={[
           { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
-          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          {
+            title: "Namespace",
+            className: "namespace",
+            sortBy: columnId.namespace,
+            id: columnId.namespace,
+          },
           { title: "Pods", className: "pods", id: columnId.pods },
-          { title: "Replicas", className: "replicas", sortBy: columnId.replicas, id: columnId.replicas },
+          {
+            title: "Replicas",
+            className: "replicas",
+            sortBy: columnId.replicas,
+            id: columnId.replicas,
+          },
           { className: "warning", showWithColumn: columnId.replicas },
           { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={statefulSet => [
           statefulSet.getName(),
-          <a
+          <NamespaceSelectBadge
             key="namespace"
-            className="filterNamespace"
-            onClick={prevDefault(() => filterByNamespace(statefulSet.getNs()))}
-          >
-            {statefulSet.getNs()}
-          </a>,
+            namespace={statefulSet.getNs()}
+          />,
           renderPodCounts(statefulSet),
           statefulSet.getReplicas(),
           <KubeObjectStatusIcon key="icon" object={statefulSet} />,
@@ -97,7 +100,6 @@ export const StatefulSets = withInjectables<Dependencies>(NonInjectedStatefulSet
   getProps: (di, props) => ({
     ...props,
     eventStore: di.inject(eventStoreInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     statefulSetStore: di.inject(statefulSetStoreInjectable),
   }),
 });

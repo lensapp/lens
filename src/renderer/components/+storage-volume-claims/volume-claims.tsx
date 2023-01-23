@@ -10,7 +10,7 @@ import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { unitsToBytes } from "../../../common/utils/convertMemory";
-import { prevDefault, stopPropagation } from "../../utils";
+import { stopPropagation } from "../../utils";
 import type { StorageClassApi } from "../../../common/k8s-api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
@@ -18,13 +18,12 @@ import { KubeObjectAge } from "../kube-object/age";
 import type { PersistentVolumeClaimStore } from "./store";
 import type { PodStore } from "../+workloads-pods/store";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import persistentVolumeClaimStoreInjectable from "./store.injectable";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -41,7 +40,6 @@ interface Dependencies {
   storageClassApi: StorageClassApi;
   podStore: PodStore;
   getDetailsUrl: GetDetailsUrl;
-  filterByNamespace: FilterByNamespace;
 }
 
 @observer
@@ -49,7 +47,6 @@ class NonInjectedPersistentVolumeClaims extends React.Component<Dependencies> {
   render() {
     const {
       persistentVolumeClaimStore,
-      filterByNamespace,
       getDetailsUrl,
       podStore,
       storageClassApi,
@@ -97,13 +94,10 @@ class NonInjectedPersistentVolumeClaims extends React.Component<Dependencies> {
             return [
               pvc.getName(),
               <KubeObjectStatusIcon key="icon" object={pvc} />,
-              <a
+              <NamespaceSelectBadge
                 key="namespace"
-                className="filterNamespace"
-                onClick={prevDefault(() => filterByNamespace(pvc.getNs()))}
-              >
-                {pvc.getNs()}
-              </a>,
+                namespace={pvc.getNs()}
+              />,
               <Link
                 key="link"
                 to={storageClassDetailsUrl}
@@ -134,7 +128,6 @@ class NonInjectedPersistentVolumeClaims extends React.Component<Dependencies> {
 export const PersistentVolumeClaims = withInjectables<Dependencies>(NonInjectedPersistentVolumeClaims, {
   getProps: (di, props) => ({
     ...props,
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     persistentVolumeClaimStore: di.inject(persistentVolumeClaimStoreInjectable),
     podStore: di.inject(podStoreInjectable),

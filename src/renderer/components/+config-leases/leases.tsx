@@ -16,9 +16,7 @@ import { KubeObjectAge } from "../kube-object/age";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import leaseStoreInjectable from "./store.injectable";
 import type { LeaseStore } from "./store";
-import { prevDefault } from "../../utils";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -32,7 +30,6 @@ export interface LeaseProps extends KubeObjectDetailsProps<Lease> {
 
 interface Dependencies {
   leaseStore: LeaseStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 @observer
@@ -67,13 +64,10 @@ class NonInjectedLease extends React.Component<LeaseProps & Dependencies> {
           renderTableContents={lease => [
             lease.getName(),
             <KubeObjectStatusIcon key="icon" object={lease} />,
-            <a
+            <NamespaceSelectBadge
               key="namespace"
-              className="filterNamespace"
-              onClick={prevDefault(() => this.props.filterByNamespace(lease.getNs()))}
-            >
-              {lease.getNs()}
-            </a>,
+              namespace={lease.getNs()}
+            />,
             lease.getHolderIdentity(),
             <KubeObjectAge key="age" object={lease} />,
           ]}
@@ -87,6 +81,5 @@ export const Leases = withInjectables<Dependencies, LeaseProps>(NonInjectedLease
   getProps: (di, props) => ({
     ...props,
     leaseStore: di.inject(leaseStoreInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });

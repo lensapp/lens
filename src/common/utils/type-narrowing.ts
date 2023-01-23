@@ -130,7 +130,7 @@ export function isFunction(val: unknown): val is (...args: unknown[]) => unknown
 /**
  * Checks if the value in the second position is non-nullable
  */
-export function hasDefinedTupleValue<K, V>(pair: [K, V | undefined | null]): pair is [K, V] {
+export function hasDefinedTupleValue<K, V>(pair: readonly [K, V | undefined | null]): pair is [K, V] {
   return pair[1] != null;
 }
 

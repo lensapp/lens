@@ -8,7 +8,7 @@ import { CatalogEntity, CatalogCategory, categoryVersion } from "../catalog/cata
 import { broadcastMessage } from "../ipc";
 import { app } from "electron";
 import type { CatalogEntityConstructor, CatalogEntitySpec } from "../catalog/catalog-entity";
-import { IpcRendererNavigationEvents } from "../../renderer/navigation/events";
+import { IpcRendererNavigationEvents } from "../ipc/navigation-events";
 import { requestClusterActivation, requestClusterDisconnection } from "../../renderer/ipc";
 import KubeClusterCategoryIcon from "./icons/kubernetes.svg";
 import getClusterByIdInjectable from "../cluster-store/get-by-id.injectable";

@@ -17,9 +17,7 @@ import type { EventStore } from "../+events/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import cronJobStoreInjectable from "./store.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
-import { prevDefault } from "../../utils";
-import type { FilterByNamespace } from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
-import filterByNamespaceInjectable from "../+namespaces/namespace-select-filter-model/filter-by-namespace.injectable";
+import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
   name = "name",
@@ -34,14 +32,12 @@ enum columnId {
 interface Dependencies {
   cronJobStore: CronJobStore;
   eventStore: EventStore;
-  filterByNamespace: FilterByNamespace;
 }
 
 const NonInjectedCronJobs = observer((props: Dependencies) => {
   const {
     cronJobStore,
     eventStore,
-    filterByNamespace,
   } = props;
 
   return (
@@ -82,13 +78,10 @@ const NonInjectedCronJobs = observer((props: Dependencies) => {
         renderTableContents={cronJob => [
           cronJob.getName(),
           <KubeObjectStatusIcon key="icon" object={cronJob} />,
-          <a
+          <NamespaceSelectBadge
             key="namespace"
-            className="filterNamespace"
-            onClick={prevDefault(() => filterByNamespace(cronJob.getNs()))}
-          >
-            {cronJob.getNs()}
-          </a>,
+            namespace={cronJob.getNs()}
+          />,
           cronJob.isNeverRun() ? "never"  : cronJob.getSchedule(),
           cronJob.getSuspendFlag(),
           cronJobStore.getActiveJobsNum(cronJob),
@@ -105,6 +98,5 @@ export const CronJobs = withInjectables<Dependencies>(NonInjectedCronJobs, {
     ...props,
     cronJobStore: di.inject(cronJobStoreInjectable),
     eventStore: di.inject(eventStoreInjectable),
-    filterByNamespace: di.inject(filterByNamespaceInjectable),
   }),
 });
