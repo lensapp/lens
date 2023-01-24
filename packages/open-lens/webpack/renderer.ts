@@ -52,6 +52,7 @@
   externals: [
     "node-fetch",
     "npm",
+    "win-ca"
   ],
   optimization: {
     minimize: false,
