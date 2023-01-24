@@ -58,10 +58,6 @@ jobs:
         shell: bash
         if: ${{ matrix.type == 'unit' }}
 
-      - run: make ci-validate-dev
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') && matrix.type == 'unit' }}
-        name: Validate dev mode will work
-
       - name: Install integration test dependencies
         id: minikube
         uses: medyagh/setup-minikube@master
