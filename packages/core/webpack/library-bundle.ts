@@ -93,10 +93,12 @@ const config = [
     optimization: {
       minimize: false,
     },
-    externals: {
-      ...(rendererConfig.externals as any),
-      "monaco-editor": "commonjs monaco-editor",
-    },
+    externals: [
+      ...(rendererConfig.externals as any).filter(Boolean),
+      {
+        "monaco-editor": "commonjs monaco-editor",
+      },
+    ],
     plugins: [
       new DefinePlugin({
         CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,

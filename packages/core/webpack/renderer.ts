@@ -66,6 +66,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     externals: [
       {
         "node-fetch": "commonjs node-fetch",
+        "win-ca": "commonjs win-ca",
       },
       ...additionalExternals,
     ],
