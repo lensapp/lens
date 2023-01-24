@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, comparer, observable, makeObservable } from "mobx";
-import type { BaseStoreDependencies } from "../base-store/base-store";
-import { BaseStore } from "../base-store/base-store";
+import { action, comparer, observable, runInAction } from "mobx";
+import type { BaseStore } from "../base-store/base-store";
 import * as uuid from "uuid";
-import { toJS } from "../utils";
+import type { CreateBaseStore } from "../base-store/create-base-store.injectable";
+import type { Migrations } from "conf/dist/source/types";
 
 export interface WeblinkData {
   id: string;
@@ -26,49 +26,55 @@ export interface WeblinkStoreModel {
   weblinks: WeblinkData[];
 }
 
-export class WeblinkStore extends BaseStore<WeblinkStoreModel> {
-  @observable weblinks: WeblinkData[] = [];
+interface Dependencies {
+  readonly storeMigrationVersion: string;
+  readonly migrations: Migrations<Record<string, unknown>>;
+  createBaseStore: CreateBaseStore;
+}
 
-  constructor(deps: BaseStoreDependencies) {
-    super(deps, {
+export class WeblinkStore {
+  private readonly store: BaseStore<WeblinkStoreModel>;
+
+  readonly weblinks = observable.array<WeblinkData>();
+
+  constructor(private readonly dependencies: Dependencies) {
+    this.store = this.dependencies.createBaseStore({
       configName: "lens-weblink-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {
         equals: comparer.structural,
       },
+      projectVersion: this.dependencies.storeMigrationVersion,
+      migrations: this.dependencies.migrations,
+      fromStore: action(({ weblinks = [] }) => {
+        this.weblinks.replace(weblinks);
+      }),
+      toJSON: () => ({
+        weblinks: this.weblinks.toJSON(),
+      }),
     });
-    makeObservable(this);
-    this.load();
-  }
 
-  @action
-  protected fromStore(data: Partial<WeblinkStoreModel> = {}) {
-    this.weblinks = data.weblinks || [];
+    this.store.load();
   }
 
   add(data: WeblinkCreateOptions) {
-    const {
-      id = uuid.v4(),
-      name,
-      url,
-    } = data;
-    const weblink: WeblinkData = { id, name, url };
+    return runInAction(() => {
+      const {
+        id = uuid.v4(),
+        name,
+        url,
+      } = data;
+      const weblink: WeblinkData = { id, name, url };
 
-    this.weblinks.push(weblink);
+      this.weblinks.push(weblink);
 
-    return weblink;
+      return weblink;
+    });
   }
 
-  @action
   removeById(id: string) {
-    this.weblinks = this.weblinks.filter((w) => w.id !== id);
-  }
-
-  toJSON(): WeblinkStoreModel {
-    const model: WeblinkStoreModel = {
-      weblinks: this.weblinks,
-    };
-
-    return toJS(model);
+    runInAction(() => {
+      this.weblinks.replace(this.weblinks.filter((w) => w.id !== id));
+    });
   }
 }
