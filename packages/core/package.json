@@ -52,7 +52,8 @@
     "prepare:dev": "env NODE_ENV=development yarn run webpack --config webpack/library-bundle.ts --progress",
     "dev": "env NODE_ENV=development yarn run webpack --config webpack/library-bundle.ts --watch",
     "prepare": "yarn run compile:node-fetch",
-    "test:unit": "func() { jest ${1} --testPathIgnorePatterns integration; }; func",
+    "test:unit": "jest --testPathIgnorePatterns integration",
+    "test:watch": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
     "lint": "PROD=true yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
     "lint:fix": "yarn run lint --fix"
   },
