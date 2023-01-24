@@ -5,6 +5,6 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { MigrationDeclaration } from "../../../common/base-store/migrations.injectable";
 
-export const fileSystemProvisionerStoreInjectionToken = getInjectionToken<MigrationDeclaration>({
-  id: "file-system-provisioner-store-injection-token",
+export const fileSystemProvisionerStoreMigrationDeclarationInjectionToken = getInjectionToken<MigrationDeclaration>({
+  id: "file-system-provisioner-store-migration-declaration",
 });
