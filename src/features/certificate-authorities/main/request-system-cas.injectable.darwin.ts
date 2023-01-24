@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import execFileInjectable from "../fs/exec-file.injectable";
-import loggerInjectable from "../logger.injectable";
-import type { AsyncResult } from "../utils/async-result";
-import { requestSystemCAsInjectionToken } from "./request-system-cas-token";
+import execFileInjectable from "../../../common/fs/exec-file.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
+import type { AsyncResult } from "../../../common/utils/async-result";
+import { requestSystemCAsInjectionToken } from "../common/request-system-cas-token";
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet#other_assertions
 const certSplitPattern = /(?=-----BEGIN\sCERTIFICATE-----)/g;
