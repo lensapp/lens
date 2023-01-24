@@ -4,7 +4,7 @@
  */
 
 import type { BaseStoreParams } from "../../common/base-store/base-store";
-import { ExtensionStore } from "../extension-store";
+import { BaseExtensionStore as ExtensionStore } from "../base-extension-store";
 
 export {
   BaseStoreParams,
