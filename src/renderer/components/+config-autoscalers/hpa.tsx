@@ -17,6 +17,7 @@ import { KubeObjectAge } from "../kube-object/age";
 import type { HorizontalPodAutoscalerStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import horizontalPodAutoscalerStoreInjectable from "./store.injectable";
+import getHorizontalPodAutoscalerMetrics from "./get-hpa-metrics.injectable";
 import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
 
 enum columnId {
@@ -32,6 +33,7 @@ enum columnId {
 
 interface Dependencies {
   horizontalPodAutoscalerStore: HorizontalPodAutoscalerStore;
+  getMetrics: (hpa: HorizontalPodAutoscaler) => string[];
 }
 
 @observer
@@ -39,7 +41,7 @@ class NonInjectedHorizontalPodAutoscalers extends React.Component<Dependencies> 
   getTargets(hpa: HorizontalPodAutoscaler) {
     const metrics = hpa.getMetrics();
 
-    if (metrics.length === 0) {
+    if (metrics.length === 0 && !hpa.spec?.targetCPUUtilizationPercentage) {
       return <p>--</p>;
     }
 
@@ -47,7 +49,7 @@ class NonInjectedHorizontalPodAutoscalers extends React.Component<Dependencies> 
 
     return (
       <p>
-        {hpa.getMetricValues(metrics[0])}
+        {this.props.getMetrics(hpa)[0]}
         {" "}
         {metricsRemain}
       </p>
@@ -120,5 +122,6 @@ export const HorizontalPodAutoscalers = withInjectables<Dependencies>(NonInjecte
   getProps: (di, props) => ({
     ...props,
     horizontalPodAutoscalerStore: di.inject(horizontalPodAutoscalerStoreInjectable),
+    getMetrics: di.inject(getHorizontalPodAutoscalerMetrics),
   }),
 });

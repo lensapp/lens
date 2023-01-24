@@ -22,6 +22,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import getHorizontalPodAutoscalerMetrics from "./get-hpa-metrics.injectable";
+import { getMetricName } from "./get-hpa-metric-name";
 
 export interface HpaDetailsProps extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 }
@@ -30,6 +32,7 @@ interface Dependencies {
   apiManager: ApiManager;
   logger: Logger;
   getDetailsUrl: GetDetailsUrl;
+  getMetrics: (hpa: HorizontalPodAutoscaler) => string[];
 }
 
 @observer
@@ -57,47 +60,46 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
     const { object: hpa } = this.props;
 
     const renderName = (metric: HorizontalPodAutoscalerMetricSpec) => {
+      const metricName = getMetricName(metric);
+
       switch (metric.type) {
         case HpaMetricType.ContainerResource:
 
         // fallthrough
         case HpaMetricType.Resource: {
           const metricSpec = metric.resource ?? metric.containerResource;
-          const addition = metricSpec.targetAverageUtilization
-            ? " (as a percentage of request)"
-            : "";
 
-          return `Resource ${metricSpec.name} on Pods${addition}`;
+          return `Resource ${metricSpec.name} on Pods`;
         }
         case HpaMetricType.Pods:
-          return `${metric.pods.metricName} on Pods`;
+          return `${metricName} on Pods`;
 
         case HpaMetricType.Object: {
           return (
             <>
-              {metric.object.metricName}
+              {metricName}
               {" "}
-              {this.renderTargetLink(metric.object.target)}
+              {this.renderTargetLink(metric.object?.describedObject)}
             </>
           );
         }
         case HpaMetricType.External:
-          return `${metric.external.metricName} on ${JSON.stringify(metric.external.metricSelector)}`;
+          return `${metricName} on ${JSON.stringify(metric.external.metricSelector ?? metric.external.metric?.selector)}`;
       }
     };
 
     return (
       <Table>
-        <TableHead>
+        <TableHead flat>
           <TableCell className="name">Name</TableCell>
           <TableCell className="metrics">Current / Target</TableCell>
         </TableHead>
         {
-          hpa.getMetrics()
-            .map((metric, index) => (
+          this.props.getMetrics(hpa)
+            .map((metrics, index) => (
               <TableRow key={index}>
-                <TableCell className="name">{renderName(metric)}</TableCell>
-                <TableCell className="metrics">{hpa.getMetricValues(metric)}</TableCell>
+                <TableCell className="name">{renderName(hpa.getMetrics()[index])}</TableCell>
+                <TableCell className="metrics">{metrics}</TableCell>
               </TableRow>
             ))
         }
@@ -175,5 +177,6 @@ export const HpaDetails = withInjectables<Dependencies, HpaDetailsProps>(NonInje
     apiManager: di.inject(apiManagerInjectable),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     logger: di.inject(loggerInjectable),
+    getMetrics: di.inject(getHorizontalPodAutoscalerMetrics),
   }),
 });
