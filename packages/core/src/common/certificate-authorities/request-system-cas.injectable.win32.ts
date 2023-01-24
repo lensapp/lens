@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import * as path from "path";
 import execFileInjectable from "../fs/exec-file.injectable";
 import loggerInjectable from "../logger.injectable";
 import { requestSystemCAsInjectionToken } from "./request-system-cas-token";
@@ -24,7 +23,7 @@ const pemEncoding = (hexEncodedCert: String) => {
 const requestSystemCAsInjectable = getInjectable({
   id: "request-system-cas",
   instantiate: (di) => {
-    const wincaRootsExePath: string = path.resolve(require.resolve("win-ca"), "..", "roots.exe");
+    const wincaRootsExePath: string = __non_webpack_require__.resolve("win-ca/lib/roots.exe");
     const execFile = di.inject(execFileInjectable);
     const logger = di.inject(loggerInjectable);
 
