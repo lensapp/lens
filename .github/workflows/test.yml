@@ -69,18 +69,18 @@ jobs:
           minikube-version: latest
         if: ${{ runner.os == 'Linux' && matrix.type == 'smoke' }}
 
-      - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration
+      - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' yarn run test:integration -- -- $ELECTRON_BUILDER_EXTRA_ARGS
         name: Run Linux integration tests
         if: ${{ runner.os == 'Linux' && matrix.type == 'smoke' }}
 
-      - run: yarn run test:integration
+      - run: yarn run test:integration -- -- $ELECTRON_BUILDER_EXTRA_ARGS
         name: Run macOS integration tests
         shell: bash
         env:
           ELECTRON_BUILDER_EXTRA_ARGS: "--x64 --arm64"
         if: ${{ runner.os == 'macOS' && matrix.type == 'smoke' }}
 
-      - run: yarn run test:integration
+      - run: yarn run test:integration -- -- $ELECTRON_BUILDER_EXTRA_ARGS
         name: Run Windows integration tests
         shell: bash
         env:

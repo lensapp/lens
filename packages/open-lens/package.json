@@ -21,7 +21,7 @@
     "clean": "rm -rf binaries/ dist/ static/build",
     "build": "npm run compile",
     "postbuild": "npm run build:tray-icons && npm run download:binaries",
-    "build:app": "electron-builder --publish onTag $ELECTRON_BUILDER_EXTRA_ARGS",
+    "build:app": "electron-builder --publish onTag",
     "prebuild:app": "run-script-os",
     "prebuild:app:default": "exit 0",
     "prebuild:app:win32": "rm -rf node_modules/win-ca/pem",
