@@ -116,7 +116,7 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
                       options={{
                         scrollbar: {
                           alwaysConsumeMouseWheel: false,
-                        }
+                        },
                       }}
                     />
                   </div>
