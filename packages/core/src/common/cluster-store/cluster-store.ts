@@ -40,7 +40,7 @@ export class ClusterStore {
         equals: comparer.structural,
       },
       projectVersion: this.dependencies.storeMigrationVersion,
-      migrations: this.dependencies.migrations as unknown as Migrations<ClusterStoreModel>,
+      migrations: this.dependencies.migrations,
       fromStore: action(({ clusters = [] }) => {
         const currentClusters = new Map(this.clusters);
         const newClusters = new Map<ClusterId, Cluster>();

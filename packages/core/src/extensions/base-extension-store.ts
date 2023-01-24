@@ -22,7 +22,7 @@ import { persistStateToConfigInjectionToken } from "../common/base-store/save-to
 import getBasenameOfPathInjectable from "../common/path/get-basename.injectable";
 import { enlistMessageChannelListenerInjectionToken } from "@k8slens/messaging";
 
-export interface ExtensionStoreParams<T extends object> extends BaseStoreParams<T> {
+export interface ExtensionStoreParams<T extends object> extends Omit<BaseStoreParams<T>, "migrations"> {
   migrations?: Migrations<T>;
 }
 

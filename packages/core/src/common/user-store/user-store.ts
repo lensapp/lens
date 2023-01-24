@@ -39,7 +39,7 @@ export class UserStore {
     this.store = this.dependencies.createBaseStore({
       configName: "lens-user-store",
       projectVersion: this.dependencies.storeMigrationVersion,
-      migrations: this.dependencies.migrations as unknown as Migrations<UserStoreModel>,
+      migrations: this.dependencies.migrations,
       fromStore: action(({ preferences }) => {
         this.dependencies.logger.debug("UserStore.fromStore()", { preferences });
 
