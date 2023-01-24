@@ -3,9 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, observable, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
-import type { BaseStoreDependencies } from "../base-store/base-store";
-import { BaseStore } from "../base-store/base-store";
+import { action, observable, makeObservable, isObservableArray, isObservableSet, isObservableMap, runInAction } from "mobx";
+import type { BaseStore } from "../base-store/base-store";
 import { getOrInsertSet, toggle, object } from "@k8slens/utilities";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
@@ -14,36 +13,71 @@ import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
 import type { SelectedUpdateChannel } from "../../features/application-update/common/selected-update-channel/selected-update-channel.injectable";
 import type { ReleaseChannel } from "../../features/application-update/common/update-channels";
 import type { PreferenceDescriptors } from "./preference-descriptors.injectable";
+import type { CreateBaseStore } from "../base-store/create-base-store.injectable";
+import type { Logger } from "../logger";
+import type { Migrations } from "conf/dist/source/types";
 import { toJS } from "../utils";
 
 export interface UserStoreModel {
   preferences: UserPreferencesModel;
 }
 
-interface Dependencies extends BaseStoreDependencies {
+interface Dependencies {
   readonly selectedUpdateChannel: SelectedUpdateChannel;
   readonly preferenceDescriptors: PreferenceDescriptors;
+  readonly logger: Logger;
+  readonly storeMigrationVersion: string;
+  readonly migrations: Migrations<Record<string, unknown>>;
   emitAppEvent: EmitAppEvent;
+  createBaseStore: CreateBaseStore;
 }
 
-export class UserStore extends BaseStore<UserStoreModel> /* implements UserStoreFlatModel (when strict null is enabled) */ {
+export class UserStore {
+  private readonly store: BaseStore<UserStoreModel>;
+
   constructor(protected readonly dependencies: Dependencies) {
-    super(dependencies, {
+    this.store = this.dependencies.createBaseStore({
       configName: "lens-user-store",
+      projectVersion: this.dependencies.storeMigrationVersion,
+      migrations: this.dependencies.migrations as unknown as Migrations<UserStoreModel>,
+      fromStore: action(({ preferences }) => {
+        this.dependencies.logger.debug("UserStore.fromStore()", { preferences });
+
+        for (const [key, { fromStore }] of object.entries(this.dependencies.preferenceDescriptors)) {
+          const curVal = this[key];
+          const newVal = fromStore((preferences)?.[key] as never) as never;
+
+          if (isObservableArray(curVal)) {
+            curVal.replace(newVal);
+          } else if (isObservableSet(curVal) || isObservableMap(curVal)) {
+            curVal.replace(newVal);
+          } else {
+            this[key] = newVal;
+          }
+        }
+
+        // TODO: Switch to action-based saving instead saving stores by reaction
+        if (preferences?.updateChannel) {
+          this.dependencies.selectedUpdateChannel.setValue(preferences?.updateChannel as ReleaseChannel);
+        }
+      }),
+      toJSON: () => {
+        const preferences = object.fromEntries(
+          object.entries(this.dependencies.preferenceDescriptors)
+            .map(([key, { toStore }]) => [key, toStore(this[key] as never)]),
+        ) as UserPreferencesModel;
+
+        return toJS({
+          preferences: {
+            ...preferences,
+            updateChannel: this.dependencies.selectedUpdateChannel.value.get().id,
+          },
+        });
+      },
     });
 
     makeObservable(this);
   }
-
-  /**
-   * @deprecated No longer used
-   */
-  @observable seenContexts = observable.set<string>();
-
-  /**
-   * @deprecated No longer used
-   */
-  @observable newContexts = observable.set<string>();
 
   @observable allowErrorReporting!: StoreType<PreferenceDescriptors["allowErrorReporting"]>;
   @observable allowUntrustedCAs!: StoreType<PreferenceDescriptors["allowUntrustedCAs"]>;
@@ -112,45 +146,13 @@ export class UserStore extends BaseStore<UserStoreModel> /* implements UserStore
     toggle(getOrInsertSet(this.hiddenTableColumns, tableId), columnId);
   }
 
-  @action
   resetTheme() {
-    this.colorTheme = this.dependencies.preferenceDescriptors.colorTheme.fromStore(undefined);
-  }
-
-  @action
-  protected fromStore({ preferences }: Partial<UserStoreModel> = {}) {
-    this.dependencies.logger.debug("UserStore.fromStore()", { preferences });
-
-    for (const [key, { fromStore }] of object.entries(this.dependencies.preferenceDescriptors)) {
-      const curVal = this[key];
-      const newVal = fromStore((preferences)?.[key] as never) as never;
-
-      if (isObservableArray(curVal)) {
-        curVal.replace(newVal);
-      } else if (isObservableSet(curVal) || isObservableMap(curVal)) {
-        curVal.replace(newVal);
-      } else {
-        this[key] = newVal;
-      }
-    }
-
-    // TODO: Switch to action-based saving instead saving stores by reaction
-    if (preferences?.updateChannel) {
-      this.dependencies.selectedUpdateChannel.setValue(preferences?.updateChannel as ReleaseChannel);
-    }
-  }
-
-  toJSON(): UserStoreModel {
-    const preferences = object.fromEntries(
-      object.entries(this.dependencies.preferenceDescriptors)
-        .map(([key, { toStore }]) => [key, toStore(this[key] as never)]),
-    ) as UserPreferencesModel;
-
-    return toJS({
-      preferences: {
-        ...preferences,
-        updateChannel: this.dependencies.selectedUpdateChannel.value.get().id,
-      },
+    runInAction(() => {
+      this.colorTheme = this.dependencies.preferenceDescriptors.colorTheme.fromStore(undefined);
     });
+  }
+
+  load() {
+    this.store.load();
   }
 }
