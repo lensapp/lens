@@ -5,11 +5,9 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import extensionsStoreInjectable from "../../extensions-store/extensions-store.injectable";
 
-const getEnabledExtensionsInjectable = getInjectable({
-  id: "get-enabled-extensions",
-
-  instantiate: (di) => () =>
-    di.inject(extensionsStoreInjectable).enabledExtensions,
+const enabledExtensionsInjectable = getInjectable({
+  id: "enabled-extensions",
+  instantiate: (di) => di.inject(extensionsStoreInjectable).enabledExtensions,
 });
 
-export default getEnabledExtensionsInjectable;
+export default enabledExtensionsInjectable;
