@@ -113,6 +113,11 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
                       value={value}
                       onChange={v => this.data.set(name, v)}
                       setInitialHeight
+                      options={{
+                        scrollbar: {
+                          alwaysConsumeMouseWheel: false,
+                        }
+                      }}
                     />
                   </div>
                 ))
