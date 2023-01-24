@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../../before-frame-starts/tokens";
-import injectSystemCAsInjectable from "../../../common/certificate-authorities/inject-system-cas.injectable";
+import injectSystemCAsInjectable from "../../../features/certificate-authorities/common/inject-system-cas.injectable";
 
 const setupSystemCaInjectable = getInjectable({
   id: "setup-system-ca",

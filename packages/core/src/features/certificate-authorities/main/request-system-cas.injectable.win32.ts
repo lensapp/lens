@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import execFileInjectable from "../fs/exec-file.injectable";
-import loggerInjectable from "../logger.injectable";
-import { requestSystemCAsInjectionToken } from "./request-system-cas-token";
+import execFileInjectable from "../../../common/fs/exec-file.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
+import { requestSystemCAsInjectionToken } from "../common/request-system-cas-token";
 
 const pemEncoding = (hexEncodedCert: String) => {
   const certData = Buffer.from(hexEncodedCert, "hex").toString("base64");
