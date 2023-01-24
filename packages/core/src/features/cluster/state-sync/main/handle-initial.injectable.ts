@@ -12,7 +12,7 @@ const handleInitialClusterStateSyncInjectable = getRequestChannelListenerInjecta
   getHandler: (di) => {
     const clusterStore = di.inject(clusterStoreInjectable);
 
-    return () => clusterStore.clustersList.map(cluster => ({
+    return () => clusterStore.clustersList.get().map(cluster => ({
       clusterId: cluster.id,
       state: cluster.getState(),
     }));

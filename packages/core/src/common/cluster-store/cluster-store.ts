@@ -4,46 +4,75 @@
  */
 
 
-import { action, comparer, computed, makeObservable, observable } from "mobx";
-import type { BaseStoreDependencies } from "../base-store/base-store";
-import { BaseStore } from "../base-store/base-store";
+import { action, comparer, computed, observable } from "mobx";
+import type { BaseStore } from "../base-store/base-store";
 import { Cluster } from "../cluster/cluster";
 import { toJS } from "../utils";
 import type { ClusterModel, ClusterId } from "../cluster-types";
 import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
+import type { CreateBaseStore } from "../base-store/create-base-store.injectable";
+import type { Migrations } from "conf/dist/source/types";
+import type { Logger } from "../logger";
 
 export interface ClusterStoreModel {
   clusters?: ClusterModel[];
 }
 
-interface Dependencies extends BaseStoreDependencies {
+interface Dependencies {
   readClusterConfigSync: ReadClusterConfigSync;
   emitAppEvent: EmitAppEvent;
+  createBaseStore: CreateBaseStore;
+  readonly storeMigrationVersion: string;
+  readonly migrations: Migrations<Record<string, unknown>>;
+  readonly logger: Logger;
 }
 
-export class ClusterStore extends BaseStore<ClusterStoreModel> {
+export class ClusterStore {
   readonly clusters = observable.map<ClusterId, Cluster>();
+  private readonly store: BaseStore<ClusterStoreModel>;
 
   constructor(protected readonly dependencies: Dependencies) {
-    super(dependencies, {
+    this.store = this.dependencies.createBaseStore({
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {
         equals: comparer.structural,
       },
+      projectVersion: this.dependencies.storeMigrationVersion,
+      migrations: this.dependencies.migrations as unknown as Migrations<ClusterStoreModel>,
+      fromStore: action(({ clusters = [] }) => {
+        const currentClusters = new Map(this.clusters);
+        const newClusters = new Map<ClusterId, Cluster>();
+
+        // update new clusters
+        for (const clusterModel of clusters) {
+          try {
+            let cluster = currentClusters.get(clusterModel.id);
+
+            if (cluster) {
+              cluster.updateModel(clusterModel);
+            } else {
+              cluster = new Cluster(
+                clusterModel,
+                this.dependencies.readClusterConfigSync(clusterModel),
+              );
+            }
+            newClusters.set(clusterModel.id, cluster);
+          } catch (error) {
+            this.dependencies.logger.warn(`[CLUSTER-STORE]: Failed to update/create a cluster: ${error}`);
+          }
+        }
+
+        this.clusters.replace(newClusters);
+      }),
+      toJSON: () => toJS({
+        clusters: this.clustersList.get().map(cluster => cluster.toJSON()),
+      }),
     });
-
-    makeObservable(this);
   }
 
-  @computed get clustersList(): Cluster[] {
-    return Array.from(this.clusters.values());
-  }
-
-  @computed get connectedClustersList(): Cluster[] {
-    return this.clustersList.filter((c) => !c.disconnected);
-  }
+  readonly clustersList = computed(() => [...this.clusters.values()]);
 
   hasClusters() {
     return this.clusters.size > 0;
@@ -72,36 +101,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return cluster;
   }
 
-  @action
-  protected fromStore({ clusters = [] }: ClusterStoreModel = {}) {
-    const currentClusters = new Map(this.clusters);
-    const newClusters = new Map<ClusterId, Cluster>();
-
-    // update new clusters
-    for (const clusterModel of clusters) {
-      try {
-        let cluster = currentClusters.get(clusterModel.id);
-
-        if (cluster) {
-          cluster.updateModel(clusterModel);
-        } else {
-          cluster = new Cluster(
-            clusterModel,
-            this.dependencies.readClusterConfigSync(clusterModel),
-          );
-        }
-        newClusters.set(clusterModel.id, cluster);
-      } catch (error) {
-        this.dependencies.logger.warn(`[CLUSTER-STORE]: Failed to update/create a cluster: ${error}`);
-      }
-    }
-
-    this.clusters.replace(newClusters);
-  }
-
-  toJSON(): ClusterStoreModel {
-    return toJS({
-      clusters: this.clustersList.map(cluster => cluster.toJSON()),
-    });
+  load() {
+    this.store.load();
   }
 }

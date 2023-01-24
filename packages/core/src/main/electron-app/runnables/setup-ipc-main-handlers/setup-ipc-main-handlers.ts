@@ -60,7 +60,7 @@ export const setupIpcMainHandlers = ({
   });
 
   ipcMainHandle(clusterStates, () => (
-    clusterStore.clustersList.map(cluster => ({
+    clusterStore.clustersList.get().map(cluster => ({
       id: cluster.id,
       state: cluster.getState(),
     }))

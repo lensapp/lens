@@ -42,15 +42,15 @@ export class ClusterManager {
   init = once(() => {
     // reacting to every cluster's state change and total amount of items
     reaction(
-      () => this.dependencies.store.clustersList.map(c => c.getState()),
-      () => this.updateCatalog(this.dependencies.store.clustersList),
+      () => this.dependencies.store.clustersList.get().map(c => c.getState()),
+      () => this.updateCatalog(this.dependencies.store.clustersList.get()),
       { fireImmediately: false },
     );
 
     // reacting to every cluster's preferences change and total amount of items
     reaction(
-      () => this.dependencies.store.clustersList.map(c => toJS(c.preferences)),
-      () => this.updateCatalog(this.dependencies.store.clustersList),
+      () => this.dependencies.store.clustersList.get().map(c => toJS(c.preferences)),
+      () => this.updateCatalog(this.dependencies.store.clustersList.get()),
       { fireImmediately: false },
     );
 
@@ -208,7 +208,9 @@ export class ClusterManager {
     this.dependencies.logger.info(`${logPrefix} network is offline`);
 
     await Promise.allSettled(
-      this.dependencies.store.clustersList
+      this.dependencies.store
+        .clustersList
+        .get()
         .filter(cluster => !cluster.disconnected.get())
         .map(async (cluster) => {
           cluster.online.set(false);
@@ -225,7 +227,9 @@ export class ClusterManager {
     this.dependencies.logger.info(`${logPrefix} network is online`);
 
     await Promise.allSettled(
-      this.dependencies.store.clustersList
+      this.dependencies.store
+        .clustersList
+        .get()
         .filter(cluster => !cluster.disconnected.get())
         .map((cluster) => (
           this.dependencies
@@ -236,7 +240,7 @@ export class ClusterManager {
   };
 
   stop() {
-    for (const cluster of this.dependencies.store.clustersList) {
+    for (const cluster of this.dependencies.store.clustersList.get()) {
       this.dependencies
         .getClusterConnection(cluster)
         .disconnect();
