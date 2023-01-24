@@ -55,6 +55,7 @@ jobs:
 
       - run: make test
         name: Run tests
+        shell: bash
         if: ${{ matrix.type == 'unit' }}
 
       - run: make ci-validate-dev
