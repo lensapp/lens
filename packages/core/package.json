@@ -97,6 +97,25 @@
     "runtime": "@side/jest-runtime"
   },
   "build": {},
+  "nx": {
+    "targets": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "outputs": [
+          "{workspaceRoot}/build/webpack/",
+          "{workspaceRoot}/static/build/"
+        ]
+      },
+      "dev": {
+        "outputs": [
+          "{workspaceRoot}/build/webpack/",
+          "{workspaceRoot}/static/build/"
+        ]
+      }
+    }
+  },
   "resolutions": {
     "@astronautlabs/jsonpath/underscore": "^1.12.1"
   },

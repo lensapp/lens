@@ -16,19 +16,9 @@
         "^build"
       ]
     },
-    "build:app": {
-      "dependsOn": [
-        "^build"
-      ]
-    },
     "dev": {
       "dependsOn": [
         "prepare:dev"
-      ]
-    },
-    "test:integration": {
-      "dependsOn": [
-        "^build:app"
       ]
     }
   }
