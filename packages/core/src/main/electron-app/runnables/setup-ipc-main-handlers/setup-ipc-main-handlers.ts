@@ -23,7 +23,6 @@ interface Dependencies {
   clusterStore: ClusterStore;
   emitAppEvent: EmitAppEvent;
   getClusterById: GetClusterById;
-  pushCatalogToRenderer: () => void;
 }
 
 export const setupIpcMainHandlers = ({
@@ -31,7 +30,6 @@ export const setupIpcMainHandlers = ({
   clusterStore,
   emitAppEvent,
   getClusterById,
-  pushCatalogToRenderer,
 }: Dependencies) => {
   ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     return getClusterById(clusterId)
@@ -43,7 +41,6 @@ export const setupIpcMainHandlers = ({
 
     if (cluster) {
       clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
-      pushCatalogToRenderer();
     }
   });
 

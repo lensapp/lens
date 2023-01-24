@@ -5,12 +5,12 @@
 
 import * as uuid from "uuid";
 import type { ClusterStoreModel } from "../../../common/cluster-store/cluster-store";
-import type { Hotbar, HotbarItem } from "../../../common/hotbars/types";
+import type { Hotbar } from "../../../common/hotbars/types";
 import { defaultHotbarCells, getEmptyHotbar } from "../../../common/hotbars/types";
 import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import catalogCatalogEntityInjectable from "../../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
-import { isDefined, isErrnoException } from "../../../common/utils";
+import { isDefined, isErrnoException, isObject } from "../../../common/utils";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { hotbarStoreMigrationInjectionToken } from "../../../common/hotbars/migrations-token";
@@ -18,17 +18,27 @@ import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable
 import loggerInjectable from "../../../common/logger.injectable";
 import { generateNewIdFor } from "../../../common/utils/generate-new-id-for";
 
+
+interface V500Beta10HotbarItem {
+  entity: {
+    uid: string;
+    name: string;
+    source?: string;
+  };
+  params?: Partial<Record<string, string>>;
+}
+
+interface V500Beta10Hotbar {
+  id: string;
+  name: string;
+  items: (null | V500Beta10HotbarItem)[];
+}
+
 interface Pre500WorkspaceStoreModel {
   workspaces: {
     id: string;
     name: string;
   }[];
-}
-
-interface PartialHotbar {
-  id: string;
-  name: string;
-  items: (null | HotbarItem)[];
 }
 
 const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
@@ -44,12 +54,11 @@ const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
       version: "5.0.0-beta.10",
       run(store) {
         const rawHotbars = store.get("hotbars");
-        const hotbars: Hotbar[] = Array.isArray(rawHotbars) ? rawHotbars.filter(h => h && typeof h === "object") : [];
-
+        const hotbars = (Array.isArray(rawHotbars) ? rawHotbars.filter(isObject) : []) as unknown[] as V500Beta10Hotbar[];
 
         // Hotbars might be empty, if some of the previous migrations weren't run
         if (hotbars.length === 0) {
-          const hotbar = getEmptyHotbar("default");
+          const hotbar = getEmptyHotbar("default") as V500Beta10Hotbar;
           const { metadata: { uid, name, source }} = catalogCatalogEntity;
 
           hotbar.items[0] = { entity: { uid, name, source }};
@@ -60,7 +69,7 @@ const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
         try {
           const workspaceStoreData: Pre500WorkspaceStoreModel = readJsonSync(joinPaths(userDataPath, "lens-workspace-store.json"));
           const { clusters = [] }: ClusterStoreModel = readJsonSync(joinPaths(userDataPath, "lens-cluster-store.json"));
-          const workspaceHotbars = new Map<string, PartialHotbar>(); // mapping from WorkspaceId to HotBar
+          const workspaceHotbars = new Map<string, V500Beta10Hotbar>(); // mapping from WorkspaceId to HotBar
 
           for (const { id, name } of workspaceStoreData.workspaces) {
             logger.info(`Creating new hotbar for ${name}`);
@@ -140,7 +149,7 @@ const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
               if (freeIndex === -1) {
                 // making a new hotbar is less destructive if the first hotbar
                 // called "default" is full than overriding a hotbar item
-                const hotbar = getEmptyHotbar("initial");
+                const hotbar = getEmptyHotbar("initial") as V500Beta10Hotbar;
 
                 hotbar.items[0] = { entity: { uid, name, source }};
                 hotbars.unshift(hotbar);
@@ -148,7 +157,7 @@ const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
                 defaultHotbar.items[freeIndex] = { entity: { uid, name, source }};
               }
             } else {
-              const hotbar = getEmptyHotbar("default");
+              const hotbar = getEmptyHotbar("default") as V500Beta10Hotbar;
 
               hotbar.items[0] = { entity: { uid, name, source }};
               hotbars.unshift(hotbar);

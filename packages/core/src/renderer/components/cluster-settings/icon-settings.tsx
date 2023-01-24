@@ -12,6 +12,8 @@ import type { KubernetesCluster } from "../../../common/catalog-entities";
 import { FilePicker, OverSizeLimitStyle } from "../file-picker";
 import { MenuActions, MenuItem } from "../menu";
 import { Avatar } from "../avatar";
+import { getIconBackground, getIconColourHash } from "../../../common/catalog/helpers";
+import { EntityIcon } from "../entity-icon";
 
 enum GeneralInputStatus {
   CLEAN = "clean",
@@ -78,11 +80,12 @@ export class ClusterIconSetting extends React.Component<ClusterIconSettingProps>
               accept="image/*"
               label={(
                 <Avatar
-                  colorHash={`${entity.getName()}-${entity.metadata.source}`}
-                  title={entity.getName()}
-                  src={entity.spec.icon?.src}
+                  colorHash={getIconColourHash(entity)}
+                  background={getIconBackground(entity)}
                   size={53}
-                />
+                >
+                  <EntityIcon entity={entity}/>
+                </Avatar>
               )}
               onOverSizeLimit={OverSizeLimitStyle.FILTER}
               handler={this.onIconPick}

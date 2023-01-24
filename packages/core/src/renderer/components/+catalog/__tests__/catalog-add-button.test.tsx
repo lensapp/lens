@@ -51,7 +51,7 @@ describe("CatalogAddButton", () => {
 
     render(<CatalogAddButton category={category}/>);
 
-    userEvent.hover(screen.getByLabelText("SpeedDial CatalogAddButton"));
+    await userEvent.hover(screen.getByLabelText("SpeedDial CatalogAddButton"));
     await screen.findByTitle("Add from kubeconfig");
   });
 
@@ -79,7 +79,7 @@ describe("CatalogAddButton", () => {
 
     render(<CatalogAddButton category={category}/>);
 
-    userEvent.hover(screen.getByLabelText("SpeedDial CatalogAddButton"));
+    await userEvent.hover(screen.getByLabelText("SpeedDial CatalogAddButton"));
 
     await expect(screen.findByTitle("Add from kubeconfig"))
       .rejects

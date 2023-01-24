@@ -6,7 +6,7 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 import type { Disposer } from "../disposer";
 import type { MessageChannel, MessageChannelListener } from "./message-channel-listener-injection-token";
 
-export type EnlistMessageChannelListener = (listener: MessageChannelListener<MessageChannel<unknown>>) => Disposer;
+export type EnlistMessageChannelListener = <T>(listener: MessageChannelListener<MessageChannel<T>>) => Disposer;
 
 export const enlistMessageChannelListenerInjectionToken = getInjectionToken<EnlistMessageChannelListener>({
   id: "enlist-message-channel-listener",

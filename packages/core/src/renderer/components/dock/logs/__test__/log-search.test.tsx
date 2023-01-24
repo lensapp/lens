@@ -96,9 +96,9 @@ describe("LogSearch tests", () => {
       />,
     );
 
-    userEvent.click(await screen.findByPlaceholderText("Search..."));
-    userEvent.keyboard("o");
-    userEvent.click(await screen.findByText("keyboard_arrow_up"));
+    await userEvent.click(await screen.findByPlaceholderText("Search..."));
+    await userEvent.keyboard("o");
+    await userEvent.click(await screen.findByText("keyboard_arrow_up"));
     expect(scrollToOverlay).toBeCalled();
   });
 
@@ -118,9 +118,9 @@ describe("LogSearch tests", () => {
       />,
     );
 
-    userEvent.click(await screen.findByPlaceholderText("Search..."));
-    userEvent.keyboard("o");
-    userEvent.click(await screen.findByText("keyboard_arrow_down"));
+    await userEvent.click(await screen.findByPlaceholderText("Search..."));
+    await userEvent.keyboard("o");
+    await userEvent.click(await screen.findByText("keyboard_arrow_down"));
     expect(scrollToOverlay).toBeCalled();
   });
 
@@ -140,8 +140,8 @@ describe("LogSearch tests", () => {
       />,
     );
 
-    userEvent.click(await screen.findByText("keyboard_arrow_down"));
-    userEvent.click(await screen.findByText("keyboard_arrow_up"));
+    await userEvent.click(await screen.findByText("keyboard_arrow_down"));
+    await userEvent.click(await screen.findByText("keyboard_arrow_up"));
     expect(scrollToOverlay).not.toBeCalled();
   });
 });

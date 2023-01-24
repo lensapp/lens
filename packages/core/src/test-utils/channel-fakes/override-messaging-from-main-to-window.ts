@@ -73,7 +73,9 @@ export const overrideMessagingFromMainToWindow = (): OverriddenWindowMessaging =
         );
       }
 
-      windowListeners.forEach((listener) => listener.handler(data));
+      for (const listener of windowListeners) {
+        listener.handler(data);
+      }
     },
   };
 };

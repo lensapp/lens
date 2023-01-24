@@ -125,51 +125,48 @@ class NonInjectedHotbarMenu extends React.Component<Dependencies & HotbarMenuPro
                   key={item.entity.uid}
                   index={0}
                 >
-                  {(provided, snapshot) => {
-                    const style = {
-                      zIndex: defaultHotbarCells - index,
-                      position: "absolute",
-                      ...provided.draggableProps.style,
-                    } as React.CSSProperties;
-
-                    return (
-                      <div
-                        key={item.entity.uid}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={style}
-                      >
-                        {entity ? (
-                          <HotbarEntityIcon
-                            key={index}
-                            index={index}
-                            entity={entity}
-                            onClick={() => this.props.entityRegistry.onRun(entity)}
-                            className={cssNames({ isDragging: snapshot.isDragging })}
-                            remove={this.removeItem}
-                            add={this.addItem}
-                            size={40}
-                          />
-                        ) : (
-                          <HotbarIcon
-                            uid={`hotbar-icon-${item.entity.uid}`}
-                            title={item.entity.name}
-                            source={item.entity.source ?? "local"}
-                            tooltip={`${item.entity.name} (${item.entity.source})`}
-                            menuItems={[
-                              {
-                                title: "Remove from Hotbar",
-                                onClick: () => this.removeItem(item.entity.uid),
-                              },
-                            ]}
-                            disabled
-                            size={40}
-                          />
-                        )}
-                      </div>
-                    );
-                  }}
+                  {(provided, snapshot) => (
+                    <div
+                      key={item.entity.uid}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        zIndex: defaultHotbarCells - index,
+                        position: "absolute",
+                        ...provided.draggableProps.style,
+                      }}
+                    >
+                      {entity ? (
+                        <HotbarEntityIcon
+                          key={index}
+                          index={index}
+                          entity={entity}
+                          onClick={() => this.props.entityRegistry.onRun(entity)}
+                          className={cssNames({ isDragging: snapshot.isDragging })}
+                          remove={this.removeItem}
+                          add={this.addItem}
+                          size={40}
+                        />
+                      ) : (
+                        <HotbarIcon
+                          uid={`hotbar-icon-${item.entity.uid}`}
+                          title={item.entity.name}
+                          source={item.entity.source ?? "local"}
+                          tooltip={`${item.entity.name} (${item.entity.source})`}
+                          menuItems={[
+                            {
+                              title: "Remove from Hotbar",
+                              onClick: () => this.removeItem(item.entity.uid),
+                            },
+                          ]}
+                          disabled
+                          size={40}
+                          avatarChildren={item.entity.shortName}
+                        />
+                      )}
+                    </div>
+                  )}
                 </Draggable>
               )}
               {provided.placeholder}

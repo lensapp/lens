@@ -47,7 +47,9 @@ describe("<ClusterFrame />", () => {
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.override(currentlyInClusterFrameInjectable, () => true);
 
-    testUsingFakeTime("2000-01-01 12:00:00am");
+    testUsingFakeTime({
+      dateTime: "2000-01-01 12:00:00am",
+    });
 
     const createCluster = di.inject(createClusterInjectable);
 

@@ -43,7 +43,7 @@ const extensionInjectable = getInjectable({
 
               reactionDisposer.push(
                 // injectables is either an array or a computed array, in which case
-                // we need to update the registered injectables with a reaction every time they change 
+                // we need to update the registered injectables with a reaction every time they change
                 reaction(
                   () => Array.isArray(injectables) ? injectables : injectables.get(),
                   (currentInjectables, previousInjectables = []) => {

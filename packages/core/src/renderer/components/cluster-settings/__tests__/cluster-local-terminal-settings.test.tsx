@@ -91,9 +91,9 @@ describe("ClusterLocalTerminalSettings", () => {
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
     const dn = await dom.findByTestId("default-namespace");
 
-    userEvent.click(dn);
-    userEvent.type(dn, "kube-system");
-    userEvent.click(dom.baseElement);
+    await userEvent.click(dn);
+    await userEvent.type(dn, "kube-system");
+    await userEvent.click(dom.baseElement);
 
     await waitFor(() => expect(cluster.preferences.defaultNamespace).toBe("kube-system"));
   });
@@ -116,9 +116,9 @@ describe("ClusterLocalTerminalSettings", () => {
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
     const dn = await dom.findByTestId("working-directory");
 
-    userEvent.click(dn);
-    userEvent.type(dn, "/foobar");
-    userEvent.click(dom.baseElement);
+    await userEvent.click(dn);
+    await userEvent.type(dn, "/foobar");
+    await userEvent.click(dom.baseElement);
 
     await waitFor(() => expect(cluster.preferences?.terminalCWD).toBe("/foobar"));
   });
@@ -142,9 +142,9 @@ describe("ClusterLocalTerminalSettings", () => {
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
     const dn = await dom.findByTestId("working-directory");
 
-    userEvent.click(dn);
-    userEvent.type(dn, "/foobar");
-    userEvent.click(dom.baseElement);
+    await userEvent.click(dn);
+    await userEvent.type(dn, "/foobar");
+    await userEvent.click(dom.baseElement);
 
     await waitFor(() => expect(showErrorNotificationMock).toHaveBeenCalled());
   });

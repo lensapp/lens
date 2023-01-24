@@ -4,44 +4,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -57,16 +19,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -473,44 +450,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -526,16 +465,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -1426,44 +1380,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -1479,16 +1395,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -2224,44 +2155,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -2277,16 +2170,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -3266,44 +3174,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -3319,16 +3189,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -4282,44 +4167,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -4335,16 +4182,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -5293,44 +5155,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -5346,16 +5170,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -6304,44 +6143,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -6357,16 +6158,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -7337,44 +7153,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -7390,16 +7168,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -8379,44 +8172,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -8432,16 +8187,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -9390,44 +9160,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -9443,16 +9175,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -10409,44 +10156,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -10462,16 +10171,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -11240,44 +10964,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     >
       <div
@@ -11340,16 +11026,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -12053,44 +11754,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     >
       <div
@@ -12153,16 +11816,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -12991,44 +12669,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -13044,16 +12684,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -14248,44 +13903,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -14301,16 +13918,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -15098,44 +14730,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -15151,16 +14745,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -16163,44 +15772,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -16216,16 +15787,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -17226,44 +16812,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -17279,16 +16827,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -18237,44 +17800,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -18290,16 +17815,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"
@@ -19248,44 +18788,6 @@ exports[`installing helm chart from new tab given tab for installing chart was n
 <body>
   <div>
     <div
-      class="Animate slide-right Drawer KubeObjectDetails flex column right enter leave"
-      style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-    >
-      <div
-        class="drawer-wrapper flex column"
-      >
-        <div
-          class="drawer-title flex align-center"
-        >
-          <div
-            class="drawer-title-text flex gaps align-center"
-          >
-            
-          </div>
-          <i
-            class="Icon material interactive focusable"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="close"
-            >
-              close
-            </span>
-          </i>
-          <div>
-            Close
-          </div>
-        </div>
-        <div
-          class="drawer-content flex column box grow"
-        />
-      </div>
-      <div
-        class="ResizingAnchor horizontal leading"
-      />
-    </div>
-    <div
       class="Notifications flex column align-flex-end"
     />
     <div
@@ -19301,16 +18803,31 @@ exports[`installing helm chart from new tab given tab for installing chart was n
         >
           <div
             class="SidebarCluster"
+            data-testid="sidebar-cluster-dropdown"
+            id="cluster-some-cluster-id"
+            role="menubar"
+            tabindex="0"
           >
             <div
-              class="Avatar rounded loadingAvatar"
-              style="width: 40px; height: 40px;"
+              class="Avatar rounded avatar"
+              style="width: 40px; height: 40px; background-color: red;"
             >
               ??
             </div>
             <div
-              class="loadingClusterName"
+              class="clusterName"
+              id="tooltip-cluster-some-cluster-id"
             />
+            <i
+              class="Icon dropdown material focusable"
+            >
+              <span
+                class="icon"
+                data-icon-name="arrow_drop_down"
+              >
+                arrow_drop_down
+              </span>
+            </i>
           </div>
           <div
             class="sidebarNav sidebar-active-status"

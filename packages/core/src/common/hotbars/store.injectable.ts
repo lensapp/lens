@@ -8,7 +8,6 @@ import { HotbarStore } from "./store";
 import loggerInjectable from "../logger.injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
-import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import storeMigrationsInjectable from "../base-store/migrations.injectable";
 import { hotbarStoreMigrationInjectionToken } from "./migrations-token";
 import getBasenameOfPathInjectable from "../path/get-basename.injectable";
@@ -16,6 +15,8 @@ import { baseStoreIpcChannelPrefixesInjectionToken } from "../base-store/channel
 import { persistStateToConfigInjectionToken } from "../base-store/save-to-file";
 import { enlistMessageChannelListenerInjectionToken } from "../utils/channel/enlist-message-channel-listener-injection-token";
 import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../base-store/disable-sync";
+import hotbarStoreMigrationVersionInjectable from "./migration-version.injectable";
+import { sendMessageToChannelInjectionToken } from "../utils/channel/message-to-channel-injection-token";
 
 const hotbarStoreInjectable = getInjectable({
   id: "hotbar-store",
@@ -25,13 +26,14 @@ const hotbarStoreInjectable = getInjectable({
     logger: di.inject(loggerInjectable),
     directoryForUserData: di.inject(directoryForUserDataInjectable),
     getConfigurationFileModel: di.inject(getConfigurationFileModelInjectable),
-    storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
+    storeMigrationVersion: di.inject(hotbarStoreMigrationVersionInjectable),
     migrations: di.inject(storeMigrationsInjectable, hotbarStoreMigrationInjectionToken),
     getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
     ipcChannelPrefixes: di.inject(baseStoreIpcChannelPrefixesInjectionToken),
     persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
     enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
     shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
+    sendMessageToChannel: di.inject(sendMessageToChannelInjectionToken),
   }),
 });
 

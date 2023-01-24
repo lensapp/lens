@@ -70,7 +70,7 @@ describe("RoleBindingDialog tests", () => {
     openRoleBindingDialog();
     const res = render(<RoleBindingDialog />);
 
-    userEvent.click(await res.findByText("Select role", { exact: false }));
+    await userEvent.click(await res.findByText("Select role", { exact: false }));
 
     await res.findAllByText("foobar", {
       exact: false,

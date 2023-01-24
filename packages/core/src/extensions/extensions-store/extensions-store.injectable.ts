@@ -11,8 +11,9 @@ import getConfigurationFileModelInjectable from "../../common/get-configuration-
 import loggerInjectable from "../../common/logger.injectable";
 import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
 import { enlistMessageChannelListenerInjectionToken } from "../../common/utils/channel/enlist-message-channel-listener-injection-token";
-import storeMigrationVersionInjectable from "../../common/vars/store-migration-version.injectable";
+import { sendMessageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
 import { ExtensionsStore } from "./extensions-store";
+import extensionsStoreMigrationVersionInjectable from "./migration-version.injectable";
 
 const extensionsStoreInjectable = getInjectable({
   id: "extensions-store",
@@ -20,13 +21,14 @@ const extensionsStoreInjectable = getInjectable({
     directoryForUserData: di.inject(directoryForUserDataInjectable),
     getConfigurationFileModel: di.inject(getConfigurationFileModelInjectable),
     logger: di.inject(loggerInjectable),
-    storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
+    storeMigrationVersion: di.inject(extensionsStoreMigrationVersionInjectable),
     migrations: {},
     getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
     ipcChannelPrefixes: di.inject(baseStoreIpcChannelPrefixesInjectionToken),
     persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
     enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
     shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
+    sendMessageToChannel: di.inject(sendMessageToChannelInjectionToken),
   }),
 });
 

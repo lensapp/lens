@@ -294,7 +294,7 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
                   <div
                     class="info-panel box grow"
                   >
-                    0 items
+                    4 items
                   </div>
                   <div
                     class="Input SearchInput"
@@ -446,12 +446,335 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
                       </div>
                     </div>
                     <div
-                      class="NoItems flex box grow"
+                      class="VirtualList Catalog box grow dark"
                     >
-                      <div
-                        class="box center"
-                      >
-                        Item list is empty
+                      <div>
+                        <div
+                          class="list"
+                          style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                        >
+                          <div
+                            style="height: 132px; width: 100%;"
+                          >
+                            <div
+                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: red;"
+                                  >
+                                    ??
+                                  </div>
+                                  <span />
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  KubernetesCluster
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  local
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="connected"
+                                  >
+                                    connected
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-some-cluster-id"
+                                      id="menu-actions-for-catalog-for-some-cluster-id"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="view_list"
+                                      >
+                                        view_list
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Catalog
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Remove from Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-catalog-entity"
+                                      id="menu-actions-for-catalog-for-catalog-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="meeting_room"
+                                      >
+                                        meeting_room
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Welcome Page
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-welcome-page-entity"
+                                      id="menu-actions-for-catalog-for-welcome-page-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 99px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="settings"
+                                      >
+                                        settings
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Preferences
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-preferences-entity"
+                                      id="menu-actions-for-catalog-for-preferences-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -474,22 +797,42 @@ exports[`Deleting a cluster when an internal kubeconfig cluster is used when the
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar active"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -946,7 +1289,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                   <div
                     class="info-panel box grow"
                   >
-                    0 items
+                    4 items
                   </div>
                   <div
                     class="Input SearchInput"
@@ -1098,12 +1441,335 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                       </div>
                     </div>
                     <div
-                      class="NoItems flex box grow"
+                      class="VirtualList Catalog box grow dark"
                     >
-                      <div
-                        class="box center"
-                      >
-                        Item list is empty
+                      <div>
+                        <div
+                          class="list"
+                          style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                        >
+                          <div
+                            style="height: 132px; width: 100%;"
+                          >
+                            <div
+                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: red;"
+                                  >
+                                    ??
+                                  </div>
+                                  <span />
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  KubernetesCluster
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  local
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="connected"
+                                  >
+                                    connected
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-some-cluster-id"
+                                      id="menu-actions-for-catalog-for-some-cluster-id"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="view_list"
+                                      >
+                                        view_list
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Catalog
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Remove from Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-catalog-entity"
+                                      id="menu-actions-for-catalog-for-catalog-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="meeting_room"
+                                      >
+                                        meeting_room
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Welcome Page
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-welcome-page-entity"
+                                      id="menu-actions-for-catalog-for-welcome-page-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 99px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="settings"
+                                      >
+                                        settings
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Preferences
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-preferences-entity"
+                                      id="menu-actions-for-catalog-for-preferences-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1126,22 +1792,42 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar active"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -1631,7 +2317,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                   <div
                     class="info-panel box grow"
                   >
-                    0 items
+                    4 items
                   </div>
                   <div
                     class="Input SearchInput"
@@ -1783,12 +2469,335 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                       </div>
                     </div>
                     <div
-                      class="NoItems flex box grow"
+                      class="VirtualList Catalog box grow dark"
                     >
-                      <div
-                        class="box center"
-                      >
-                        Item list is empty
+                      <div>
+                        <div
+                          class="list"
+                          style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                        >
+                          <div
+                            style="height: 132px; width: 100%;"
+                          >
+                            <div
+                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: red;"
+                                  >
+                                    ??
+                                  </div>
+                                  <span />
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  KubernetesCluster
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  local
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="connected"
+                                  >
+                                    connected
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-some-cluster-id"
+                                      id="menu-actions-for-catalog-for-some-cluster-id"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="view_list"
+                                      >
+                                        view_list
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Catalog
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Remove from Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-catalog-entity"
+                                      id="menu-actions-for-catalog-for-catalog-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="meeting_room"
+                                      >
+                                        meeting_room
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Welcome Page
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-welcome-page-entity"
+                                      id="menu-actions-for-catalog-for-welcome-page-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 99px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="settings"
+                                      >
+                                        settings
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Preferences
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-preferences-entity"
+                                      id="menu-actions-for-catalog-for-preferences-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1811,22 +2820,42 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar active"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -2395,7 +3424,7 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                   <div
                     class="info-panel box grow"
                   >
-                    0 items
+                    4 items
                   </div>
                   <div
                     class="Input SearchInput focused"
@@ -2547,12 +3576,335 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
                       </div>
                     </div>
                     <div
-                      class="NoItems flex box grow"
+                      class="VirtualList Catalog box grow dark"
                     >
-                      <div
-                        class="box center"
-                      >
-                        Item list is empty
+                      <div>
+                        <div
+                          class="list"
+                          style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                        >
+                          <div
+                            style="height: 132px; width: 100%;"
+                          >
+                            <div
+                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: red;"
+                                  >
+                                    ??
+                                  </div>
+                                  <span />
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  KubernetesCluster
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  local
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="connected"
+                                  >
+                                    connected
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-some-cluster-id"
+                                      id="menu-actions-for-catalog-for-some-cluster-id"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="view_list"
+                                      >
+                                        view_list
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Catalog
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Remove from Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-catalog-entity"
+                                      id="menu-actions-for-catalog-for-catalog-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="meeting_room"
+                                      >
+                                        meeting_room
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Welcome Page
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-welcome-page-entity"
+                                      id="menu-actions-for-catalog-for-welcome-page-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 99px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="settings"
+                                      >
+                                        settings
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Preferences
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-preferences-entity"
+                                      id="menu-actions-for-catalog-for-preferences-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -2575,22 +3927,42 @@ exports[`Deleting a cluster when the kubeconfig has multiple clusters when the d
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar active"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>
@@ -3159,7 +4531,7 @@ exports[`Deleting a cluster when the kubeconfig has only one cluster when the di
                   <div
                     class="info-panel box grow"
                   >
-                    0 items
+                    4 items
                   </div>
                   <div
                     class="Input SearchInput"
@@ -3311,12 +4683,335 @@ exports[`Deleting a cluster when the kubeconfig has only one cluster when the di
                       </div>
                     </div>
                     <div
-                      class="NoItems flex box grow"
+                      class="VirtualList Catalog box grow dark"
                     >
-                      <div
-                        class="box center"
-                      >
-                        Item list is empty
+                      <div>
+                        <div
+                          class="list"
+                          style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                        >
+                          <div
+                            style="height: 132px; width: 100%;"
+                          >
+                            <div
+                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: red;"
+                                  >
+                                    ??
+                                  </div>
+                                  <span />
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  KubernetesCluster
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  local
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="connected"
+                                  >
+                                    connected
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-some-cluster-id"
+                                      id="menu-actions-for-catalog-for-some-cluster-id"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="view_list"
+                                      >
+                                        view_list
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Catalog
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Remove from Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-catalog-entity"
+                                      id="menu-actions-for-catalog-for-catalog-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="meeting_room"
+                                      >
+                                        meeting_room
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Welcome Page
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-welcome-page-entity"
+                                      id="menu-actions-for-catalog-for-welcome-page-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style="position: absolute; left: 0px; top: 99px; height: 33px; width: 100%;"
+                            >
+                              <div
+                                class="TableRow nowrap"
+                              >
+                                <div
+                                  class="TableCell entityName"
+                                >
+                                  <div
+                                    class="Avatar rounded catalogAvatar"
+                                    style="width: 24px; height: 24px; background-color: rgb(61, 144, 206);"
+                                  >
+                                    <i
+                                      class="Icon material focusable"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="settings"
+                                      >
+                                        settings
+                                      </span>
+                                    </i>
+                                  </div>
+                                  <span>
+                                    Preferences
+                                  </span>
+                                  <i
+                                    class="Icon pinIcon svg interactive focusable small"
+                                    tabindex="0"
+                                  >
+                                    <span
+                                      class="icon"
+                                    />
+                                  </i>
+                                  <div>
+                                    Add to Hotbar
+                                  </div>
+                                </div>
+                                <div
+                                  class="TableCell"
+                                >
+                                  General
+                                </div>
+                                <div
+                                  class="TableCell sourceCell"
+                                >
+                                  app
+                                </div>
+                                <div
+                                  class="TableCell labelsCell scrollable"
+                                />
+                                <div
+                                  class="TableCell statusCell"
+                                >
+                                  <span
+                                    class="active"
+                                  >
+                                    active
+                                  </span>
+                                </div>
+                                <div
+                                  class="TableCell menu"
+                                >
+                                  <div>
+                                    <i
+                                      class="Icon material interactive focusable"
+                                      data-testid="icon-for-menu-actions-for-catalog-for-preferences-entity"
+                                      id="menu-actions-for-catalog-for-preferences-entity"
+                                      tabindex="0"
+                                    >
+                                      <span
+                                        class="icon"
+                                        data-icon-name="more_vert"
+                                      >
+                                        more_vert
+                                      </span>
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -3339,22 +5034,42 @@ exports[`Deleting a cluster when the kubeconfig has only one cluster when the di
           class="HotbarItems flex column gaps"
         >
           <div
-            class="HotbarCell isDraggingOwner animateDown"
+            class="HotbarCell animateDown"
             index="0"
           >
             <div
               style="z-index: 12; position: absolute;"
             >
               <div
-                class="HotbarIcon contextMenuAvailable"
+                class="HotbarIcon"
               >
                 <div
-                  class="Avatar rounded disabled avatar"
-                  id="hotbarIcon-hotbar-icon-catalog-entity"
-                  style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
+                  class="Avatar rounded avatar active"
+                  data-testid="hotbar-icon-for-catalog-entity"
+                  id="hotbar-icon-for-catalog-entity"
+                  style="width: 40px; height: 40px; background-color: rgb(61, 144, 206);"
                 >
-                  Ca
+                  <i
+                    class="Icon material focusable"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="view_list"
+                    >
+                      view_list
+                    </span>
+                  </i>
                 </div>
+                <i
+                  class="Icon badge material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="settings"
+                  >
+                    settings
+                  </span>
+                </i>
               </div>
             </div>
           </div>

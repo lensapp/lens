@@ -17,7 +17,6 @@ import directoryForTempInjectable from "../app-paths/directory-for-temp/director
 import kubectlBinaryNameInjectable from "../../main/kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../../main/kubectl/normalized-arch.injectable";
 import normalizedPlatformInjectable from "../vars/normalized-platform.injectable";
-import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import type { WriteJsonSync } from "../fs/write-json-sync.injectable";
 import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
 import type { ReadFileSync } from "../fs/read-file-sync.injectable";
@@ -27,6 +26,7 @@ import type { WriteFileSync } from "../fs/write-file-sync.injectable";
 import writeFileSyncInjectable from "../fs/write-file-sync.injectable";
 import type { WriteBufferSync } from "../fs/write-buffer-sync.injectable";
 import writeBufferSyncInjectable from "../fs/write-buffer-sync.injectable";
+import clusterStoreMigrationVersionInjectable from "../cluster-store/migration-version.injectable";
 
 // NOTE: this is intended to read the actual file system
 const testDataIcon = readFileSync("test-data/cluster-store-migration-icon.png");
@@ -281,7 +281,7 @@ describe("cluster-store", () => {
       });
       writeBufferSync("/some-directory-for-user-data/icon_path", testDataIcon);
 
-      di.override(storeMigrationVersionInjectable, () => "3.6.0");
+      di.override(clusterStoreMigrationVersionInjectable, () => "3.6.0");
 
       clusterStore = di.inject(clusterStoreInjectable);
       clusterStore.load();

@@ -17,21 +17,52 @@ export interface EntitySettingComponents {
 }
 
 export interface EntitySettingRegistration {
-  apiVersions: string[];
+  /**
+   * The list of apiVersions for this setting. This is an additive list. If the
+   * value is `"*"` then it will match all versions.
+   */
+  apiVersions: string[] | "*";
+
+  /**
+   * The kind of entity. If this is `"*"` then it will match all kinds.
+   */
   kind: string;
+
+  /**
+   * The heading for this setting
+   */
   title: string;
   components: EntitySettingComponents;
+
+  /**
+   * If set then only entities with `.source` matching this value will have
+   * this setting.
+   */
   source?: string;
+
+  /**
+   * The ID for the setting area for use with navigation links. If not provided
+   * then it will default to the lowercase version of `.title`.
+   */
   id?: string;
+
+  /**
+   * The sorting order placement for this component.
+   *
+   * @default 50
+   */
   priority?: number;
+
+  /**
+   * The section of the settings to be put under.
+   */
   group?: string;
 }
 
 export interface RegisteredEntitySetting {
   id: string;
   orderNumber: number;
-  apiVersions: Set<string>;
-  kind: string;
+  isFor: (entity: CatalogEntity) => boolean;
   title: string;
   components: EntitySettingComponents;
   source?: string;
@@ -61,15 +92,19 @@ const getInjectableForEntitySettingRegistrationFor = (extension: LensRendererExt
   source,
 }: EntitySettingRegistration) => getInjectable({
   id: `${extension.manifest.name}:${group}/${kind}:${id}`,
-  instantiate: () => ({
-    apiVersions: new Set(apiVersions),
-    components,
-    id,
-    kind,
-    orderNumber: priority ?? 50,
-    title,
-    group,
-    source,
-  }),
+  instantiate: (): RegisteredEntitySetting => {
+    return {
+      isFor: entity => (
+        (apiVersions === "*" || apiVersions.includes(entity.apiVersion))
+        && (kind === "*" || entity.kind === kind)
+      ),
+      components,
+      id,
+      orderNumber: priority ?? 50,
+      title,
+      group,
+      source,
+    };
+  },
   injectionToken: entitySettingInjectionToken,
 });

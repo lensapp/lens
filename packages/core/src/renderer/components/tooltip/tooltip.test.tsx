@@ -38,7 +38,7 @@ describe("<Tooltip />", () => {
     expect(result.baseElement).toMatchSnapshot();
   });
 
-  it("renders to DOM when hovering over target", () => {
+  it("renders to DOM when hovering over target", async () => {
     const result = render((
       <>
         <Tooltip
@@ -56,7 +56,7 @@ describe("<Tooltip />", () => {
 
     assert(target);
 
-    userEvent.hover(target);
+    await userEvent.hover(target);
     expect(result.baseElement).toMatchSnapshot();
   });
 

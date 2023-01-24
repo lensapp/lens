@@ -16,6 +16,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import currentCatalogEntityForSettingsInjectable from "./current-entity.injectable";
 import type { ActiveEntitySettings } from "./active-tabs.injectable";
 import activeEntitySettingsTabInjectable from "./active-tabs.injectable";
+import { getIconBackground, getIconColourHash } from "../../../common/catalog/helpers";
+import { EntityIcon } from "../entity-icon";
 
 interface Dependencies {
   entity: IComputedValue<CatalogEntity | undefined>;
@@ -56,12 +58,13 @@ const NonInjectedCatalogEntitySettings = observer((props: CatalogEntitySettingsP
     <>
       <div className={styles.avatarAndName}>
         <Avatar
-          title={entity.getName()}
-          colorHash={`${entity.getName()}-${entity.metadata.source}`}
-          src={entity.spec.icon?.src}
+          colorHash={getIconColourHash(entity)}
+          background={getIconBackground(entity)}
           className={styles.settingsAvatar}
           size={40}
-        />
+        >
+          <EntityIcon entity={entity}/>
+        </Avatar>
         <div className={styles.entityName}>
           {entity.getName()}
         </div>

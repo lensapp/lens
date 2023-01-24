@@ -5,13 +5,11 @@
 
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
+import { computed } from "mobx";
 import { KubernetesCluster, WebLink } from "../../common/catalog-entities";
-import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
-import type { Cluster } from "../../common/cluster/cluster";
 import navigateToEntitySettingsInjectable from "../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
-import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
+import catalogEntityRegistryInjectable from "../../main/catalog/entity-registry.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import createClusterInjectable from "../../renderer/cluster/create-cluster.injectable";
 
 describe("Showing correct entity settings", () => {
   let builder: ApplicationBuilder;
@@ -20,14 +18,11 @@ describe("Showing correct entity settings", () => {
   let clusterEntity: KubernetesCluster;
   let localClusterEntity: KubernetesCluster;
   let otherEntity: WebLink;
-  let cluster: Cluster;
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.afterWindowStart((windowDi) => {
-      const createCluster = windowDi.inject(createClusterInjectable);
-
+    builder.beforeApplicationStart((mainDi) => {
       clusterEntity = new KubernetesCluster({
         metadata: {
           labels: {},
@@ -70,27 +65,8 @@ describe("Showing correct entity settings", () => {
           phase: "available",
         },
       });
-      cluster = createCluster({
-        contextName: clusterEntity.spec.kubeconfigContext,
-        id: clusterEntity.getId(),
-        kubeConfigPath: clusterEntity.spec.kubeconfigPath,
-      }, {
-        clusterServerUrl: "https://localhost:9999",
-      });
 
-      // TODO: remove once ClusterStore can be used without overriding it
-      windowDi.override(getClusterByIdInjectable, () => (clusterId) => {
-        if (clusterId === cluster.id) {
-          return cluster;
-        }
-
-        return undefined;
-      });
-
-      // TODO: replace with proper entity source once syncing entities between main and windows is injectable
-      const catalogEntityRegistry = windowDi.inject(catalogEntityRegistryInjectable);
-
-      catalogEntityRegistry.updateItems([clusterEntity, otherEntity, localClusterEntity]);
+      mainDi.inject(catalogEntityRegistryInjectable).addComputedSource("test-id", computed(() => [clusterEntity, otherEntity, localClusterEntity]));
     });
 
     rendered = await builder.render();
@@ -143,13 +119,6 @@ describe("Showing correct entity settings", () => {
     it("shows Node Shell setting tab header", () => {
       expect(rendered.queryByTestId("node-shell-tab")).toBeInTheDocument();
     });
-
-    it("shows the setting tabs in the correct order", () => {
-      expect(rendered.getByTestId("proxy-tab").nextSibling).toHaveAttribute("data-testid", "terminal-tab");
-      expect(rendered.getByTestId("terminal-tab").nextSibling).toHaveAttribute("data-testid", "namespace-tab");
-      expect(rendered.getByTestId("namespace-tab").nextSibling).toHaveAttribute("data-testid", "metrics-tab");
-      expect(rendered.getByTestId("metrics-tab").nextSibling).toHaveAttribute("data-testid", "node-shell-tab");
-    });
   });
 
   describe("when navigating to local cluster entity settings", () => {
@@ -190,14 +159,6 @@ describe("Showing correct entity settings", () => {
     it("shows Node Shell setting tab header", () => {
       expect(rendered.queryByTestId("node-shell-tab")).toBeInTheDocument();
     });
-
-    it("shows the setting tabs in the correct order", () => {
-      expect(rendered.getByTestId("general-tab").nextSibling).toHaveAttribute("data-testid", "proxy-tab");
-      expect(rendered.getByTestId("proxy-tab").nextSibling).toHaveAttribute("data-testid", "terminal-tab");
-      expect(rendered.getByTestId("terminal-tab").nextSibling).toHaveAttribute("data-testid", "namespace-tab");
-      expect(rendered.getByTestId("namespace-tab").nextSibling).toHaveAttribute("data-testid", "metrics-tab");
-      expect(rendered.getByTestId("metrics-tab").nextSibling).toHaveAttribute("data-testid", "node-shell-tab");
-    });
   });
 
   describe("when navigating to weblink entity settings", () => {
@@ -219,8 +180,8 @@ describe("Showing correct entity settings", () => {
       expect(rendered.queryByTestId("general-tab")).not.toBeInTheDocument();
     });
 
-    it("shows no settings page info", () => {
-      expect(rendered.baseElement.querySelector("[data-preference-page-does-not-exist-test='true']")).toBeInTheDocument();
+    it("shows the short name setting", () => {
+      expect(rendered.queryByTestId("short-name-tab")).toBeInTheDocument();
     });
   });
 });

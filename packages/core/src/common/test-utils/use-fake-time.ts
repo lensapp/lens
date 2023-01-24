@@ -16,10 +16,21 @@ export const advanceFakeTime = (milliseconds: number) => {
   });
 };
 
-export const testUsingFakeTime = (dateTime = "2015-10-21T07:28:00Z") => {
+export interface TestUsingFakeTimeOptions {
+  dateTime?: string;
+  autoAdvance?: boolean;
+}
+
+export const testUsingFakeTime = ({ autoAdvance = false, dateTime: dateTime = "2015-10-21T07:28:00Z" }: TestUsingFakeTimeOptions = {}) => {
   usingFakeTime = true;
 
+  const setInterval = global.setInterval;
+
   jest.useFakeTimers();
+
+  if (autoAdvance) {
+    setInterval(() => advanceFakeTime(100), 100);
+  }
 
   jest.setSystemTime(new Date(dateTime));
 };

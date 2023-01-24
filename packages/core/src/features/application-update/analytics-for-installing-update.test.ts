@@ -17,7 +17,7 @@ import type { DownloadPlatformUpdate } from "./main/download-update/download-pla
 import downloadPlatformUpdateInjectable from "./main/download-update/download-platform-update/download-platform-update.injectable";
 import quitAndInstallUpdateInjectable from "./main/quit-and-install-update.injectable";
 import periodicalCheckForUpdatesInjectable from "./child-features/periodical-checking-of-updates/main/periodical-check-for-updates.injectable";
-import { advanceFakeTime, testUsingFakeTime } from "../../common/test-utils/use-fake-time";
+import { advanceFakeTime } from "../../common/test-utils/use-fake-time";
 import emitEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import getBuildVersionInjectable from "../../main/vars/build-version/get-build-version.injectable";
 
@@ -29,9 +29,11 @@ describe("analytics for installing update", () => {
   let mainDi: DiContainer;
 
   beforeEach(async () => {
-    testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    builder = getApplicationBuilder();
+    builder = getApplicationBuilder({
+      useFakeTime: {
+        dateTime: "2015-10-21T07:28:00Z",
+      },
+    });
 
     analyticsListenerMock = jest.fn();
 

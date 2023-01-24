@@ -18,8 +18,7 @@ const catalogEntitySettingItemsInjectable = getInjectable({
     return computed(() => (
       items.get()
         .filter(item => (
-          item.apiVersions.has(entity.apiVersion)
-          && item.kind === entity.kind
+          item.isFor(entity)
           && (!item.source || item.source === entity.metadata.source)
         ))
         .sort(byOrderNumber)

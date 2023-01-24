@@ -15,7 +15,7 @@ import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import assert from "assert";
-import { advanceFakeTime, testUsingFakeTime } from "../../common/test-utils/use-fake-time";
+import { advanceFakeTime } from "../../common/test-utils/use-fake-time";
 import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
@@ -27,9 +27,11 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
   let rendered: RenderResult;
 
   beforeEach(() => {
-    testUsingFakeTime("2015-10-21T07:28:00Z");
-
-    applicationBuilder = getApplicationBuilder();
+    applicationBuilder = getApplicationBuilder({
+      useFakeTime: {
+        dateTime: "2015-10-21T07:28:00Z",
+      },
+    });
 
     applicationBuilder.setEnvironmentToClusterFrame();
 

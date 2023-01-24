@@ -14,16 +14,14 @@ interface ExtensionIsEnabledForCluster {
 const extensionIsEnabledForClusterInjectable = getInjectable({
   id: "extension-is-enabled-for-cluster",
 
-  instantiate: async (
-    di,
-    { extension, cluster }: ExtensionIsEnabledForCluster,
-  ) => (await extension.isEnabledForCluster(cluster)) as boolean,
+  instantiate: async (di, { extension, cluster }: ExtensionIsEnabledForCluster) => (
+    await extension.isEnabledForCluster(cluster) as boolean
+  ),
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (
-      di,
-      { extension, cluster }: ExtensionIsEnabledForCluster,
-    ) => `${extension.sanitizedExtensionId}-${cluster.getId()}`,
+    getInstanceKey: (di, { extension, cluster }: ExtensionIsEnabledForCluster) => (
+      `${extension.sanitizedExtensionId}-${cluster.getId()}`
+    ),
   }),
 });
 

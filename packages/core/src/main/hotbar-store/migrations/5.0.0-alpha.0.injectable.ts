@@ -9,6 +9,21 @@ import catalogCatalogEntityInjectable from "../../../common/catalog-entities/gen
 import { getInjectable } from "@ogre-tools/injectable";
 import { hotbarStoreMigrationInjectionToken } from "../../../common/hotbars/migrations-token";
 
+interface V500Alpha0HotbarItem {
+  entity: {
+     uid: string;
+    name: string;
+    source?: string;
+  };
+  params?: Partial<Record<string, string>>;
+}
+
+interface V500Alpha0Hotbar {
+  id: string;
+  name: string;
+  items: (V500Alpha0HotbarItem | null)[];
+}
+
 const v500Alpha0HotbarStoreMigrationInjectable = getInjectable({
   id: "v5.0.0-alpha.0-hotbar-store-migration",
   instantiate: (di) => {
@@ -17,7 +32,7 @@ const v500Alpha0HotbarStoreMigrationInjectable = getInjectable({
     return {
       version: "5.0.0-alpha.0",
       run(store) {
-        const hotbar = getEmptyHotbar("default");
+        const hotbar = getEmptyHotbar("default") as V500Alpha0Hotbar;
 
         const { metadata: { uid, name, source }} = catalogCatalogEntity;
 
