@@ -1,0 +1,5 @@
+static/build/
+build/webpack/
+binaries/
+dist/
+node_modules/
