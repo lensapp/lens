@@ -35,7 +35,7 @@ export interface BaseStoreParams<T> extends Omit<ConfOptions<T>, "migrations"> {
    *
    * @param data the parsed information read from the stored JSON file
    */
-  fromStore(data: T): void;
+  fromStore(data: Partial<T>): void;
 
   /**
    * toJSON is called when syncing the store to the filesystem. It should
