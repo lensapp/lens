@@ -9,5 +9,5 @@ import certificateAuthoritiesChannelListenerInjectable from "./channel-handler.i
 
 export default getGlobalOverride(certificateAuthoritiesChannelListenerInjectable, () => ({
   channel: casChannel,
-  handler: () => () => [],
+  handler: () => [],
 }));
