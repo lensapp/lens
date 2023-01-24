@@ -10,8 +10,10 @@ import type { Cluster } from "../../common/cluster/cluster";
 import { requestApiVersionsInjectionToken } from "./request-api-versions";
 import { withConcurrencyLimit } from "../../common/utils/with-concurrency-limit";
 import requestKubeApiResourcesForInjectable from "./request-kube-api-resources-for.injectable";
+import type { AsyncResult } from "../../common/utils/async-result";
+import { backoffCaller } from "../../common/utils/backoff-caller";
 
-export type RequestApiResources = (cluster: Cluster) => Promise<KubeApiResource[]>;
+export type RequestApiResources = (cluster: Cluster) => Promise<AsyncResult<KubeApiResource[], Error>>;
 
 export interface KubeResourceListGroup {
   group: string;
@@ -25,23 +27,46 @@ const requestApiResourcesInjectable = getInjectable({
     const apiVersionRequesters = di.injectMany(requestApiVersionsInjectionToken);
     const requestKubeApiResourcesFor = di.inject(requestKubeApiResourcesForInjectable);
 
-    return async (cluster) => {
+    return async (...args) => {
+      const [cluster] = args;
       const requestKubeApiResources = withConcurrencyLimit(5)(requestKubeApiResourcesFor(cluster));
 
-      try {
-        const requests = await Promise.all(apiVersionRequesters.map(fn => fn(cluster)));
-        const resources = await Promise.all((
-          requests
-            .flat()
-            .map(requestKubeApiResources)
-        ));
+      const groupLists: KubeResourceListGroup[] = [];
 
-        return resources.flat();
-      } catch (error) {
-        logger.error(`[LIST-API-RESOURCES]: failed to list api resources: ${error}`);
+      for (const apiVersionRequester of apiVersionRequesters) {
+        const result = await backoffCaller(() => apiVersionRequester(cluster), {
+          onIntermediateError: (error, attempt) => {
+            cluster.broadcastConnectUpdate(`Failed to list kube API resource kinds, attempt ${attempt}: ${error}`, "warning");
+            logger.warn(`[LIST-API-RESOURCES]: failed to list kube api resources: ${error}`, { attempt, clusterId: cluster.id });
+          },
+        });
 
-        return [];
+        if (!result.callWasSuccessful) {
+          return result;
+        }
+
+        groupLists.push(...result.response);
       }
+
+      const apiResourceRequests = groupLists.map(async listGroup => (
+        Object.assign(await requestKubeApiResources(listGroup), { listGroup })
+      ));
+      const results = await Promise.all(apiResourceRequests);
+      const resources: KubeApiResource[] = [];
+
+      for (const result of results) {
+        if (!result.callWasSuccessful) {
+          cluster.broadcastConnectUpdate(`Kube APIs under "${result.listGroup.path}" may not be displayed`, "warning");
+          continue;
+        }
+
+        resources.push(...result.response);
+      }
+
+      return {
+        callWasSuccessful: true,
+        response: resources,
+      };
     };
   },
 });

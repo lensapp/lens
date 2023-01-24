@@ -11,7 +11,7 @@ import React from "react";
 import { ipcRendererOn } from "../../../common/ipc";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { IClassName } from "../../utils";
-import { isBoolean, hasTypedProperty, isObject, isString, cssNames } from "../../utils";
+import { hasTypedProperty, isObject, isString, cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
@@ -51,8 +51,8 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
     return this.props.entityRegistry.getById(this.cluster.id);
   }
 
-  @computed get hasErrors(): boolean {
-    return this.authOutput.some(({ isError }) => isError);
+  @computed get hasErrorsOrWarnings(): boolean {
+    return this.authOutput.some(({ level }) => level !== "info");
   }
 
   componentDidMount() {
@@ -61,7 +61,7 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
         if (
           isObject(res)
           && hasTypedProperty(res, "message", isString)
-          && hasTypedProperty(res, "isError", isBoolean)
+          && hasTypedProperty(res, "level", function (val): val is KubeAuthUpdate["level"] { return ["info", "warning", "error"].includes(val as string); })
         ) {
           this.authOutput.push(res);
         } else {
@@ -87,7 +87,7 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
     } catch (error) {
       this.authOutput.push({
         message: String(error),
-        isError: true,
+        level: "error",
       });
     } finally {
       this.isReconnecting = false;
@@ -102,8 +102,8 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
     return (
       <pre>
         {
-          this.authOutput.map(({ message, isError }, index) => (
-            <p key={index} className={cssNames({ error: isError })}>
+          this.authOutput.map(({ message, level }, index) => (
+            <p key={index} className={cssNames({ error: level === "error", warning: level === "warning" })}>
               {message.trim()}
             </p>
           ))
@@ -113,7 +113,7 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
   }
 
   renderStatusIcon() {
-    if (this.hasErrors) {
+    if (this.hasErrorsOrWarnings) {
       return <Icon material="cloud_off" className={styles.icon} />;
     }
 
@@ -131,7 +131,7 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
   }
 
   renderReconnectionHelp() {
-    if (this.hasErrors && !this.isReconnecting) {
+    if (this.hasErrorsOrWarnings && !this.isReconnecting) {
       return (
         <>
           <Button

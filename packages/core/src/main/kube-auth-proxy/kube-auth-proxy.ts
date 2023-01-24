@@ -71,17 +71,17 @@ export class KubeAuthProxy {
       },
     });
     this.proxyProcess.on("error", (error) => {
-      this.cluster.broadcastConnectUpdate(error.message, true);
+      this.cluster.broadcastConnectUpdate(error.message, "error");
       this.exit();
     });
 
     this.proxyProcess.on("exit", (code) => {
-      this.cluster.broadcastConnectUpdate(`proxy exited with code: ${code}`, code ? code > 0: false);
+      this.cluster.broadcastConnectUpdate(`proxy exited with code: ${code}`, code ? "error" : "info");
       this.exit();
     });
 
     this.proxyProcess.on("disconnect", () => {
-      this.cluster.broadcastConnectUpdate("Proxy disconnected communications", true );
+      this.cluster.broadcastConnectUpdate("Proxy disconnected communications", "error");
       this.exit();
     });
 
@@ -93,7 +93,7 @@ export class KubeAuthProxy {
         return;
       }
 
-      this.cluster.broadcastConnectUpdate(data.toString(), true);
+      this.cluster.broadcastConnectUpdate(data.toString(), "error");
     });
 
     this.proxyProcess.stdout.on("data", (data: Buffer) => {
@@ -114,7 +114,7 @@ export class KubeAuthProxy {
       this.ready = true;
     } catch (error) {
       this.dependencies.logger.warn("[KUBE-AUTH-PROXY]: waitUntilUsed failed", error);
-      this.cluster.broadcastConnectUpdate("Proxy port failed to be used within timelimit, restarting...", true);
+      this.cluster.broadcastConnectUpdate("Proxy port failed to be used within timelimit, restarting...", "error");
       this.exit();
 
       return this.run();
