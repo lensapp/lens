@@ -134,6 +134,7 @@
     "@sentry/electron": "^3.0.8",
     "@sentry/integrations": "^6.19.3",
     "@side/jest-runtime": "^1.0.1",
+    "@testing-library/user-event": "^14.4.3",
     "abort-controller": "^3.0.0",
     "auto-bind": "^4.0.0",
     "await-lock": "^2.2.2",
