@@ -30,7 +30,7 @@ import { storesAndApisCanBeCreatedInjectionToken } from "../../common/k8s-api/st
 import type { JsonApiConfig } from "../../common/k8s-api/json-api";
 import type { KubeJsonApi as InternalKubeJsonApi } from "../../common/k8s-api/kube-json-api";
 import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-api.injectable";
-import type { RequestInit } from "node-fetch";
+import type { RequestInit } from "@k8slens/node-fetch";
 import createKubeJsonApiForClusterInjectable from "../../common/k8s-api/create-kube-json-api-for-cluster.injectable";
 
 export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);

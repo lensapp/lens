@@ -47,11 +47,9 @@
   "author": "OpenLens Authors <info@k8slens.dev>",
   "scripts": {
     "build": "env NODE_ENV=production yarn run webpack --config webpack/library-bundle.ts",
-    "clean": "rm -rf dist webpack/build/ static/build",
-    "compile:node-fetch": "yarn run webpack --config webpack/node-fetch.ts",
+    "clean": "rm -rf dist static/build",
     "prepare:dev": "env NODE_ENV=development yarn run webpack --config webpack/library-bundle.ts --progress",
     "dev": "env NODE_ENV=development yarn run webpack --config webpack/library-bundle.ts --watch",
-    "prepare": "yarn run compile:node-fetch",
     "test:unit": "jest --testPathIgnorePatterns integration",
     "test:watch": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
     "lint": "PROD=true yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
@@ -105,13 +103,11 @@
           "^build"
         ],
         "outputs": [
-          "{workspaceRoot}/build/webpack/",
           "{workspaceRoot}/static/build/"
         ]
       },
       "dev": {
         "outputs": [
-          "{workspaceRoot}/build/webpack/",
           "{workspaceRoot}/static/build/"
         ]
       }
@@ -124,6 +120,7 @@
     "@astronautlabs/jsonpath": "^1.1.0",
     "@hapi/call": "^9.0.0",
     "@hapi/subtext": "^7.0.4",
+    "@k8slens/node-fetch": "^6.4.0-alpha.4",
     "@kubernetes/client-node": "^0.18.0",
     "@material-ui/styles": "^4.11.5",
     "@ogre-tools/fp": "^12.0.1",
@@ -166,7 +163,6 @@
     "mobx-utils": "^6.0.4",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.40",
-    "node-fetch": "^3.3.0",
     "node-pty": "0.10.1",
     "npm": "^8.19.3",
     "p-limit": "^3.1.0",

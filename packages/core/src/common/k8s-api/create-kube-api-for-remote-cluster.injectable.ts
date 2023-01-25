@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { AgentOptions } from "https";
 import { Agent } from "https";
-import type { RequestInit } from "node-fetch";
+import type { RequestInit } from "@k8slens/node-fetch";
 import loggerInjectable from "../logger.injectable";
 import isDevelopmentInjectable from "../vars/is-development.injectable";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
