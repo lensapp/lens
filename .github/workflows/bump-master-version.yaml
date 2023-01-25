@@ -19,11 +19,11 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         run: |
-          npm i --location=global semver
+          yarn install --frozen-lockfile
       - name: Bump version to first alpha of next minor version
         id: bump
         run: |
-          CURRENT_VERSION=$(cat package.json | jq .version --raw-output)
+          CURRENT_VERSION=$(cat lerna.json | jq .version --raw-output)
 
           if ! [[ "${CURRENT_VERSION}" =~ ^\d+\.\d+\.0$ ]]; then
             echo "Not a minor release"
@@ -31,15 +31,13 @@ jobs:
             exit 0
           fi
 
-          NEW_VERSION=$(cat package.json | jq .version --raw-output | xargs semver -i preminor --preid alpha)
-          cat package.json | jq --arg new_version "$NEW_VERSION" '.version = $new_version' > new-package.json
-          mv new-package.json package.json
+          yarn bump-version preminor
 
           echo "status=create" >> $GITHUB_OUTPUT
       - uses: peter-evans/create-pull-request@v4
         if: ${{ steps.bump.outputs.status == 'create' }}
         with:
-          add-paths: package.json
+          add-paths: lerna.json,packages/*/package.json
           commit-message: Update package.json version to next preminor because of recent release
           signoff: true
           delete-branch: true

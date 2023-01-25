@@ -25,4 +25,4 @@ jobs:
           set -e
           export PATH=${PATH}:`go env GOPATH`/bin
 
-          addlicense -check -l mit -c "OpenLens Authors" src/**/*.?css
+          addlicense -check -l mit -c "OpenLens Authors" packages/*/src/**/*.?css

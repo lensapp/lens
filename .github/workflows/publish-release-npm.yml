@@ -12,8 +12,8 @@ on:
         type: string
         description: The version to release manually
 jobs:
-  publish-extensions:
-    name: Publish Extensions NPM Package Release
+  publish-npm-packages:
+    name: Publish NPM Packages
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -30,39 +30,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Generate NPM package
+      - name: Generate NPM packages
         run: |
-          make build-extensions-npm
+          yarn install --frozen-lockfile
+          yarn run build
 
-      - name: Publish NPM package
+      - name: Publish NPM packages
         run: |
-          make publish-extensions-npm
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-  publish-library:
-    name: Publish Library NPM Package Release
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
-    steps:
-      - name: Checkout Release
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ inputs.version }}
-
-      - name: Using Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Generate NPM package
-        run: |
-          make build-library-npm
-
-      - name: Publish NPM package
-        run: |
-          make publish-library-npm
+          yarn lerna publish from-package --no-push --no-git-tag-version --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

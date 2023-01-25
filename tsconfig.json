@@ -26,20 +26,6 @@
     "traceResolution": false,
     "resolveJsonModule": true,
     "useDefineForClassFields": true,
-    "paths": {
-      "*": [
-        "node_modules/*",
-        "types/*"
-      ]
-    },
-    "plugins": [
-      {
-        "name": "typescript-plugin-css-modules",
-        "options": {
-          "namedExports": false
-        }
-      }
-    ]
   },
   "ts-node": {
     "transpileOnly": true,
@@ -47,17 +33,7 @@
       "module": "CommonJS"
     }
   },
-  "include": [
-    "src/**/*",
-    "types/*.d.ts",
-  ],
   "exclude": [
     "node_modules",
-    "out",
-    "dist",
-    "coverage",
-    "binaries",
-    "static",
-    "src/extensions/npm"
   ]
 }

@@ -1,0 +1,33 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "types/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules",
+        "options": {
+          "namedExports": false
+        }
+      }
+    ]
+  },
+  "include": [
+    "src/**/*",
+    "../core/types/*.d.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "../core/src/"
+  ],
+  "references": [
+    {
+      "path": "../core"
+    }
+  ]
+}
