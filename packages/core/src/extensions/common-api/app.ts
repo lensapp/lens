@@ -11,26 +11,17 @@ import isWindowsInjectable from "../../common/vars/is-windows.injectable";
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getEnabledExtensionsInjectable from "./get-enabled-extensions/get-enabled-extensions.injectable";
-import type { UserPreferenceExtensionItems } from "./user-preferences";
-import { Preferences } from "./user-preferences";
 import { slackUrl, issuesTrackerUrl } from "../../common/vars";
 import { buildVersionInjectionToken } from "../../common/vars/build-semantic-version.injectable";
+import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import userStoreInjectable from "../../common/user-store/user-store.injectable";
 
-export interface AppExtensionItems {
-  readonly Preferences: UserPreferenceExtensionItems;
-  readonly version: string;
-  readonly appName: string;
-  readonly slackUrl: string;
-  readonly issuesTrackerUrl: string;
-  readonly isSnap: boolean;
-  readonly isWindows: boolean;
-  readonly isMac: boolean;
-  readonly isLinux: boolean;
-  getEnabledExtensions: () => string[];
-}
+const userStore = asLegacyGlobalForExtensionApi(userStoreInjectable);
 
-export const App: AppExtensionItems = {
-  Preferences,
+export const App = {
+  Preferences: {
+    getKubectlPath: () => userStore.kubectlBinariesPath,
+  },
   getEnabledExtensions: asLegacyGlobalFunctionForExtensionApi(getEnabledExtensionsInjectable),
   get version() {
     const di = getLegacyGlobalDiForExtensionApi();
@@ -64,4 +55,4 @@ export const App: AppExtensionItems = {
   },
   slackUrl,
   issuesTrackerUrl,
-};
+} as const;

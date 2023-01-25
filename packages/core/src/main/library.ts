@@ -11,7 +11,7 @@ import * as extensionApi from "./extension-api";
 import { createApp } from "./create-app";
 
 // @experimental
-export { 
+export {
   createApp,
   extensionApi,
   afterApplicationIsLoadedInjectionToken,

@@ -4,11 +4,9 @@
   "out": "../../docs/extensions/api",
   "excludePrivate": true,
   "entryPointStrategy": "expand",
+  "excludeExternals": true,
   "entryPoints": [
     "src/extension-api.ts",
-    "../core/src/common/library.ts",
-    "../core/src/main/library.ts",
-    "../core/src/renderer/library.ts"
   ],
   "hideBreadcrumbs": true,
   "disableSources": true,
