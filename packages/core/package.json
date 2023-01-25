@@ -1,7 +1,7 @@
 {
-  "name": "@k8slens/open-lens",
-  "productName": "OpenLens",
-  "description": "OpenLens - Open Source IDE for Kubernetes",
+  "name": "@k8slens/core",
+  "productName": "",
+  "description": "Lens Desktop Core",
   "homepage": "https://github.com/lensapp/lens",
   "version": "6.4.0-alpha.4",
   "repository": {
@@ -42,7 +42,7 @@
     "types/*",
     "tsconfig.json"
   ],
-  "copyright": "© 2022 OpenLens Authors",
+  "copyright": "© 2023 OpenLens Authors",
   "license": "MIT",
   "author": "OpenLens Authors <info@k8slens.dev>",
   "scripts": {
