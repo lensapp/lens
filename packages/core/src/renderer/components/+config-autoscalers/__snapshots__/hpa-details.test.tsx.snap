@@ -1,0 +1,326 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<HpaDetails/> renders 1`] = `
+<body>
+  <div>
+    <div
+      class="HpaDetails"
+    >
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Reference
+        </span>
+        <span
+          class="value"
+        >
+          Deployment
+          /
+          hpav2deployment
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Min Pods
+        </span>
+        <span
+          class="value"
+        >
+          0
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Max Pods
+        </span>
+        <span
+          class="value"
+        >
+          10
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Replicas
+        </span>
+        <span
+          class="value"
+        >
+          0
+        </span>
+      </div>
+      <div
+        class="DrawerItem status labelsOnly"
+      >
+        <span
+          class="name"
+        >
+          Status
+        </span>
+        <span
+          class="value"
+        />
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<HpaDetails/> shows unknown metrics with lack of metric type 1`] = `
+<body>
+  <div>
+    <div
+      class="HpaDetails"
+    >
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Reference
+        </span>
+        <span
+          class="value"
+        >
+          Deployment
+          /
+          hpav2deployment
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Min Pods
+        </span>
+        <span
+          class="value"
+        >
+          0
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Max Pods
+        </span>
+        <span
+          class="value"
+        >
+          10
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Replicas
+        </span>
+        <span
+          class="value"
+        >
+          0
+        </span>
+      </div>
+      <div
+        class="DrawerItem status labelsOnly"
+      >
+        <span
+          class="name"
+        >
+          Status
+        </span>
+        <span
+          class="value"
+        />
+      </div>
+      <div
+        class="DrawerTitle title"
+      >
+        Metrics
+      </div>
+      <div
+        class="metrics"
+      >
+        <div
+          class="Table flex column scrollable autoSize"
+        >
+          <div
+            class="TableHead sticky flat"
+          >
+            <div
+              class="TableCell name"
+            >
+              Name
+            </div>
+            <div
+              class="TableCell metrics"
+            >
+              Current / Target
+            </div>
+          </div>
+          <div
+            class="TableRow"
+          >
+            <div
+              class="TableCell name"
+            >
+              unknown
+            </div>
+            <div
+              class="TableCell metrics"
+            >
+              unknown / unknown
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<HpaDetails/> shows unknown metrics with with unusual type 1`] = `
+<body>
+  <div>
+    <div
+      class="HpaDetails"
+    >
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Reference
+        </span>
+        <span
+          class="value"
+        >
+          Deployment
+          /
+          hpav2deployment
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Min Pods
+        </span>
+        <span
+          class="value"
+        >
+          0
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Max Pods
+        </span>
+        <span
+          class="value"
+        >
+          10
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Replicas
+        </span>
+        <span
+          class="value"
+        >
+          0
+        </span>
+      </div>
+      <div
+        class="DrawerItem status labelsOnly"
+      >
+        <span
+          class="name"
+        >
+          Status
+        </span>
+        <span
+          class="value"
+        />
+      </div>
+      <div
+        class="DrawerTitle title"
+      >
+        Metrics
+      </div>
+      <div
+        class="metrics"
+      >
+        <div
+          class="Table flex column scrollable autoSize"
+        >
+          <div
+            class="TableHead sticky flat"
+          >
+            <div
+              class="TableCell name"
+            >
+              Name
+            </div>
+            <div
+              class="TableCell metrics"
+            >
+              Current / Target
+            </div>
+          </div>
+          <div
+            class="TableRow"
+          >
+            <div
+              class="TableCell name"
+            >
+              unknown
+            </div>
+            <div
+              class="TableCell metrics"
+            >
+              unknown / unknown
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

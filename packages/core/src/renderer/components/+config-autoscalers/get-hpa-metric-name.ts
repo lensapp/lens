@@ -19,8 +19,8 @@ interface Metric extends MetricNames {
   type: HpaMetricType;
 }
 
-export function getMetricName(metric: Metric): string | undefined {
-  switch (metric.type) {
+export function getMetricName(metric: Metric | undefined): string | undefined {
+  switch (metric?.type) {
     case HpaMetricType.Resource:
       return metric.resource?.name;
     case HpaMetricType.Pods:
