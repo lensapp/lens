@@ -1,8 +1,13 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import type { RenderResult } from "@testing-library/react";
 import React from "react";
 import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import { DiRender, renderFor } from "../test-utils/renderFor";
+import type { DiRender } from "../test-utils/renderFor";
+import { renderFor } from "../test-utils/renderFor";
 import { HpaDetails } from "./hpa-details";
 
 jest.mock("react-router-dom", () => ({
@@ -43,8 +48,8 @@ describe("<HpaDetails/>", () => {
     const hpa = new HorizontalPodAutoscaler(hpaV2);
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.baseElement).toMatchSnapshot();
   });
@@ -53,8 +58,8 @@ describe("<HpaDetails/>", () => {
     const hpa = new HorizontalPodAutoscaler(hpaV2);
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.queryByTestId("hpa-metrics")).toBeNull();
   });
@@ -82,11 +87,11 @@ describe("<HpaDetails/>", () => {
     });
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.getByText("CPU Utilization percentage")).toBeInTheDocument();
-  })
+  });
 
   it("shows proper metric name for container resource metrics", () => {
     const hpa = new HorizontalPodAutoscaler(
@@ -112,11 +117,11 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.getByText("Resource cpu on Pods")).toBeInTheDocument();
-  })
+  });
 
   it("shows proper metric name for resource metrics", () => {
     const hpa = new HorizontalPodAutoscaler(
@@ -141,11 +146,11 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.getByText("Resource cpu on Pods")).toBeInTheDocument();
-  })
+  });
 
   it("shows proper metric name for pod metrics for hpa v2", () => {
     const hpa = new HorizontalPodAutoscaler(
@@ -172,11 +177,11 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.getByText("packets-per-second on Pods")).toBeInTheDocument();
-  })
+  });
 
   it("shows proper metric name for pod metrics for hpa v2beta1", () => {
     const hpa = new HorizontalPodAutoscaler(
@@ -197,11 +202,11 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.getByText("packets-per-second on Pods")).toBeInTheDocument();
-  })
+  });
 
   it("shows proper metric name for object metrics for hpa v2", () => {
     const hpa = new HorizontalPodAutoscaler(
@@ -224,7 +229,7 @@ describe("<HpaDetails/>", () => {
                   kind: "Service",
                   name: "nginx",
                   apiVersion: "v1",
-                }
+                },
               },
             },
           ],
@@ -233,11 +238,11 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.getByText(/requests-per-second/)).toHaveTextContent("requests-per-second onService/nginx");
-  })
+  });
 
   it("shows proper metric name for object metrics for hpa v2beta1", () => {
     const hpa = new HorizontalPodAutoscaler(
@@ -258,11 +263,11 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.getByText("requests-per-second")).toBeInTheDocument();
-  })
+  });
 
   it("shows proper metric name for external metrics for hpa v2", () => {
     const hpa = new HorizontalPodAutoscaler(
@@ -292,11 +297,11 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.getByText("queue_messages_ready on {\"matchLabels\":{\"queue\":\"worker_tasks\"}}")).toBeInTheDocument();
-  })
+  });
 
   it("shows proper metric name for external metrics for hpa v2beta1", () => {
     const hpa = new HorizontalPodAutoscaler(
@@ -311,7 +316,7 @@ describe("<HpaDetails/>", () => {
                 metricName: "queue_messages_ready",
                 metricSelector: {
                   matchLabels: { queue: "worker_tasks" },
-                }
+                },
               },
             },
           ],
@@ -320,11 +325,11 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.getByText("queue_messages_ready on {\"matchLabels\":{\"queue\":\"worker_tasks\"}}")).toBeInTheDocument();
-  })
+  });
 
   it("shows unknown metrics with lack of metric type", () => {
     const hpa = new HorizontalPodAutoscaler(
@@ -349,11 +354,11 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.baseElement).toMatchSnapshot();
-  })
+  });
 
   it("shows unknown metrics with with unusual type", () => {
     const hpa = new HorizontalPodAutoscaler(
@@ -379,9 +384,9 @@ describe("<HpaDetails/>", () => {
     );
 
     result = render(
-      <HpaDetails object={hpa} />
-    )
+      <HpaDetails object={hpa} />,
+    );
 
     expect(result.baseElement).toMatchSnapshot();
-  })
+  });
 });
