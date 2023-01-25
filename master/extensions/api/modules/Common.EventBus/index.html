@@ -720,6 +720,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    Classes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#interfaces" class="md-nav__link">
     Interfaces
   </a>
@@ -727,8 +734,35 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#type-aliases" class="md-nav__link">
+    Type Aliases
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#variables" class="md-nav__link">
     Variables
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-aliases_1" class="md-nav__link">
+    Type Aliases
+  </a>
+  
+    <nav class="md-nav" aria-label="Type Aliases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eventemittercallback" class="md-nav__link">
+    EventEmitterCallback
   </a>
   
 </li>
@@ -775,17 +809,63 @@
                 <h1 id="namespace-eventbus">Namespace: EventBus<a class="headerlink" href="#namespace-eventbus" title="Permanent link">#</a></h1>
 <p><a href="../Common/">Common</a>.EventBus</p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="../../classes/Common.EventBus.EventEmitter/">EventEmitter</a></li>
+</ul>
 <h3 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="../../interfaces/Common.EventBus.AppEvent/">AppEvent</a></li>
+<li><a href="../../interfaces/Common.EventBus.EventEmitterOptions/">EventEmitterOptions</a></li>
+</ul>
+<h3 id="type-aliases">Type Aliases<a class="headerlink" href="#type-aliases" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#eventemittercallback">EventEmitterCallback</a></li>
 </ul>
 <h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#appeventbus">appEventBus</a></li>
 </ul>
+<h2 id="type-aliases_1">Type Aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
+<h3 id="eventemittercallback">EventEmitterCallback<a class="headerlink" href="#eventemittercallback" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>EventEmitterCallback</strong>&lt;<code>D</code>>: (...<code>data</code>: <code>D</code>) =&gt; <code>void</code> | <code>boolean</code></p>
+<h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>D</code></td>
+<td align="left">extends <code>any</code>[]</td>
+</tr>
+</tbody>
+</table>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
+<p>▸ (<code>...data</code>): <code>void</code> | <code>boolean</code></p>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>...data</code></td>
+<td align="left"><code>D</code></td>
+</tr>
+</tbody>
+</table>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h5>
+<p><code>void</code> | <code>boolean</code></p>
 <h2 id="variables_1">Variables<a class="headerlink" href="#variables_1" title="Permanent link">#</a></h2>
 <h3 id="appeventbus">appEventBus<a class="headerlink" href="#appeventbus" title="Permanent link">#</a></h3>
-<p>• <code>Const</code> <strong>appEventBus</strong>: <code>EventEmitter</code>&lt;[<a href="../../interfaces/Common.EventBus.AppEvent/"><code>AppEvent</code></a>]></p>
+<p>• <code>Const</code> <strong>appEventBus</strong>: <a href="../../classes/Common.EventBus.EventEmitter/"><code>EventEmitter</code></a>&lt;[<a href="../../interfaces/Common.EventBus.AppEvent/"><code>AppEvent</code></a>]></p>
                 
               
               
