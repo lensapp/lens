@@ -22,7 +22,6 @@ const downloadBinaryInjectable = getInjectable({
       let result: Response;
 
       try {
-        // TODO: upgrade node-fetch once we switch to ESM
         result = await fetch(url, opts as RequestInit);
       } catch (error) {
         return {
