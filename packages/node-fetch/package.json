@@ -10,6 +10,7 @@
     "clean": "rm -rf dist/",
     "build": "webpack --config webpack.ts",
     "lint": "exit 0",
+    "prepare": "npm run build",
     "prepare:dev": "yarn run build",
     "prepare:test": "yarn run build"
   },
