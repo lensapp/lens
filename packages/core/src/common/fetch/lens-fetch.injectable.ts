@@ -7,7 +7,7 @@ import { Agent } from "https";
 import type { RequestInit, Response } from "@k8slens/node-fetch";
 import lensProxyPortInjectable from "../../main/lens-proxy/lens-proxy-port.injectable";
 import lensProxyCertificateInjectable from "../certificate/lens-proxy-certificate.injectable";
-import nodeFetchModuleInjectable from "./fetch-module.injectable";
+import fetch from "@k8slens/node-fetch";
 
 export type LensRequestInit = Omit<RequestInit, "agent">;
 
@@ -16,7 +16,6 @@ export type LensFetch = (pathnameAndQuery: string, init?: LensRequestInit) => Pr
 const lensFetchInjectable = getInjectable({
   id: "lens-fetch",
   instantiate: (di): LensFetch => {
-    const { default: fetch } = di.inject(nodeFetchModuleInjectable);
     const lensProxyPort = di.inject(lensProxyPortInjectable);
     const lensProxyCertificate = di.inject(lensProxyCertificateInjectable);
 

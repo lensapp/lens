@@ -4,17 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RequestInit, Response } from "@k8slens/node-fetch";
-import nodeFetchModuleInjectable from "./fetch-module.injectable";
+import fetch from "@k8slens/node-fetch";
 
 export type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
 
 const fetchInjectable = getInjectable({
   id: "fetch",
-  instantiate: (di): Fetch => {
-    const { default: fetch } = di.inject(nodeFetchModuleInjectable);
-
-    return (url, init) => fetch(url, init);
-  },
+  instantiate: () => fetch as Fetch,
   causesSideEffects: true,
 });
 

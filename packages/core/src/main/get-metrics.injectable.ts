@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../common/cluster/cluster";
-import nodeFetchModuleInjectable from "../common/fetch/fetch-module.injectable";
+import { FormData } from "@k8slens/node-fetch";
 import type { RequestMetricsParams } from "../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 import { object } from "../common/utils";
 import k8sRequestInjectable from "./k8s-request.injectable";
@@ -16,7 +16,6 @@ const getMetricsInjectable = getInjectable({
 
   instantiate: (di): GetMetrics => {
     const k8sRequest = di.inject(k8sRequestInjectable);
-    const { FormData } = di.inject(nodeFetchModuleInjectable);
 
     return async (
       cluster,
