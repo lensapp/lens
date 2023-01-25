@@ -8,7 +8,7 @@ import { open } from "fs/promises";
 import type { WriteStream } from "fs-extra";
 import { constants, ensureDir, unlink } from "fs-extra";
 import path from "path";
-import type * as FetchModule from "node-fetch";
+import type * as FetchModule from "@k8slens/node-fetch";
 import { promisify } from "util";
 import { pipeline as _pipeline, Transform, Writable } from "stream";
 import type { SingleBar } from "cli-progress";

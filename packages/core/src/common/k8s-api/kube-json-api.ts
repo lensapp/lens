@@ -5,7 +5,7 @@
 
 import type { JsonApiData, JsonApiError } from "./json-api";
 import { JsonApi } from "./json-api";
-import type { Response } from "node-fetch";
+import type { Response } from "@k8slens/node-fetch";
 import type { KubeJsonApiObjectMetadata } from "./kube-object";
 
 export interface KubeJsonApiListMetadata {

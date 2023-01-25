@@ -5,10 +5,10 @@
 import path from "path";
 
 export default {
-  entry: "./node_modules/node-fetch/src/index.js",
+  entry: "./src/index.ts",
   output: {
-    path: path.resolve(__dirname, "..", "build", "webpack"),
-    filename: "node-fetch.bundle.js",
+    path: path.resolve(__dirname, "dist"),
+    filename: "index.js",
     library: {
       name: "NodeFetch",
       type: "commonjs",
@@ -25,7 +25,22 @@ export default {
   externalsPresets: {
     node: true,
   },
+  module: {
+    rules: [
+      { 
+        test: /\.(ts|tsx)$/, 
+        loader: "ts-loader",
+        options: {
+          compilerOptions: {
+            declaration: true,
+            sourceMap: false,
+            outDir: path.resolve("./dist/"),
+          },
+        },
+      }
+    ]
+  },
   resolve: {
-    extensions: [".js"],
+    extensions: [".ts"],
   },
 };

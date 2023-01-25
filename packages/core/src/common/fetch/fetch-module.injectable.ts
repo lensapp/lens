@@ -3,9 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type * as FetchModule from "node-fetch";
-
-const { NodeFetch } = require("../../../build/webpack/node-fetch.bundle") as { NodeFetch: typeof FetchModule };
+import * as NodeFetch from "@k8slens/node-fetch";
 
 /**
  * NOTE: while using this module can cause side effects, this specific injectable is not marked as

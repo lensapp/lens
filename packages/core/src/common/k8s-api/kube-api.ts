@@ -15,7 +15,7 @@ import type { IKubeWatchEvent } from "./kube-watch-event";
 import type { KubeJsonApiData, KubeJsonApi } from "./kube-json-api";
 import type { Disposer } from "../utils";
 import { isDefined, noop, WrappedAbortController } from "../utils";
-import type { RequestInit, Response } from "node-fetch";
+import type { RequestInit, Response } from "@k8slens/node-fetch";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { RequestInit, Response } from "node-fetch";
+import type { RequestInit, Response } from "@k8slens/node-fetch";
 import nodeFetchModuleInjectable from "./fetch-module.injectable";
 
 export type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
