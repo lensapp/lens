@@ -10,7 +10,6 @@ export default {
     path: path.resolve(__dirname, "dist"),
     filename: "index.js",
     library: {
-      name: "NodeFetch",
       type: "commonjs",
     },
     clean: true,

@@ -4,13 +4,14 @@
   "description": "Node fetch for Lens",
   "license": "MIT",
   "private": false,
-  "exports": {
-    ".": "./dist/index.js"
-  },
-  "types": "./dist/src/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf dist/",
-    "build": "webpack --config webpack.ts"
+    "build": "webpack --config webpack.ts",
+    "lint": "exit 0",
+    "prepare:dev": "yarn run build",
+    "prepare:lint": "yarn run build"
   },
   "dependencies": {
     "node-fetch": "^3.3.0"
