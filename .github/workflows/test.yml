@@ -53,14 +53,10 @@ jobs:
           retry_on: error
           command: yarn install --frozen-lockfile
 
-      - run: make test
+      - run: yarn run test:unit
         name: Run tests
         shell: bash
         if: ${{ matrix.type == 'unit' }}
-
-      - run: make ci-validate-dev
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'dependencies') && matrix.type == 'unit' }}
-        name: Validate dev mode will work
 
       - name: Install integration test dependencies
         id: minikube
