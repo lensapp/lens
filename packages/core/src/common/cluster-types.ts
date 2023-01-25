@@ -157,7 +157,7 @@ export enum ClusterStatus {
  */
 export interface KubeAuthUpdate {
   message: string;
-  isError: boolean;
+  level: "info" | "warning" | "error";
 }
 
 /**

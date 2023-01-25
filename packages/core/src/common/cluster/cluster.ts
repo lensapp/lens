@@ -356,7 +356,7 @@ export class Cluster implements ClusterModel {
         this.broadcastConnectUpdate("Starting connection ...");
         await this.reconnect();
       } catch (error) {
-        this.broadcastConnectUpdate(`Failed to start connection: ${error}`, true);
+        this.broadcastConnectUpdate(`Failed to start connection: ${error}`, "error");
 
         return;
       }
@@ -366,7 +366,7 @@ export class Cluster implements ClusterModel {
       this.broadcastConnectUpdate("Refreshing connection status ...");
       await this.refreshConnectionStatus();
     } catch (error) {
-      this.broadcastConnectUpdate(`Failed to connection status: ${error}`, true);
+      this.broadcastConnectUpdate(`Failed to connection status: ${error}`, "error");
 
       return;
     }
@@ -376,7 +376,7 @@ export class Cluster implements ClusterModel {
         this.broadcastConnectUpdate("Refreshing cluster accessibility ...");
         await this.refreshAccessibility();
       } catch (error) {
-        this.broadcastConnectUpdate(`Failed to refresh accessibility: ${error}`, true);
+        this.broadcastConnectUpdate(`Failed to refresh accessibility: ${error}`, "error");
 
         return;
       }
@@ -484,9 +484,20 @@ export class Cluster implements ClusterModel {
       resource: "*",
     });
     this.allowedNamespaces.replace(await this.requestAllowedNamespaces(proxyConfig));
-    this.knownResources.replace(await this.dependencies.requestApiResources(this));
+
+    const knownResources = await this.dependencies.requestApiResources(this);
+
+    if (knownResources.callWasSuccessful) {
+      this.knownResources.replace(knownResources.response);
+    } else if (this.knownResources.length > 0) {
+      this.dependencies.logger.warn(`[CLUSTER]: failed to list KUBE resources, sticking with previous list`);
+    } else {
+      this.dependencies.logger.warn(`[CLUSTER]: failed to list KUBE resources for the first time, blocking connection to cluster...`);
+      this.broadcastConnectUpdate("Failed to list kube API resources, please reconnect...", "error");
+    }
+
     this.allowedResources.replace(await this.getAllowedResources(requestNamespaceListPermissions));
-    this.ready = true;
+    this.ready = this.knownResources.length > 0;
   }
 
   /**
@@ -536,37 +547,37 @@ export class Cluster implements ClusterModel {
       if (isRequestError(error)) {
         if (error.statusCode) {
           if (error.statusCode >= 400 && error.statusCode < 500) {
-            this.broadcastConnectUpdate("Invalid credentials", true);
+            this.broadcastConnectUpdate("Invalid credentials", "error");
 
             return ClusterStatus.AccessDenied;
           }
 
           const message = String(error.error || error.message) || String(error);
 
-          this.broadcastConnectUpdate(message, true);
+          this.broadcastConnectUpdate(message, "error");
 
           return ClusterStatus.Offline;
         }
 
         if (error.failed === true) {
           if (error.timedOut === true) {
-            this.broadcastConnectUpdate("Connection timed out", true);
+            this.broadcastConnectUpdate("Connection timed out", "error");
 
             return ClusterStatus.Offline;
           }
 
-          this.broadcastConnectUpdate("Failed to fetch credentials", true);
+          this.broadcastConnectUpdate("Failed to fetch credentials", "error");
 
           return ClusterStatus.AccessDenied;
         }
 
         const message = String(error.error || error.message) || String(error);
 
-        this.broadcastConnectUpdate(message, true);
+        this.broadcastConnectUpdate(message, "error");
       } else if (error instanceof Error || typeof error === "string") {
-        this.broadcastConnectUpdate(`${error}`, true);
+        this.broadcastConnectUpdate(`${error}`, "error");
       } else {
-        this.broadcastConnectUpdate("Unknown error has occurred", true);
+        this.broadcastConnectUpdate("Unknown error has occurred", "error");
       }
 
       return ClusterStatus.Offline;
@@ -636,8 +647,8 @@ export class Cluster implements ClusterModel {
    * broadcast an authentication update concerning this cluster
    * @internal
    */
-  broadcastConnectUpdate(message: string, isError = false): void {
-    const update: KubeAuthUpdate = { message, isError };
+  broadcastConnectUpdate(message: string, level: KubeAuthUpdate["level"] = "info"): void {
+    const update: KubeAuthUpdate = { message, level };
 
     this.dependencies.logger.debug(`[CLUSTER]: broadcasting connection update`, { ...update, meta: this.getMeta() });
     this.dependencies.broadcastMessage(`cluster:${this.id}:connection-update`, update);
@@ -668,7 +679,7 @@ export class Cluster implements ClusterModel {
   }
 
   protected async getAllowedResources(requestNamespaceListPermissions: RequestNamespaceListPermissions) {
-    if (!this.allowedNamespaces.length) {
+    if (!this.allowedNamespaces.length || !this.knownResources.length) {
       return [];
     }
 

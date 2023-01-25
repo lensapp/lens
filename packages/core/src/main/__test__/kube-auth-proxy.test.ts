@@ -200,34 +200,34 @@ describe("kube auth proxy tests", () => {
       await proxy.run();
       listeners.emit("error", { message: "foobarbat" });
 
-      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "foobarbat", isError: true });
+      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "foobarbat", level: "error" });
     });
 
     it("should call spawn and broadcast exit", async () => {
       await proxy.run();
       listeners.emit("exit", 0);
 
-      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "proxy exited with code: 0", isError: false });
+      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "proxy exited with code: 0", level: "info" });
     });
 
     it("should call spawn and broadcast errors from stderr", async () => {
       await proxy.run();
       listeners.emit("stderr/data", "an error");
 
-      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "an error", isError: true });
+      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "an error", level: "error" });
     });
 
     it("should call spawn and broadcast stdout serving info", async () => {
       await proxy.run();
 
-      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "Authentication proxy started", isError: false });
+      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "Authentication proxy started", level: "info" });
     });
 
     it("should call spawn and broadcast stdout other info", async () => {
       await proxy.run();
       listeners.emit("stdout/data", "some info");
 
-      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "some info", isError: false });
+      expect(broadcastMessageMock).toBeCalledWith("cluster:foobar:connection-update", { message: "some info", level: "info" });
     });
   });
 });
