@@ -91,7 +91,7 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
     };
 
     return (
-      <Table>
+      <Table data-testid="hpa-metrics">
         <TableHead flat>
           <TableCell className="name">Name</TableCell>
           <TableCell className="metrics">Current / Target</TableCell>
@@ -164,10 +164,14 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
             ))}
         </DrawerItem>
 
-        <DrawerTitle>Metrics</DrawerTitle>
-        <div className="metrics">
-          {this.renderMetrics()}
-        </div>
+        {(hpa.getMetrics().length !== 0 || hpa.spec?.targetCPUUtilizationPercentage) && (
+          <>
+            <DrawerTitle>Metrics</DrawerTitle>
+            <div className="metrics">
+              {this.renderMetrics()}
+            </div>
+          </>
+        )}
       </div>
     );
   }
