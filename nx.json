@@ -24,7 +24,12 @@
     },
     "lint": {
       "dependsOn": [
-        "^prepare:lint"
+        "^prepare:dev"
+      ]
+    },
+    "test:unit": {
+      "dependsOn": [
+        "^prepare:dev"
       ]
     }
   }

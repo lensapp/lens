@@ -10,8 +10,7 @@
     "clean": "rm -rf dist/",
     "build": "webpack --config webpack.ts",
     "lint": "exit 0",
-    "prepare:dev": "yarn run build",
-    "prepare:lint": "yarn run build"
+    "prepare:dev": "yarn run build"
   },
   "dependencies": {
     "node-fetch": "^3.3.0"
