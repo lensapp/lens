@@ -17,6 +17,11 @@
         "^build"
       ]
     },
+    "build:docs": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
     "dev": {
       "dependsOn": [
         "prepare:dev"

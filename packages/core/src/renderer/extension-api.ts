@@ -22,6 +22,10 @@ const LensExtensions = {
   Renderer: LensExtensionsRendererApi,
 };
 
+export type {
+  LensExtensionsRendererApi,
+};
+
 export {
   React,
   ReactDOM,

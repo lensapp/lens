@@ -9,20 +9,9 @@ import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import { Singleton } from "../../common/utils";
 import { prevDefault, stopPropagation } from "../../renderer/utils/prevDefault";
-import type { IClassName } from "../../renderer/utils/cssNames";
 import { cssNames } from "../../renderer/utils/cssNames";
 
-export interface UtilsExtensionItems {
-  Singleton: typeof Singleton;
-  prevDefault: <E extends React.SyntheticEvent | Event, R>(callback: (evt: E) => R) => (evt: E) => R;
-  stopPropagation: (evt: Event | React.SyntheticEvent) => void;
-  cssNames: (...classNames: IClassName[]) => string;
-  openExternal: (url: string) => Promise<void>;
-  openBrowser: (url: string) => Promise<void>;
-  getAppVersion: () => string;
-}
-
-export const Util: UtilsExtensionItems = {
+export const Util = {
   Singleton,
   prevDefault,
   stopPropagation,
@@ -34,4 +23,4 @@ export const Util: UtilsExtensionItems = {
 
     return di.inject(buildVersionInjectable).get();
   },
-};
+} as const;

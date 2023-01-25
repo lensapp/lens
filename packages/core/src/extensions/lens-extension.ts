@@ -32,7 +32,12 @@ export interface LensExtensionManifest extends PackageJson {
 export const lensExtensionDependencies = Symbol("lens-extension-dependencies");
 export const Disposers = Symbol("disposers");
 
-export class LensExtension<Dependencies extends LensExtensionDependencies = LensExtensionDependencies> {
+export class LensExtension<
+  /**
+   * @ignore
+   */
+  Dependencies extends LensExtensionDependencies = LensExtensionDependencies,
+> {
   readonly id: LensExtensionId;
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
@@ -50,6 +55,9 @@ export class LensExtension<Dependencies extends LensExtensionDependencies = Lens
     return this._isEnabled;
   }
 
+  /**
+   * @ignore
+   */
   [Disposers] = disposer();
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
@@ -72,6 +80,9 @@ export class LensExtension<Dependencies extends LensExtensionDependencies = Lens
     return this.manifest.description;
   }
 
+  /**
+   * @ignore
+   */
   readonly [lensExtensionDependencies]!: Dependencies;
 
   /**
