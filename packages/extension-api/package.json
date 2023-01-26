@@ -15,6 +15,10 @@
   "author": {
     "name": "OpenLens Authors"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "yarn run webpack --config webpack/extensions.ts",
     "build:docs": "yarn run typedoc",
