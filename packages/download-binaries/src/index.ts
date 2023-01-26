@@ -2,25 +2,44 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import packageInfo from "../package.json";
-import type { FileHandle } from "fs/promises";
-import { open } from "fs/promises";
-import type { WriteStream } from "fs-extra";
-import { constants, ensureDir, unlink } from "fs-extra";
+import { FileHandle, readFile } from "fs/promises";
+import type { WriteStream } from "fs";
+import { constants } from "fs";
+import { open, mkdir, unlink } from "fs/promises";
 import path from "path";
-import type * as FetchModule from "@k8slens/node-fetch";
 import { promisify } from "util";
 import { pipeline as _pipeline, Transform, Writable } from "stream";
 import type { SingleBar } from "cli-progress";
 import { MultiBar } from "cli-progress";
 import { extract } from "tar-stream";
 import gunzip from "gunzip-maybe";
-import { isErrnoException, setTimeoutFor } from "../../core/src/common/utils";
-import AbortController from "abort-controller";
+import fetch from "node-fetch"
+import z from "zod";
+import arg from "arg";
 
-type Response = FetchModule.Response;
-type RequestInfo = FetchModule.RequestInfo;
-type RequestInit = FetchModule.RequestInit;
+console.log(process.argv)
+
+const options = arg({
+  "--package": String,
+  "--base-dir": String,
+});
+
+const pathToPackage = options["--package"];
+const pathToBaseDir = options["--base-dir"];
+
+if (typeof pathToPackage !== "string") {
+  throw new Error("--package is required");
+}
+
+if (typeof pathToBaseDir !== "string") {
+  throw new Error("--base-dir is required");
+}
+
+function setTimeoutFor(controller: AbortController, timeout: number): void {
+  const handle = setTimeout(() => controller.abort(), timeout);
+
+  controller.signal.addEventListener("abort", () => clearTimeout(handle));
+}
 
 const pipeline = promisify(_pipeline);
 
@@ -41,10 +60,6 @@ interface BinaryDownloaderArgs {
   readonly baseDir: string;
 }
 
-interface BinaryDownloaderDependencies {
-  fetch: (url: RequestInfo, init?: RequestInit) => Promise<Response>;
-}
-
 abstract class BinaryDownloader {
   protected abstract readonly url: string;
   protected readonly bar: SingleBar;
@@ -54,7 +69,7 @@ abstract class BinaryDownloader {
     return [file];
   }
 
-  constructor(protected readonly dependencies: BinaryDownloaderDependencies, public readonly args: BinaryDownloaderArgs, multiBar: MultiBar) {
+  constructor(public readonly args: BinaryDownloaderArgs, multiBar: MultiBar) {
     this.bar = multiBar.create(1, 0, args);
     this.target = path.join(args.baseDir, args.platform, args.fileArch, args.binaryName);
   }
@@ -68,7 +83,7 @@ abstract class BinaryDownloader {
 
     setTimeoutFor(controller, 15 * 60 * 1000);
 
-    const stream = await this.dependencies.fetch(this.url, {
+    const stream = await fetch(this.url, {
       signal: controller.signal,
     });
     const total = Number(stream.headers.get("content-length"));
@@ -81,7 +96,10 @@ abstract class BinaryDownloader {
 
     bar.setTotal(total);
 
-    await ensureDir(path.dirname(this.target), 0o755);
+    await mkdir(path.dirname(this.target), {
+      mode: 0o755,
+      recursive: true,
+    });
 
     try {
       /**
@@ -116,7 +134,7 @@ abstract class BinaryDownloader {
     } catch (error) {
       await fileHandle?.close();
 
-      if (isErrnoException(error) && error.code === "EEXIST") {
+      if ((error as any)?.code === "EEXIST") {
         bar.increment(total); // mark as finished
         controller.abort(); // stop trying to download
       } else {
@@ -130,10 +148,10 @@ abstract class BinaryDownloader {
 class LensK8sProxyDownloader extends BinaryDownloader {
   protected readonly url: string;
 
-  constructor(deps: BinaryDownloaderDependencies, args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
+  constructor(args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
     const binaryName = getBinaryName("lens-k8s-proxy", { forPlatform: args.platform });
 
-    super(deps, { ...args, binaryName }, bar);
+    super({ ...args, binaryName }, bar);
     this.url = `https://github.com/lensapp/lens-k8s-proxy/releases/download/v${args.version}/lens-k8s-proxy-${args.platform}-${args.downloadArch}`;
   }
 }
@@ -141,10 +159,10 @@ class LensK8sProxyDownloader extends BinaryDownloader {
 class KubectlDownloader extends BinaryDownloader {
   protected readonly url: string;
 
-  constructor(deps: BinaryDownloaderDependencies, args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
+  constructor(args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
     const binaryName = getBinaryName("kubectl", { forPlatform: args.platform });
 
-    super(deps, { ...args, binaryName }, bar);
+    super({ ...args, binaryName }, bar);
     this.url = `https://storage.googleapis.com/kubernetes-release/release/v${args.version}/bin/${args.platform}/${args.downloadArch}/${binaryName}`;
   }
 }
@@ -152,10 +170,10 @@ class KubectlDownloader extends BinaryDownloader {
 class HelmDownloader extends BinaryDownloader {
   protected readonly url: string;
 
-  constructor(deps: BinaryDownloaderDependencies, args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
+  constructor(args: Omit<BinaryDownloaderArgs, "binaryName">, bar: MultiBar) {
     const binaryName = getBinaryName("helm", { forPlatform: args.platform });
 
-    super(deps, { ...args, binaryName }, bar);
+    super({ ...args, binaryName }, bar);
     this.url = `https://get.helm.sh/helm-v${args.version}-${args.platform}-${args.downloadArch}.tar.gz`;
   }
 
@@ -182,99 +200,100 @@ class HelmDownloader extends BinaryDownloader {
 
 type SupportedPlatform = "darwin" | "linux" | "windows";
 
-const importFetchModule = new Function('return import("node-fetch")') as () => Promise<typeof FetchModule>;
+const PackageInfo = z.object({
+  config: z.object({
+    k8sProxyVersion: z.string().min(1),
+    bundledKubectlVersion: z.string().min(1),
+    bundledHelmVersion: z.string().min(1),
+  })
+})
 
-async function main() {
-  const deps: BinaryDownloaderDependencies = {
-    fetch: (await importFetchModule()).default,
-  };
-  const normalizedPlatform = (() => {
-    switch (process.platform) {
-      case "darwin":
-        return "darwin";
-      case "linux":
-        return "linux";
-      case "win32":
-        return "windows";
-      default:
-        throw new Error(`platform=${process.platform} is unsupported`);
-    }
-  })();
-  const multiBar = new MultiBar({
-    align: "left",
-    clearOnComplete: false,
-    hideCursor: true,
-    autopadding: true,
-    noTTYOutput: true,
-    format: "[{bar}] {percentage}% | {downloadArch} {binaryName}",
-  });
-  const baseDir = path.join(process.cwd(), "binaries", "client");
-  const downloaders: BinaryDownloader[] = [
-    new LensK8sProxyDownloader(deps, {
+const packageInfoRaw = await readFile(pathToPackage, "utf-8");
+const packageInfo = PackageInfo.parse(JSON.parse(packageInfoRaw));
+
+const normalizedPlatform = (() => {
+  switch (process.platform) {
+    case "darwin":
+      return "darwin";
+    case "linux":
+      return "linux";
+    case "win32":
+      return "windows";
+    default:
+      throw new Error(`platform=${process.platform} is unsupported`);
+  }
+})();
+const multiBar = new MultiBar({
+  align: "left",
+  clearOnComplete: false,
+  hideCursor: true,
+  autopadding: true,
+  noTTYOutput: true,
+  format: "[{bar}] {percentage}% | {downloadArch} {binaryName}",
+});
+const downloaders: BinaryDownloader[] = [
+  new LensK8sProxyDownloader({
+    version: packageInfo.config.k8sProxyVersion,
+    platform: normalizedPlatform,
+    downloadArch: "amd64",
+    fileArch: "x64",
+    baseDir: pathToBaseDir,
+  }, multiBar),
+  new KubectlDownloader({
+    version: packageInfo.config.bundledKubectlVersion,
+    platform: normalizedPlatform,
+    downloadArch: "amd64",
+    fileArch: "x64",
+    baseDir: pathToBaseDir,
+  }, multiBar),
+  new HelmDownloader({
+    version: packageInfo.config.bundledHelmVersion,
+    platform: normalizedPlatform,
+    downloadArch: "amd64",
+    fileArch: "x64",
+    baseDir: pathToBaseDir,
+  }, multiBar),
+];
+
+if (normalizedPlatform !== "windows") {
+  downloaders.push(
+    new LensK8sProxyDownloader({
       version: packageInfo.config.k8sProxyVersion,
       platform: normalizedPlatform,
-      downloadArch: "amd64",
-      fileArch: "x64",
-      baseDir,
+      downloadArch: "arm64",
+      fileArch: "arm64",
+      baseDir: pathToBaseDir,
     }, multiBar),
-    new KubectlDownloader(deps, {
+    new KubectlDownloader({
       version: packageInfo.config.bundledKubectlVersion,
       platform: normalizedPlatform,
-      downloadArch: "amd64",
-      fileArch: "x64",
-      baseDir,
+      downloadArch: "arm64",
+      fileArch: "arm64",
+      baseDir: pathToBaseDir,
     }, multiBar),
-    new HelmDownloader(deps, {
+    new HelmDownloader({
       version: packageInfo.config.bundledHelmVersion,
       platform: normalizedPlatform,
-      downloadArch: "amd64",
-      fileArch: "x64",
-      baseDir,
+      downloadArch: "arm64",
+      fileArch: "arm64",
+      baseDir: pathToBaseDir,
     }, multiBar),
-  ];
-
-  if (normalizedPlatform !== "windows") {
-    downloaders.push(
-      new LensK8sProxyDownloader(deps, {
-        version: packageInfo.config.k8sProxyVersion,
-        platform: normalizedPlatform,
-        downloadArch: "arm64",
-        fileArch: "arm64",
-        baseDir,
-      }, multiBar),
-      new KubectlDownloader(deps, {
-        version: packageInfo.config.bundledKubectlVersion,
-        platform: normalizedPlatform,
-        downloadArch: "arm64",
-        fileArch: "arm64",
-        baseDir,
-      }, multiBar),
-      new HelmDownloader(deps, {
-        version: packageInfo.config.bundledHelmVersion,
-        platform: normalizedPlatform,
-        downloadArch: "arm64",
-        fileArch: "arm64",
-        baseDir,
-      }, multiBar),
-    );
-  }
-
-  const settledResults = await Promise.allSettled(downloaders.map(downloader => (
-    downloader.ensureBinary()
-      .catch(error => {
-        throw new Error(`Failed to download ${downloader.args.binaryName} for ${downloader.args.platform}/${downloader.args.downloadArch}: ${error}`);
-      })
-  )));
-
-  multiBar.stop();
-  const errorResult = settledResults.find(res => res.status === "rejected") as PromiseRejectedResult | undefined;
-
-  if (errorResult) {
-    console.error("234", String(errorResult.reason));
-    process.exit(1);
-  }
-
-  process.exit(0);
+  );
 }
 
-main().catch(error => console.error("from main", error));
+const settledResults = await Promise.allSettled(downloaders.map(downloader => (
+  downloader.ensureBinary()
+    .catch(error => {
+      throw new Error(`Failed to download ${downloader.args.binaryName} for ${downloader.args.platform}/${downloader.args.downloadArch}: ${error}`);
+    })
+)));
+
+multiBar.stop();
+const errorResult = settledResults.find(res => res.status === "rejected") as PromiseRejectedResult | undefined;
+
+if (errorResult) {
+  console.error("234", String(errorResult.reason));
+  process.exit(1);
+}
+
+process.exit(0);
