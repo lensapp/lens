@@ -2,7 +2,7 @@
   "name": "@k8slens/extensions",
   "productName": "OpenLens extensions",
   "description": "OpenLens - Open Source Kubernetes IDE: extensions",
-  "version": "6.4.0-beta.2",
+  "version": "6.4.0-beta.3",
   "copyright": "© 2022 OpenLens Authors",
   "license": "MIT",
   "main": "dist/src/extension-api.js",
@@ -22,7 +22,7 @@
     "prepare:dev": "yarn run build"
   },
   "dependencies": {
-    "@k8slens/core": "^6.4.0-beta.2"
+    "@k8slens/core": "^6.4.0-beta.3"
   },
   "devDependencies": {
     "@types/node": "^16.18.6",
