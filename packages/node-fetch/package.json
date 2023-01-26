@@ -4,10 +4,6 @@
   "description": "Node fetch for Lens",
   "license": "MIT",
   "private": false,
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
-  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
