@@ -42,6 +42,7 @@
     "build/installer.nsh",
     "build/notarize.js",
     "static/build/library/**/*",
+    "src/renderer/template.html",
     "templates/**/*",
     "types/*",
     "tsconfig.json"
