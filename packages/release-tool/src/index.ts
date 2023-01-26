@@ -83,8 +83,7 @@ if (basename(process.cwd()) === "scripts") {
   console.error(errorMessages.wrongCwd);
 }
 
-const packageJson = await fse.readJson("./package.json");
-const currentVersion = new SemVer(packageJson.version);
+const currentVersion = new SemVer((await fse.readJson("./lerna.json")).version);
 
 console.log(`current version: ${currentVersion.format()}`);
 
