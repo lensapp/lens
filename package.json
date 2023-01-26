@@ -24,6 +24,6 @@
   },
   "devDependencies": {
     "adr": "^1.4.3",
-    "lerna": "^6.3.0"
+    "lerna": "^6.4.1"
   }
 }
