@@ -12,6 +12,10 @@
   "bugs": {
     "url": "https://github.com/lensapp/lens/issues"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "main": "static/build/main.js",
   "exports": {
     "./main": "./static/build/library/main.js",
