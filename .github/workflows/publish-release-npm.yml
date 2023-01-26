@@ -37,7 +37,7 @@ jobs:
 
       - name: Publish NPM packages
         run: |
-          ./node_modules/.bin/npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
           yarn lerna publish from-package --no-push --no-git-tag-version --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
