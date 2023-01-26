@@ -37,7 +37,6 @@
     }
   },
   "files": [
-    "build/download_binaries.ts",
     "build/*.plist",
     "build/installer.nsh",
     "build/notarize.js",
