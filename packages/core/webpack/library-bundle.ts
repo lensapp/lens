@@ -8,13 +8,14 @@ import path from "path";
 import { DefinePlugin, optimize } from "webpack";
 import main from "./main";
 import renderer, { iconsAndImagesWebpackRules } from "./renderer";
-import { buildDir } from "./vars";
+import { buildDir, isDevelopment } from "./vars";
 
 const rendererConfig = renderer({ showVars: false });
+const mainConfig = main();
 
 const config = [
   {
-    ...main(),
+    ...mainConfig,
     entry: {
       main: path.resolve(__dirname, "..", "src", "main", "library.ts"),
     },
@@ -62,7 +63,7 @@ const config = [
     ],
   },
   {
-    ...main(),
+    ...mainConfig,
     name: "lens-app-common",
     entry: {
       common: path.resolve(__dirname, "..", "src", "common", "library.ts"),
@@ -106,7 +107,7 @@ const config = [
       }),
       new MiniCssExtractPlugin({
         filename: "[name].css",
-        runtime: false,
+        runtime: isDevelopment,
       }),
       new optimize.LimitChunkCountPlugin({
         maxChunks: 1,

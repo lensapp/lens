@@ -13,7 +13,7 @@ import CircularDependencyPlugin from "circular-dependency-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import type { WebpackPluginInstance } from "webpack";
 import { DefinePlugin } from "webpack";
-import getTypescriptLoader from "./get-typescript-loader";
+import { getTypescriptLoader } from "./get-typescript-loader";
 import { assetsFolderName, isDevelopment, rendererDir, buildDir, appName, htmlTemplate, publicPath, sassCommonVars, additionalExternals } from "./vars";
 import { platform } from "process";
 
