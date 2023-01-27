@@ -237,7 +237,7 @@
     "electron": "^19.1.9",
     "electron-builder": "^23.6.0",
     "electron-notarize": "^0.3.0",
-    "esbuild-loader": "^2.20.0",
+    "esbuild-loader": "^2.21.0",
     "fork-ts-checker-webpack-plugin": "^7.2.14",
     "gunzip-maybe": "^1.4.2",
     "html-webpack-plugin": "^5.5.0",
