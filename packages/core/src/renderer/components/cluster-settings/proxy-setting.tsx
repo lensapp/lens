@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import React from "react";
-import { observable, autorun, makeObservable } from "mobx";
-import { observer, disposeOnUnmount } from "mobx-react";
+import React, { useEffect, useState } from "react";
+import { action } from "mobx";
+import { observer } from "mobx-react";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
@@ -14,47 +14,47 @@ export interface ClusterProxySettingProps {
   cluster: Cluster;
 }
 
-@observer
-export class ClusterProxySetting extends React.Component<ClusterProxySettingProps> {
-  @observable proxy = "";
+export const ClusterProxySetting = observer((props: ClusterProxySettingProps) => {
+  const { cluster } = props;
 
-  constructor(props: ClusterProxySettingProps) {
-    super(props);
-    makeObservable(this);
-  }
+  const [httpsProxy, setHttpsProxy] = useState(cluster.preferences.httpsProxy || "");
+  const [noProxy, setNoProxy] = useState(cluster.preferences.noProxy || "");
 
-  componentDidMount() {
-    disposeOnUnmount(this,
-      autorun(() => {
-        this.proxy = this.props.cluster.preferences.httpsProxy || "";
-      }),
-    );
-  }
+  useEffect(() => action(() => {
+    cluster.preferences.httpsProxy = httpsProxy;
+    cluster.preferences.noProxy = noProxy;
+  }), []);
 
-  save = () => {
-    this.props.cluster.preferences.httpsProxy = this.proxy;
-  };
-
-  onChange = (value: string) => {
-    this.proxy = value;
-  };
-
-  render() {
-    return (
-      <>
-        <SubTitle title="HTTP Proxy" id="http-proxy" />
-        <Input
-          theme="round-black"
-          value={this.proxy}
-          onChange={this.onChange}
-          onBlur={this.save}
-          placeholder="http://<address>:<port>"
-          validators={this.proxy ? InputValidators.isUrl : undefined}
-        />
-        <small className="hint">
-          HTTP Proxy server. Used for communicating with Kubernetes API.
-        </small>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <SubTitle title="HTTPS Proxy" id="http-proxy" />
+      <Input
+        theme="round-black"
+        value={httpsProxy}
+        onChange={setHttpsProxy}
+        onBlur={() => {
+          props.cluster.preferences.httpsProxy = httpsProxy;
+        }}
+        placeholder="https://<address>:<port>"
+        validators={httpsProxy ? InputValidators.isUrl : undefined}
+      />
+      <small className="hint">
+        HTTPS Proxy server. Used for communicating with Kubernetes API.
+      </small>
+      <SubTitle title="No Proxy" id="no-proxy" />
+      <Input
+        theme="round-black"
+        value={noProxy}
+        onChange={setNoProxy}
+        onBlur={() => {
+          props.cluster.preferences.noProxy = noProxy;
+        }}
+        placeholder=""
+        validators={noProxy ? InputValidators.isUrl : undefined}
+      />
+      <small className="hint">
+        NO_PROXY configuration. Useful for when specifying that cluster communication shouldn&apos;t go through the default proxy.
+      </small>
+    </>
+  );
+});

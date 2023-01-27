@@ -106,6 +106,7 @@ export interface ClusterPreferences extends ClusterPrometheusPreferences {
    */
   icon?: string | null;
   httpsProxy?: string;
+  noProxy?: string;
   hiddenMetrics?: string[];
   nodeShellImage?: string;
   imagePullSecret?: string;

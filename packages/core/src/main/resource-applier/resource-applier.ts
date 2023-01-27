@@ -17,6 +17,8 @@ import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { CreateKubectl } from "../kubectl/create-kubectl.injectable";
 import type { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
 import type { AsyncResult } from "@k8slens/utilities";
+import type { IComputedValue } from "mobx";
+import type { ClusterEnvironment } from "../../common/cluster-env.injectable";
 
 export interface ResourceApplierDependencies {
   emitAppEvent: EmitAppEvent;
@@ -27,6 +29,7 @@ export interface ResourceApplierDependencies {
   createKubectl: CreateKubectl;
   readonly proxyKubeconfigManager: KubeconfigManager;
   readonly logger: Logger;
+  readonly clusterEnvironment: IComputedValue<ClusterEnvironment>;
 }
 
 export class ResourceApplier {
@@ -100,17 +103,17 @@ export class ResourceApplier {
 
     this.dependencies.logger.debug(`shooting manifests with ${kubectlPath}`, { args });
 
-    const execEnv = { ...process.env };
-    const httpsProxy = this.cluster.preferences?.httpsProxy;
-
-    if (httpsProxy) {
-      execEnv.HTTPS_PROXY = httpsProxy;
-    }
+    const execEnv = {
+      ...process.env,
+      ...this.dependencies.clusterEnvironment.get(),
+    };
 
     try {
       await this.dependencies.writeFile(fileName, content);
 
-      const result = await this.dependencies.execFile(kubectlPath, args);
+      const result = await this.dependencies.execFile(kubectlPath, args, {
+        env: execEnv,
+      });
 
       if (result.callWasSuccessful) {
         return result;

@@ -9,6 +9,7 @@ import type { Cluster } from "../../common/cluster/cluster";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import kubeAuthProxyCertificateInjectable from "../kube-auth-proxy/kube-auth-proxy-certificate.injectable";
 import type { KubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
+import clusterEnvironmentInjectable from "../../common/cluster-env.injectable";
 
 export interface KubeAuthProxyServer {
   getApiTarget(isLongRunningRequest?: boolean): Promise<ServerOptions>;
@@ -26,6 +27,7 @@ const kubeAuthProxyServerInjectable = getInjectable({
   instantiate: (di, cluster): KubeAuthProxyServer => {
     const clusterUrl = new URL(cluster.apiUrl.get());
 
+    const clusterEnvironment = di.inject(clusterEnvironmentInjectable, cluster);
     const createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
     const certificate = di.inject(kubeAuthProxyCertificateInjectable, clusterUrl.hostname);
 
@@ -34,7 +36,10 @@ const kubeAuthProxyServerInjectable = getInjectable({
 
     const ensureServerHelper = async (): Promise<KubeAuthProxy> => {
       if (!kubeAuthProxy) {
-        const proxyEnv = Object.assign({}, process.env);
+        const proxyEnv = {
+          ...process.env,
+          ...clusterEnvironment.get(),
+        };
 
         if (cluster.preferences.httpsProxy) {
           proxyEnv.HTTPS_PROXY = cluster.preferences.httpsProxy;
