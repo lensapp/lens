@@ -2,1492 +2,1492 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://api-docs.k8slens.dev/master/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/architecture/decisions/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/extension-migration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Common.Catalog.CatalogCategory/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Common.Catalog.CatalogEntity/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Common.Catalog.GeneralEntity/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Common.Catalog.KubernetesCluster/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Common.Catalog.KubernetesClusterCategory/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Common.Catalog.WebLink/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Common.EventBus.EventEmitter/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Common.LensExtension/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Common.Store.ExtensionStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.Ipc/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.ClusterRole/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.ClusterRoleBinding/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.ConfigMap/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.CronJob/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.CustomResourceDefinition/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.DaemonSet/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.Deployment/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.Endpoint/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.HorizontalPodAutoscaler/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.Ingress/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.Job/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.KubeEvent/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.KubeObject/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.KubeObjectStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.KubeStatus/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.LimitRange/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.Namespace/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.NetworkPolicy/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.Node/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.PersistentVolume/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.PersistentVolumeClaim/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.Pod/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.PodDisruptionBudget/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.PriorityClass/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.ReplicaSet/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.ResourceQuota/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.ResourceStack/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.Role/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.RoleBinding/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.Secret/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.Service/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.ServiceAccount/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.StatefulSet/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.K8sApi.StorageClass/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Main.LensExtensionsMainApi.LensExtension/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Catalog.CatalogEntityRegistry/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.DrawerParamToggler/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.Input/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.MenuItem/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.NotificationsStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.PageLayout/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.SettingLayout/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.Slider/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.Spinner/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.Stepper/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.SubTitle/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.Tab/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.TableCell/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.TableHead/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.TableRow/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.Tabs/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.TerminalStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.Tooltip/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.Wizard/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.WizardLayout/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Component.WizardStep/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Ipc/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.CRDResourceStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.CRDStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.ConfigMapsStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.CronJobStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.DaemonSetStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.DeploymentStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.EndpointStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.EventStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.HPAStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.IngressClassStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.IngressStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.JobStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.KubeObjectStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.LimitRangesStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.NamespaceStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.NetworkPolicyStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.NodesStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.PersistentVolumesStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.PodDisruptionBudgetsStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.PodsStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.PriorityClassStoreStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.ReplicaSetStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.ResourceQuotasStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.ResourceStack/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.RoleBindingsStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.RolesStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.SecretsStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.ServiceAccountsStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.ServiceStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.StatefulSetStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.StorageClassStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.K8sApi.VolumeClaimStore/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.LensExtension/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/classes/Renderer.LensExtensionsRendererApi.Navigation.PageParam/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/enums/Renderer.LensExtensionsRendererApi.Component.NotificationStatus/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/enums/Renderer.LensExtensionsRendererApi.Component.TooltipPosition/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/enums/Renderer.LensExtensionsRendererApi.K8sApi.KubeObjectStatusLevel/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogCategoryEvents/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogCategoryMetadata/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogCategorySpec/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogCategoryVersion/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityActionContext/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityAddMenu/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityAddMenuContext/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityContextMenu/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityContextMenuContext/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityContextMenuNavigate/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityData/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityKindData/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityMetadata/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntitySettingsContext/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntitySettingsMenu/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CatalogEntityStatus/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.GeneralEntitySpec/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.KubernetesClusterMetadata/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.KubernetesClusterPrometheusMetrics/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.KubernetesClusterSpec/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.KubernetesClusterStatus/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.TitleCellProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.WebLinkSpec/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.WebLinkStatus/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.EventBus.AppEvent/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.EventBus.EventEmitterOptions/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.LensExtensionManifest/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Logger/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Store.BaseStoreParams/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.AppPreferenceComponents/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.AppPreferenceRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.ClusterPageMenuComponents/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.ClusterPageMenuRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.CustomCategoryViewComponents/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.CustomCategoryViewProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.CustomCategoryViewRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectContextMenuItem/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectDetailComponents/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectDetailRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectHandlers/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectMenuComponents/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectMenuRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectOnContextMenuOpenContext/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.KubeObjectStatusRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.PageComponentProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.PageComponents/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.PageParams/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.PageRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.PageTarget/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.ProtocolHandlerRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.ProtocolRouteHandler/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.ProtocolRouteParams/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.RegisteredPage/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.ShellEnvContext/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.StatusBarRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Types.TrayMenuRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.Catalog.CatalogEntityRegistry/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.BaseKubeJsonApiObjectMetadata/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.IKubeApiCluster/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.ILocalKubeApiConfig/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.IPodContainer/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.IPodContainerStatus/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.IRemoteKubeApiConfig/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.ISecretRef/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.IgnoredKubeApiOptions/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.KubeJsonApiData/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.KubeObjectStoreLoadAllParams/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.KubeObjectStoreLoadingParams/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.KubeObjectStoreSubscribeParams/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.KubeStatusData/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Main.LensExtensionsMainApi.K8sApi.OwnerReference/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.AdditionalCategoryColumnRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.BadgeProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.BarChartProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.BaseIconProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.ButtonProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.CategoryColumnRegistration/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.CheckboxProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.ConfirmDialogBooleanParams/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.ConfirmDialogParams/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.ConfirmDialogProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.CreateNotificationOptions/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.CustomPlaceholderProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.DialogProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.DrawerItemLabelsProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.DrawerItemProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.DrawerParamTogglerProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.DrawerProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.DrawerTitleProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.IconDataFnArg/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.IconProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.KubeEventDetailsProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.KubeObjectDetailsProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.KubeObjectListLayoutProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.KubeObjectMenuProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.KubeObjectMetaProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.LineProgressProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.MainLayoutProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.MenuActionsProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.MenuContextValue/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.MenuItemProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.MenuPosition/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.MenuProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.MenuStyle/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.MonacoEditorProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.NamespaceSelectProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.Notification/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.PieChartData/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.PieChartProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.PodDetailsListProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.RadioGroupProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.RadioProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.SearchInputProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.SelectOption/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.SelectProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.SettingLayoutProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.SliderProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.SpinnerProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.StatusBrickProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.StepperProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.SubTitleProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.SwitchProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.SwitcherProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TabLayoutProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TabLayoutRoute/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TabProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TableCellProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TableHeadProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TableProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TableRowProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TableSortParams/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TabsProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TooltipContentFormatters/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TooltipDecoratorProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.TooltipProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.WizardCommonProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.WizardLayoutProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.WizardProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Component.WizardStepProps/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.K8sApi.IKubeApiCluster/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.K8sApi.IgnoredKubeApiOptions/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.K8sApi.KubeObjectStatus/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Navigation.PageParamInit/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Navigation.URLParams/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.LensExtensionsRendererApi.Theme.LensTheme/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Common.Catalog/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Common.EventBus/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Common.Proxy/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Common.Store/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Common.Types/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Common/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Main.LensExtensionsMainApi.Catalog/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Main.LensExtensionsMainApi.K8sApi/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Main.LensExtensionsMainApi.Navigation/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Main.LensExtensionsMainApi.Power/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Main.LensExtensionsMainApi/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Main/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Renderer.LensExtensionsRendererApi.Catalog/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Renderer.LensExtensionsRendererApi.Component/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Renderer.LensExtensionsRendererApi.K8sApi/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Renderer.LensExtensionsRendererApi.Navigation/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Renderer.LensExtensionsRendererApi.Theme/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Renderer.LensExtensionsRendererApi/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/modules/Renderer/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/capabilities/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/capabilities/common-capabilities/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/capabilities/styling/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/get-started/anatomy/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/get-started/overview/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/get-started/wrapping-up/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/get-started/your-first-extension/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/anatomy/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/catalog/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/components/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/extending-kubernetes-cluster/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/generator/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/ipc/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/kube-object-list-layout/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/main-extension/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/protocol-handlers/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/renderer-extension/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/resource-stack/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/stores/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/guides/working-with-mobx/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/testing-and-publishing/bundling/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/testing-and-publishing/publishing/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/testing-and-publishing/testing/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/usage/</loc>
-         <lastmod>2023-01-26</lastmod>
+         <lastmod>2023-01-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
