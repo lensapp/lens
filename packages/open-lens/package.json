@@ -35,7 +35,7 @@
     "dev:renderer": "env NODE_ENV=development ts-node ./webpack/dev-server.ts",
     "test:integration": "jest -xyz --runInBand --detectOpenHandles --forceExit --modulePaths=[\"<rootDir>/integration/\"];",
     "build:tray-icons": "ts-node build/generate-tray-icons.ts",
-    "download:binaries": "cd node_modules/@k8slens/download-binaries && npm run download -- --package $INIT_CWD/package.json --base-dir $INIT_CWD/binaries/client"
+    "download:binaries": "npm exec -- @k8slens/download-binaries --package $INIT_CWD/package.json --base-dir $INIT_CWD/binaries/client"
   },
   "config": {
     "k8sProxyVersion": "0.3.0",

@@ -6,9 +6,9 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf dist/",
-    "build": "swc ./src/index.ts -o ./dist/index.mjs",
-    "download": "node ./dist/index.mjs"
+    "build": "swc ./src/index.ts -o ./dist/index.mjs"
   },
+  "bin": "./dist/index.mjs",
   "files": [
     "dist"
   ],

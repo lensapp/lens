@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
@@ -16,8 +17,6 @@ import gunzip from "gunzip-maybe";
 import fetch from "node-fetch"
 import z from "zod";
 import arg from "arg";
-
-console.log(process.argv)
 
 const options = arg({
   "--package": String,
