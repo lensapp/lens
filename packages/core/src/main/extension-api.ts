@@ -19,6 +19,10 @@ const LensExtensions = {
   Main: LensExtensionsMainApi,
 };
 
+export type {
+  LensExtensionsMainApi,
+};
+
 const Pty = {
   spawn,
 };

@@ -14,14 +14,24 @@ const requestNonCoreApiVersionsInjectable = getInjectable({
     const k8sRequest = di.inject(k8sRequestInjectable);
 
     return async (cluster) => {
-      const { groups } = await k8sRequest(cluster, "/apis") as V1APIGroupList;
+      try {
+        const { groups } = await k8sRequest(cluster, "/apis") as V1APIGroupList;
 
-      return chain(groups.values())
-        .filterMap(group => group.preferredVersion?.groupVersion && ({
-          group: group.name,
-          path: `/apis/${group.preferredVersion.groupVersion}`,
-        }))
-        .collect(v => [...v]);
+        return {
+          callWasSuccessful: true,
+          response: chain(groups.values())
+            .filterMap(group => group.preferredVersion?.groupVersion && ({
+              group: group.name,
+              path: `/apis/${group.preferredVersion.groupVersion}`,
+            }))
+            .collect(v => [...v]),
+        };
+      } catch (error) {
+        return {
+          callWasSuccessful: false,
+          error: error as Error,
+        };
+      }
     };
   },
   injectionToken: requestApiVersionsInjectionToken,

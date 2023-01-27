@@ -7,7 +7,7 @@ import type { CatalogEntityMetadata, CatalogEntitySpec, CatalogEntityStatus } fr
 import type { CatalogEntityActionContext } from "../catalog/catalog-entity";
 import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog/catalog-entity";
 
-interface GeneralEntitySpec extends CatalogEntitySpec {
+export interface GeneralEntitySpec extends CatalogEntitySpec {
   path: string;
   icon?: {
     material?: string;

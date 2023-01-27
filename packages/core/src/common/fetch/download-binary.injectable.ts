@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { RequestInit, Response } from "node-fetch";
+import type { RequestInit, Response } from "@k8slens/node-fetch";
 import type { AsyncResult } from "../utils/async-result";
 import fetchInjectable from "./fetch.injectable";
 
@@ -22,7 +22,6 @@ const downloadBinaryInjectable = getInjectable({
       let result: Response;
 
       try {
-        // TODO: upgrade node-fetch once we switch to ESM
         result = await fetch(url, opts as RequestInit);
       } catch (error) {
         return {

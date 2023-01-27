@@ -21,8 +21,9 @@ jobs:
       - uses: butlerlogic/action-autotag@stable
         id: tagger
         with:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          tag_prefix: "v"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag_prefix: v
+          root: /packages/core
       - uses: ncipollo/release-action@v1
         if: ${{ steps.tagger.outputs.tagname != '' }}
         with:

@@ -50,7 +50,6 @@
     ],
   },
   externals: [
-    "node-fetch",
     "npm",
     "win-ca"
   ],

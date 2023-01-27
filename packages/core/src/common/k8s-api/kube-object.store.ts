@@ -12,7 +12,7 @@ import type { IKubeWatchEvent } from "./kube-watch-event";
 import { ItemStore } from "../item.store";
 import type { KubeApiQueryParams, KubeApi, KubeApiWatchCallback } from "./kube-api";
 import { parseKubeApi } from "./kube-api-parse";
-import type { RequestInit } from "node-fetch";
+import type { RequestInit } from "@k8slens/node-fetch";
 import type { Patch } from "rfc6902";
 import type { Logger } from "../logger";
 import assert from "assert";

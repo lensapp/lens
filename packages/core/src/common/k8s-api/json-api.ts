@@ -8,7 +8,7 @@
 import { Agent as HttpAgent } from "http";
 import { Agent as HttpsAgent } from "https";
 import { merge } from "lodash";
-import type { Response, RequestInit } from "node-fetch";
+import type { Response, RequestInit } from "@k8slens/node-fetch";
 import { stringify } from "querystring";
 import type { Patch } from "rfc6902";
 import type { PartialDeep, ValueOf } from "type-fest";

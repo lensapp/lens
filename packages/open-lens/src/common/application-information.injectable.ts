@@ -1,6 +1,6 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
-import { applicationInformationToken, ApplicationInformation } from "@k8slens/open-lens/common";
+import { applicationInformationToken, ApplicationInformation } from "@k8slens/core/common";
 import packageJson from "../../package.json";
 
 const applicationInformationInjectable = getInjectable({

@@ -5,7 +5,8 @@
       "options": {
         "cacheableOperations": [
           "build",
-          "prepare:dev"
+          "prepare:dev",
+          "prepare:lint"
         ]
       }
     }
@@ -16,9 +17,24 @@
         "^build"
       ]
     },
+    "build:docs": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
     "dev": {
       "dependsOn": [
         "prepare:dev"
+      ]
+    },
+    "lint": {
+      "dependsOn": [
+        "^prepare:test"
+      ]
+    },
+    "test:unit": {
+      "dependsOn": [
+        "^prepare:test"
       ]
     }
   }

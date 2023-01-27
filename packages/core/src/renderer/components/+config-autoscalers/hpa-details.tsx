@@ -62,7 +62,7 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
     const renderName = (metric: HorizontalPodAutoscalerMetricSpec) => {
       const metricName = getMetricName(metric);
 
-      switch (metric.type) {
+      switch (metric?.type) {
         case HpaMetricType.ContainerResource:
 
         // fallthrough
@@ -85,11 +85,13 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
         }
         case HpaMetricType.External:
           return `${metricName} on ${JSON.stringify(metric.external.metricSelector ?? metric.external.metric?.selector)}`;
+        default:
+          return hpa.spec?.targetCPUUtilizationPercentage ? "CPU Utilization percentage" : "unknown";
       }
     };
 
     return (
-      <Table>
+      <Table data-testid="hpa-metrics">
         <TableHead flat>
           <TableCell className="name">Name</TableCell>
           <TableCell className="metrics">Current / Target</TableCell>
@@ -162,10 +164,14 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
             ))}
         </DrawerItem>
 
-        <DrawerTitle>Metrics</DrawerTitle>
-        <div className="metrics">
-          {this.renderMetrics()}
-        </div>
+        {(hpa.getMetrics().length !== 0 || hpa.spec?.targetCPUUtilizationPercentage) && (
+          <>
+            <DrawerTitle>Metrics</DrawerTitle>
+            <div className="metrics">
+              {this.renderMetrics()}
+            </div>
+          </>
+        )}
       </div>
     );
   }

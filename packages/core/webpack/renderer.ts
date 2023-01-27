@@ -13,7 +13,7 @@ import CircularDependencyPlugin from "circular-dependency-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import type { WebpackPluginInstance } from "webpack";
 import { DefinePlugin } from "webpack";
-import getTypescriptLoader from "./get-typescript-loader";
+import { getTypescriptLoader } from "./get-typescript-loader";
 import { assetsFolderName, isDevelopment, rendererDir, buildDir, appName, htmlTemplate, publicPath, sassCommonVars, additionalExternals } from "./vars";
 import { platform } from "process";
 
@@ -65,7 +65,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     },
     externals: [
       {
-        "node-fetch": "commonjs node-fetch",
         "win-ca": "commonjs win-ca",
       },
       ...additionalExternals,
@@ -176,9 +175,7 @@ export interface CssModulesWebpackRuleOptions {
  * Import CSS or SASS styles with modules support (*.module.scss)
  */
 export function cssModulesWebpackRule({ styleLoader }: CssModulesWebpackRuleOptions = {}): webpack.RuleSetRule {
-  styleLoader ??= isDevelopment
-    ? "style-loader"
-    : MiniCssExtractPlugin.loader;
+  styleLoader ??= MiniCssExtractPlugin.loader;
 
   return {
     test: /\.s?css$/,

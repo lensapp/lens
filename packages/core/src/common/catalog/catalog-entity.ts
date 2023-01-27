@@ -9,7 +9,9 @@ import { observable, makeObservable } from "mobx";
 import { once } from "lodash";
 import type { Disposer } from "../utils";
 import { iter } from "../utils";
-import type { CategoryColumnRegistration } from "../../renderer/components/+catalog/custom-category-columns";
+import type { CategoryColumnRegistration, TitleCellProps } from "../../renderer/components/+catalog/custom-category-columns";
+
+export type { CategoryColumnRegistration, TitleCellProps };
 
 export type CatalogEntityDataFor<Entity> = Entity extends CatalogEntity<infer Metadata, infer Status, infer Spec>
   ? CatalogEntityData<Metadata, Status, Spec>

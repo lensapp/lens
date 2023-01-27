@@ -53,10 +53,16 @@ export abstract class BaseStore<T extends object> {
 
   readonly displayName = kebabCase(this.params.configName).toUpperCase();
 
+  /**
+   * @ignore
+   */
+  protected readonly dependencies: BaseStoreDependencies;
+
   protected constructor(
-    protected readonly dependencies: BaseStoreDependencies,
+    dependencies: BaseStoreDependencies,
     protected readonly params: BaseStoreParams<T>,
   ) {
+    this.dependencies = dependencies;
     makeObservable(this);
   }
 

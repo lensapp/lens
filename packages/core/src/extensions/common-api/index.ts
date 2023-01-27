@@ -13,6 +13,8 @@ import * as Types from "./types";
 import * as Proxy from "./proxy";
 import loggerInjectable from "../../common/logger.injectable";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import type { Logger } from "../../common/logger";
+import type { LensExtension, LensExtensionManifest } from "../lens-extension";
 
 const logger = asLegacyGlobalForExtensionApi(loggerInjectable);
 
@@ -25,4 +27,7 @@ export {
   Util,
   logger,
   Proxy,
+  Logger,
+  LensExtension,
+  LensExtensionManifest,
 };

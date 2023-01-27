@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { Response, Headers as NodeFetchHeaders } from "node-fetch";
+import type { Response, Headers as NodeFetchHeaders } from "@k8slens/node-fetch";
 import { PassThrough } from "stream";
 
 export const createMockResponseFromString = (url: string, data: string, statusCode = 200) => {

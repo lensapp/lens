@@ -35,9 +35,9 @@ export default function generateExtensionTypes(): webpack.Configuration {
     ],
     stats: "errors-warnings",
     externals: [
-      "@k8slens/open-lens/common",
-      "@k8slens/open-lens/main",
-      "@k8slens/open-lens/renderer",
+      "@k8slens/core/common",
+      "@k8slens/core/main",
+      "@k8slens/core/renderer",
     ],
     module: {
       rules: [

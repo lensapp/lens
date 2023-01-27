@@ -1,9 +1,9 @@
 {
-  "name": "@k8slens/open-lens",
-  "productName": "OpenLens",
-  "description": "OpenLens - Open Source IDE for Kubernetes",
+  "name": "@k8slens/core",
+  "productName": "",
+  "description": "Lens Desktop Core",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.4.0-alpha.4",
+  "version": "6.4.0-beta.8",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -11,6 +11,10 @@
   "keywords": [],
   "bugs": {
     "url": "https://github.com/lensapp/lens/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "main": "static/build/main.js",
   "exports": {
@@ -33,25 +37,23 @@
     }
   },
   "files": [
-    "build/download_binaries.ts",
     "build/*.plist",
     "build/installer.nsh",
     "build/notarize.js",
     "static/build/library/**/*",
+    "src/renderer/template.html",
     "templates/**/*",
     "types/*",
     "tsconfig.json"
   ],
-  "copyright": "© 2022 OpenLens Authors",
+  "copyright": "© 2023 OpenLens Authors",
   "license": "MIT",
   "author": "OpenLens Authors <info@k8slens.dev>",
   "scripts": {
     "build": "env NODE_ENV=production yarn run webpack --config webpack/library-bundle.ts",
-    "clean": "rm -rf dist webpack/build/ static/build",
-    "compile:node-fetch": "yarn run webpack --config webpack/node-fetch.ts",
+    "clean": "rm -rf dist static/build",
     "prepare:dev": "env NODE_ENV=development yarn run webpack --config webpack/library-bundle.ts --progress",
     "dev": "env NODE_ENV=development yarn run webpack --config webpack/library-bundle.ts --watch",
-    "prepare": "yarn run compile:node-fetch",
     "test:unit": "jest --testPathIgnorePatterns integration",
     "test:watch": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
     "lint": "PROD=true yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
@@ -60,7 +62,7 @@
   "config": {
     "k8sProxyVersion": "0.3.0",
     "bundledKubectlVersion": "1.23.3",
-    "bundledHelmVersion": "3.7.2",
+    "bundledHelmVersion": "3.11.0",
     "sentryDsn": "",
     "contentSecurityPolicy": "script-src 'unsafe-eval' 'self'; frame-src https://*.lens.app:*/; img-src * data:",
     "welcomeRoute": "/welcome"
@@ -95,6 +97,9 @@
     "setupFilesAfterEnv": [
       "<rootDir>/src/jest-after-env.setup.ts"
     ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!jsonpath-plus)"
+    ],
     "runtime": "@side/jest-runtime"
   },
   "build": {},
@@ -105,13 +110,11 @@
           "^build"
         ],
         "outputs": [
-          "{workspaceRoot}/build/webpack/",
           "{workspaceRoot}/static/build/"
         ]
       },
       "dev": {
         "outputs": [
-          "{workspaceRoot}/build/webpack/",
           "{workspaceRoot}/static/build/"
         ]
       }
@@ -124,7 +127,8 @@
     "@astronautlabs/jsonpath": "^1.1.0",
     "@hapi/call": "^9.0.0",
     "@hapi/subtext": "^7.0.4",
-    "@kubernetes/client-node": "^0.18.0",
+    "@k8slens/node-fetch": "^6.4.0-beta.8",
+    "@kubernetes/client-node": "^0.18.1",
     "@material-ui/styles": "^4.11.5",
     "@ogre-tools/fp": "^12.0.1",
     "@ogre-tools/injectable": "^12.0.1",
@@ -133,7 +137,7 @@
     "@ogre-tools/injectable-react": "^12.0.1",
     "@sentry/electron": "^3.0.8",
     "@sentry/integrations": "^6.19.3",
-    "@side/jest-runtime": "^1.0.1",
+    "@side/jest-runtime": "^1.1.0",
     "@testing-library/user-event": "^14.4.3",
     "abort-controller": "^3.0.0",
     "auto-bind": "^4.0.0",
@@ -167,7 +171,6 @@
     "mobx-utils": "^6.0.4",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.40",
-    "node-fetch": "^3.3.0",
     "node-pty": "0.10.1",
     "npm": "^8.19.3",
     "p-limit": "^3.1.0",
@@ -202,7 +205,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@sentry/types": "^6.19.7",
     "@swc/cli": "^0.1.59",
-    "@swc/core": "^1.3.27",
+    "@swc/core": "^1.3.28",
     "@swc/jest": "^0.2.24",
     "@testing-library/dom": "^7.31.2",
     "@testing-library/jest-dom": "^5.16.5",
@@ -211,7 +214,6 @@
     "@types/byline": "^4.2.33",
     "@types/chart.js": "^2.9.36",
     "@types/circular-dependency-plugin": "5.0.5",
-    "@types/cli-progress": "^3.11.0",
     "@types/color": "^3.0.3",
     "@types/command-line-args": "^5.2.0",
     "@types/crypto-js": "^3.1.47",
@@ -219,7 +221,6 @@
     "@types/electron-devtools-installer": "^2.2.1",
     "@types/fs-extra": "^9.0.13",
     "@types/glob-to-regexp": "^0.4.1",
-    "@types/gunzip-maybe": "^1.4.0",
     "@types/hapi__call": "^9.0.0",
     "@types/hapi__subtext": "^7.0.0",
     "@types/html-webpack-plugin": "^3.2.6",
@@ -248,7 +249,6 @@
     "@types/semver": "^7.3.13",
     "@types/sharp": "^0.31.1",
     "@types/tar": "^6.1.3",
-    "@types/tar-stream": "^2.2.2",
     "@types/tcp-port-used": "^1.0.1",
     "@types/tempy": "^0.3.0",
     "@types/triple-beam": "^1.3.2",
@@ -258,14 +258,13 @@
     "@types/webpack-dev-server": "^4.7.2",
     "@types/webpack-env": "^1.18.0",
     "@types/webpack-node-externals": "^2.5.3",
-    "@typescript-eslint/eslint-plugin": "^5.48.2",
-    "@typescript-eslint/parser": "^5.48.2",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
     "adr": "^1.4.3",
     "ansi_up": "^5.1.0",
     "chalk": "^4.1.2",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
-    "cli-progress": "^3.11.2",
     "color": "^3.2.1",
     "command-line-args": "^5.2.1",
     "concurrently": "^7.6.0",
@@ -284,8 +283,7 @@
     "eslint-plugin-react": "^7.32.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "fork-ts-checker-webpack-plugin": "^6.5.2",
-    "gunzip-maybe": "^1.4.2",
+    "fork-ts-checker-webpack-plugin": "^7.3.0",
     "html-webpack-plugin": "^5.5.0",
     "identity-obj-proxy": "^3.0.0",
     "ignore-loader": "^0.1.2",
@@ -304,7 +302,7 @@
     "node-gyp": "^8.3.0",
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.20",
-    "playwright": "^1.29.2",
+    "playwright": "^1.30.0",
     "postcss": "^8.4.21",
     "postcss-loader": "^6.2.1",
     "query-string": "^7.1.3",
@@ -322,7 +320,6 @@
     "sharp": "^0.31.3",
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.2.4",
-    "tar-stream": "^2.2.0",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
     "type-fest": "^2.14.0",

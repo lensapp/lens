@@ -4,7 +4,7 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.4.0-alpha.2",
+  "version": "6.4.0-beta.8",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -35,7 +35,7 @@
     "dev:renderer": "env NODE_ENV=development ts-node ./webpack/dev-server.ts",
     "test:integration": "jest -xyz --runInBand --detectOpenHandles --forceExit --modulePaths=[\"<rootDir>/integration/\"];",
     "build:tray-icons": "ts-node build/generate-tray-icons.ts",
-    "download:binaries": "ts-node build/download_binaries.ts"
+    "download:binaries": "npm exec -- @k8slens/download-binaries --package $INIT_CWD/package.json --base-dir $INIT_CWD/binaries/client"
   },
   "config": {
     "k8sProxyVersion": "0.3.0",
@@ -97,8 +97,8 @@
     "generateUpdatesFilesForAllChannels": true,
     "files": [
       "static/**/*",
-      "!node_modules/@k8slens/open-lens/node_modules/**/*",
-      "!node_modules/@k8slens/open-lens/src"
+      "!node_modules/@k8slens/core/node_modules/**/*",
+      "!node_modules/@k8slens/core/src"
     ],
     "afterSign": "build/notarize.js",
     "extraResources": [
@@ -192,7 +192,8 @@
     }
   },
   "dependencies": {
-    "@k8slens/open-lens": "^6.4.0-alpha.2",
+    "@k8slens/core": "^6.4.0-beta.8",
+    "@k8slens/download-binaries": "^6.4.0-beta.8",
     "@ogre-tools/fp": "^12.0.1",
     "@ogre-tools/injectable": "^12.0.1",
     "@ogre-tools/injectable-extension-for-auto-registration": "^12.0.1",
@@ -201,18 +202,16 @@
     "mobx": "^6.7.0"
   },
   "devDependencies": {
+    "@k8slens/node-fetch": "^6.4.0-beta.8",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
-    "@swc/core": "^1.3.26",
+    "@swc/core": "^1.3.28",
     "@swc/jest": "^0.2.24",
     "@types/byline": "^4.2.33",
     "@types/chart.js": "^2.9.36",
-    "@types/cli-progress": "^3.11.0",
     "@types/color": "^3.0.3",
     "@types/crypto-js": "^3.1.47",
-    "@types/gunzip-maybe": "^1.4.0",
     "@types/lodash": "^4.14.191",
     "@types/node": "^16.18.6",
-    "@types/node-fetch": "^2.6.2",
     "@types/proper-lockfile": "^4.1.2",
     "@types/react-dom": "^17.0.16",
     "@types/react-router-dom": "^5.3.3",
@@ -220,7 +219,6 @@
     "@types/react-window": "^1.8.5",
     "@types/request-promise-native": "^1.0.18",
     "@types/tar": "^6.1.3",
-    "@types/tar-stream": "^2.2.2",
     "@types/tcp-port-used": "^1.0.1",
     "@types/url-parse": "^1.4.8",
     "@types/uuid": "^8.3.4",
@@ -231,15 +229,13 @@
     "abort-controller": "^3.0.0",
     "autoprefixer": "^10.4.13",
     "circular-dependency-plugin": "^5.2.2",
-    "cli-progress": "^3.11.2",
     "concurrently": "^7.6.0",
     "css-loader": "^6.7.2",
     "electron": "^19.1.9",
     "electron-builder": "^23.6.0",
     "electron-notarize": "^0.3.0",
     "esbuild-loader": "^2.20.0",
-    "fork-ts-checker-webpack-plugin": "^7.2.14",
-    "gunzip-maybe": "^1.4.2",
+    "fork-ts-checker-webpack-plugin": "^7.3.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^28.1.3",
     "jest-environment-jsdom": "^28.1.3",
@@ -250,7 +246,7 @@
     "monaco-editor-webpack-plugin": "^5.0.0",
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.20",
-    "playwright": "^1.29.2",
+    "playwright": "^1.30.0",
     "react-refresh": "^0.14.0",
     "react-refresh-typescript": "^2.0.7",
     "react-select": "^5.7.0",

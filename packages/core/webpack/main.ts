@@ -7,7 +7,7 @@ import path from "path";
 import type webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import nodeExternals from "webpack-node-externals";
-import getTypeScriptLoader from "./get-typescript-loader";
+import { getTypescriptLoader } from "./get-typescript-loader";
 import CircularDependencyPlugin from "circular-dependency-plugin";
 import { iconsAndImagesWebpackRules } from "./renderer";
 import type { WebpackPluginInstance } from "webpack";
@@ -56,7 +56,7 @@ const main = ({ showVars = true } = {}): webpack.Configuration => {
           test: /\.node$/,
           use: "node-loader",
         },
-        getTypeScriptLoader({}, /\.ts$/),
+        getTypescriptLoader({}, /\.ts$/),
         ...iconsAndImagesWebpackRules(),
       ],
     },

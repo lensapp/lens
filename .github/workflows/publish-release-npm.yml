@@ -37,6 +37,13 @@ jobs:
 
       - name: Publish NPM packages
         run: |
-          yarn lerna publish from-package --no-push --no-git-tag-version --yes
+          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+          DIST_TAG=$(cat lerna.json | jq '.version' --raw-output | xargs node ./packages/semver/dist/index.mjs --prerelease 0)
+          yarn lerna \
+            publish from-package \
+            --no-push \
+            --no-git-tag-version \
+            --yes \
+            --dist-tag ${DIST_TAG:-latest}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
