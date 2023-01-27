@@ -12,6 +12,11 @@
   "files": [
     "dist"
   ],
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "arg": "^5.0.2",
     "cli-progress": "^3.11.2",
