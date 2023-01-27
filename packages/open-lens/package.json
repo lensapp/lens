@@ -4,7 +4,7 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.4.0-beta.8",
+  "version": "6.4.0-beta.9",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -192,8 +192,8 @@
     }
   },
   "dependencies": {
-    "@k8slens/core": "^6.4.0-beta.8",
-    "@k8slens/ensure-binaries": "^6.4.0-beta.8",
+    "@k8slens/core": "^6.4.0-beta.9",
+    "@k8slens/ensure-binaries": "^6.4.0-beta.9",
     "@ogre-tools/fp": "^12.0.1",
     "@ogre-tools/injectable": "^12.0.1",
     "@ogre-tools/injectable-extension-for-auto-registration": "^12.0.1",
@@ -202,7 +202,7 @@
     "mobx": "^6.7.0"
   },
   "devDependencies": {
-    "@k8slens/node-fetch": "^6.4.0-beta.8",
+    "@k8slens/node-fetch": "^6.4.0-beta.9",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@swc/core": "^1.3.28",
     "@swc/jest": "^0.2.24",
