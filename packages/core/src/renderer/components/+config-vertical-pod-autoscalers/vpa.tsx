@@ -8,7 +8,6 @@ import "./vpa.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-// import type { VerticalPodAutoscaler } from "../../../common/k8s-api/endpoints/vertical-pod-autoscaler.api";
 import { Badge } from "../badge";
 import { cssNames, prevDefault } from "../../utils";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

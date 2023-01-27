@@ -7,12 +7,7 @@ import type { BaseKubeObjectCondition, NamespaceScopedMetadata } from "../kube-o
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
-
-export interface CrossVersionObjectReference {
-  kind: string;
-  name: string;
-  apiVersion?: string;
-}
+import type { CrossVersionObjectReference } from "./types/cross-version-object-reference";
 
 export enum ResourceName {
   ResourceCPU = "cpu",
@@ -52,7 +47,10 @@ export enum ControlledValues {
   ControlledValueRequestsOnly = "RequestsOnly",
 }
 
-// ContainerResourcePolicy controls how autoscaler computes the recommended resources for a specific container.
+/** 
+ * ContainerResourcePolicy controls how autoscaler computes the recommended resources for
+ * a specific container.
+ */
 export interface ContainerResourcePolicy {
   containerName?: string;
   mode?: ContainerScalingMode;
@@ -62,29 +60,41 @@ export interface ContainerResourcePolicy {
   controlledValues?: ControlledValues;
 }
 
-// Controls how the autoscaler computes recommended resources.
-// The resource policy may be used to set constraints on the recommendations for individual containers.
-// If not specified, the autoscaler computes recommended resources for all containers in the pod, without additional constraints.
+/** 
+ * Controls how the autoscaler computes recommended resources.
+ * The resource policy may be used to set constraints on the recommendations for individual
+ * containers.
+ * If not specified, the autoscaler computes recommended resources for all containers in the
+ * pod, without additional constraints.
+ */
 export interface PodResourcePolicy {
   containerPolicies?: ContainerResourcePolicy[]; // Per-container resource policies.
 }
 
 export enum UpdateMode {
-  // UpdateModeOff means that autoscaler never changes Pod resources.
-  // The recommender still sets the recommended resources in the
-  // VerticalPodAutoscaler object. This can be used for a "dry run".
+  /**
+   * UpdateModeOff means that autoscaler never changes Pod resources.
+   * The recommender still sets the recommended resources in the
+   * VerticalPodAutoscaler object. This can be used for a "dry run".
+   */
   UpdateModeOff = "Off",
-  // UpdateModeInitial means that autoscaler only assigns resources on pod
-  // creation and does not change them during the lifetime of the pod.
+  /**
+   * UpdateModeInitial means that autoscaler only assigns resources on pod
+   * creation and does not change them during the lifetime of the pod.
+   */
   UpdateModeInitial = "Initial",
-  // UpdateModeRecreate means that autoscaler assigns resources on pod
-  // creation and additionally can update them during the lifetime of the
-  // pod by deleting and recreating the pod.
+  /**
+   * UpdateModeRecreate means that autoscaler assigns resources on pod
+   * creation and additionally can update them during the lifetime of the
+   * pod by deleting and recreating the pod.
+   */
   UpdateModeRecreate = "Recreate",
-  // UpdateModeAuto means that autoscaler assigns resources on pod creation
-  // and additionally can update them during the lifetime of the pod,
-  // using any available update method. Currently this is equivalent to
-  // Recreate, which is the only available update method.
+  /**
+   * UpdateModeAuto means that autoscaler assigns resources on pod creation
+   * and additionally can update them during the lifetime of the pod,
+   * using any available update method. Currently this is equivalent to
+   * Recreate, which is the only available update method.
+   */
   UpdateModeAuto = "Auto",
 }
 export interface PodUpdatePolicy {
