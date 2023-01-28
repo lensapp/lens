@@ -1,0 +1,24 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+$vpa-status-colors: (
+  recommendationprovided: var(--colorOk),
+  lowconfidence: var(--colorInfo),
+  fetchinghistory: var(--colorInfo),
+  nopodsmatched: var(--colorInfo),
+  configdeprecated: var(--colorSoftError),
+  configunsupported: var(--colorError),
+);
+
+@mixin vpa-status-bgc {
+
+  @each $status,
+  $color in $vpa-status-colors {
+    &.#{$status} {
+      background: $color;
+      color: white;
+    }
+  }
+}

@@ -7,7 +7,7 @@ export type KubeResource =
   "namespaces" | "nodes" | "events" | "resourcequotas" | "services" | "limitranges" | "leases" |
   "secrets" | "configmaps" | "ingresses" | "ingressclasses" | "networkpolicies" | "persistentvolumeclaims" | "persistentvolumes" | "storageclasses" |
   "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "jobs" | "cronjobs" |
-  "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets" |
+  "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "verticalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets" |
   "priorityclasses" | "runtimeclasses" |
   "roles" | "clusterroles" | "rolebindings" | "clusterrolebindings" | "serviceaccounts";
 
@@ -205,5 +205,10 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
     kind: "StorageClass",
     group: "storage.k8s.io",
     namespaced: false,
+  },
+  verticalpodautoscalers: {
+    kind: "VerticalPodAutoscaler",
+    group: "autoscaling.k8s.io",
+    namespaced: true,
   },
 };
