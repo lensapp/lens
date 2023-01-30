@@ -10,8 +10,6 @@ export type ApplicationInformation = Pick<typeof packageJson, "version" | "confi
   build: Partial<typeof packageJson["build"]> & { publish?: unknown[] };
 };
 
-const applicationInformationToken = getInjectionToken<ApplicationInformation>({
+export const applicationInformationToken = getInjectionToken<ApplicationInformation>({
   id: "application-information-token",
 });
-
-export default applicationInformationToken;

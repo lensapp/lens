@@ -2,15 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import applicationInformationToken from "./vars/application-information-token";
-import type { ApplicationInformation } from "./vars/application-information-token";
-import { bundledExtensionInjectionToken } from "../extensions/extension-discovery/bundled-extension-token";
-import * as extensionApi from "../extensions/common-api";
 
 // @experimental
-export {
-  applicationInformationToken,
-  ApplicationInformation,
-  bundledExtensionInjectionToken,
-  extensionApi,
-};
+export { applicationInformationToken } from "./vars/application-information-token";
+export type { ApplicationInformation } from "./vars/application-information-token";
+export { bundledExtensionInjectionToken } from "../extensions/extension-discovery/bundled-extension-token";
+
+export * as CommonApi from "../extensions/common-api";
