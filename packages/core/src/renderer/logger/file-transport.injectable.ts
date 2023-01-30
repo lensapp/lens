@@ -34,7 +34,7 @@ const rendererFileLoggerTransportInjectable = getInjectable({
       filename: `lens-renderer-${frameId}.log`,
       dirname: di.inject(directoryForLogsInjectable),
       maxsize: 1024 * 1024,
-      maxFiles: 0,
+      maxFiles: 2,
       tailable: true,
     });
   },
