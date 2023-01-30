@@ -6,8 +6,9 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "swc ./src/index.ts -o ./dist/index.js",
-    "prepare:dev": "npm run build"
+    "build": "swc ./src/index.ts",
+    "prepare:dev": "npm run build",
+    "prepare": "npm run build"
   },
   "bin": {
     "ensure-binaries": "./dist/index.js"
