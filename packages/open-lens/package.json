@@ -204,7 +204,7 @@
   "devDependencies": {
     "@k8slens/node-fetch": "^6.4.0-beta.10",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
-    "@swc/core": "^1.3.28",
+    "@swc/core": "^1.3.30",
     "@swc/jest": "^0.2.24",
     "@types/byline": "^4.2.33",
     "@types/chart.js": "^2.9.36",
