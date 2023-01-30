@@ -13,7 +13,7 @@ import openLinkInBrowserInjectable from "../../../../common/utils/open-link-in-b
 import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
 import lensResourcesDirInjectable from "../../../../common/vars/lens-resources-dir.injectable";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
-import applicationInformationToken from "../../../../common/vars/application-information-token";
+import { applicationInformationToken } from "../../../../common/vars/application-information-token";
 import pathExistsSyncInjectable from "../../../../common/fs/path-exists-sync.injectable";
 import lensProxyCertificateInjectable from "../../../../common/certificate/lens-proxy-certificate.injectable";
 
