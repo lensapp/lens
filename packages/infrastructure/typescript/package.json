@@ -1,0 +1,21 @@
+{
+  "name": "@k8slens/typescript",
+  "private": false,
+  "version": "0.0.1",
+  "description": "Typescript configuration for Lens packages.",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "dependencies": {
+    "typescript": "^4.9.3",
+    "typescript-plugin-css-modules": "^3.4.0"
+  }
+}
