@@ -6,6 +6,7 @@
 import { LensExtension, lensExtensionDependencies } from "./lens-extension";
 import type { CatalogEntity } from "../common/catalog";
 import type { IComputedValue, IObservableArray } from "mobx";
+import { isObservableArray } from "mobx";
 import type { MenuRegistration } from "../features/application-menu/main/menu-registration";
 import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
 import type { ShellEnvModifier } from "../main/shell-session/shell-env-modifier/shell-env-modifier-registration";
@@ -34,8 +35,12 @@ export class LensMainExtension extends LensExtension<LensMainExtensionDependenci
     await this[lensExtensionDependencies].navigate(this.id, pageId, params, frameId);
   }
 
-  addCatalogSource(id: string, source: IObservableArray<CatalogEntity>) {
-    this[lensExtensionDependencies].entityRegistry.addObservableSource(`${this.name}:${id}`, source);
+  addCatalogSource(id: string, source: IObservableArray<CatalogEntity> | IComputedValue<CatalogEntity[]>) {
+    if (isObservableArray(source)) {
+      this[lensExtensionDependencies].entityRegistry.addObservableSource(`${this.name}:${id}`, source);
+    } else {
+      this[lensExtensionDependencies].entityRegistry.addComputedSource(`${this.name}:${id}`, source);
+    }
   }
 
   removeCatalogSource(id: string) {
