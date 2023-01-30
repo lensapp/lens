@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/semver",
-  "version": "6.4.0-beta.8",
+  "version": "6.4.0-beta.10",
   "description": "CLI over semver package for picking parts of a version",
   "main": "dist/index.mjs",
   "license": "MIT",
@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@swc/cli": "^0.1.59",
-    "@swc/core": "^1.3.28",
+    "@swc/core": "^1.3.30",
     "@types/command-line-args": "^5.2.0",
     "@types/node": "^16.18.11",
     "@types/semver": "^7.3.13"

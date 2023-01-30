@@ -8,6 +8,7 @@ import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { BaseKubeObjectCondition, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
+import type { CrossVersionObjectReference } from "./types/cross-version-object-reference";
 
 export enum HpaMetricType {
   Resource = "Resource",
@@ -298,12 +299,6 @@ export type HorizontalPodAutoscalerMetricStatus =
   | OptionVarient<HpaMetricType.Object, BaseHorizontalPodAutoscalerMetricStatus, "object">
   | OptionVarient<HpaMetricType.Pods, BaseHorizontalPodAutoscalerMetricStatus, "pods">
   | OptionVarient<HpaMetricType.ContainerResource, BaseHorizontalPodAutoscalerMetricStatus, "containerResource">;
-
-export interface CrossVersionObjectReference {
-  kind: string;
-  name: string;
-  apiVersion: string;
-}
 
 export interface HorizontalPodAutoscalerSpec {
   scaleTargetRef: CrossVersionObjectReference;

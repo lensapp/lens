@@ -1,0 +1,22 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+@import "autoscaler.mixins";
+
+.VpaDetails {
+  .status {
+    @include vpa-status-bgc;
+  }
+
+  .metrics .Table {
+    .TableCell {
+      word-break: break-word;
+
+      &.name {
+        flex-grow: 2;
+      }
+    }
+  }
+}

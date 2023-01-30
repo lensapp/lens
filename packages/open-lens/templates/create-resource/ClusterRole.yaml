@@ -88,6 +88,15 @@ rules:
       - list
       - watch
   - apiGroups:
+      - autoscaling.k8s.io
+    resources:
+      - verticalpodautoscalers
+      - verticalpodautoscalers/status
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - storage.k8s.io
     resources:
       - csidrivers
