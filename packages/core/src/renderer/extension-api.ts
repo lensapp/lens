@@ -5,33 +5,11 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import * as Mobx from "mobx";
-import * as MobxReact from "mobx-react";
-import * as ReactRouter from "react-router";
-import * as ReactRouterDom from "react-router-dom";
-import * as LensExtensionsCommonApi from "../extensions/common-api";
-import * as LensExtensionsRendererApi from "../extensions/renderer-api";
 
-/**
- * Exports for virtual package "@k8slens/extensions" for renderer-process.
- * All exporting names available in global runtime scope:
- * e.g. Devtools -> Console -> window.LensExtensions (renderer)
- */
-const LensExtensions = {
-  Common: LensExtensionsCommonApi,
-  Renderer: LensExtensionsRendererApi,
-};
+export { React, ReactDOM };
 
-export type {
-  LensExtensionsRendererApi,
-};
-
-export {
-  React,
-  ReactDOM,
-  ReactRouter,
-  ReactRouterDom,
-  Mobx,
-  MobxReact,
-  LensExtensions,
-};
+export * as Mobx from "mobx";
+export * as MobxReact from "mobx-react";
+export * as ReactRouter from "react-router";
+export * as ReactRouterDom from "react-router-dom";
+export * as RendererApi from "../extensions/renderer-api";

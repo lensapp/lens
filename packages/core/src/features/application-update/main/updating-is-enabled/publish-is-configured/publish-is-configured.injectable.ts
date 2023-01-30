@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import applicationInformationToken from "../../../../../common/vars/application-information-token";
+import { applicationInformationToken } from "../../../../../common/vars/application-information-token";
 
 const publishIsConfiguredInjectable = getInjectable({
   id: "publish-is-configured",

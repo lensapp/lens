@@ -1,7 +1,8 @@
 import "@k8slens/core/styles";
 import { createContainer } from "@ogre-tools/injectable";
 import { runInAction } from "mobx";
-import { createApp, extensionApi } from "@k8slens/core/renderer";
+import { createApp, RendererApi } from "@k8slens/core/renderer";
+import { CommonApi } from "@k8slens/core/common";
 import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registration";
 
 const di = createContainer("renderer");
@@ -22,16 +23,6 @@ runInAction(() => {
 
 app.start();
 
-const {
-  React,
-  ReactDOM,
-  ReactRouter,
-  ReactRouterDom,
-  Mobx,
-  MobxReact,
-  LensExtensions
-} = extensionApi;
-
 export {
   React,
   ReactDOM,
@@ -39,5 +30,9 @@ export {
   ReactRouterDom,
   Mobx,
   MobxReact,
-  LensExtensions
+} from "@k8slens/core/renderer";
+
+export const LensExtensions = {
+  Renderer: RendererApi,
+  Common: CommonApi,
 };
