@@ -20,5 +20,8 @@
     "command-line-args": "^5.2.1",
     "fs-extra": "^11.1.0",
     "semver": "^7.3.8"
+  },
+  "dependencies": {
+    "rimraf": "^4.1.2"
   }
 }

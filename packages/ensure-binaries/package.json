@@ -37,6 +37,7 @@
     "@types/gunzip-maybe": "^1.4.0",
     "@types/node": "^16.18.11",
     "@types/semver": "^7.3.13",
-    "@types/tar-stream": "^2.2.2"
+    "@types/tar-stream": "^2.2.2",
+    "rimraf": "^4.1.2"
   }
 }
