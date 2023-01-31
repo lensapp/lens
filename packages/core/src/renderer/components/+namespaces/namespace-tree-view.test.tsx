@@ -21,7 +21,7 @@ import { NamespaceTreeView } from "./namespace-tree-view";
 import type { NamespaceStore } from "./store";
 import namespaceStoreInjectable from "./store.injectable";
 
-function createNamespace(name: string, labels?: Record<string, string>): Namespace {
+function createNamespace(name: string, labels?: Record<string, string>, annotations?: Record<string, string>): Namespace {
   return new Namespace({
     apiVersion: "v1",
     kind: "Namespace",
@@ -32,6 +32,9 @@ function createNamespace(name: string, labels?: Record<string, string>): Namespa
       uid: `${name}-1`,
       labels: {
         ...labels
+      },
+      annotations: {
+        ...annotations
       }
     },
   });
@@ -42,6 +45,10 @@ const singleRoot = createNamespace("single-root", {
 });
 
 const acmeGroup = createNamespace("acme-org", {
+  "hnc.x-k8s.io/included-namespace": "true",
+});
+
+const orgA = createNamespace("org-a", {
   "hnc.x-k8s.io/included-namespace": "true",
 });
 
@@ -57,6 +64,22 @@ const teamB = createNamespace("team-b", {
   "acme-org.tree.hnc.x-k8s.io/depth": "1",
   "kubernetes.io/metadata.name": "team-b",
   "team-b.tree.hnc.x-k8s.io/depth": "0",
+});
+
+const teamC = createNamespace("team-c", {
+  "hnc.x-k8s.io/included-namespace": "true",
+  "org-a.tree.hnc.x-k8s.io/depth": "1",
+  "kubernetes.io/metadata.name": "team-c",
+  "team-c.tree.hnc.x-k8s.io/depth": "0",
+});
+
+const service1 = createNamespace("service-1", {
+  "hnc.x-k8s.io/included-namespace": "true",
+  "org-a.tree.hnc.x-k8s.io/depth": "1",
+  "kubernetes.io/metadata.name": "team-c",
+  "service-1.tree.hnc.x-k8s.io/depth": "0",
+}, {
+  "hnc.x-k8s.io/subnamespace-of": "org-a",
 });
 
 describe("<NamespaceTreeView />", () => {
@@ -114,8 +137,11 @@ describe("<NamespaceTreeView />", () => {
           createNamespace("test-4"),
           createNamespace("test-5"),
           acmeGroup,
+          orgA,
           teamA,
           teamB,
+          teamC,
+          service1,
         ],
       })));
     });
@@ -134,6 +160,12 @@ describe("<NamespaceTreeView />", () => {
 
     it("renders namespace with 2 children namespaces", () => {
       const result = render(<NamespaceTreeView root={acmeGroup} />);
+
+      expect(result.baseElement).toMatchSnapshot();
+    });
+
+    it("renders namespace with children namespaces and a subnamespace", () => {
+      const result = render(<NamespaceTreeView root={orgA} />);
 
       expect(result.baseElement).toMatchSnapshot();
     })
