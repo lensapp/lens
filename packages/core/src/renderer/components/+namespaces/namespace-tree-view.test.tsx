@@ -81,6 +81,28 @@ const service1 = createNamespace("service-1", {
   "hnc.x-k8s.io/subnamespace-of": "org-a",
 });
 
+const levelsDeep = createNamespace("levels-deep", {
+  "hnc.x-k8s.io/included-namespace": "true",
+});
+
+const levelDeepChildA = createNamespace("level-deep-child-a", {
+  "hnc.x-k8s.io/included-namespace": "true",
+  "levels-deep.tree.hnc.x-k8s.io/depth": "1",
+  "level-deep-child-a.tree.hnc.x-k8s.io/depth": "0",
+});
+
+const levelDeepChildB = createNamespace("level-deep-child-b", {
+  "hnc.x-k8s.io/included-namespace": "true",
+  "levels-deep.tree.hnc.x-k8s.io/depth": "1",
+  "level-deep-child-b.tree.hnc.x-k8s.io/depth": "0",
+});
+
+const levelDeepSubChildA = createNamespace("level-deep-subchild-a", {
+  "hnc.x-k8s.io/included-namespace": "true",
+  "levels-deep.tree.hnc.x-k8s.io/depth": "1",
+  "level-deep-child-b.tree.hnc.x-k8s.io/depth": "0",
+});
+
 describe("<NamespaceTreeView />", () => {
   let di: DiContainer;
   let render: DiRender;
@@ -141,6 +163,10 @@ describe("<NamespaceTreeView />", () => {
           teamB,
           teamC,
           service1,
+          levelsDeep,
+          levelDeepChildA,
+          levelDeepChildB,
+          levelDeepSubChildA,
         ],
       })));
     });
@@ -180,6 +206,12 @@ describe("<NamespaceTreeView />", () => {
       const trueNamespace = result.getByTestId("namespace-team-c-1");
 
       expect(trueNamespace.querySelector("[data-testid='subnamespace-badge-for-team-c-1']")).toBeNull();
+    });
+
+    it("renders 2 levels deep", () => {
+      const result = render(<NamespaceTreeView root={levelsDeep} />);
+
+      expect(result.baseElement).toMatchSnapshot();
     });
   });
 });
