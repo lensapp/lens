@@ -12,6 +12,7 @@ import loggerInjectable from "../../common/logger.injectable";
 import waitUntilPortIsUsedInjectable from "./wait-until-port-is-used/wait-until-port-is-used.injectable";
 import lensK8sProxyPathInjectable from "./lens-k8s-proxy-path.injectable";
 import getPortFromStreamInjectable from "../utils/get-port-from-stream.injectable";
+import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
 
 export type CreateKubeAuthProxy = (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
 
@@ -25,6 +26,7 @@ const createKubeAuthProxyInjectable = getInjectable({
       logger: di.inject(loggerInjectable),
       waitUntilPortIsUsed: di.inject(waitUntilPortIsUsedInjectable),
       getPortFromStream: di.inject(getPortFromStreamInjectable),
+      dirname: di.inject(getDirnameOfPathInjectable),
     };
 
     return (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => {

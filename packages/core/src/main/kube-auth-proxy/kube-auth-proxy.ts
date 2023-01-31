@@ -14,6 +14,7 @@ import { TypedRegEx } from "typed-regex";
 import type { Spawn } from "../child-process/spawn.injectable";
 import type { Logger } from "../../common/logger";
 import type { WaitUntilPortIsUsed } from "./wait-until-port-is-used/wait-until-port-is-used.injectable";
+import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 
 const startingServeMatcher = "starting to serve on (?<address>.+)";
 const startingServeRegex = Object.assign(TypedRegEx(startingServeMatcher, "i"), {
@@ -27,6 +28,7 @@ export interface KubeAuthProxyDependencies {
   spawn: Spawn;
   waitUntilPortIsUsed: WaitUntilPortIsUsed;
   getPortFromStream: GetPortFromStream;
+  dirname: GetDirnameOfPath;
 }
 
 export class KubeAuthProxy {
@@ -69,6 +71,7 @@ export class KubeAuthProxy {
         PROXY_KEY: cert.private,
         PROXY_CERT: cert.cert,
       },
+      cwd: this.dependencies.dirname(this.cluster.kubeConfigPath),
     });
     this.proxyProcess.on("error", (error) => {
       this.cluster.broadcastConnectUpdate(error.message, "error");
