@@ -17,16 +17,9 @@
   "scripts": {
     "clean": "rimraf dist/",
     "generate-types": "tsc --d --declarationDir ./dist --declarationMap --emitDeclarationOnly",
-    "build": "npm run generate-types && swc ./src/index.ts -d ./dist",
-    "prepare": "npm run build",
-    "prepare:dev": "npm run build",
-    "prepare:test": "npm run build"
+    "build": "npm run generate-types && swc ./src/index.ts -d ./dist"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.61",
-    "@swc/core": "^1.3.44",
-    "@types/node": "^16.18.11",
-    "@types/semver": "^7.3.13",
     "rimraf": "^4.4.1"
   },
   "peerDependencies": {

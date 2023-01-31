@@ -15,11 +15,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "webpack --config webpack.ts",
-    "lint": "exit 0",
-    "prepare": "npm run build",
-    "prepare:dev": "npm run build",
-    "prepare:test": "npm run build"
+    "build": "webpack --config webpack.ts"
   },
   "dependencies": {
     "node-fetch": "^3.3.0",

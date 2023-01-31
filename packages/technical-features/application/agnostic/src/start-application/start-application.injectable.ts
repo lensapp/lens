@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import { runManyFor } from "@k8slens/run-many";
 import * as timeSlots from "./time-slots";

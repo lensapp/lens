@@ -9,9 +9,7 @@
     "build": "swc ./src/index.ts -d ./dist/",
     "postbuild": "run-script-os",
     "postbuild:windows": "",
-    "postbuild:nix": "chmod u+x ./dist/index.js",
-    "prepare:dev": "npm run build",
-    "prepare": "npm run build"
+    "postbuild:nix": "chmod u+x ./dist/index.js"
   },
   "bin": {
     "ensure-binaries": "./dist/index.js"
@@ -34,7 +32,7 @@
     "zod": "^3.20.6"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.61",
+    "@swc/cli": "^0.1.62",
     "@swc/core": "^1.3.44",
     "@types/cli-progress": "^3.11.0",
     "@types/gunzip-maybe": "^1.4.0",
