@@ -86,7 +86,7 @@ async function attemptStart() {
       app,
       window,
       cleanup: async () => {
-        await app.close();
+        app.process().kill();
         await remove(CICD).catch(noop);
       },
     };
