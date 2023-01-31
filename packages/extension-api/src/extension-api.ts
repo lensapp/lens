@@ -3,6 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export { MainApi as Main } from "@k8slens/core/main";
-export { RendererApi as Renderer } from "@k8slens/core/renderer";
-export { CommonApi as Common } from "@k8slens/core/common";
+export { extensionApi as Main } from "@k8slens/core/main";
+export { extensionApi as Renderer } from "@k8slens/core/renderer";
+export { extensionApi as Common } from "@k8slens/core/common";
