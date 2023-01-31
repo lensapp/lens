@@ -27,6 +27,7 @@ export interface LensExtensionManifest extends PackageJson {
     npm?: string;
     node?: string;
   };
+  storeName?: string;
 }
 
 export const lensExtensionDependencies = Symbol("lens-extension-dependencies");
@@ -79,6 +80,18 @@ export class LensExtension<
   get description() {
     return this.manifest.description;
   }
+  
+  get storeName() {
+    return this.manifest.storeName;
+  } 
+
+  get dataLocation() {
+    return this.storeName || this.id; 
+  }
+
+  get storeLocation() {
+    return this.storeName || this.name; 
+  }
 
   /**
    * @ignore
@@ -93,7 +106,7 @@ export class LensExtension<
    * folder name.
    */
   async getExtensionFileFolder(): Promise<string> {
-    return this[lensExtensionDependencies].fileSystemProvisionerStore.requestDirectory(this.id);
+    return this[lensExtensionDependencies].fileSystemProvisionerStore.requestDirectory(this.dataLocation);
   }
 
   @action

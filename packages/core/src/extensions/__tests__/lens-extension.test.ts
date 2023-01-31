@@ -18,6 +18,7 @@ describe("lens extension", () => {
         name: "foo-bar",
         version: "0.1.1",
         engines: { lens: "^5.5.0" },
+        storeName: "foo-bar-store",
       },
       id: "/this/is/fake/package.json",
       absolutePath: "/absolute/fake/",
@@ -31,6 +32,12 @@ describe("lens extension", () => {
   describe("name", () => {
     it("returns name", () => {
       expect(ext.name).toBe("foo-bar");
+    });
+  });
+
+  describe("storeName", () => {
+    it("returns storeName", () => {
+      expect(ext.storeName).toBe("foo-bar-store");
     });
   });
 });
