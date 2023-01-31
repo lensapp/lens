@@ -18,6 +18,7 @@ import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../base-s
 import { persistStateToConfigInjectionToken } from "../base-store/save-to-file";
 import getBasenameOfPathInjectable from "../path/get-basename.injectable";
 import { enlistMessageChannelListenerInjectionToken } from "../utils/channel/enlist-message-channel-listener-injection-token";
+import { sendMessageToChannelInjectionToken } from "../utils/channel/message-to-channel-injection-token";
 
 const clusterStoreInjectable = getInjectable({
   id: "cluster-store",
@@ -36,6 +37,7 @@ const clusterStoreInjectable = getInjectable({
     persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
     enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
     shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
+    sendMessageToChannel: di.inject(sendMessageToChannelInjectionToken),
   }),
 });
 

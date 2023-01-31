@@ -16,6 +16,7 @@ import { baseStoreIpcChannelPrefixesInjectionToken } from "../base-store/channel
 import { persistStateToConfigInjectionToken } from "../base-store/save-to-file";
 import { enlistMessageChannelListenerInjectionToken } from "../utils/channel/enlist-message-channel-listener-injection-token";
 import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../base-store/disable-sync";
+import { sendMessageToChannelInjectionToken } from "../utils/channel/message-to-channel-injection-token";
 
 const hotbarStoreInjectable = getInjectable({
   id: "hotbar-store",
@@ -32,6 +33,7 @@ const hotbarStoreInjectable = getInjectable({
     persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
     enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
     shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
+    sendMessageToChannel: di.inject(sendMessageToChannelInjectionToken),
   }),
 });
 

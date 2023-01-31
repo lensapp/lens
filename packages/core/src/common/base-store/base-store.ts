@@ -8,7 +8,6 @@ import type { Migrations, Options as ConfOptions } from "conf/dist/source/types"
 import type { IEqualsComparer } from "mobx";
 import { makeObservable, reaction } from "mobx";
 import { disposer, isPromiseLike, toJS } from "../utils";
-import { broadcastMessage } from "../ipc";
 import isEqual from "lodash/isEqual";
 import { kebabCase } from "lodash";
 import type { GetConfigurationFileModel } from "../get-configuration-file-model/get-configuration-file-model.injectable";
@@ -16,18 +15,20 @@ import type { Logger } from "../logger";
 import type { PersistStateToConfig } from "./save-to-file";
 import type { GetBasenameOfPath } from "../path/get-basename.injectable";
 import type { EnlistMessageChannelListener } from "../utils/channel/enlist-message-channel-listener-injection-token";
+import type { SendMessageToChannel } from "../utils/channel/message-to-channel-injection-token";
+import type { MessageChannel } from "../utils/channel/message-channel-listener-injection-token";
 
-export interface BaseStoreParams<T> extends Omit<ConfOptions<T>, "migrations"> {
+export interface BaseStoreParams<T> extends Omit<ConfOptions<T>, "migrations" | "projectVersion"> {
   syncOptions?: {
     fireImmediately?: boolean;
     equals?: IEqualsComparer<T>;
   };
-  configName: string;
+  readonly configName: string;
 }
 
 export interface IpcChannelPrefixes {
-  local: string;
-  remote: string;
+  readonly local: string;
+  readonly remote: string;
 }
 
 export interface BaseStoreDependencies {
@@ -41,6 +42,7 @@ export interface BaseStoreDependencies {
   persistStateToConfig: PersistStateToConfig;
   getBasenameOfPath: GetBasenameOfPath;
   enlistMessageChannelListener: EnlistMessageChannelListener;
+  sendMessageToChannel: SendMessageToChannel;
 }
 
 /**
@@ -96,20 +98,26 @@ export abstract class BaseStore<T extends object> {
     const name = this.dependencies.getBasenameOfPath(config.path);
 
     const disableSync = () => this.syncDisposers();
+
+    const sendChannel: MessageChannel<T> = {
+      id: `${this.dependencies.ipcChannelPrefixes.remote}:${config.path}`,
+    };
+    const receiveChannel: MessageChannel<T> = {
+      id: `${this.dependencies.ipcChannelPrefixes.local}:${config.path}`,
+    };
+
     const enableSync = () => {
       this.syncDisposers.push(
         reaction(
           () => toJS(this.toJSON()), // unwrap possible observables and react to everything
           model => {
             this.dependencies.persistStateToConfig(config, model);
-            broadcastMessage(`${this.dependencies.ipcChannelPrefixes.remote}:${config.path}`, model);
+            this.dependencies.sendMessageToChannel(sendChannel, model);
           },
           this.params.syncOptions,
         ),
         this.dependencies.enlistMessageChannelListener({
-          channel: {
-            id: `${this.dependencies.ipcChannelPrefixes.local}:${config.path}`,
-          },
+          channel: receiveChannel,
           handler: (model) => {
             this.dependencies.logger.silly(`[${this.displayName}]: syncing ${name}`, { model });
 
@@ -119,11 +127,13 @@ export abstract class BaseStore<T extends object> {
 
             // todo: use "resourceVersion" if merge required (to avoid equality checks => better performance)
             if (!isEqual(this.toJSON(), model)) {
-              this.fromStore(model as T);
+              this.fromStore(model);
             }
 
             if (this.dependencies.shouldDisableSyncInListener) {
-              enableSync();
+              setImmediate(() => {
+                enableSync();
+              });
             }
           },
         }),
