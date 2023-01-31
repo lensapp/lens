@@ -20,6 +20,10 @@ import { NamespaceTreeView } from "./namespace-tree-view";
 import type { NamespaceStore } from "./store";
 import namespaceStoreInjectable from "./store.injectable";
 
+jest.mock("react-router-dom", () => ({
+  Link: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 function createNamespace(name: string, labels?: Record<string, string>, annotations?: Record<string, string>): Namespace {
   return new Namespace({
     apiVersion: "v1",

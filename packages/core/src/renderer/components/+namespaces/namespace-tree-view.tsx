@@ -2,8 +2,11 @@ import { alpha, SvgIcon, withStyles } from "@material-ui/core";
 import { TreeItem, TreeItemProps, TreeView } from "@material-ui/lab";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
+import { Link } from "react-router-dom";
 import type { Namespace } from "../../../common/k8s-api/endpoints";
 import { DrawerTitle } from "../drawer";
+import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
+import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import type { NamespaceStore } from "./store";
 import namespaceStoreInjectable from "./store.injectable";
 
@@ -13,9 +16,10 @@ interface NamespaceTreeViewProps {
 
 interface Dependencies {
   namespaceStore: NamespaceStore;
+  getDetailsUrl: GetDetailsUrl;
 }
 
-function NonInjectableNamespaceTreeView({ root, namespaceStore }: Dependencies & NamespaceTreeViewProps) {
+function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }: Dependencies & NamespaceTreeViewProps) {
   const hierarchicalNamespaces = namespaceStore.getByLabel(["hnc.x-k8s.io/included-namespace=true"]);
   const expandedItems = hierarchicalNamespaces.map(ns => `namespace-${ns.getId()}`);
 
@@ -39,7 +43,9 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore }: Dependencies &
         data-testid={`namespace-${child.getId()}`}
         label={(
           <>
-            {child.getName()}
+            <Link key={child.getId()} to={getDetailsUrl(child.selfLink)}>
+              {child.getName()}
+            </Link>
             {renderBadge(child)}
           </>
         )}
@@ -115,6 +121,7 @@ const StyledTreeItem = withStyles((theme) => ({
 export const NamespaceTreeView = withInjectables<Dependencies, NamespaceTreeViewProps>(NonInjectableNamespaceTreeView, {
   getProps: (di, props) => ({
     namespaceStore: di.inject(namespaceStoreInjectable),
+    getDetailsUrl: di.inject(getDetailsUrlInjectable),
     ...props,
   }),
 });
