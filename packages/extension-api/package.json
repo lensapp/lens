@@ -22,8 +22,7 @@
   "scripts": {
     "build": "webpack --config webpack/extensions.ts",
     "build:docs": "typedoc",
-    "clean": "rimraf dist/",
-    "prepare:dev": "npm run build"
+    "clean": "rimraf dist/"
   },
   "dependencies": {
     "@k8slens/core": "^6.5.0-alpha.6"
