@@ -116,6 +116,10 @@ const StyledTreeItem = withStyles((theme) => ({
     paddingLeft: 16,
     borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
   },
+  label: {
+    fontSize: "inherit",
+    lineHeight: "1.8",
+  },
 }))((props: TreeItemProps) => <TreeItem {...props} />);
 
 export const NamespaceTreeView = withInjectables<Dependencies, NamespaceTreeViewProps>(NonInjectableNamespaceTreeView, {
