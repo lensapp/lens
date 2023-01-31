@@ -99,8 +99,9 @@ const levelDeepChildB = createNamespace("level-deep-child-b", {
 
 const levelDeepSubChildA = createNamespace("level-deep-subchild-a", {
   "hnc.x-k8s.io/included-namespace": "true",
-  "levels-deep.tree.hnc.x-k8s.io/depth": "1",
-  "level-deep-child-b.tree.hnc.x-k8s.io/depth": "0",
+  "levels-deep.tree.hnc.x-k8s.io/depth": "2",
+  "level-deep-child-b.tree.hnc.x-k8s.io/depth": "1",
+  "level-deep-subchild-a.tree.hnc.x-k8s.io/depth": "0",
 });
 
 describe("<NamespaceTreeView />", () => {
@@ -212,6 +213,13 @@ describe("<NamespaceTreeView />", () => {
       const result = render(<NamespaceTreeView root={levelsDeep} />);
 
       expect(result.baseElement).toMatchSnapshot();
+    });
+
+    it("expands children items", () => {
+      const result = render(<NamespaceTreeView root={levelsDeep} />);
+      const deepest = result.getByTestId("namespace-level-deep-child-b-1");
+
+      expect(deepest).toHaveAttribute("aria-expanded", "true");
     });
   });
 });

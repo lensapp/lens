@@ -17,6 +17,7 @@ interface Dependencies {
 
 function NonInjectableNamespaceTreeView({ root, namespaceStore }: Dependencies & NamespaceTreeViewProps) {
   const hierarchicalNamespaces = namespaceStore.getByLabel(["hnc.x-k8s.io/included-namespace=true"]);
+  const expandedItems = hierarchicalNamespaces.map(ns => `namespace-${ns.getId()}`);
 
   function renderBadge(namespace: Namespace) {
     if (!namespace.getAnnotations().find(annotation => annotation.includes("hnc.x-k8s.io/subnamespace-of"))) {
@@ -60,6 +61,7 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore }: Dependencies &
         defaultCollapseIcon={<MinusSquare />}
         defaultExpandIcon={<PlusSquare />}
         defaultEndIcon={<CloseSquare />}
+        expanded={expandedItems}
       >
         <StyledTreeItem
           nodeId={`namespace-${root.getId()}`}
