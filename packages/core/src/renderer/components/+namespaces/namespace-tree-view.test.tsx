@@ -1,6 +1,7 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { DiContainer } from "@ogre-tools/injectable";
+import _ from "lodash";
 import React from "react";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -20,7 +21,7 @@ import { NamespaceTreeView } from "./namespace-tree-view";
 import type { NamespaceStore } from "./store";
 import namespaceStoreInjectable from "./store.injectable";
 
-function createNamespace(name: string): Namespace {
+function createNamespace(name: string, labels?: Record<string, string>): Namespace {
   return new Namespace({
     apiVersion: "v1",
     kind: "Namespace",
@@ -29,9 +30,34 @@ function createNamespace(name: string): Namespace {
       resourceVersion: "1",
       selfLink: `/api/v1/namespaces/${name}`,
       uid: `${name}-1`,
+      labels: {
+        ...labels
+      }
     },
   });
 }
+
+const singleRoot = createNamespace("single-root", {
+  "hnc.x-k8s.io/included-namespace": "true",
+});
+
+const acmeGroup = createNamespace("acme-org", {
+  "hnc.x-k8s.io/included-namespace": "true",
+});
+
+const teamA = createNamespace("team-a", {
+  "hnc.x-k8s.io/included-namespace": "true",
+  "acme-org.tree.hnc.x-k8s.io/depth": "1",
+  "kubernetes.io/metadata.name": "team-a",
+  "team-a.tree.hnc.x-k8s.io/depth": "0",
+});
+
+const teamB = createNamespace("team-b", {
+  "hnc.x-k8s.io/included-namespace": "true",
+  "acme-org.tree.hnc.x-k8s.io/depth": "1",
+  "kubernetes.io/metadata.name": "team-b",
+  "team-b.tree.hnc.x-k8s.io/depth": "0",
+});
 
 describe("<NamespaceTreeView />", () => {
   let di: DiContainer;
@@ -87,14 +113,9 @@ describe("<NamespaceTreeView />", () => {
           createNamespace("test-3"),
           createNamespace("test-4"),
           createNamespace("test-5"),
-          createNamespace("test-6"),
-          createNamespace("test-7"),
-          createNamespace("test-8"),
-          createNamespace("test-9"),
-          createNamespace("test-10"),
-          createNamespace("test-11"),
-          createNamespace("test-12"),
-          createNamespace("test-13"),
+          acmeGroup,
+          teamA,
+          teamB,
         ],
       })));
     });
@@ -106,22 +127,15 @@ describe("<NamespaceTreeView />", () => {
     });
 
     it("renders one namespace without children", () => {
-      const ns = new Namespace({
-        apiVersion: "v1",
-        kind: "Namespace",
-        metadata: {
-          name: "acme-group",
-          resourceVersion: "1",
-          selfLink: `/api/v1/namespaces/acme-group`,
-          uid: `acme-group-1`,
-          labels: {
-            "hnc.x-k8s.io/included-namespace": "true",
-          }
-        },
-      });
-      const result = render(<NamespaceTreeView root={ns} />);
+      const result = render(<NamespaceTreeView root={singleRoot} />);
   
       expect(result.baseElement).toMatchSnapshot();
     });
+
+    it("renders namespace with 2 children namespaces", () => {
+      const result = render(<NamespaceTreeView root={acmeGroup} />);
+
+      expect(result.baseElement).toMatchSnapshot();
+    })
   });
 });

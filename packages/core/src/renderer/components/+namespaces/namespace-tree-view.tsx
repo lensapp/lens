@@ -15,11 +15,19 @@ interface Dependencies {
   namespaceStore: NamespaceStore;
 }
 
-function NonInjectableNamespaceTreeView({ root }: Dependencies & NamespaceTreeViewProps) {
+function NonInjectableNamespaceTreeView({ root, namespaceStore }: Dependencies & NamespaceTreeViewProps) {
+  const hierarchicalNamespaces = namespaceStore.getByLabel(["hnc.x-k8s.io/included-namespace=true"]);
+
   function renderChildren(parent: Namespace) {
-    return (
-      <div>no children</div>
+    const children = hierarchicalNamespaces.filter(ns =>
+      ns.getLabels().find(label => label === `${parent.getName()}.tree.hnc.x-k8s.io/depth=1`)
     );
+
+    return children.map(child => (
+      <StyledTreeItem key={`namespace-${child.getId()}`} nodeId={`namespace-${child.getId()}`} label={child.getName()}>
+        {renderChildren(child)}
+      </StyledTreeItem>
+    ));
   }
 
   if (!root.getLabels().find(label => label === "hnc.x-k8s.io/included-namespace=true")) {
@@ -30,6 +38,7 @@ function NonInjectableNamespaceTreeView({ root }: Dependencies & NamespaceTreeVi
     <div data-testid="namespace-tree-view">
       <DrawerTitle>Tree View</DrawerTitle>
       <TreeView
+        defaultExpanded={[`namespace-${root.getId()}`]}
         defaultCollapseIcon={<MinusSquare />}
         defaultExpandIcon={<PlusSquare />}
         defaultEndIcon={<CloseSquare />}
