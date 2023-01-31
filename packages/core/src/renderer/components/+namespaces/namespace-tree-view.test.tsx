@@ -167,6 +167,19 @@ describe("<NamespaceTreeView />", () => {
       const result = render(<NamespaceTreeView root={orgA} />);
 
       expect(result.baseElement).toMatchSnapshot();
-    })
+    });
+
+    it("renders an indicator badge for the subnamespace", () => {
+      const result = render(<NamespaceTreeView root={orgA} />);
+
+      expect(result.getByTestId("subnamespace-badge-for-service-1-1")).toBeInTheDocument();
+    });
+
+    it("does not render an indicator badge for the true namespace", () => {
+      const result = render(<NamespaceTreeView root={orgA} />);
+      const trueNamespace = result.getByTestId("namespace-team-c-1");
+
+      expect(trueNamespace.querySelector("[data-testid='subnamespace-badge-for-team-c-1']")).toBeNull();
+    });
   });
 });

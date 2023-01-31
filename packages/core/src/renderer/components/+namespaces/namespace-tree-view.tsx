@@ -18,13 +18,31 @@ interface Dependencies {
 function NonInjectableNamespaceTreeView({ root, namespaceStore }: Dependencies & NamespaceTreeViewProps) {
   const hierarchicalNamespaces = namespaceStore.getByLabel(["hnc.x-k8s.io/included-namespace=true"]);
 
+  function renderBadge(namespace: Namespace) {
+    if (!namespace.getAnnotations().find(annotation => annotation.includes("hnc.x-k8s.io/subnamespace-of"))) {
+      return null;
+    }
+
+    return <span data-testid={`subnamespace-badge-for-${namespace.getId()}`}>S</span>;
+  }
+
   function renderChildren(parent: Namespace) {
     const children = hierarchicalNamespaces.filter(ns =>
       ns.getLabels().find(label => label === `${parent.getName()}.tree.hnc.x-k8s.io/depth=1`)
     );
 
     return children.map(child => (
-      <StyledTreeItem key={`namespace-${child.getId()}`} nodeId={`namespace-${child.getId()}`} label={child.getName()}>
+      <StyledTreeItem
+        key={`namespace-${child.getId()}`}
+        nodeId={`namespace-${child.getId()}`}
+        data-testid={`namespace-${child.getId()}`}
+        label={(
+          <>
+            {child.getName()}
+            {renderBadge(child)}
+          </>
+        )}
+      >
         {renderChildren(child)}
       </StyledTreeItem>
     ));
@@ -43,7 +61,11 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore }: Dependencies &
         defaultExpandIcon={<PlusSquare />}
         defaultEndIcon={<CloseSquare />}
       >
-        <StyledTreeItem nodeId={`namespace-${root.getId()}`} label={root.getName()} data-testid={`namespace-${root.getId()}`}>
+        <StyledTreeItem
+          nodeId={`namespace-${root.getId()}`}
+          label={root.getName()}
+          data-testid={`namespace-${root.getId()}`}
+        >
           {renderChildren(root)}
         </StyledTreeItem>
       </TreeView>

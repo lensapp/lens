@@ -60,6 +60,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
               >
                 <li
                   class="MuiTreeItem-root"
+                  data-testid="namespace-team-a-1"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -90,6 +91,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                 </li>
                 <li
                   class="MuiTreeItem-root"
+                  data-testid="namespace-team-b-1"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -188,6 +190,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
               >
                 <li
                   class="MuiTreeItem-root"
+                  data-testid="namespace-service-1-1"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -213,11 +216,17 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                       class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
                     >
                       service-1
+                      <span
+                        data-testid="subnamespace-badge-for-service-1-1"
+                      >
+                        S
+                      </span>
                     </div>
                   </div>
                 </li>
                 <li
                   class="MuiTreeItem-root"
+                  data-testid="namespace-team-c-1"
                   role="treeitem"
                   tabindex="-1"
                 >
