@@ -18,7 +18,7 @@ import type { EnlistMessageChannelListener } from "../utils/channel/enlist-messa
 import type { SendMessageToChannel } from "../utils/channel/message-to-channel-injection-token";
 import type { MessageChannel } from "../utils/channel/message-channel-listener-injection-token";
 
-export interface BaseStoreParams<T> extends Omit<ConfOptions<T>, "migrations" | "projectVersion"> {
+export interface BaseStoreParams<T> extends Omit<ConfOptions<T>, "migrations"> {
   syncOptions?: {
     fireImmediately?: boolean;
     equals?: IEqualsComparer<T>;

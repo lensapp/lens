@@ -21,6 +21,7 @@ import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../common
 import { persistStateToConfigInjectionToken } from "../common/base-store/save-to-file";
 import getBasenameOfPathInjectable from "../common/path/get-basename.injectable";
 import { enlistMessageChannelListenerInjectionToken } from "../common/utils/channel/enlist-message-channel-listener-injection-token";
+import { sendMessageToChannelInjectionToken } from "../common/utils/channel/message-to-channel-injection-token";
 
 export interface ExtensionStoreParams<T extends object> extends BaseStoreParams<T> {
   migrations?: Migrations<T>;
@@ -63,6 +64,7 @@ export abstract class ExtensionStore<T extends object> extends BaseStore<T> {
       persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
       enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
       shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
+      sendMessageToChannel: di.inject(sendMessageToChannelInjectionToken),
     }, params);
   }
 
