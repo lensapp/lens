@@ -50,7 +50,10 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
               {child.getName()}
             </Link>
             {" "}
-            <SubnamespaceBadge namespace={child} />
+            <SubnamespaceBadge
+              id={`namespace-details-badge-for-${child.getId()}`}
+              namespace={child}
+            />
           </>
         )}
       >

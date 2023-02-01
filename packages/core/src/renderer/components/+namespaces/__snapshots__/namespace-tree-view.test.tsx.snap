@@ -871,6 +871,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                       <span
                         class="subnamespaceBadge"
                         data-testid="subnamespace-badge-for-service-1-1"
+                        id="namespace-details-badge-for-service-1-1"
                       >
                         S
                       </span>
