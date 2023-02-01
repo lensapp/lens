@@ -10,7 +10,7 @@
     "build:app": "lerna run --stream build:app",
     "build:docs": "lerna run --stream build:docs",
     "clean": "lerna run clean --stream",
-    "clean:node_modules": "lerna clean -y && rm -rf node_modules",
+    "clean:node_modules": "lerna clean -y && rimraf node_modules",
     "dev": "lerna run dev --stream --skip-nx-cache",
     "lint": "lerna run lint --stream",
     "mkdocs:serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
