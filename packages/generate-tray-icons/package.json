@@ -5,14 +5,17 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "swc ./src/index.ts -o ./dist/index.mjs",
+    "build": "swc ./src/index.ts",
     "prepare:dev": "npm run build",
     "prepare": "npm run build"
   },
-  "bin": "./dist/index.mjs",
+  "bin": {
+    "generate-tray-icons": "./dist/index.js"
+  },
   "files": [
     "dist"
   ],
+  "type": "module",
   "private": false,
   "publishConfig": {
     "access": "public",
