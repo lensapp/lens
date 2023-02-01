@@ -24,6 +24,8 @@
   },
   "devDependencies": {
     "adr": "^1.4.3",
-    "lerna": "^6.4.1"
+    "cross-env": "^7.0.3",
+    "lerna": "^6.4.1",
+    "rimraf": "^4.1.2"
   }
 }

@@ -22,7 +22,7 @@
   "scripts": {
     "build": "yarn run webpack --config webpack/extensions.ts",
     "build:docs": "yarn run typedoc",
-    "clean": "rm -rf dist/",
+    "clean": "rimraf dist/",
     "prepare:dev": "yarn run build"
   },
   "dependencies": {
