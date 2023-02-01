@@ -20,9 +20,15 @@ interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
 }
 
+function isNamespaceControlledByHNC(namespace: Namespace) {
+  const hierarchicalNamesaceControllerLabel = "hnc.x-k8s.io/included-namespace=true";
+
+  return namespace.getLabels().find(label => label === hierarchicalNamesaceControllerLabel);
+}
+
 function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }: Dependencies & NamespaceTreeViewProps) {
   const hierarchicalNamespaces = namespaceStore.getByLabel(["hnc.x-k8s.io/included-namespace=true"]);
-  const expandedItems = hierarchicalNamespaces.map(ns => `namespace-${ns.getId()}`);
+  const [expandedItems, setExpandedItems] = React.useState<string[]>(hierarchicalNamespaces.map(ns => `namespace-${ns.getId()}`));
 
   function renderChildren(parent: Namespace) {
     const children = hierarchicalNamespaces.filter(ns =>
@@ -34,6 +40,10 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
         key={`namespace-${child.getId()}`}
         nodeId={`namespace-${child.getId()}`}
         data-testid={`namespace-${child.getId()}`}
+        onIconClick={(evt) =>{
+          toggleNode(`namespace-${child.getId()}`)
+          evt.stopPropagation();
+        }}
         label={(
           <>
             <Link key={child.getId()} to={getDetailsUrl(child.selfLink)}>
@@ -49,7 +59,15 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
     ));
   }
 
-  if (!root.getLabels().find(label => label === "hnc.x-k8s.io/included-namespace=true")) {
+  function toggleNode(id: string) {
+    if (expandedItems.includes(id)) {
+      setExpandedItems(expandedItems.filter(item => item !== id));
+    } else {
+      setExpandedItems([...expandedItems, id]);
+    }
+  }
+
+  if (!isNamespaceControlledByHNC(root)) {
     return null;
   }
 
@@ -67,6 +85,10 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
           nodeId={`namespace-${root.getId()}`}
           label={root.getName()}
           data-testid={`namespace-${root.getId()}`}
+          onIconClick={(evt) => {
+            toggleNode(`namespace-${root.getId()}`);
+            evt.stopPropagation();
+          }}
         >
           {renderChildren(root)}
         </StyledTreeItem>
@@ -77,7 +99,7 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
 
 function MinusSquare() {
   return (
-    <SvgIcon style={{ width: 14, height: 14 }}>
+    <SvgIcon style={{ width: 14, height: 14 }} data-testid="minus-square">
       <path d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z" />
     </SvgIcon>
   );

@@ -1,6 +1,7 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { DiContainer } from "@ogre-tools/injectable";
+import { fireEvent } from "@testing-library/react";
 import React from "react";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -219,11 +220,21 @@ describe("<NamespaceTreeView />", () => {
       expect(result.baseElement).toMatchSnapshot();
     });
 
-    it("expands children items", () => {
+    it("expands children items by default", () => {
       const result = render(<NamespaceTreeView root={levelsDeep} />);
       const deepest = result.getByTestId("namespace-level-deep-child-b-1");
 
       expect(deepest).toHaveAttribute("aria-expanded", "true");
+    });
+
+    it("collapses item by clicking minus button", () => {
+      const result = render(<NamespaceTreeView root={levelsDeep} />);
+      const levelB = result.getByTestId("namespace-level-deep-child-b-1");
+      const minusButton = levelB.querySelector("[data-testid='minus-square']");
+
+      fireEvent.click(minusButton!);
+
+      expect(result.baseElement).toMatchSnapshot();
     });
   });
 });
