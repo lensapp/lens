@@ -14,7 +14,7 @@
     "dist"
   ],
   "scripts": {
-    "clean": "rm -rf dist/",
+    "clean": "rimraf dist/",
     "build": "webpack --config webpack.ts",
     "lint": "exit 0",
     "prepare": "npm run build",

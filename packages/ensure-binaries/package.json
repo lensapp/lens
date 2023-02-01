@@ -5,7 +5,7 @@
   "main": "dist/index.mjs",
   "license": "MIT",
   "scripts": {
-    "clean": "rm -rf dist/",
+    "clean": "rimraf dist/",
     "build": "swc ./src/index.ts -o ./dist/index.mjs",
     "prepare:dev": "npm run build"
   },

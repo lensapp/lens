@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "clean": "rm -rf dist/",
+    "clean": "rimraf dist/",
     "build": "swc ./src/index.ts -o ./dist/index.mjs",
     "create-release-pr": "node ./dist/index.mjs"
   },

@@ -55,7 +55,6 @@ jobs:
 
       - run: yarn run test:unit
         name: Run tests
-        shell: bash
         if: ${{ matrix.type == 'unit' }}
 
       - name: Install integration test dependencies
@@ -76,5 +75,4 @@ jobs:
 
       - run: yarn run test:integration
         name: Run Windows integration tests
-        shell: bash
         if: ${{ runner.os == 'Windows' && matrix.type == 'smoke' }}
