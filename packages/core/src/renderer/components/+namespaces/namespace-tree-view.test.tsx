@@ -236,5 +236,19 @@ describe("<NamespaceTreeView />", () => {
 
       expect(result.baseElement).toMatchSnapshot();
     });
+
+    it("expands item by clicking plus button", () => {
+      const result = render(<NamespaceTreeView root={levelsDeep} />);
+      const levelB = result.getByTestId("namespace-level-deep-child-b-1");
+      const minusButton = levelB.querySelector("[data-testid='minus-square']");
+
+      fireEvent.click(minusButton!);
+
+      const plusButton = levelB.querySelector("[data-testid='plus-square']");
+
+      fireEvent.click(plusButton!);
+
+      expect(result.baseElement).toMatchSnapshot();
+    });
   });
 });
