@@ -69,9 +69,9 @@
         use: "node-loader",
       },
       {
-      test: /\.tsx?$/,
-      loader: "ts-loader",
-      options: {},
+        test: /\.tsx?$/,
+        loader: "ts-loader",
+        options: {},
       },
       cssModulesWebpackRule(),
       ...iconsAndImagesWebpackRules(),

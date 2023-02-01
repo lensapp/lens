@@ -8,26 +8,26 @@ import userCreateResourceTemplatesInjectable from "./user-templates.injectable";
 import lensCreateResourceTemplatesInjectable from "./lens-templates.injectable";
 import type { GroupBase } from "react-select";
 
-export type RawTemplates = [group: string, items: [file: string, contents: string][]];
+export interface RawTemplate {
+  label: string;
+  value: string;
+}
+export interface RawTemplates {
+  label: string;
+  options: RawTemplate[];
+}
 
 const createResourceTemplatesInjectable = getInjectable({
   id: "create-resource-templates",
 
-  instantiate: async (di) => {
-    const lensResourceTemplates = await di.inject(lensCreateResourceTemplatesInjectable);
+  instantiate: (di) => {
+    const lensResourceTemplates = di.inject(lensCreateResourceTemplatesInjectable);
     const userResourceTemplates = di.inject(userCreateResourceTemplatesInjectable);
 
-    return computed((): GroupBase<{ label: string; value: string }>[] => {
-      const res = [
-        ...userResourceTemplates.get(),
-        lensResourceTemplates,
-      ];
-
-      return res.map(([group, items]) => ({
-        label: group,
-        options: items.map(([label, value]) => ({ label, value })),
-      }));
-    });
+    return computed((): GroupBase<RawTemplate>[] => [
+      ...userResourceTemplates.get(),
+      lensResourceTemplates,
+    ]);
   },
 });
 
