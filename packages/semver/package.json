@@ -2,13 +2,14 @@
   "name": "@k8slens/semver",
   "version": "6.4.0-beta.10",
   "description": "CLI over semver package for picking parts of a version",
-  "main": "dist/index.mjs",
   "license": "MIT",
   "private": true,
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "swc ./src/index.ts -o ./dist/index.mjs"
+    "build": "swc ./src/index.ts -d ./dist"
   },
+  "type": "module",
+  "bin": "./dist/index.js",
   "dependencies": {
     "command-line-args": "^5.2.1",
     "semver": "^7.3.8"
