@@ -114,11 +114,13 @@ const StyledTreeItem = withStyles((theme) => ({
   group: {
     marginLeft: 8,
     paddingLeft: 16,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+    borderLeft: `1px dashed var(--borderColor)`,
   },
   label: {
     fontSize: "inherit",
     lineHeight: "1.8",
+    cursor: "default",
+    backgroundColor: "transparent!important",
   },
 }))((props: TreeItemProps) => <TreeItem {...props} />);
 
