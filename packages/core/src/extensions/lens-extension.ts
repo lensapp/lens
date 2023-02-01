@@ -8,7 +8,7 @@ import { action, computed, makeObservable, observable } from "mobx";
 import type { PackageJson } from "type-fest";
 import { disposer } from "../common/utils";
 import type { LensExtensionDependencies } from "./lens-extension-set-dependencies";
-import type { ProtocolHandlerRegistration } from "./common-api/registrations";
+import type { ProtocolHandlerRegistration } from "../common/protocol-handler/registration";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
