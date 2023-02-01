@@ -15,7 +15,7 @@
  import { DefinePlugin } from "webpack";
  import { assetsFolderName, isDevelopment, rendererDir, buildDir, htmlTemplate, publicPath, sassCommonVars } from "./vars";
  import { platform } from "process";
- 
+
  const renderer: webpack.Configuration = {
   target: "electron-renderer",
   name: "lens-app-renderer",
@@ -120,7 +120,7 @@
     ),
   ],
 };
- 
+
  /**
   * Import icons and image files.
   * Read more about asset types: https://webpack.js.org/guides/asset-modules/
@@ -137,7 +137,7 @@
      },
    ];
  }
- 
+
  /**
   * Import custom fonts as URL.
   */
@@ -149,11 +149,11 @@
      },
    ];
  }
- 
+
  export interface CssModulesWebpackRuleOptions {
    styleLoader?: string;
  }
- 
+
  /**
   * Import CSS or SASS styles with modules support (*.module.scss)
   */
@@ -161,7 +161,7 @@
    styleLoader ??= isDevelopment
      ? "style-loader"
      : MiniCssExtractPlugin.loader;
- 
+
    return {
      test: /\.s?css$/,
      use: [
@@ -180,6 +180,5 @@
      ],
    };
  }
- 
+
  export default renderer;
- 
