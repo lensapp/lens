@@ -1,9 +1,10 @@
 .subnamespaceBadge {
-  border-radius: 3px;
-  padding: 0px 6px;
-  background-color: var(--halfGray);
-  color: white;
+  border-radius: 2px;
+  padding: 0px 4px;
+  border: 1px solid cadetblue;
+  color: cadetblue;
   display: inline-block;
   font-size: 0.7rem;
   font-weight: bold;
+  line-height: 1.3;
 }
