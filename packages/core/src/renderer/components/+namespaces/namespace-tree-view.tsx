@@ -129,7 +129,7 @@ function CloseSquare() {
   );
 }
 
-const StyledTreeItem = withStyles((theme) => ({
+const StyledTreeItem = withStyles(() => ({
   iconContainer: {
     "& .close": {
       opacity: 0.3,
