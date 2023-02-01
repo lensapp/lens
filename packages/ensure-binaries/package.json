@@ -9,7 +9,9 @@
     "build": "swc ./src/index.ts -o ./dist/index.mjs",
     "prepare:dev": "npm run build"
   },
-  "bin": "./dist/index.mjs",
+  "bin": {
+    "ensure-binaries": "./dist/index.mjs"
+  },
   "files": [
     "dist"
   ],
