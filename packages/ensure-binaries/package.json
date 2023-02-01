@@ -31,7 +31,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.59",
+    "@swc/cli": "^0.1.60",
     "@swc/core": "^1.3.31",
     "@types/cli-progress": "^3.11.0",
     "@types/gunzip-maybe": "^1.4.0",

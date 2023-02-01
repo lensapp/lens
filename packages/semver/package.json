@@ -15,7 +15,7 @@
     "semver": "^7.3.8"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.59",
+    "@swc/cli": "^0.1.60",
     "@swc/core": "^1.3.31",
     "@types/command-line-args": "^5.2.0",
     "@types/node": "^16.18.11",
