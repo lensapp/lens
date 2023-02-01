@@ -1,8 +1,8 @@
 import { createContainer } from "@ogre-tools/injectable";
 import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registration";
 import { runInAction } from "mobx";
-import { createApp, MainApi } from "@k8slens/core/main";
-import { CommonApi } from "@k8slens/core/common";
+import { createApp, extensionApi as Main } from "@k8slens/core/main";
+import { extensionApi as Common } from "@k8slens/core/common";
 
 const di = createContainer("main");
 const app = createApp({
@@ -36,6 +36,6 @@ export {
 } from "@k8slens/core/main";
 
 export const LensExtensions = {
-  Main: MainApi,
-  Common: CommonApi,
+  Main,
+  Common,
 }

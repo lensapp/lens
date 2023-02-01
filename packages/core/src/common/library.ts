@@ -8,4 +8,4 @@ export { applicationInformationToken } from "./vars/application-information-toke
 export type { ApplicationInformation } from "./vars/application-information-token";
 export { bundledExtensionInjectionToken } from "../extensions/extension-discovery/bundled-extension-token";
 
-export * as CommonApi from "../extensions/common-api";
+export * as extensionApi from "../extensions/common-api";
