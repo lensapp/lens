@@ -95,11 +95,6 @@
     ],
     "afterSign": "build/notarize.js",
     "extraResources": [
-      {
-        "from": "templates/",
-        "to": "./templates/",
-        "filter": "**/*.yaml"
-      },
       "LICENSE"
     ],
     "linux": {

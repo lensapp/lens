@@ -75,6 +75,10 @@ export function webpackLensRenderer(): webpack.Configuration {
             },
           },
         },
+        {
+          test: /\.(yaml|yml)$/,
+          type: "asset/source",
+        },
         cssModulesWebpackRule(),
         ...iconsAndImagesWebpackRules(),
         ...fontsLoaderWebpackRules(),

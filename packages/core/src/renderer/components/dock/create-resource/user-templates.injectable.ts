@@ -7,15 +7,15 @@ import { computed, observable } from "mobx";
 import { delay, getOrInsert, isErrnoException } from "@k8slens/utilities";
 import { readFile } from "fs/promises";
 import { hasCorrectExtension } from "./has-correct-extension";
-import type { RawTemplates } from "./create-resource-templates.injectable";
+import type { RawTemplate, RawTemplates } from "./create-resource-templates.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import watchInjectable from "../../../../common/fs/watch/watch.injectable";
 import getRelativePathInjectable from "../../../../common/path/get-relative-path.injectable";
 import homeDirectoryPathInjectable from "../../../../common/os/home-directory-path.injectable";
 import getDirnameOfPathInjectable from "../../../../common/path/get-dirname.injectable";
-import loggerInjectable from "../../../../common/logger.injectable";
 import parsePathInjectable from "../../../../common/path/parse.injectable";
 import { waitForPath } from "../../../../common/utils/wait-for-path";
+import prefixedLoggerInjectable from "../../../../common/logger/prefixed-logger.injectable";
 
 const userCreateResourceTemplatesInjectable = getInjectable({
   id: "user-create-resource-templates",
@@ -25,23 +25,29 @@ const userCreateResourceTemplatesInjectable = getInjectable({
     const getRelativePath = di.inject(getRelativePathInjectable);
     const homeDirectoryPath = di.inject(homeDirectoryPathInjectable);
     const getDirnameOfPath = di.inject(getDirnameOfPathInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(prefixedLoggerInjectable, "USER-CREATE-RESOURCE-TEMPLATES");
     const parsePath = di.inject(parsePathInjectable);
 
     const userTemplatesFolder = joinPaths(homeDirectoryPath, ".k8slens", "templates");
     const groupTemplates = (templates: Map<string, string>): RawTemplates[] => {
-      const res = new Map<string, [string, string][]>();
+      const res = new Map<string, RawTemplate[]>();
 
-      for (const [filePath, contents] of templates) {
+      for (const [filePath, value] of templates) {
         const rawRelative = getDirnameOfPath(getRelativePath(userTemplatesFolder, filePath));
         const title = rawRelative === "."
           ? "ungrouped"
           : rawRelative;
 
-        getOrInsert(res, title, []).push([parsePath(filePath).name, contents]);
+        getOrInsert(res, title, []).push({
+          label: parsePath(filePath).name,
+          value,
+        });
       }
 
-      return [...res.entries()];
+      return Array.from(res.entries(), ([label, options]) => ({
+        label,
+        options,
+      }));
     };
 
     /**
@@ -51,7 +57,7 @@ const userCreateResourceTemplatesInjectable = getInjectable({
 
     const onAddOrChange = async (filePath: string) => {
       if (!hasCorrectExtension(filePath)) {
-      // ignore non yaml or json files
+        // ignore non yaml or json files
         return;
       }
 
@@ -63,7 +69,7 @@ const userCreateResourceTemplatesInjectable = getInjectable({
         if (isErrnoException(error) && error.code === "ENOENT") {
         // ignore, file disappeared
         } else {
-          logger.warn(`[USER-CREATE-RESOURCE-TEMPLATES]: encountered error while reading ${filePath}`, error);
+          logger.warn(`encountered error while reading ${filePath}`, error);
         }
       }
     };
@@ -77,14 +83,14 @@ const userCreateResourceTemplatesInjectable = getInjectable({
           await waitForPath(userTemplatesFolder);
           break;
         } catch (error) {
-          logger.warn(`[USER-CREATE-RESOURCE-TEMPLATES]: encountered error while waiting for ${userTemplatesFolder} to exist, waiting and trying again`, error);
+          logger.warn(`encountered error while waiting for ${userTemplatesFolder} to exist, waiting and trying again`, error);
           await delay(i * 1000); // exponential backoff in seconds
         }
       }
 
       /**
-     * NOTE: There is technically a race condition here of the form "time-of-check to time-of-use"
-     */
+       * NOTE: There is technically a race condition here of the form "time-of-check to time-of-use"
+       */
       watch(userTemplatesFolder, {
         disableGlobbing: true,
         ignorePermissionErrors: true,
@@ -100,7 +106,7 @@ const userCreateResourceTemplatesInjectable = getInjectable({
         .on("change", onAddOrChange)
         .on("unlink", onUnlink)
         .on("error", error => {
-          logger.warn(`[USER-CREATE-RESOURCE-TEMPLATES]: encountered error while watching files under ${userTemplatesFolder}`, error);
+          logger.warn(`encountered error while watching files under ${userTemplatesFolder}`, error);
         });
     })();
 
