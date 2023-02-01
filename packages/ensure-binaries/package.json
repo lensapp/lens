@@ -2,14 +2,17 @@
   "name": "@k8slens/ensure-binaries",
   "version": "6.4.0-beta.10",
   "description": "CLI for downloading configured versions of the bundled versions of CLIs",
-  "main": "dist/index.mjs",
+  "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "swc ./src/index.ts -o ./dist/index.mjs",
+    "build": "swc ./src/index.ts -o ./dist/index.js",
     "prepare:dev": "npm run build"
   },
-  "bin": "./dist/index.mjs",
+  "bin": {
+    "ensure-binaries": "./dist/index.js"
+  },
+  "type": "module",
   "files": [
     "dist"
   ],
