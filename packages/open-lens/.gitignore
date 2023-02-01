@@ -2,3 +2,5 @@ static/build
 binaries/
 dist/
 node_modules/
+*.mjs
+*.mjs.map

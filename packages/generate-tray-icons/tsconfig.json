@@ -9,7 +9,6 @@
         "types/*"
       ]
     },
-    "types": []
   },
   "include": [
     "src/**/*",

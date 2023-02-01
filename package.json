@@ -18,8 +18,7 @@
     "test:unit": "lerna run --stream test:unit",
     "test:integration": "lerna run --stream test:integration",
     "bump-version": "lerna version --no-git-tag-version --no-push",
-    "precreate-release-pr": "lerna run build --no-progress --scope @k8slens/release-tool",
-    "create-release-pr": "node ./packages/release-tool/dist/index.mjs",
+    "create-release-pr": "node packages/release-tool",
     "postinstall": "lerna bootstrap"
   },
   "devDependencies": {
