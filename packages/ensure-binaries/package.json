@@ -12,6 +12,7 @@
   "bin": {
     "ensure-binaries": "./dist/index.js"
   },
+  "type": "module",
   "files": [
     "dist"
   ],
