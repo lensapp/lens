@@ -1,4 +1,4 @@
-import { alpha, SvgIcon, withStyles } from "@material-ui/core";
+import { SvgIcon, withStyles } from "@material-ui/core";
 import { TreeItem, TreeItemProps, TreeView } from "@material-ui/lab";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
@@ -9,6 +9,7 @@ import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.inject
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import type { NamespaceStore } from "./store";
 import namespaceStoreInjectable from "./store.injectable";
+import { SubnamespaceBadge } from "./subnamespace-badge";
 
 interface NamespaceTreeViewProps {
   root: Namespace;
@@ -22,14 +23,6 @@ interface Dependencies {
 function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }: Dependencies & NamespaceTreeViewProps) {
   const hierarchicalNamespaces = namespaceStore.getByLabel(["hnc.x-k8s.io/included-namespace=true"]);
   const expandedItems = hierarchicalNamespaces.map(ns => `namespace-${ns.getId()}`);
-
-  function renderBadge(namespace: Namespace) {
-    if (!namespace.getAnnotations().find(annotation => annotation.includes("hnc.x-k8s.io/subnamespace-of"))) {
-      return null;
-    }
-
-    return <span data-testid={`subnamespace-badge-for-${namespace.getId()}`}>S</span>;
-  }
 
   function renderChildren(parent: Namespace) {
     const children = hierarchicalNamespaces.filter(ns =>
@@ -46,7 +39,8 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
             <Link key={child.getId()} to={getDetailsUrl(child.selfLink)}>
               {child.getName()}
             </Link>
-            {renderBadge(child)}
+            {" "}
+            <SubnamespaceBadge namespace={child} />
           </>
         )}
       >

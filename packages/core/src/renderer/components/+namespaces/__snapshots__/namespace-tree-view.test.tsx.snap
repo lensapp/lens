@@ -31,7 +31,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
             >
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
+                class="MuiSvgIcon-root"
                 focusable="false"
                 style="width: 14px; height: 14px;"
                 viewBox="0 0 24 24"
@@ -72,7 +72,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                     >
                       <svg
                         aria-hidden="true"
-                        class="MuiSvgIcon-root close MuiSvgIcon-fontSizeInherit"
+                        class="MuiSvgIcon-root close"
                         focusable="false"
                         style="width: 14px; height: 14px;"
                         viewBox="0 0 24 24"
@@ -86,6 +86,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                       class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
                     >
                       level-deep-child-a
+                       
                     </div>
                   </div>
                   <ul
@@ -117,7 +118,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                     >
                       <svg
                         aria-hidden="true"
-                        class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
+                        class="MuiSvgIcon-root"
                         focusable="false"
                         style="width: 14px; height: 14px;"
                         viewBox="0 0 24 24"
@@ -131,6 +132,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                       class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
                     >
                       level-deep-child-b
+                       
                     </div>
                   </div>
                   <ul
@@ -158,7 +160,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                             >
                               <svg
                                 aria-hidden="true"
-                                class="MuiSvgIcon-root close MuiSvgIcon-fontSizeInherit"
+                                class="MuiSvgIcon-root close"
                                 focusable="false"
                                 style="width: 14px; height: 14px;"
                                 viewBox="0 0 24 24"
@@ -172,6 +174,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                               class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
                             >
                               level-deep-subchild-a
+                               
                             </div>
                           </div>
                           <ul
@@ -233,7 +236,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
             >
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
+                class="MuiSvgIcon-root"
                 focusable="false"
                 style="width: 14px; height: 14px;"
                 viewBox="0 0 24 24"
@@ -274,7 +277,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                     >
                       <svg
                         aria-hidden="true"
-                        class="MuiSvgIcon-root close MuiSvgIcon-fontSizeInherit"
+                        class="MuiSvgIcon-root close"
                         focusable="false"
                         style="width: 14px; height: 14px;"
                         viewBox="0 0 24 24"
@@ -288,6 +291,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                       class="MuiTypography-root MuiTreeItem-label Component-label-6 MuiTypography-body1"
                     >
                       team-a
+                       
                     </div>
                   </div>
                   <ul
@@ -318,7 +322,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                     >
                       <svg
                         aria-hidden="true"
-                        class="MuiSvgIcon-root close MuiSvgIcon-fontSizeInherit"
+                        class="MuiSvgIcon-root close"
                         focusable="false"
                         style="width: 14px; height: 14px;"
                         viewBox="0 0 24 24"
@@ -332,6 +336,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                       class="MuiTypography-root MuiTreeItem-label Component-label-6 MuiTypography-body1"
                     >
                       team-b
+                       
                     </div>
                   </div>
                   <ul
@@ -389,7 +394,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
             >
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit"
+                class="MuiSvgIcon-root"
                 focusable="false"
                 style="width: 14px; height: 14px;"
                 viewBox="0 0 24 24"
@@ -430,7 +435,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                     >
                       <svg
                         aria-hidden="true"
-                        class="MuiSvgIcon-root close MuiSvgIcon-fontSizeInherit"
+                        class="MuiSvgIcon-root close"
                         focusable="false"
                         style="width: 14px; height: 14px;"
                         viewBox="0 0 24 24"
@@ -444,7 +449,9 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                       class="MuiTypography-root MuiTreeItem-label Component-label-9 MuiTypography-body1"
                     >
                       service-1
+                       
                       <span
+                        class="subnamespaceBadge"
                         data-testid="subnamespace-badge-for-service-1-1"
                       >
                         S
@@ -479,7 +486,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                     >
                       <svg
                         aria-hidden="true"
-                        class="MuiSvgIcon-root close MuiSvgIcon-fontSizeInherit"
+                        class="MuiSvgIcon-root close"
                         focusable="false"
                         style="width: 14px; height: 14px;"
                         viewBox="0 0 24 24"
@@ -493,6 +500,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                       class="MuiTypography-root MuiTreeItem-label Component-label-9 MuiTypography-body1"
                     >
                       team-c
+                       
                     </div>
                   </div>
                   <ul
@@ -555,7 +563,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders one namespace
             >
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root close MuiSvgIcon-fontSizeInherit"
+                class="MuiSvgIcon-root close"
                 focusable="false"
                 style="width: 14px; height: 14px;"
                 viewBox="0 0 24 24"
