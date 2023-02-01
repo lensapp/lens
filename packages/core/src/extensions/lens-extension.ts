@@ -63,7 +63,7 @@ export class LensExtension<
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
     makeObservable(this);
-    this.id = id;
+    this.id = manifest.storeName || id;
     this.manifest = manifest;
     this.manifestPath = manifestPath;
     this.isBundled = !!isBundled;
@@ -83,10 +83,6 @@ export class LensExtension<
   
   get storeName() {
     return this.manifest.storeName;
-  } 
-
-  get dataLocation() {
-    return this.storeName || this.id; 
   }
 
   get storeLocation() {
@@ -106,7 +102,7 @@ export class LensExtension<
    * folder name.
    */
   async getExtensionFileFolder(): Promise<string> {
-    return this[lensExtensionDependencies].fileSystemProvisionerStore.requestDirectory(this.dataLocation);
+    return this[lensExtensionDependencies].fileSystemProvisionerStore.requestDirectory(this.id);
   }
 
   @action
