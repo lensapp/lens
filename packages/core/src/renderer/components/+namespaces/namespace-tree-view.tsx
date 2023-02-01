@@ -1,5 +1,10 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import { SvgIcon, withStyles } from "@material-ui/core";
-import { TreeItem, TreeItemProps, TreeView } from "@material-ui/lab";
+import type { TreeItemProps } from "@material-ui/lab";
+import { TreeItem, TreeView } from "@material-ui/lab";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -32,7 +37,7 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
 
   function renderChildren(parent: Namespace) {
     const children = hierarchicalNamespaces.filter(ns =>
-      ns.getLabels().find(label => label === `${parent.getName()}.tree.hnc.x-k8s.io/depth=1`)
+      ns.getLabels().find(label => label === `${parent.getName()}.tree.hnc.x-k8s.io/depth=1`),
     );
 
     return children.map(child => (
@@ -41,7 +46,7 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
         nodeId={`namespace-${child.getId()}`}
         data-testid={`namespace-${child.getId()}`}
         onIconClick={(evt) =>{
-          toggleNode(`namespace-${child.getId()}`)
+          toggleNode(`namespace-${child.getId()}`);
           evt.stopPropagation();
         }}
         label={(
@@ -97,7 +102,7 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
         </StyledTreeItem>
       </TreeView>
     </div>
-  )
+  );
 }
 
 function MinusSquare() {
@@ -126,7 +131,7 @@ function CloseSquare() {
 
 const StyledTreeItem = withStyles((theme) => ({
   iconContainer: {
-    '& .close': {
+    "& .close": {
       opacity: 0.3,
     },
   },

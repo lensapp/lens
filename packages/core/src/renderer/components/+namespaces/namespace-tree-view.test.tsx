@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { DiContainer } from "@ogre-tools/injectable";
@@ -35,11 +39,11 @@ function createNamespace(name: string, labels?: Record<string, string>, annotati
       selfLink: `/api/v1/namespaces/${name}`,
       uid: `${name}-1`,
       labels: {
-        ...labels
+        ...labels,
       },
       annotations: {
-        ...annotations
-      }
+        ...annotations,
+      },
     },
   });
 }
@@ -232,7 +236,9 @@ describe("<NamespaceTreeView />", () => {
       const levelB = result.getByTestId("namespace-level-deep-child-b-1");
       const minusButton = levelB.querySelector("[data-testid='minus-square']");
 
-      fireEvent.click(minusButton!);
+      if (minusButton) {
+        fireEvent.click(minusButton);
+      }
 
       expect(result.baseElement).toMatchSnapshot();
     });
@@ -242,11 +248,15 @@ describe("<NamespaceTreeView />", () => {
       const levelB = result.getByTestId("namespace-level-deep-child-b-1");
       const minusButton = levelB.querySelector("[data-testid='minus-square']");
 
-      fireEvent.click(minusButton!);
+      if (minusButton) {
+        fireEvent.click(minusButton);
+      }
 
       const plusButton = levelB.querySelector("[data-testid='plus-square']");
 
-      fireEvent.click(plusButton!);
+      if (plusButton) {
+        fireEvent.click(plusButton);
+      }
 
       expect(result.baseElement).toMatchSnapshot();
     });
