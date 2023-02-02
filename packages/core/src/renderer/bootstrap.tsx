@@ -13,12 +13,12 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
 import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
 import extensionInstallationStateStoreInjectable from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import initRootFrameInjectable from "./frames/root-frame/init-root-frame.injectable";
+import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
 import { Router } from "react-router";
 import historyInjectable from "./navigation/history.injectable";
 import assert from "assert";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
-import rootComponentInjectable from "./bootstrap/root-component.injectable";
-import initializeAppInjectable from "./bootstrap/initialize-app.injectable";
 
 export async function bootstrap(di: DiContainer) {
   const startFrame = di.inject(startFrameInjectable);
@@ -41,8 +41,17 @@ export async function bootstrap(di: DiContainer) {
 
   extensionInstallationStateStore.bindIpcListeners();
 
-  const App = di.inject(rootComponentInjectable);
-  const initializeApp = di.inject(initializeAppInjectable);
+  let App;
+  let initializeApp;
+
+  // TODO: Introduce proper architectural boundaries between root and cluster iframes
+  if (process.isMainFrame) {
+    initializeApp = di.inject(initRootFrameInjectable);
+    App = (await import("./frames/root-frame/root-frame")).RootFrame;
+  } else {
+    initializeApp = di.inject(initClusterFrameInjectable);
+    App = (await import("./frames/cluster-frame/cluster-frame")).ClusterFrame;
+  }
 
   try {
     await initializeApp(() => unmountComponentAtNode(rootElem));

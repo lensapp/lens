@@ -13,20 +13,19 @@ import loggerInjectable from "../../../common/logger.injectable";
 import { delay } from "../../../common/utils";
 import { broadcastMessage } from "../../../common/ipc";
 import { bundledExtensionsLoaded } from "../../../common/ipc/extension-handling";
-import { initializeAppInjectionToken } from "../../bootstrap/tokens";
 
 const initRootFrameInjectable = getInjectable({
   id: "init-root-frame",
-  instantiate: (di) => ({
-    init: async (unmountRoot: () => void) => {
-      const loadExtensions = di.inject(loadExtensionsInjectable);
-      const registerIpcListeners = di.inject(registerIpcListenersInjectable);
-      const ipcRenderer = di.inject(ipcRendererInjectable);
-      const bindProtocolAddRouteHandlers = di.inject(bindProtocolAddRouteHandlersInjectable);
-      const lensProtocolRouterRenderer = di.inject(lensProtocolRouterRendererInjectable);
-      const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
-      const logger = di.inject(loggerInjectable);
+  instantiate: (di) => {
+    const loadExtensions = di.inject(loadExtensionsInjectable);
+    const registerIpcListeners = di.inject(registerIpcListenersInjectable);
+    const ipcRenderer = di.inject(ipcRendererInjectable);
+    const bindProtocolAddRouteHandlers = di.inject(bindProtocolAddRouteHandlersInjectable);
+    const lensProtocolRouterRenderer = di.inject(lensProtocolRouterRendererInjectable);
+    const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
+    const logger = di.inject(loggerInjectable);
 
+    return async (unmountRoot: () => void) => {
       catalogEntityRegistry.init();
 
       try {
@@ -50,7 +49,8 @@ const initRootFrameInjectable = getInjectable({
 
       bindProtocolAddRouteHandlers();
 
-      window.addEventListener("offline", () => broadcastMessage("network:offline"),
+      window.addEventListener("offline", () =>
+        broadcastMessage("network:offline"),
       );
 
       window.addEventListener("online", () => broadcastMessage("network:online"));
@@ -62,10 +62,8 @@ const initRootFrameInjectable = getInjectable({
 
         unmountRoot();
       });
-    },
-    isActive: process.isMainFrame,
-  }),
-  injectionToken: initializeAppInjectionToken,
+    };
+  },
 });
 
 export default initRootFrameInjectable;

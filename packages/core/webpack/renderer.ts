@@ -38,6 +38,7 @@ export const webpackLensRenderer = (): webpack.Configuration => ({
       type: "commonjs2",
     },
     path: path.resolve(buildDir, "library"),
+    asyncChunks: false,
   },
   watchOptions: {
     ignored: /node_modules/, // https://webpack.js.org/configuration/watch/
