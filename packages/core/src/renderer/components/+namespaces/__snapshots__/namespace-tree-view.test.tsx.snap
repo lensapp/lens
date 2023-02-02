@@ -27,7 +27,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
             class="MuiTreeItem-content"
           >
             <div
-              class="MuiTreeItem-iconContainer Component-iconContainer-22"
+              class="MuiTreeItem-iconContainer"
             >
               <svg
                 aria-hidden="true"
@@ -43,13 +43,13 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
               </svg>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-24 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label Component-label-16 MuiTypography-body1"
             >
               levels-deep
             </div>
           </div>
           <ul
-            class="MuiCollapse-root MuiTreeItem-group Component-group-23 MuiCollapse-entered"
+            class="MuiCollapse-root MuiTreeItem-group Component-group-15 MuiCollapse-entered"
             role="group"
             style="min-height: 0px;"
           >
@@ -69,29 +69,34 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
                     class="MuiTreeItem-content"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer Component-iconContainer-22"
+                      class="MuiTreeItem-iconContainer"
                     >
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root close"
-                        focusable="false"
-                        style="width: 14px; height: 14px;"
-                        viewBox="0 0 24 24"
+                      <div
+                        style="opacity: 0.3;"
                       >
-                        <path
-                          d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z"
-                        />
-                      </svg>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          data-testid="minus-square"
+                          focusable="false"
+                          style="width: 14px; height: 14px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                          />
+                        </svg>
+                      </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-24 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label Component-label-16 MuiTypography-body1"
                     >
                       level-deep-child-a
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-23 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group Component-group-15 MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -115,7 +120,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
                     class="MuiTreeItem-content"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer Component-iconContainer-22"
+                      class="MuiTreeItem-iconContainer"
                     >
                       <svg
                         aria-hidden="true"
@@ -131,14 +136,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
                       </svg>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-24 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label Component-label-16 MuiTypography-body1"
                     >
                       level-deep-child-b
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-23"
+                    class="MuiCollapse-root MuiTreeItem-group Component-group-15"
                     role="group"
                     style="min-height: 0px; height: 0px; transition-duration: 300ms;"
                   >
@@ -158,29 +163,34 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
                             class="MuiTreeItem-content"
                           >
                             <div
-                              class="MuiTreeItem-iconContainer Component-iconContainer-22"
+                              class="MuiTreeItem-iconContainer"
                             >
-                              <svg
-                                aria-hidden="true"
-                                class="MuiSvgIcon-root close"
-                                focusable="false"
-                                style="width: 14px; height: 14px;"
-                                viewBox="0 0 24 24"
+                              <div
+                                style="opacity: 0.3;"
                               >
-                                <path
-                                  d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z"
-                                />
-                              </svg>
+                                <svg
+                                  aria-hidden="true"
+                                  class="MuiSvgIcon-root"
+                                  data-testid="minus-square"
+                                  focusable="false"
+                                  style="width: 14px; height: 14px;"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                                  />
+                                </svg>
+                              </div>
                             </div>
                             <div
-                              class="MuiTypography-root MuiTreeItem-label Component-label-24 MuiTypography-body1"
+                              class="MuiTypography-root MuiTreeItem-label Component-label-16 MuiTypography-body1"
                             >
                               level-deep-subchild-a
                                
                             </div>
                           </div>
                           <ul
-                            class="MuiCollapse-root MuiTreeItem-group Component-group-23 MuiCollapse-entered"
+                            class="MuiCollapse-root MuiTreeItem-group Component-group-15 MuiCollapse-entered"
                             role="group"
                             style="min-height: 0px;"
                           >
@@ -234,7 +244,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
             class="MuiTreeItem-content"
           >
             <div
-              class="MuiTreeItem-iconContainer Component-iconContainer-25"
+              class="MuiTreeItem-iconContainer"
             >
               <svg
                 aria-hidden="true"
@@ -250,13 +260,13 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
               </svg>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-27 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
             >
               levels-deep
             </div>
           </div>
           <ul
-            class="MuiCollapse-root MuiTreeItem-group Component-group-26 MuiCollapse-entered"
+            class="MuiCollapse-root MuiTreeItem-group Component-group-17 MuiCollapse-entered"
             role="group"
             style="min-height: 0px;"
           >
@@ -276,29 +286,34 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
                     class="MuiTreeItem-content"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer Component-iconContainer-25"
+                      class="MuiTreeItem-iconContainer"
                     >
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root close"
-                        focusable="false"
-                        style="width: 14px; height: 14px;"
-                        viewBox="0 0 24 24"
+                      <div
+                        style="opacity: 0.3;"
                       >
-                        <path
-                          d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z"
-                        />
-                      </svg>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          data-testid="minus-square"
+                          focusable="false"
+                          style="width: 14px; height: 14px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                          />
+                        </svg>
+                      </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-27 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
                     >
                       level-deep-child-a
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-26 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group Component-group-17 MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -322,7 +337,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
                     class="MuiTreeItem-content"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer Component-iconContainer-25"
+                      class="MuiTreeItem-iconContainer"
                     >
                       <svg
                         aria-hidden="true"
@@ -338,14 +353,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
                       </svg>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-27 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
                     >
                       level-deep-child-b
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-26"
+                    class="MuiCollapse-root MuiTreeItem-group Component-group-17"
                     role="group"
                     style="min-height: 0px; height: 0px; transition-duration: 300ms;"
                   >
@@ -365,29 +380,34 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
                             class="MuiTreeItem-content"
                           >
                             <div
-                              class="MuiTreeItem-iconContainer Component-iconContainer-25"
+                              class="MuiTreeItem-iconContainer"
                             >
-                              <svg
-                                aria-hidden="true"
-                                class="MuiSvgIcon-root close"
-                                focusable="false"
-                                style="width: 14px; height: 14px;"
-                                viewBox="0 0 24 24"
+                              <div
+                                style="opacity: 0.3;"
                               >
-                                <path
-                                  d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z"
-                                />
-                              </svg>
+                                <svg
+                                  aria-hidden="true"
+                                  class="MuiSvgIcon-root"
+                                  data-testid="minus-square"
+                                  focusable="false"
+                                  style="width: 14px; height: 14px;"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                                  />
+                                </svg>
+                              </div>
                             </div>
                             <div
-                              class="MuiTypography-root MuiTreeItem-label Component-label-27 MuiTypography-body1"
+                              class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
                             >
                               level-deep-subchild-a
                                
                             </div>
                           </div>
                           <ul
-                            class="MuiCollapse-root MuiTreeItem-group Component-group-26 MuiCollapse-entered"
+                            class="MuiCollapse-root MuiTreeItem-group Component-group-17 MuiCollapse-entered"
                             role="group"
                             style="min-height: 0px;"
                           >
@@ -441,7 +461,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
             class="MuiTreeItem-content"
           >
             <div
-              class="MuiTreeItem-iconContainer Component-iconContainer-16"
+              class="MuiTreeItem-iconContainer"
             >
               <svg
                 aria-hidden="true"
@@ -457,13 +477,13 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
               </svg>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label Component-label-12 MuiTypography-body1"
             >
               levels-deep
             </div>
           </div>
           <ul
-            class="MuiCollapse-root MuiTreeItem-group Component-group-17 MuiCollapse-entered"
+            class="MuiCollapse-root MuiTreeItem-group Component-group-11 MuiCollapse-entered"
             role="group"
             style="min-height: 0px;"
           >
@@ -483,29 +503,34 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                     class="MuiTreeItem-content"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer Component-iconContainer-16"
+                      class="MuiTreeItem-iconContainer"
                     >
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root close"
-                        focusable="false"
-                        style="width: 14px; height: 14px;"
-                        viewBox="0 0 24 24"
+                      <div
+                        style="opacity: 0.3;"
                       >
-                        <path
-                          d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z"
-                        />
-                      </svg>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          data-testid="minus-square"
+                          focusable="false"
+                          style="width: 14px; height: 14px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                          />
+                        </svg>
+                      </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label Component-label-12 MuiTypography-body1"
                     >
                       level-deep-child-a
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-17 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group Component-group-11 MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -529,7 +554,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                     class="MuiTreeItem-content"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer Component-iconContainer-16"
+                      class="MuiTreeItem-iconContainer"
                     >
                       <svg
                         aria-hidden="true"
@@ -545,14 +570,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                       </svg>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label Component-label-12 MuiTypography-body1"
                     >
                       level-deep-child-b
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-17 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group Component-group-11 MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -572,29 +597,34 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                             class="MuiTreeItem-content"
                           >
                             <div
-                              class="MuiTreeItem-iconContainer Component-iconContainer-16"
+                              class="MuiTreeItem-iconContainer"
                             >
-                              <svg
-                                aria-hidden="true"
-                                class="MuiSvgIcon-root close"
-                                focusable="false"
-                                style="width: 14px; height: 14px;"
-                                viewBox="0 0 24 24"
+                              <div
+                                style="opacity: 0.3;"
                               >
-                                <path
-                                  d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z"
-                                />
-                              </svg>
+                                <svg
+                                  aria-hidden="true"
+                                  class="MuiSvgIcon-root"
+                                  data-testid="minus-square"
+                                  focusable="false"
+                                  style="width: 14px; height: 14px;"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                                  />
+                                </svg>
+                              </div>
                             </div>
                             <div
-                              class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
+                              class="MuiTypography-root MuiTreeItem-label Component-label-12 MuiTypography-body1"
                             >
                               level-deep-subchild-a
                                
                             </div>
                           </div>
                           <ul
-                            class="MuiCollapse-root MuiTreeItem-group Component-group-17 MuiCollapse-entered"
+                            class="MuiCollapse-root MuiTreeItem-group Component-group-11 MuiCollapse-entered"
                             role="group"
                             style="min-height: 0px;"
                           >
@@ -648,7 +678,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
             class="MuiTreeItem-content"
           >
             <div
-              class="MuiTreeItem-iconContainer Component-iconContainer-4"
+              class="MuiTreeItem-iconContainer"
             >
               <svg
                 aria-hidden="true"
@@ -664,13 +694,13 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
               </svg>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-6 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label Component-label-4 MuiTypography-body1"
             >
               acme-org
             </div>
           </div>
           <ul
-            class="MuiCollapse-root MuiTreeItem-group Component-group-5 MuiCollapse-entered"
+            class="MuiCollapse-root MuiTreeItem-group Component-group-3 MuiCollapse-entered"
             role="group"
             style="min-height: 0px;"
           >
@@ -690,29 +720,34 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                     class="MuiTreeItem-content"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer Component-iconContainer-4"
+                      class="MuiTreeItem-iconContainer"
                     >
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root close"
-                        focusable="false"
-                        style="width: 14px; height: 14px;"
-                        viewBox="0 0 24 24"
+                      <div
+                        style="opacity: 0.3;"
                       >
-                        <path
-                          d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z"
-                        />
-                      </svg>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          data-testid="minus-square"
+                          focusable="false"
+                          style="width: 14px; height: 14px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                          />
+                        </svg>
+                      </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-6 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label Component-label-4 MuiTypography-body1"
                     >
                       team-a
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-5 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group Component-group-3 MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -735,29 +770,34 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                     class="MuiTreeItem-content"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer Component-iconContainer-4"
+                      class="MuiTreeItem-iconContainer"
                     >
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root close"
-                        focusable="false"
-                        style="width: 14px; height: 14px;"
-                        viewBox="0 0 24 24"
+                      <div
+                        style="opacity: 0.3;"
                       >
-                        <path
-                          d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z"
-                        />
-                      </svg>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          data-testid="minus-square"
+                          focusable="false"
+                          style="width: 14px; height: 14px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                          />
+                        </svg>
+                      </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-6 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label Component-label-4 MuiTypography-body1"
                     >
                       team-b
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-5 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group Component-group-3 MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -807,7 +847,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
             class="MuiTreeItem-content"
           >
             <div
-              class="MuiTreeItem-iconContainer Component-iconContainer-7"
+              class="MuiTreeItem-iconContainer"
             >
               <svg
                 aria-hidden="true"
@@ -823,13 +863,13 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
               </svg>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-9 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label Component-label-6 MuiTypography-body1"
             >
               org-a
             </div>
           </div>
           <ul
-            class="MuiCollapse-root MuiTreeItem-group Component-group-8 MuiCollapse-entered"
+            class="MuiCollapse-root MuiTreeItem-group Component-group-5 MuiCollapse-entered"
             role="group"
             style="min-height: 0px;"
           >
@@ -849,22 +889,27 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                     class="MuiTreeItem-content"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer Component-iconContainer-7"
+                      class="MuiTreeItem-iconContainer"
                     >
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root close"
-                        focusable="false"
-                        style="width: 14px; height: 14px;"
-                        viewBox="0 0 24 24"
+                      <div
+                        style="opacity: 0.3;"
                       >
-                        <path
-                          d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z"
-                        />
-                      </svg>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          data-testid="minus-square"
+                          focusable="false"
+                          style="width: 14px; height: 14px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                          />
+                        </svg>
+                      </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-9 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label Component-label-6 MuiTypography-body1"
                     >
                       service-1
                        
@@ -878,7 +923,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-8 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group Component-group-5 MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -901,29 +946,34 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                     class="MuiTreeItem-content"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer Component-iconContainer-7"
+                      class="MuiTreeItem-iconContainer"
                     >
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root close"
-                        focusable="false"
-                        style="width: 14px; height: 14px;"
-                        viewBox="0 0 24 24"
+                      <div
+                        style="opacity: 0.3;"
                       >
-                        <path
-                          d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z"
-                        />
-                      </svg>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          data-testid="minus-square"
+                          focusable="false"
+                          style="width: 14px; height: 14px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                          />
+                        </svg>
+                      </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-9 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label Component-label-6 MuiTypography-body1"
                     >
                       team-c
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-8 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group Component-group-5 MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -978,22 +1028,27 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders one namespace
             class="MuiTreeItem-content"
           >
             <div
-              class="MuiTreeItem-iconContainer Component-iconContainer-1"
+              class="MuiTreeItem-iconContainer"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root close"
-                focusable="false"
-                style="width: 14px; height: 14px;"
-                viewBox="0 0 24 24"
+              <div
+                style="opacity: 0.3;"
               >
-                <path
-                  d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z"
-                />
-              </svg>
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  data-testid="minus-square"
+                  focusable="false"
+                  style="width: 14px; height: 14px;"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                  />
+                </svg>
+              </div>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-3 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label Component-label-2 MuiTypography-body1"
             >
               single-root
             </div>
