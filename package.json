@@ -25,8 +25,7 @@
     "test:integration": "lerna run --stream test:integration",
     "bump-version": "lerna version --no-git-tag-version --no-push",
     "precreate-release-pr": "cd packages/release-tool && npm run build",
-    "create-release-pr": "node packages/release-tool/dist/index.js",
-    "postinstall": "lerna bootstrap --ignore open-lens && lerna bootstrap --scope open-lens --include-dependencies"
+    "create-release-pr": "node packages/release-tool/dist/index.js"
   },
   "devDependencies": {
     "adr": "^1.4.3",
