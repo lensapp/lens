@@ -29,7 +29,8 @@ import type { KubeObjectDetailRegistration } from "../renderer/components/kube-o
 import type { ClusterFrameChildComponent } from "../renderer/frames/cluster-frame/cluster-frame-child-component-injection-token";
 import type { EntitySettingRegistration } from "../renderer/components/+entity-settings/extension-registrator.injectable";
 import type { CatalogEntityDetailRegistration } from "../renderer/components/+catalog/entity-details/token";
-import type { ClusterPageMenuRegistration, PageRegistration } from "./common-api/registrations";
+import type { PageRegistration } from "../renderer/routes/page-registration";
+import type { ClusterPageMenuRegistration } from "../renderer/components/layout/cluster-page-menu";
 
 export class LensRendererExtension extends LensExtension<LensRendererExtensionDependencies> {
   globalPages: PageRegistration[] = [];
