@@ -82,6 +82,10 @@
           }
         ],
       },
+      {
+        test: /\.map$/,
+        loader: "ignore-loader"
+      },
       cssModulesWebpackRule(),
       ...iconsAndImagesWebpackRules(),
       ...fontsLoaderWebpackRules(),

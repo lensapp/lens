@@ -45,6 +45,19 @@ const main: webpack.Configuration = ({
         loader: "ts-loader",
         options: {},
        },
+      {
+        test: /\.js$/,
+        enforce: "pre",
+        use: [
+          {
+            loader: "source-map-loader",
+          }
+        ],
+      },
+      {
+        test: /\.map$/,
+        loader: "ignore-loader"
+      },
       ...iconsAndImagesWebpackRules(),
     ],
   },
