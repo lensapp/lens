@@ -936,6 +936,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kubejsonapidatafor" class="md-nav__link">
+    KubeJsonApiDataFor
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#kubejsonapiobjectmetadata" class="md-nav__link">
     KubeJsonApiObjectMetadata
   </a>
@@ -1566,6 +1573,7 @@
 <li><a href="./#jsonpatch">JsonPatch</a></li>
 <li><a href="./#kubeevent">KubeEvent</a></li>
 <li><a href="./#kubejsonapidata">KubeJsonApiData</a></li>
+<li><a href="./#kubejsonapidatafor">KubeJsonApiDataFor</a></li>
 <li><a href="./#kubejsonapiobjectmetadata">KubeJsonApiObjectMetadata</a></li>
 <li><a href="./#kubeobject">KubeObject</a></li>
 <li><a href="./#kubeobjectmetadata">KubeObjectMetadata</a></li>
@@ -1767,6 +1775,9 @@
 <h3 id="kubejsonapidata">KubeJsonApiData<a class="headerlink" href="#kubejsonapidata" title="Permanent link">#</a></h3>
 <p>Re-exports <a href="../../interfaces/Main.K8sApi.KubeJsonApiData/">KubeJsonApiData</a></p>
 <hr />
+<h3 id="kubejsonapidatafor">KubeJsonApiDataFor<a class="headerlink" href="#kubejsonapidatafor" title="Permanent link">#</a></h3>
+<p>Re-exports <a href="../Main.K8sApi/#kubejsonapidatafor">KubeJsonApiDataFor</a></p>
+<hr />
 <h3 id="kubejsonapiobjectmetadata">KubeJsonApiObjectMetadata<a class="headerlink" href="#kubejsonapiobjectmetadata" title="Permanent link">#</a></h3>
 <p>Re-exports <a href="../Main.K8sApi/#kubejsonapiobjectmetadata">KubeJsonApiObjectMetadata</a></p>
 <hr />
@@ -1874,7 +1885,7 @@
 </tr>
 <tr>
 <td align="left"><code>Data</code></td>
-<td align="left">extends <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>> = <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>></td>
+<td align="left">extends <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>Object</code>> = <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>Object</code>></td>
 </tr>
 </tbody>
 </table>
@@ -1950,7 +1961,7 @@
 </tr>
 <tr>
 <td align="left"><code>Data</code></td>
-<td align="left">extends <a href="../../interfaces/Main.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../Main.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Data</code>> = <code>KubeJsonApiDataFor</code>&lt;<code>Object_1</code>></td>
+<td align="left">extends <a href="../../interfaces/Main.K8sApi.KubeJsonApiData/"><code>KubeJsonApiData</code></a>&lt;<a href="../Main.K8sApi/#kubeobjectmetadata"><code>KubeObjectMetadata</code></a>&lt;<code>KubeObjectScope</code>>, <code>unknown</code>, <code>unknown</code>, <code>Data</code>> = <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>Object_1</code>></td>
 </tr>
 </tbody>
 </table>
@@ -2170,7 +2181,7 @@
 </tr>
 <tr>
 <td align="left"><code>Api</code></td>
-<td align="left">extends <code>KubeApi</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>, <code>Api</code>></td>
+<td align="left">extends <code>KubeApi</code>&lt;<code>Object</code>, <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>Object</code>>, <code>Api</code>></td>
 </tr>
 <tr>
 <td align="left"><code>Data</code></td>
@@ -2203,7 +2214,7 @@
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
 <p><code>Api</code></p>
-<p>▸ <strong>forCluster</strong>&lt;<code>Object</code>, <code>Data</code>>(<code>cluster</code>, <code>kubeClass</code>, <code>apiClass?</code>): <code>KubeApi</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>></p>
+<p>▸ <strong>forCluster</strong>&lt;<code>Object</code>, <code>Data</code>>(<code>cluster</code>, <code>kubeClass</code>, <code>apiClass?</code>): <code>KubeApi</code>&lt;<code>Object</code>, <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>Object</code>>></p>
 <h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2242,12 +2253,12 @@
 </tr>
 <tr>
 <td align="left"><code>apiClass?</code></td>
-<td align="left"><code>KubeApiConstructor</code>&lt;<code>Object</code>, <code>KubeApi</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>>></td>
+<td align="left"><code>KubeApiConstructor</code>&lt;<code>Object</code>, <code>KubeApi</code>&lt;<code>Object</code>, <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>Object</code>>>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>KubeApi</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>></p>
+<p><code>KubeApi</code>&lt;<code>Object</code>, <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>Object</code>>></p>
 <hr />
 <h3 id="forremotecluster">forRemoteCluster<a class="headerlink" href="#forremotecluster" title="Permanent link">#</a></h3>
 <p>▸ <strong>forRemoteCluster</strong>&lt;<code>Object</code>, <code>Api</code>, <code>Data</code>>(<code>config</code>, <code>kubeClass</code>, <code>apiClass</code>): <code>Api</code></p>
@@ -2266,7 +2277,7 @@
 </tr>
 <tr>
 <td align="left"><code>Api</code></td>
-<td align="left">extends <code>KubeApi</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>, <code>Api</code>></td>
+<td align="left">extends <code>KubeApi</code>&lt;<code>Object</code>, <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>Object</code>>, <code>Api</code>></td>
 </tr>
 <tr>
 <td align="left"><code>Data</code></td>
@@ -2299,7 +2310,7 @@
 </table>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
 <p><code>Api</code></p>
-<p>▸ <strong>forRemoteCluster</strong>&lt;<code>Object</code>, <code>Data</code>>(<code>config</code>, <code>kubeClass</code>, <code>apiClass?</code>): <code>KubeApi</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>></p>
+<p>▸ <strong>forRemoteCluster</strong>&lt;<code>Object</code>, <code>Data</code>>(<code>config</code>, <code>kubeClass</code>, <code>apiClass?</code>): <code>KubeApi</code>&lt;<code>Object</code>, <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>Object</code>>></p>
 <h4 id="type-parameters_5">Type parameters<a class="headerlink" href="#type-parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -2338,12 +2349,12 @@
 </tr>
 <tr>
 <td align="left"><code>apiClass?</code></td>
-<td align="left"><code>KubeApiConstructor</code>&lt;<code>Object</code>, <code>KubeApi</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>>></td>
+<td align="left"><code>KubeApiConstructor</code>&lt;<code>Object</code>, <code>KubeApi</code>&lt;<code>Object</code>, <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>Object</code>>>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>KubeApi</code>&lt;<code>Object</code>, <code>KubeJsonApiDataFor</code>&lt;<code>Object</code>>></p>
+<p><code>KubeApi</code>&lt;<code>Object</code>, <a href="../Main.K8sApi/#kubejsonapidatafor"><code>KubeJsonApiDataFor</code></a>&lt;<code>Object</code>>></p>
 <hr />
 <h3 id="isallowedresource">isAllowedResource<a class="headerlink" href="#isallowedresource" title="Permanent link">#</a></h3>
 <p>▸ <strong>isAllowedResource</strong>(<code>resources</code>): <code>boolean</code></p>
