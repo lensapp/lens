@@ -156,7 +156,7 @@ try {
       generateImages(checkingForUpdatesImage, size, "trayIconCheckingForUpdates"),
     ];
 
-  let timeout;
+  let timeout: NodeJS.Timeout | undefined;
 
   await Promise.race([
     Promise.all(imageGenerators),
@@ -164,6 +164,8 @@ try {
       reject(new Error("Timeout, generating images took too long"))
     }, tenMinutes)),
   ]);
+
+  clearTimeout(timeout);
 
   console.log("Generated all images");
 } catch (error) {
