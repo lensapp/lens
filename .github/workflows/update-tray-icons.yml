@@ -1,0 +1,29 @@
+name: Update Tray Icons
+on:
+  schedule:
+    - cron: 0 1 * * 1-5 # 1 am every work day
+  workflow_dispatch:
+jobs:
+  update:
+    name: Update icons
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Release from lens
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install deps
+        run: yarn install --frozen-lockfile
+      - name: Build new icons
+        run: yarn build:tray-icons
+        working-directory: packages/open-lens
+      - uses: peter-evans/create-pull-request@v4
+        if: ${{ steps.has.outputs.CHANGES == true }}
+        with:
+          add-paths: build/tray/*
+          commit-message: Update tray icons
+          signoff: true
+          delete-branch: true
+          branch: cron-update-tray-icons
+          title: Update tray icons
+          labels: chore
