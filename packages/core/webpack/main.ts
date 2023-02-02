@@ -6,6 +6,7 @@
 import path from "path";
 import type webpack from "webpack";
 import nodeExternals from "webpack-node-externals";
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import { iconsAndImagesWebpackRules } from "./renderer";
 import { DefinePlugin } from "webpack";
 import { buildDir, isDevelopment } from "./vars";
@@ -54,8 +55,8 @@ const webpackLensMain = (): webpack.Configuration => {
           use: {
             loader: "ts-loader",
             options: {
+              transpileOnly: true,
               compilerOptions: {
-                declaration: true,
                 sourceMap: false,
               },
             },
@@ -68,6 +69,16 @@ const webpackLensMain = (): webpack.Configuration => {
       new DefinePlugin({
         CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
         CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
+      }),
+      new ForkTsCheckerPlugin({
+        typescript: {
+          mode: "write-dts",
+          configOverwrite: {
+            compilerOptions: {
+              declaration: true,
+            },
+          },
+        },
       }),
     ],
   };

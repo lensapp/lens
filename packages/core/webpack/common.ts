@@ -5,6 +5,7 @@
 
 import type webpack from "webpack";
 import path from "path";
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import webpackLensMain from "./main";
 import { buildDir } from "./vars";
 
@@ -27,7 +28,9 @@ const webpackLensCommon = (): webpack.Configuration => {
     optimization: {
       minimize: false,
     },
-    plugins: [],
+    plugins: [
+      new ForkTsCheckerPlugin({}),
+    ],
   };
 };
 

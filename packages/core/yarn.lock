@@ -4496,7 +4496,7 @@ cosmiconfig@^6.0.0:
     path-type "^4.0.0"
     yaml "^1.7.2"
 
-cosmiconfig@^7.0.0:
+cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-7.1.0.tgz#1443b9afa596b670082ea46cbd8f6a62b84635f6"
   integrity sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==
@@ -6228,6 +6228,24 @@ forever-agent@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
+
+fork-ts-checker-webpack-plugin@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/fork-ts-checker-webpack-plugin/-/fork-ts-checker-webpack-plugin-7.3.0.tgz#a9c984a018493962360d7c7e77a67b44a2d5f3aa"
+  integrity sha512-IN+XTzusCjR5VgntYFgxbxVx3WraPRnKehBFrf00cMSrtUuW9MsG9dhL6MWpY6MkjC3wVwoujfCDgZZCQwbswA==
+  dependencies:
+    "@babel/code-frame" "^7.16.7"
+    chalk "^4.1.2"
+    chokidar "^3.5.3"
+    cosmiconfig "^7.0.1"
+    deepmerge "^4.2.2"
+    fs-extra "^10.0.0"
+    memfs "^3.4.1"
+    minimatch "^3.0.4"
+    node-abort-controller "^3.0.1"
+    schema-utils "^3.1.1"
+    semver "^7.3.5"
+    tapable "^2.2.1"
 
 form-data@^2.5.0:
   version "2.5.1"
@@ -9280,6 +9298,11 @@ node-abi@^3.3.0:
   dependencies:
     semver "^7.3.5"
 
+node-abort-controller@^3.0.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/node-abort-controller/-/node-abort-controller-3.1.1.tgz#a94377e964a9a37ac3976d848cb5c765833b8548"
+  integrity sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==
+
 node-addon-api@^1.6.3:
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.7.2.tgz#3df30b95720b53c24e59948b49532b662444f54d"
@@ -12014,7 +12037,7 @@ tailwindcss@^3.2.4:
     quick-lru "^5.1.1"
     resolve "^1.22.1"
 
-tapable@^2.1.1, tapable@^2.2.0:
+tapable@^2.1.1, tapable@^2.2.0, tapable@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.2.1.tgz#1967a73ef4060a82f12ab96af86d52fdb76eeca0"
   integrity sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==

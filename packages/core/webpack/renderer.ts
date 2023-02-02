@@ -7,6 +7,7 @@ import path from "path";
 import type webpack from "webpack";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CircularDependencyPlugin from "circular-dependency-plugin";
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import type { WebpackPluginInstance } from "webpack";
 import { optimize, DefinePlugin } from "webpack";
 import nodeExternals from "webpack-node-externals";
@@ -67,6 +68,7 @@ export function webpackLensRenderer(): webpack.Configuration {
           use: {
             loader: "ts-loader",
             options: {
+              transpileOnly: true,
               compilerOptions: {
                 declaration: true,
                 sourceMap: false,
@@ -85,6 +87,7 @@ export function webpackLensRenderer(): webpack.Configuration {
         CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
         CONTEXT_MATCHER_FOR_FEATURES: `/\\/(renderer|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
       }),
+      new ForkTsCheckerPlugin({}),
 
       new CircularDependencyPlugin({
         cwd: __dirname,
