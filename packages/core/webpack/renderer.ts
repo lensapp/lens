@@ -14,97 +14,104 @@ import nodeExternals from "webpack-node-externals";
 import { isDevelopment, buildDir, sassCommonVars } from "./vars";
 import { platform } from "process";
 
-export function webpackLensRenderer(): webpack.Configuration {
-  return {
-    target: "electron-renderer",
-    name: "lens-app-renderer",
-    mode: isDevelopment ? "development" : "production",
-    // https://webpack.js.org/configuration/devtool/ (see description of each option)
-    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
-    cache: isDevelopment ? { type: "filesystem" } : false,
-    entry: {
-      renderer: path.resolve(__dirname, "..", "src", "renderer", "library.ts"),
+export const webpackLensRenderer = (): webpack.Configuration => ({
+  target: "electron-renderer",
+  name: "lens-app-renderer",
+  mode: isDevelopment ? "development" : "production",
+  // https://webpack.js.org/configuration/devtool/ (see description of each option)
+  devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
+  cache: isDevelopment ? { type: "filesystem" } : false,
+  entry: {
+    common: {
+      import: path.resolve(__dirname, "..", "static", "build", "library", "common.js"),
     },
-    output: {
-      library: {
-        type: "commonjs2",
-      },
-      path: path.resolve(buildDir, "library"),
+    renderer: {
+      import: path.resolve(__dirname, "..", "src", "renderer", "library.ts"),
+      dependOn: "common",
     },
-    watchOptions: {
-      ignored: /node_modules/, // https://webpack.js.org/configuration/watch/
+  },
+  dependencies: [
+    "lens-app-common",
+  ],
+  output: {
+    library: {
+      type: "commonjs2",
     },
-    ignoreWarnings: [
-      /Critical dependency: the request of a dependency is an expression/,
-      /require.extensions is not supported by webpack./, // handlebars
-      /\[ReactRefreshPlugin] .*?HMR.*? is not enabled/, // enabled in webpack.dev-server
+    path: path.resolve(buildDir, "library"),
+  },
+  watchOptions: {
+    ignored: /node_modules/, // https://webpack.js.org/configuration/watch/
+  },
+  ignoreWarnings: [
+    /Critical dependency: the request of a dependency is an expression/,
+    /require.extensions is not supported by webpack./,
+    /\[ReactRefreshPlugin] .*?HMR.*? is not enabled/, // enabled in webpack.dev-server
+  ],
+  resolve: {
+    extensions: [
+      ".js", ".jsx", ".json",
+      ".ts", ".tsx",
     ],
-    resolve: {
-      extensions: [
-        ".js", ".jsx", ".json",
-        ".ts", ".tsx",
-      ],
-    },
-    externals: [
-      nodeExternals(),
-    ],
-    optimization: {
-      minimize: false,
-    },
-    module: {
-      parser: {
-        javascript: {
-          commonjsMagicComments: true,
-        },
+  },
+  externals: [
+    nodeExternals(),
+  ],
+  optimization: {
+    minimize: false,
+  },
+  module: {
+    parser: {
+      javascript: {
+        commonjsMagicComments: true,
       },
-      rules: [
-        {
-          test: /\.node$/,
-          use: "node-loader",
-        },
-        {
-          test: /\.tsx?$/,
-          exclude: /node_modules/,
-          use: {
-            loader: "ts-loader",
-            options: {
-              transpileOnly: true,
-              compilerOptions: {
-                declaration: true,
-                sourceMap: false,
-              },
+    },
+    rules: [
+      {
+        test: /\.node$/,
+        use: "node-loader",
+      },
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "ts-loader",
+          options: {
+            transpileOnly: true,
+            compilerOptions: {
+              declaration: true,
+              sourceMap: false,
             },
           },
         },
-        cssModulesWebpackRule(),
-        ...iconsAndImagesWebpackRules(),
-        ...fontsLoaderWebpackRules(),
-      ],
-    },
-
-    plugins: [
-      new DefinePlugin({
-        CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
-        CONTEXT_MATCHER_FOR_FEATURES: `/\\/(renderer|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
-      }),
-      new ForkTsCheckerPlugin({}),
-
-      new CircularDependencyPlugin({
-        cwd: __dirname,
-        exclude: /node_modules/,
-        failOnError: true,
-      }) as unknown as WebpackPluginInstance,
-
-      new MiniCssExtractPlugin({
-        filename: "[name].css",
-      }),
-
-      new optimize.LimitChunkCountPlugin({
-        maxChunks: 1,
-      }),
+      },
+      cssModulesWebpackRule(),
+      ...iconsAndImagesWebpackRules(),
+      ...fontsLoaderWebpackRules(),
     ],
-  };
-}
+  },
+
+  plugins: [
+    new DefinePlugin({
+      CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
+      CONTEXT_MATCHER_FOR_FEATURES: `/\\/(renderer|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
+    }),
+    new ForkTsCheckerPlugin({}),
+
+    new CircularDependencyPlugin({
+      cwd: __dirname,
+      exclude: /node_modules/,
+      failOnError: true,
+    }) as unknown as WebpackPluginInstance,
+
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+    }),
+
+    new optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
+    }),
+  ],
+});
 
 /**
  * Import icons and image files.

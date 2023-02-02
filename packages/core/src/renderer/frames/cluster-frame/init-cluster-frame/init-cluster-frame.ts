@@ -9,9 +9,10 @@ import { when } from "mobx";
 import { requestSetClusterFrameId } from "../../../ipc";
 import type { EmitAppEvent } from "../../../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../../../common/logger";
+import assert from "assert";
 
 interface Dependencies {
-  hostedCluster: Cluster;
+  hostedCluster: Cluster | undefined;
   loadExtensions: () => void;
   catalogEntityRegistry: CatalogEntityRegistry;
   frameRoutingId: number;
@@ -32,6 +33,8 @@ export const initClusterFrame = ({
   showErrorNotification,
 }: Dependencies) =>
   async (unmountRoot: () => void) => {
+    assert(hostedCluster, "This can only be injected within a cluster frame");
+
     // TODO: Make catalogEntityRegistry already initialized when passed as dependency
     catalogEntityRegistry.init();
 

@@ -11,7 +11,7 @@
  import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
  import CircularDependencyPlugin from "circular-dependency-plugin";
  import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
- import type { WebpackPluginInstance } from "webpack";
+ import { WebpackPluginInstance } from "webpack";
  import { DefinePlugin } from "webpack";
  import { assetsFolderName, isDevelopment, rendererDir, buildDir, htmlTemplate, publicPath, sassCommonVars } from "./vars";
  import { platform } from "process";
@@ -42,6 +42,7 @@
     /Critical dependency: the request of a dependency is an expression/,
     /require.extensions is not supported by webpack./, // handlebars
     /\[ReactRefreshPlugin] .*?HMR.*? is not enabled/, // enabled in webpack.dev-server
+    /Failed to parse source map/, // from the source-map-loader
   ],
   resolve: {
     extensions: [
@@ -68,9 +69,18 @@
         use: "node-loader",
       },
       {
-      test: /\.tsx?$/,
-      loader: "ts-loader",
-      options: {},
+        test: /\.tsx?$/,
+        loader: "ts-loader",
+        options: {},
+      },
+      {
+        test: /\.js$/,
+        enforce: "pre",
+        use: [
+          {
+            loader: "source-map-loader",
+          }
+        ],
       },
       cssModulesWebpackRule(),
       ...iconsAndImagesWebpackRules(),

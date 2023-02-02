@@ -12,76 +12,81 @@ import { DefinePlugin } from "webpack";
 import { buildDir, isDevelopment } from "./vars";
 import { platform } from "process";
 
-const webpackLensMain = (): webpack.Configuration => {
-  return {
-    name: "lens-app-main",
-    context: __dirname,
-    target: "electron-main",
-    mode: isDevelopment ? "development" : "production",
-    devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
-    cache: isDevelopment ? { type: "filesystem" } : false,
-    entry: {
-      main: path.resolve(__dirname, "..", "src", "main", "library.ts"),
+export const webpackLensMain = (): webpack.Configuration => ({
+  name: "lens-app-main",
+  context: __dirname,
+  target: "electron-main",
+  mode: isDevelopment ? "development" : "production",
+  devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
+  cache: isDevelopment ? { type: "filesystem" } : false,
+  entry: {
+    common: {
+      import: path.resolve(__dirname, "..", "static", "build", "library", "common.js"),
     },
-    output: {
-      library: {
-        type: "commonjs2",
+    main: {
+      import: path.resolve(__dirname, "..", "src", "main", "library.ts"),
+      dependOn: "common",
+    },
+  },
+  dependencies: [
+    "lens-app-common",
+  ],
+  output: {
+    library: {
+      type: "commonjs2",
+    },
+    path: path.resolve(buildDir, "library"),
+  },
+  optimization: {
+    minimize: false,
+  },
+  resolve: {
+    extensions: [".json", ".js", ".ts"],
+  },
+  externals: [
+    nodeExternals(),
+  ],
+  module: {
+    parser: {
+      javascript: {
+        commonjsMagicComments: true,
       },
-      path: path.resolve(buildDir, "library"),
     },
-    optimization: {
-      minimize: false,
-    },
-    resolve: {
-      extensions: [".json", ".js", ".ts"],
-    },
-    externals: [
-      nodeExternals(),
-    ],
-    module: {
-      parser: {
-        javascript: {
-          commonjsMagicComments: true,
-        },
+    rules: [
+      {
+        test: /\.node$/,
+        use: "node-loader",
       },
-      rules: [
-        {
-          test: /\.node$/,
-          use: "node-loader",
-        },
-        {
-          test: /\.ts$/,
-          exclude: /node_modules/,
-          use: {
-            loader: "ts-loader",
-            options: {
-              transpileOnly: true,
-              compilerOptions: {
-                sourceMap: false,
-              },
-            },
-          },
-        },
-        ...iconsAndImagesWebpackRules(),
-      ],
-    },
-    plugins: [
-      new DefinePlugin({
-        CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
-        CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
-      }),
-      new ForkTsCheckerPlugin({
-        typescript: {
-          mode: "write-dts",
-          configOverwrite: {
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "ts-loader",
+          options: {
+            transpileOnly: true,
             compilerOptions: {
-              declaration: true,
+              sourceMap: false,
             },
           },
         },
-      }),
+      },
+      ...iconsAndImagesWebpackRules(),
     ],
-  };
-};
-
-export default webpackLensMain;
+  },
+  plugins: [
+    new DefinePlugin({
+      CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
+      CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
+    }),
+    new ForkTsCheckerPlugin({
+      typescript: {
+        mode: "write-dts",
+        configOverwrite: {
+          compilerOptions: {
+            declaration: true,
+          },
+        },
+      },
+    }),
+  ],
+});

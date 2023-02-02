@@ -44,7 +44,8 @@
     "src/renderer/template.html",
     "templates/**/*",
     "types/*",
-    "tsconfig.json"
+    "tsconfig.json",
+    "src/renderer/**/*.svg"
   ],
   "copyright": "© 2023 OpenLens Authors",
   "license": "MIT",

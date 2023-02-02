@@ -6,32 +6,27 @@
 import type webpack from "webpack";
 import path from "path";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
-import webpackLensMain from "./main";
+import { webpackLensMain } from "./main";
 import { buildDir } from "./vars";
 
-const webpackLensCommon = (): webpack.Configuration => {
-  const mainConfig = webpackLensMain();
-
-  return {
-    ...mainConfig,
-    name: "lens-app-common",
-    entry: {
-      common: path.resolve(__dirname, "..", "src", "common", "library.ts"),
+export const webpackLensCommon = (): webpack.Configuration => ({
+  ...webpackLensMain(),
+  name: "lens-app-common",
+  entry: {
+    common: path.resolve(__dirname, "..", "src", "common", "library.ts"),
+  },
+  dependencies: [],
+  output: {
+    publicPath: "",
+    library: {
+      type: "commonjs2",
     },
-    output: {
-      publicPath: "",
-      library: {
-        type: "commonjs2",
-      },
-      path: path.resolve(buildDir, "library"),
-    },
-    optimization: {
-      minimize: false,
-    },
-    plugins: [
-      new ForkTsCheckerPlugin({}),
-    ],
-  };
-};
-
-export default webpackLensCommon;
+    path: path.resolve(buildDir, "library"),
+  },
+  optimization: {
+    minimize: false,
+  },
+  plugins: [
+    new ForkTsCheckerPlugin({}),
+  ],
+});

@@ -258,6 +258,7 @@
     "react-select": "^5.7.0",
     "rimraf": "^4.1.2",
     "run-script-os": "^1.1.6",
+    "source-map-loader": "^4.0.1",
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.2.4",
     "ts-loader": "^9.4.2",
