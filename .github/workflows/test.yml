@@ -75,4 +75,5 @@ jobs:
 
       - run: yarn run test:integration
         name: Run Windows integration tests
+        shell: powershell
         if: ${{ runner.os == 'Windows' && matrix.type == 'smoke' }}
