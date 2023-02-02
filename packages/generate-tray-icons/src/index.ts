@@ -69,12 +69,18 @@ const generateImage = (image: Buffer, size: number, namePrefix: string) => (
     .toFile(path.join(outputFolder, `${namePrefix}.png`))
 );
 
-const generateImages = (image: Buffer, size: number, name: string) => Promise.all([
-  generateImage(image, size, name),
-  generateImage(image, size * 2, `${name}@2x`),
-  generateImage(image, size * 3, `${name}@3x`),
-  generateImage(image, size * 4, `${name}@4x`),
-]);
+const generateImages = async (image: Buffer, size: number, name: string) => {
+  console.log(`START: Generating ${name}`);
+
+  await Promise.all([
+    generateImage(image, size, name),
+    generateImage(image, size * 2, `${name}@2x`),
+    generateImage(image, size * 3, `${name}@3x`),
+    generateImage(image, size * 4, `${name}@4x`),
+  ]);
+
+  console.log(`  END: Generating ${name}`);
+};
 
 async function generateImageWithSvg(baseImage: Buffer, system: TargetSystems, filePath: string) {
   const svgFile = await getIconImage(system, filePath);
@@ -120,6 +126,8 @@ async function getIconImage(system: TargetSystems, filePath: string) {
   return Buffer.from(root.outerHTML);
 }
 
+const tenMinutes = 10 * 60 * 1000;
+
 try {
   console.log("Generating tray icon pngs");
   await mkdir(outputFolder, {
@@ -135,17 +143,26 @@ try {
   const checkingForUpdatesTemplateImage = await generateImageWithSvg(baseIconTemplateImage, "macos", spinnerFile);
   const checkingForUpdatesImage = await generateImageWithSvg(baseIconImage, "windows-or-linux", spinnerFile);
 
-  await Promise.all([
-    // Templates are for macOS only
-    generateImages(baseIconTemplateImage, size, "trayIconTemplate"),
-    generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate"),
-    generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate"),
-    generateImages(checkingForUpdatesTemplateImage, size, "trayIconCheckingForUpdatesTemplate"),
+  const imageGenerators = process.platform === "darwin"
+    ? [
+      generateImages(baseIconTemplateImage, size, "trayIconTemplate"),
+      generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate"),
+      generateImages(updateAvailableTemplateImage, size, "trayIconUpdateAvailableTemplate"),
+      generateImages(checkingForUpdatesTemplateImage, size, "trayIconCheckingForUpdatesTemplate"),
+    ]
+    : [
+      generateImages(baseIconImage, size, "trayIcon"),
+      generateImages(updateAvailableImage, size, "trayIconUpdateAvailable"),
+      generateImages(checkingForUpdatesImage, size, "trayIconCheckingForUpdates"),
+    ];
 
-    // Non-templates are for windows and linux
-    generateImages(baseIconImage, size, "trayIcon"),
-    generateImages(updateAvailableImage, size, "trayIconUpdateAvailable"),
-    generateImages(checkingForUpdatesImage, size, "trayIconCheckingForUpdates"),
+  let timeout;
+
+  await Promise.race([
+    Promise.all(imageGenerators),
+    new Promise((resolve, reject) => timeout = setTimeout(() => {
+      reject(new Error("Timeout, generating images took too long"))
+    }, tenMinutes)),
   ]);
 
   console.log("Generated all images");
