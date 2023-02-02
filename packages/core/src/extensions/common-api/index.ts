@@ -3,31 +3,21 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-// APIs
-import { App } from "./app";
-import * as EventBus from "./event-bus";
-import * as Store from "./stores";
-import { Util } from "./utils";
-import * as Catalog from "./catalog";
-import * as Types from "./types";
-import * as Proxy from "./proxy";
 import loggerInjectable from "../../common/logger.injectable";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
-import type { Logger } from "../../common/logger";
-import type { LensExtension, LensExtensionManifest } from "../lens-extension";
 
-const logger = asLegacyGlobalForExtensionApi(loggerInjectable);
+// APIs
+export { App } from "./app";
+export * as EventBus from "./event-bus";
+export * as Store from "./stores";
+export * as Util from "./utils";
+export * as Catalog from "./catalog";
+export * as Types from "./types";
+export * as Proxy from "./proxy";
 
-export {
-  App,
-  EventBus,
-  Catalog,
-  Store,
-  Types,
-  Util,
-  logger,
-  Proxy,
-  Logger,
-  LensExtension,
-  LensExtensionManifest,
-};
+export type { Logger } from "../../common/logger";
+export type { LensExtension, LensExtensionManifest } from "../lens-extension";
+export type { InstalledExtension } from "../extension-discovery/extension-discovery";
+export type { PackageJson } from "type-fest";
+
+export const logger = asLegacyGlobalForExtensionApi(loggerInjectable);

@@ -108,13 +108,16 @@ export type { CreateKubeApiForLocalClusterConfig as ILocalKubeApiConfig } from "
 export {
   KubeObject,
   KubeStatus,
-  type OwnerReference,
-  type KubeObjectMetadata,
-  type NamespaceScopedMetadata,
-  type ClusterScopedMetadata,
-  type BaseKubeJsonApiObjectMetadata,
-  type KubeJsonApiObjectMetadata,
-  type KubeStatusData,
+} from "../../common/k8s-api/kube-object";
+export type {
+  OwnerReference,
+  KubeObjectMetadata,
+  NamespaceScopedMetadata,
+  ClusterScopedMetadata,
+  BaseKubeJsonApiObjectMetadata,
+  KubeJsonApiObjectMetadata,
+  KubeStatusData,
+  KubeJsonApiDataFor,
 } from "../../common/k8s-api/kube-object";
 
 export type {
@@ -177,11 +180,11 @@ export abstract class KubeObjectStore<
   }
 }
 
-export {
-  type JsonPatch,
-  type KubeObjectStoreLoadAllParams,
-  type KubeObjectStoreLoadingParams,
-  type KubeObjectStoreSubscribeParams,
+export type {
+  JsonPatch,
+  KubeObjectStoreLoadAllParams,
+  KubeObjectStoreLoadingParams,
+  KubeObjectStoreSubscribeParams,
 } from "../../common/k8s-api/kube-object.store";
 
 /**
