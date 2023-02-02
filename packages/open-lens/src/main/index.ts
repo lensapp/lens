@@ -1,8 +1,7 @@
 import { createContainer } from "@ogre-tools/injectable";
 import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registration";
 import { runInAction } from "mobx";
-import { createApp, extensionApi as Main } from "@k8slens/core/main";
-import { extensionApi as Common } from "@k8slens/core/common";
+import { createApp, extensionApi as Main, commonExtensionApi as Common } from "@k8slens/core/main";
 
 const di = createContainer("main");
 const app = createApp({

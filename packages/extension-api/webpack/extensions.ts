@@ -35,7 +35,6 @@ export default function generateExtensionTypes(): webpack.Configuration {
     ],
     stats: "errors-warnings",
     externals: [
-      "@k8slens/core/common",
       "@k8slens/core/main",
       "@k8slens/core/renderer",
     ],
