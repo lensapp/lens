@@ -36,13 +36,8 @@ async function getMainWindow(app: ElectronApplication, timeout = 50_000): Promis
     app.on("window", onWindow);
     cleanup.push(() => app.off("window", onWindow));
 
-    const onClose = () => {
-      cleanup();
-      reject(new Error("App has unnexpectedly closed"));
-    };
-
-    app.on("close", onClose);
-    cleanup.push(() => app.off("close", onClose));
+    app.on("close", cleanup);
+    cleanup.push(() => app.off("close", cleanup));
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const stdout = app.process().stdout!;
@@ -86,7 +81,7 @@ async function attemptStart() {
       app,
       window,
       cleanup: async () => {
-        await app.close();
+        app.process().kill();
         await remove(CICD).catch(noop);
       },
     };

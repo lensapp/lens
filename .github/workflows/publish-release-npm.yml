@@ -38,7 +38,7 @@ jobs:
       - name: Publish NPM packages
         run: |
           npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-          DIST_TAG=$(cat lerna.json | jq '.version' --raw-output | xargs node ./packages/semver/dist/index.mjs --prerelease 0)
+          DIST_TAG=$(cat lerna.json | jq '.version' --raw-output | xargs npm exec -- @k8slens/semver --prerelease 0)
           yarn lerna \
             publish from-package \
             --no-push \

@@ -10,7 +10,7 @@
     "build:app": "lerna run --stream build:app",
     "build:docs": "lerna run --stream build:docs",
     "clean": "lerna run clean --stream",
-    "clean:node_modules": "lerna clean -y && rm -rf node_modules",
+    "clean:node_modules": "lerna clean -y && rimraf node_modules",
     "dev": "lerna run dev --stream --skip-nx-cache",
     "lint": "lerna run lint --stream",
     "mkdocs:serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
@@ -18,11 +18,11 @@
     "test:unit": "lerna run --stream test:unit",
     "test:integration": "lerna run --stream test:integration",
     "bump-version": "lerna version --no-git-tag-version --no-push",
-    "precreate-release-pr": "lerna run build --no-progress --scope @k8slens/release-tool",
-    "create-release-pr": "node ./packages/release-tool/dist/index.mjs",
+    "create-release-pr": "node packages/release-tool",
     "postinstall": "lerna bootstrap"
   },
   "devDependencies": {
+    "@k8slens/semver": "./packages/semver",
     "adr": "^1.4.3",
     "cross-env": "^7.0.3",
     "lerna": "^6.4.1",

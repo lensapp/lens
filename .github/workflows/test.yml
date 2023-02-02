@@ -48,7 +48,7 @@ jobs:
       - uses: nick-fields/retry@v2
         name: Install dependencies
         with:
-          timeout_minutes: 10
+          timeout_minutes: 20
           max_attempts: 3
           retry_on: error
           command: yarn install --frozen-lockfile
