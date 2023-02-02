@@ -5,31 +5,16 @@
 
 import path from "path";
 import type webpack from "webpack";
-import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
-import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
 import CircularDependencyPlugin from "circular-dependency-plugin";
-import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import type { WebpackPluginInstance } from "webpack";
-import { DefinePlugin } from "webpack";
-import { getTypescriptLoader } from "./get-typescript-loader";
-import { assetsFolderName, isDevelopment, rendererDir, buildDir, appName, htmlTemplate, publicPath, sassCommonVars, additionalExternals } from "./vars";
+import { optimize, DefinePlugin } from "webpack";
+import nodeExternals from "webpack-node-externals";
+import { isDevelopment, buildDir, sassCommonVars } from "./vars";
 import { platform } from "process";
 
-export function webpackLensRenderer({ showVars = true } = {}): webpack.Configuration {
-  if (showVars) {
-    console.info("WEBPACK:renderer", {
-      assetsFolderName,
-      isDevelopment,
-      rendererDir,
-      buildDir,
-      appName,
-      htmlTemplate,
-      publicPath,
-    });
-  }
-
+export function webpackLensRenderer(): webpack.Configuration {
   return {
     target: "electron-renderer",
     name: "lens-app-renderer",
@@ -38,16 +23,13 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
     cache: isDevelopment ? { type: "filesystem" } : false,
     entry: {
-      [appName]: path.resolve(rendererDir, "index.ts"),
+      renderer: path.resolve(__dirname, "..", "src", "renderer", "library.ts"),
     },
     output: {
-      libraryTarget: "global",
-      globalObject: "this",
-      publicPath,
-      path: buildDir,
-      filename: "[name].js",
-      chunkFilename: "chunks/[name].js",
-      assetModuleFilename: `${assetsFolderName}/[name][ext][query]`,
+      library: {
+        type: "commonjs2",
+      },
+      path: path.resolve(buildDir, "library"),
     },
     watchOptions: {
       ignored: /node_modules/, // https://webpack.js.org/configuration/watch/
@@ -64,10 +46,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       ],
     },
     externals: [
-      {
-        "win-ca": "commonjs win-ca",
-      },
-      ...additionalExternals,
+      nodeExternals(),
     ],
     optimization: {
       minimize: false,
@@ -83,11 +62,20 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
           test: /\.node$/,
           use: "node-loader",
         },
-        getTypescriptLoader({
-          getCustomTransformers: () => ({
-            before: isDevelopment ? [require("react-refresh-typescript")()] : [],
-          }),
-        }),
+        {
+          test: /\.tsx?$/,
+          exclude: /node_modules/,
+          use: {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+              compilerOptions: {
+                declaration: true,
+                sourceMap: false,
+              },
+            },
+          },
+        },
         cssModulesWebpackRule(),
         ...iconsAndImagesWebpackRules(),
         ...fontsLoaderWebpackRules(),
@@ -99,25 +87,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
         CONTEXT_MATCHER_FOR_FEATURES: `/\\/(renderer|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
       }),
-      new ForkTsCheckerPlugin(),
-
-      // see also: https://github.com/Microsoft/monaco-editor-webpack-plugin#options
-      new MonacoWebpackPlugin({
-        // publicPath: "/",
-        // filename: "[name].worker.js",
-        languages: ["json", "yaml"],
-        globalAPI: isDevelopment,
-      }),
-
-      new HtmlWebpackPlugin({
-        filename: "index.html",
-        template: htmlTemplate,
-        inject: true,
-        hash: true,
-        templateParameters: {
-          assetPath: `${publicPath}${assetsFolderName}`,
-        },
-      }),
+      new ForkTsCheckerPlugin({}),
 
       new CircularDependencyPlugin({
         cwd: __dirname,
@@ -129,11 +99,9 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         filename: "[name].css",
       }),
 
-      ...(
-        isDevelopment
-          ? [new ReactRefreshWebpackPlugin({ overlay: false })]
-          : []
-      ),
+      new optimize.LimitChunkCountPlugin({
+        maxChunks: 1,
+      }),
     ],
   };
 }
