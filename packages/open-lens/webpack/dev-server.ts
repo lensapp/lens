@@ -23,20 +23,25 @@ const server = new WebpackDevServer({
   allowedHosts: ".lens.app",
   host: "localhost",
   port: webpackDevServerPort,
-  static: buildDir, // aka `devServer.contentBase` in webpack@4
-  hot: "only", // use HMR only without errors
+  static: {
+    directory: buildDir,
+    serveIndex: true,
+  },
+  hot: true,
   liveReload: false,
+  // historyApiFallback: true,
   devMiddleware: {
     writeToDisk: true,
     index: "index.html",
     publicPath: "/build",
   },
-  proxy: {
-    "^/$": "/build/",
-  },
+  // proxy: {
+  //   "^/$": "/build/",
+  // },
   client: {
     overlay: false, // don't show warnings and errors on top of rendered app view
-    logging: "error",
+    logging: "info",
+    reconnect: true,
   },
 }, compiler);
 
