@@ -83,6 +83,7 @@ class NonInjectedSidebarItem extends React.Component<
         data-testid={`sidebar-item-${this.id}`}
         data-is-active-test={this.isActive}
         data-parent-id-test={this.registration.parentId}
+        data-expandable={this.isExpandable}
       >
         <NavLink
           to={""}

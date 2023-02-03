@@ -28,6 +28,12 @@
 
   .subMenu {
     .SidebarItem {
+      &[data-expandable="true"] {
+        > .navItem {
+          font-weight: bolder;
+        }
+      }
+
       .navItem {
         padding-left: 34px
       }
@@ -38,10 +44,6 @@
   .subMenu .subMenu {
     &.active {
       border-color: transparent;
-    }
-
-    .SidebarItem {
-      padding-left: calc(var(--padding) / 2);
     }
   }
 }
