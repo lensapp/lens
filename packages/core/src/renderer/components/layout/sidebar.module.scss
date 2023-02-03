@@ -4,7 +4,9 @@
  */
 
 .sidebarNav {
-  @apply flex overflow-auto flex-col;
+  display: flex;
+  flex-direction: column;
+  overflow: overlay;
   width: var(--sidebar-width);
   padding-bottom: calc(var(--padding) * 3);
 
@@ -17,6 +19,16 @@
   background-repeat: no-repeat;
   background-size: 100% 40px, 100% 40px, 100% 12px, 100% 12px;
   background-attachment: local, local, scroll, scroll;
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--sidebarScrollbarBackground);
+    }
+  }
 }
 
 .sidebarNav :global(.Icon) {

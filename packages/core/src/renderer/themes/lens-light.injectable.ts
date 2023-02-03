@@ -38,6 +38,7 @@ const lensLightThemeInjectable = getInjectable({
       sidebarSubmenuActiveColor: "#3d90ce",
       sidebarBackground: "#e8e8e8",
       sidebarItemHoverBackground: "#f0f2f5",
+      sidebarScrollbarBackground: "#666f7940",
       badgeBackgroundColor: "#ffba44",
       buttonPrimaryBackground: "#3d90ce",
       buttonDefaultBackground: "#414448",
