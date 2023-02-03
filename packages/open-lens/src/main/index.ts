@@ -15,7 +15,6 @@ runInAction(() => {
       di,
       requireContexts: [
         require.context("./", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
-        require.context("../common", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
       ],
     });
   } catch (err) {
