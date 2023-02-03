@@ -636,6 +636,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.CategoryColumnRegistration/</loc>
+         <lastmod>2023-02-03</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Catalog.GeneralEntitySpec/</loc>
          <lastmod>2023-02-03</lastmod>
          <changefreq>daily</changefreq>
@@ -952,11 +957,6 @@
     </url>
     <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.ButtonProps/</loc>
-         <lastmod>2023-02-03</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.CategoryColumnRegistration/</loc>
          <lastmod>2023-02-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
