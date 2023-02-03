@@ -29,7 +29,7 @@
   .subMenu {
     .SidebarItem {
       &[data-expandable="true"] {
-        > .navItem {
+        > .navItem > span {
           font-weight: bolder;
         }
       }
