@@ -12,5 +12,6 @@ export * as Mobx from "mobx";
 export * as MobxReact from "mobx-react";
 export * as ReactRouter from "react-router";
 export * as ReactRouterDom from "react-router-dom";
-export * as extensionApi from "../extensions/renderer-api";
+export * as rendererExtensionApi from "../extensions/renderer-api";
+export * as commonExtensionApi from "../extensions/common-api";
 export { createApp } from "./create-app";

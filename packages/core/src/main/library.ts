@@ -10,5 +10,6 @@ export { beforeElectronIsReadyInjectionToken } from "./start-main-application/ru
 export { onLoadOfApplicationInjectionToken } from "./start-main-application/runnable-tokens/on-load-of-application-injection-token";
 export { createApp } from "./create-app";
 export * as Mobx from "mobx";
-export * as extensionApi from "../extensions/main-api";
+export * as mainExtensionApi from "../extensions/main-api";
+export * as commonExtensionApi from "../extensions/common-api";
 export * as Pty from "node-pty";
