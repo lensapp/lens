@@ -37,38 +37,43 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
   const hierarchicalNamespaces = namespaceStore.getByLabel(["hnc.x-k8s.io/included-namespace=true"]);
   const [expandedItems, setExpandedItems] = React.useState<string[]>(hierarchicalNamespaces.map(ns => `namespace-${ns.getId()}`));
   const classes = { group: styles.group, label: styles.label };
+  const nodeId = `namespace-${root.getId()}`;
 
   function renderChildren(parent: Namespace) {
     const children = hierarchicalNamespaces.filter(ns =>
       ns.getLabels().find(label => label === `${parent.getName()}.tree.hnc.x-k8s.io/depth=1`),
     );
 
-    return children.map(child => (
-      <TreeItem
-        key={`namespace-${child.getId()}`}
-        nodeId={`namespace-${child.getId()}`}
-        data-testid={`namespace-${child.getId()}`}
-        classes={classes}
-        onIconClick={(evt) =>{
-          toggleNode(`namespace-${child.getId()}`);
-          evt.stopPropagation();
-        }}
-        label={(
-          <>
-            <Link key={child.getId()} to={getDetailsUrl(child.selfLink)}>
-              {child.getName()}
-            </Link>
-            {" "}
-            <SubnamespaceBadge
-              id={`namespace-details-badge-for-${child.getId()}`}
-              namespace={child}
-            />
-          </>
-        )}
-      >
-        {renderChildren(child)}
-      </TreeItem>
-    ));
+    return children.map(child => {
+      const childId = `namespace-${child.getId()}`;
+
+      return (
+        <TreeItem
+          key={childId}
+          nodeId={childId}
+          data-testid={childId}
+          classes={classes}
+          onIconClick={(evt) =>{
+            toggleNode(childId);
+            evt.stopPropagation();
+          }}
+          label={(
+            <>
+              <Link key={child.getId()} to={getDetailsUrl(child.selfLink)}>
+                {child.getName()}
+              </Link>
+              {" "}
+              <SubnamespaceBadge
+                id={`namespace-details-badge-for-${child.getId()}`}
+                namespace={child}
+              />
+            </>
+          )}
+        >
+          {renderChildren(child)}
+        </TreeItem>
+      );
+    });
   }
 
   function toggleNode(id: string) {
@@ -87,19 +92,19 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
     <div data-testid="namespace-tree-view" className={styles.TreeView}>
       <DrawerTitle>Tree View</DrawerTitle>
       <TreeView
-        defaultExpanded={[`namespace-${root.getId()}`]}
+        defaultExpanded={[nodeId]}
         defaultCollapseIcon={<MinusSquare />}
         defaultExpandIcon={<PlusSquare />}
         defaultEndIcon={(<div style={{ opacity: 0.3 }}><MinusSquare /></div>)}
         expanded={expandedItems}
       >
         <TreeItem
-          nodeId={`namespace-${root.getId()}`}
+          nodeId={nodeId}
           label={root.getName()}
-          data-testid={`namespace-${root.getId()}`}
+          data-testid={nodeId}
           classes={classes}
           onIconClick={(evt) => {
-            toggleNode(`namespace-${root.getId()}`);
+            toggleNode(nodeId);
             evt.stopPropagation();
           }}
         >
