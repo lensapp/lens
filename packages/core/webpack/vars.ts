@@ -21,8 +21,5 @@ export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const publicPath = "/build/";
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 export const webpackDevServerPort = Number(process.env.WEBPACK_DEV_SERVER_PORT) || 9191;
-export const additionalExternals = (process.env.LENS_BUILD_ADDITIONAL_WEBPACK_EXTERNALS || "")
-  .split(",")
-  .map(s => s.trim());
 
 assert(Number.isInteger(webpackDevServerPort), "WEBPACK_DEV_SERVER_PORT environment variable must only be an integer");
