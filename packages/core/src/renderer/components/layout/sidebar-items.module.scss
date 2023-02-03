@@ -12,7 +12,11 @@
     padding: 4px 8px 4px 8px;
     cursor: pointer;
 
-    &:global(.active), &:hover {
+    &:hover {
+      background: var(--sidebarLogoBackground);
+    }
+
+    &:global(.active) {
       background: var(--blue);
       color: var(--sidebarActiveColor);
     }
