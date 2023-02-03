@@ -19,7 +19,7 @@
     "test:integration": "lerna run --stream test:integration",
     "bump-version": "lerna version --no-git-tag-version --no-push",
     "create-release-pr": "node packages/release-tool",
-    "postinstall": "lerna bootstrap"
+    "postinstall": "lerna bootstrap --ignore open-lens && lerna bootstrap --scope open-lens --include-dependencies"
   },
   "devDependencies": {
     "@k8slens/semver": "./packages/semver",
