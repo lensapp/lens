@@ -92,6 +92,6 @@ export abstract class ExtensionStore<T extends object> extends BaseStore<T> {
   protected cwd() {
     assert(this.extension, "must call this.load() first");
 
-    return path.join(super.cwd(), "extension-store", this.extension.name);
+    return path.join(super.cwd(), "extension-store", this.extension.storeName);
   }
 }
