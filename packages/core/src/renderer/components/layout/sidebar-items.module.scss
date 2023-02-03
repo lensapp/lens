@@ -7,9 +7,9 @@
 
   > .navItem {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     text-decoration: none;
-    padding: 6px 8px 6px 8px;
+    padding: 4px 8px 4px 8px;
     cursor: pointer;
 
     &:global(.active), &:hover {

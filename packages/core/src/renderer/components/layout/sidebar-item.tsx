@@ -105,6 +105,7 @@ class NonInjectedSidebarItem extends React.Component<
           {this.isExpandable && (
             <Icon
               className={styles.expandIcon}
+              small
               material={
                 this.expanded ? "keyboard_arrow_up" : "keyboard_arrow_down"
               }
