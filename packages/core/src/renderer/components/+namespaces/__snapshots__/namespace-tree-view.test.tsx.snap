@@ -4,6 +4,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
 <body>
   <div>
     <div
+      class="TreeView"
       data-testid="namespace-tree-view"
     >
       <div
@@ -43,13 +44,13 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
               </svg>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-16 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               levels-deep
             </div>
           </div>
           <ul
-            class="MuiCollapse-root MuiTreeItem-group Component-group-15 MuiCollapse-entered"
+            class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
             role="group"
             style="min-height: 0px;"
           >
@@ -89,14 +90,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
                       </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-16 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                     >
                       level-deep-child-a
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-15 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -136,14 +137,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
                       </svg>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-16 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                     >
                       level-deep-child-b
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-15"
+                    class="MuiCollapse-root MuiTreeItem-group group"
                     role="group"
                     style="min-height: 0px; height: 0px; transition-duration: 300ms;"
                   >
@@ -183,14 +184,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
                               </div>
                             </div>
                             <div
-                              class="MuiTypography-root MuiTreeItem-label Component-label-16 MuiTypography-body1"
+                              class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                             >
                               level-deep-subchild-a
                                
                             </div>
                           </div>
                           <ul
-                            class="MuiCollapse-root MuiTreeItem-group Component-group-15 MuiCollapse-entered"
+                            class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
                             role="group"
                             style="min-height: 0px;"
                           >
@@ -221,6 +222,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
 <body>
   <div>
     <div
+      class="TreeView"
       data-testid="namespace-tree-view"
     >
       <div
@@ -260,13 +262,13 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
               </svg>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               levels-deep
             </div>
           </div>
           <ul
-            class="MuiCollapse-root MuiTreeItem-group Component-group-17 MuiCollapse-entered"
+            class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
             role="group"
             style="min-height: 0px;"
           >
@@ -306,14 +308,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
                       </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                     >
                       level-deep-child-a
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-17 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -353,14 +355,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
                       </svg>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                     >
                       level-deep-child-b
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-17"
+                    class="MuiCollapse-root MuiTreeItem-group group"
                     role="group"
                     style="min-height: 0px; height: 0px; transition-duration: 300ms;"
                   >
@@ -400,14 +402,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
                               </div>
                             </div>
                             <div
-                              class="MuiTypography-root MuiTreeItem-label Component-label-18 MuiTypography-body1"
+                              class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                             >
                               level-deep-subchild-a
                                
                             </div>
                           </div>
                           <ul
-                            class="MuiCollapse-root MuiTreeItem-group Component-group-17 MuiCollapse-entered"
+                            class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
                             role="group"
                             style="min-height: 0px;"
                           >
@@ -438,6 +440,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
 <body>
   <div>
     <div
+      class="TreeView"
       data-testid="namespace-tree-view"
     >
       <div
@@ -477,13 +480,13 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
               </svg>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-12 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               levels-deep
             </div>
           </div>
           <ul
-            class="MuiCollapse-root MuiTreeItem-group Component-group-11 MuiCollapse-entered"
+            class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
             role="group"
             style="min-height: 0px;"
           >
@@ -523,14 +526,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                       </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-12 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                     >
                       level-deep-child-a
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-11 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -570,14 +573,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                       </svg>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-12 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                     >
                       level-deep-child-b
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-11 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -617,14 +620,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
                               </div>
                             </div>
                             <div
-                              class="MuiTypography-root MuiTreeItem-label Component-label-12 MuiTypography-body1"
+                              class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                             >
                               level-deep-subchild-a
                                
                             </div>
                           </div>
                           <ul
-                            class="MuiCollapse-root MuiTreeItem-group Component-group-11 MuiCollapse-entered"
+                            class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
                             role="group"
                             style="min-height: 0px;"
                           >
@@ -655,6 +658,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
 <body>
   <div>
     <div
+      class="TreeView"
       data-testid="namespace-tree-view"
     >
       <div
@@ -694,13 +698,13 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
               </svg>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-4 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               acme-org
             </div>
           </div>
           <ul
-            class="MuiCollapse-root MuiTreeItem-group Component-group-3 MuiCollapse-entered"
+            class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
             role="group"
             style="min-height: 0px;"
           >
@@ -740,14 +744,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                       </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-4 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                     >
                       team-a
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-3 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -790,14 +794,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                       </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-4 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                     >
                       team-b
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-3 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -824,6 +828,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
 <body>
   <div>
     <div
+      class="TreeView"
       data-testid="namespace-tree-view"
     >
       <div
@@ -863,13 +868,13 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
               </svg>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-6 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               org-a
             </div>
           </div>
           <ul
-            class="MuiCollapse-root MuiTreeItem-group Component-group-5 MuiCollapse-entered"
+            class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
             role="group"
             style="min-height: 0px;"
           >
@@ -909,7 +914,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                       </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-6 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                     >
                       service-1
                        
@@ -923,7 +928,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-5 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -966,14 +971,14 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                       </div>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label Component-label-6 MuiTypography-body1"
+                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
                     >
                       team-c
                        
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group Component-group-5 MuiCollapse-entered"
+                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
                     role="group"
                     style="min-height: 0px;"
                   >
@@ -1006,6 +1011,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders one namespace
 <body>
   <div>
     <div
+      class="TreeView"
       data-testid="namespace-tree-view"
     >
       <div
@@ -1048,7 +1054,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders one namespace
               </div>
             </div>
             <div
-              class="MuiTypography-root MuiTreeItem-label Component-label-2 MuiTypography-body1"
+              class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               single-root
             </div>

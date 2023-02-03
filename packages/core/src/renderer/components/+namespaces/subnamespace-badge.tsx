@@ -14,7 +14,7 @@ interface SubnamespaceBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 export function SubnamespaceBadge({ namespace, id, ...other }: SubnamespaceBadgeProps) {
-  if (!namespace.getAnnotations().find(annotation => annotation.includes("hnc.x-k8s.io/subnamespace-of"))) {
+  if (!namespace.isSubnamespace()) {
     return null;
   }
 

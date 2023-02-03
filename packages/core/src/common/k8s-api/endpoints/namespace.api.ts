@@ -33,6 +33,10 @@ export class Namespace extends KubeObject<
   getStatus() {
     return this.status?.phase ?? "-";
   }
+
+  isSubnamespace(){  
+    return this.getAnnotations().find(annotation => annotation.includes("hnc.x-k8s.io/subnamespace-of"));
+  }
 }
 
 export class NamespaceApi extends KubeApi<Namespace> {
