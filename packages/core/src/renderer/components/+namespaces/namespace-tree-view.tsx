@@ -2,8 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { SvgIcon, withStyles } from "@material-ui/core";
-import type { TreeItemProps } from "@material-ui/lab";
+
+import styles from "./namespace-tree-view.module.scss";
+
+import { SvgIcon } from "@material-ui/core";
 import { TreeItem, TreeView } from "@material-ui/lab";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
@@ -34,6 +36,7 @@ function isNamespaceControlledByHNC(namespace: Namespace) {
 function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }: Dependencies & NamespaceTreeViewProps) {
   const hierarchicalNamespaces = namespaceStore.getByLabel(["hnc.x-k8s.io/included-namespace=true"]);
   const [expandedItems, setExpandedItems] = React.useState<string[]>(hierarchicalNamespaces.map(ns => `namespace-${ns.getId()}`));
+  const classes = { group: styles.group, label: styles.label };
 
   function renderChildren(parent: Namespace) {
     const children = hierarchicalNamespaces.filter(ns =>
@@ -41,10 +44,11 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
     );
 
     return children.map(child => (
-      <StyledTreeItem
+      <TreeItem
         key={`namespace-${child.getId()}`}
         nodeId={`namespace-${child.getId()}`}
         data-testid={`namespace-${child.getId()}`}
+        classes={classes}
         onIconClick={(evt) =>{
           toggleNode(`namespace-${child.getId()}`);
           evt.stopPropagation();
@@ -63,7 +67,7 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
         )}
       >
         {renderChildren(child)}
-      </StyledTreeItem>
+      </TreeItem>
     ));
   }
 
@@ -80,7 +84,7 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
   }
 
   return (
-    <div data-testid="namespace-tree-view">
+    <div data-testid="namespace-tree-view" className={styles.TreeView}>
       <DrawerTitle>Tree View</DrawerTitle>
       <TreeView
         defaultExpanded={[`namespace-${root.getId()}`]}
@@ -89,17 +93,18 @@ function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }:
         defaultEndIcon={(<div style={{ opacity: 0.3 }}><MinusSquare /></div>)}
         expanded={expandedItems}
       >
-        <StyledTreeItem
+        <TreeItem
           nodeId={`namespace-${root.getId()}`}
           label={root.getName()}
           data-testid={`namespace-${root.getId()}`}
+          classes={classes}
           onIconClick={(evt) => {
             toggleNode(`namespace-${root.getId()}`);
             evt.stopPropagation();
           }}
         >
           {renderChildren(root)}
-        </StyledTreeItem>
+        </TreeItem>
       </TreeView>
     </div>
   );
@@ -120,20 +125,6 @@ function PlusSquare() {
     </SvgIcon>
   );
 }
-
-const StyledTreeItem = withStyles(() => ({
-  group: {
-    marginLeft: 8,
-    paddingLeft: 16,
-    borderLeft: `1px dashed var(--borderColor)`,
-  },
-  label: {
-    fontSize: "inherit",
-    lineHeight: "1.8",
-    cursor: "default",
-    backgroundColor: "transparent!important",
-  },
-}))((props: TreeItemProps) => <TreeItem {...props} />);
 
 export const NamespaceTreeView = withInjectables<Dependencies, NamespaceTreeViewProps>(NonInjectableNamespaceTreeView, {
   getProps: (di, props) => ({
