@@ -27,24 +27,9 @@
   }
 
   .subMenu {
-    border-left: 4px solid transparent;
-
-    &.active {
-      border-color: var(--blue);
-    }
-  
     .SidebarItem {
-      color: var(--textColorPrimary);
-      padding-left: 25px;
-  
       .navItem {
-        padding-top: 4px;
-        padding-bottom: 4px;
-
-        &:global(.active), &:hover {
-          color: var(--sidebarSubmenuActiveColor);
-          background: none;
-        }
+        padding-left: 34px
       }
     }
   }
