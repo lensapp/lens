@@ -233,6 +233,7 @@
     "autoprefixer": "^10.4.13",
     "circular-dependency-plugin": "^5.2.2",
     "concurrently": "^7.6.0",
+    "copy-webpack-plugin": "^11.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.2",
     "electron": "^19.1.9",
