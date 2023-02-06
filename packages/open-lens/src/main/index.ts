@@ -3,6 +3,11 @@ import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registra
 import { runInAction } from "mobx";
 import { createApp, mainExtensionApi as Main, commonExtensionApi as Common } from "@k8slens/core/main";
 
+import { registerFeature } from '@lensapp/feature-core';
+
+// @ts-ignore
+import clusterFeature from '@lensapp/cluster/main';
+
 const di = createContainer("main");
 const app = createApp({
   di,
@@ -19,6 +24,8 @@ runInAction(() => {
         require.context("../common", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
       ],
     });
+
+    registerFeature(di, clusterFeature);
   } catch (err) {
     console.error(err);
     process.exit(1);

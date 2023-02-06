@@ -208,6 +208,7 @@ describe("channel", () => {
       handler: () => () => "some-other-value",
     });
 
+    // @ts-ignore
     testChannelListenerInMain2Injectable.id += "2";
 
     applicationBuilder.beforeApplicationStart((mainDi) => {

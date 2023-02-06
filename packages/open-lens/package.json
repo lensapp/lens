@@ -200,6 +200,10 @@
     "@ogre-tools/injectable-extension-for-auto-registration": "^14.0.3",
     "@ogre-tools/injectable-extension-for-mobx": "^14.0.3",
     "@ogre-tools/injectable-react": "^14.0.3",
+
+    "@lensapp/feature-core": "*",
+    "@lensapp/cluster": "*",
+
     "mobx": "^6.7.0",
     "rimraf": "^4.1.2"
   },
