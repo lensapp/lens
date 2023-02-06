@@ -29,7 +29,7 @@
     "compile": "cross-env NODE_ENV=production webpack --config webpack/webpack.ts --progress",
     "postcompile": "npm run build:tray-icons && npm run download:binaries",
     "predev": "rimraf static/build/ && npm run build:tray-icons && npm run download:binaries",
-    "dev": "concurrently -i -k \"yarn run dev-run -C\" yarn:dev:*",
+    "dev": "concurrently -i -k \"npm run dev-run -C\" npm:dev:*",
     "dev-run": "nodemon --watch ./static/build/main.js --exec \"electron --remote-debugging-port=9223 --inspect .\"",
     "dev:main": "cross-env NODE_ENV=development webpack --config webpack/main.ts --progress --watch",
     "dev:renderer": "cross-env NODE_ENV=development ts-node ./webpack/dev-server.ts",
