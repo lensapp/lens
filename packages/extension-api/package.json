@@ -29,7 +29,7 @@
     "@k8slens/core": "^6.4.0-beta.13"
   },
   "devDependencies": {
-    "@types/node": "^16.18.6",
+    "@types/node": "^16.18.12",
     "@types/webpack": "^5.28.0",
     "@types/webpack-env": "^1.18.0",
     "@types/webpack-node-externals": "2.5.3",
