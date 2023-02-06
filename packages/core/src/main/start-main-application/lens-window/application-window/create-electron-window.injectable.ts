@@ -27,6 +27,12 @@ export interface UrlSource {
 }
 export type ContentSource = RequireExactlyOne<FileSource & UrlSource>;
 
+enum ChromiumNetError {
+  SUCCESS = 0,
+  FAILURE = 1,
+  RESULT_FROM_CHROMIUM,
+}
+
 export interface ElectronWindowConfiguration {
   id: string;
   title: string;
@@ -112,6 +118,15 @@ const createElectronWindowInjectable = getInjectable({
 
       applicationWindowState.manage(browserWindow);
 
+      browserWindow.webContents.session.setCertificateVerifyProc((request, shouldBeTrusted) => {
+        const { certificate } = request;
+        const cert = new X509Certificate(certificate.data);
+        const shouldTrustCert = cert.raw.length === lensProxyX509Cert.raw.length
+          && timingSafeEqual(cert.raw, lensProxyX509Cert.raw);
+
+        shouldBeTrusted(shouldTrustCert ? ChromiumNetError.SUCCESS : ChromiumNetError.RESULT_FROM_CHROMIUM);
+      });
+
       browserWindow
         .on("focus", () => {
           configuration.onFocus?.();
@@ -125,13 +140,6 @@ const createElectronWindowInjectable = getInjectable({
         })
         .webContents.on("dom-ready", () => {
           configuration.onDomReady?.();
-        })
-        .on("certificate-error", (event, url, error, certificate, shouldBeTrusted) => {
-          const cert = new X509Certificate(certificate.data);
-          const shouldTrustCert = cert.raw.length === lensProxyX509Cert.raw.length
-            && timingSafeEqual(cert.raw, lensProxyX509Cert.raw);
-
-          shouldBeTrusted(shouldTrustCert);
         })
         .on("did-fail-load", (_event, code, desc) => {
           logger.error(
