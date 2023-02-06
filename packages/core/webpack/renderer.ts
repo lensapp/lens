@@ -46,7 +46,7 @@ export function webpackLensRenderer(): webpack.Configuration {
       ],
     },
     externals: [
-      nodeExternals(),
+      nodeExternals({ modulesFromFile: true }),
     ],
     optimization: {
       minimize: false,
