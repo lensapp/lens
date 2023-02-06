@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by clicking minus button 1`] = `
+exports[`<NamespaceTreeView /> collapses item by clicking minus button 1`] = `
 <body>
   <div>
     <div
@@ -218,7 +218,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves collapses item by cli
 </body>
 `;
 
-exports[`<NamespaceTreeView /> once the subscribe resolves expands item by clicking plus button 1`] = `
+exports[`<NamespaceTreeView /> expands item by clicking plus button 1`] = `
 <body>
   <div>
     <div
@@ -436,7 +436,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves expands item by click
 </body>
 `;
 
-exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep 1`] = `
+exports[`<NamespaceTreeView /> renders 2 levels deep 1`] = `
 <body>
   <div>
     <div
@@ -654,7 +654,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders 2 levels deep
 </body>
 `;
 
-exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace with 2 children namespaces 1`] = `
+exports[`<NamespaceTreeView /> renders namespace with 2 children namespaces 1`] = `
 <body>
   <div>
     <div
@@ -824,7 +824,7 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
 </body>
 `;
 
-exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace with children namespaces and a subnamespace 1`] = `
+exports[`<NamespaceTreeView /> renders namespace with children namespaces and a subnamespace 1`] = `
 <body>
   <div>
     <div
@@ -886,6 +886,56 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
               >
                 <li
                   class="MuiTreeItem-root Mui-expanded"
+                  data-testid="namespace-team-c-1"
+                  role="treeitem"
+                  tabindex="-1"
+                >
+                  <div
+                    class="MuiTreeItem-content"
+                  >
+                    <div
+                      class="MuiTreeItem-iconContainer"
+                    >
+                      <div
+                        style="opacity: 0.3;"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          data-testid="minus-square"
+                          focusable="false"
+                          style="width: 14px; height: 14px;"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div
+                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
+                    >
+                      team-c
+                       
+                    </div>
+                  </div>
+                  <ul
+                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
+                    role="group"
+                    style="min-height: 0px;"
+                  >
+                    <div
+                      class="MuiCollapse-wrapper"
+                    >
+                      <div
+                        class="MuiCollapse-wrapperInner"
+                      />
+                    </div>
+                  </ul>
+                </li>
+                <li
+                  class="MuiTreeItem-root Mui-expanded"
                   data-testid="namespace-service-1-1"
                   role="treeitem"
                   tabindex="-1"
@@ -941,56 +991,6 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
                     </div>
                   </ul>
                 </li>
-                <li
-                  class="MuiTreeItem-root Mui-expanded"
-                  data-testid="namespace-team-c-1"
-                  role="treeitem"
-                  tabindex="-1"
-                >
-                  <div
-                    class="MuiTreeItem-content"
-                  >
-                    <div
-                      class="MuiTreeItem-iconContainer"
-                    >
-                      <div
-                        style="opacity: 0.3;"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root"
-                          data-testid="minus-square"
-                          focusable="false"
-                          style="width: 14px; height: 14px;"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0zM17.873 11.023h-11.826q-.375 0-.669.281t-.294.682v0q0 .401.294 .682t.669.281h11.826q.375 0 .669-.281t.294-.682v0q0-.401-.294-.682t-.669-.281z"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                    <div
-                      class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
-                    >
-                      team-c
-                       
-                    </div>
-                  </div>
-                  <ul
-                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
-                  >
-                    <div
-                      class="MuiCollapse-wrapper"
-                    >
-                      <div
-                        class="MuiCollapse-wrapperInner"
-                      />
-                    </div>
-                  </ul>
-                </li>
               </div>
             </div>
           </ul>
@@ -1001,13 +1001,13 @@ exports[`<NamespaceTreeView /> once the subscribe resolves renders namespace wit
 </body>
 `;
 
-exports[`<NamespaceTreeView /> once the subscribe resolves renders null with regular namespace 1`] = `
+exports[`<NamespaceTreeView /> renders null with regular namespace 1`] = `
 <body>
   <div />
 </body>
 `;
 
-exports[`<NamespaceTreeView /> once the subscribe resolves renders one namespace without children 1`] = `
+exports[`<NamespaceTreeView /> renders one namespace without children 1`] = `
 <body>
   <div>
     <div

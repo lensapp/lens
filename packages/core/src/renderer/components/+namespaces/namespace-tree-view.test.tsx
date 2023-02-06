@@ -2,28 +2,15 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { AsyncFnMock } from "@async-fn/jest";
-import asyncFn from "@async-fn/jest";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { fireEvent } from "@testing-library/react";
 import React from "react";
-import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
-import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import type { Fetch } from "../../../common/fetch/fetch.injectable";
-import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
-import { createMockResponseFromString } from "../../../test-utils/mock-responses";
-import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
-import createClusterInjectable from "../../cluster/create-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
-import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
-import { type Disposer, disposer } from "../../utils";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
+import hierarchicalNamespacesInjectable from "./hierarchical-namespaces.injectable";
 import { NamespaceTreeView } from "./namespace-tree-view";
-import type { NamespaceStore } from "./store";
-import namespaceStoreInjectable from "./store.injectable";
 
 jest.mock("react-router-dom", () => ({
   Link: ({ children }: { children: React.ReactNode }) => children,
@@ -116,149 +103,103 @@ const levelDeepSubChildA = createNamespace("level-deep-subchild-a", {
 describe("<NamespaceTreeView />", () => {
   let di: DiContainer;
   let render: DiRender;
-  let namespaceStore: NamespaceStore;
-  let fetchMock: AsyncFnMock<Fetch>;
-  let cleanup: Disposer;
   
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
-    di.unoverride(subscribeStoresInjectable);
 
-    di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
-    di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
-    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(hierarchicalNamespacesInjectable, () => [
+      acmeGroup,
+      orgA,
+      teamA,
+      teamB,
+      teamC,
+      service1,
+      levelsDeep,
+      levelDeepChildA,
+      levelDeepChildB,
+      levelDeepSubChildA,
+    ])
 
-    fetchMock = asyncFn();
-    di.override(fetchInjectable, () => fetchMock);
-
-    const createCluster = di.inject(createClusterInjectable);
-
-    di.override(hostedClusterInjectable, () => createCluster({
-      contextName: "some-context-name",
-      id: "some-cluster-id",
-      kubeConfigPath: "/some-path-to-a-kubeconfig",
-    }, {
-      clusterServerUrl: "https://localhost:8080",
-    }));
-
-    namespaceStore = di.inject(namespaceStoreInjectable);
-
-    const subscribeStores = di.inject(subscribeStoresInjectable);
-
-    cleanup = disposer(subscribeStores([namespaceStore]));
     render = renderFor(di);
   });
 
-  afterEach(() => {
-    cleanup();
+  it("renders null with regular namespace", () => {
+    const result = render(<NamespaceTreeView root={createNamespace("tree-1")} />);
+
+    expect(result.baseElement).toMatchSnapshot();
   });
 
-  describe("once the subscribe resolves", () => {
-    beforeEach(async () => {
-      await fetchMock.resolveSpecific([
-        "https://127.0.0.1:12345/api-kube/api/v1/namespaces",
-      ], createMockResponseFromString("https://127.0.0.1:12345/api-kube/api/v1/namespaces", JSON.stringify({
-        apiVersion: "v1",
-        kind: "NamespaceList",
-        metadata: {},
-        items: [
-          createNamespace("test-1"),
-          createNamespace("test-2"),
-          createNamespace("test-3"),
-          createNamespace("test-4"),
-          createNamespace("test-5"),
-          acmeGroup,
-          orgA,
-          teamA,
-          teamB,
-          teamC,
-          service1,
-          levelsDeep,
-          levelDeepChildA,
-          levelDeepChildB,
-          levelDeepSubChildA,
-        ],
-      })));
-    });
+  it("renders one namespace without children", () => {
+    const result = render(<NamespaceTreeView root={singleRoot} />);
 
-    it("renders null with regular namespace", () => {
-      const result = render(<NamespaceTreeView root={createNamespace("tree-1")} />);
-  
-      expect(result.baseElement).toMatchSnapshot();
-    });
+    expect(result.baseElement).toMatchSnapshot();
+  });
 
-    it("renders one namespace without children", () => {
-      const result = render(<NamespaceTreeView root={singleRoot} />);
-  
-      expect(result.baseElement).toMatchSnapshot();
-    });
+  it("renders namespace with 2 children namespaces", () => {
+    const result = render(<NamespaceTreeView root={acmeGroup} />);
 
-    it("renders namespace with 2 children namespaces", () => {
-      const result = render(<NamespaceTreeView root={acmeGroup} />);
+    expect(result.baseElement).toMatchSnapshot();
+  });
 
-      expect(result.baseElement).toMatchSnapshot();
-    });
+  it("renders namespace with children namespaces and a subnamespace", () => {
+    const result = render(<NamespaceTreeView root={orgA} />);
 
-    it("renders namespace with children namespaces and a subnamespace", () => {
-      const result = render(<NamespaceTreeView root={orgA} />);
+    expect(result.baseElement).toMatchSnapshot();
+  });
 
-      expect(result.baseElement).toMatchSnapshot();
-    });
+  it("renders an indicator badge for the subnamespace", () => {
+    const result = render(<NamespaceTreeView root={orgA} />);
 
-    it("renders an indicator badge for the subnamespace", () => {
-      const result = render(<NamespaceTreeView root={orgA} />);
+    expect(result.getByTestId("subnamespace-badge-for-service-1-1")).toBeInTheDocument();
+  });
 
-      expect(result.getByTestId("subnamespace-badge-for-service-1-1")).toBeInTheDocument();
-    });
+  it("does not render an indicator badge for the true namespace", () => {
+    const result = render(<NamespaceTreeView root={orgA} />);
+    const trueNamespace = result.getByTestId("namespace-team-c-1");
 
-    it("does not render an indicator badge for the true namespace", () => {
-      const result = render(<NamespaceTreeView root={orgA} />);
-      const trueNamespace = result.getByTestId("namespace-team-c-1");
+    expect(trueNamespace.querySelector("[data-testid='subnamespace-badge-for-team-c-1']")).toBeNull();
+  });
 
-      expect(trueNamespace.querySelector("[data-testid='subnamespace-badge-for-team-c-1']")).toBeNull();
-    });
+  it("renders 2 levels deep", () => {
+    const result = render(<NamespaceTreeView root={levelsDeep} />);
 
-    it("renders 2 levels deep", () => {
-      const result = render(<NamespaceTreeView root={levelsDeep} />);
+    expect(result.baseElement).toMatchSnapshot();
+  });
 
-      expect(result.baseElement).toMatchSnapshot();
-    });
+  it("expands children items by default", () => {
+    const result = render(<NamespaceTreeView root={levelsDeep} />);
+    const deepest = result.getByTestId("namespace-level-deep-child-b-1");
 
-    it("expands children items by default", () => {
-      const result = render(<NamespaceTreeView root={levelsDeep} />);
-      const deepest = result.getByTestId("namespace-level-deep-child-b-1");
+    expect(deepest).toHaveAttribute("aria-expanded", "true");
+  });
 
-      expect(deepest).toHaveAttribute("aria-expanded", "true");
-    });
+  it("collapses item by clicking minus button", () => {
+    const result = render(<NamespaceTreeView root={levelsDeep} />);
+    const levelB = result.getByTestId("namespace-level-deep-child-b-1");
+    const minusButton = levelB.querySelector("[data-testid='minus-square']");
 
-    it("collapses item by clicking minus button", () => {
-      const result = render(<NamespaceTreeView root={levelsDeep} />);
-      const levelB = result.getByTestId("namespace-level-deep-child-b-1");
-      const minusButton = levelB.querySelector("[data-testid='minus-square']");
+    if (minusButton) {
+      fireEvent.click(minusButton);
+    }
 
-      if (minusButton) {
-        fireEvent.click(minusButton);
-      }
+    expect(result.baseElement).toMatchSnapshot();
+  });
 
-      expect(result.baseElement).toMatchSnapshot();
-    });
+  it("expands item by clicking plus button", () => {
+    const result = render(<NamespaceTreeView root={levelsDeep} />);
+    const levelB = result.getByTestId("namespace-level-deep-child-b-1");
+    const minusButton = levelB.querySelector("[data-testid='minus-square']");
 
-    it("expands item by clicking plus button", () => {
-      const result = render(<NamespaceTreeView root={levelsDeep} />);
-      const levelB = result.getByTestId("namespace-level-deep-child-b-1");
-      const minusButton = levelB.querySelector("[data-testid='minus-square']");
+    if (minusButton) {
+      fireEvent.click(minusButton);
+    }
 
-      if (minusButton) {
-        fireEvent.click(minusButton);
-      }
+    const plusButton = levelB.querySelector("[data-testid='plus-square']");
 
-      const plusButton = levelB.querySelector("[data-testid='plus-square']");
+    if (plusButton) {
+      fireEvent.click(plusButton);
+    }
 
-      if (plusButton) {
-        fireEvent.click(plusButton);
-      }
-
-      expect(result.baseElement).toMatchSnapshot();
-    });
+    expect(result.baseElement).toMatchSnapshot();
   });
 });

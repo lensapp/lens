@@ -14,16 +14,15 @@ import type { Namespace } from "../../../common/k8s-api/endpoints";
 import { DrawerTitle } from "../drawer";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
-import type { NamespaceStore } from "./store";
-import namespaceStoreInjectable from "./store.injectable";
 import { SubnamespaceBadge } from "./subnamespace-badge";
+import hierarchicalNamespacesInjectable from "./hierarchical-namespaces.injectable";
 
 interface NamespaceTreeViewProps {
   root: Namespace;
 }
 
 interface Dependencies {
-  namespaceStore: NamespaceStore;
+  namespaces: Namespace[];
   getDetailsUrl: GetDetailsUrl;
 }
 
@@ -33,14 +32,13 @@ function isNamespaceControlledByHNC(namespace: Namespace) {
   return namespace.getLabels().find(label => label === hierarchicalNamesaceControllerLabel);
 }
 
-function NonInjectableNamespaceTreeView({ root, namespaceStore, getDetailsUrl }: Dependencies & NamespaceTreeViewProps) {
-  const hierarchicalNamespaces = namespaceStore.getByLabel(["hnc.x-k8s.io/included-namespace=true"]);
-  const [expandedItems, setExpandedItems] = React.useState<string[]>(hierarchicalNamespaces.map(ns => `namespace-${ns.getId()}`));
+function NonInjectableNamespaceTreeView({ root, namespaces, getDetailsUrl }: Dependencies & NamespaceTreeViewProps) {
+  const [expandedItems, setExpandedItems] = React.useState<string[]>(namespaces.map(ns => `namespace-${ns.getId()}`));
   const classes = { group: styles.group, label: styles.label };
   const nodeId = `namespace-${root.getId()}`;
 
   function renderChildren(parent: Namespace) {
-    const children = hierarchicalNamespaces.filter(ns =>
+    const children = namespaces.filter(ns =>
       ns.getLabels().find(label => label === `${parent.getName()}.tree.hnc.x-k8s.io/depth=1`),
     );
 
@@ -133,7 +131,7 @@ function PlusSquareIcon() {
 
 export const NamespaceTreeView = withInjectables<Dependencies, NamespaceTreeViewProps>(NonInjectableNamespaceTreeView, {
   getProps: (di, props) => ({
-    namespaceStore: di.inject(namespaceStoreInjectable),
+    namespaces: di.inject(hierarchicalNamespacesInjectable),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     ...props,
   }),
