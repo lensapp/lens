@@ -84,6 +84,6 @@ export const initClusterFrame = ({
       unmountRoot();
     });
 
-    window.addEventListener("beforeunload", onCloseFrame, { capture: true });
-    window.addEventListener("pagehide", onCloseFrame, { capture: true });
+    window.addEventListener("beforeunload", onCloseFrame);
+    window.addEventListener("pagehide", onCloseFrame);
   };
