@@ -72,7 +72,9 @@ exports[`show status for a kube object given application starts and in test page
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -92,7 +94,7 @@ exports[`show status for a kube object given application starts and in test page
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -104,7 +106,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -129,7 +133,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -152,7 +158,7 @@ exports[`show status for a kube object given application starts and in test page
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -164,7 +170,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -189,7 +197,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -209,7 +219,7 @@ exports[`show status for a kube object given application starts and in test page
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -221,7 +231,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -246,7 +258,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -269,7 +283,7 @@ exports[`show status for a kube object given application starts and in test page
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -494,7 +508,9 @@ exports[`show status for a kube object given application starts and in test page
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -514,7 +530,7 @@ exports[`show status for a kube object given application starts and in test page
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -526,7 +542,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -551,7 +569,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -574,7 +594,7 @@ exports[`show status for a kube object given application starts and in test page
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -586,7 +606,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -611,7 +633,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -631,7 +655,7 @@ exports[`show status for a kube object given application starts and in test page
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -643,7 +667,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -668,7 +694,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -691,7 +719,7 @@ exports[`show status for a kube object given application starts and in test page
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -956,7 +984,9 @@ exports[`show status for a kube object given application starts and in test page
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -976,7 +1006,7 @@ exports[`show status for a kube object given application starts and in test page
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -988,7 +1018,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -1013,7 +1045,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -1036,7 +1070,7 @@ exports[`show status for a kube object given application starts and in test page
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1048,7 +1082,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -1073,7 +1109,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -1093,7 +1131,7 @@ exports[`show status for a kube object given application starts and in test page
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1105,7 +1143,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -1130,7 +1170,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -1153,7 +1195,7 @@ exports[`show status for a kube object given application starts and in test page
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1418,7 +1460,9 @@ exports[`show status for a kube object given application starts and in test page
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -1438,7 +1482,7 @@ exports[`show status for a kube object given application starts and in test page
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1450,7 +1494,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -1475,7 +1521,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -1498,7 +1546,7 @@ exports[`show status for a kube object given application starts and in test page
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1510,7 +1558,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -1535,7 +1585,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -1555,7 +1607,7 @@ exports[`show status for a kube object given application starts and in test page
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1567,7 +1619,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -1592,7 +1646,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -1615,7 +1671,7 @@ exports[`show status for a kube object given application starts and in test page
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1840,7 +1896,9 @@ exports[`show status for a kube object given application starts and in test page
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -1860,7 +1918,7 @@ exports[`show status for a kube object given application starts and in test page
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1872,7 +1930,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -1897,7 +1957,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -1920,7 +1982,7 @@ exports[`show status for a kube object given application starts and in test page
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1932,7 +1994,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -1957,7 +2021,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -1977,7 +2043,7 @@ exports[`show status for a kube object given application starts and in test page
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1989,7 +2055,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -2014,7 +2082,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -2037,7 +2107,7 @@ exports[`show status for a kube object given application starts and in test page
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2262,7 +2332,9 @@ exports[`show status for a kube object given application starts and in test page
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -2282,7 +2354,7 @@ exports[`show status for a kube object given application starts and in test page
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2294,7 +2366,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -2319,7 +2393,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -2342,7 +2418,7 @@ exports[`show status for a kube object given application starts and in test page
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2354,7 +2430,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -2379,7 +2457,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -2399,7 +2479,7 @@ exports[`show status for a kube object given application starts and in test page
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2411,7 +2491,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -2436,7 +2518,9 @@ exports[`show status for a kube object given application starts and in test page
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -2459,7 +2543,7 @@ exports[`show status for a kube object given application starts and in test page
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"

@@ -71,7 +71,9 @@ exports[`legacy extension adding cluster frame components given custom component
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -92,7 +94,7 @@ exports[`legacy extension adding cluster frame components given custom component
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -104,7 +106,9 @@ exports[`legacy extension adding cluster frame components given custom component
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -129,7 +133,9 @@ exports[`legacy extension adding cluster frame components given custom component
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -152,7 +158,7 @@ exports[`legacy extension adding cluster frame components given custom component
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -164,7 +170,9 @@ exports[`legacy extension adding cluster frame components given custom component
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -189,7 +197,9 @@ exports[`legacy extension adding cluster frame components given custom component
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -209,7 +219,7 @@ exports[`legacy extension adding cluster frame components given custom component
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -221,7 +231,9 @@ exports[`legacy extension adding cluster frame components given custom component
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -246,7 +258,9 @@ exports[`legacy extension adding cluster frame components given custom component
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -269,7 +283,7 @@ exports[`legacy extension adding cluster frame components given custom component
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"

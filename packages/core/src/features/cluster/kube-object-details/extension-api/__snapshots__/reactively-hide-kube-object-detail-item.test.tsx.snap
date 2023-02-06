@@ -133,7 +133,9 @@ exports[`reactively hide kube object detail item renders 1`] = `
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -154,7 +156,7 @@ exports[`reactively hide kube object detail item renders 1`] = `
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -166,7 +168,9 @@ exports[`reactively hide kube object detail item renders 1`] = `
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -191,7 +195,9 @@ exports[`reactively hide kube object detail item renders 1`] = `
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -214,7 +220,7 @@ exports[`reactively hide kube object detail item renders 1`] = `
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -226,7 +232,9 @@ exports[`reactively hide kube object detail item renders 1`] = `
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -251,7 +259,9 @@ exports[`reactively hide kube object detail item renders 1`] = `
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -271,7 +281,7 @@ exports[`reactively hide kube object detail item renders 1`] = `
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -283,7 +293,9 @@ exports[`reactively hide kube object detail item renders 1`] = `
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -308,7 +320,9 @@ exports[`reactively hide kube object detail item renders 1`] = `
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -331,7 +345,7 @@ exports[`reactively hide kube object detail item renders 1`] = `
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -749,7 +763,9 @@ exports[`reactively hide kube object detail item when the item is shown renders 
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -770,7 +786,7 @@ exports[`reactively hide kube object detail item when the item is shown renders 
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -782,7 +798,9 @@ exports[`reactively hide kube object detail item when the item is shown renders 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -807,7 +825,9 @@ exports[`reactively hide kube object detail item when the item is shown renders 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -830,7 +850,7 @@ exports[`reactively hide kube object detail item when the item is shown renders 
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -842,7 +862,9 @@ exports[`reactively hide kube object detail item when the item is shown renders 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -867,7 +889,9 @@ exports[`reactively hide kube object detail item when the item is shown renders 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -887,7 +911,7 @@ exports[`reactively hide kube object detail item when the item is shown renders 
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -899,7 +923,9 @@ exports[`reactively hide kube object detail item when the item is shown renders 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -924,7 +950,9 @@ exports[`reactively hide kube object detail item when the item is shown renders 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -947,7 +975,7 @@ exports[`reactively hide kube object detail item when the item is shown renders 
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"

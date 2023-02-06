@@ -71,7 +71,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -92,7 +94,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -104,7 +106,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -129,7 +133,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -152,7 +158,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -164,7 +170,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -189,7 +197,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -209,7 +219,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -221,7 +231,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -246,7 +258,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -269,7 +283,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -281,7 +295,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-extension-name-some-parent-id"
           >
@@ -297,7 +313,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -647,7 +663,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -668,7 +686,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -680,7 +698,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -705,7 +725,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -728,7 +750,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -740,7 +762,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -765,7 +789,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -785,7 +811,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -797,7 +823,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -822,7 +850,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -845,7 +875,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -857,7 +887,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-extension-name-some-parent-id"
           >
@@ -873,7 +905,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1223,7 +1255,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -1244,7 +1278,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1256,7 +1290,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -1281,7 +1317,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -1304,7 +1342,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1316,7 +1354,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -1341,7 +1381,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -1361,7 +1403,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1373,7 +1415,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -1398,7 +1442,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -1421,7 +1467,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1433,7 +1479,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="true"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-extension-name-some-parent-id"
           >
@@ -1449,7 +1497,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1463,7 +1511,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
               class="subMenu"
             >
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="false"
                 data-parent-id-test="some-extension-name-some-parent-id"
                 data-testid="sidebar-item-some-extension-name-some-child-id"
@@ -1479,7 +1529,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 </a>
               </div>
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="false"
                 data-parent-id-test="some-extension-name-some-parent-id"
                 data-testid="sidebar-item-some-extension-name-some-other-child-id"
@@ -1835,7 +1887,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-workloads"
           >
@@ -1855,7 +1909,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1867,7 +1921,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -1892,7 +1948,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -1915,7 +1973,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1927,7 +1985,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -1952,7 +2012,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -1972,7 +2034,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1984,7 +2046,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -2009,7 +2073,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -2032,7 +2098,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2044,7 +2110,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="true"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-some-extension-name-some-parent-id"
           >
@@ -2061,7 +2129,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2075,7 +2143,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
               class="subMenu active"
             >
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="true"
                 data-parent-id-test="some-extension-name-some-parent-id"
                 data-testid="sidebar-item-some-extension-name-some-child-id"
@@ -2092,7 +2162,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 </a>
               </div>
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="false"
                 data-parent-id-test="some-extension-name-some-parent-id"
                 data-testid="sidebar-item-some-extension-name-some-other-child-id"
@@ -2366,7 +2438,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-workloads"
           >
@@ -2386,7 +2460,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2398,7 +2472,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -2423,7 +2499,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -2446,7 +2524,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2458,7 +2536,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -2483,7 +2563,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -2503,7 +2585,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2515,7 +2597,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -2540,7 +2624,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -2563,7 +2649,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2575,7 +2661,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="true"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-some-extension-name-some-parent-id"
           >
@@ -2592,7 +2680,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2606,7 +2694,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
               class="subMenu active"
             >
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="false"
                 data-parent-id-test="some-extension-name-some-parent-id"
                 data-testid="sidebar-item-some-extension-name-some-child-id"
@@ -2622,7 +2712,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 </a>
               </div>
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="true"
                 data-parent-id-test="some-extension-name-some-parent-id"
                 data-testid="sidebar-item-some-extension-name-some-other-child-id"
@@ -2897,7 +2989,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-workloads"
           >
@@ -2917,7 +3011,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2929,7 +3023,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -2954,7 +3050,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -2977,7 +3075,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2989,7 +3087,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -3014,7 +3114,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -3034,7 +3136,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3046,7 +3148,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -3071,7 +3175,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -3094,7 +3200,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3106,7 +3212,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-some-extension-name-some-parent-id"
           >
@@ -3123,7 +3231,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3391,7 +3499,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -3412,7 +3522,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3424,7 +3534,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -3449,7 +3561,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -3472,7 +3586,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3484,7 +3598,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -3509,7 +3625,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -3529,7 +3647,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3541,7 +3659,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -3566,7 +3686,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -3589,7 +3711,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3601,7 +3723,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="true"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-extension-name-some-parent-id"
           >
@@ -3617,7 +3741,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3631,7 +3755,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
               class="subMenu"
             >
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="false"
                 data-parent-id-test="some-extension-name-some-parent-id"
                 data-testid="sidebar-item-some-extension-name-some-child-id"
@@ -3647,7 +3773,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 </a>
               </div>
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="false"
                 data-parent-id-test="some-extension-name-some-parent-id"
                 data-testid="sidebar-item-some-extension-name-some-other-child-id"
@@ -4003,7 +4131,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -4024,7 +4154,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -4036,7 +4166,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -4061,7 +4193,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -4084,7 +4218,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -4096,7 +4230,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -4121,7 +4257,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -4141,7 +4279,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -4153,7 +4291,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -4178,7 +4318,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -4201,7 +4343,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -4213,7 +4355,9 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-extension-name-some-parent-id"
           >
@@ -4229,7 +4373,7 @@ exports[`cluster - sidebar and tab navigation for extensions given extension wit
                 Parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"

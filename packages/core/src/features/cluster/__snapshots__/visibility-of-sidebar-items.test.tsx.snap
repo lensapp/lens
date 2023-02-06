@@ -71,7 +71,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -92,7 +94,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -104,7 +106,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -129,7 +133,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -152,7 +158,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -164,7 +170,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -189,7 +197,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -209,7 +219,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -221,7 +231,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -246,7 +258,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -269,7 +283,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -619,7 +633,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -640,7 +656,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -652,7 +668,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -677,7 +695,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-some-item-id"
           >
@@ -692,7 +712,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -715,7 +737,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -727,7 +749,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -752,7 +776,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-namespaces"
           >
@@ -777,7 +803,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -797,7 +825,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -809,7 +837,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -834,7 +864,9 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -857,7 +889,7 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"

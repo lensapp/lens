@@ -71,7 +71,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -92,7 +94,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -104,7 +106,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -129,7 +133,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-parent-id"
           >
@@ -145,7 +151,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Some parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -157,7 +163,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -180,7 +188,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -192,7 +200,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -217,7 +227,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -237,7 +249,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -249,7 +261,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -274,7 +288,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -297,7 +313,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -647,7 +663,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -668,7 +686,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -680,7 +698,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -705,7 +725,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-parent-id"
           >
@@ -721,7 +743,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Some parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -733,7 +755,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -756,7 +780,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -768,7 +792,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -793,7 +819,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -813,7 +841,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -825,7 +853,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -850,7 +880,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -873,7 +905,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1223,7 +1255,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -1244,7 +1278,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1256,7 +1290,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -1281,7 +1317,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="true"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-parent-id"
           >
@@ -1297,7 +1335,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Some parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1311,7 +1349,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               class="subMenu"
             >
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="false"
                 data-parent-id-test="some-parent-id"
                 data-testid="sidebar-item-some-child-id"
@@ -1329,7 +1369,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </ul>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -1352,7 +1394,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1364,7 +1406,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -1389,7 +1433,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -1409,7 +1455,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1421,7 +1467,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -1446,7 +1494,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -1469,7 +1519,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1819,7 +1869,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-workloads"
           >
@@ -1839,7 +1891,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1851,7 +1903,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -1876,7 +1930,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="true"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-some-parent-id"
           >
@@ -1893,7 +1949,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Some parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1907,7 +1963,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               class="subMenu active"
             >
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="true"
                 data-parent-id-test="some-parent-id"
                 data-testid="sidebar-item-some-child-id"
@@ -1926,7 +1984,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </ul>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -1949,7 +2009,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1961,7 +2021,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -1986,7 +2048,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -2006,7 +2070,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2018,7 +2082,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -2043,7 +2109,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -2066,7 +2134,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2293,7 +2361,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-workloads"
           >
@@ -2313,7 +2383,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2325,7 +2395,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -2350,7 +2422,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-some-parent-id"
           >
@@ -2367,7 +2441,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Some parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2379,7 +2453,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -2402,7 +2478,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2414,7 +2490,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -2439,7 +2517,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -2459,7 +2539,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2471,7 +2551,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -2496,7 +2578,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -2519,7 +2603,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2746,7 +2830,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -2767,7 +2853,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2779,7 +2865,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -2804,7 +2892,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="true"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-parent-id"
           >
@@ -2820,7 +2910,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Some parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2834,7 +2924,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
               class="subMenu"
             >
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="false"
                 data-parent-id-test="some-parent-id"
                 data-testid="sidebar-item-some-child-id"
@@ -2852,7 +2944,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </ul>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -2875,7 +2969,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2887,7 +2981,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -2912,7 +3008,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -2932,7 +3030,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -2944,7 +3042,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -2969,7 +3069,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -2992,7 +3094,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3342,7 +3444,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -3363,7 +3467,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3375,7 +3479,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -3400,7 +3506,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-parent-id"
           >
@@ -3416,7 +3524,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Some parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3428,7 +3536,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -3451,7 +3561,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3463,7 +3573,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -3488,7 +3600,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -3508,7 +3622,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -3520,7 +3634,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -3545,7 +3661,9 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -3568,7 +3686,7 @@ exports[`cluster - sidebar and tab navigation for core given core registrations 
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"

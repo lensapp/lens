@@ -72,7 +72,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -93,7 +95,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -105,7 +107,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -130,7 +134,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -153,7 +159,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -165,7 +171,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -190,7 +198,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -210,7 +220,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -222,7 +232,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -247,7 +259,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -270,7 +284,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -627,7 +641,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -648,7 +664,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -660,7 +676,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -685,7 +703,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -708,7 +728,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -720,7 +740,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -745,7 +767,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -765,7 +789,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -777,7 +801,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -802,7 +828,9 @@ exports[`disable workloads overview details when cluster is not relevant given e
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -825,7 +853,7 @@ exports[`disable workloads overview details when cluster is not relevant given e
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1177,7 +1205,9 @@ exports[`disable workloads overview details when cluster is not relevant given n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -1198,7 +1228,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1210,7 +1240,9 @@ exports[`disable workloads overview details when cluster is not relevant given n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -1235,7 +1267,9 @@ exports[`disable workloads overview details when cluster is not relevant given n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -1258,7 +1292,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1270,7 +1304,9 @@ exports[`disable workloads overview details when cluster is not relevant given n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -1295,7 +1331,9 @@ exports[`disable workloads overview details when cluster is not relevant given n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -1315,7 +1353,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1327,7 +1365,9 @@ exports[`disable workloads overview details when cluster is not relevant given n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -1352,7 +1392,9 @@ exports[`disable workloads overview details when cluster is not relevant given n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -1375,7 +1417,7 @@ exports[`disable workloads overview details when cluster is not relevant given n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"

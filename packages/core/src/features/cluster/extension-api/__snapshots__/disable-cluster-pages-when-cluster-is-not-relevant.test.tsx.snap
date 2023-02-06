@@ -72,7 +72,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -92,7 +94,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -104,7 +106,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -129,7 +133,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -152,7 +158,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -164,7 +170,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -189,7 +197,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -209,7 +219,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -221,7 +231,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -246,7 +258,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -269,7 +283,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -500,7 +514,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -521,7 +537,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -533,7 +549,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -558,7 +576,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -581,7 +601,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -593,7 +613,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -618,7 +640,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -638,7 +662,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -650,7 +674,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -675,7 +701,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -698,7 +726,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given extension shou
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1050,7 +1078,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -1071,7 +1101,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1083,7 +1113,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -1108,7 +1140,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -1131,7 +1165,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1143,7 +1177,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -1168,7 +1204,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -1188,7 +1226,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1200,7 +1238,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -1225,7 +1265,9 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -1248,7 +1290,7 @@ exports[`disable-cluster-pages-when-cluster-is-not-relevant given not yet known 
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"

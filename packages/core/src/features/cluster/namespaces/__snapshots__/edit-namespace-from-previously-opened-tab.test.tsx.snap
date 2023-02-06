@@ -72,7 +72,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -93,7 +95,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -105,7 +107,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -130,7 +134,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -153,7 +159,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -165,7 +171,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -190,7 +198,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-namespaces"
             >
@@ -215,7 +225,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -235,7 +247,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -247,7 +259,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -272,7 +286,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -295,7 +311,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -657,7 +673,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -678,7 +696,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -690,7 +708,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -715,7 +735,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -738,7 +760,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -750,7 +772,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -775,7 +799,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-namespaces"
             >
@@ -800,7 +826,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -820,7 +848,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -832,7 +860,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -857,7 +887,9 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -880,7 +912,7 @@ exports[`cluster/namespaces - edit namespaces from previously opened tab given t
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"

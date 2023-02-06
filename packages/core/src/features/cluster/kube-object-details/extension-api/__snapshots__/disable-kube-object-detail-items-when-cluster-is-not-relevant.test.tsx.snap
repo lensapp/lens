@@ -138,7 +138,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -159,7 +161,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -171,7 +173,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -196,7 +200,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -219,7 +225,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -231,7 +237,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -256,7 +264,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -276,7 +286,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -288,7 +298,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -313,7 +325,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -336,7 +350,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -749,7 +763,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -770,7 +786,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -782,7 +798,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -807,7 +825,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -830,7 +850,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -842,7 +862,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -867,7 +889,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -887,7 +911,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -899,7 +923,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -924,7 +950,9 @@ exports[`disable kube object detail items when cluster is not relevant given ext
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -947,7 +975,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1360,7 +1388,9 @@ exports[`disable kube object detail items when cluster is not relevant given not
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -1381,7 +1411,7 @@ exports[`disable kube object detail items when cluster is not relevant given not
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1393,7 +1423,9 @@ exports[`disable kube object detail items when cluster is not relevant given not
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -1418,7 +1450,9 @@ exports[`disable kube object detail items when cluster is not relevant given not
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -1441,7 +1475,7 @@ exports[`disable kube object detail items when cluster is not relevant given not
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1453,7 +1487,9 @@ exports[`disable kube object detail items when cluster is not relevant given not
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -1478,7 +1514,9 @@ exports[`disable kube object detail items when cluster is not relevant given not
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -1498,7 +1536,7 @@ exports[`disable kube object detail items when cluster is not relevant given not
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1510,7 +1548,9 @@ exports[`disable kube object detail items when cluster is not relevant given not
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -1535,7 +1575,9 @@ exports[`disable kube object detail items when cluster is not relevant given not
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -1558,7 +1600,7 @@ exports[`disable kube object detail items when cluster is not relevant given not
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"

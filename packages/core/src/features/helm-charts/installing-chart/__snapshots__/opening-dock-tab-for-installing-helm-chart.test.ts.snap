@@ -72,7 +72,9 @@ exports[`opening dock tab for installing helm chart given application is started
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -92,7 +94,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -104,7 +106,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -129,7 +133,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -152,7 +158,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -164,7 +170,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -189,7 +197,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -210,7 +220,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -222,7 +232,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -247,7 +259,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -270,7 +284,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -609,7 +623,9 @@ exports[`opening dock tab for installing helm chart given application is started
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -629,7 +645,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -641,7 +657,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -666,7 +684,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -689,7 +709,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -701,7 +721,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -726,7 +748,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -747,7 +771,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -759,7 +783,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -784,7 +810,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -807,7 +835,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1316,7 +1344,9 @@ exports[`opening dock tab for installing helm chart given application is started
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -1336,7 +1366,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1348,7 +1378,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -1373,7 +1405,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -1396,7 +1430,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1408,7 +1442,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -1433,7 +1469,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -1454,7 +1492,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1466,7 +1504,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -1491,7 +1531,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -1514,7 +1556,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2080,7 +2122,9 @@ exports[`opening dock tab for installing helm chart given application is started
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -2100,7 +2144,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2112,7 +2156,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -2137,7 +2183,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -2160,7 +2208,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2172,7 +2220,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -2197,7 +2247,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -2218,7 +2270,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2230,7 +2282,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -2255,7 +2309,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -2278,7 +2334,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3027,7 +3083,9 @@ exports[`opening dock tab for installing helm chart given application is started
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -3047,7 +3105,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3059,7 +3117,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -3084,7 +3144,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -3107,7 +3169,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3119,7 +3181,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -3144,7 +3208,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -3165,7 +3231,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3177,7 +3243,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -3202,7 +3270,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -3225,7 +3295,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3984,7 +4054,9 @@ exports[`opening dock tab for installing helm chart given application is started
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -4004,7 +4076,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4016,7 +4088,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -4041,7 +4115,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -4064,7 +4140,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4076,7 +4152,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -4101,7 +4179,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -4122,7 +4202,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4134,7 +4214,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -4159,7 +4241,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -4182,7 +4266,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4931,7 +5015,9 @@ exports[`opening dock tab for installing helm chart given application is started
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -4951,7 +5037,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4963,7 +5049,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -4988,7 +5076,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -5011,7 +5101,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5023,7 +5113,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -5048,7 +5140,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -5069,7 +5163,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5081,7 +5175,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -5106,7 +5202,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -5129,7 +5227,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5882,7 +5980,9 @@ exports[`opening dock tab for installing helm chart given application is started
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -5902,7 +6002,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5914,7 +6014,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -5939,7 +6041,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -5962,7 +6066,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5974,7 +6078,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -5999,7 +6105,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -6020,7 +6128,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -6032,7 +6140,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -6057,7 +6167,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -6080,7 +6192,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -6839,7 +6951,9 @@ exports[`opening dock tab for installing helm chart given application is started
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -6859,7 +6973,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -6871,7 +6985,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -6896,7 +7012,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -6919,7 +7037,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -6931,7 +7049,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -6956,7 +7076,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -6977,7 +7099,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -6989,7 +7111,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -7014,7 +7138,9 @@ exports[`opening dock tab for installing helm chart given application is started
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -7037,7 +7163,7 @@ exports[`opening dock tab for installing helm chart given application is started
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"

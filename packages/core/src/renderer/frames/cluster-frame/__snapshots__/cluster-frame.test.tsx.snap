@@ -75,7 +75,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="true"
             data-testid="sidebar-item-cluster-overview"
           >
@@ -98,7 +100,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-nodes"
           >
@@ -120,7 +124,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-workloads"
           >
@@ -140,7 +146,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -152,7 +158,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -177,7 +185,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -200,7 +210,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -212,7 +222,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -237,7 +249,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-namespaces"
           >
@@ -262,7 +276,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -282,7 +298,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -294,7 +310,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -319,7 +337,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -342,7 +362,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -579,7 +599,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="true"
             data-testid="sidebar-item-cluster-overview"
           >
@@ -602,7 +624,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-nodes"
           >
@@ -624,7 +648,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-workloads"
           >
@@ -644,7 +670,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -656,7 +682,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -681,7 +709,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -704,7 +734,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -716,7 +746,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -741,7 +773,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-namespaces"
           >
@@ -766,7 +800,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -786,7 +822,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -798,7 +834,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -823,7 +861,9 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -846,7 +886,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1090,7 +1130,9 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -1111,7 +1153,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1123,7 +1165,9 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -1148,7 +1192,9 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -1171,7 +1217,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1183,7 +1229,9 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -1208,7 +1256,9 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-namespaces"
           >
@@ -1233,7 +1283,9 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -1253,7 +1305,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -1265,7 +1317,9 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -1290,7 +1344,9 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -1313,7 +1369,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"

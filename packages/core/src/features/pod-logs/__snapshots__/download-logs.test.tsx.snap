@@ -72,7 +72,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -93,7 +95,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -105,7 +107,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -130,7 +134,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -153,7 +159,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -165,7 +171,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -190,7 +198,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -210,7 +220,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -222,7 +232,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -247,7 +259,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -270,7 +284,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs avail
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -965,7 +979,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -986,7 +1002,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -998,7 +1014,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -1023,7 +1041,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -1046,7 +1066,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1058,7 +1078,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -1083,7 +1105,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -1103,7 +1127,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1115,7 +1139,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -1140,7 +1166,9 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -1163,7 +1191,7 @@ exports[`download logs options in logs dock tab opening pod logs when logs not a
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"

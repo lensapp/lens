@@ -72,7 +72,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-workloads"
             >
@@ -93,7 +95,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -105,7 +107,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -130,7 +134,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -153,7 +159,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -165,7 +171,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -190,7 +198,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-helm"
             >
@@ -210,7 +220,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -222,7 +232,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -247,7 +259,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -270,7 +284,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -541,7 +555,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -561,7 +577,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -573,7 +589,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -598,7 +616,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -621,7 +641,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -633,7 +653,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -658,7 +680,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -679,7 +703,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -691,7 +715,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -716,7 +742,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -739,7 +767,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1494,7 +1522,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -1514,7 +1544,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1526,7 +1556,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -1551,7 +1583,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -1574,7 +1608,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1586,7 +1620,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -1611,7 +1647,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -1632,7 +1670,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1644,7 +1682,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -1669,7 +1709,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -1692,7 +1734,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2292,7 +2334,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -2312,7 +2356,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2324,7 +2368,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -2349,7 +2395,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -2372,7 +2420,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2384,7 +2432,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -2409,7 +2459,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -2430,7 +2482,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2442,7 +2494,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -2467,7 +2521,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -2490,7 +2546,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3334,7 +3390,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -3354,7 +3412,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3366,7 +3424,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -3391,7 +3451,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -3414,7 +3476,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3426,7 +3488,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -3451,7 +3515,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -3472,7 +3538,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3484,7 +3550,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -3509,7 +3577,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -3532,7 +3602,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4350,7 +4420,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -4370,7 +4442,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4382,7 +4454,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -4407,7 +4481,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -4430,7 +4506,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4442,7 +4518,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -4467,7 +4545,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -4488,7 +4568,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4500,7 +4580,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -4525,7 +4607,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -4548,7 +4632,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5361,7 +5445,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -5381,7 +5467,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5393,7 +5479,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -5418,7 +5506,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -5441,7 +5531,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5453,7 +5543,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -5478,7 +5570,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -5499,7 +5593,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5511,7 +5605,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -5536,7 +5632,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -5559,7 +5657,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -6372,7 +6470,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -6392,7 +6492,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -6404,7 +6504,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -6429,7 +6531,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -6452,7 +6556,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -6464,7 +6568,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -6489,7 +6595,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -6510,7 +6618,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -6522,7 +6630,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -6547,7 +6657,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -6570,7 +6682,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -7405,7 +7517,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -7425,7 +7539,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -7437,7 +7551,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -7462,7 +7578,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -7485,7 +7603,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -7497,7 +7615,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -7522,7 +7642,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -7543,7 +7665,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -7555,7 +7677,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -7580,7 +7704,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -7603,7 +7729,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -8447,7 +8573,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -8467,7 +8595,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -8479,7 +8607,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -8504,7 +8634,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -8527,7 +8659,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -8539,7 +8671,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -8564,7 +8698,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -8585,7 +8721,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -8597,7 +8733,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -8622,7 +8760,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -8645,7 +8785,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -9458,7 +9598,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -9478,7 +9620,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -9490,7 +9632,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -9515,7 +9659,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -9538,7 +9684,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -9550,7 +9696,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -9575,7 +9723,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -9596,7 +9746,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -9608,7 +9758,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -9633,7 +9785,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -9656,7 +9810,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -10477,7 +10631,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -10497,7 +10653,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -10509,7 +10665,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -10534,7 +10692,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -10557,7 +10717,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -10569,7 +10729,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -10594,7 +10756,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -10615,7 +10779,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -10627,7 +10791,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -10652,7 +10818,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -10675,7 +10843,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -11355,7 +11523,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -11375,7 +11545,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -11387,7 +11557,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -11412,7 +11584,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -11435,7 +11609,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -11447,7 +11621,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -11472,7 +11648,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -11493,7 +11671,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -11505,7 +11683,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -11530,7 +11710,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -11553,7 +11735,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -12168,7 +12350,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -12188,7 +12372,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -12200,7 +12384,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -12225,7 +12411,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -12248,7 +12436,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -12260,7 +12448,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -12285,7 +12475,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -12306,7 +12498,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -12318,7 +12510,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -12343,7 +12537,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -12366,7 +12562,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -13059,7 +13255,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -13079,7 +13277,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -13091,7 +13289,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -13116,7 +13316,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -13139,7 +13341,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -13151,7 +13353,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -13176,7 +13380,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -13197,7 +13403,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -13209,7 +13415,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -13234,7 +13442,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -13257,7 +13467,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -14316,7 +14526,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -14336,7 +14548,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -14348,7 +14560,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -14373,7 +14587,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -14396,7 +14612,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -14408,7 +14624,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -14433,7 +14651,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -14454,7 +14674,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -14466,7 +14686,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -14491,7 +14713,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -14514,7 +14738,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -15166,7 +15390,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -15186,7 +15412,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -15198,7 +15424,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -15223,7 +15451,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -15246,7 +15476,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -15258,7 +15488,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -15283,7 +15515,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -15304,7 +15538,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -15316,7 +15550,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -15341,7 +15577,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -15364,7 +15602,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -16231,7 +16469,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -16251,7 +16491,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -16263,7 +16503,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -16288,7 +16530,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -16311,7 +16555,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -16323,7 +16567,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -16348,7 +16594,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -16369,7 +16617,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -16381,7 +16629,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -16406,7 +16656,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -16429,7 +16681,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -17294,7 +17546,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -17314,7 +17568,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -17326,7 +17580,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -17351,7 +17607,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -17374,7 +17632,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -17386,7 +17644,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -17411,7 +17671,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -17432,7 +17694,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -17444,7 +17706,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -17469,7 +17733,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -17492,7 +17758,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -18305,7 +18571,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -18325,7 +18593,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -18337,7 +18605,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -18362,7 +18632,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -18385,7 +18657,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -18397,7 +18669,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -18422,7 +18696,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -18443,7 +18719,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -18455,7 +18731,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -18480,7 +18758,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -18503,7 +18783,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -19316,7 +19596,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -19336,7 +19618,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -19348,7 +19630,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -19373,7 +19657,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -19396,7 +19682,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -19408,7 +19694,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -19433,7 +19721,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -19454,7 +19744,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -19466,7 +19756,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -19491,7 +19783,9 @@ exports[`installing helm chart from new tab given tab for installing chart was n
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -19514,7 +19808,7 @@ exports[`installing helm chart from new tab given tab for installing chart was n
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"

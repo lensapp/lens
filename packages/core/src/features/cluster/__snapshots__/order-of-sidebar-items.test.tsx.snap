@@ -71,7 +71,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -92,7 +94,7 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -104,7 +106,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -129,7 +133,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-parent-id"
           >
@@ -142,7 +148,7 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
                 Some parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -154,7 +160,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -177,7 +185,7 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -189,7 +197,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -214,7 +224,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-some-another-parent-id"
           >
@@ -229,7 +241,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -249,7 +263,7 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -261,7 +275,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -286,7 +302,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -309,7 +327,7 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -321,7 +339,9 @@ exports[`cluster - order of sidebar items when rendered renders 1`] = `
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-some-other-parent-id"
           >
@@ -674,7 +694,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
           class="sidebarNav sidebar-active-status"
         >
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="true"
             data-testid="sidebar-item-workloads"
           >
@@ -695,7 +717,7 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                 Workloads
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -707,7 +729,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-config"
           >
@@ -732,7 +756,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </a>
           </div>
           <div
+            aria-expanded="true"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-some-parent-id"
           >
@@ -745,7 +771,7 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                 Some parent
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -759,7 +785,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
               class="subMenu"
             >
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="false"
                 data-parent-id-test="some-parent-id"
                 data-testid="sidebar-item-some-child-id"
@@ -775,7 +803,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                 </a>
               </div>
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="false"
                 data-parent-id-test="some-parent-id"
                 data-testid="sidebar-item-some-another-child-id"
@@ -791,7 +821,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                 </a>
               </div>
               <div
+                aria-expanded="false"
                 class="SidebarItem"
+                data-expandable="false"
                 data-is-active-test="false"
                 data-parent-id-test="some-parent-id"
                 data-testid="sidebar-item-some-other-child-id"
@@ -809,7 +841,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </ul>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-network"
           >
@@ -832,7 +866,7 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                 Network
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -844,7 +878,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-storage"
           >
@@ -869,7 +905,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-some-another-parent-id"
           >
@@ -884,7 +922,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-helm"
           >
@@ -904,7 +944,7 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                 Helm
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -916,7 +956,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-user-management"
           >
@@ -941,7 +983,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="true"
             data-is-active-test="false"
             data-testid="sidebar-item-custom-resources"
           >
@@ -964,7 +1008,7 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
                 Custom Resources
               </span>
               <i
-                class="Icon expandIcon material focusable"
+                class="Icon expandIcon material focusable small"
               >
                 <span
                   class="icon"
@@ -976,7 +1020,9 @@ exports[`cluster - order of sidebar items when rendered when parent is expanded 
             </a>
           </div>
           <div
+            aria-expanded="false"
             class="SidebarItem"
+            data-expandable="false"
             data-is-active-test="false"
             data-testid="sidebar-item-some-other-parent-id"
           >

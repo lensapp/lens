@@ -72,7 +72,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -92,7 +94,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -104,7 +106,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -129,7 +133,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -152,7 +158,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -164,7 +170,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -189,7 +197,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -210,7 +220,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -222,7 +232,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -247,7 +259,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -270,7 +284,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -772,7 +786,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -792,7 +808,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -804,7 +820,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -829,7 +847,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -852,7 +872,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -864,7 +884,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -889,7 +911,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -910,7 +934,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -922,7 +946,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -947,7 +973,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -970,7 +998,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1575,7 +1603,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -1595,7 +1625,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1607,7 +1637,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -1632,7 +1664,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -1655,7 +1689,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1667,7 +1701,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -1692,7 +1728,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -1713,7 +1751,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -1725,7 +1763,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -1750,7 +1790,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -1773,7 +1815,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2394,7 +2436,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -2414,7 +2458,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2426,7 +2470,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -2451,7 +2497,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -2474,7 +2522,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2486,7 +2534,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -2511,7 +2561,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -2532,7 +2584,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -2544,7 +2596,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -2569,7 +2623,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -2592,7 +2648,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3249,7 +3305,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -3269,7 +3327,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3281,7 +3339,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -3306,7 +3366,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -3329,7 +3391,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3341,7 +3403,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -3366,7 +3430,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -3387,7 +3453,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -3399,7 +3465,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -3424,7 +3492,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -3447,7 +3517,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4244,7 +4314,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -4264,7 +4336,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4276,7 +4348,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -4301,7 +4375,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -4324,7 +4400,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4336,7 +4412,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -4361,7 +4439,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -4382,7 +4462,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -4394,7 +4474,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -4419,7 +4501,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -4442,7 +4526,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5241,7 +5325,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
             class="sidebarNav sidebar-active-status"
           >
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-workloads"
             >
@@ -5261,7 +5347,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Workloads
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5273,7 +5359,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-config"
             >
@@ -5298,7 +5386,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-network"
             >
@@ -5321,7 +5411,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Network
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5333,7 +5423,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-storage"
             >
@@ -5358,7 +5450,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="true"
               data-testid="sidebar-item-helm"
             >
@@ -5379,7 +5473,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Helm
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
@@ -5391,7 +5485,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="false"
               data-is-active-test="false"
               data-testid="sidebar-item-user-management"
             >
@@ -5416,7 +5512,9 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
               </a>
             </div>
             <div
+              aria-expanded="false"
               class="SidebarItem"
+              data-expandable="true"
               data-is-active-test="false"
               data-testid="sidebar-item-custom-resources"
             >
@@ -5439,7 +5537,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                   Custom Resources
                 </span>
                 <i
-                  class="Icon expandIcon material focusable"
+                  class="Icon expandIcon material focusable small"
                 >
                   <span
                     class="icon"
