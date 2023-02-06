@@ -11,6 +11,7 @@
  import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
  import CircularDependencyPlugin from "circular-dependency-plugin";
  import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+ import CopyPlugin from "copy-webpack-plugin";
  import type { WebpackPluginInstance } from "webpack";
  import { DefinePlugin } from "webpack";
  import { assetsFolderName, isDevelopment, rendererDir, buildDir, htmlTemplate, publicPath, sassCommonVars } from "./vars";
@@ -111,6 +112,15 @@
 
     new MiniCssExtractPlugin({
       filename: "[name].css",
+    }),
+
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "node_modules/@k8slens/core/static/build/library/*.ttf",
+          to: "[name][ext]",
+        },
+      ],
     }),
 
     ...(
