@@ -17,8 +17,6 @@ import {
   orderBy,
   some,
 } from "lodash/fp";
-import sidebarStorageInjectable, { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";
-import type { StorageLayer } from "../../utils";
 
 export interface SidebarItemRegistration {
   id: string;
@@ -46,7 +44,6 @@ const sidebarItemsInjectable = getInjectable({
 
   instantiate: (di) => {
     const computedInjectMany = di.inject(computedInjectManyInjectable);
-    const sidebarStorage: StorageLayer<SidebarStorageState> = di.inject(sidebarStorageInjectable)
     const sidebarItemRegistrations = computedInjectMany(sidebarItemsInjectionToken);
 
     return computed((): HierarchicalSidebarItem[] => {
@@ -65,8 +62,6 @@ const sidebarItemsInjectable = getInjectable({
             map((registration) => {
               const children = _getSidebarItemsHierarchy(registration.id);
 
-              const parentExpanded = () => Boolean(sidebarStorage.get().expanded[registration.id])
-
               return {
                 registration,
                 children,
@@ -80,7 +75,6 @@ const sidebarItemsInjectable = getInjectable({
                     children,
                     invokeMap("isActive.get"),
                     some(identity),
-                    (identityFound) => identityFound && !parentExpanded(),
                   );
                 }),
               };
