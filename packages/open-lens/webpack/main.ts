@@ -27,7 +27,7 @@ const main: webpack.Configuration = ({
     extensions: [".json", ".js", ".ts"],
   },
   externals: [
-    nodeExternals(),
+    nodeExternals({ modulesFromFile: true }),
   ],
   module: {
     parser: {
