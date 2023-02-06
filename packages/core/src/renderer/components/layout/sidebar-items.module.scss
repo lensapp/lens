@@ -22,7 +22,8 @@
     }
 
     span {
-      word-break: break-word;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
@@ -35,6 +36,8 @@
       &[data-expandable="true"] {
         > .navItem > span {
           font-weight: bolder;
+          color: var(--textColorAccent);
+          opacity: 0.6;
         }
       }
 
