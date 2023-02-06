@@ -18,11 +18,12 @@
     "test:unit": "lerna run --stream test:unit",
     "test:integration": "lerna run --stream test:integration",
     "bump-version": "lerna version --no-git-tag-version --no-push",
-    "create-release-pr": "node packages/release-tool",
+    "create-release-pr": "create-release-pr",
     "postinstall": "lerna bootstrap --ignore open-lens && lerna bootstrap --scope open-lens --include-dependencies"
   },
   "devDependencies": {
     "@k8slens/semver": "./packages/semver",
+    "@k8slens/release-tool": "./packages/release-tool",
     "adr": "^1.4.3",
     "cross-env": "^7.0.3",
     "lerna": "^6.4.1",
