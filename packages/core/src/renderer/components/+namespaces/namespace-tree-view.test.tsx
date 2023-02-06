@@ -118,7 +118,7 @@ describe("<NamespaceTreeView />", () => {
       levelDeepChildA,
       levelDeepChildB,
       levelDeepSubChildA,
-    ])
+    ]);
 
     render = renderFor(di);
   });
