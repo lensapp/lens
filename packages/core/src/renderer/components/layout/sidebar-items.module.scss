@@ -5,6 +5,18 @@
   width: 100%;
   user-select: none;
 
+  // Do not highlight active state when item expanded
+  &[aria-expanded='true'] {
+    > .navItem:global(.active) {
+      background-color: transparent;
+      color: var(--textColorPrimary);
+    }
+
+    >.navItem:hover {
+      background: var(--sidebarLogoBackground);
+    }
+  }
+
   > .navItem {
     display: flex;
     gap: 8px;
@@ -34,11 +46,13 @@
   .subMenu {
     .SidebarItem {
       &[data-expandable="true"] {
-        > .navItem > span {
-          font-weight: bolder;
-          color: var(--textColorAccent);
-          opacity: 0.6;
-        }
+        > .navItem {
+          > span {
+            font-weight: bolder;
+            color: var(--textColorAccent);
+            opacity: 0.7;
+          }
+        } 
       }
 
       .navItem {
