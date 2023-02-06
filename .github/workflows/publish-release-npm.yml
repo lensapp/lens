@@ -32,8 +32,8 @@ jobs:
 
       - name: Generate NPM packages
         run: |
-          yarn install --frozen-lockfile
-          yarn run build
+          npm ci
+          npm run build
 
       - name: Publish NPM packages
         run: |
@@ -41,7 +41,7 @@ jobs:
           VERSION=$(cat lerna.json | jq '.version' --raw-output)
           echo ${VERSION}
           DIST_TAG=$(npm exec -- @k8slens/semver --prerelease 0 ${VERSION})
-          yarn lerna \
+          npx lerna \
             publish from-package \
             --no-push \
             --no-git-tag-version \

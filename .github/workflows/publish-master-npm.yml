@@ -27,12 +27,12 @@ jobs:
 
       - name: Generate NPM packages
         run: |
-          yarn install --frozen-lockfile
-          yarn run build
+          npm ci
+          npm run build
 
       - name: Publish NPM package
         run: |
           npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-          yarn lerna publish from-package --dist-tag master --no-push --no-git-tag-version --yes
+          npx lerna publish from-package --dist-tag master --no-push --no-git-tag-version --yes
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

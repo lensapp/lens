@@ -20,10 +20,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "yarn run webpack --config webpack/extensions.ts",
-    "build:docs": "yarn run typedoc",
+    "build": "webpack --config webpack/extensions.ts",
+    "build:docs": "typedoc",
     "clean": "rimraf dist/",
-    "prepare:dev": "yarn run build"
+    "prepare:dev": "npm run build"
   },
   "dependencies": {
     "@k8slens/core": "^6.4.0-beta.13"

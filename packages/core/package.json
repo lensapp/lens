@@ -50,14 +50,14 @@
   "license": "MIT",
   "author": "OpenLens Authors <info@k8slens.dev>",
   "scripts": {
-    "build": "cross-env NODE_ENV=production yarn run webpack --config webpack/library-bundle.ts --progress",
+    "build": "cross-env NODE_ENV=production webpack --config webpack/library-bundle.ts --progress",
     "clean": "rimraf dist static/build",
-    "prepare:dev": "cross-env NODE_ENV=development yarn run webpack --config webpack/library-bundle.ts --progress",
-    "dev": "cross-env NODE_ENV=development yarn run webpack --config webpack/library-bundle.ts --watch",
+    "prepare:dev": "cross-env NODE_ENV=development webpack --config webpack/library-bundle.ts --progress",
+    "dev": "cross-env NODE_ENV=development webpack --config webpack/library-bundle.ts --watch",
     "test:unit": "jest --testPathIgnorePatterns integration",
     "test:watch": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
-    "lint": "PROD=true yarn run eslint --ext js,ts,tsx --max-warnings=0 .",
-    "lint:fix": "yarn run lint --fix"
+    "lint": "PROD=true eslint --ext js,ts,tsx --max-warnings=0 .",
+    "lint:fix": "npm run lint --fix"
   },
   "config": {
     "k8sProxyVersion": "0.3.0",
