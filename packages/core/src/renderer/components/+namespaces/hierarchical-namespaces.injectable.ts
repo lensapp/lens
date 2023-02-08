@@ -11,7 +11,7 @@ const hierarchicalNamespacesInjectable = getInjectable({
   instantiate: (di) => {
     const namespaceStore = di.inject(namespaceStoreInjectable);
 
-    return namespaceStore.getByLabel(["hnc.x-k8s.io/included-namespace=true"]);
+    return namespaceStore.items.filter(item => item.isControlledByHNC());
   },
 });
 
