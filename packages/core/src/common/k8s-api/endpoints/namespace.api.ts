@@ -34,8 +34,18 @@ export class Namespace extends KubeObject<
     return this.status?.phase ?? "-";
   }
 
-  isSubnamespace(){  
+  isSubnamespace() {  
     return this.getAnnotations().find(annotation => annotation.includes("hnc.x-k8s.io/subnamespace-of"));
+  }
+
+  isChildOf(parentName: string) {
+    this.getLabels().find(label => label === `${parentName}.tree.hnc.x-k8s.io/depth=1`);
+  }
+
+  isControlledByHNC() {
+    const hierarchicalNamesaceControllerLabel = "hnc.x-k8s.io/included-namespace=true";
+
+    return this.getLabels().find(label => label === hierarchicalNamesaceControllerLabel);
   }
 }
 

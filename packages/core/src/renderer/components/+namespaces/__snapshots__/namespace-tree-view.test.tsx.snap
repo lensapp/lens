@@ -20,7 +20,7 @@ exports[`<NamespaceTreeView /> collapses item by clicking minus button 1`] = `
         <li
           aria-expanded="true"
           class="MuiTreeItem-root Mui-expanded"
-          data-testid="namespace-levels-deep-1"
+          data-testid="namespace-levels-deep"
           role="treeitem"
           tabindex="0"
         >
@@ -47,6 +47,7 @@ exports[`<NamespaceTreeView /> collapses item by clicking minus button 1`] = `
               class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               levels-deep
+               
             </div>
           </div>
           <ul
@@ -62,7 +63,7 @@ exports[`<NamespaceTreeView /> collapses item by clicking minus button 1`] = `
               >
                 <li
                   class="MuiTreeItem-root Mui-expanded"
-                  data-testid="namespace-level-deep-child-a-1"
+                  data-testid="namespace-level-deep-child-a"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -96,24 +97,11 @@ exports[`<NamespaceTreeView /> collapses item by clicking minus button 1`] = `
                        
                     </div>
                   </div>
-                  <ul
-                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
-                  >
-                    <div
-                      class="MuiCollapse-wrapper"
-                    >
-                      <div
-                        class="MuiCollapse-wrapperInner"
-                      />
-                    </div>
-                  </ul>
                 </li>
                 <li
                   aria-expanded="false"
                   class="MuiTreeItem-root"
-                  data-testid="namespace-level-deep-child-b-1"
+                  data-testid="namespace-level-deep-child-b"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -156,7 +144,7 @@ exports[`<NamespaceTreeView /> collapses item by clicking minus button 1`] = `
                       >
                         <li
                           class="MuiTreeItem-root Mui-expanded"
-                          data-testid="namespace-level-deep-subchild-a-1"
+                          data-testid="namespace-level-deep-subchild-a"
                           role="treeitem"
                           tabindex="-1"
                         >
@@ -190,19 +178,6 @@ exports[`<NamespaceTreeView /> collapses item by clicking minus button 1`] = `
                                
                             </div>
                           </div>
-                          <ul
-                            class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
-                            role="group"
-                            style="min-height: 0px;"
-                          >
-                            <div
-                              class="MuiCollapse-wrapper"
-                            >
-                              <div
-                                class="MuiCollapse-wrapperInner"
-                              />
-                            </div>
-                          </ul>
                         </li>
                       </div>
                     </div>
@@ -238,7 +213,7 @@ exports[`<NamespaceTreeView /> expands item by clicking plus button 1`] = `
         <li
           aria-expanded="true"
           class="MuiTreeItem-root Mui-expanded"
-          data-testid="namespace-levels-deep-1"
+          data-testid="namespace-levels-deep"
           role="treeitem"
           tabindex="0"
         >
@@ -265,6 +240,7 @@ exports[`<NamespaceTreeView /> expands item by clicking plus button 1`] = `
               class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               levels-deep
+               
             </div>
           </div>
           <ul
@@ -280,7 +256,7 @@ exports[`<NamespaceTreeView /> expands item by clicking plus button 1`] = `
               >
                 <li
                   class="MuiTreeItem-root Mui-expanded"
-                  data-testid="namespace-level-deep-child-a-1"
+                  data-testid="namespace-level-deep-child-a"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -314,24 +290,11 @@ exports[`<NamespaceTreeView /> expands item by clicking plus button 1`] = `
                        
                     </div>
                   </div>
-                  <ul
-                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
-                  >
-                    <div
-                      class="MuiCollapse-wrapper"
-                    >
-                      <div
-                        class="MuiCollapse-wrapperInner"
-                      />
-                    </div>
-                  </ul>
                 </li>
                 <li
                   aria-expanded="true"
                   class="MuiTreeItem-root Mui-expanded"
-                  data-testid="namespace-level-deep-child-b-1"
+                  data-testid="namespace-level-deep-child-b"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -374,7 +337,7 @@ exports[`<NamespaceTreeView /> expands item by clicking plus button 1`] = `
                       >
                         <li
                           class="MuiTreeItem-root Mui-expanded"
-                          data-testid="namespace-level-deep-subchild-a-1"
+                          data-testid="namespace-level-deep-subchild-a"
                           role="treeitem"
                           tabindex="-1"
                         >
@@ -408,19 +371,6 @@ exports[`<NamespaceTreeView /> expands item by clicking plus button 1`] = `
                                
                             </div>
                           </div>
-                          <ul
-                            class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
-                            role="group"
-                            style="min-height: 0px;"
-                          >
-                            <div
-                              class="MuiCollapse-wrapper"
-                            >
-                              <div
-                                class="MuiCollapse-wrapperInner"
-                              />
-                            </div>
-                          </ul>
                         </li>
                       </div>
                     </div>
@@ -456,7 +406,7 @@ exports[`<NamespaceTreeView /> renders 2 levels deep 1`] = `
         <li
           aria-expanded="true"
           class="MuiTreeItem-root Mui-expanded"
-          data-testid="namespace-levels-deep-1"
+          data-testid="namespace-levels-deep"
           role="treeitem"
           tabindex="0"
         >
@@ -483,6 +433,7 @@ exports[`<NamespaceTreeView /> renders 2 levels deep 1`] = `
               class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               levels-deep
+               
             </div>
           </div>
           <ul
@@ -498,7 +449,7 @@ exports[`<NamespaceTreeView /> renders 2 levels deep 1`] = `
               >
                 <li
                   class="MuiTreeItem-root Mui-expanded"
-                  data-testid="namespace-level-deep-child-a-1"
+                  data-testid="namespace-level-deep-child-a"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -532,24 +483,11 @@ exports[`<NamespaceTreeView /> renders 2 levels deep 1`] = `
                        
                     </div>
                   </div>
-                  <ul
-                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
-                  >
-                    <div
-                      class="MuiCollapse-wrapper"
-                    >
-                      <div
-                        class="MuiCollapse-wrapperInner"
-                      />
-                    </div>
-                  </ul>
                 </li>
                 <li
                   aria-expanded="true"
                   class="MuiTreeItem-root Mui-expanded"
-                  data-testid="namespace-level-deep-child-b-1"
+                  data-testid="namespace-level-deep-child-b"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -592,7 +530,7 @@ exports[`<NamespaceTreeView /> renders 2 levels deep 1`] = `
                       >
                         <li
                           class="MuiTreeItem-root Mui-expanded"
-                          data-testid="namespace-level-deep-subchild-a-1"
+                          data-testid="namespace-level-deep-subchild-a"
                           role="treeitem"
                           tabindex="-1"
                         >
@@ -626,19 +564,6 @@ exports[`<NamespaceTreeView /> renders 2 levels deep 1`] = `
                                
                             </div>
                           </div>
-                          <ul
-                            class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
-                            role="group"
-                            style="min-height: 0px;"
-                          >
-                            <div
-                              class="MuiCollapse-wrapper"
-                            >
-                              <div
-                                class="MuiCollapse-wrapperInner"
-                              />
-                            </div>
-                          </ul>
                         </li>
                       </div>
                     </div>
@@ -674,7 +599,7 @@ exports[`<NamespaceTreeView /> renders namespace with 2 children namespaces 1`] 
         <li
           aria-expanded="true"
           class="MuiTreeItem-root Mui-expanded"
-          data-testid="namespace-acme-org-1"
+          data-testid="namespace-acme-org"
           role="treeitem"
           tabindex="0"
         >
@@ -701,6 +626,7 @@ exports[`<NamespaceTreeView /> renders namespace with 2 children namespaces 1`] 
               class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               acme-org
+               
             </div>
           </div>
           <ul
@@ -716,7 +642,7 @@ exports[`<NamespaceTreeView /> renders namespace with 2 children namespaces 1`] 
               >
                 <li
                   class="MuiTreeItem-root Mui-expanded"
-                  data-testid="namespace-team-a-1"
+                  data-testid="namespace-team-a"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -750,23 +676,10 @@ exports[`<NamespaceTreeView /> renders namespace with 2 children namespaces 1`] 
                        
                     </div>
                   </div>
-                  <ul
-                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
-                  >
-                    <div
-                      class="MuiCollapse-wrapper"
-                    >
-                      <div
-                        class="MuiCollapse-wrapperInner"
-                      />
-                    </div>
-                  </ul>
                 </li>
                 <li
                   class="MuiTreeItem-root Mui-expanded"
-                  data-testid="namespace-team-b-1"
+                  data-testid="namespace-team-b"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -800,19 +713,6 @@ exports[`<NamespaceTreeView /> renders namespace with 2 children namespaces 1`] 
                        
                     </div>
                   </div>
-                  <ul
-                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
-                  >
-                    <div
-                      class="MuiCollapse-wrapper"
-                    >
-                      <div
-                        class="MuiCollapse-wrapperInner"
-                      />
-                    </div>
-                  </ul>
                 </li>
               </div>
             </div>
@@ -844,7 +744,7 @@ exports[`<NamespaceTreeView /> renders namespace with children namespaces and a 
         <li
           aria-expanded="true"
           class="MuiTreeItem-root Mui-expanded"
-          data-testid="namespace-org-a-1"
+          data-testid="namespace-org-a"
           role="treeitem"
           tabindex="0"
         >
@@ -871,6 +771,7 @@ exports[`<NamespaceTreeView /> renders namespace with children namespaces and a 
               class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               org-a
+               
             </div>
           </div>
           <ul
@@ -886,7 +787,7 @@ exports[`<NamespaceTreeView /> renders namespace with children namespaces and a 
               >
                 <li
                   class="MuiTreeItem-root Mui-expanded"
-                  data-testid="namespace-team-c-1"
+                  data-testid="namespace-team-c"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -920,23 +821,10 @@ exports[`<NamespaceTreeView /> renders namespace with children namespaces and a 
                        
                     </div>
                   </div>
-                  <ul
-                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
-                  >
-                    <div
-                      class="MuiCollapse-wrapper"
-                    >
-                      <div
-                        class="MuiCollapse-wrapperInner"
-                      />
-                    </div>
-                  </ul>
                 </li>
                 <li
                   class="MuiTreeItem-root Mui-expanded"
-                  data-testid="namespace-service-1-1"
+                  data-testid="namespace-service-1"
                   role="treeitem"
                   tabindex="-1"
                 >
@@ -970,26 +858,13 @@ exports[`<NamespaceTreeView /> renders namespace with children namespaces and a 
                        
                       <span
                         class="subnamespaceBadge"
-                        data-testid="namespace-details-badge-for-service-1-1"
-                        id="namespace-details-badge-for-service-1-1"
+                        data-testid="namespace-details-badge-for-service-1"
+                        id="namespace-details-badge-for-service-1"
                       >
                         S
                       </span>
                     </div>
                   </div>
-                  <ul
-                    class="MuiCollapse-root MuiTreeItem-group group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
-                  >
-                    <div
-                      class="MuiCollapse-wrapper"
-                    >
-                      <div
-                        class="MuiCollapse-wrapperInner"
-                      />
-                    </div>
-                  </ul>
                 </li>
               </div>
             </div>
@@ -998,12 +873,6 @@ exports[`<NamespaceTreeView /> renders namespace with children namespaces and a 
       </ul>
     </div>
   </div>
-</body>
-`;
-
-exports[`<NamespaceTreeView /> renders null with regular namespace 1`] = `
-<body>
-  <div />
 </body>
 `;
 
@@ -1026,7 +895,7 @@ exports[`<NamespaceTreeView /> renders one namespace without children 1`] = `
       >
         <li
           class="MuiTreeItem-root"
-          data-testid="namespace-single-root-1"
+          data-testid="namespace-single-root"
           role="treeitem"
           tabindex="0"
         >
@@ -1057,6 +926,7 @@ exports[`<NamespaceTreeView /> renders one namespace without children 1`] = `
               class="MuiTypography-root MuiTreeItem-label label MuiTypography-body1"
             >
               single-root
+               
             </div>
           </div>
         </li>

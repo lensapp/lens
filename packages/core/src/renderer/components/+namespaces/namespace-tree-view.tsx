@@ -17,9 +17,10 @@ import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injec
 import { SubnamespaceBadge } from "./subnamespace-badge";
 import hierarchicalNamespacesInjectable from "./hierarchical-namespaces.injectable";
 import { prevDefault } from "../../utils";
+import type { NamespaceTree } from "./store";
 
 interface NamespaceTreeViewProps {
-  root: Namespace;
+  tree: NamespaceTree;
 }
 
 interface Dependencies {
@@ -27,48 +28,33 @@ interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
 }
 
-function isNamespaceControlledByHNC(namespace: Namespace) {
-  const hierarchicalNamesaceControllerLabel = "hnc.x-k8s.io/included-namespace=true";
-
-  return namespace.getLabels().find(label => label === hierarchicalNamesaceControllerLabel);
-}
-
-function NonInjectableNamespaceTreeView({ root, namespaces, getDetailsUrl }: Dependencies & NamespaceTreeViewProps) {
-  const [expandedItems, setExpandedItems] = React.useState<string[]>(namespaces.map(ns => `namespace-${ns.getId()}`));
+function NonInjectableNamespaceTreeView({ tree, namespaces, getDetailsUrl }: Dependencies & NamespaceTreeViewProps) {
+  const [expandedItems, setExpandedItems] = React.useState<string[]>(namespaces.map(ns => ns.getId()));
   const classes = { group: styles.group, label: styles.label };
-  const nodeId = `namespace-${root.getId()}`;
 
-  function renderChildren(parent: Namespace) {
-    const children = namespaces.filter(ns =>
-      ns.getLabels().find(label => label === `${parent.getName()}.tree.hnc.x-k8s.io/depth=1`),
-    );
-
-    return children.map(child => {
-      const childId = `namespace-${child.getId()}`;
-
-      return (
-        <TreeItem
-          key={childId}
-          nodeId={childId}
-          data-testid={childId}
-          classes={classes}
-          onIconClick={prevDefault(() => toggleNode(childId))}
-          label={(
-            <>
-              <Link key={child.getId()} to={getDetailsUrl(child.selfLink)}>
-                {child.getName()}
-              </Link>
-              {" "}
-              {child.isSubnamespace() && (
-                <SubnamespaceBadge id={`namespace-details-badge-for-${child.getId()}`} />
-              )}
-            </>
-          )}
+  function renderTree(nodes: NamespaceTree) {
+    return (
+      <TreeItem
+        key={nodes.id}
+        nodeId={nodes.id}
+        data-testid={`namespace-${nodes.id}`}
+        classes={classes}
+        onIconClick={prevDefault(() => toggleNode(nodes.id))}
+        label={(
+          <>
+            <Link key={nodes.namespace.getId()} to={getDetailsUrl(nodes.namespace.selfLink)}>
+              {nodes.namespace.getName()}
+            </Link>
+            {" "}
+            {nodes.namespace.isSubnamespace() && (
+              <SubnamespaceBadge id={`namespace-details-badge-for-${nodes.namespace.getId()}`} />
+            )}
+          </>
+        )}
         >
-          {renderChildren(child)}
-        </TreeItem>
-      );
-    });
+          {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
+      </TreeItem>
+    )
   }
 
   function toggleNode(id: string) {
@@ -79,29 +65,17 @@ function NonInjectableNamespaceTreeView({ root, namespaces, getDetailsUrl }: Dep
     }
   }
 
-  if (!isNamespaceControlledByHNC(root)) {
-    return null;
-  }
-
   return (
     <div data-testid="namespace-tree-view" className={styles.TreeView}>
       <DrawerTitle>Tree View</DrawerTitle>
       <TreeView
-        defaultExpanded={[nodeId]}
+        defaultExpanded={[tree.id]}
         defaultCollapseIcon={<MinusSquareIcon />}
         defaultExpandIcon={<PlusSquareIcon />}
         defaultEndIcon={(<div style={{ opacity: 0.3 }}><MinusSquareIcon /></div>)}
         expanded={expandedItems}
       >
-        <TreeItem
-          nodeId={nodeId}
-          label={root.getName()}
-          data-testid={nodeId}
-          classes={classes}
-          onIconClick={prevDefault(() => toggleNode(nodeId))}
-        >
-          {renderChildren(root)}
-        </TreeItem>
+        {renderTree(tree)}
       </TreeView>
     </div>
   );
