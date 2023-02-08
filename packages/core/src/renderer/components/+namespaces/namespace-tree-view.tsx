@@ -51,10 +51,10 @@ function NonInjectableNamespaceTreeView({ tree, namespaces, getDetailsUrl }: Dep
             )}
           </>
         )}
-        >
-          {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
+      >
+        {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
       </TreeItem>
-    )
+    );
   }
 
   function toggleNode(id: string) {

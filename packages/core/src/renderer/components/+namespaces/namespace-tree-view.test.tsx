@@ -127,8 +127,8 @@ describe("<NamespaceTreeView />", () => {
   it("renders one namespace without children", () => {
     const tree: NamespaceTree = {
       id: "single-root",
-      namespace: singleRoot
-    }
+      namespace: singleRoot,
+    };
 
     const result = render(<NamespaceTreeView tree={tree} />);
 
@@ -142,14 +142,14 @@ describe("<NamespaceTreeView />", () => {
       children: [
         {
           id: "team-a",
-          namespace: teamA
+          namespace: teamA,
         },
         {
           id: "team-b",
-          namespace: teamB
-        }
-      ]
-    }
+          namespace: teamB,
+        },
+      ],
+    };
 
     const result = render(<NamespaceTreeView tree={tree} />);
 
@@ -163,14 +163,14 @@ describe("<NamespaceTreeView />", () => {
       children: [
         {
           id: "team-c",
-          namespace: teamC
+          namespace: teamC,
         },
         {
           id: "service-1",
-          namespace: service1
-        }
-      ]
-    }
+          namespace: service1,
+        },
+      ],
+    };
     const result = render(<NamespaceTreeView tree={tree} />);
 
     expect(result.baseElement).toMatchSnapshot();
@@ -183,14 +183,14 @@ describe("<NamespaceTreeView />", () => {
       children: [
         {
           id: "team-c",
-          namespace: teamC
+          namespace: teamC,
         },
         {
           id: "service-1",
-          namespace: service1
-        }
-      ]
-    }
+          namespace: service1,
+        },
+      ],
+    };
     const result = render(<NamespaceTreeView tree={tree} />);
 
     expect(result.getByTestId("namespace-details-badge-for-service-1")).toBeInTheDocument();
@@ -203,14 +203,14 @@ describe("<NamespaceTreeView />", () => {
       children: [
         {
           id: "team-c",
-          namespace: teamC
+          namespace: teamC,
         },
         {
           id: "service-1",
-          namespace: service1
-        }
-      ]
-    }
+          namespace: service1,
+        },
+      ],
+    };
     const result = render(<NamespaceTreeView tree={tree} />);
     const trueNamespace = result.getByTestId("namespace-team-c");
 
@@ -224,18 +224,18 @@ describe("<NamespaceTreeView />", () => {
       children: [
         {
           id: "level-deep-child-a",
-          namespace: levelDeepChildA
+          namespace: levelDeepChildA,
         },
         {
           id: "level-deep-child-b",
           namespace: levelDeepChildB,
           children: [{
             id: "level-deep-subchild-a",
-            namespace: levelDeepSubChildA
-          }]
-        }
-      ]
-    }
+            namespace: levelDeepSubChildA,
+          }],
+        },
+      ],
+    };
     const result = render(<NamespaceTreeView tree={tree} />);
 
     expect(result.baseElement).toMatchSnapshot();
@@ -248,18 +248,18 @@ describe("<NamespaceTreeView />", () => {
       children: [
         {
           id: "level-deep-child-a",
-          namespace: levelDeepChildA
+          namespace: levelDeepChildA,
         },
         {
           id: "level-deep-child-b",
           namespace: levelDeepChildB,
           children: [{
             id: "level-deep-subchild-a",
-            namespace: levelDeepSubChildA
-          }]
-        }
-      ]
-    }
+            namespace: levelDeepSubChildA,
+          }],
+        },
+      ],
+    };
     const result = render(<NamespaceTreeView tree={tree} />);
     const deepest = result.getByTestId("namespace-level-deep-child-b");
 
@@ -273,18 +273,18 @@ describe("<NamespaceTreeView />", () => {
       children: [
         {
           id: "level-deep-child-a",
-          namespace: levelDeepChildA
+          namespace: levelDeepChildA,
         },
         {
           id: "level-deep-child-b",
           namespace: levelDeepChildB,
           children: [{
             id: "level-deep-subchild-a",
-            namespace: levelDeepSubChildA
-          }]
-        }
-      ]
-    }
+            namespace: levelDeepSubChildA,
+          }],
+        },
+      ],
+    };
     const result = render(<NamespaceTreeView tree={tree} />);
     const levelB = result.getByTestId("namespace-level-deep-child-b");
     const minusButton = levelB.querySelector("[data-testid='minus-square']");
@@ -303,18 +303,18 @@ describe("<NamespaceTreeView />", () => {
       children: [
         {
           id: "level-deep-child-a",
-          namespace: levelDeepChildA
+          namespace: levelDeepChildA,
         },
         {
           id: "level-deep-child-b",
           namespace: levelDeepChildB,
           children: [{
             id: "level-deep-subchild-a",
-            namespace: levelDeepSubChildA
-          }]
-        }
-      ]
-    }
+            namespace: levelDeepSubChildA,
+          }],
+        },
+      ],
+    };
     const result = render(<NamespaceTreeView tree={tree} />);
     const levelB = result.getByTestId("namespace-level-deep-child-b");
     const minusButton = levelB.querySelector("[data-testid='minus-square']");

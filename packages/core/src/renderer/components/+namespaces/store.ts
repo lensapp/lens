@@ -12,10 +12,10 @@ import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { NamespaceApi } from "../../../common/k8s-api/endpoints/namespace.api";
 import { Namespace } from "../../../common/k8s-api/endpoints/namespace.api";
 
-export type NamespaceTree = {
-  id: string,
-  namespace: Namespace,
-  children?: NamespaceTree[]
+export interface NamespaceTree {
+  id: string;
+  namespace: Namespace;
+  children?: NamespaceTree[];
 }
 
 interface Dependencies extends KubeObjectStoreDependencies {
@@ -214,8 +214,8 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
     return {
       id: root.getId(),
       namespace: root,
-      children: children.map(this.getNamespaceTree)
-    }
+      children: children.map(this.getNamespaceTree),
+    };
   }
 
   @action
