@@ -970,7 +970,7 @@ exports[`<NamespaceTreeView /> renders namespace with children namespaces and a 
                        
                       <span
                         class="subnamespaceBadge"
-                        data-testid="subnamespace-badge-for-service-1-1"
+                        data-testid="namespace-details-badge-for-service-1-1"
                         id="namespace-details-badge-for-service-1-1"
                       >
                         S
