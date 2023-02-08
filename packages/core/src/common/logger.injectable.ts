@@ -3,20 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { createLogger, format } from "winston";
 import type { Logger } from "./logger";
-import { loggerTransportInjectionToken } from "./logger/transports";
+import winstonLoggerInjectable from "./winston-logger.injectable";
 
 const loggerInjectable = getInjectable({
   id: "logger",
   instantiate: (di): Logger => {
-    const baseLogger = createLogger({
-      format: format.combine(
-        format.splat(),
-        format.simple(),
-      ),
-      transports: di.injectMany(loggerTransportInjectionToken),
-    });
+    const baseLogger = di.inject(winstonLoggerInjectable);
 
     return {
       debug: (message, ...data) => baseLogger.debug(message, ...data),
