@@ -16,6 +16,7 @@ import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.inject
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import { SubnamespaceBadge } from "./subnamespace-badge";
 import hierarchicalNamespacesInjectable from "./hierarchical-namespaces.injectable";
+import { prevDefault } from "../../utils";
 
 interface NamespaceTreeViewProps {
   root: Namespace;
@@ -51,10 +52,7 @@ function NonInjectableNamespaceTreeView({ root, namespaces, getDetailsUrl }: Dep
           nodeId={childId}
           data-testid={childId}
           classes={classes}
-          onIconClick={(evt) =>{
-            toggleNode(childId);
-            evt.stopPropagation();
-          }}
+          onIconClick={prevDefault(() => toggleNode(childId))}
           label={(
             <>
               <Link key={child.getId()} to={getDetailsUrl(child.selfLink)}>
@@ -100,10 +98,7 @@ function NonInjectableNamespaceTreeView({ root, namespaces, getDetailsUrl }: Dep
           label={root.getName()}
           data-testid={nodeId}
           classes={classes}
-          onIconClick={(evt) => {
-            toggleNode(nodeId);
-            evt.stopPropagation();
-          }}
+          onIconClick={prevDefault(() => toggleNode(nodeId))}
         >
           {renderChildren(root)}
         </TreeItem>
