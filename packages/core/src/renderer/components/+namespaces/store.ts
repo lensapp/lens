@@ -11,6 +11,7 @@ import type { KubeObjectStoreDependencies, KubeObjectStoreLoadingParams } from "
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { NamespaceApi } from "../../../common/k8s-api/endpoints/namespace.api";
 import { Namespace } from "../../../common/k8s-api/endpoints/namespace.api";
+import type { CustomResourceDefinitionStore } from "../+custom-resources/definition.store";
 
 export interface NamespaceTree {
   id: string;
@@ -21,6 +22,7 @@ export interface NamespaceTree {
 interface Dependencies extends KubeObjectStoreDependencies {
   readonly storage: StorageLayer<string[] | undefined>;
   readonly clusterConfiguredAccessibleNamespaces: IComputedValue<string[]>;
+  readonly crdStore: CustomResourceDefinitionStore;
 }
 
 export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
@@ -219,7 +221,25 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   @action
+  async removeSubnamespace(item: Namespace) {
+    // Remove anchor from the parent namespace
+    const crd = this.dependencies.crdStore.getByName(item.getName());
+
+    if (!crd) {
+      return;
+    }
+
+    this.dependencies.crdStore.remove(crd);
+  }
+
+  @action
   async remove(item: Namespace) {
+    if (item.isSubnamespace()) {
+      this.removeSubnamespace(item);
+
+      return;
+    }
+
     await super.remove(item);
     this.clearSelected(item.getName());
   }

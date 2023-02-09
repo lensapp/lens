@@ -38,6 +38,8 @@ function createNamespace(name: string, labels?: Record<string, string>, annotati
   });
 }
 
+const fullNamespace = createNamespace("full-namespace");
+
 const singleRoot = createNamespace("single-root", {
   "hnc.x-k8s.io/included-namespace": "true",
 });
@@ -133,6 +135,7 @@ describe("NamespaceStore", () => {
     namespaceStore = di.inject(namespaceStoreInjectable);
 
     namespaceStore.items = observable.array([
+      fullNamespace,
       acmeGroup,
       orgA,
       teamA,
@@ -145,6 +148,10 @@ describe("NamespaceStore", () => {
       levelDeepSubChildA,
     ]);
   });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  })
 
   it("returns tree for single node", () => {
     const tree = namespaceStore.getNamespaceTree(service1);
@@ -214,9 +221,17 @@ describe("NamespaceStore", () => {
 
   describe("when removing a full namespace", () => {
     it("removes namespace", () => {
-      namespaceStore.remove(acmeGroup);
+      namespaceStore.remove(fullNamespace);
 
-      expect(deleteMock).toBeCalledWith({ name: "acme-org", namespace: undefined });
+      expect(deleteMock).toBeCalledWith({ name: "full-namespace", namespace: undefined });
+    });
+  });
+
+  describe("when removing a subnamespace", () => {
+    it("does not remove namespace directly", () => {
+      namespaceStore.remove(service1);
+
+      expect(deleteMock).not.toBeCalled();
     });
   });
 });
