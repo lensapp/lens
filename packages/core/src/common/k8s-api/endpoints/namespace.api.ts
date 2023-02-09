@@ -39,7 +39,7 @@ export class Namespace extends KubeObject<
   }
 
   isChildOf(parentName: string) {
-    this.getLabels().find(label => label === `${parentName}.tree.hnc.x-k8s.io/depth=1`);
+    return this.getLabels().find(label => label === `${parentName}.tree.hnc.x-k8s.io/depth=1`);
   }
 
   isControlledByHNC() {
