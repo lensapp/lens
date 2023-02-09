@@ -1,6 +1,9 @@
 {
   "name": "lens-monorepo",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "adr:create": "echo \"What is the title?\"; read title; adr new \"$title\"",
     "adr:change-status": "echo \"Decision number?:\"; read decision; adr status $decision",
@@ -18,12 +21,11 @@
     "test:unit": "lerna run --stream test:unit",
     "test:integration": "lerna run --stream test:integration",
     "bump-version": "lerna version --no-git-tag-version --no-push",
-    "create-release-pr": "create-release-pr",
-    "postinstall": "lerna bootstrap --ignore open-lens && lerna bootstrap --scope open-lens --include-dependencies"
+    "create-release-pr": "create-release-pr"
   },
   "devDependencies": {
-    "@k8slens/semver": "./packages/semver",
-    "@k8slens/release-tool": "./packages/release-tool",
+    "@k8slens/semver": "^6.4.0-beta.13",
+    "@k8slens/release-tool": "^6.4.0-beta.13",
     "adr": "^1.4.3",
     "cross-env": "^7.0.3",
     "lerna": "^6.4.1",
