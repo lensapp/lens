@@ -3,11 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { AsyncFnMock } from "@async-fn/jest";
+import asyncFn from "@async-fn/jest";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { observable } from "mobx";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import { Namespace } from "../../../common/k8s-api/endpoints";
+import type { Fetch } from "../../../common/fetch/fetch.injectable";
+import fetchInjectable from "../../../common/fetch/fetch.injectable";
+import { Namespace, NamespaceApi } from "../../../common/k8s-api/endpoints";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import createClusterInjectable from "../../cluster/create-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -99,14 +103,19 @@ const levelDeepSubChildA = createNamespace("level-deep-subchild-a", {
   "level-deep-subchild-a.tree.hnc.x-k8s.io/depth": "0",
 });
 
+const deleteMock = jest.spyOn(NamespaceApi.prototype, "delete")
+  .mockImplementation();
 
 describe("NamespaceStore", () => {
   let di: DiContainer;
   let namespaceStore: NamespaceStore;
+  let fetchMock: AsyncFnMock<Fetch>;
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
 
+    fetchMock = asyncFn();
+    di.override(fetchInjectable, () => fetchMock);
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
@@ -200,6 +209,14 @@ describe("NamespaceStore", () => {
           }],
         },
       ],
+    });
+  });
+
+  describe("when removing a full namespace", () => {
+    it("removes namespace", () => {
+      namespaceStore.remove(acmeGroup);
+
+      expect(deleteMock).toBeCalledWith({ name: "acme-org", namespace: undefined });
     });
   });
 });
