@@ -16,6 +16,7 @@ import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.
 import createClusterInjectable from "../../cluster/create-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
+import removeSubnamespaceInjectable from "./remove-subnamespace.injectable";
 import type { NamespaceStore } from "./store";
 import namespaceStoreInjectable from "./store.injectable";
 
@@ -105,8 +106,10 @@ const levelDeepSubChildA = createNamespace("level-deep-subchild-a", {
   "level-deep-subchild-a.tree.hnc.x-k8s.io/depth": "0",
 });
 
-const deleteMock = jest.spyOn(NamespaceApi.prototype, "delete")
+const deleteNamespaceMock = jest.spyOn(NamespaceApi.prototype, "delete")
   .mockImplementation();
+
+const removeSubnamespaceMock = jest.fn();
 
 describe("NamespaceStore", () => {
   let di: DiContainer;
@@ -121,6 +124,7 @@ describe("NamespaceStore", () => {
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(removeSubnamespaceInjectable, () => removeSubnamespaceMock);
 
     const createCluster = di.inject(createClusterInjectable);
 
@@ -223,7 +227,7 @@ describe("NamespaceStore", () => {
     it("removes namespace", () => {
       namespaceStore.remove(fullNamespace);
 
-      expect(deleteMock).toBeCalledWith({ name: "full-namespace", namespace: undefined });
+      expect(deleteNamespaceMock).toBeCalledWith({ name: "full-namespace", namespace: undefined });
     });
   });
 
@@ -231,7 +235,13 @@ describe("NamespaceStore", () => {
     it("does not remove namespace directly", () => {
       namespaceStore.remove(service1);
 
-      expect(deleteMock).not.toBeCalled();
+      expect(deleteNamespaceMock).not.toBeCalled();
+    });
+
+    it("calls remove subnamespace function", () => {
+      namespaceStore.remove(service1);
+
+      expect(removeSubnamespaceMock).toBeCalledWith("service-1");
     });
   });
 });
