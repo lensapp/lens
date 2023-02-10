@@ -155,7 +155,7 @@ describe("NamespaceStore", () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-  })
+  });
 
   it("returns tree for single node", () => {
     const tree = namespaceStore.getNamespaceTree(service1);
