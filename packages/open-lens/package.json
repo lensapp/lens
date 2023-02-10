@@ -94,6 +94,8 @@
     }
   },
   "build": {
+    "npmRebuild": false,
+    "electronVersion": "19.1.9",
     "generateUpdatesFilesForAllChannels": true,
     "files": [
       "static/**/*",
