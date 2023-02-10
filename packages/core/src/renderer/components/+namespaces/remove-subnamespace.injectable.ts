@@ -6,7 +6,6 @@ import { getInjectable } from "@ogre-tools/injectable";
 import customResourceDefinitionStoreInjectable from "../+custom-resources/definition.store.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
-import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
 
 const removeSubnamespaceInjectable = getInjectable({
   id: "remove-subnamespace",
