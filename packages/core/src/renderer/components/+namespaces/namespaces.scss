@@ -22,4 +22,8 @@
       @include namespaceStatus;
     }
   }
+
+  .subnamespaceBadge {
+    margin-inline-start: var(--margin);
+  }
 }
