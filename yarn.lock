@@ -38,17 +38,6 @@
   resolved "https://registry.yarnpkg.com/@isaacs/string-locale-compare/-/string-locale-compare-1.1.0.tgz#291c227e93fd407a96ecd59879a35809120e432b"
   integrity sha512-SQ7Kzhh9+D+ZW9MA0zkYv3VXhIDNx+LzM6EJ+/65I3QY+enU6Itte7E5XX7EWrqLW2FN4n06GWzBnPoC3th2aQ==
 
-"@k8slens/release-tool@./packages/release-tool":
-  version "6.4.0-beta.13"
-  dependencies:
-    rimraf "^4.1.2"
-
-"@k8slens/semver@./packages/semver":
-  version "6.4.0-beta.13"
-  dependencies:
-    command-line-args "^5.2.1"
-    semver "^7.3.8"
-
 "@lerna/add@6.4.1":
   version "6.4.1"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-6.4.1.tgz#fa20fe9ff875dc5758141262c8cde0d9a6481ec4"
