@@ -21,7 +21,7 @@ export interface NamespaceTree {
 interface Dependencies extends KubeObjectStoreDependencies {
   readonly storage: StorageLayer<string[] | undefined>;
   readonly clusterConfiguredAccessibleNamespaces: IComputedValue<string[]>;
-  readonly removeSubnamespace: (name: string) => void;
+  readonly removeSubnamespace: (name: string) => Promise<void>;
 }
 
 export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
