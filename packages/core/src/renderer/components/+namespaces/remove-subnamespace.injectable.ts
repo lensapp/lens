@@ -15,7 +15,6 @@ const removeSubnamespaceInjectable = getInjectable({
     const crdStore = di.inject(customResourceDefinitionStoreInjectable);
     const apiManager = di.inject(apiManagerInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
-    const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
 
     /**
      * Removing subnamespace controlled by hierarchical namespace controller by deleting
@@ -40,9 +39,7 @@ const removeSubnamespaceInjectable = getInjectable({
         return;
       }
 
-      await store?.remove(anchor);
-
-      showSuccessNotification(`Subnamespace ${subnamespaceName} removed`);
+      store?.remove(anchor);
     };
   },
 });
