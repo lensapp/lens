@@ -26,9 +26,9 @@ try {
 
   const currentVersion = new SemVer(packageJson.version);
 
-  const patialVersion = `${currentVersion.major}.${currentVersion.minor}.${currentVersion.patch}`;
+  const partialVersion = `${currentVersion.major}.${currentVersion.minor}.${currentVersion.patch}`;
   const prereleasePart = `cron.${currentHash}`;
-  const newVersion = `${patialVersion}-${prereleasePart}`;
+  const newVersion = `${partialVersion}-${prereleasePart}`;
 
   await writeFile(
     versionJsonPath,
