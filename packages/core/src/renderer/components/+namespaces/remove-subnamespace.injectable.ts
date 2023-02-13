@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import customResourceDefinitionStoreInjectable from "../+custom-resources/definition.store.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
-import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import loggerInjectable from "../../../common/logger.injectable";
 
 const removeSubnamespaceInjectable = getInjectable({
   id: "remove-subnamespace",
@@ -13,7 +13,7 @@ const removeSubnamespaceInjectable = getInjectable({
   instantiate: (di) => {
     const crdStore = di.inject(customResourceDefinitionStoreInjectable);
     const apiManager = di.inject(apiManagerInjectable);
-    const showErrorNotification = di.inject(showErrorNotificationInjectable);
+    const logger = di.inject(loggerInjectable);
 
     /**
      * Removing subnamespace controlled by hierarchical namespace controller by deleting
@@ -33,7 +33,7 @@ const removeSubnamespaceInjectable = getInjectable({
       const anchor = store?.getByName(subnamespaceName);
 
       if (!anchor) {
-        showErrorNotification("Error removing namespace: can not find subnamespace anchor.");
+        logger.error("[REMOVING-SUBNAMESPACE]: Error removing namespace: can not find subnamespace anchor.");
         
         return;
       }
