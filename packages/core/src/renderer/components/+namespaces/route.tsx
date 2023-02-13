@@ -16,6 +16,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "./store.injectable";
 import { KubeObjectAge } from "../kube-object/age";
 import openAddNamepaceDialogInjectable from "./add-dialog/open.injectable";
+import { SubnamespaceBadge } from "./subnamespace-badge";
 
 enum columnId {
   name = "name",
@@ -55,7 +56,12 @@ const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog }: 
         { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
       ]}
       renderTableContents={namespace => [
-        namespace.getName(),
+        <>
+          {namespace.getName()}
+          {namespace.isSubnamespace() && (
+            <SubnamespaceBadge className="subnamespaceBadge" id={`namespace-list-badge-for-${namespace.getId()}`} />
+          )}
+        </>,
         <KubeObjectStatusIcon key="icon" object={namespace} />,
         namespace.getLabels().map(label => (
           <Badge

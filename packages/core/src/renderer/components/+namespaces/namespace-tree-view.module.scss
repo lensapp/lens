@@ -1,0 +1,14 @@
+.TreeView {
+  .group {
+    margin-inline-start: var(--margin);
+    padding-inline-start: calc(var(--padding) * 2);
+    border-inline-start: 1px dashed var(--borderColor);
+  }
+  
+  .label {
+    font-size: inherit;
+    line-height: 1.8;
+    cursor: default;
+    background-color: transparent!important;
+  }
+}

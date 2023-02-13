@@ -26,6 +26,9 @@ import limitRangeStoreInjectable from "../+config-limit-ranges/store.injectable"
 import resourceQuotaStoreInjectable from "../+config-resource-quotas/store.injectable";
 import type { Logger } from "../../../common/logger";
 import loggerInjectable from "../../../common/logger.injectable";
+import { NamespaceTreeView } from "./namespace-tree-view";
+import namespaceStoreInjectable from "./store.injectable";
+import type { NamespaceStore } from "./store";
 
 export interface NamespaceDetailsProps extends KubeObjectDetailsProps<Namespace> {
 }
@@ -35,6 +38,7 @@ interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
   resourceQuotaStore: ResourceQuotaStore;
   limitRangeStore: LimitRangeStore;
+  namespaceStore: NamespaceStore;
   logger: Logger;
 }
 
@@ -103,6 +107,10 @@ class NonInjectedNamespaceDetails extends React.Component<NamespaceDetailsProps 
             </Link>
           ))}
         </DrawerItem>
+
+        {namespace.isControlledByHNC() && (
+          <NamespaceTreeView tree={this.props.namespaceStore.getNamespaceTree(namespace)}/>
+        )}
       </div>
     );
   }
@@ -115,6 +123,7 @@ export const NamespaceDetails = withInjectables<Dependencies, NamespaceDetailsPr
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     limitRangeStore: di.inject(limitRangeStoreInjectable),
     resourceQuotaStore: di.inject(resourceQuotaStoreInjectable),
+    namespaceStore: di.inject(namespaceStoreInjectable),
     logger: di.inject(loggerInjectable),
   }),
 });
