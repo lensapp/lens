@@ -12,12 +12,12 @@ import replicationControllersRouteInjectable
 import navigateToReplicationControllersInjectable
   from "../../../common/front-end-routing/routes/cluster/workloads/replicationcontrollers/navigate-to-replication-controllers.injectable";
 
-const replicationctrlSidebarItemsInjectable = getInjectable({
+const replicationControllerSidebarItemsInjectable = getInjectable({
   id: "replicationctrl-sidebar-items",
 
   instantiate: (di) => {
     const route = di.inject(replicationControllersRouteInjectable);
-    const navigateToReplicasets = di.inject(navigateToReplicationControllersInjectable);
+    const navigateToPage = di.inject(navigateToReplicationControllersInjectable);
     const routeIsActive = di.inject(routeIsActiveInjectable, route);
 
     return computed(() => [
@@ -25,7 +25,7 @@ const replicationctrlSidebarItemsInjectable = getInjectable({
         id: "replication-controllers",
         parentId: workloadsSidebarItemId,
         title: "ReplicationControllers",
-        onClick: navigateToReplicasets,
+        onClick: navigateToPage,
         isActive: routeIsActive,
         isVisible: route.isEnabled,
         orderNumber: 61,
@@ -36,4 +36,4 @@ const replicationctrlSidebarItemsInjectable = getInjectable({
   injectionToken: sidebarItemsInjectionToken,
 });
 
-export default replicationctrlSidebarItemsInjectable;
+export default replicationControllerSidebarItemsInjectable;

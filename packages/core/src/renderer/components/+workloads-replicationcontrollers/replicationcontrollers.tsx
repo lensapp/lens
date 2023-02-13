@@ -47,7 +47,7 @@ const NonInjectedReplicationControllers = observer((props: Dependencies) => {
         searchFilters={[
           replicaSet => replicaSet.getSearchFields(),
         ]}
-        renderHeaderTitle="Replica Sets"
+        renderHeaderTitle="Replication Controllers"
         renderTableHeader={[
           { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
           { className: "warning", showWithColumn: columnId.name },
