@@ -40,7 +40,7 @@ jobs:
           npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
           VERSION=$(cat lerna.json | jq '.version' --raw-output)
           echo ${VERSION}
-          DIST_TAG=$(npm exec -- @k8slens/semver --prerelease 0 ${VERSION})
+          DIST_TAG=$(node packages/semver/dist/index.js --prerelease 0 ${VERSION})
           yarn lerna \
             publish from-package \
             --no-push \

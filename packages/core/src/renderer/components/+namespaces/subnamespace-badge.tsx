@@ -6,16 +6,17 @@ import styles from "./subnamespace-badge.module.scss";
 
 import React from "react";
 import { Tooltip } from "../tooltip";
+import { cssNames } from "../../utils";
 
 interface SubnamespaceBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   id: string;
 }
 
-export function SubnamespaceBadge({ id, ...other }: SubnamespaceBadgeProps) {
+export function SubnamespaceBadge({ id, className, ...other }: SubnamespaceBadgeProps) {
   return (
     <>
       <span
-        className={styles.subnamespaceBadge}
+        className={cssNames(styles.subnamespaceBadge, className)}
         data-testid={id}
         id={id}
         {...other}
