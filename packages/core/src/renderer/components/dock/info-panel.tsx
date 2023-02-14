@@ -93,18 +93,25 @@ class NonInjectedInfoPanel extends Component<InfoPanelProps & Dependencies> {
       if (showNotifications && result) {
         this.props.showSuccessNotification(result);
       }
+
+      return result;
     } catch (error) {
       if (showNotifications) {
         this.props.showCheckedErrorNotification(error, "Unknown error while submitting");
       }
+
+      return false;
     } finally {
       this.waiting = false;
     }
   };
 
   submitAndClose = async () => {
-    await this.submit();
-    this.close();
+    const result = await this.submit();
+
+    if (result) {
+      this.close();
+    }
   };
 
   close = () => {
