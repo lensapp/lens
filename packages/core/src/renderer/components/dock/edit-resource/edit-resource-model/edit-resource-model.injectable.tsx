@@ -174,5 +174,7 @@ export class EditResourceModel {
     runInAction(() => {
       this.editingResource.firstDraft = currentValue;
     });
+
+    return result.response.toString();
   };
 }

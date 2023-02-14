@@ -21,15 +21,15 @@ jobs:
 
       - name: Install deps
         run: |
-          npm i --location=global semver
-          npm install
-
+          yarn install
           sudo apt-get install -y ripgrep
+          cd packages/bump-version-for-cron && yarn build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Bump version
         id: version
-        run: npm run bump-version-for-cron
+        run: |
+          node packages/bump-version-for-cron/dist/index.js --path lerna.json
       - name: Check if branch already exists
         id: check-branch
         run: git ls-remote --exit-code --tags origin v${{ steps.version.outputs.VERSION }}
@@ -81,7 +81,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16.x"
-          cache: "npm"
           registry-url: "https://npm.pkg.github.com"
       - name: Build package
         shell: bash

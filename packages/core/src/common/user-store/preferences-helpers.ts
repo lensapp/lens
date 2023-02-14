@@ -23,7 +23,7 @@ export const defaultTerminalConfig: TerminalConfig = {
   fontFamily: defaultTerminalFontFamily,
 };
 
-interface BaseEditorConfiguration extends Required<Pick<editor.IStandaloneEditorConstructionOptions, "minimap" | "tabSize" | "fontSize" | "fontFamily">> {
+export interface BaseEditorConfiguration extends Required<Pick<editor.IStandaloneEditorConstructionOptions, "minimap" | "tabSize" | "fontSize" | "fontFamily">> {
   lineNumbers: NonNullable<Exclude<editor.IStandaloneEditorConstructionOptions["lineNumbers"], Function>>;
 }
 
