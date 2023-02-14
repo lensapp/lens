@@ -86,7 +86,7 @@ const attemptInstall = ({
     }
 
     const extensionFolder = getExtensionDestFolder(name);
-    const installedExtension = extensionLoader.getExtension(validatedRequest.id);
+    const installedExtension = extensionLoader.getExtensionById(validatedRequest.id);
 
     if (installedExtension) {
       const { version: oldVersion } = installedExtension.manifest;

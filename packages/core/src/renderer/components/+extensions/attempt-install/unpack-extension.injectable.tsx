@@ -73,7 +73,7 @@ const unpackExtensionInjectable = getInjectable({
         await fse.move(unpackedRootFolder, extensionFolder, { overwrite: true });
 
         // wait for the loader has actually install it
-        await when(() => extensionLoader.userExtensions.has(id));
+        await when(() => extensionLoader.userExtensions.get().has(id));
 
         // Enable installed extensions by default.
         extensionLoader.setIsEnabled(id, true);

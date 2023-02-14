@@ -114,38 +114,36 @@ describe("ExtensionLoader", () => {
   });
 
   it("renderer updates extension after ipc broadcast", async () => {
-    expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`Map {}`);
+    expect(extensionLoader.userExtensions.get().size).toBe(0);
 
     await extensionLoader.init();
     await delay(10);
 
     // Assert the extensions after the extension broadcast event
-    expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`
-      Map {
-        "manifest/path" => Object {
-          "absolutePath": "/test/1",
-          "id": "manifest/path",
-          "isBundled": false,
-          "isEnabled": true,
-          "manifest": Object {
-            "name": "TestExtension",
-            "version": "1.0.0",
-          },
-          "manifestPath": "manifest/path",
+    expect(extensionLoader.userExtensions.get()).toEqual(new Map([
+      ["manifest/path", {
+        absolutePath: "/test/1",
+        id: "manifest/path",
+        isBundled: false,
+        isEnabled: true,
+        manifest: {
+          name: "TestExtension",
+          version: "1.0.0",
         },
-        "manifest/path3" => Object {
-          "absolutePath": "/test/3",
-          "id": "manifest/path3",
-          "isBundled": false,
-          "isEnabled": true,
-          "manifest": Object {
-            "name": "TestExtension3",
-            "version": "3.0.0",
-          },
-          "manifestPath": "manifest/path3",
+        manifestPath: "manifest/path",
+      }],
+      ["manifest/path3", {
+        absolutePath: "/test/3",
+        id: "manifest/path3",
+        isBundled: false,
+        isEnabled: true,
+        manifest: {
+          name: "TestExtension3",
+          version: "3.0.0",
         },
-      }
-    `);
+        manifestPath: "manifest/path3",
+      }],
+    ]));
   });
 
   it("updates ExtensionsStore after isEnabled is changed", async () => {

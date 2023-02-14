@@ -18,11 +18,6 @@ export interface LensExtensionState {
   name: string;
 }
 
-export interface IsEnabledExtensionDescriptor {
-  id: string;
-  isBundled: boolean;
-}
-
 export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
   constructor(deps: BaseStoreDependencies) {
     super(deps, {
@@ -39,12 +34,12 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
       .map(({ name }) => name);
   }
 
-  protected state = observable.map<LensExtensionId, LensExtensionState>();
+  protected readonly state = observable.map<LensExtensionId, LensExtensionState>();
 
-  isEnabled({ id, isBundled }: IsEnabledExtensionDescriptor): boolean {
+  isEnabled(extId: LensExtensionId): boolean {
     // By default false, so that copied extensions are disabled by default.
     // If user installs the extension from the UI, the Extensions component will specifically enable it.
-    return isBundled || Boolean(this.state.get(id)?.enabled);
+    return this.state.get(extId)?.enabled ?? false;
   }
 
   mergeState = action((extensionsState: Record<LensExtensionId, LensExtensionState> | [LensExtensionId, LensExtensionState][]) => {

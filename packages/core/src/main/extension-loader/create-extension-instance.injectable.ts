@@ -24,7 +24,7 @@ const createExtensionInstanceInjectable = getInjectable({
     };
 
     return (ExtensionClass, extension) => {
-      const instance = new ExtensionClass(extension) as LensMainExtension;
+      const instance = new ExtensionClass(extension as any) as LensMainExtension;
 
       (instance as Writable<LensMainExtension>)[lensExtensionDependencies] = deps;
 

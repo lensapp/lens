@@ -3,19 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { InstalledExtension } from "./extension-discovery/extension-discovery";
+import type { BundledInstalledExtension, ExternalInstalledExtension, InstalledExtension } from "./extension-discovery/extension-discovery";
 import { action, computed, makeObservable, observable } from "mobx";
-import type { PackageJson } from "type-fest";
 import { disposer } from "../common/utils";
 import type { LensExtensionDependencies } from "./lens-extension-set-dependencies";
 import type { ProtocolHandlerRegistration } from "../common/protocol-handler/registration";
+import type { PackageJson } from "type-fest";
 
 export type LensExtensionId = string; // path to manifest (package.json)
-export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
+export type LensExtensionConstructor = new (ext: ExternalInstalledExtension) => LensExtension;
+export type BundledLensExtensionContructor = new (ext: BundledInstalledExtension) => LensExtension;
 
-export interface LensExtensionManifest extends PackageJson {
+export interface BundledLensExtensionManifest extends PackageJson {
   name: string;
   version: string;
+  publishConfig?: Partial<Record<string, string>>;
+}
+
+export interface LensExtensionManifest extends BundledLensExtensionManifest {
   main?: string; // path to %ext/dist/main.js
   renderer?: string; // path to %ext/dist/renderer.js
   /**
@@ -24,8 +29,7 @@ export interface LensExtensionManifest extends PackageJson {
    */
   engines: {
     lens: string; // "semver"-package format
-    npm?: string;
-    node?: string;
+    [x: string]: string | undefined;
   };
 
   // Specify extension name used for persisting data.
@@ -65,14 +69,12 @@ export class LensExtension<
   [Disposers] = disposer();
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
-    makeObservable(this);
-
     // id is the name of the manifest
     this.id = id;
-
-    this.manifest = manifest;
+    this.manifest = manifest as LensExtensionManifest;
     this.manifestPath = manifestPath;
     this.isBundled = !!isBundled;
+    makeObservable(this);
   }
 
   get name() {
