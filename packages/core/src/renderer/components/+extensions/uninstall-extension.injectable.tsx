@@ -27,7 +27,7 @@ const uninstallExtensionInjectable = getInjectable({
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
 
     return async (extensionId: LensExtensionId): Promise<boolean> => {
-      const ext = extensionLoader.getExtension(extensionId);
+      const ext = extensionLoader.getExtensionById(extensionId);
 
       if (!ext) {
         logger.debug(`[EXTENSIONS]: cannot uninstall ${extensionId}, was not installed`);
@@ -45,7 +45,7 @@ const uninstallExtensionInjectable = getInjectable({
         await extensionDiscovery.uninstallExtension(extensionId);
 
         // wait for the ExtensionLoader to actually uninstall the extension
-        await when(() => !extensionLoader.userExtensions.has(extensionId));
+        await when(() => !extensionLoader.userExtensions.get().has(extensionId));
 
         showSuccessNotification(
           <p>

@@ -12,7 +12,7 @@ const userExtensionsInjectable = getInjectable({
   instantiate: (di) => {
     const extensionLoader = di.inject(extensionLoaderInjectable);
 
-    return computed(() => [...extensionLoader.userExtensions.values()]);
+    return computed(() => [...extensionLoader.userExtensions.get().values()]);
   },
 });
 

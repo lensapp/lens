@@ -4,8 +4,7 @@
  */
 
 import styles from "./installed-extensions.module.scss";
-import React, { useMemo } from "react";
-import type { ExtensionDiscovery } from "../../../extensions/extension-discovery/extension-discovery";
+import React from "react";
 import { Icon } from "../icon";
 import { List } from "../list/list";
 import { MenuActions, MenuItem } from "../menu";
@@ -17,18 +16,27 @@ import extensionDiscoveryInjectable from "../../../extensions/extension-discover
 import { withInjectables } from "@ogre-tools/injectable-react";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
-import type { InstalledExtension, LensExtensionId } from "@k8slens/legacy-extensions";
+import type { InstalledExtension } from "@k8slens/legacy-extensions";
+import type { IComputedValue } from "mobx";
+import type { ConfirmUninstallExtension } from "./confirm-uninstall-extension.injectable";
+import confirmUninstallExtensionInjectable from "./confirm-uninstall-extension.injectable";
+import type { DisableExtension } from "./disable-extension.injectable";
+import disableExtensionInjectable from "./disable-extension.injectable";
+import type { EnableExtension } from "./enable-extension.injectable";
+import enableExtensionInjectable from "./enable-extension.injectable";
+import userExtensionsInjectable from "./user-extensions/user-extensions.injectable";
+import type { ExtensionDiscovery } from "../../../extensions/extension-discovery/extension-discovery";
 
 export interface InstalledExtensionsProps {
-  extensions: InstalledExtension[];
-  enable: (id: LensExtensionId) => void;
-  disable: (id: LensExtensionId) => void;
-  uninstall: (extension: InstalledExtension) => void;
 }
 
 interface Dependencies {
   extensionDiscovery: ExtensionDiscovery;
   extensionInstallationStateStore: ExtensionInstallationStateStore;
+  userExtensions: IComputedValue<InstalledExtension[]>;
+  enableExtension: EnableExtension;
+  disableExtension: DisableExtension;
+  confirmUninstallExtension: ConfirmUninstallExtension;
 }
 
 function getStatus(extension: InstalledExtension) {
@@ -39,105 +47,19 @@ function getStatus(extension: InstalledExtension) {
   return extension.isEnabled ? "Enabled" : "Disabled";
 }
 
-const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extensionInstallationStateStore, extensions, uninstall, enable, disable }: Dependencies & InstalledExtensionsProps) => {
-  const columns = useMemo(
-    () => [
-      {
-        Header: "Name",
-        accessor: "extension",
-        width: 200,
-        sortType: (rowA: Row, rowB: Row) => { // Custom sorting for extension name
-          const nameA = extensions[rowA.index].manifest.name;
-          const nameB = extensions[rowB.index].manifest.name;
-
-          if (nameA > nameB) return -1;
-          if (nameB > nameA) return 1;
-
-          return 0;
-        },
-      },
-      {
-        Header: "Version",
-        accessor: "version",
-      },
-      {
-        Header: "Status",
-        accessor: "status",
-      },
-      {
-        Header: "",
-        accessor: "actions",
-        disableSortBy: true,
-        width: 20,
-        className: "actions",
-      },
-    ], [],
-  );
-
-  const data = useMemo(
-    () => extensions.map(extension => {
-      const { id, isEnabled, isCompatible, manifest } = extension;
-      const { name, description, version } = manifest;
-      const isUninstalling = extensionInstallationStateStore.isExtensionUninstalling(id);
-
-      return {
-        extension: (
-          <div className={"flex items-start"}>
-            <div>
-              <div className={styles.extensionName}>{name}</div>
-              <div className={styles.extensionDescription}>{description}</div>
-            </div>
-          </div>
-        ),
-        version,
-        status: (
-          <div className={cssNames({ [styles.enabled]: isEnabled, [styles.invalid]: !isCompatible })}>
-            {getStatus(extension)}
-          </div>
-        ),
-        actions: (
-          <MenuActions
-            id={`menu-actions-for-installed-extensions-for-${id}`}
-            usePortal
-            toolbar={false}>
-            {isCompatible && (
-              <>
-                {isEnabled ? (
-                  <MenuItem
-                    disabled={isUninstalling}
-                    onClick={() => disable(id)}
-                  >
-                    <Icon material="unpublished" />
-                    <span className="title" aria-disabled={isUninstalling}>Disable</span>
-                  </MenuItem>
-                ) : (
-                  <MenuItem
-                    disabled={isUninstalling}
-                    onClick={() => enable(id)}
-                  >
-                    <Icon material="check_circle" />
-                    <span className="title" aria-disabled={isUninstalling}>Enable</span>
-                  </MenuItem>
-                )}
-              </>
-            )}
-
-            <MenuItem
-              disabled={isUninstalling}
-              onClick={() => uninstall(extension)}
-            >
-              <Icon material="delete" />
-              <span className="title" aria-disabled={isUninstalling}>Uninstall</span>
-            </MenuItem>
-          </MenuActions>
-        ),
-      };
-    }), [extensions, extensionInstallationStateStore.anyUninstalling],
-  );
-
+const NonInjectedInstalledExtensions = observer(({
+  extensionDiscovery,
+  extensionInstallationStateStore,
+  userExtensions,
+  confirmUninstallExtension,
+  enableExtension,
+  disableExtension,
+}: Dependencies & InstalledExtensionsProps) => {
   if (!extensionDiscovery.isLoaded) {
     return <div><Spinner center /></div>;
   }
+
+  const extensions = userExtensions.get();
 
   if (extensions.length == 0) {
     return (
@@ -151,13 +73,96 @@ const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extension
     );
   }
 
+  const toggleExtensionWith = (enabled: boolean) => (
+    enabled
+      ? disableExtension
+      : enableExtension
+  );
+
   return (
     <section data-testid="extensions-table">
       <List
         title={<h2 className={styles.title}>Installed extensions</h2>}
-        columns={columns}
-        data={data}
-        items={extensions}
+        columns={[
+          {
+            Header: "Name",
+            accessor: "extension",
+            width: 200,
+            sortType: (rowA: Row, rowB: Row) => { // Custom sorting for extension name
+              const nameA = extensions[rowA.index].manifest.name;
+              const nameB = extensions[rowB.index].manifest.name;
+
+              if (nameA > nameB) return -1;
+              if (nameB > nameA) return 1;
+
+              return 0;
+            },
+          },
+          {
+            Header: "Version",
+            accessor: "version",
+          },
+          {
+            Header: "Status",
+            accessor: "status",
+          },
+          {
+            Header: "",
+            accessor: "actions",
+            disableSortBy: true,
+            width: 20,
+          },
+        ]}
+        data={extensions.map(extension => {
+          const { id, isEnabled, isCompatible, manifest } = extension;
+          const { name, description, version } = manifest;
+          const isUninstalling = extensionInstallationStateStore.isExtensionUninstalling(id);
+          const toggleExtension = toggleExtensionWith(isEnabled);
+
+          return {
+            extension: (
+              <div className={"flex items-start"}>
+                <div>
+                  <div className={styles.extensionName}>{name}</div>
+                  <div className={styles.extensionDescription}>{description}</div>
+                </div>
+              </div>
+            ),
+            version,
+            status: (
+              <div className={cssNames({ [styles.enabled]: isEnabled, [styles.invalid]: !isCompatible })}>
+                {getStatus(extension)}
+              </div>
+            ),
+            actions: (
+              <MenuActions
+                id={`menu-actions-for-installed-extensions-for-${id}`}
+                usePortal
+                toolbar={false}>
+                {isCompatible && (
+                  <MenuItem
+                    disabled={isUninstalling}
+                    onClick={() => toggleExtension(id)}
+                  >
+                    <Icon material={isEnabled ? "unpublished" : "check_circle"} />
+                    <span className="title" aria-disabled={isUninstalling}>
+                      {isEnabled ? "Disable" : "Enabled"}
+                    </span>
+                  </MenuItem>
+                )}
+
+                <MenuItem
+                  disabled={isUninstalling}
+                  onClick={() => confirmUninstallExtension(extension)}
+                >
+                  <Icon material="delete" />
+                  <span className="title" aria-disabled={isUninstalling}>Uninstall</span>
+                </MenuItem>
+              </MenuActions>
+            ),
+          };
+        })}
+        items={userExtensions.get()}
         filters={[
           (extension) => extension.manifest.name,
           (extension) => getStatus(extension),
@@ -170,8 +175,12 @@ const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extension
 
 export const InstalledExtensions = withInjectables<Dependencies, InstalledExtensionsProps>(NonInjectedInstalledExtensions, {
   getProps: (di, props) => ({
+    ...props,
     extensionDiscovery: di.inject(extensionDiscoveryInjectable),
     extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
-    ...props,
+    userExtensions: di.inject(userExtensionsInjectable),
+    enableExtension: di.inject(enableExtensionInjectable),
+    disableExtension: di.inject(disableExtensionInjectable),
+    confirmUninstallExtension: di.inject(confirmUninstallExtensionInjectable),
   }),
 });
