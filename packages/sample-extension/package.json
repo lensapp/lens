@@ -1,0 +1,44 @@
+{
+  "name": "@k8slens/sample-extension",
+  "version": "6.4.0-beta.13",
+  "description": "Sample bundled extension for open-lens",
+  "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    "./main": "./dist/main.js",
+    "./renderer": "./dist/renderer.js"
+  },
+  "typesVersions": {
+    "*": {
+      "./main": [
+        "./dist/main.d.ts"
+      ],
+      "./renderer": [
+        "./dist/renderer.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "clean": "rimraf dist/",
+    "build": "webpack --config webpack.ts",
+    "lint": "exit 0",
+    "prepare": "yarn run build",
+    "prepare:dev": "yarn run build",
+    "prepare:test": "yarn run build"
+  },
+  "devDependencies": {
+    "@k8slens/extensions": "6.4.0-beta.13",
+    "@types/node": "16",
+    "rimraf": "^4.1.2",
+    "ts-loader": "^9.4.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  }
+}
