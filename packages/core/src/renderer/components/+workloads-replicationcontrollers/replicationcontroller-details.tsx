@@ -7,11 +7,11 @@ import styles from "./replicationcontroller-details.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { DrawerItem } from "../drawer";
+import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { ReplicationControllerStore } from "./replicationctrl-store";
-import replicationControllerStoreInjectable from "./replicationctrl-store.injectable";
+import type { ReplicationControllerStore } from "./replicationcontroller-store";
+import replicationControllerStoreInjectable from "./replicationcontroller-store.injectable";
 import type { ReplicationController } from "../../../common/k8s-api/endpoints";
 
 export interface ReplicationControllerDetailsProps extends KubeObjectDetailsProps<ReplicationController> {
@@ -24,13 +24,39 @@ interface Dependencies {
 @observer
 class NonInjectedReplicationControllerDetails extends React.Component<ReplicationControllerDetailsProps & Dependencies> {
   render() {
-    const { object: ctrl, store } = this.props;
+    const { object: resource } = this.props;
 
     return (
       <div className={styles.ReplicationControllerDetails}>
-        <DrawerItem name="Some info" labelsOnly>
-          <p>Controller: {ctrl.getName()}</p>
-          <p>Items in store: <Badge label={store.items.length} /></p>
+        <DrawerTitle>
+          Spec
+        </DrawerTitle>
+        <DrawerItem name="Desired Replicas">
+          {resource.getDesiredReplicas()}
+        </DrawerItem>
+        <DrawerItem name="Selectors" labelsOnly>
+          {
+            resource.getSelectorLabels().map(label => (<Badge key={label} label={label} />))
+          }
+        </DrawerItem>
+
+        <DrawerTitle>
+          Status
+        </DrawerTitle>
+        <DrawerItem name="Replicas">
+          {resource.getReplicas()}
+        </DrawerItem>
+        <DrawerItem name="Available Replicas">
+          {resource.getAvailableReplicas()}
+        </DrawerItem>
+        <DrawerItem name="Labeled Replicas">
+          {resource.getLabeledReplicas()}
+        </DrawerItem>
+        <DrawerItem name="Controller Generation">
+          {resource.getGeneration()}
+        </DrawerItem>
+        <DrawerItem name="Minimum Pod Readiness">
+          {`${resource.getMinReadySeconds()} seconds`}
         </DrawerItem>
       </div>
     );

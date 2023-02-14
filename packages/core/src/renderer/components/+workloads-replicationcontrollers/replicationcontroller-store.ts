@@ -5,11 +5,11 @@
 
 import type {
   ReplicationController,
-  ReplicationControllerApi
+  ReplicationControllerApi,
 } from "../../../common/k8s-api/endpoints";
 import type {
   KubeObjectStoreDependencies,
-  KubeObjectStoreOptions
+  KubeObjectStoreOptions,
 } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 

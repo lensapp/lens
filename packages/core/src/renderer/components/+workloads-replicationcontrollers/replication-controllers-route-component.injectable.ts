@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { ReplicationControllers } from "./replicationcontrollers";
 import {
-  routeSpecificComponentInjectionToken
+  routeSpecificComponentInjectionToken,
 } from "../../routes/route-specific-component-injection-token";
 import replicationControllersRouteInjectable
   from "../../../common/front-end-routing/routes/cluster/workloads/replicationcontrollers/replicationcontrollers-route.injectable";

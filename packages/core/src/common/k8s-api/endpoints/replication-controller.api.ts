@@ -8,7 +8,7 @@ import { KubeApi } from "../kube-api";
 import type {
   BaseKubeObjectCondition,
   KubeObjectStatus,
-  NamespaceScopedMetadata
+  NamespaceScopedMetadata,
 } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { PodTemplateSpec } from "./types";
@@ -63,7 +63,7 @@ export interface ReplicationControllerSpec {
    * Template is the object that describes the pod that will be created if insufficient replicas are detected. This takes precedence over a TemplateRef.
    * More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
    */
-  template?: PodTemplateSpec;
+  template: PodTemplateSpec;
 }
 
 export interface ReplicationControllerStatus extends KubeObjectStatus {
@@ -103,8 +103,8 @@ export class ReplicationController extends KubeObject<
     return this.spec?.minReadySeconds ?? 0;
   }
 
-  getDesiredReplicas(): number | undefined {
-    return this.spec?.replicas;
+  getGeneration() {
+    return this.status?.observedGeneration;
   }
 
   getSelectorLabels(): string[] {
@@ -113,6 +113,10 @@ export class ReplicationController extends KubeObject<
 
   getReplicas(): number | undefined {
     return this.status?.replicas;
+  }
+
+  getDesiredReplicas(): number | undefined {
+    return this.spec?.replicas;
   }
 
   getAvailableReplicas(): number | undefined {
