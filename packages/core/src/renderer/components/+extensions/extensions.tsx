@@ -24,8 +24,8 @@ import { docsUrl } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 import userExtensionsInjectable from "./user-extensions/user-extensions.injectable";
-import enableExtensionInjectable from "./enable-extension/enable-extension.injectable";
-import disableExtensionInjectable from "./disable-extension/disable-extension.injectable";
+import enableExtensionInjectable from "./enable-extension.injectable";
+import disableExtensionInjectable from "./disable-extension.injectable";
 import type { ConfirmUninstallExtension } from "./confirm-uninstall-extension.injectable";
 import confirmUninstallExtensionInjectable from "./confirm-uninstall-extension.injectable";
 import type { InstallExtensionFromInput } from "./install-extension-from-input.injectable";

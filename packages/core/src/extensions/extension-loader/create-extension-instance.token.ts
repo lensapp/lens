@@ -4,10 +4,13 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { InstalledExtension } from "../extension-discovery/extension-discovery";
-import type { LensExtension, LensExtensionConstructor } from "../lens-extension";
+import type { BundledInstalledExtension, ExternalInstalledExtension } from "../extension-discovery/extension-discovery";
+import type { BundledLensExtensionContructor, LensExtension, LensExtensionConstructor } from "../lens-extension";
 
-export type CreateExtensionInstance = (ExtensionClass: LensExtensionConstructor, extension: InstalledExtension) => LensExtension;
+export interface CreateExtensionInstance {
+  (ExtensionClass: LensExtensionConstructor, extension: ExternalInstalledExtension): LensExtension;
+  (ExtensionClass: BundledLensExtensionContructor, extension: BundledInstalledExtension): LensExtension;
+}
 
 export const createExtensionInstanceInjectionToken = getInjectionToken<CreateExtensionInstance>({
   id: "create-extension-instance-token",

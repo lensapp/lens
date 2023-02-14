@@ -13,7 +13,7 @@ import { Icon } from "../icon";
 import { List } from "../list/list";
 import { MenuActions, MenuItem } from "../menu";
 import { Spinner } from "../spinner";
-import { cssNames } from "../../utils";
+import { cssNames, toJS } from "../../utils";
 import { observer } from "mobx-react";
 import type { Row } from "react-table";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
@@ -45,7 +45,14 @@ function getStatus(extension: InstalledExtension) {
   return extension.isEnabled ? "Enabled" : "Disabled";
 }
 
-const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extensionInstallationStateStore, extensions, uninstall, enable, disable }: Dependencies & InstalledExtensionsProps) => {
+const NonInjectedInstalledExtensions = observer(({
+  extensionDiscovery,
+  extensionInstallationStateStore,
+  extensions,
+  uninstall,
+  enable,
+  disable,
+}: Dependencies & InstalledExtensionsProps) => {
   const columns = useMemo(
     () => [
       {
@@ -138,7 +145,7 @@ const NonInjectedInstalledExtensions = observer(({ extensionDiscovery, extension
           </MenuActions>
         ),
       };
-    }), [extensions, extensionInstallationStateStore.anyUninstalling],
+    }), [toJS(extensions), extensionInstallationStateStore.anyUninstalling],
   );
 
   if (!extensionDiscovery.isLoaded) {

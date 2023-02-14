@@ -10,7 +10,7 @@ import { broadcastMessage, ipcMainHandle, ipcRendererOn } from "../../common/ipc
 import { isErrnoException, toJS } from "../../common/utils";
 import type { ExtensionsStore } from "../extensions-store/extensions-store";
 import type { ExtensionLoader } from "../extension-loader";
-import type { LensExtensionId, LensExtensionManifest } from "../lens-extension";
+import type { BundledLensExtensionManifest, LensExtensionId, LensExtensionManifest } from "../lens-extension";
 import type { ExtensionInstallationStateStore } from "../extension-installation-state-store/extension-installation-state-store";
 import { extensionDiscoveryStateChannel } from "../../common/ipc/extension-handling";
 import { requestInitialExtensionDiscovery } from "../../renderer/ipc";
@@ -58,21 +58,30 @@ interface Dependencies {
   getRelativePath: GetRelativePath;
 }
 
-export interface InstalledExtension {
-  id: LensExtensionId;
-
-  readonly manifest: LensExtensionManifest;
-
+export interface BaseInstalledExtension {
+  readonly id: LensExtensionId;
   // Absolute path to the non-symlinked source folder,
   // e.g. "/Users/user/.k8slens/extensions/helloworld"
   readonly absolutePath: string;
-
   // Absolute to the symlinked package.json file
   readonly manifestPath: string;
-  readonly isBundled: boolean; // defined in project root's package.json
+}
+
+export interface BundledInstalledExtension extends BaseInstalledExtension {
+  readonly manifest: BundledLensExtensionManifest;
+  readonly isBundled: true;
+  readonly isCompatible: true;
+  readonly isEnabled: true;
+}
+
+export interface ExternalInstalledExtension extends BaseInstalledExtension {
+  readonly manifest: LensExtensionManifest;
+  readonly isBundled: false;
   readonly isCompatible: boolean;
   isEnabled: boolean;
 }
+
+export type InstalledExtension = BundledInstalledExtension | ExternalInstalledExtension;
 
 const logModule = "[EXTENSION-DISCOVERY]";
 
@@ -87,10 +96,6 @@ interface ExtensionDiscoveryChannelMessage {
  * @param lstat the stats to compare
  */
 const isDirectoryLike = (lstat: Stats) => lstat.isDirectory() || lstat.isSymbolicLink();
-
-interface LoadFromFolderOptions {
-  isBundled?: boolean;
-}
 
 interface ExtensionDiscoveryEvents {
   add: (ext: InstalledExtension) => void;
@@ -286,7 +291,7 @@ export class ExtensionDiscovery {
    * @param extensionId The ID of the extension to uninstall.
    */
   async uninstallExtension(extensionId: LensExtensionId): Promise<void> {
-    const extension = this.extensions.get(extensionId) ?? this.dependencies.extensionLoader.getExtension(extensionId);
+    const extension = this.extensions.get(extensionId) ?? this.dependencies.extensionLoader.getExtensionById(extensionId);
 
     if (!extension) {
       return void this.dependencies.logger.warn(`${logModule} could not uninstall extension, not found`, { id: extensionId });
@@ -345,24 +350,26 @@ export class ExtensionDiscovery {
    * Returns InstalledExtension from path to package.json file.
    * Also updates this.packagesJson.
    */
-  protected async getByManifest(manifestPath: string, { isBundled = false } = {}): Promise<InstalledExtension | null> {
+  protected async loadExtensionFromFolder(folderPath: string): Promise<ExternalInstalledExtension | null> {
+    const manifestPath = this.dependencies.joinPaths(folderPath, manifestFilename);
+
     try {
       const manifest = await this.dependencies.readJsonFile(manifestPath) as unknown as LensExtensionManifest;
-      const id = isBundled ? manifestPath : this.getInstalledManifestPath(manifest.name);
-      const isEnabled = this.dependencies.extensionsStore.isEnabled({ id, isBundled });
+      const id = this.getInstalledManifestPath(manifest.name);
+      const isEnabled = this.dependencies.extensionsStore.isEnabled(id);
       const extensionDir = this.dependencies.getDirnameOfPath(manifestPath);
       const npmPackage = this.dependencies.joinPaths(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = this.dependencies.isProduction && await this.dependencies.pathExists(npmPackage)
         ? npmPackage
         : extensionDir;
-      const isCompatible = isBundled || this.dependencies.isCompatibleExtension(manifest);
+      const isCompatible = this.dependencies.isCompatibleExtension(manifest);
 
       return {
         id,
         absolutePath,
         manifestPath: id,
         manifest,
-        isBundled,
+        isBundled: false,
         isEnabled,
         isCompatible,
       };
@@ -378,14 +385,14 @@ export class ExtensionDiscovery {
     }
   }
 
-  async ensureExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
+  async ensureExtensions(): Promise<Map<LensExtensionId, ExternalInstalledExtension>> {
     const userExtensions = await this.loadFromFolder(this.localFolderPath);
 
     return this.extensions = new Map(userExtensions.map(extension => [extension.id, extension]));
   }
 
-  async loadFromFolder(folderPath: string): Promise<InstalledExtension[]> {
-    const extensions: InstalledExtension[] = [];
+  async loadFromFolder(folderPath: string): Promise<ExternalInstalledExtension[]> {
+    const extensions: ExternalInstalledExtension[] = [];
     const paths = await this.dependencies.readDirectory(folderPath);
 
     for (const fileName of paths) {
@@ -416,16 +423,6 @@ export class ExtensionDiscovery {
     this.dependencies.logger.debug(`${logModule}: ${extensions.length} extensions loaded`, { folderPath, extensions });
 
     return extensions;
-  }
-
-  /**
-   * Loads extension from absolute path, updates this.packagesJson to include it and returns the extension.
-   * @param folderPath Folder path to extension
-   */
-  async loadExtensionFromFolder(folderPath: string, { isBundled = false }: LoadFromFolderOptions = {}): Promise<InstalledExtension | null> {
-    const manifestPath = this.dependencies.joinPaths(folderPath, manifestFilename);
-
-    return this.getByManifest(manifestPath, { isBundled });
   }
 
   toJSON(): ExtensionDiscoveryChannelMessage {

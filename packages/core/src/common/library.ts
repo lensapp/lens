@@ -6,4 +6,6 @@
 // @experimental
 export { applicationInformationToken } from "./vars/application-information-token";
 export type { ApplicationInformation } from "./vars/application-information-token";
+export type { BundledExtension } from "../extensions/extension-discovery/bundled-extension-token";
+export type { BundledLensExtensionManifest } from "../extensions/lens-extension";
 export { bundledExtensionInjectionToken } from "../extensions/extension-discovery/bundled-extension-token";

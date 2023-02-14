@@ -6,23 +6,18 @@
 import * as uuid from "uuid";
 
 import { ProtocolHandlerExtension, ProtocolHandlerInternal, ProtocolHandlerInvalid } from "../../../common/protocol-handler";
-import { delay, noop } from "../../../common/utils";
-import type { ExtensionsStore, IsEnabledExtensionDescriptor } from "../../../extensions/extensions-store/extensions-store";
+import { noop } from "../../../common/utils";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
-import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import { LensExtension } from "../../../extensions/lens-extension";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import type { ObservableMap } from "mobx";
+import { runInAction } from "mobx";
 import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
-import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
-import pathExistsInjectable from "../../../common/fs/path-exists.injectable";
-import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
-import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
 
 function throwIfDefined(val: any): void {
   if (val != null) {
@@ -39,20 +34,13 @@ describe("protocol router tests", () => {
   beforeEach(async () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
-    di.override(pathExistsInjectable, () => () => { throw new Error("tried call pathExists without override"); });
-    di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
-    di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
-    di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
-
     enabledExtensions = new Set();
 
     di.override(extensionsStoreInjectable, () => ({
-      isEnabled: ({ id, isBundled }: IsEnabledExtensionDescriptor) => isBundled || enabledExtensions.has(id),
-    } as unknown as ExtensionsStore));
+      isEnabled: (id) => enabledExtensions.has(id),
+    }));
 
-    di.permitSideEffects(getConfigurationFileModelInjectable);
-
-    di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 
     broadcastMessageMock = jest.fn();
     di.override(broadcastMessageInjectable, () => broadcastMessageMock);
@@ -60,7 +48,9 @@ describe("protocol router tests", () => {
     extensionInstances = di.inject(extensionInstancesInjectable);
     lpr = di.inject(lensProtocolRouterMainInjectable);
 
-    lpr.rendererLoaded = true;
+    runInAction(() => {
+      lpr.rendererLoaded.set(true);
+    });
   });
 
   it("should broadcast invalid protocol on non-lens URLs", async () => {
@@ -73,7 +63,19 @@ describe("protocol router tests", () => {
     expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInvalid, "invalid host", "lens://foobar");
   });
 
-  it("should not throw when has valid host", async () => {
+  it("should broadcast internal route when called with valid host", async () => {
+    lpr.addInternalHandler("/", noop);
+
+    try {
+      expect(await lpr.route("lens://app")).toBeUndefined();
+    } catch (error) {
+      expect(throwIfDefined(error)).not.toThrow();
+    }
+
+    expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app", "matched");
+  });
+
+  it("should broadcast external route when called with valid host", async () => {
     const extId = uuid.v4();
     const ext = new LensExtension({
       id: extId,
@@ -97,22 +99,12 @@ describe("protocol router tests", () => {
     extensionInstances.set(extId, ext);
     enabledExtensions.add(extId);
 
-    lpr.addInternalHandler("/", noop);
-
-    try {
-      expect(await lpr.route("lens://app")).toBeUndefined();
-    } catch (error) {
-      expect(throwIfDefined(error)).not.toThrow();
-    }
-
     try {
       expect(await lpr.route("lens://extension/@mirantis/minikube")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    await delay(50);
-    expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app", "matched");
     expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerExtension, "lens://extension/@mirantis/minikube", "matched");
   });
 
@@ -183,7 +175,6 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    await delay(50);
     expect(called).toBe("foob");
     expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/@foobar/icecream/page/foob", "matched");
   });
@@ -252,7 +243,6 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    await delay(50);
 
     expect(called).toBe(1);
     expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/icecream/page", "matched");
