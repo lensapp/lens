@@ -24,7 +24,7 @@ const replicationControllerSidebarItemsInjectable = getInjectable({
       {
         id: "replication-controllers",
         parentId: workloadsSidebarItemId,
-        title: "ReplicationControllers",
+        title: "Replication Controllers",
         onClick: navigateToPage,
         isActive: routeIsActive,
         isVisible: route.isEnabled,
