@@ -58,15 +58,13 @@ const requestMetricsInjectable = getInjectable({
         end = now;
       }
 
-      const res = await apiBase.post("/metrics", {
+      return apiBase.post("/metrics", {
         data: query,
         query: {
           start, end, step,
           "kubernetes_namespace": namespace,
         },
       });
-
-      return res;
     }
 
     return requestMetrics;
