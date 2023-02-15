@@ -5,7 +5,7 @@
 
 import "./release-details.scss";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Link } from "react-router-dom";
 import { DrawerItem, DrawerTitle } from "../../drawer";
@@ -44,7 +44,6 @@ const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & Rel
       </div>
     );
   }
-
 
   return (
     <div>
@@ -133,8 +132,8 @@ const ResourceGroup = ({
       </TableHead>
 
       {resources.map(
-        ({ detailsUrl, name, namespace, uid }) => (
-          <TableRow key={uid}>
+        ({ detailsUrl, name, namespace }) => (
+          <TableRow key={name}>
             <TableCell className="name">
               {detailsUrl ? <Link to={detailsUrl}>{name}</Link> : name}
             </TableCell>
