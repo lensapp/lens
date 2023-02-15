@@ -3,18 +3,48 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { LensExtension, lensExtensionDependencies } from "./lens-extension";
+import type { LensExtensionDependencies } from "./lens-extension";
+import { LensExtension } from "./lens-extension";
 import type { CatalogEntity } from "../common/catalog";
 import type { IComputedValue, IObservableArray } from "mobx";
 import { isObservableArray } from "mobx";
 import type { MenuRegistration } from "../features/application-menu/main/menu-registration";
 import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
 import type { ShellEnvModifier } from "../main/shell-session/shell-env-modifier/shell-env-modifier-registration";
-import type { LensMainExtensionDependencies } from "./lens-extension-set-dependencies";
+import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import type { InstalledExtension } from "./common-api";
+import type { CatalogEntityRegistry } from "../main/catalog";
+import type { NavigateForExtension } from "../main/start-main-application/lens-window/navigate-for-extension.injectable";
+import catalogEntityRegistryInjectable from "../main/catalog/entity-registry.injectable";
+import fileSystemProvisionerStoreInjectable from "./extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
+import loggerInjectable from "../common/logger.injectable";
+import navigateForExtensionInjectable from "../main/start-main-application/lens-window/navigate-for-extension.injectable";
 
-export class LensMainExtension extends LensExtension<LensMainExtensionDependencies> {
+interface LensMainExtensionDependencies extends LensExtensionDependencies {
+  readonly entityRegistry: CatalogEntityRegistry;
+  readonly navigate: NavigateForExtension;
+}
+
+export class LensMainExtension extends LensExtension {
   appMenus: MenuRegistration[] | IComputedValue<MenuRegistration[]> = [];
   trayMenus: TrayMenuRegistration[] | IComputedValue<TrayMenuRegistration[]> = [];
+
+  /**
+   * @ignore
+   */
+  declare readonly dependencies: LensMainExtensionDependencies;
+
+  constructor(extension: InstalledExtension) {
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
+    const deps: LensMainExtensionDependencies = {
+      entityRegistry: di.inject(catalogEntityRegistryInjectable),
+      fileSystemProvisionerStore: di.inject(fileSystemProvisionerStoreInjectable),
+      logger: di.inject(loggerInjectable),
+      navigate: di.inject(navigateForExtensionInjectable),
+    };
+
+    super(deps, extension);
+  }
 
   /**
    * implement this to modify the shell environment that Lens terminals are opened with. The ShellEnvModifier type has the signature
@@ -32,18 +62,18 @@ export class LensMainExtension extends LensExtension<LensMainExtensionDependenci
   terminalShellEnvModifier?: ShellEnvModifier;
 
   async navigate(pageId?: string, params?: Record<string, any>, frameId?: number) {
-    await this[lensExtensionDependencies].navigate(this.id, pageId, params, frameId);
+    await this.dependencies.navigate(this.id, pageId, params, frameId);
   }
 
   addCatalogSource(id: string, source: IObservableArray<CatalogEntity> | IComputedValue<CatalogEntity[]>) {
     if (isObservableArray(source)) {
-      this[lensExtensionDependencies].entityRegistry.addObservableSource(`${this.name}:${id}`, source);
+      this.dependencies.entityRegistry.addObservableSource(`${this.name}:${id}`, source);
     } else {
-      this[lensExtensionDependencies].entityRegistry.addComputedSource(`${this.name}:${id}`, source);
+      this.dependencies.entityRegistry.addComputedSource(`${this.name}:${id}`, source);
     }
   }
 
   removeCatalogSource(id: string) {
-    this[lensExtensionDependencies].entityRegistry.removeSource(`${this.name}:${id}`);
+    this.dependencies.entityRegistry.removeSource(`${this.name}:${id}`);
   }
 }

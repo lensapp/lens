@@ -9,14 +9,13 @@ import type { ObservableMap } from "mobx";
 import { runInAction, action, computed, observable, reaction, when } from "mobx";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
 import { isDefined, iter, toJS } from "../../common/utils";
-import type { ExternalInstalledExtension, InstalledExtension } from "../extension-discovery/extension-discovery";
+import type { BundledInstalledExtension, ExternalInstalledExtension, InstalledExtension } from "../extension-discovery/extension-discovery";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
 import type { LensExtensionState } from "../extensions-store/extensions-store";
 import { extensionLoaderFromMainChannel, extensionLoaderFromRendererChannel } from "../../common/ipc/extension-handling";
 import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
 import assert from "assert";
 import { EventEmitter } from "../../common/event-emitter";
-import type { CreateExtensionInstance } from "./create-extension-instance.token";
 import type { Extension } from "./extension/extension.injectable";
 import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
@@ -31,7 +30,6 @@ interface Dependencies {
   readonly logger: Logger;
   readonly extensionEntryPointName: "main" | "renderer";
   updateExtensionsState: (extensionsState: Record<LensExtensionId, LensExtensionState>) => void;
-  createExtensionInstance: CreateExtensionInstance;
   getExtension: (instance: LensExtension) => Extension;
   joinPaths: JoinPaths;
   getDirnameOfPath: GetDirnameOfPath;
@@ -239,7 +237,7 @@ export class ExtensionLoader {
             return null;
           }
 
-          const installedExtension: InstalledExtension = {
+          const installedExtension: BundledInstalledExtension = {
             absolutePath: "irrelevant",
             id: extension.manifest.name,
             isBundled: true,
@@ -248,10 +246,7 @@ export class ExtensionLoader {
             manifest: extension.manifest,
             manifestPath: "irrelevant",
           };
-          const instance = this.dependencies.createExtensionInstance(
-            LensExtensionClass,
-            installedExtension,
-          );
+          const instance = new LensExtensionClass(installedExtension);
 
           this.dependencies.extensionInstances.set(extension.manifest.name, instance);
 
@@ -310,35 +305,32 @@ export class ExtensionLoader {
 
     return [...installedExtensions.entries()]
       .filter((entry): entry is [string, ExternalInstalledExtension] => !entry[1].isBundled)
-      .map(([extId, extension]) => {
-        const alreadyInit = this.dependencies.extensionInstances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
+      .map(([extId, installedExtension]) => {
+        const alreadyInit = this.dependencies.extensionInstances.has(extId) || this.nonInstancesByName.has(installedExtension.manifest.name);
 
-        if (extension.isCompatible && extension.isEnabled && !alreadyInit) {
+        if (installedExtension.isCompatible && installedExtension.isEnabled && !alreadyInit) {
           try {
-            const LensExtensionClass = this.requireExtension(extension);
+            const LensExtensionClass = this.requireExtension(installedExtension);
 
             if (!LensExtensionClass) {
-              this.nonInstancesByName.add(extension.manifest.name);
+              this.nonInstancesByName.add(installedExtension.manifest.name);
 
               return null;
             }
 
-            const instance = this.dependencies.createExtensionInstance(
-              LensExtensionClass,
-              extension,
-            );
+            const instance = new LensExtensionClass(installedExtension);
 
             this.dependencies.extensionInstances.set(extId, instance);
 
             return {
               instance,
-              installedExtension: extension,
+              installedExtension,
               activated: instance.activate(),
             } as ExtensionBeingActivated;
           } catch (err) {
-            this.dependencies.logger.error(`${logModule}: error loading extension`, { ext: extension, err });
+            this.dependencies.logger.error(`${logModule}: error loading extension`, { ext: installedExtension, err });
           }
-        } else if (!extension.isEnabled && alreadyInit) {
+        } else if (!installedExtension.isEnabled && alreadyInit) {
           this.removeInstance(extId);
         }
 
