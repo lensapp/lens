@@ -31,7 +31,6 @@ import assert from "assert";
 import activeThemeInjectable from "../../../../themes/active.injectable";
 import type { ToHelmRelease } from "../../to-helm-release.injectable";
 import toHelmReleaseInjectable from "../../to-helm-release.injectable";
-import uniqueId from "lodash/uniqueId";
 
 const releaseDetailsModelInjectable = getInjectable({
   id: "release-details-model",
@@ -57,7 +56,7 @@ const releaseDetailsModelInjectable = getInjectable({
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, release: TargetHelmRelease) => `${release.namespace}/${release.name}-${uniqueId()}`,
+    getInstanceKey: (di, release: TargetHelmRelease) => `${release.namespace}/${release.name}`,
   }),
 });
 

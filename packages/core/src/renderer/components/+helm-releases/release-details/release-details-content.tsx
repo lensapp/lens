@@ -111,10 +111,16 @@ const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & Rel
 export const ReleaseDetailsContent = withInjectables<Dependencies, ReleaseDetailsContentProps>(NonInjectedReleaseDetailsContent, {
   getPlaceholder: () => <Spinner center data-testid="helm-release-detail-content-spinner" />,
 
-  getProps: async (di, props) => ({
-    model: await di.inject(releaseDetailsModelInjectable, props.targetRelease),
-    ...props,
-  }),
+  getProps: async (di, props) => {
+    const model = await di.inject(releaseDetailsModelInjectable, props.targetRelease);
+
+    await model.load();
+
+    return {
+      model: await di.inject(releaseDetailsModelInjectable, props.targetRelease),
+      ...props,
+    }
+  },
 });
 
 const ResourceGroup = ({
