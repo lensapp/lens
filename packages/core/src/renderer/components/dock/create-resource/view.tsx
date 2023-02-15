@@ -76,7 +76,7 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
     this.error = error.toString();
   };
 
-  create = async (): Promise<void> => {
+  create = async (): Promise<string | void> => {
     const { apiManager, getDetailsUrl, navigate, requestKubeObjectCreation } = this.props;
 
     if (this.error || !this.data?.trim()) {
@@ -98,7 +98,7 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
         this.props.logger.warn("Failed to create resource", { resource }, result.error);
         this.props.showCheckedErrorNotification(result.error, "Unknown error occured while creating resources");
 
-        return;
+        throw result.error;
       }
 
       const { kind, apiVersion, metadata: { name, namespace }} = result.response;
@@ -122,7 +122,13 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
       ));
     });
 
-    await Promise.allSettled(creatingResources);
+    const results = await Promise.allSettled(creatingResources);
+
+    if (results.some(result => result.status === "rejected")) {
+      return;
+    }
+
+    return "All resources have been successfully created";
   };
 
   renderControls() {

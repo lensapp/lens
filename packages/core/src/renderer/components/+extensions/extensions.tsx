@@ -37,6 +37,7 @@ import installOnDropInjectable from "./install-on-drop.injectable";
 import { supportedExtensionFormats } from "./supported-extension-formats";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import Gutter from "../gutter/gutter";
 
 interface Dependencies {
   userExtensions: IComputedValue<InstalledExtension[]>;
@@ -112,6 +113,8 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
               installFromSelectFileDialog={this.props.installFromSelectFileDialog}
               installPath={this.installPath}
             />
+
+            <Gutter size="md" />
 
             <InstalledExtensions
               extensions={userExtensions}

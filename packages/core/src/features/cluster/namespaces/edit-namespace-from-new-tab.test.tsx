@@ -401,8 +401,7 @@ metadata:
                   expect(rendered.baseElement).toMatchSnapshot();
                 });
 
-                // TODO: Not doable at the moment because info panel controls closing of the tab
-                xit("does not close the dock tab", () => {
+                it("does not close the dock tab", () => {
                   expect(
                     rendered.getByTestId("dock-tab-for-some-first-tab-id"),
                   ).toBeInTheDocument();
