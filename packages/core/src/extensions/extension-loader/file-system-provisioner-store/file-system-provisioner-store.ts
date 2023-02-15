@@ -3,25 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { SHA256 } from "crypto-js";
 import { action, makeObservable, observable } from "mobx";
 import type { BaseStoreDependencies } from "../../../common/base-store/base-store";
 import { BaseStore } from "../../../common/base-store/base-store";
 import type { LensExtensionId } from "../../lens-extension";
-import { getOrInsertWithAsync, toJS } from "../../../common/utils";
-import type { EnsureDirectory } from "../../../common/fs/ensure-dir.injectable";
-import type { JoinPaths } from "../../../common/path/join-paths.injectable";
-import type { RandomBytes } from "../../../common/utils/random-bytes.injectable";
+import { toJS } from "../../../common/utils";
+import type { EnsureHashedDirectoryForExtension } from "./ensure-hashed-directory-for-extension.injectable";
 
 interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths
 }
 
 interface Dependencies extends BaseStoreDependencies {
-  readonly directoryForExtensionData: string;
-  ensureDirectory: EnsureDirectory;
-  joinPaths: JoinPaths;
-  randomBytes: RandomBytes;
+  ensureHashedDirectoryForExtension: EnsureHashedDirectoryForExtension;
 }
 
 export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
@@ -43,16 +37,7 @@ export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
    * @returns path to the folder that the extension can safely write files to.
    */
   async requestDirectory(extensionName: string): Promise<string> {
-    const dirPath = await getOrInsertWithAsync(this.registeredExtensions, extensionName, async () => {
-      const salt = (await this.dependencies.randomBytes(32)).toString("hex");
-      const hashedName = SHA256(`${extensionName}/${salt}`).toString();
-
-      return this.dependencies.joinPaths(this.dependencies.directoryForExtensionData, hashedName);
-    });
-
-    await this.dependencies.ensureDirectory(dirPath);
-
-    return dirPath;
+    return this.dependencies.ensureHashedDirectoryForExtension(extensionName, this.registeredExtensions);
   }
 
   @action
