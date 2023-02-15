@@ -443,6 +443,9 @@ exports[`extensions - navigation using application menu when navigating to exten
                   : you can drag and drop a tarball file to this area
                 </small>
               </section>
+              <div
+                class="size-md"
+              />
               <div>
                 <div
                   class="Spinner singleColor center"

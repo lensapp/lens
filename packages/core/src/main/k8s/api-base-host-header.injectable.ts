@@ -11,7 +11,7 @@ const apiBaseHostHeaderInjectable = getInjectable({
   instantiate: (di) => {
     const lensProxyPort = di.inject(lensProxyPortInjectable);
 
-    return `localhost:${lensProxyPort.get()}`;
+    return `lens.app:${lensProxyPort.get()}`;
   },
   injectionToken: apiBaseHostHeaderInjectionToken,
 });

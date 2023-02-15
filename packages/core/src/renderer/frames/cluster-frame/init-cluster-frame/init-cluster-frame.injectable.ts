@@ -12,6 +12,7 @@ import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.
 import loadExtensionsInjectable from "../../load-extensions.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import showErrorNotificationInjectable from "../../../components/notifications/show-error-notification.injectable";
+import closeRendererLogFileInjectable from "../../../logger/close-renderer-log-file.injectable";
 
 const initClusterFrameInjectable = getInjectable({
   id: "init-cluster-frame",
@@ -29,6 +30,7 @@ const initClusterFrameInjectable = getInjectable({
       emitAppEvent: di.inject(emitAppEventInjectable),
       logger: di.inject(loggerInjectable),
       showErrorNotification: di.inject(showErrorNotificationInjectable),
+      closeFileLogging: di.inject(closeRendererLogFileInjectable),
     });
   },
 });

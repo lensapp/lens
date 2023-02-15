@@ -6,9 +6,7 @@
 import { iter } from "../../common/utils";
 
 export type IgnoredClassNames = number | symbol | Function;
-
-export type IClassName = string | string[] | IClassNameMap | undefined | null | false | IgnoredClassNames;
-export type IClassNameMap = object;
+export type IClassName = string | string[] | Record<string, any> | undefined | null | false | IgnoredClassNames;
 
 export function cssNames(...classNames: IClassName[]): string {
   const classNamesEnabled = new Map<string, boolean>();
