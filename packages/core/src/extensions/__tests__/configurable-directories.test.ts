@@ -6,13 +6,11 @@ import { runInAction } from "mobx";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
-import logErrorInjectable from "../../common/log-error.injectable";
 import getHashInjectable from "../../extensions/extension-loader/file-system-provisioner-store/get-hash.injectable";
 import fsInjectable from "../../common/fs/fs.injectable";
 
 describe("configurable directories for extension files", () => {
   let builder: ApplicationBuilder;
-  let logErrorMock: jest.Mock;
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
@@ -22,10 +20,6 @@ describe("configurable directories for extension files", () => {
         runInAction(() => {
           mainDi.override(getHashInjectable, () => x => x);
         });
-
-        logErrorMock = jest.fn();
-
-        mainDi.override(logErrorInjectable, () => logErrorMock);
       },
     );
 
