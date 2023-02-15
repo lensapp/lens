@@ -6,7 +6,7 @@
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type {
-  BaseKubeObjectCondition,
+  BaseKubeObjectCondition, KubeObjectMetadata,
   KubeObjectStatus,
   NamespaceScopedMetadata,
 } from "../kube-object";
@@ -25,7 +25,7 @@ export class ReplicationControllerApi extends KubeApi<ReplicationController> {
     return `${this.formatUrlForNotListing(params)}/scale`;
   }
 
-  getScale(params: { namespace: string; name: string }) {
+  getScale(params: { namespace: string; name: string }): Promise<Scale> {
     return this.request.get(this.getScaleApiUrl(params));
   }
 
@@ -37,9 +37,25 @@ export class ReplicationControllerApi extends KubeApi<ReplicationController> {
           replicas,
         },
       },
+    }, {
+      headers: {
+        "content-type": "application/strategic-merge-patch+json",
+      },
     });
   }
+}
 
+export interface Scale {
+  apiVersion: "autoscaling/v1";
+  kind: "Scale";
+  metadata: KubeObjectMetadata;
+  spec: {
+    replicas: number;
+  };
+  status: {
+    replicas: number;
+    selector: string;
+  };
 }
 
 export interface ReplicationControllerSpec {
@@ -115,8 +131,8 @@ export class ReplicationController extends KubeObject<
     return this.status?.replicas;
   }
 
-  getDesiredReplicas(): number | undefined {
-    return this.spec?.replicas;
+  getDesiredReplicas(): number {
+    return this.spec?.replicas ?? 0;
   }
 
   getAvailableReplicas(): number | undefined {

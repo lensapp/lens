@@ -4,4 +4,10 @@
  */
 
 .ReplicationControllerDetails {
+
+  .desiredReplicas {
+    display: flex;
+    gap: calc(var(--margin) * 2);
+    align-items: center;
+  }
 }
