@@ -13,7 +13,6 @@ import { HotbarMenu } from "../hotbar/hotbar-menu";
 import { DeleteClusterDialog } from "../delete-cluster-dialog";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { TopBar } from "../layout/top-bar/top-bar";
-import catalogPreviousActiveTabStorageInjectable from "../+catalog/catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
 import type { IComputedValue } from "mobx";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import welcomeRouteInjectable from "../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
@@ -21,10 +20,8 @@ import { buildURL } from "@k8slens/utilities";
 import type { WatchForGeneralEntityNavigation } from "../../api/helpers/watch-for-general-entity-navigation.injectable";
 import watchForGeneralEntityNavigationInjectable from "../../api/helpers/watch-for-general-entity-navigation.injectable";
 import currentPathInjectable from "../../routes/current-path.injectable";
-import type { StorageLayer } from "../../utils/storage-helper";
 
 interface Dependencies {
-  catalogPreviousActiveTabStorage: StorageLayer<string | null>;
   currentRouteComponent: IComputedValue<React.ElementType | undefined>;
   welcomeUrl: string;
   watchForGeneralEntityNavigation: WatchForGeneralEntityNavigation;
@@ -84,7 +81,6 @@ class NonInjectedClusterManager extends React.Component<Dependencies> {
 
 export const ClusterManager = withInjectables<Dependencies>(NonInjectedClusterManager, {
   getProps: (di) => ({
-    catalogPreviousActiveTabStorage: di.inject(catalogPreviousActiveTabStorageInjectable),
     currentRouteComponent: di.inject(currentRouteComponentInjectable),
     welcomeUrl: buildURL(di.inject(welcomeRouteInjectable).path),
     watchForGeneralEntityNavigation: di.inject(watchForGeneralEntityNavigationInjectable),

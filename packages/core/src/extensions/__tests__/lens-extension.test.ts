@@ -3,17 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { LensExtension } from "../lens-extension";
-import { Console } from "console";
-import { stdout, stderr } from "process";
-
-console = new Console(stdout, stderr);
-
-let ext: LensExtension;
+import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import { LensMainExtension } from "../lens-main-extension";
 
 describe("lens extension", () => {
+  let ext: LensMainExtension;
+
   beforeEach(async () => {
-    ext = new LensExtension({
+    const builder = getApplicationBuilder();
+
+    /**
+     * This is required because it sets up `AppPaths` which are required by LensMainExtension.
+     *
+     * That type isn't used internally so it needs to use "legacy global DI" to get its dependencies.
+     */
+    await builder.render();
+
+    ext = new LensMainExtension({
       manifest: {
         name: "foo-bar",
         version: "0.1.1",

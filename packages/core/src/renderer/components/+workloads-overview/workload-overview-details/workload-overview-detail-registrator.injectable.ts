@@ -16,43 +16,29 @@ const workloadOverviewDetailRegistratorInjectable = getInjectable({
   instantiate: (di) => {
     const getRandomId = di.inject(getRandomIdInjectable);
 
-    const getExtensionShouldBeEnabledForClusterFrame = (
-      extension: LensRendererExtension,
-    ) =>
-      di.inject(extensionShouldBeEnabledForClusterFrameInjectable, extension);
-
     return (ext) => {
       const extension = ext as LensRendererExtension;
+      const extensionShouldBeEnabledForClusterFrame = di.inject(extensionShouldBeEnabledForClusterFrameInjectable, extension);
 
-      const extensionShouldBeEnabledForClusterFrame =
-        getExtensionShouldBeEnabledForClusterFrame(extension);
+      return extension.kubeWorkloadsOverviewItems.map((registration) => getInjectable({
+        id: `workload-overview-detail-from-${extension.sanitizedExtensionId}-${getRandomId()}`,
 
-      return extension.kubeWorkloadsOverviewItems.map((registration) => {
-        const id = `workload-overview-detail-from-${
-          extension.sanitizedExtensionId
-        }-${getRandomId()}`;
+        instantiate: () => ({
+          Component: registration.components.Details,
 
-        return getInjectable({
-          id,
+          enabled: computed(() => {
+            if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
+              return false;
+            }
 
-          instantiate: () => ({
-            Component: registration.components.Details,
-
-            enabled: computed(() => {
-              if (!extensionShouldBeEnabledForClusterFrame.value.get()) {
-                return false;
-              }
-
-              return registration.visible ? registration.visible.get() : true;
-            }),
-
-            orderNumber:
-              0.5 + (registration.priority ? 100 - registration.priority : 50),
+            return registration.visible ? registration.visible.get() : true;
           }),
 
-          injectionToken: workloadOverviewDetailInjectionToken,
-        });
-      });
+          orderNumber: 0.5 + (registration.priority ? 100 - registration.priority : 50),
+        }),
+
+        injectionToken: workloadOverviewDetailInjectionToken,
+      }));
     };
   },
 

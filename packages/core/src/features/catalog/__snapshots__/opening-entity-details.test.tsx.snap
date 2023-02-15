@@ -82,6 +82,7 @@ exports[`opening catalog entity details panel renders 1`] = `
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -374,41 +375,35 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
                 Catalog
               </div>
               <ul
-                aria-multiselectable="false"
-                class="MuiTreeView-root"
+                class="treeView"
                 role="tree"
               >
                 <li
-                  aria-selected="true"
-                  class="MuiTreeItem-root Mui-selected"
+                  class="root selected treeItem"
                   data-testid="*-tab"
                   role="treeitem"
-                  tabindex="0"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="iconContainer"
+                  />
+                  <div
+                    class="label"
                   >
-                    <div
-                      class="MuiTreeItem-iconContainer"
-                    />
-                    <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                    >
-                      Browse
-                    </div>
+                    Browse
                   </div>
                 </li>
+                <div
+                  class="HorizontalLine size-xxs"
+                />
                 <li
-                  aria-expanded="true"
-                  class="MuiTreeItem-root bordered Mui-expanded"
-                  role="treeitem"
-                  tabindex="-1"
+                  class="root treeGroup"
+                  role="group"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="group"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer"
+                      class="iconContainer"
                     >
                       <i
                         class="Icon material focusable"
@@ -422,7 +417,7 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
                       </i>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
+                      class="label"
                     >
                       <div
                         class="parent"
@@ -432,124 +427,99 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
+                    class="contents expanded"
                   >
-                    <div
-                      class="MuiCollapse-wrapper"
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/General-tab"
+                      role="treeitem"
                     >
                       <div
-                        class="MuiCollapse-wrapperInner"
+                        class="iconContainer"
                       >
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/General-tab"
-                          role="treeitem"
-                          tabindex="-1"
+                        <i
+                          class="Icon material focusable small"
                         >
-                          <div
-                            class="MuiTreeItem-content"
+                          <span
+                            class="icon"
+                            data-icon-name="settings"
                           >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="settings"
-                                >
-                                  settings
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  General
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/KubernetesCluster-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name=""
-                                />
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Clusters
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/WebLink-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="public"
-                                >
-                                  public
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Web Links
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
+                            settings
+                          </span>
+                        </i>
                       </div>
-                    </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            General
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/KubernetesCluster-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name=""
+                          />
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Clusters
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/WebLink-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon material focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="public"
+                          >
+                            public
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Web Links
+                          </div>
+                        </div>
+                      </div>
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -641,6 +611,7 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
                       </div>
                       <div
                         class="TableCell nowrap sorting"
+                        data-testid="catalog-kind-column"
                         id="kind"
                       >
                         <div
@@ -661,6 +632,7 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
                       </div>
                       <div
                         class="TableCell sourceCell nowrap sorting"
+                        data-testid="catalog-source-column"
                         id="source"
                       >
                         <div
@@ -681,6 +653,7 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
                       </div>
                       <div
                         class="TableCell labelsCell scrollable nowrap"
+                        data-testid="catalog-labels-column"
                         id="labels"
                       >
                         <div
@@ -691,6 +664,7 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
                       </div>
                       <div
                         class="TableCell statusCell nowrap sorting"
+                        data-testid="catalog-status-column"
                         id="status"
                       >
                         <div
@@ -1195,41 +1169,35 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                 Catalog
               </div>
               <ul
-                aria-multiselectable="false"
-                class="MuiTreeView-root"
+                class="treeView"
                 role="tree"
               >
                 <li
-                  aria-selected="true"
-                  class="MuiTreeItem-root Mui-selected"
+                  class="root selected treeItem"
                   data-testid="*-tab"
                   role="treeitem"
-                  tabindex="0"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="iconContainer"
+                  />
+                  <div
+                    class="label"
                   >
-                    <div
-                      class="MuiTreeItem-iconContainer"
-                    />
-                    <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                    >
-                      Browse
-                    </div>
+                    Browse
                   </div>
                 </li>
+                <div
+                  class="HorizontalLine size-xxs"
+                />
                 <li
-                  aria-expanded="true"
-                  class="MuiTreeItem-root bordered Mui-expanded"
-                  role="treeitem"
-                  tabindex="-1"
+                  class="root treeGroup"
+                  role="group"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="group"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer"
+                      class="iconContainer"
                     >
                       <i
                         class="Icon material focusable"
@@ -1243,7 +1211,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </i>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
+                      class="label"
                     >
                       <div
                         class="parent"
@@ -1253,124 +1221,99 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
+                    class="contents expanded"
                   >
-                    <div
-                      class="MuiCollapse-wrapper"
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/General-tab"
+                      role="treeitem"
                     >
                       <div
-                        class="MuiCollapse-wrapperInner"
+                        class="iconContainer"
                       >
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/General-tab"
-                          role="treeitem"
-                          tabindex="-1"
+                        <i
+                          class="Icon material focusable small"
                         >
-                          <div
-                            class="MuiTreeItem-content"
+                          <span
+                            class="icon"
+                            data-icon-name="settings"
                           >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="settings"
-                                >
-                                  settings
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  General
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/KubernetesCluster-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name=""
-                                />
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Clusters
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/WebLink-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="public"
-                                >
-                                  public
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Web Links
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
+                            settings
+                          </span>
+                        </i>
                       </div>
-                    </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            General
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/KubernetesCluster-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name=""
+                          />
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Clusters
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/WebLink-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon material focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="public"
+                          >
+                            public
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Web Links
+                          </div>
+                        </div>
+                      </div>
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -1462,6 +1405,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell nowrap sorting"
+                        data-testid="catalog-kind-column"
                         id="kind"
                       >
                         <div
@@ -1482,6 +1426,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell sourceCell nowrap sorting"
+                        data-testid="catalog-source-column"
                         id="source"
                       >
                         <div
@@ -1502,6 +1447,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell labelsCell scrollable nowrap"
+                        data-testid="catalog-labels-column"
                         id="labels"
                       >
                         <div
@@ -1512,6 +1458,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell statusCell nowrap sorting"
+                        data-testid="catalog-status-column"
                         id="status"
                       >
                         <div
@@ -2048,41 +1995,35 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                 Catalog
               </div>
               <ul
-                aria-multiselectable="false"
-                class="MuiTreeView-root"
+                class="treeView"
                 role="tree"
               >
                 <li
-                  aria-selected="true"
-                  class="MuiTreeItem-root Mui-selected"
+                  class="root selected treeItem"
                   data-testid="*-tab"
                   role="treeitem"
-                  tabindex="0"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="iconContainer"
+                  />
+                  <div
+                    class="label"
                   >
-                    <div
-                      class="MuiTreeItem-iconContainer"
-                    />
-                    <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                    >
-                      Browse
-                    </div>
+                    Browse
                   </div>
                 </li>
+                <div
+                  class="HorizontalLine size-xxs"
+                />
                 <li
-                  aria-expanded="true"
-                  class="MuiTreeItem-root bordered Mui-expanded"
-                  role="treeitem"
-                  tabindex="-1"
+                  class="root treeGroup"
+                  role="group"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="group"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer"
+                      class="iconContainer"
                     >
                       <i
                         class="Icon material focusable"
@@ -2096,7 +2037,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </i>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
+                      class="label"
                     >
                       <div
                         class="parent"
@@ -2106,124 +2047,99 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
+                    class="contents expanded"
                   >
-                    <div
-                      class="MuiCollapse-wrapper"
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/General-tab"
+                      role="treeitem"
                     >
                       <div
-                        class="MuiCollapse-wrapperInner"
+                        class="iconContainer"
                       >
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/General-tab"
-                          role="treeitem"
-                          tabindex="-1"
+                        <i
+                          class="Icon material focusable small"
                         >
-                          <div
-                            class="MuiTreeItem-content"
+                          <span
+                            class="icon"
+                            data-icon-name="settings"
                           >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="settings"
-                                >
-                                  settings
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  General
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/KubernetesCluster-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name=""
-                                />
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Clusters
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/WebLink-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="public"
-                                >
-                                  public
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Web Links
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
+                            settings
+                          </span>
+                        </i>
                       </div>
-                    </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            General
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/KubernetesCluster-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name=""
+                          />
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Clusters
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/WebLink-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon material focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="public"
+                          >
+                            public
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Web Links
+                          </div>
+                        </div>
+                      </div>
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -2315,6 +2231,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell nowrap sorting"
+                        data-testid="catalog-kind-column"
                         id="kind"
                       >
                         <div
@@ -2335,6 +2252,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell sourceCell nowrap sorting"
+                        data-testid="catalog-source-column"
                         id="source"
                       >
                         <div
@@ -2355,6 +2273,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell labelsCell scrollable nowrap"
+                        data-testid="catalog-labels-column"
                         id="labels"
                       >
                         <div
@@ -2365,6 +2284,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell statusCell nowrap sorting"
+                        data-testid="catalog-status-column"
                         id="status"
                       >
                         <div
@@ -2901,41 +2821,35 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                 Catalog
               </div>
               <ul
-                aria-multiselectable="false"
-                class="MuiTreeView-root"
+                class="treeView"
                 role="tree"
               >
                 <li
-                  aria-selected="true"
-                  class="MuiTreeItem-root Mui-selected"
+                  class="root selected treeItem"
                   data-testid="*-tab"
                   role="treeitem"
-                  tabindex="0"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="iconContainer"
+                  />
+                  <div
+                    class="label"
                   >
-                    <div
-                      class="MuiTreeItem-iconContainer"
-                    />
-                    <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                    >
-                      Browse
-                    </div>
+                    Browse
                   </div>
                 </li>
+                <div
+                  class="HorizontalLine size-xxs"
+                />
                 <li
-                  aria-expanded="true"
-                  class="MuiTreeItem-root bordered Mui-expanded"
-                  role="treeitem"
-                  tabindex="-1"
+                  class="root treeGroup"
+                  role="group"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="group"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer"
+                      class="iconContainer"
                     >
                       <i
                         class="Icon material focusable"
@@ -2949,7 +2863,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </i>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
+                      class="label"
                     >
                       <div
                         class="parent"
@@ -2959,124 +2873,99 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
+                    class="contents expanded"
                   >
-                    <div
-                      class="MuiCollapse-wrapper"
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/General-tab"
+                      role="treeitem"
                     >
                       <div
-                        class="MuiCollapse-wrapperInner"
+                        class="iconContainer"
                       >
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/General-tab"
-                          role="treeitem"
-                          tabindex="-1"
+                        <i
+                          class="Icon material focusable small"
                         >
-                          <div
-                            class="MuiTreeItem-content"
+                          <span
+                            class="icon"
+                            data-icon-name="settings"
                           >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="settings"
-                                >
-                                  settings
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  General
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/KubernetesCluster-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name=""
-                                />
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Clusters
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/WebLink-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="public"
-                                >
-                                  public
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Web Links
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
+                            settings
+                          </span>
+                        </i>
                       </div>
-                    </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            General
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/KubernetesCluster-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name=""
+                          />
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Clusters
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/WebLink-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon material focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="public"
+                          >
+                            public
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Web Links
+                          </div>
+                        </div>
+                      </div>
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -3168,6 +3057,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell nowrap sorting"
+                        data-testid="catalog-kind-column"
                         id="kind"
                       >
                         <div
@@ -3188,6 +3078,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell sourceCell nowrap sorting"
+                        data-testid="catalog-source-column"
                         id="source"
                       >
                         <div
@@ -3208,6 +3099,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell labelsCell scrollable nowrap"
+                        data-testid="catalog-labels-column"
                         id="labels"
                       >
                         <div
@@ -3218,6 +3110,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell statusCell nowrap sorting"
+                        data-testid="catalog-status-column"
                         id="status"
                       >
                         <div
@@ -4005,41 +3898,35 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                 Catalog
               </div>
               <ul
-                aria-multiselectable="false"
-                class="MuiTreeView-root"
+                class="treeView"
                 role="tree"
               >
                 <li
-                  aria-selected="true"
-                  class="MuiTreeItem-root Mui-selected"
+                  class="root selected treeItem"
                   data-testid="*-tab"
                   role="treeitem"
-                  tabindex="0"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="iconContainer"
+                  />
+                  <div
+                    class="label"
                   >
-                    <div
-                      class="MuiTreeItem-iconContainer"
-                    />
-                    <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                    >
-                      Browse
-                    </div>
+                    Browse
                   </div>
                 </li>
+                <div
+                  class="HorizontalLine size-xxs"
+                />
                 <li
-                  aria-expanded="true"
-                  class="MuiTreeItem-root bordered Mui-expanded"
-                  role="treeitem"
-                  tabindex="-1"
+                  class="root treeGroup"
+                  role="group"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="group"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer"
+                      class="iconContainer"
                     >
                       <i
                         class="Icon material focusable"
@@ -4053,7 +3940,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </i>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
+                      class="label"
                     >
                       <div
                         class="parent"
@@ -4063,124 +3950,99 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
+                    class="contents expanded"
                   >
-                    <div
-                      class="MuiCollapse-wrapper"
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/General-tab"
+                      role="treeitem"
                     >
                       <div
-                        class="MuiCollapse-wrapperInner"
+                        class="iconContainer"
                       >
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/General-tab"
-                          role="treeitem"
-                          tabindex="-1"
+                        <i
+                          class="Icon material focusable small"
                         >
-                          <div
-                            class="MuiTreeItem-content"
+                          <span
+                            class="icon"
+                            data-icon-name="settings"
                           >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="settings"
-                                >
-                                  settings
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  General
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/KubernetesCluster-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name=""
-                                />
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Clusters
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/WebLink-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="public"
-                                >
-                                  public
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Web Links
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
+                            settings
+                          </span>
+                        </i>
                       </div>
-                    </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            General
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/KubernetesCluster-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name=""
+                          />
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Clusters
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/WebLink-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon material focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="public"
+                          >
+                            public
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Web Links
+                          </div>
+                        </div>
+                      </div>
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -4272,6 +4134,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell nowrap sorting"
+                        data-testid="catalog-kind-column"
                         id="kind"
                       >
                         <div
@@ -4292,6 +4155,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell sourceCell nowrap sorting"
+                        data-testid="catalog-source-column"
                         id="source"
                       >
                         <div
@@ -4312,6 +4176,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell labelsCell scrollable nowrap"
+                        data-testid="catalog-labels-column"
                         id="labels"
                       >
                         <div
@@ -4322,6 +4187,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell statusCell nowrap sorting"
+                        data-testid="catalog-status-column"
                         id="status"
                       >
                         <div
@@ -4846,41 +4712,35 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                 Catalog
               </div>
               <ul
-                aria-multiselectable="false"
-                class="MuiTreeView-root"
+                class="treeView"
                 role="tree"
               >
                 <li
-                  aria-selected="true"
-                  class="MuiTreeItem-root Mui-selected"
+                  class="root selected treeItem"
                   data-testid="*-tab"
                   role="treeitem"
-                  tabindex="0"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="iconContainer"
+                  />
+                  <div
+                    class="label"
                   >
-                    <div
-                      class="MuiTreeItem-iconContainer"
-                    />
-                    <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                    >
-                      Browse
-                    </div>
+                    Browse
                   </div>
                 </li>
+                <div
+                  class="HorizontalLine size-xxs"
+                />
                 <li
-                  aria-expanded="true"
-                  class="MuiTreeItem-root bordered Mui-expanded"
-                  role="treeitem"
-                  tabindex="-1"
+                  class="root treeGroup"
+                  role="group"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="group"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer"
+                      class="iconContainer"
                     >
                       <i
                         class="Icon material focusable"
@@ -4894,7 +4754,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </i>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
+                      class="label"
                     >
                       <div
                         class="parent"
@@ -4904,124 +4764,99 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
+                    class="contents expanded"
                   >
-                    <div
-                      class="MuiCollapse-wrapper"
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/General-tab"
+                      role="treeitem"
                     >
                       <div
-                        class="MuiCollapse-wrapperInner"
+                        class="iconContainer"
                       >
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/General-tab"
-                          role="treeitem"
-                          tabindex="-1"
+                        <i
+                          class="Icon material focusable small"
                         >
-                          <div
-                            class="MuiTreeItem-content"
+                          <span
+                            class="icon"
+                            data-icon-name="settings"
                           >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="settings"
-                                >
-                                  settings
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  General
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/KubernetesCluster-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name=""
-                                />
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Clusters
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/WebLink-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="public"
-                                >
-                                  public
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Web Links
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
+                            settings
+                          </span>
+                        </i>
                       </div>
-                    </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            General
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/KubernetesCluster-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name=""
+                          />
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Clusters
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/WebLink-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon material focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="public"
+                          >
+                            public
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Web Links
+                          </div>
+                        </div>
+                      </div>
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -5113,6 +4948,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell nowrap sorting"
+                        data-testid="catalog-kind-column"
                         id="kind"
                       >
                         <div
@@ -5133,6 +4969,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell sourceCell nowrap sorting"
+                        data-testid="catalog-source-column"
                         id="source"
                       >
                         <div
@@ -5153,6 +4990,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell labelsCell scrollable nowrap"
+                        data-testid="catalog-labels-column"
                         id="labels"
                       >
                         <div
@@ -5163,6 +5001,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell statusCell nowrap sorting"
+                        data-testid="catalog-status-column"
                         id="status"
                       >
                         <div
@@ -5687,41 +5526,35 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                 Catalog
               </div>
               <ul
-                aria-multiselectable="false"
-                class="MuiTreeView-root"
+                class="treeView"
                 role="tree"
               >
                 <li
-                  aria-selected="true"
-                  class="MuiTreeItem-root Mui-selected"
+                  class="root selected treeItem"
                   data-testid="*-tab"
                   role="treeitem"
-                  tabindex="0"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="iconContainer"
+                  />
+                  <div
+                    class="label"
                   >
-                    <div
-                      class="MuiTreeItem-iconContainer"
-                    />
-                    <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                    >
-                      Browse
-                    </div>
+                    Browse
                   </div>
                 </li>
+                <div
+                  class="HorizontalLine size-xxs"
+                />
                 <li
-                  aria-expanded="true"
-                  class="MuiTreeItem-root bordered Mui-expanded"
-                  role="treeitem"
-                  tabindex="-1"
+                  class="root treeGroup"
+                  role="group"
                 >
                   <div
-                    class="MuiTreeItem-content"
+                    class="group"
                   >
                     <div
-                      class="MuiTreeItem-iconContainer"
+                      class="iconContainer"
                     >
                       <i
                         class="Icon material focusable"
@@ -5735,7 +5568,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </i>
                     </div>
                     <div
-                      class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
+                      class="label"
                     >
                       <div
                         class="parent"
@@ -5745,124 +5578,99 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                     </div>
                   </div>
                   <ul
-                    class="MuiCollapse-root MuiTreeItem-group MuiCollapse-entered"
-                    role="group"
-                    style="min-height: 0px;"
+                    class="contents expanded"
                   >
-                    <div
-                      class="MuiCollapse-wrapper"
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/General-tab"
+                      role="treeitem"
                     >
                       <div
-                        class="MuiCollapse-wrapperInner"
+                        class="iconContainer"
                       >
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/General-tab"
-                          role="treeitem"
-                          tabindex="-1"
+                        <i
+                          class="Icon material focusable small"
                         >
-                          <div
-                            class="MuiTreeItem-content"
+                          <span
+                            class="icon"
+                            data-icon-name="settings"
                           >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="settings"
-                                >
-                                  settings
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  General
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/KubernetesCluster-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name=""
-                                />
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Clusters
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                        <li
-                          class="MuiTreeItem-root"
-                          data-testid="entity.k8slens.dev/WebLink-tab"
-                          role="treeitem"
-                          tabindex="-1"
-                        >
-                          <div
-                            class="MuiTreeItem-content"
-                          >
-                            <div
-                              class="MuiTreeItem-iconContainer"
-                            >
-                              <i
-                                class="Icon material focusable small"
-                              >
-                                <span
-                                  class="icon"
-                                  data-icon-name="public"
-                                >
-                                  public
-                                </span>
-                              </i>
-                            </div>
-                            <div
-                              class="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-                            >
-                              <div
-                                class="flex"
-                              >
-                                <div>
-                                  Web Links
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
+                            settings
+                          </span>
+                        </i>
                       </div>
-                    </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            General
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/KubernetesCluster-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name=""
+                          />
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Clusters
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li
+                      class="root treeItem"
+                      data-testid="entity.k8slens.dev/WebLink-tab"
+                      role="treeitem"
+                    >
+                      <div
+                        class="iconContainer"
+                      >
+                        <i
+                          class="Icon material focusable small"
+                        >
+                          <span
+                            class="icon"
+                            data-icon-name="public"
+                          >
+                            public
+                          </span>
+                        </i>
+                      </div>
+                      <div
+                        class="label"
+                      >
+                        <div
+                          class="flex"
+                        >
+                          <div>
+                            Web Links
+                          </div>
+                        </div>
+                      </div>
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -5954,6 +5762,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell nowrap sorting"
+                        data-testid="catalog-kind-column"
                         id="kind"
                       >
                         <div
@@ -5974,6 +5783,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell sourceCell nowrap sorting"
+                        data-testid="catalog-source-column"
                         id="source"
                       >
                         <div
@@ -5994,6 +5804,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell labelsCell scrollable nowrap"
+                        data-testid="catalog-labels-column"
                         id="labels"
                       >
                         <div
@@ -6004,6 +5815,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                       </div>
                       <div
                         class="TableCell statusCell nowrap sorting"
+                        data-testid="catalog-status-column"
                         id="status"
                       >
                         <div
@@ -6692,6 +6504,7 @@ exports[`opening catalog entity details panel when not navigated to the catalog 
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"

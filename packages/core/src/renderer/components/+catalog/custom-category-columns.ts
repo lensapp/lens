@@ -13,6 +13,7 @@ import type { TableCellProps } from "../table";
 export interface TitleCellProps {
   className?: string;
   title: string;
+  "data-testid"?: string;
 }
 
 export interface CategoryColumnRegistration {

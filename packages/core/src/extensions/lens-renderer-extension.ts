@@ -3,10 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { Disposers, LensExtension, lensExtensionDependencies } from "./lens-extension";
-import type { CatalogEntity, CategoryFilter } from "../common/catalog";
+import { Disposers, LensExtension } from "./lens-extension";
 import type { Disposer } from "@k8slens/utilities";
-import type { EntityFilter } from "../renderer/api/catalog/entity/registry";
+import type { LensExtensionDependencies } from "./lens-extension";
+import type { CatalogEntity, CategoryFilter, CatalogCategoryRegistry } from "../common/catalog";
+import type { EntityFilter, CatalogEntityRegistry } from "../renderer/api/catalog/entity/registry";
 import type { TopBarRegistration } from "../renderer/components/layout/top-bar/top-bar-registration";
 import type { KubernetesCluster } from "../common/catalog-entities";
 import type { WelcomeMenuRegistration } from "../renderer/components/+welcome/welcome-menu-items/welcome-menu-registration";
@@ -22,7 +23,6 @@ import type { KubeObjectStatusRegistration } from "../renderer/components/kube-o
 import { fromPairs, map, matches, toPairs } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import { getExtensionRoutePath } from "../renderer/routes/for-extension";
-import type { LensRendererExtensionDependencies } from "./lens-extension-set-dependencies";
 import type { KubeObjectHandlerRegistration } from "../renderer/kube-object/handler";
 import type { AppPreferenceTabRegistration } from "../features/preferences/renderer/compliance-for-legacy-extension-api/app-preference-tab-registration";
 import type { KubeObjectDetailRegistration } from "../renderer/components/kube-object-details/kube-object-detail-registration";
@@ -31,8 +31,29 @@ import type { EntitySettingRegistration } from "../renderer/components/+entity-s
 import type { CatalogEntityDetailRegistration } from "../renderer/components/+catalog/entity-details/token";
 import type { PageRegistration } from "../renderer/routes/page-registration";
 import type { ClusterPageMenuRegistration } from "../renderer/components/layout/cluster-page-menu";
+import type { IComputedValue } from "mobx";
+import type { NavigateToRoute } from "../common/front-end-routing/navigate-to-route-injection-token";
+import type { Route } from "../common/front-end-routing/front-end-route-injection-token";
+import type { GetExtensionPageParameters } from "../renderer/routes/get-extension-page-parameters.injectable";
+import type { InstalledExtension } from "./common-api";
+import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import catalogCategoryRegistryInjectable from "../common/catalog/category-registry.injectable";
+import catalogEntityRegistryInjectable from "../renderer/api/catalog/entity/registry.injectable";
+import loggerInjectable from "../common/logger.injectable";
+import getExtensionPageParametersInjectable from "../renderer/routes/get-extension-page-parameters.injectable";
+import navigateToRouteInjectable from "../renderer/routes/navigate-to-route.injectable";
+import routesInjectable from "../renderer/routes/routes.injectable";
+import ensureHashedDirectoryForExtensionInjectable from "./extension-loader/file-system-provisioner-store/ensure-hashed-directory-for-extension.injectable";
 
-export class LensRendererExtension extends LensExtension<LensRendererExtensionDependencies> {
+interface LensRendererExtensionDependencies extends LensExtensionDependencies {
+  navigateToRoute: NavigateToRoute;
+  getExtensionPageParameters: GetExtensionPageParameters;
+  readonly routes: IComputedValue<Route<unknown>[]>;
+  readonly entityRegistry: CatalogEntityRegistry;
+  readonly categoryRegistry: CatalogCategoryRegistry;
+}
+
+export class LensRendererExtension extends LensExtension {
   globalPages: PageRegistration[] = [];
   clusterPages: PageRegistration[] = [];
   clusterPageMenus: ClusterPageMenuRegistration[] = [];
@@ -54,8 +75,28 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
   customCategoryViews: CustomCategoryViewRegistration[] = [];
   kubeObjectHandlers: KubeObjectHandlerRegistration[] = [];
 
+  /**
+   * @ignore
+   */
+  declare protected readonly dependencies: LensRendererExtensionDependencies;
+
+  constructor(extension: InstalledExtension) {
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi("renderer");
+    const deps: LensRendererExtensionDependencies = {
+      getExtensionPageParameters: di.inject(getExtensionPageParametersInjectable),
+      navigateToRoute: di.inject(navigateToRouteInjectable),
+      ensureHashedDirectoryForExtension: di.inject(ensureHashedDirectoryForExtensionInjectable),
+      categoryRegistry: di.inject(catalogCategoryRegistryInjectable),
+      entityRegistry: di.inject(catalogEntityRegistryInjectable),
+      routes: di.inject(routesInjectable),
+      logger: di.inject(loggerInjectable),
+    };
+
+    super(deps, extension);
+  }
+
   async navigate(pageId?: string, params: object = {}) {
-    const routes = this[lensExtensionDependencies].routes.get();
+    const routes = this.dependencies.routes.get();
     const targetRegistration = [...this.globalPages, ...this.clusterPages]
       .find(registration => registration.id === (pageId || undefined));
 
@@ -70,7 +111,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
       return;
     }
 
-    const normalizedParams = this[lensExtensionDependencies].getExtensionPageParameters({
+    const normalizedParams = this.dependencies.getExtensionPageParameters({
       extension: this,
       registration: targetRegistration,
     });
@@ -84,7 +125,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
       fromPairs,
     );
 
-    this[lensExtensionDependencies].navigateToRoute(targetRoute, {
+    this.dependencies.navigateToRoute(targetRoute, {
       query,
     });
   }
@@ -107,7 +148,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
    * @returns A function to clean up the filter
    */
   addCatalogFilter(fn: EntityFilter): Disposer {
-    const dispose = this[lensExtensionDependencies].entityRegistry.addCatalogFilter(fn);
+    const dispose = this.dependencies.entityRegistry.addCatalogFilter(fn);
 
     this[Disposers].push(dispose);
 
@@ -120,7 +161,7 @@ export class LensRendererExtension extends LensExtension<LensRendererExtensionDe
    * @returns A function to clean up the filter
    */
   addCatalogCategoryFilter(fn: CategoryFilter): Disposer {
-    const dispose = this[lensExtensionDependencies].categoryRegistry.addCatalogCategoryFilter(fn);
+    const dispose = this.dependencies.categoryRegistry.addCatalogCategoryFilter(fn);
 
     this[Disposers].push(dispose);
 

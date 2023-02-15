@@ -7,7 +7,7 @@ import styles from "./horizontal-line.module.scss";
 import { cssNames } from "@k8slens/utilities";
 
 interface HorizontalLineProps {
-  size?: "sm" | "md" | "xl";
+  size?: "xxs" | "xs" | "sm" | "md" | "lg" | "xl";
 }
 
 export const HorizontalLine = ({ size = "xl" }: HorizontalLineProps = { size: "xl" }) => {

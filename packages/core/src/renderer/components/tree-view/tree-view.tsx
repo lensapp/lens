@@ -3,103 +3,153 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./tree-view.scss";
-
-import React, { useEffect, useRef } from "react";
-import { Icon } from "../icon";
-import TreeView from "@material-ui/lab/TreeView";
-import TreeItem from "@material-ui/lab/TreeItem";
+import styles from "./tree-view.module.scss";
+import type { MouseEventHandler } from "react";
+import React, { useState } from "react";
 import { cssNames } from "@k8slens/utilities";
+import { Icon } from "../icon";
 
-import _ from "lodash";
-import getDeepDash from "deepdash";
+export interface TreeViewClasses {
+  root?: string;
+}
 
-const deepDash = getDeepDash(_);
+export interface TreeViewProps {
+  classes?: TreeViewClasses;
+  children: React.ReactNode;
+}
 
-export interface NavigationTree {
-  id: string;
-  parentId?: string;
-  name: string;
+export function TreeView(props: TreeViewProps) {
+  const {
+    children,
+    classes = {},
+  } = props;
+
+  return (
+    <ul
+      className={cssNames(classes.root, styles.treeView)}
+      role="tree"
+    >
+      {children}
+    </ul>
+  );
+}
+
+export interface TreeItemClasses {
+  root?: string;
+  label?: string;
+  selected?: string;
+  hover?: string;
+  iconContainer?: string;
+}
+
+export interface TreeItemProps {
+  classes?: TreeItemClasses;
+  icon?: JSX.Element;
+  label: JSX.Element | string;
+  "data-testid"?: string;
   selected?: boolean;
-  children?: NavigationTree[];
+  onClick?: MouseEventHandler;
 }
 
-export interface RecursiveTreeViewProps {
-  data: NavigationTree[];
-}
+export function TreeItem(props: TreeItemProps) {
+  const {
+    label,
+    "data-testid": dataTestId,
+    classes = {},
+    icon,
+    onClick,
+    selected = false,
+  } = props;
+  const [hovering, setHovering] = useState(false);
+  const optionalCssNames: Partial<Record<string, any>> = {};
 
-function scrollToItem(id: string) {
-  document.getElementById(id)?.scrollIntoView();
-}
+  if (classes.selected) {
+    optionalCssNames[classes.selected] = selected;
+  }
 
-function getSelectedNode(data: NavigationTree[]) {
-  return deepDash.findDeep(data, (value, key) => key === "selected" && value === true)?.parent;
-}
-
-export function RecursiveTreeView({ data }: RecursiveTreeViewProps) {
-  const [expanded, setExpanded] = React.useState<string[]>([]);
-  const prevData = useRef<NavigationTree[]>(data);
-
-  const handleToggle = (event: React.ChangeEvent<{}>, nodeIds: string[]) => {
-    setExpanded(nodeIds);
-  };
-
-  const expandTopLevelNodes = () => {
-    setExpanded(data.map(node => node.id));
-  };
-
-  const expandParentNode = () => {
-    const node = getSelectedNode(data) as any as NavigationTree;
-    const id = node?.parentId;
-
-    if (id && !expanded.includes(id)) {
-      setExpanded([...expanded, id]);
-    }
-  };
-
-  const onLabelClick = (event: React.MouseEvent, nodeId: string) => {
-    event.preventDefault();
-    scrollToItem(nodeId);
-  };
-
-  const renderTree = (nodes: NavigationTree[]) => {
-    return nodes.map(node => (
-      <TreeItem
-        key={node.id}
-        nodeId={node.id}
-        label={node.name}
-        onLabelClick={(event) => onLabelClick(event, node.id)}
-        className={cssNames({ selected: node.selected })}
-        title={node.name}
-      >
-        {Array.isArray(node.children) ? node.children.map((node) => renderTree([node])) : null}
-      </TreeItem>
-    ));
-  };
-
-  useEffect(() => {
-    if (!prevData.current.length) {
-      expandTopLevelNodes();
-    } else {
-      expandParentNode();
-    }
-    prevData.current = data;
-  }, [data]);
-
-  if (!data.length) {
-    return null;
+  if (classes.hover) {
+    optionalCssNames[classes.hover] = hovering;
   }
 
   return (
-    <TreeView
-      data-testid="TreeView"
-      className="TreeView"
-      expanded={expanded}
-      onNodeToggle={handleToggle}
-      defaultCollapseIcon={<Icon material="expand_more"/>}
-      defaultExpandIcon={<Icon material="chevron_right" />}
+    <li
+      className={cssNames(classes.root, optionalCssNames, styles.treeItem, {
+        [styles.selected]: selected,
+      })}
+      role="treeitem"
+      data-testid={dataTestId}
+      onClick={onClick}
+      onMouseOver={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
     >
-      {renderTree(data)}
-    </TreeView>
+      <div className={cssNames(classes.iconContainer, styles.iconContainer)}>
+        {icon}
+      </div>
+      <div className={classes.label}>
+        {label}
+      </div>
+    </li>
+  );
+}
+
+export interface TreeGroupClasses {
+  root?: string;
+  group?: string;
+  iconContainer?: string;
+  label?: string;
+  contents?: string;
+}
+
+export interface TreeGroupProps {
+  classes?: TreeGroupClasses;
+  children?: JSX.Element[] | JSX.Element;
+  defaultExpanded?: boolean;
+  label: JSX.Element | string;
+  "data-testid"?: string;
+  collapseIcon?: JSX.Element;
+  expandIcon?: JSX.Element;
+}
+
+export function TreeGroup(props: TreeGroupProps) {
+  const {
+    label,
+    "data-testid": dataTestId,
+    children,
+    classes = {},
+    collapseIcon,
+    defaultExpanded = true,
+    expandIcon,
+  } = props;
+  const [expanded, setExpanded] = useState(defaultExpanded);
+
+  return (
+    <li
+      className={cssNames(classes.root, styles.treeGroup)}
+      role="group"
+      data-testid={dataTestId}
+    >
+      <div
+        className={cssNames(classes.group, styles.group)}
+        onClick={() => setExpanded(!expanded)}
+      >
+        <div className={cssNames(classes.iconContainer, styles.iconContainer)}>
+          {
+            expanded
+              ? collapseIcon ?? <Icon material="expand_more" />
+              : expandIcon ?? <Icon material="chevron_right" />
+          }
+        </div>
+        <div className={classes.label}>
+          {label}
+        </div>
+      </div>
+      <ul
+        className={cssNames(classes.contents, styles.contents, {
+          [styles.expanded]: expanded,
+        })}
+      >
+        {children}
+      </ul>
+    </li>
   );
 }

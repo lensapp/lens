@@ -20,6 +20,9 @@
 
 $baseline: 8px;
 
+@include horizontalLineSize('xxs', 0.5 * $baseline);
+@include horizontalLineSize('xs', 1 * $baseline);
 @include horizontalLineSize('sm', 2 * $baseline);
 @include horizontalLineSize('md', 3 * $baseline);
+@include horizontalLineSize('lg', 4 * $baseline);
 @include horizontalLineSize('xl', 5 * $baseline);

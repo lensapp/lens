@@ -81,6 +81,7 @@ exports[`navigate to extension page renders 1`] = `
         >
           <i
             class="Icon logo svg focusable"
+            data-testid="no-welcome-banners-icon"
           >
             <span
               class="icon"

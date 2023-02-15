@@ -25,6 +25,8 @@ import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 import { kubeObjectMenuItemInjectionToken } from "./kube-object-menu-item-injection-token";
 import activeEntityInternalClusterInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 
 // TODO: make `animated={false}` not required to make tests deterministic
 describe("kube-object-menu", () => {
@@ -33,6 +35,9 @@ describe("kube-object-menu", () => {
 
   beforeEach(() => {
     di = getDiForUnitTesting();
+
+    di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
+    di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
 
     runInAction(() => {
       di.register(
