@@ -5,7 +5,7 @@
 
 import "./release-details.scss";
 
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Link } from "react-router-dom";
 import { DrawerItem, DrawerTitle } from "../../drawer";
@@ -85,6 +85,7 @@ const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & Rel
 
       <ReleaseValues
         configuration={model.configuration}
+        release={model.release.name}
         onlyUserSuppliedValuesAreShown={
           model.onlyUserSuppliedValuesAreShown
         }
@@ -150,10 +151,11 @@ const ResourceGroup = ({
 
 interface ReleaseValuesProps {
   configuration: ConfigurationInput;
+  release: string;
   onlyUserSuppliedValuesAreShown: OnlyUserSuppliedValuesAreShownToggle;
 }
 
-const ReleaseValues = observer(({ configuration, onlyUserSuppliedValuesAreShown }: ReleaseValuesProps) => {
+const ReleaseValues = observer(({ configuration, release, onlyUserSuppliedValuesAreShown }: ReleaseValuesProps) => {
   const configurationIsLoading = configuration.isLoading.get();
 
   return (
@@ -170,7 +172,7 @@ const ReleaseValues = observer(({ configuration, onlyUserSuppliedValuesAreShown 
         />
 
         <MonacoEditor
-          id="helm-release-configuration"
+          id={`helm-release-configuration-${release}`}
           style={{ minHeight: 300 }}
           value={configuration.nonSavedValue.get()}
           onChange={configuration.onChange}
