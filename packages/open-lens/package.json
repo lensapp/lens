@@ -35,7 +35,8 @@
     "dev:renderer": "cross-env NODE_ENV=development ts-node ./webpack/dev-server.ts",
     "test:integration": "jest -xyz --runInBand --detectOpenHandles --forceExit --modulePaths=[\"<rootDir>/integration/\"];",
     "build:tray-icons": "generate-tray-icons --output ./static/build/tray --input ../../node_modules/@k8slens/core/src/renderer/components/icon/logo-lens.svg --notice-icon ../../node_modules/@k8slens/core/src/renderer/components/icon/notice.svg --spinner-icon ../../node_modules/@k8slens/core/src/renderer/components/icon/arrow-spinner.svg",
-    "download:binaries": "ensure-binaries --package ./package.json --base-dir ./binaries/client"
+    "download:binaries": "ensure-binaries --package ./package.json --base-dir ./binaries/client",
+    "postinstall": "electron-rebuild"
   },
   "config": {
     "k8sProxyVersion": "0.3.0",
@@ -270,6 +271,7 @@
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.11.1",
     "webpack-node-externals": "^3.0.0",
-    "xterm-addon-fit": "^0.5.0"
+    "xterm-addon-fit": "^0.5.0",
+    "@electron/rebuild": "^3.2.10"
   }
 }
