@@ -10,8 +10,6 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { DefaultProps } from "./mui-base-theme";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DiContainer } from "@ogre-tools/injectable";
-import extensionLoaderInjectable from "../extensions/extension-loader/extension-loader.injectable";
-import extensionDiscoveryInjectable from "../extensions/extension-discovery/extension-discovery.injectable";
 import extensionInstallationStateStoreInjectable from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame.injectable";
 import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
@@ -28,14 +26,6 @@ export async function bootstrap(di: DiContainer) {
   const rootElem = document.getElementById("app");
 
   assert(rootElem, "#app MUST exist");
-
-  const extensionLoader = di.inject(extensionLoaderInjectable);
-
-  extensionLoader.init();
-
-  const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
-
-  extensionDiscovery.init();
 
   const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
 
@@ -54,9 +44,7 @@ export async function bootstrap(di: DiContainer) {
   }
 
   try {
-    await initializeApp(() => {
-      unmountComponentAtNode(rootElem);
-    });
+    await initializeApp(() => unmountComponentAtNode(rootElem));
   } catch (error) {
     console.error(`[BOOTSTRAP]: view initialization error: ${error}`, {
       origin: location.href,
