@@ -6,7 +6,14 @@
 import { observer } from "mobx-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useMutationObserver } from "../../hooks";
-import type { NavigationTree } from "../tree-view";
+
+export interface NavigationTree {
+  id: string;
+  parentId?: string;
+  name: string;
+  selected?: boolean;
+  children?: NavigationTree[];
+}
 
 export interface ScrollSpyProps extends React.DOMAttributes<HTMLElement> {
   render: (data: NavigationTree[]) => JSX.Element;

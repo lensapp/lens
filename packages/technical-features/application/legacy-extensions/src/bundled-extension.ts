@@ -4,10 +4,12 @@ import type {
   BundledLensExtensionManifest,
 } from "./lens-extension";
 
+export type BundledExtensionResult = BundledLensExtensionConstructor | null;
+
 export interface BundledExtension {
   readonly manifest: BundledLensExtensionManifest;
-  main: () => Promise<BundledLensExtensionConstructor | null>;
-  renderer: () => Promise<BundledLensExtensionConstructor | null>;
+  main: () => BundledExtensionResult | Promise<BundledExtensionResult>;
+  renderer: () => BundledExtensionResult | Promise<BundledExtensionResult>;
 }
 
 export const bundledExtensionInjectionToken =

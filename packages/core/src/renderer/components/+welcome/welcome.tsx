@@ -71,7 +71,11 @@ const NonInjectedWelcome = observer(({
             ))}
           </Carousel>
         ) : (
-          <Icon svg="logo-lens" className="logo" />
+          <Icon
+            svg="logo-lens"
+            className="logo"
+            data-testid="no-welcome-banners-icon"
+          />
         )}
 
         <div className="flex justify-center">

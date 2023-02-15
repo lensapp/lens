@@ -81,6 +81,7 @@ exports[`welcome - navigation using application menu renders 1`] = `
         >
           <i
             class="Icon logo svg focusable"
+            data-testid="no-welcome-banners-icon"
           >
             <span
               class="icon"
@@ -1116,6 +1117,7 @@ exports[`welcome - navigation using application menu when navigated somewhere el
         >
           <i
             class="Icon logo svg focusable"
+            data-testid="no-welcome-banners-icon"
           >
             <span
               class="icon"

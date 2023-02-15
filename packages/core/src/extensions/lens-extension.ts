@@ -5,19 +5,19 @@
 
 import { action, computed, makeObservable, observable } from "mobx";
 import { disposer } from "@k8slens/utilities";
-import type { LensExtensionDependencies } from "./lens-extension-set-dependencies";
 import type { ProtocolHandlerRegistration } from "../common/protocol-handler/registration";
-import type { InstalledExtension, LegacyLensExtension, LensExtensionId, LensExtensionManifest } from "@k8slens/legacy-extensions";
+import type { InstalledExtension, LensExtensionId, LensExtensionManifest } from "@k8slens/legacy-extensions";
+import type { Logger } from "./common-api";
+import type { EnsureHashedDirectoryForExtension } from "./extension-loader/file-system-provisioner-store/ensure-hashed-directory-for-extension.injectable";
 
-export const lensExtensionDependencies = Symbol("lens-extension-dependencies");
 export const Disposers = Symbol("disposers");
 
-export class LensExtension<
-  /**
-   * @ignore
-   */
-  Dependencies extends LensExtensionDependencies = LensExtensionDependencies,
-> implements LegacyLensExtension {
+export interface LensExtensionDependencies {
+  readonly logger: Logger;
+  ensureHashedDirectoryForExtension: EnsureHashedDirectoryForExtension;
+}
+
+export class LensExtension {
   readonly id: LensExtensionId;
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
@@ -26,6 +26,11 @@ export class LensExtension<
   get sanitizedExtensionId() {
     return sanitizeExtensionName(this.name);
   }
+
+  /**
+   * @ignore
+   */
+  protected readonly dependencies: LensExtensionDependencies;
 
   protocolHandlers: ProtocolHandlerRegistration[] = [];
 
@@ -40,12 +45,12 @@ export class LensExtension<
    */
   [Disposers] = disposer();
 
-  constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
-    // id is the name of the manifest
+  constructor(deps: LensExtensionDependencies, { id, manifest, manifestPath, isBundled }: InstalledExtension) {
+    this.dependencies = deps;
     this.id = id;
     this.manifest = manifest as LensExtensionManifest;
     this.manifestPath = manifestPath;
-    this.isBundled = !!isBundled;
+    this.isBundled = isBundled;
     makeObservable(this);
   }
 
@@ -67,11 +72,6 @@ export class LensExtension<
   }
 
   /**
-   * @ignore
-   */
-  readonly [lensExtensionDependencies]!: Dependencies;
-
-  /**
    * getExtensionFileFolder returns the path to an already created folder. This
    * folder is for the sole use of this extension.
    *
@@ -80,7 +80,7 @@ export class LensExtension<
    */
   async getExtensionFileFolder(): Promise<string> {
     // storeName is read from the manifest and has a fallback to the manifest name, which equals id
-    return this[lensExtensionDependencies].ensureHashedDirectoryForExtension(this.storeName);
+    return this.dependencies.ensureHashedDirectoryForExtension(this.storeName);
   }
 
   @action
@@ -90,7 +90,7 @@ export class LensExtension<
     }
 
     this._isEnabled = true;
-    this[lensExtensionDependencies].logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
+    this.dependencies.logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
   }
 
   @action
@@ -104,9 +104,9 @@ export class LensExtension<
     try {
       await this.onDeactivate();
       this[Disposers]();
-      this[lensExtensionDependencies].logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
+      this.dependencies.logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
     } catch (error) {
-      this[lensExtensionDependencies].logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
+      this.dependencies.logger.error(`[EXTENSION]: disabling ${this.name}@${this.version} threw an error: ${error}`);
     }
   }
 

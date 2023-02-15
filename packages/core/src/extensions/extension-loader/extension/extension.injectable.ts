@@ -5,9 +5,9 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { reaction, runInAction } from "mobx";
 import { disposer } from "@k8slens/utilities";
-import type { LensExtension } from "../../lens-extension";
 import { extensionRegistratorInjectionToken } from "../extension-registrator-injection-token";
 import { injectableDifferencingRegistratorWith } from "../../../common/utils/registrator-helper";
+import type { LegacyLensExtension } from "@k8slens/legacy-extensions";
 
 export interface Extension {
   register: () => void;
@@ -17,7 +17,7 @@ export interface Extension {
 const extensionInjectable = getInjectable({
   id: "extension",
 
-  instantiate: (parentDi, instance: LensExtension): Extension => {
+  instantiate: (parentDi, instance): Extension => {
     const extensionInjectable = getInjectable({
       id: `extension-${instance.sanitizedExtensionId}`,
 
@@ -66,7 +66,7 @@ const extensionInjectable = getInjectable({
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, instance: LensExtension) => instance,
+    getInstanceKey: (di, instance: LegacyLensExtension) => instance,
   }),
 });
 

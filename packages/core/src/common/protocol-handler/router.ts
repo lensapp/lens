@@ -201,7 +201,7 @@ export abstract class LensProtocolRouter {
       return name;
     }
 
-    const extension = extensionLoader.getInstanceByName(name);
+    const extension = extensionLoader.getInstanceByName(name) as LensExtension | undefined;
 
     if (!extension) {
       this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but does not have a class for ${ipcRenderer ? "renderer" : "main"}`);

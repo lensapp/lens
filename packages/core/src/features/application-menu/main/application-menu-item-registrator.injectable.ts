@@ -6,7 +6,6 @@ import { computed } from "mobx";
 import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { extensionRegistratorInjectionToken } from "../../../extensions/extension-loader/extension-registrator-injection-token";
-import type { LensExtension } from "../../../extensions/lens-extension";
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import type {
   ApplicationMenuItemTypes,
@@ -25,7 +24,7 @@ const applicationMenuItemRegistratorInjectable = getInjectable({
     const logError = di.inject(logErrorInjectable);
     const toRecursedInjectables = toRecursedInjectablesFor(logError);
 
-    return (ext: LensExtension) => {
+    return (ext) => {
       const mainExtension = ext as LensMainExtension;
 
       return computed(() => {
