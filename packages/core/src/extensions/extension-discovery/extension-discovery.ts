@@ -216,9 +216,6 @@ export class ExtensionDiscovery {
         const extension = await this.loadExtensionFromFolder(absPath);
 
         if (extension) {
-          // Remove a broken symlink left by a previous installation if it exists.
-          await this.dependencies.removePath(extension.manifestPath);
-
           // Install dependencies for the new extension
           await this.dependencies.installExtension(extension.absolutePath);
 
