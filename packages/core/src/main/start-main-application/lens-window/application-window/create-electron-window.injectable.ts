@@ -27,10 +27,11 @@ export interface UrlSource {
 }
 export type ContentSource = RequireExactlyOne<FileSource & UrlSource>;
 
+// see https://www.electronjs.org/docs/latest/api/session#sessetcertificateverifyprocproc
 enum ChromiumNetError {
   SUCCESS = 0,
-  FAILURE = 1,
-  RESULT_FROM_CHROMIUM,
+  FAILURE = -2,
+  RESULT_FROM_CHROMIUM = -3,
 }
 
 export interface ElectronWindowConfiguration {
