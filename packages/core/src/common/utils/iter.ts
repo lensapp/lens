@@ -14,6 +14,7 @@ interface Iterator<T> extends Iterable<T> {
   flatMap<U>(fn: (val: T) => U[]): Iterator<U>;
   concat(src2: IterableIterator<T>): Iterator<T>;
   join(sep?: string): string;
+  count(): number;
 }
 
 export function chain<T>(src: IterableIterator<T>): Iterator<T> {
@@ -26,6 +27,7 @@ export function chain<T>(src: IterableIterator<T>): Iterator<T> {
     join: (sep) => join(src, sep),
     collect: (fn) => fn(src),
     concat: (src2) => chain(concat(src, src2)),
+    count: () => count(src),
     [Symbol.iterator]: () => src,
   };
 }
@@ -245,4 +247,15 @@ export function* concat<T>(...sources: IterableIterator<T>[]): IterableIterator<
       yield val;
     }
   }
+}
+
+export function count(src: Iterable<unknown>): number {
+  let i = 0;
+
+  for (const x of src) {
+    void x;
+    i += 1;
+  }
+
+  return i;
 }

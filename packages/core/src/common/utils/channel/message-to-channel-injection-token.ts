@@ -7,7 +7,7 @@ import type { MessageChannel } from "./message-channel-listener-injection-token"
 
 export interface SendMessageToChannel {
   (channel: MessageChannel<void>): void;
-  <Message>(channel: MessageChannel<Message>, message: Message): void;
+  <Channel extends MessageChannel<unknown>>(channel: Channel, message: Channel extends MessageChannel<infer Message> ? Message : never): void;
 }
 
 export type MessageChannelSender<Channel> = Channel extends MessageChannel<void | undefined>

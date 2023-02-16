@@ -8,8 +8,9 @@ import getDirnameOfPathInjectable from "../../../../common/path/get-dirname.inje
 import getRelativePathInjectable from "../../../../common/path/get-relative-path.injectable";
 import fileSystemSeparatorInjectable from "../../../../common/path/separator.injectable";
 import { manifestFilename } from "../../../../common/vars";
-import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import installedExtensionsInjectable from "../../common/installed-extensions.injectable";
+import setExtensionAsInstallingInjectable from "../../installation-states/main/set-as-installing.injectable";
+import clearExtensionAsInstallingInjectable from "../../installation-states/renderer/clear-as-installing.injectable";
 import installExtensionPackageInjectable from "../common/install-package.injectable";
 import localExtensionsDirectoryPathInjectable from "../common/local-extensions-directory-path.injectable";
 import extensionDiscoveryLoggerInjectable from "../common/logger.injectable";
@@ -22,12 +23,13 @@ const extensionFileAddedInjectable = getInjectable({
     const localExtensionsDirectoryPath = di.inject(localExtensionsDirectoryPathInjectable);
     const fileSystemSeparator = di.inject(fileSystemSeparatorInjectable);
     const getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
-    const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
     const getDirnameOfPath = di.inject(getDirnameOfPathInjectable);
     const loadUserExtensionFromFolder = di.inject(loadUserExtensionFromFolderInjectable);
     const installExtensionPackage = di.inject(installExtensionPackageInjectable);
     const installedExtensions = di.inject(installedExtensionsInjectable);
     const logger = di.inject(extensionDiscoveryLoggerInjectable);
+    const setExtensionAsInstalling = di.inject(setExtensionAsInstallingInjectable);
+    const clearExtensionAsInstalling = di.inject(clearExtensionAsInstallingInjectable);
 
     return async (manifestPath: string): Promise<void> => {
       // e.g. "foo/package.json"
@@ -40,7 +42,7 @@ const extensionFileAddedInjectable = getInjectable({
 
       if (getBasenameOfPath(manifestPath) === manifestFilename && isUnderLocalFolderPath) {
         try {
-          extensionInstallationStateStore.setInstallingFromMain(manifestPath);
+          setExtensionAsInstalling(manifestPath);
           const absPath = getDirnameOfPath(manifestPath);
 
           // this.loadExtensionFromPath updates this.packagesJson
@@ -56,7 +58,7 @@ const extensionFileAddedInjectable = getInjectable({
         } catch (error) {
           logger.error(`failed to add extension: ${error}`, { error });
         } finally {
-          extensionInstallationStateStore.clearInstallingFromMain(manifestPath);
+          clearExtensionAsInstalling(manifestPath);
         }
       }
     };

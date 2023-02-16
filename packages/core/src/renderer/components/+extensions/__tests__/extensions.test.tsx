@@ -17,8 +17,6 @@ import directoryForDownloadsInjectable from "../../../../common/app-paths/direct
 import assert from "assert";
 import type { InstallExtensionFromInput } from "../install-extension-from-input.injectable";
 import installExtensionFromInputInjectable from "../install-extension-from-input.injectable";
-import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
-import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { IObservableValue, ObservableMap } from "mobx";
 import { computed, observable, when } from "mobx";
 import type { RemovePath } from "../../../../common/fs/remove.injectable";
@@ -31,16 +29,18 @@ import installedExtensionsInjectable from "../../../../features/extensions/commo
 import initialDiscoveryLoadCompletedInjectable from "../../../../features/extensions/discovery/common/initial-load-completed.injectable";
 import type { RemoveExtensionFiles } from "../../../../features/extensions/discovery/common/uninstall-extension.injectable";
 import removeExtensionFilesInjectable from "../../../../features/extensions/discovery/common/uninstall-extension.injectable";
+import type { StartPreInstallPhase } from "../../../../features/extensions/installation-states/renderer/start-pre-install-phase.injectable";
+import startPreInstallPhaseInjectable from "../../../../features/extensions/installation-states/renderer/start-pre-install-phase.injectable";
 
 describe("Extensions", () => {
   let installedExtensions: ObservableMap<LensExtensionId, InstalledExtension>;
   let installExtensionFromInput: jest.MockedFunction<InstallExtensionFromInput>;
-  let extensionInstallationStateStore: ExtensionInstallationStateStore;
   let render: DiRender;
   let deleteFileMock: jest.MockedFunction<RemovePath>;
   let downloadBinary: jest.MockedFunction<DownloadBinary>;
   let isLoaded: IObservableValue<boolean>;
   let removeExtensionFilesMock: jest.MockedFunction<RemoveExtensionFiles>;
+  let startPreInstallPhase: StartPreInstallPhase;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -69,7 +69,7 @@ describe("Extensions", () => {
     di.override(downloadBinaryInjectable, () => downloadBinary);
 
     installedExtensions = di.inject(installedExtensionsInjectable);
-    extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
+    startPreInstallPhase = di.inject(startPreInstallPhaseInjectable);
 
     installedExtensions.set("extensionId", {
       id: "extensionId",
@@ -133,10 +133,10 @@ describe("Extensions", () => {
     installExtensionFromInput.mockImplementation(async (input) => {
       expect(input).toBe("https://test.extensionurl/package.tgz");
 
-      const clear = extensionInstallationStateStore.startPreInstall();
+      const clearPreInstallPhase = startPreInstallPhase();
 
       await when(() => resolveInstall.get());
-      clear();
+      clearPreInstallPhase();
     });
 
     fireEvent.change(await screen.findByPlaceholderText("File path or URL", {

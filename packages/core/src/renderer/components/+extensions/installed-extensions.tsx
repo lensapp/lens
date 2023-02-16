@@ -5,9 +5,7 @@
 
 import styles from "./installed-extensions.module.scss";
 import React, { useMemo } from "react";
-import type {
-  InstalledExtension,
-} from "../../../extensions/extension-discovery/extension-discovery";
+import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
 import { Icon } from "../icon";
 import { List } from "../list/list";
 import { MenuActions, MenuItem } from "../menu";
@@ -16,14 +14,12 @@ import { cssNames, toJS } from "../../utils";
 import { observer } from "mobx-react";
 import type { Row } from "react-table";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
-
-
 import { withInjectables } from "@ogre-tools/injectable-react";
-import extensionInstallationStateStoreInjectable
-  from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
-import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import type { IComputedValue } from "mobx";
 import initialDiscoveryLoadCompletedInjectable from "../../../features/extensions/discovery/common/initial-load-completed.injectable";
+import type { GetExtensionInstallationPhase } from "../../../features/extensions/installation-states/renderer/get-phase.injectable";
+import getExtensionInstallationPhaseInjectable from "../../../features/extensions/installation-states/renderer/get-phase.injectable";
+import extensionsUninstallingCountInjectable from "../../../features/extensions/installation-states/renderer/uninstalling-count.injectable";
 
 export interface InstalledExtensionsProps {
   extensions: InstalledExtension[];
@@ -34,7 +30,8 @@ export interface InstalledExtensionsProps {
 
 interface Dependencies {
   initialDiscoveryLoadCompleted: IComputedValue<boolean>;
-  extensionInstallationStateStore: ExtensionInstallationStateStore;
+  getExtensionInstallationPhase: GetExtensionInstallationPhase;
+  extensionsUninstallingCount: IComputedValue<number>;
 }
 
 function getStatus(extension: InstalledExtension) {
@@ -47,11 +44,12 @@ function getStatus(extension: InstalledExtension) {
 
 const NonInjectedInstalledExtensions = observer(({
   initialDiscoveryLoadCompleted,
-  extensionInstallationStateStore,
+  getExtensionInstallationPhase,
   extensions,
   uninstall,
   enable,
   disable,
+  extensionsUninstallingCount,
 }: Dependencies & InstalledExtensionsProps) => {
   const columns = useMemo(
     () => [
@@ -91,7 +89,7 @@ const NonInjectedInstalledExtensions = observer(({
     () => extensions.map(extension => {
       const { id, isEnabled, isCompatible, manifest } = extension;
       const { name, description, version } = manifest;
-      const isUninstalling = extensionInstallationStateStore.isExtensionUninstalling(id);
+      const isUninstalling = getExtensionInstallationPhase(id) === "uninstalling";
 
       return {
         extension: (
@@ -145,7 +143,7 @@ const NonInjectedInstalledExtensions = observer(({
           </MenuActions>
         ),
       };
-    }), [toJS(extensions), extensionInstallationStateStore.anyUninstalling],
+    }), [toJS(extensions), extensionsUninstallingCount.get() > 0],
   );
 
   if (!initialDiscoveryLoadCompleted.get()) {
@@ -184,7 +182,8 @@ const NonInjectedInstalledExtensions = observer(({
 export const InstalledExtensions = withInjectables<Dependencies, InstalledExtensionsProps>(NonInjectedInstalledExtensions, {
   getProps: (di, props) => ({
     ...props,
-    extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
     initialDiscoveryLoadCompleted: di.inject(initialDiscoveryLoadCompletedInjectable).value,
+    getExtensionInstallationPhase: di.inject(getExtensionInstallationPhaseInjectable),
+    extensionsUninstallingCount: di.inject(extensionsUninstallingCountInjectable),
   }),
 });

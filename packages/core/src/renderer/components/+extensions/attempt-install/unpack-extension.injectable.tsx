@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import getExtensionDestFolderInjectable from "./get-extension-dest-folder.injectable";
-import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { Disposer } from "../../../../common/utils";
 import { noop } from "../../../../common/utils";
 import { extensionDisplayName } from "../../../../extensions/lens-extension";
@@ -20,6 +19,8 @@ import showInfoNotificationInjectable from "../../notifications/show-info-notifi
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
 import installedUserExtensionsInjectable from "../../../../features/extensions/common/user-extensions.injectable";
 import enableExtensionInjectable from "../enable-extension.injectable";
+import setExtensionAsInstallingInjectable from "../../../../features/extensions/installation-states/renderer/set-as-installing.injectable";
+import clearExtensionAsInstallingInjectable from "../../../../features/extensions/installation-states/renderer/clear-as-installing.injectable";
 
 export type UnpackExtension = (request: InstallRequestValidated, disposeDownloading?: Disposer) => Promise<void>;
 
@@ -27,13 +28,14 @@ const unpackExtensionInjectable = getInjectable({
   id: "unpack-extension",
   instantiate: (di): UnpackExtension => {
     const getExtensionDestFolder = di.inject(getExtensionDestFolderInjectable);
-    const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
     const extractTar = di.inject(extractTarInjectable);
     const logger = di.inject(loggerInjectable);
     const showInfoNotification = di.inject(showInfoNotificationInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const installedUserExtensions = di.inject(installedUserExtensionsInjectable);
     const enableExtension = di.inject(enableExtensionInjectable);
+    const setExtensionAsInstalling = di.inject(setExtensionAsInstallingInjectable);
+    const clearExtensionAsInstalling = di.inject(clearExtensionAsInstallingInjectable);
 
     return async (request, disposeDownloading) => {
       const {
@@ -43,7 +45,7 @@ const unpackExtensionInjectable = getInjectable({
         manifest: { name, version },
       } = request;
 
-      extensionInstallationStateStore.setInstalling(id);
+      setExtensionAsInstalling(id);
       disposeDownloading?.();
 
       const displayName = extensionDisplayName(name, version);
@@ -103,8 +105,8 @@ const unpackExtensionInjectable = getInjectable({
           </p>
         ));
       } finally {
-      // Remove install state once finished
-        extensionInstallationStateStore.clearInstalling(id);
+        // Remove install state once finished
+        clearExtensionAsInstalling(id);
 
         // clean up
         fse.remove(unpackingTempFolder).catch(noop);

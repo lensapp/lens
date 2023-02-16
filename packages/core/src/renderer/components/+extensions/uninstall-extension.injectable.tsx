@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import { extensionDisplayName } from "../../../extensions/lens-extension";
@@ -15,18 +14,21 @@ import showErrorNotificationInjectable from "../notifications/show-error-notific
 import installedUserExtensionsInjectable from "../../../features/extensions/common/user-extensions.injectable";
 import getInstalledExtensionInjectable from "../../../features/extensions/common/get-installed-extension.injectable";
 import removeExtensionFilesInjectable from "../../../features/extensions/discovery/common/uninstall-extension.injectable";
+import clearExtensionAsInstallingInjectable from "../../../features/extensions/installation-states/renderer/clear-as-installing.injectable";
+import setExtensionAsUninstallingInjectable from "../../../features/extensions/installation-states/renderer/set-as-uninstalling.injectable";
 
 const uninstallExtensionInjectable = getInjectable({
   id: "uninstall-extension",
 
   instantiate: (di) => {
-    const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
     const logger = di.inject(loggerInjectable);
     const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const installedUserExtensions = di.inject(installedUserExtensionsInjectable);
     const getInstalledExtension = di.inject(getInstalledExtensionInjectable);
     const removeExtensionFiles = di.inject(removeExtensionFilesInjectable);
+    const clearExtensionAsInstalling = di.inject(clearExtensionAsInstallingInjectable);
+    const setExtensionAsUninstalling = di.inject(setExtensionAsUninstallingInjectable);
 
     return async (extensionId: LensExtensionId): Promise<boolean> => {
       const ext = getInstalledExtension(extensionId);
@@ -42,8 +44,8 @@ const uninstallExtensionInjectable = getInjectable({
 
       try {
         logger.debug(`[EXTENSIONS]: trying to uninstall ${extensionId}`);
-        extensionInstallationStateStore.setUninstalling(extensionId);
 
+        setExtensionAsUninstalling(extensionId);
         await removeExtensionFiles(extensionId);
 
         // wait for the ExtensionLoader to actually uninstall the extension
@@ -76,8 +78,7 @@ const uninstallExtensionInjectable = getInjectable({
 
         return false;
       } finally {
-      // Remove uninstall state on uninstall failure
-        extensionInstallationStateStore.clearUninstalling(extensionId);
+        clearExtensionAsInstalling(extensionId);
       }
     };
   },

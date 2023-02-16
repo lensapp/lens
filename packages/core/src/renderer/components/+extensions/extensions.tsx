@@ -35,9 +35,8 @@ import type { LensExtensionId } from "../../../extensions/lens-extension";
 import type { InstallOnDrop } from "./install-on-drop.injectable";
 import installOnDropInjectable from "./install-on-drop.injectable";
 import { supportedExtensionFormats } from "./supported-extension-formats";
-import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
-import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import Gutter from "../gutter/gutter";
+import extensionsInstallingCountInjectable from "../../../features/extensions/installation-states/renderer/installing-count.injectable";
 
 interface Dependencies {
   userExtensions: IComputedValue<InstalledExtension[]>;
@@ -47,7 +46,7 @@ interface Dependencies {
   installExtensionFromInput: InstallExtensionFromInput;
   installFromSelectFileDialog: () => Promise<void>;
   installOnDrop: InstallOnDrop;
-  extensionInstallationStateStore: ExtensionInstallationStateStore;
+  extensionsInstallingCount: IComputedValue<number>;
 }
 
 @observer
@@ -64,7 +63,7 @@ class NonInjectedExtensions extends React.Component<Dependencies> {
       reaction(() => this.props.userExtensions.get().length, (curSize, prevSize) => {
         if (curSize > prevSize) {
           disposeOnUnmount(this, [
-            when(() => !this.props.extensionInstallationStateStore.anyInstalling, () => this.installPath = ""),
+            when(() => this.props.extensionsInstallingCount.get() === 0, () => this.installPath = ""),
           ]);
         }
       }),
@@ -138,6 +137,6 @@ export const Extensions = withInjectables<Dependencies>(NonInjectedExtensions, {
     installExtensionFromInput: di.inject(installExtensionFromInputInjectable),
     installOnDrop: di.inject(installOnDropInjectable),
     installFromSelectFileDialog: di.inject(installFromSelectFileDialogInjectable),
-    extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
+    extensionsInstallingCount: di.inject(extensionsInstallingCountInjectable),
   }),
 });

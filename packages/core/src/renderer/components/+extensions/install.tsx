@@ -8,14 +8,15 @@ import React from "react";
 import { prevDefault } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
-import { observer } from "mobx-react";
 import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { TooltipPosition } from "../tooltip";
-import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
-import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { unionInputValidatorsAsync } from "../input/input_validators";
+import type { IComputedValue } from "mobx";
+import extensionsInstallingCountInjectable from "../../../features/extensions/installation-states/renderer/installing-count.injectable";
+import extensionsPreinstallingCountInjectable from "../../../features/extensions/installation-states/renderer/preinstalling-count.injectable";
+import { observer } from "mobx-react";
 
 export interface InstallProps {
   installPath: string;
@@ -26,7 +27,8 @@ export interface InstallProps {
 }
 
 interface Dependencies {
-  extensionInstallationStateStore: ExtensionInstallationStateStore;
+  extensionsInstallingCount: IComputedValue<number>;
+  extensionsPreinstallingCount: IComputedValue<number>;
 }
 
 const installInputValidator = unionInputValidatorsAsync(
@@ -38,71 +40,67 @@ const installInputValidator = unionInputValidatorsAsync(
   InputValidators.isPath,
 );
 
-const NonInjectedInstall: React.FC<Dependencies & InstallProps> = ({
+const NonInjectedInstall = observer(({
   installPath,
   supportedFormats,
   onChange,
   installFromInput,
   installFromSelectFileDialog,
-  extensionInstallationStateStore,
-}) => (
-  <section>
-    <SubTitle
-      title={`Name or file path or URL to an extension package (${supportedFormats.join(
-        ", ",
-      )})`}
-    />
-    <div className={styles.inputs}>
-      <div>
-        <Input
-          theme="round-black"
-          disabled={extensionInstallationStateStore.anyPreInstallingOrInstalling}
-          placeholder={"Name or file path or URL"}
-          showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
-          validators={installPath ? installInputValidator : undefined}
-          value={installPath}
-          onChange={onChange}
-          onSubmit={installFromInput}
-          iconRight={(
-            <Icon
-              className={styles.icon}
-              smallest
-              material="folder_open"
-              onClick={prevDefault(installFromSelectFileDialog)}
-              tooltip="Browse"
-            />
-          )}
-        />
-      </div>
-      <div>
-        <Button
-          className={styles.button}
-          primary
-          label="Install"
-          disabled={
-            extensionInstallationStateStore.anyPreInstallingOrInstalling
-          }
-          waiting={extensionInstallationStateStore.anyPreInstallingOrInstalling}
-          onClick={installFromInput}
-        />
-      </div>
-    </div>
-    <small className={styles.proTip}>
-      <b>Pro-Tip</b>
-      : you can drag and drop a tarball file to this area
-    </small>
-  </section>
-);
+  extensionsInstallingCount,
+  extensionsPreinstallingCount,
+}: Dependencies & InstallProps) => {
+  const anyPreInstallingOrInstalling = extensionsInstallingCount.get() > 0 || extensionsPreinstallingCount.get() > 0;
 
-export const Install = withInjectables<Dependencies, InstallProps>(
-  observer(NonInjectedInstall),
-  {
-    getProps: (di, props) => ({
-      extensionInstallationStateStore: di.inject(
-        extensionInstallationStateStoreInjectable,
-      ),
+  return (
+    <section>
+      <SubTitle
+        title={`Name or file path or URL to an extension package (${supportedFormats.join(", ")})`}
+      />
+      <div className={styles.inputs}>
+        <div>
+          <Input
+            theme="round-black"
+            disabled={anyPreInstallingOrInstalling}
+            placeholder={"Name or file path or URL"}
+            showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
+            validators={installPath ? installInputValidator : undefined}
+            value={installPath}
+            onChange={onChange}
+            onSubmit={installFromInput}
+            iconRight={(
+              <Icon
+                className={styles.icon}
+                smallest
+                material="folder_open"
+                onClick={prevDefault(installFromSelectFileDialog)}
+                tooltip="Browse"
+              />
+            )}
+          />
+        </div>
+        <div>
+          <Button
+            className={styles.button}
+            primary
+            label="Install"
+            disabled={anyPreInstallingOrInstalling}
+            waiting={anyPreInstallingOrInstalling}
+            onClick={installFromInput}
+          />
+        </div>
+      </div>
+      <small className={styles.proTip}>
+        <b>Pro-Tip</b>
+        : you can drag and drop a tarball file to this area
+      </small>
+    </section>
+  );
+});
 
-      ...props,
-    }),
-  },
-);
+export const Install = withInjectables<Dependencies, InstallProps>(NonInjectedInstall, {
+  getProps: (di, props) => ({
+    ...props,
+    extensionsInstallingCount: di.inject(extensionsInstallingCountInjectable),
+    extensionsPreinstallingCount: di.inject(extensionsPreinstallingCountInjectable),
+  }),
+});

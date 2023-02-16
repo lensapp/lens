@@ -9,7 +9,6 @@ import URLParse from "url-parse";
 import { getInjectable } from "@ogre-tools/injectable";
 import attemptInstallInjectable from "./attempt-install/attempt-install.injectable";
 import getBaseRegistryUrlInjectable from "./get-base-registry-url/get-base-registry-url.injectable";
-import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import confirmInjectable from "../confirm-dialog/confirm.injectable";
 import { reduce } from "lodash";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
@@ -19,6 +18,7 @@ import downloadJsonInjectable from "../../../common/fetch/download-json/normal.i
 import type { PackageJson } from "type-fest";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import startPreInstallPhaseInjectable from "../../../features/extensions/installation-states/renderer/start-pre-install-phase.injectable";
 
 export interface ExtensionInfo {
   name: string;
@@ -46,17 +46,17 @@ const attemptInstallByInfoInjectable = getInjectable({
   instantiate: (di): AttemptInstallByInfo => {
     const attemptInstall = di.inject(attemptInstallInjectable);
     const getBaseRegistryUrl = di.inject(getBaseRegistryUrlInjectable);
-    const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
     const confirm = di.inject(confirmInjectable);
     const getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
     const downloadJson = di.inject(downloadJsonInjectable);
     const downloadBinary = di.inject(downloadBinaryInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const logger = di.inject(loggerInjectable);
+    const startPreInstallPhase = di.inject(startPreInstallPhaseInjectable);
 
     return async (info) => {
       const { name, version: versionOrTagName, requireConfirmation = false } = info;
-      const disposer = extensionInstallationStateStore.startPreInstall();
+      const clearPreInstallPhase = startPreInstallPhase();
       const baseUrl = await getBaseRegistryUrl();
       const registryUrl = new URLParse(baseUrl).set("pathname", name).toString();
       let json: NpmRegistryPackageDescriptor;
@@ -67,13 +67,13 @@ const attemptInstallByInfoInjectable = getInjectable({
         if (!result.callWasSuccessful) {
           showErrorNotification(`Failed to get registry information for extension: ${result.error}`);
 
-          return disposer();
+          return clearPreInstallPhase();
         }
 
         if (!isObject(result.response) || Array.isArray(result.response)) {
           showErrorNotification("Failed to get registry information for extension");
 
-          return disposer();
+          return clearPreInstallPhase();
         }
 
         if (result.response.error || !isObject(result.response.versions)) {
@@ -81,7 +81,7 @@ const attemptInstallByInfoInjectable = getInjectable({
 
           showErrorNotification(`Failed to get registry information for extension${message}`);
 
-          return disposer();
+          return clearPreInstallPhase();
         }
 
         json = result.response as unknown as NpmRegistryPackageDescriptor;
@@ -95,7 +95,7 @@ const attemptInstallByInfoInjectable = getInjectable({
           showErrorNotification(`Failed to get valid registry information for extension. ${error}`);
         }
 
-        return disposer();
+        return clearPreInstallPhase();
       }
 
       let version = versionOrTagName;
@@ -119,7 +119,7 @@ const attemptInstallByInfoInjectable = getInjectable({
                   </p>
                 ));
 
-                return disposer();
+                return clearPreInstallPhase();
               }
 
               version = potentialVersion;
@@ -137,7 +137,7 @@ const attemptInstallByInfoInjectable = getInjectable({
             </p>
           ));
 
-          return disposer();
+          return clearPreInstallPhase();
         }
       } else {
         const versions = Object.keys(json.versions)
@@ -154,7 +154,7 @@ const attemptInstallByInfoInjectable = getInjectable({
         logger.error("No versions supplied for extension", { name });
         showErrorNotification(`No versions found for ${name}`);
 
-        return disposer();
+        return clearPreInstallPhase();
       }
 
       const versionInfo = json.versions[version];
@@ -164,7 +164,7 @@ const attemptInstallByInfoInjectable = getInjectable({
         showErrorNotification("Configured registry has invalid data model. Please verify that it is like NPM's.");
         logger.warn(`[ATTEMPT-INSTALL-BY-INFO]: registry returned unexpected data, final version is ${version} but the versions object is missing .dist.tarball as a string`, versionInfo);
 
-        return disposer();
+        return clearPreInstallPhase();
       }
 
       if (requireConfirmation) {
@@ -183,7 +183,7 @@ const attemptInstallByInfoInjectable = getInjectable({
         });
 
         if (!proceed) {
-          return disposer();
+          return clearPreInstallPhase();
         }
       }
 
@@ -194,10 +194,10 @@ const attemptInstallByInfoInjectable = getInjectable({
       if (!request.callWasSuccessful) {
         showErrorNotification(`Failed to download extension: ${request.error}`);
 
-        return disposer();
+        return clearPreInstallPhase();
       }
 
-      return attemptInstall({ fileName, data: request.response }, disposer);
+      return attemptInstall({ fileName, data: request.response }, clearPreInstallPhase);
     };
   },
 });
