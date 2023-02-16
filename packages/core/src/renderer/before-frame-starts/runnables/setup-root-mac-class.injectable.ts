@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import isMacInjectable from "../../../common/vars/is-mac.injectable";
+import rootElementInjectable from "../../window/root-element.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../tokens";
 
 const setupRootMacClassnameInjectable = getInjectable({
@@ -12,9 +13,9 @@ const setupRootMacClassnameInjectable = getInjectable({
     id: "setup-root-mac-classname",
     run: () => {
       const isMac = di.inject(isMacInjectable);
-      const rootElem = document.getElementById("app");
+      const rootElem = di.inject(rootElementInjectable);
 
-      rootElem?.classList.toggle("is-mac", isMac);
+      rootElem.classList.toggle("is-mac", isMac);
     },
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,

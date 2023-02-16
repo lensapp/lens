@@ -13,6 +13,7 @@ import autoInitExtensionsInjectable from "../../../features/extensions/loader/co
 import prefixedLoggerInjectable from "../../../common/logger/prefixed-logger.injectable";
 import { when } from "mobx";
 import requestSetClusterFrameIdInjectable from "../../../features/cluster/frame-id/renderer/request-set-frame-id.injectable";
+import unmountRootComponentInjectable from "../../window/unmount-root-component.injectable";
 
 const initClusterFrameInjectable = getInjectable({
   id: "init-cluster-frame",
@@ -29,8 +30,9 @@ const initClusterFrameInjectable = getInjectable({
     const logger = di.inject(prefixedLoggerInjectable, "CLUSTER-FRAME");
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const requestSetClusterFrameId = di.inject(requestSetClusterFrameIdInjectable);
+    const unmountRootComponent = di.inject(unmountRootComponentInjectable);
 
-    return async (unmountRoot: () => void) => {
+    return async () => {
       logger.info(`Init dashboard, clusterId=${hostedCluster.id}, frameId=${frameRoutingId}`);
 
       await requestSetClusterFrameId(hostedCluster.id);
@@ -69,7 +71,7 @@ const initClusterFrameInjectable = getInjectable({
 
       window.addEventListener("beforeunload", () => {
         logger.info(`Unload dashboard, clusterId=${(hostedCluster.id)}, frameId=${frameRoutingId}`);
-        unmountRoot();
+        unmountRootComponent();
       });
     };
   },

@@ -11,6 +11,7 @@ import { delay } from "../../../common/utils";
 import { broadcastMessage } from "../../../common/ipc";
 import sendBundledExtensionsLoadedInjectable from "../../../features/extensions/loader/renderer/send-bundled-extensions-loaded.injectable";
 import autoInitExtensionsInjectable from "../../../features/extensions/loader/common/auto-init-extensions.injectable";
+import unmountRootComponentInjectable from "../../window/unmount-root-component.injectable";
 
 const initRootFrameInjectable = getInjectable({
   id: "init-root-frame",
@@ -21,8 +22,9 @@ const initRootFrameInjectable = getInjectable({
     const lensProtocolRouterRenderer = di.inject(lensProtocolRouterRendererInjectable);
     const logger = di.inject(loggerInjectable);
     const sendBundledExtensionsLoaded = di.inject(sendBundledExtensionsLoadedInjectable);
+    const unmountRootComponent = di.inject(unmountRootComponentInjectable);
 
-    return async (unmountRoot: () => void) => {
+    return async () => {
       try {
         // maximum time to let bundled extensions finish loading
         const timeout = delay(10000);
@@ -54,8 +56,7 @@ const initRootFrameInjectable = getInjectable({
 
       window.addEventListener("beforeunload", () => {
         logger.info("[ROOT-FRAME]: Unload app");
-
-        unmountRoot();
+        unmountRootComponent();
       });
     };
   },
