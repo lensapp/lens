@@ -27,6 +27,7 @@ export const ResourceNames: Record<KubeResource, string> = {
   "deployments": "Deployments",
   "statefulsets": "Stateful Sets",
   "replicasets": "Replica Sets",
+  "replicationcontrollers": "Replication Controllers",
   "jobs": "Jobs",
   "cronjobs": "Cron Jobs",
   "endpoints": "Endpoints",
