@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import extensionDiscoveryInjectable from "../../extensions/extension-discovery/extension-discovery.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../before-frame-starts/tokens";
-import initializeExtensionLoaderInjectable from "../extension-loader/init.injectable";
 
 const initializeExtensionDiscoveryInjectable = getInjectable({
   id: "initialize-extension-discovery",
@@ -16,7 +15,6 @@ const initializeExtensionDiscoveryInjectable = getInjectable({
 
       await extensionDiscovery.init();
     },
-    runAfter: di.inject(initializeExtensionLoaderInjectable),
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });

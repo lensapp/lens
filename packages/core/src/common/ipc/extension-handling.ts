@@ -4,5 +4,3 @@
  */
 
 export const extensionDiscoveryStateChannel = "extension-discovery:state";
-export const extensionLoaderFromMainChannel = "extension-loader:main:state";
-export const extensionLoaderFromRendererChannel = "extension-loader:renderer:state";

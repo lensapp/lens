@@ -5,11 +5,11 @@
 
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
+import type { ObservableMap } from "mobx";
 import { makeObservable, observable, reaction, when } from "mobx";
 import { broadcastMessage, ipcMainHandle, ipcRendererOn } from "../../common/ipc";
-import { isErrnoException, toJS } from "../../common/utils";
+import { isErrnoException, iter, toJS } from "../../common/utils";
 import type { ExtensionsStore } from "../extensions-store/extensions-store";
-import type { ExtensionLoader } from "../extension-loader";
 import type { BundledLensExtensionManifest, LensExtensionId, LensExtensionManifest } from "../lens-extension";
 import type { ExtensionInstallationStateStore } from "../extension-installation-state-store/extension-installation-state-store";
 import { extensionDiscoveryStateChannel } from "../../common/ipc/extension-handling";
@@ -32,7 +32,6 @@ import type { RemovePath } from "../../common/fs/remove.injectable";
 import type TypedEventEmitter from "typed-emitter";
 
 interface Dependencies {
-  readonly extensionLoader: ExtensionLoader;
   readonly extensionsStore: ExtensionsStore;
   readonly extensionInstallationStateStore: ExtensionInstallationStateStore;
   readonly extensionPackageRootDirectory: string;
@@ -41,6 +40,7 @@ interface Dependencies {
   readonly isProduction: boolean;
   readonly fileSystemSeparator: string;
   readonly homeDirectoryPath: string;
+  readonly installedExtensions: ObservableMap<LensExtensionId, InstalledExtension>;
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
   installExtension: (name: string) => Promise<void>;
   readJsonFile: ReadJson;
@@ -60,11 +60,6 @@ interface Dependencies {
 
 export interface BaseInstalledExtension {
   readonly id: LensExtensionId;
-  // Absolute path to the non-symlinked source folder,
-  // e.g. "/Users/user/.k8slens/extensions/helloworld"
-  readonly absolutePath: string;
-  // Absolute to the symlinked package.json file
-  readonly manifestPath: string;
 }
 
 export interface BundledInstalledExtension extends BaseInstalledExtension {
@@ -78,6 +73,11 @@ export interface ExternalInstalledExtension extends BaseInstalledExtension {
   readonly manifest: LensExtensionManifest;
   readonly isBundled: false;
   readonly isCompatible: boolean;
+  // Absolute path to the non-symlinked source folder,
+  // e.g. "/Users/user/.k8slens/extensions/helloworld"
+  readonly absolutePath: string;
+  // Absolute to the symlinked package.json file
+  readonly manifestPath: string;
   isEnabled: boolean;
 }
 
@@ -99,7 +99,7 @@ const isDirectoryLike = (lstat: Stats) => lstat.isDirectory() || lstat.isSymboli
 
 interface ExtensionDiscoveryEvents {
   add: (ext: InstalledExtension) => void;
-  remove: (extId: LensExtensionId) => void;
+  remove: (ext: InstalledExtension) => void;
 }
 
 /**
@@ -116,7 +116,6 @@ export class ExtensionDiscovery {
   protected bundledFolderPath!: string;
 
   private loadStarted = false;
-  private extensions: Map<string, InstalledExtension> = new Map();
 
   // True if extensions have been loaded from the disk after app startup
   @observable isLoaded = false;
@@ -177,11 +176,8 @@ export class ExtensionDiscovery {
    * Watches for added/removed local extensions.
    * Dependencies are installed automatically after an extension folder is copied.
    */
-  async watchExtensions(): Promise<void> {
+  watchExtensions() {
     this.dependencies.logger.info(`${logModule} watching extension add/remove in ${this.localFolderPath}`);
-
-    // Wait until .load() has been called and has been resolved
-    await this.whenLoaded;
 
     this.dependencies.watch(this.localFolderPath, {
       // For adding and removing symlinks to work, the depth has to be 1.
@@ -224,7 +220,7 @@ export class ExtensionDiscovery {
           // Install dependencies for the new extension
           await this.dependencies.installExtension(extension.absolutePath);
 
-          this.extensions.set(extension.id, extension);
+          this.dependencies.installedExtensions.set(extension.id, extension);
           this.dependencies.logger.info(`${logModule} Added extension ${extension.manifest.name}`);
           this.events.emit("add", extension);
         }
@@ -251,28 +247,23 @@ export class ExtensionDiscovery {
       return;
     }
 
-    for (const extension of this.extensions.values()) {
-      if (extension.absolutePath !== filePath) {
-        continue;
-      }
+    const extension = iter.find(
+      this.dependencies.installedExtensions.values(),
+      (ext) => !ext.isBundled && ext.absolutePath === filePath,
+    );
 
-      const extensionName = extension.manifest.name;
-
-      // If the extension is deleted manually while the application is running, also remove the symlink
-      await this.removeSymlinkByPackageName(extensionName);
-
-      // The path to the manifest file is the lens extension id
-      // Note: that we need to use the symlinked path
-      const lensExtensionId = extension.manifestPath;
-
-      this.extensions.delete(extension.id);
-      this.dependencies.logger.info(`${logModule} removed extension ${extensionName}`);
-      this.events.emit("remove", lensExtensionId);
+    if (!extension) {
+      this.dependencies.logger.warn(`${logModule} extension ${extensionFolderName} not found, can't remove`);
 
       return;
     }
 
-    this.dependencies.logger.warn(`${logModule} extension ${extensionFolderName} not found, can't remove`);
+    // If the extension is deleted manually while the application is running, also remove the symlink
+    await this.removeSymlinkByPackageName(extension.manifest.name);
+
+    this.dependencies.installedExtensions.delete(extension.id);
+    this.dependencies.logger.info(`${logModule} removed extension ${extension.manifest.name}`);
+    this.events.emit("remove", extension);
   };
 
   /**
@@ -291,10 +282,14 @@ export class ExtensionDiscovery {
    * @param extensionId The ID of the extension to uninstall.
    */
   async uninstallExtension(extensionId: LensExtensionId): Promise<void> {
-    const extension = this.extensions.get(extensionId) ?? this.dependencies.extensionLoader.getExtensionById(extensionId);
+    const extension = this.dependencies.installedExtensions.get(extensionId);
 
     if (!extension) {
       return void this.dependencies.logger.warn(`${logModule} could not uninstall extension, not found`, { id: extensionId });
+    }
+
+    if (extension.isBundled) {
+      return void this.dependencies.logger.warn(`${logModule} could not uninstall extension, is bundled`, { id: extensionId });
     }
 
     const { manifest, absolutePath } = extension;
@@ -307,7 +302,7 @@ export class ExtensionDiscovery {
     await this.dependencies.removePath(absolutePath);
   }
 
-  async load(): Promise<Map<LensExtensionId, InstalledExtension>> {
+  async load() {
     if (this.loadStarted) {
       // The class is simplified by only supporting .load() to be called once
       throw new Error("ExtensionDiscovery.load() can be only be called once");
@@ -323,11 +318,10 @@ export class ExtensionDiscovery {
     await this.dependencies.ensureDirectory(this.nodeModulesPath);
     await this.dependencies.ensureDirectory(this.localFolderPath);
 
-    const extensions = await this.ensureExtensions();
+    const userExtensions = await this.loadFromFolder(this.localFolderPath);
 
+    this.dependencies.installedExtensions.replace(userExtensions.map(ext => [ext.id, ext]));
     this.isLoaded = true;
-
-    return extensions;
   }
 
   /**
@@ -383,12 +377,6 @@ export class ExtensionDiscovery {
 
       return null;
     }
-  }
-
-  async ensureExtensions(): Promise<Map<LensExtensionId, ExternalInstalledExtension>> {
-    const userExtensions = await this.loadFromFolder(this.localFolderPath);
-
-    return this.extensions = new Map(userExtensions.map(extension => [extension.id, extension]));
   }
 
   async loadFromFolder(folderPath: string): Promise<ExternalInstalledExtension[]> {

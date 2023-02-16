@@ -4,15 +4,15 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
+import installedUserExtensionsInjectable from "../../../../features/extensions/common/user-extensions.injectable";
 
 const userExtensionsInjectable = getInjectable({
   id: "user-extensions",
 
   instantiate: (di) => {
-    const extensionLoader = di.inject(extensionLoaderInjectable);
+    const installedUserExtensions = di.inject(installedUserExtensionsInjectable);
 
-    return computed(() => [...extensionLoader.userExtensions.get().values()]);
+    return computed(() => [...installedUserExtensions.get().values()]);
   },
 });
 

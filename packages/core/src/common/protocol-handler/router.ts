@@ -11,12 +11,11 @@ import { pathToRegexp } from "path-to-regexp";
 import type Url from "url-parse";
 import { RoutingError, RoutingErrorType } from "./error";
 import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
-import type { ExtensionLoader } from "../../extensions/extension-loader";
 import type { LensExtension } from "../../extensions/lens-extension";
 import type { RouteHandler, RouteParams } from "./registration";
 import { when } from "mobx";
-import { ipcRenderer } from "electron";
 import type { Logger } from "../logger";
+import type { FindExtensionInstanceByName } from "../../features/extensions/loader/common/find-instance-by-name.injectable";
 
 // IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
 export const ProtocolHandlerIpcPrefix = "protocol-handler";
@@ -64,9 +63,9 @@ export function foldAttemptResults(mainAttempt: RouteAttempt, rendererAttempt: R
 }
 
 export interface LensProtocolRouterDependencies {
-  readonly extensionLoader: ExtensionLoader;
   readonly extensionsStore: ExtensionsStore;
   readonly logger: Logger;
+  findExtensionInstanceByName: FindExtensionInstanceByName;
 }
 
 export abstract class LensProtocolRouter {
@@ -184,13 +183,8 @@ export abstract class LensProtocolRouter {
     const { [EXTENSION_PUBLISHER_MATCH]: publisher, [EXTENSION_NAME_MATCH]: partialName } = match.params;
     const name = [publisher, partialName].filter(isDefined).join("/");
 
-    const extensionLoader = this.dependencies.extensionLoader;
-
     try {
-      /**
-       * Note, if `getInstanceByName` returns `null` that means we won't be getting an instance
-       */
-      await when(() => extensionLoader.getInstanceByName(name) !== void 0, {
+      await when(() => this.dependencies.findExtensionInstanceByName(name) !== "not-installed", {
         timeout: 5_000,
       });
     } catch (error) {
@@ -201,10 +195,10 @@ export abstract class LensProtocolRouter {
       return name;
     }
 
-    const extension = extensionLoader.getInstanceByName(name);
+    const extension = this.dependencies.findExtensionInstanceByName(name);
 
-    if (!extension) {
-      this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but does not have a class for ${ipcRenderer ? "renderer" : "main"}`);
+    if (typeof extension === "string") {
+      this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but ${extension}`);
 
       return name;
     }

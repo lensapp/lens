@@ -4,12 +4,13 @@
  */
 
 import type { BundledInstalledExtension, ExternalInstalledExtension, InstalledExtension } from "./extension-discovery/extension-discovery";
-import { action, computed, makeObservable, observable } from "mobx";
+import { observable } from "mobx";
 import { disposer } from "../common/utils";
 import type { ProtocolHandlerRegistration } from "../common/protocol-handler/registration";
 import type { PackageJson } from "type-fest";
 import type { FileSystemProvisionerStore } from "./extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import type { Logger } from "../common/logger";
+import assert from "assert";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (ext: ExternalInstalledExtension) => LensExtension;
@@ -19,6 +20,10 @@ export interface BundledLensExtensionManifest extends PackageJson {
   name: string;
   version: string;
   publishConfig?: Partial<Record<string, string>>;
+
+  // Specify extension name used for persisting data.
+  // Useful if extension is renamed but the data should not be lost.
+  storeName?: string;
 }
 
 export interface LensExtensionDependencies {
@@ -37,35 +42,39 @@ export interface LensExtensionManifest extends BundledLensExtensionManifest {
     lens: string; // "semver"-package format
     [x: string]: string | undefined;
   };
-
-  // Specify extension name used for persisting data.
-  // Useful if extension is renamed but the data should not be lost.
-  storeName?: string;
 }
 
 export const Disposers = Symbol("disposers");
 
 export class LensExtension {
-  readonly id: LensExtensionId;
-  readonly manifest: LensExtensionManifest;
-  readonly manifestPath: string;
-  readonly isBundled: boolean;
+  get id() {
+    return this.extension.id;
+  }
+
+  get manifest() {
+    return this.extension.manifest as LensExtensionManifest;
+  }
+
+  get manifestPath() {
+    assert(!this.extension.isBundled, "LensExtension.manifestPath doesn't exist for bundled extensions");
+
+    return this.extension.manifestPath;
+  }
+
+  get isBundled() {
+    return this.extension.isBundled;
+  }
 
   get sanitizedExtensionId() {
     return sanitizeExtensionName(this.name);
   }
 
-  /**
-   * @ignore
-   */
-  protected readonly dependencies: LensExtensionDependencies;
-
   protocolHandlers: ProtocolHandlerRegistration[] = [];
 
-  @observable private _isEnabled = false;
+  private readonly _isEnabled = observable.box(false);
 
-  @computed get isEnabled() {
-    return this._isEnabled;
+  get isEnabled() {
+    return this._isEnabled.get();
   }
 
   /**
@@ -73,13 +82,13 @@ export class LensExtension {
    */
   [Disposers] = disposer();
 
-  constructor(deps: LensExtensionDependencies, { id, manifest, manifestPath, isBundled }: InstalledExtension) {
+  /**
+   * @ignore
+   */
+  declare protected readonly dependencies: LensExtensionDependencies;
+
+  constructor(deps: LensExtensionDependencies, private readonly extension: InstalledExtension) {
     this.dependencies = deps;
-    this.id = id;
-    this.manifest = manifest as LensExtensionManifest;
-    this.manifestPath = manifestPath;
-    this.isBundled = isBundled;
-    makeObservable(this);
   }
 
   get name() {
@@ -111,23 +120,21 @@ export class LensExtension {
     return this.dependencies.fileSystemProvisionerStore.requestDirectory(this.storeName);
   }
 
-  @action
   async enable() {
-    if (this._isEnabled) {
+    if (this._isEnabled.get()) {
       return;
     }
 
-    this._isEnabled = true;
+    this._isEnabled.set(true);
     this.dependencies.logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
   }
 
-  @action
   async disable() {
-    if (!this._isEnabled) {
+    if (!this._isEnabled.get()) {
       return;
     }
 
-    this._isEnabled = false;
+    this._isEnabled.set(false);
 
     try {
       await this.onDeactivate();

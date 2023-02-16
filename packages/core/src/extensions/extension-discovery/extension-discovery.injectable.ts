@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { ExtensionDiscovery } from "./extension-discovery";
-import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 import isCompatibleExtensionInjectable from "./is-compatible-extension/is-compatible-extension.injectable";
 import extensionsStoreInjectable from "../extensions-store/extensions-store.injectable";
 import extensionInstallationStateStoreInjectable from "../extension-installation-state-store/extension-installation-state-store.injectable";
@@ -28,12 +27,12 @@ import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import removePathInjectable from "../../common/fs/remove.injectable";
 import homeDirectoryPathInjectable from "../../common/os/home-directory-path.injectable";
 import lensResourcesDirInjectable from "../../common/vars/lens-resources-dir.injectable";
+import installedExtensionsInjectable from "../../features/extensions/common/installed-extensions.injectable";
 
 const extensionDiscoveryInjectable = getInjectable({
   id: "extension-discovery",
 
   instantiate: (di) => new ExtensionDiscovery({
-    extensionLoader: di.inject(extensionLoaderInjectable),
     extensionsStore: di.inject(extensionsStoreInjectable),
     extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
     isCompatibleExtension: di.inject(isCompatibleExtensionInjectable),
@@ -57,6 +56,7 @@ const extensionDiscoveryInjectable = getInjectable({
     getRelativePath: di.inject(getRelativePathInjectable),
     joinPaths: di.inject(joinPathsInjectable),
     homeDirectoryPath: di.inject(homeDirectoryPathInjectable),
+    installedExtensions: di.inject(installedExtensionsInjectable),
   }),
 });
 

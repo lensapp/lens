@@ -3,11 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
 import loggerInjectable from "../../../common/logger.injectable";
 import extensionDiscoveryInjectable from "../../../extensions/extension-discovery/extension-discovery.injectable";
-import extensionLoaderInjectable from "../../../extensions/extension-loader/extension-loader.injectable";
+import autoInitExtensionsInjectable from "../../../features/extensions/loader/common/auto-init-extensions.injectable";
+import removeExtensionInstanceInjectable from "../../../features/extensions/loader/common/remove-instance.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
 import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
 
@@ -17,8 +16,9 @@ const initializeExtensionsInjectable = getInjectable({
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
     const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
-    const extensionLoader = di.inject(extensionLoaderInjectable);
     const showErrorPopup = di.inject(showErrorPopupInjectable);
+    const removeExtensionInstance = di.inject(removeExtensionInstanceInjectable);
+    const autoInitExtensions = di.inject(autoInitExtensionsInjectable);
 
     return {
       id: "initialize-extensions",
@@ -27,30 +27,18 @@ const initializeExtensionsInjectable = getInjectable({
 
         await extensionDiscovery.init();
 
-        await extensionLoader.init();
+        await autoInitExtensions();
 
         try {
-          const extensions = await extensionDiscovery.load();
+          await extensionDiscovery.load();
+          extensionDiscovery.events.on("remove", (ext) => removeExtensionInstance(ext.id));
 
           // Start watching after bundled extensions are loaded
           extensionDiscovery.watchExtensions();
-
-          // Subscribe to extensions that are copied or deleted to/from the extensions folder
-          extensionDiscovery.events
-            .on("add", (extension: InstalledExtension) => {
-              extensionLoader.addExtension(extension);
-            })
-            .on("remove", (lensExtensionId: LensExtensionId) => {
-              extensionLoader.removeExtension(lensExtensionId);
-            });
-
-          extensionLoader.initExtensions(extensions);
         } catch (error: any) {
           showErrorPopup(
             "Lens Error",
-            `Could not load extensions${
-              error?.message ? `: ${error.message}` : ""
-            }`,
+            `Could not load extensions${error?.message ? `: ${error.message}` : ""}`,
           );
 
           console.error(error);

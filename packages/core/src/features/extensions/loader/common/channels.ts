@@ -12,12 +12,8 @@ export const loadedExtensionsChannel: RequestChannel<void, [LensExtensionId, Ins
   id: "loaded-extensions",
 };
 
-export const extensionStateUpdateChannel: MessageChannel<[LensExtensionId, InstalledExtension]> = {
-  id: "add-extension",
-};
-
-export const removeExtensionChannel: MessageChannel<LensExtensionId> = {
-  id: "remove-extension",
+export const extensionStateUpdatesChannel: MessageChannel<[LensExtensionId, InstalledExtension][]> = {
+  id: "extensions-updated",
 };
 
 export const bundledExtensionsLoadedChannel: MessageChannel<void> = {

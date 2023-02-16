@@ -34,17 +34,13 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
       .map(({ name }) => name);
   }
 
-  protected readonly state = observable.map<LensExtensionId, LensExtensionState>();
+  readonly state = observable.map<LensExtensionId, LensExtensionState>();
 
   isEnabled(extId: LensExtensionId): boolean {
     // By default false, so that copied extensions are disabled by default.
     // If user installs the extension from the UI, the Extensions component will specifically enable it.
     return this.state.get(extId)?.enabled ?? false;
   }
-
-  mergeState = action((extensionsState: Record<LensExtensionId, LensExtensionState> | [LensExtensionId, LensExtensionState][]) => {
-    this.state.merge(extensionsState);
-  });
 
   @action
   protected fromStore({ extensions }: LensExtensionsStoreModel) {

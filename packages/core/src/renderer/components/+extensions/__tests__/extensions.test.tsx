@@ -6,12 +6,10 @@
 import "@testing-library/jest-dom/extend-expect";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import type { ExtensionDiscovery } from "../../../../extensions/extension-discovery/extension-discovery";
-import type { ExtensionLoader } from "../../../../extensions/extension-loader";
+import type { ExtensionDiscovery, InstalledExtension } from "../../../../extensions/extension-discovery/extension-discovery";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { Extensions } from "../extensions";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
@@ -22,15 +20,18 @@ import type { InstallExtensionFromInput } from "../install-extension-from-input.
 import installExtensionFromInputInjectable from "../install-extension-from-input.injectable";
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import type { ObservableMap } from "mobx";
 import { observable, when } from "mobx";
 import type { RemovePath } from "../../../../common/fs/remove.injectable";
 import removePathInjectable from "../../../../common/fs/remove.injectable";
 import type { DownloadBinary } from "../../../../common/fetch/download-binary.injectable";
 import downloadBinaryInjectable from "../../../../common/fetch/download-binary.injectable";
 import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";
+import type { LensExtensionId } from "../../../../extensions/lens-extension";
+import installedExtensionsInjectable from "../../../../features/extensions/common/installed-extensions.injectable";
 
 describe("Extensions", () => {
-  let extensionLoader: ExtensionLoader;
+  let installedExtensions: ObservableMap<LensExtensionId, InstalledExtension>;
   let extensionDiscovery: ExtensionDiscovery;
   let installExtensionFromInput: jest.MockedFunction<InstallExtensionFromInput>;
   let extensionInstallationStateStore: ExtensionInstallationStateStore;
@@ -56,11 +57,11 @@ describe("Extensions", () => {
     downloadBinary = jest.fn().mockImplementation((url) => { throw new Error(`Unexpected call to downloadJson for url=${url}`); });
     di.override(downloadBinaryInjectable, () => downloadBinary);
 
-    extensionLoader = di.inject(extensionLoaderInjectable);
+    installedExtensions = di.inject(installedExtensionsInjectable);
     extensionDiscovery = di.inject(extensionDiscoveryInjectable);
     extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
 
-    extensionLoader.addExtension({
+    installedExtensions.set("extensionId", {
       id: "extensionId",
       manifest: {
         name: "test",

@@ -3,24 +3,31 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import extensionLoaderInjectable from "../../../extensions/extension-loader/extension-loader.injectable";
+import { action } from "mobx";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
+import getInstalledExtensionInjectable from "../../../features/extensions/common/get-installed-extension.injectable";
 
-export type DisableExtension = (extId: LensExtensionId) => void;
+export type DisableExtension = (id: LensExtensionId) => void;
 
 const disableExtensionInjectable = getInjectable({
   id: "disable-extension",
 
   instantiate: (di): DisableExtension => {
-    const extensionLoader = di.inject(extensionLoaderInjectable);
+    const getInstalledExtension = di.inject(getInstalledExtensionInjectable);
 
-    return (extId) => {
-      const ext = extensionLoader.getExtensionById(extId);
+    return action((id) => {
+      const extension = getInstalledExtension(id);
 
-      if (ext && !ext.isBundled) {
-        ext.isEnabled = false;
+      if (!extension) {
+        throw new Error(`Missing extension with id="${id}"`);
       }
-    };
+
+      if (extension.isBundled) {
+        throw new Error("Cannot change the enabled state for bundled extensions");
+      }
+
+      extension.isEnabled = false;
+    });
   },
 });
 

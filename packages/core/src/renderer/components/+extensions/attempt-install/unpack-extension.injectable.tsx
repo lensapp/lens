@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
 import getExtensionDestFolderInjectable from "./get-extension-dest-folder.injectable";
 import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { Disposer } from "../../../../common/utils";
@@ -19,19 +18,22 @@ import extractTarInjectable from "../../../../common/fs/extract-tar.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import showInfoNotificationInjectable from "../../notifications/show-info-notification.injectable";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
+import installedUserExtensionsInjectable from "../../../../features/extensions/common/user-extensions.injectable";
+import enableExtensionInjectable from "../enable-extension.injectable";
 
 export type UnpackExtension = (request: InstallRequestValidated, disposeDownloading?: Disposer) => Promise<void>;
 
 const unpackExtensionInjectable = getInjectable({
   id: "unpack-extension",
   instantiate: (di): UnpackExtension => {
-    const extensionLoader = di.inject(extensionLoaderInjectable);
     const getExtensionDestFolder = di.inject(getExtensionDestFolderInjectable);
     const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
     const extractTar = di.inject(extractTarInjectable);
     const logger = di.inject(loggerInjectable);
     const showInfoNotification = di.inject(showInfoNotificationInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
+    const installedUserExtensions = di.inject(installedUserExtensionsInjectable);
+    const enableExtension = di.inject(enableExtensionInjectable);
 
     return async (request, disposeDownloading) => {
       const {
@@ -73,10 +75,10 @@ const unpackExtensionInjectable = getInjectable({
         await fse.move(unpackedRootFolder, extensionFolder, { overwrite: true });
 
         // wait for the loader has actually install it
-        await when(() => extensionLoader.userExtensions.get().has(id));
+        await when(() => installedUserExtensions.get().has(id));
 
         // Enable installed extensions by default.
-        extensionLoader.setIsEnabled(id, true);
+        enableExtension(id);
 
         showInfoNotification((
           <p>

@@ -7,16 +7,16 @@ import bindProtocolAddRouteHandlersInjectable from "../../protocol-handler/bind-
 import lensProtocolRouterRendererInjectable from "../../protocol-handler/lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import registerIpcListenersInjectable from "../../ipc/register-ipc-listeners.injectable";
-import loadExtensionsInjectable from "../load-extensions.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import { delay } from "../../../common/utils";
 import { broadcastMessage } from "../../../common/ipc";
 import sendBundledExtensionsLoadedInjectable from "../../../features/extensions/loader/renderer/send-bundled-extensions-loaded.injectable";
+import autoInitExtensionsInjectable from "../../../features/extensions/loader/common/auto-init-extensions.injectable";
 
 const initRootFrameInjectable = getInjectable({
   id: "init-root-frame",
   instantiate: (di) => {
-    const loadExtensions = di.inject(loadExtensionsInjectable);
+    const autoInitExtensions = di.inject(autoInitExtensionsInjectable);
     const registerIpcListeners = di.inject(registerIpcListenersInjectable);
     const bindProtocolAddRouteHandlers = di.inject(bindProtocolAddRouteHandlersInjectable);
     const lensProtocolRouterRenderer = di.inject(lensProtocolRouterRendererInjectable);
@@ -31,7 +31,7 @@ const initRootFrameInjectable = getInjectable({
         // maximum time to let bundled extensions finish loading
         const timeout = delay(10000);
 
-        const loadingExtensions = await loadExtensions();
+        const loadingExtensions = await autoInitExtensions();
 
         const loadingBundledExtensions = loadingExtensions
           .filter((e) => e.isBundled)

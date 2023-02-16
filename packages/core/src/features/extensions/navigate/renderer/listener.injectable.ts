@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getMessageChannelListenerInjectable } from "../../../../common/utils/channel/message-channel-listener-injection-token";
-import extensionLoaderInjectable from "../../../../extensions/extension-loader/extension-loader.injectable";
+import extensionInstancesInjectable from "../../../../extensions/extension-loader/extension-instances.injectable";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import { navigateForExtensionChannel } from "../common/channel";
 
@@ -11,13 +11,13 @@ const navigateForExtensionListenerInjectable = getMessageChannelListenerInjectab
   channel: navigateForExtensionChannel,
   id: "main",
   handler: (di) => {
-    const extensionLoader = di.inject(extensionLoaderInjectable);
+    const extensionInstances = di.inject(extensionInstancesInjectable);
 
     return ({ extId, pageId, params }) => {
-      const extension = extensionLoader.getInstanceById(extId) as LensRendererExtension | undefined;
+      const extension = extensionInstances.get(extId);
 
       if (extension) {
-        extension.navigate(pageId, params);
+        (extension as LensRendererExtension).navigate(pageId, params);
       }
     };
   },

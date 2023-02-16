@@ -6,9 +6,7 @@
 import { clusterActivateHandler, clusterDisconnectHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
 import type { ClusterId, ClusterState } from "../../common/cluster-types";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel, type WindowAction } from "../../common/ipc/window";
-import { extensionDiscoveryStateChannel, extensionLoaderFromMainChannel } from "../../common/ipc/extension-handling";
-import type { InstalledExtension } from "../../extensions/extension-discovery/extension-discovery";
-import type { LensExtensionId } from "../../extensions/lens-extension";
+import { extensionDiscoveryStateChannel } from "../../common/ipc/extension-handling";
 import { toJS } from "../utils";
 import type { Location } from "history";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
@@ -60,8 +58,4 @@ export function requestInitialClusterStates(): Promise<{ id: string; state: Clus
 
 export function requestInitialExtensionDiscovery(): Promise<{ isLoaded: boolean }> {
   return requestMain(extensionDiscoveryStateChannel);
-}
-
-export function requestExtensionLoaderInitialState(): Promise<[LensExtensionId, InstalledExtension][]> {
-  return requestMain(extensionLoaderFromMainChannel);
 }
