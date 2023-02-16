@@ -23,7 +23,6 @@ import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectab
 import electronQuitAndInstallUpdateInjectable from "./electron-app/features/electron-quit-and-install-update.injectable";
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
-import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
@@ -58,7 +57,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
     }
 
     di.override(electronInjectable, () => ({}));
-    di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
 
     overrideRunnablesHavingSideEffects(di);
     overrideElectronFeatures(di);
