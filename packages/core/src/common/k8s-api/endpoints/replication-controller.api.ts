@@ -29,7 +29,7 @@ export class ReplicationControllerApi extends KubeApi<ReplicationController> {
     return this.request.get(this.getScaleApiUrl(params));
   }
 
-  scale(params: { namespace: string; name: string }, replicas: number) {
+  scale(params: { namespace: string; name: string }, replicas: number): Promise<Scale> {
     return this.request.patch(this.getScaleApiUrl(params), {
       data: {
         metadata: params,
