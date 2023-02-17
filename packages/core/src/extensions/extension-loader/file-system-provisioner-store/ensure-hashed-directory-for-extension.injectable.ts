@@ -12,9 +12,10 @@ import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import directoryForExtensionDataInjectable from "./directory-for-extension-data.injectable";
 import ensureDirInjectable from "../../../common/fs/ensure-dir.injectable";
 import getHashInjectable from "./get-hash.injectable";
-import findKeyContainsInjectable from "../../../common/utils/find-key-contains.injectable";
+import getPathToLegacyPackageJsonInjectable from "./get-path-to-legacy-package-json.injectable";
 
 export type EnsureHashedDirectoryForExtension = (extensionName: string, registeredExtensions: ObservableMap<string, string>) => Promise<string>;
+
 
 const ensureHashedDirectoryForExtensionInjectable = getInjectable({
   id: "ensure-hashed-directory-for-extension",
@@ -25,21 +26,24 @@ const ensureHashedDirectoryForExtensionInjectable = getInjectable({
     const directoryForExtensionData = di.inject(directoryForExtensionDataInjectable);
     const ensureDirectory = di.inject(ensureDirInjectable);
     const getHash = di.inject(getHashInjectable);
-    const findKeyContains = di.inject(findKeyContainsInjectable)<string>;
+    const getPathToLegacyPackageJson = di.inject(getPathToLegacyPackageJsonInjectable);
 
     return async (extensionName, registeredExtensions) => {
-      const legacyDirPath = findKeyContains(registeredExtensions, extensionName);
+      let dirPath: string;
 
-      if (legacyDirPath) {
-        return legacyDirPath;
+      const legacyDirPath = getPathToLegacyPackageJson(extensionName);
+      const hashedDirectoryForLegacyDirPath = registeredExtensions.get(legacyDirPath);
+
+      if (hashedDirectoryForLegacyDirPath) {
+        dirPath = hashedDirectoryForLegacyDirPath;
+      } else {
+        dirPath = await getOrInsertWithAsync(registeredExtensions, extensionName, async () => {
+          const salt = (await randomBytes(32)).toString("hex");
+          const hashedName = getHash(`${extensionName}/${salt}`);
+
+          return joinPaths(directoryForExtensionData, hashedName);
+        });
       }
-
-      const dirPath = await getOrInsertWithAsync(registeredExtensions, extensionName, async () => {
-        const salt = (await randomBytes(32)).toString("hex");
-        const hashedName = getHash(`${extensionName}/${salt}`);
-
-        return joinPaths(directoryForExtensionData, hashedName);
-      });
 
       await ensureDirectory(dirPath);
 
