@@ -9,13 +9,12 @@
 
 import { ipcMain, ipcRenderer, webContents } from "electron";
 import { toJS } from "../utils/toJS";
-import type { ClusterFrameInfo } from "../cluster-frames";
-import { clusterFrameMap } from "../cluster-frames";
 import type { Disposer } from "../utils";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
 import loggerInjectable from "../logger.injectable";
 import ipcMainInjectionToken from "./ipc-main-injection-token";
+import clusterFramesInjectable from "../cluster-frames.injectable";
 
 export const broadcastMainChannel = "ipc:broadcast-main";
 
@@ -29,10 +28,6 @@ export function ipcMainHandle(channel: string, listener: (event: Electron.IpcMai
   });
 }
 
-function getSubFrames(): ClusterFrameInfo[] {
-  return Array.from(clusterFrameMap.values());
-}
-
 export async function broadcastMessage(channel: string, ...args: any[]): Promise<void> {
   if (ipcRenderer) {
     return ipcRenderer.invoke(broadcastMainChannel, channel, ...args.map(sanitizePayload));
@@ -44,12 +39,13 @@ export async function broadcastMessage(channel: string, ...args: any[]): Promise
 
   const di = getLegacyGlobalDiForExtensionApi();
   const logger = di.inject(loggerInjectable);
+  const clusterFrames = di.inject(clusterFramesInjectable);
 
   ipcMain.listeners(channel).forEach((func) => func({
     processId: undefined, frameId: undefined, sender: undefined, senderFrame: undefined,
   }, ...args));
 
-  const subFrames = getSubFrames();
+  const subFrames = [...clusterFrames.values()];
   const views = webContents.getAllWebContents();
 
   if (!views || !Array.isArray(views) || views.length === 0) return;

@@ -12,7 +12,7 @@ import showErrorNotificationInjectable from "../../components/notifications/show
 import autoInitExtensionsInjectable from "../../../features/extensions/loader/common/auto-init-extensions.injectable";
 import prefixedLoggerInjectable from "../../../common/logger/prefixed-logger.injectable";
 import { when } from "mobx";
-import { requestSetClusterFrameId } from "../../ipc";
+import requestSetClusterFrameIdInjectable from "../../../features/cluster/frame-id/renderer/request-set-frame-id.injectable";
 
 const initClusterFrameInjectable = getInjectable({
   id: "init-cluster-frame",
@@ -28,6 +28,7 @@ const initClusterFrameInjectable = getInjectable({
     const emitAppEvent = di.inject(emitAppEventInjectable);
     const logger = di.inject(prefixedLoggerInjectable, "CLUSTER-FRAME");
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
+    const requestSetClusterFrameId = di.inject(requestSetClusterFrameIdInjectable);
 
     return async (unmountRoot: () => void) => {
       // TODO: Make catalogEntityRegistry already initialized when passed as dependency

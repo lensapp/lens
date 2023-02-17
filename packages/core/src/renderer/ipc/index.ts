@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { clusterActivateHandler, clusterDisconnectHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
+import { clusterActivateHandler, clusterDisconnectHandler, clusterStates } from "../../common/ipc/cluster";
 import type { ClusterId, ClusterState } from "../../common/cluster-types";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel, type WindowAction } from "../../common/ipc/window";
 import { toJS } from "../utils";
@@ -37,10 +37,6 @@ export function emitWindowLocationChanged(location: Location): void {
 
 export function requestWindowAction(type: WindowAction): Promise<void> {
   return requestMain(windowActionHandleChannel, type);
-}
-
-export function requestSetClusterFrameId(clusterId: ClusterId): Promise<void> {
-  return requestMain(clusterSetFrameIdHandler, clusterId);
 }
 
 export function requestClusterActivation(clusterId: ClusterId, force?: boolean): Promise<void> {

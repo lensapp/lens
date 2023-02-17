@@ -4,7 +4,6 @@
  */
 
 export const clusterActivateHandler = "cluster:activate";
-export const clusterSetFrameIdHandler = "cluster:set-frame-id";
 export const clusterVisibilityHandler = "cluster:visibility";
 export const clusterDisconnectHandler = "cluster:disconnect";
 export const clusterStates = "cluster:states";
