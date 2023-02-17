@@ -21,6 +21,7 @@ import { runInAction, computed, observable } from "mobx";
 import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { flushPromises } from "../../common/test-utils/flush-promises";
+import type { ClusterPageMenuRegistration } from "../../extensions/common-api/types";
 
 describe("cluster - sidebar and tab navigation for extensions", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -139,15 +140,12 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
         const route = windowDi
           .inject(routesInjectable)
           .get()
-          .find(
-            matches({
-              path: "/extension/some-extension-name/some-child-page-id",
-            }),
-          );
+          .find(matches({
+            path: "/extension/some-extension-name/some-child-page-id",
+          }));
 
         assert(route);
         navigateToRoute(route);
-
       });
 
       it("renders", () => {
@@ -450,6 +448,133 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
             });
           });
         });
+      });
+    });
+  });
+
+  describe("given extension with cluster pages and cluster page menus with explicit 'orderNumber'", () => {
+    let someObservable: IObservableValue<boolean>;
+
+    beforeEach(() => {
+      someObservable = observable.box(false);
+
+      const testExtension = {
+        id: "some-extension-id",
+        name: "some-extension-name",
+
+        rendererOptions: {
+          clusterPages: [
+            {
+              components: {
+                Page: () => {
+                  throw new Error("should never come here");
+                },
+              },
+            },
+            {
+              id: "some-child-page-id",
+
+              components: {
+                Page: () => <div data-testid="some-child-page">Some child page</div>,
+              },
+            },
+            {
+              id: "some-other-child-page-id",
+
+              components: {
+                Page: () => (
+                  <div data-testid="some-other-child-page">Some other child page</div>
+                ),
+              },
+            },
+          ],
+
+          clusterPageMenus: [
+            {
+              id: "some-parent-id",
+              title: "Parent",
+              components: {
+                Icon: () => <div>Some icon</div>,
+              },
+              orderNumber: -Infinity,
+            },
+            {
+              id: "some-child-id",
+              target: { pageId: "some-child-page-id" },
+              parentId: "some-parent-id",
+              title: "Child 1",
+              components: {
+                Icon: null as never,
+              },
+            },
+            {
+              id: "some-other-child-id",
+              target: { pageId: "some-other-child-page-id" },
+              parentId: "some-parent-id",
+              title: "Child 2",
+              components: {
+                Icon: null as never,
+              },
+            },
+            {
+              id: "some-menu-with-controlled-visibility",
+              title: "Some menu with controlled visibility",
+              visible: computed(() => someObservable.get()),
+              components: {
+                Icon: () => <div>Some icon</div>,
+              },
+            },
+          ] as ClusterPageMenuRegistration[],
+        },
+      };
+
+      applicationBuilder.extensions.enable(testExtension);
+    });
+
+    describe("given no state for expanded sidebar items exists, and navigated to child sidebar item, when rendered", () => {
+      beforeEach(async () => {
+        rendered = await applicationBuilder.render();
+
+        const windowDi = applicationBuilder.applicationWindow.only.di;
+
+        const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
+
+        const route = windowDi
+          .inject(routesInjectable)
+          .get()
+          .find(matches({
+            path: "/extension/some-extension-name/some-child-page-id",
+          }));
+
+        assert(route);
+        navigateToRoute(route);
+      });
+
+      it("renders", () => {
+        expect(rendered.container).toMatchSnapshot();
+      });
+
+      it("renderes parent as first item in sidebar", () => {
+        const parent = rendered.getByTestId("sidebar-item-some-extension-name-some-parent-id");
+
+        assert(parent);
+        expect(parent.previousSibling).toBeNull();
+      });
+
+      it("parent is highlighted", () => {
+        const parent = rendered.getByTestId("sidebar-item-some-extension-name-some-parent-id");
+
+        expect(parent?.dataset.isActiveTest).toBe("true");
+      });
+
+      it("parent sidebar item is not expanded", () => {
+        const child = rendered.queryByTestId("sidebar-item-some-extension-name-some-child-id");
+
+        expect(child).toBeNull();
+      });
+
+      it("child page is shown", () => {
+        expect(rendered.getByTestId("some-child-page")).not.toBeNull();
       });
     });
   });
