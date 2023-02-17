@@ -6,7 +6,7 @@
 export type KubeResource =
   "namespaces" | "nodes" | "events" | "resourcequotas" | "services" | "limitranges" | "leases" |
   "secrets" | "configmaps" | "ingresses" | "ingressclasses" | "networkpolicies" | "persistentvolumeclaims" | "persistentvolumes" | "storageclasses" |
-  "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "jobs" | "cronjobs" |
+  "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "replicationcontrollers" | "jobs" | "cronjobs" |
   "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "verticalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets" |
   "priorityclasses" | "runtimeclasses" |
   "roles" | "clusterroles" | "rolebindings" | "clusterrolebindings" | "serviceaccounts";
@@ -169,6 +169,11 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   replicasets: {
     kind: "ReplicaSet",
     group: "apps",
+    namespaced: true,
+  },
+  replicationcontrollers: {
+    kind: "ReplicationController",
+    group: "", // core
     namespaced: true,
   },
   roles: {
