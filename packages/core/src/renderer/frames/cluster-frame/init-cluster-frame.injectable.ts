@@ -23,7 +23,7 @@ const initClusterFrameInjectable = getInjectable({
 
     assert(hostedCluster, "This can only be injected within a cluster frame");
 
-    const loadExtensions = di.inject(autoInitExtensionsInjectable);
+    const autoInitExtensions = di.inject(autoInitExtensionsInjectable);
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const frameRoutingId = di.inject(frameRoutingIdInjectable);
     const emitAppEvent = di.inject(emitAppEventInjectable);
@@ -45,7 +45,7 @@ const initClusterFrameInjectable = getInjectable({
       when(
         () => catalogEntityRegistry.items.get().length > 0,
         () =>
-          loadExtensions(),
+          autoInitExtensions(),
         {
           timeout: 15_000,
           onError: (error) => {
