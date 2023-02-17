@@ -101,9 +101,7 @@ const NonInjectedLogsDockTab = observer(({
 export const LogsDockTab = withInjectables<Dependencies, LogsDockTabProps>(NonInjectedLogsDockTab, {
   getProps: (di, props) => ({
     ...props,
-    model: di.inject(logsViewModelInjectable, {
-      tabId: props.tab.id,
-    }),
+    model: di.inject(logsViewModelInjectable, props.tab.id),
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
   }),
