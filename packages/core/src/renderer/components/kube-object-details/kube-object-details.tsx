@@ -9,16 +9,20 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { IComputedValue } from "mobx";
 import { Drawer } from "../drawer";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Spinner } from "../spinner";
 import { KubeObjectMenu } from "../kube-object-menu";
 import type { HideDetails } from "../kube-detail-params/hide-details.injectable";
-import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
-import kubeObjectDetailItemsInjectable from "./kube-object-detail-items/kube-object-detail-items.injectable";
-import type { CurrentKubeObject } from "./current-kube-object-in-details.injectable";
-import currentKubeObjectInDetailsInjectable from "./current-kube-object-in-details.injectable";
+import kubeObjectDetailItemsInjectable
+  from "./kube-object-detail-items/kube-object-detail-items.injectable";
+import type {
+  KubeObjectDetailsItemComputed,
+} from "./current-kube-object-in-details.injectable";
+import {
+  currentKubeObjectInDetailsInjectable2,
+} from "./current-kube-object-in-details.injectable";
 
 export interface KubeObjectDetailsProps<Kube extends KubeObject = KubeObject> {
   className?: string;
@@ -27,7 +31,7 @@ export interface KubeObjectDetailsProps<Kube extends KubeObject = KubeObject> {
 
 interface Dependencies {
   detailComponents: IComputedValue<React.ElementType[]>;
-  kubeObject: IAsyncComputed<CurrentKubeObject>;
+  kubeObject: KubeObjectDetailsItemComputed;
   hideDetails: HideDetails;
 }
 
@@ -38,36 +42,27 @@ const NonInjectedKubeObjectDetails = observer((props: Dependencies) => {
     kubeObject,
   } = props;
 
-  const currentKubeObject = kubeObject.value.get();
-  const isLoading = kubeObject.pending.get();
+  const object = kubeObject.get();
 
   return (
     <Drawer
       className="KubeObjectDetails flex column"
-      open={Boolean(isLoading || currentKubeObject)}
-      title={(
-        currentKubeObject?.object
-          ? `${currentKubeObject.object.kind}: ${currentKubeObject.object.getName()}`
-          : ""
-      )}
-      toolbar={currentKubeObject?.object && <KubeObjectMenu object={currentKubeObject.object} toolbar={true}/>}
+      open={!!object}
+      title={
+        object instanceof KubeObject ? `${object.kind}: ${object.getName()}` : ""
+      }
+      toolbar={object && <KubeObjectMenu object={object as KubeObject} toolbar />}
       onClose={hideDetails}
     >
-      {isLoading && <Spinner center/>}
-      {currentKubeObject?.error && (
+      {!object && <Spinner center />}
+      {object instanceof Error && (
         <div className="box center">
           Resource loading has failed:
-          <b>{currentKubeObject.error}</b>
+          <b>{object}</b>
         </div>
       )}
-      {currentKubeObject?.object && (
-        <>
-          {
-            detailComponents.get()
-              .map((Component, index) => <Component key={index} object={currentKubeObject.object} />)
-          }
-        </>
-      )}
+      {object && detailComponents.get()
+        .map((Component, index) => <Component key={index} object={object} />)}
     </Drawer>
   );
 });
@@ -77,6 +72,6 @@ export const KubeObjectDetails = withInjectables<Dependencies>(NonInjectedKubeOb
     ...props,
     hideDetails: di.inject(hideDetailsInjectable),
     detailComponents: di.inject(kubeObjectDetailItemsInjectable),
-    kubeObject: di.inject(currentKubeObjectInDetailsInjectable),
+    kubeObject: di.inject(currentKubeObjectInDetailsInjectable2),
   }),
 });

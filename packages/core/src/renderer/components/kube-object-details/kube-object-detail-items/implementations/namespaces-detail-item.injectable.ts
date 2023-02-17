@@ -6,18 +6,23 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
 import { computed } from "mobx";
 import { NamespaceDetails } from "../../../+namespaces";
-import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
-import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
+import {
+  kubeObjectMatchesToKindAndApiVersion,
+} from "../kube-object-matches-to-kind-and-api-version";
+import {
+  currentKubeObjectInDetailsInjectable2,
+} from "../../current-kube-object-in-details.injectable";
+import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
 
 const namespacesDetailItemInjectable = getInjectable({
   id: "namespaces-detail-item",
 
   instantiate: (di) => {
-    const kubeObject = di.inject(currentKubeObjectInDetailsInjectable);
+    const kubeObject = di.inject(currentKubeObjectInDetailsInjectable2);
 
     return {
       Component: NamespaceDetails,
-      enabled: computed(() => isNamespace(kubeObject.value.get()?.object)),
+      enabled: computed(() => isNamespace(kubeObject.get() as KubeObject)),
       orderNumber: 10,
     };
   },

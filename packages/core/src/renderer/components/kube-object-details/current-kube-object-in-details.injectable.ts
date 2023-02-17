@@ -7,6 +7,8 @@ import kubeDetailsUrlParamInjectable from "../kube-detail-params/kube-details-ur
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { IComputedValue } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 
 export type CurrentKubeObject =
   | undefined
@@ -37,6 +39,38 @@ const currentKubeObjectInDetailsInjectable = getInjectable({
           return { error: String(error) };
         }
       },
+    });
+  },
+});
+
+export type KubeObjectDetailsItemValue = KubeObject | Error | undefined;
+export type KubeObjectDetailsItemComputed = IComputedValue<KubeObjectDetailsItemValue>;
+
+export const currentKubeObjectInDetailsInjectable2 = getInjectable({
+  id: "current-kube-object-in-details-2",
+
+  instantiate(di): KubeObjectDetailsItemComputed {
+    const kubeObjectUrlParam = di.inject(kubeDetailsUrlParamInjectable);
+    const apiManager = di.inject(apiManagerInjectable);
+    const kubeObject = observable.box<KubeObjectDetailsItemValue>();
+
+    return computed(() => {
+      const kubeObjUrlPath = kubeObjectUrlParam.get();
+
+      if (!kubeObjUrlPath) return; // details panel is hidden
+
+      const store = apiManager.getStore(kubeObjUrlPath);
+      const object = store?.getByPath(kubeObjUrlPath);
+
+      if (!object) {
+        store?.loadFromPath(kubeObjUrlPath)
+          .then(action((obj) => kubeObject.set(obj)))
+          .catch(action((error) => kubeObject.set(Error(error))));
+      } else {
+        runInAction(() => kubeObject.set(object));
+      }
+
+      return kubeObject.get() ?? object;
     });
   },
 });
