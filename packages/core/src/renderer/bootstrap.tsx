@@ -11,7 +11,6 @@ import { DefaultProps } from "./mui-base-theme";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DiContainer } from "@ogre-tools/injectable";
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame.injectable";
-import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame.injectable";
 import { Router } from "react-router";
 import historyInjectable from "./navigation/history.injectable";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
@@ -30,10 +29,6 @@ export async function bootstrap(di: DiContainer) {
       const initRootFrame = di.inject(initRootFrameInjectable);
 
       await initRootFrame();
-    } else {
-      const initClusterFrame = di.inject(initClusterFrameInjectable);
-
-      await initClusterFrame();
     }
   } catch (error) {
     console.error(`[BOOTSTRAP]: view initialization error: ${error}`, {

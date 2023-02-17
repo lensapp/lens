@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, comparer, computed, makeObservable, observable, reaction, runInAction, when } from "mobx";
+import { action, comparer, computed, makeObservable, observable, reaction, runInAction } from "mobx";
 import type { ClusterContextHandler } from "../../main/context-handler/context-handler";
 import type { KubeConfig } from "@kubernetes/client-node";
 import { HttpError } from "@kubernetes/client-node";
@@ -74,10 +74,6 @@ export class Cluster implements ClusterModel {
     assert(this._proxyKubeconfigManager, "proxyKubeconfigManager is only defined in the main environment");
 
     return this._proxyKubeconfigManager;
-  }
-
-  get whenReady() {
-    return when(() => this.ready);
   }
 
   /**
