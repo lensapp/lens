@@ -29,17 +29,9 @@ export async function bootstrap(di: DiContainer) {
 
   assert(rootElem, "#app MUST exist");
 
-  const extensionLoader = di.inject(extensionLoaderInjectable);
-
-  extensionLoader.init();
-
-  const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
-
-  extensionDiscovery.init();
-
-  const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
-
-  extensionInstallationStateStore.bindIpcListeners();
+  await di.inject(extensionLoaderInjectable).init();
+  await di.inject(extensionDiscoveryInjectable).init();
+  di.inject(extensionInstallationStateStoreInjectable).bindIpcListeners();
 
   let App;
   let initializeApp;
