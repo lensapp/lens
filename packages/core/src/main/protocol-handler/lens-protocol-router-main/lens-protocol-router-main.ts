@@ -71,7 +71,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
       this.dependencies.showApplicationWindow().catch(noop);
       const routeInternally = checkHost(url);
 
-      this.dependencies.logger.info(`${proto.LensProtocolRouter.LoggingPrefix}: routing ${url.toString()}`);
+      this.dependencies.logger.info(`routing ${url.toString()}`);
 
       if (routeInternally) {
         this._routeToInternal(url);
@@ -82,9 +82,9 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
       this.dependencies.broadcastMessage(ProtocolHandlerInvalid, error ? String(error) : "unknown error", rawUrl);
 
       if (error instanceof proto.RoutingError) {
-        this.dependencies.logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${error}`, { url: error.url });
+        this.dependencies.logger.error(`${error}`, { url: error.url });
       } else {
-        this.dependencies.logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ${error}`, { rawUrl });
+        this.dependencies.logger.error(`${error}`, { rawUrl });
       }
     }
   }

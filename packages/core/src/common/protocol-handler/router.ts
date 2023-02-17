@@ -7,7 +7,6 @@ import type { match } from "react-router";
 import { matchPath } from "react-router";
 import { countBy } from "lodash";
 import { isDefined, iter } from "../utils";
-import { pathToRegexp } from "path-to-regexp";
 import type Url from "url-parse";
 import { RoutingError, RoutingErrorType } from "./error";
 import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
@@ -62,17 +61,13 @@ export function foldAttemptResults(mainAttempt: RouteAttempt, rendererAttempt: R
 export interface LensProtocolRouterDependencies {
   readonly extensionsStore: ExtensionsStore;
   readonly logger: Logger;
+  readonly internalRoutes: Map<string, RouteHandler>;
   findExtensionInstanceByName: FindExtensionInstanceByName;
 }
 
+export const extensionUrlDeepLinkingSchema = `/:${EXTENSION_PUBLISHER_MATCH}(@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
+
 export abstract class LensProtocolRouter {
-  // Map between path schemas and the handlers
-  protected internalRoutes = new Map<string, RouteHandler>();
-
-  public static readonly LoggingPrefix = "[PROTOCOL ROUTER]";
-
-  static readonly ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}(@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
-
   constructor(protected readonly dependencies: LensProtocolRouterDependencies) {}
 
   /**
@@ -81,7 +76,7 @@ export abstract class LensProtocolRouter {
    * @returns true if a route has been found
    */
   protected _routeToInternal(url: Url<Record<string, string | undefined>>): RouteAttempt {
-    return this._route(this.internalRoutes.entries(), url);
+    return this._route(this.dependencies.internalRoutes.entries(), url);
   }
 
   /**
@@ -137,7 +132,7 @@ export abstract class LensProtocolRouter {
         data.extensionName = extensionName;
       }
 
-      this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: No handler found`, data);
+      this.dependencies.logger.info(`No handler found`, data);
 
       return RouteAttempt.MISSING;
     }
@@ -171,7 +166,7 @@ export abstract class LensProtocolRouter {
       [EXTENSION_NAME_MATCH]: string;
     }
 
-    const match = matchPath<ExtensionUrlMatch>(url.pathname, LensProtocolRouter.ExtensionUrlSchema);
+    const match = matchPath<ExtensionUrlMatch>(url.pathname, extensionUrlDeepLinkingSchema);
 
     if (!match) {
       throw new RoutingError(RoutingErrorType.NO_EXTENSION_ID, url);
@@ -186,7 +181,7 @@ export abstract class LensProtocolRouter {
       });
     } catch (error) {
       this.dependencies.logger.info(
-        `${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed (${error})`,
+        `Extension ${name} matched, but not installed (${error})`,
       );
 
       return name;
@@ -195,18 +190,18 @@ export abstract class LensProtocolRouter {
     const extension = this.dependencies.findExtensionInstanceByName(name);
 
     if (typeof extension === "string") {
-      this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but ${extension}`);
+      this.dependencies.logger.info(`Extension ${name} matched, but ${extension}`);
 
       return name;
     }
 
     if (!extension.isBundled && !this.dependencies.extensionsStore.isEnabled(extension.id)) {
-      this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
+      this.dependencies.logger.info(`Extension ${name} matched, but not enabled`);
 
       return name;
     }
 
-    this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched`);
+    this.dependencies.logger.info(`Extension ${name} matched`);
 
     return extension;
   }
@@ -243,26 +238,5 @@ export abstract class LensProtocolRouter {
 
       throw error;
     }
-  }
-
-  /**
-   * Add a handler under the `lens://app` tree of routing.
-   * @param pathSchema the URI path schema to match against for this handler
-   * @param handler a function that will be called if a protocol path matches
-   */
-  public addInternalHandler(urlSchema: string, handler: RouteHandler): this {
-    pathToRegexp(urlSchema); // verify now that the schema is valid
-    this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: internal registering ${urlSchema}`);
-    this.internalRoutes.set(urlSchema, handler);
-
-    return this;
-  }
-
-  /**
-   * Remove an internal protocol handler.
-   * @param pathSchema the path schema that the handler was registered under
-   */
-  public removeInternalHandler(urlSchema: string): void {
-    this.internalRoutes.delete(urlSchema);
   }
 }

@@ -7,8 +7,9 @@ import { LensProtocolRouterMain } from "./lens-protocol-router-main";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
 import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
 import findExtensionInstanceByNameInjectable from "../../../features/extensions/loader/common/find-instance-by-name.injectable";
+import internalDeepLinkingRoutesInjectable from "../../../features/deep-linking/renderer/internal-deep-linking-routes.injectable";
+import protocolHandlerLoggerInjectable from "../../../common/protocol-handler/logger.injectable";
 
 const lensProtocolRouterMainInjectable = getInjectable({
   id: "lens-protocol-router-main",
@@ -17,8 +18,9 @@ const lensProtocolRouterMainInjectable = getInjectable({
     extensionsStore: di.inject(extensionsStoreInjectable),
     showApplicationWindow: di.inject(showApplicationWindowInjectable),
     broadcastMessage: di.inject(broadcastMessageInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(protocolHandlerLoggerInjectable),
     findExtensionInstanceByName: di.inject(findExtensionInstanceByNameInjectable),
+    internalRoutes: di.inject(internalDeepLinkingRoutesInjectable),
   }),
 });
 

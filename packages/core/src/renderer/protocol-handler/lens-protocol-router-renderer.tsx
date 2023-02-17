@@ -5,11 +5,11 @@
 
 import React from "react";
 import { ipcRenderer } from "electron";
-import * as proto from "../../../common/protocol-handler";
+import * as proto from "../../common/protocol-handler";
 import Url from "url-parse";
-import type { LensProtocolRouterDependencies } from "../../../common/protocol-handler";
-import { foldAttemptResults, ProtocolHandlerInvalid, RouteAttempt } from "../../../common/protocol-handler";
-import type { ShowNotification } from "../../components/notifications";
+import type { LensProtocolRouterDependencies } from "../../common/protocol-handler";
+import { foldAttemptResults, ProtocolHandlerInvalid, RouteAttempt } from "../../common/protocol-handler";
+import type { ShowNotification } from "../components/notifications";
 
 interface Dependencies extends LensProtocolRouterDependencies {
   showShortInfoNotification: ShowNotification;
