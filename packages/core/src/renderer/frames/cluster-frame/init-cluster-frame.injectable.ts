@@ -31,9 +31,6 @@ const initClusterFrameInjectable = getInjectable({
     const requestSetClusterFrameId = di.inject(requestSetClusterFrameIdInjectable);
 
     return async (unmountRoot: () => void) => {
-      // TODO: Make catalogEntityRegistry already initialized when passed as dependency
-      catalogEntityRegistry.init();
-
       logger.info(`Init dashboard, clusterId=${hostedCluster.id}, frameId=${frameRoutingId}`);
 
       await requestSetClusterFrameId(hostedCluster.id);

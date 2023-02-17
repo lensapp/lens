@@ -7,8 +7,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import { broadcastMessage } from "../../../common/ipc";
-import { catalogEntityRunListener } from "../../../common/ipc/catalog";
+import type { RequestCatalogEntityRun } from "../../../features/catalog/entity-run/renderer/request-entity-run.injectable";
+import requestCatalogEntityRunInjectable from "../../../features/catalog/entity-run/renderer/request-entity-run.injectable";
 import type { CatalogEntity } from "../../api/catalog-entity";
 import catalogEnitiesInjectable from "../../api/catalog/entity/entities.injectable";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
@@ -16,11 +16,13 @@ import { Select } from "../select";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
+  requestCatalogEntityRun: RequestCatalogEntityRun;
   entities: IComputedValue<CatalogEntity[]>;
 }
 
 const NonInjectedActivateEntityCommand = observer(({
   closeCommandOverlay,
+  requestCatalogEntityRun,
   entities,
 }: Dependencies) => (
   <Select
@@ -28,7 +30,7 @@ const NonInjectedActivateEntityCommand = observer(({
     menuPortalTarget={null}
     onChange={(option) => {
       if (option) {
-        broadcastMessage(catalogEntityRunListener, option.value.getId());
+        requestCatalogEntityRun(option.value.getId());
         closeCommandOverlay();
       }
     }}
@@ -51,5 +53,6 @@ export const ActivateEntityCommand = withInjectables<Dependencies>(NonInjectedAc
   getProps: di => ({
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
     entities: di.inject(catalogEnitiesInjectable),
+    requestCatalogEntityRun: di.inject(requestCatalogEntityRunInjectable),
   }),
 });

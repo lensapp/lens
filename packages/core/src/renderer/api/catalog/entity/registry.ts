@@ -4,15 +4,11 @@
  */
 
 import { computed, observable, makeObservable, action } from "mobx";
-import { ipcRendererOn } from "../../../../common/ipc";
 import type { CatalogCategory, CatalogEntity, CatalogEntityData, CatalogCategoryRegistry, CatalogEntityKindData } from "../../../../common/catalog";
-import "../../../../common/catalog-entities";
 import { iter } from "../../../utils";
 import type { Disposer } from "../../../utils";
 import { once } from "lodash";
 import { CatalogRunEvent } from "../../../../common/catalog/catalog-run-event";
-import { catalogEntityRunListener } from "../../../../common/ipc/catalog";
-import { isMainFrame } from "process";
 import type { Navigate } from "../../../navigation/navigate.injectable";
 import type { Logger } from "../../../../common/logger";
 
@@ -82,15 +78,6 @@ export class CatalogEntityRegistry {
   }
 
   init() {
-    if (isMainFrame) {
-      ipcRendererOn(catalogEntityRunListener, (event, id: string) => {
-        const entity = this.getById(id);
-
-        if (entity) {
-          this.onRun(entity);
-        }
-      });
-    }
   }
 
   @action updateItems(items: (CatalogEntityData & CatalogEntityKindData)[]) {
@@ -229,6 +216,14 @@ export class CatalogEntityRegistry {
     }
 
     return true;
+  }
+
+  onRunById(entityId: string): void {
+    const entity = this.getById(entityId);
+
+    if (entity) {
+      this.onRun(entity);
+    }
   }
 
   /**
