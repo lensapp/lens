@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
 import { sanitizeExtensionName } from "../../../../extensions/lens-extension";
 import path from "path";
+import localExtensionsDirectoryPathInjectable from "../../../../features/extensions/discovery/common/local-extensions-directory-path.injectable";
 
 export type GetExtensionDestFolder = (name: string) => string;
 
@@ -13,9 +13,9 @@ const getExtensionDestFolderInjectable = getInjectable({
   id: "get-extension-dest-folder",
 
   instantiate: (di): GetExtensionDestFolder => {
-    const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
+    const localExtensionsDirectoryPath = di.inject(localExtensionsDirectoryPathInjectable);
 
-    return (name) => path.join(extensionDiscovery.localFolderPath, sanitizeExtensionName(name));
+    return (name) => path.join(localExtensionsDirectoryPath, sanitizeExtensionName(name));
   },
 });
 

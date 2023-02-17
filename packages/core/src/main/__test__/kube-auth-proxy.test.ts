@@ -24,7 +24,7 @@ import kubectlBinaryNameInjectable from "../kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../kubectl/normalized-arch.injectable";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
-import ensureDirInjectable from "../../common/fs/ensure-dir.injectable";
+import ensureDirectoryInjectable from "../../common/fs/ensure-directory.injectable";
 import type { GetBasenameOfPath } from "../../common/path/get-basename.injectable";
 import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
 
@@ -45,7 +45,7 @@ describe("kube auth proxy tests", () => {
     di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
 
     const writeJsonSync = di.inject(writeJsonSyncInjectable);
-    const ensureDir = di.inject(ensureDirInjectable);
+    const ensureDir = di.inject(ensureDirectoryInjectable);
 
     getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
 

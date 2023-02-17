@@ -6,13 +6,12 @@
 import "@testing-library/jest-dom/extend-expect";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import type { ExtensionDiscovery, InstalledExtension } from "../../../../extensions/extension-discovery/extension-discovery";
+import type { InstalledExtension } from "../../../../extensions/extension-discovery/extension-discovery";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { Extensions } from "../extensions";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import extensionDiscoveryInjectable from "../../../../extensions/extension-discovery/extension-discovery.injectable";
 import directoryForUserDataInjectable from "../../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForDownloadsInjectable from "../../../../common/app-paths/directory-for-downloads/directory-for-downloads.injectable";
 import assert from "assert";
@@ -20,8 +19,8 @@ import type { InstallExtensionFromInput } from "../install-extension-from-input.
 import installExtensionFromInputInjectable from "../install-extension-from-input.injectable";
 import type { ExtensionInstallationStateStore } from "../../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
-import type { ObservableMap } from "mobx";
-import { observable, when } from "mobx";
+import type { IObservableValue, ObservableMap } from "mobx";
+import { computed, observable, when } from "mobx";
 import type { RemovePath } from "../../../../common/fs/remove.injectable";
 import removePathInjectable from "../../../../common/fs/remove.injectable";
 import type { DownloadBinary } from "../../../../common/fetch/download-binary.injectable";
@@ -29,15 +28,19 @@ import downloadBinaryInjectable from "../../../../common/fetch/download-binary.i
 import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";
 import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import installedExtensionsInjectable from "../../../../features/extensions/common/installed-extensions.injectable";
+import initialDiscoveryLoadCompletedInjectable from "../../../../features/extensions/discovery/common/initial-load-completed.injectable";
+import type { RemoveExtensionFiles } from "../../../../features/extensions/discovery/common/uninstall-extension.injectable";
+import removeExtensionFilesInjectable from "../../../../features/extensions/discovery/common/uninstall-extension.injectable";
 
 describe("Extensions", () => {
   let installedExtensions: ObservableMap<LensExtensionId, InstalledExtension>;
-  let extensionDiscovery: ExtensionDiscovery;
   let installExtensionFromInput: jest.MockedFunction<InstallExtensionFromInput>;
   let extensionInstallationStateStore: ExtensionInstallationStateStore;
   let render: DiRender;
   let deleteFileMock: jest.MockedFunction<RemovePath>;
   let downloadBinary: jest.MockedFunction<DownloadBinary>;
+  let isLoaded: IObservableValue<boolean>;
+  let removeExtensionFilesMock: jest.MockedFunction<RemoveExtensionFiles>;
 
   beforeEach(() => {
     const di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -47,6 +50,14 @@ describe("Extensions", () => {
     di.override(currentlyInClusterFrameInjectable, () => false);
 
     render = renderFor(di);
+
+    isLoaded = observable.box(false);
+
+    di.override(initialDiscoveryLoadCompletedInjectable, () => ({
+      id: "some",
+      set: value => isLoaded.set(value),
+      value: computed(() => isLoaded.get()),
+    }));
 
     installExtensionFromInput = jest.fn();
     di.override(installExtensionFromInputInjectable, () => installExtensionFromInput);
@@ -58,7 +69,6 @@ describe("Extensions", () => {
     di.override(downloadBinaryInjectable, () => downloadBinary);
 
     installedExtensions = di.inject(installedExtensionsInjectable);
-    extensionDiscovery = di.inject(extensionDiscoveryInjectable);
     extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
 
     installedExtensions.set("extensionId", {
@@ -75,11 +85,12 @@ describe("Extensions", () => {
       isCompatible: true,
     });
 
-    extensionDiscovery.uninstallExtension = jest.fn(() => Promise.resolve());
+    removeExtensionFilesMock = jest.fn();
+    di.override(removeExtensionFilesInjectable, () => removeExtensionFilesMock);
   });
 
   it("disables uninstall and disable buttons while uninstalling", async () => {
-    extensionDiscovery.isLoaded = true;
+    isLoaded.set(true);
 
     render((
       <>
@@ -103,7 +114,7 @@ describe("Extensions", () => {
     fireEvent.click(await screen.findByText("Yes"));
 
     await waitFor(async () => {
-      expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
+      expect(removeExtensionFilesMock).toHaveBeenCalled();
       fireEvent.click(menuTrigger);
       expect(screen.getByText("Disable")).toHaveAttribute("aria-disabled", "true");
       expect(screen.getByText("Uninstall")).toHaveAttribute("aria-disabled", "true");
@@ -155,14 +166,14 @@ describe("Extensions", () => {
   });
 
   it("displays spinner while extensions are loading", () => {
-    extensionDiscovery.isLoaded = false;
+    isLoaded.set(false);
     const { container } = render(<Extensions />);
 
     expect(container.querySelector(".Spinner")).toBeInTheDocument();
   });
 
   it("does not display the spinner while extensions are not loading", async () => {
-    extensionDiscovery.isLoaded = true;
+    isLoaded.set(true);
     const { container } = render(<Extensions />);
 
     expect(container.querySelector(".Spinner")).not.toBeInTheDocument();

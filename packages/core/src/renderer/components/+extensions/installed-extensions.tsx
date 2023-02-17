@@ -6,7 +6,6 @@
 import styles from "./installed-extensions.module.scss";
 import React, { useMemo } from "react";
 import type {
-  ExtensionDiscovery,
   InstalledExtension,
 } from "../../../extensions/extension-discovery/extension-discovery";
 import { Icon } from "../icon";
@@ -17,13 +16,14 @@ import { cssNames, toJS } from "../../utils";
 import { observer } from "mobx-react";
 import type { Row } from "react-table";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
-import extensionDiscoveryInjectable
-  from "../../../extensions/extension-discovery/extension-discovery.injectable";
+
 
 import { withInjectables } from "@ogre-tools/injectable-react";
 import extensionInstallationStateStoreInjectable
   from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import type { IComputedValue } from "mobx";
+import initialDiscoveryLoadCompletedInjectable from "../../../features/extensions/discovery/common/initial-load-completed.injectable";
 
 export interface InstalledExtensionsProps {
   extensions: InstalledExtension[];
@@ -33,7 +33,7 @@ export interface InstalledExtensionsProps {
 }
 
 interface Dependencies {
-  extensionDiscovery: ExtensionDiscovery;
+  initialDiscoveryLoadCompleted: IComputedValue<boolean>;
   extensionInstallationStateStore: ExtensionInstallationStateStore;
 }
 
@@ -46,7 +46,7 @@ function getStatus(extension: InstalledExtension) {
 }
 
 const NonInjectedInstalledExtensions = observer(({
-  extensionDiscovery,
+  initialDiscoveryLoadCompleted,
   extensionInstallationStateStore,
   extensions,
   uninstall,
@@ -148,7 +148,7 @@ const NonInjectedInstalledExtensions = observer(({
     }), [toJS(extensions), extensionInstallationStateStore.anyUninstalling],
   );
 
-  if (!extensionDiscovery.isLoaded) {
+  if (!initialDiscoveryLoadCompleted.get()) {
     return <div><Spinner center /></div>;
   }
 
@@ -183,8 +183,8 @@ const NonInjectedInstalledExtensions = observer(({
 
 export const InstalledExtensions = withInjectables<Dependencies, InstalledExtensionsProps>(NonInjectedInstalledExtensions, {
   getProps: (di, props) => ({
-    extensionDiscovery: di.inject(extensionDiscoveryInjectable),
-    extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
     ...props,
+    extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
+    initialDiscoveryLoadCompleted: di.inject(initialDiscoveryLoadCompletedInjectable).value,
   }),
 });

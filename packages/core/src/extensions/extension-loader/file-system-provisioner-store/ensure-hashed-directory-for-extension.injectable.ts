@@ -9,7 +9,7 @@ import { getOrInsert } from "../../../common/utils";
 import randomBytesInjectable from "../../../common/utils/random-bytes.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import directoryForExtensionDataInjectable from "./directory-for-extension-data.injectable";
-import ensureDirInjectable from "../../../common/fs/ensure-dir.injectable";
+import ensureDirectoryInjectable from "../../../common/fs/ensure-directory.injectable";
 import getHashInjectable from "./get-hash.injectable";
 import getPathToLegacyPackageJsonInjectable from "./get-path-to-legacy-package-json.injectable";
 import { registeredExtensionsInjectable } from "./registered-extensions.injectable";
@@ -23,7 +23,7 @@ const ensureHashedDirectoryForExtensionInjectable = getInjectable({
     const randomBytes = di.inject(randomBytesInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
     const directoryForExtensionData = di.inject(directoryForExtensionDataInjectable);
-    const ensureDirectory = di.inject(ensureDirInjectable);
+    const ensureDirectory = di.inject(ensureDirectoryInjectable);
     const getHash = di.inject(getHashInjectable);
     const getPathToLegacyPackageJson = di.inject(getPathToLegacyPackageJsonInjectable);
     const registeredExtensions = di.inject(registeredExtensionsInjectable);

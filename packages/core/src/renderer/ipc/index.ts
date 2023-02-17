@@ -6,7 +6,6 @@
 import { clusterActivateHandler, clusterDisconnectHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
 import type { ClusterId, ClusterState } from "../../common/cluster-types";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel, type WindowAction } from "../../common/ipc/window";
-import { extensionDiscoveryStateChannel } from "../../common/ipc/extension-handling";
 import { toJS } from "../utils";
 import type { Location } from "history";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
@@ -54,8 +53,4 @@ export function requestClusterDisconnection(clusterId: ClusterId, force?: boolea
 
 export function requestInitialClusterStates(): Promise<{ id: string; state: ClusterState }[]> {
   return requestMain(clusterStates);
-}
-
-export function requestInitialExtensionDiscovery(): Promise<{ isLoaded: boolean }> {
-  return requestMain(extensionDiscoveryStateChannel);
 }

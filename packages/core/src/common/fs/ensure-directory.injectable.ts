@@ -7,12 +7,9 @@ import fsInjectable from "./fs.injectable";
 
 export type EnsureDirectory = (dirPath: string) => Promise<void>;
 
-const ensureDirInjectable = getInjectable({
+const ensureDirectoryInjectable = getInjectable({
   id: "ensure-dir",
-
-  // TODO: Remove usages of ensureDir from business logic.
-  // TODO: Read, Write, Watch etc. operations should do this internally.
   instantiate: (di): EnsureDirectory => di.inject(fsInjectable).ensureDir,
 });
 
-export default ensureDirInjectable;
+export default ensureDirectoryInjectable;

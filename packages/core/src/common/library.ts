@@ -4,4 +4,4 @@
  */
 
 // @experimental
-export { bundledExtensionInjectionToken } from "../extensions/extension-discovery/bundled-extension-token";
+export { bundledExtensionInjectionToken } from "../features/extensions/common/bundled-extension-token";

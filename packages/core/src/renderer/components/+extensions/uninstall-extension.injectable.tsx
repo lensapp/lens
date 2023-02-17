@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
-import extensionDiscoveryInjectable from "../../../extensions/extension-discovery/extension-discovery.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { LensExtensionId } from "../../../extensions/lens-extension";
 import { extensionDisplayName } from "../../../extensions/lens-extension";
@@ -15,18 +14,19 @@ import showSuccessNotificationInjectable from "../notifications/show-success-not
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 import installedUserExtensionsInjectable from "../../../features/extensions/common/user-extensions.injectable";
 import getInstalledExtensionInjectable from "../../../features/extensions/common/get-installed-extension.injectable";
+import removeExtensionFilesInjectable from "../../../features/extensions/discovery/common/uninstall-extension.injectable";
 
 const uninstallExtensionInjectable = getInjectable({
   id: "uninstall-extension",
 
   instantiate: (di) => {
-    const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
     const extensionInstallationStateStore = di.inject(extensionInstallationStateStoreInjectable);
     const logger = di.inject(loggerInjectable);
     const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const installedUserExtensions = di.inject(installedUserExtensionsInjectable);
     const getInstalledExtension = di.inject(getInstalledExtensionInjectable);
+    const removeExtensionFiles = di.inject(removeExtensionFilesInjectable);
 
     return async (extensionId: LensExtensionId): Promise<boolean> => {
       const ext = getInstalledExtension(extensionId);
@@ -44,7 +44,7 @@ const uninstallExtensionInjectable = getInjectable({
         logger.debug(`[EXTENSIONS]: trying to uninstall ${extensionId}`);
         extensionInstallationStateStore.setUninstalling(extensionId);
 
-        await extensionDiscovery.uninstallExtension(extensionId);
+        await removeExtensionFiles(extensionId);
 
         // wait for the ExtensionLoader to actually uninstall the extension
         await when(() => !installedUserExtensions.get().has(extensionId));

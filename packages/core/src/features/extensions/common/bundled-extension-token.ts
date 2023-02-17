@@ -4,7 +4,7 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { BundledLensExtensionManifest, BundledLensExtensionContructor } from "../lens-extension";
+import type { BundledLensExtensionManifest, BundledLensExtensionContructor } from "../../../extensions/lens-extension";
 
 export interface BundledExtension {
   readonly manifest: BundledLensExtensionManifest;

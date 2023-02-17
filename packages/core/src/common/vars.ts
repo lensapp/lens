@@ -12,6 +12,8 @@ export const defaultFontSize = 12;
 export const defaultTerminalFontFamily = "RobotoMono";
 export const defaultEditorFontFamily = "RobotoMono";
 
+export const manifestFilename = "package.json";
+
 // Apis
 export const apiPrefix = "/api"; // local router apis
 export const apiKubePrefix = "/api-kube"; // k8s cluster apis

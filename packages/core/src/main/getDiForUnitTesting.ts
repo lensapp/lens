@@ -7,7 +7,6 @@ import { chunk } from "lodash/fp";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { isInjectable } from "@ogre-tools/injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
-import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
 import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
 import setupLensProxyInjectable from "./start-main-application/runnables/setup-lens-proxy.injectable";
 import setupSyncingOfWeblinksInjectable from "./start-main-application/runnables/setup-syncing-of-weblinks.injectable";
@@ -82,7 +81,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 // TODO: Reorganize code in Runnables to get rid of requirement for override
 const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
   [
-    initializeExtensionsInjectable,
     initializeClusterManagerInjectable,
     setupIpcMainHandlersInjectable,
     setupLensProxyInjectable,

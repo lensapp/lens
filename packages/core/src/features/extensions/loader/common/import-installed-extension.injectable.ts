@@ -46,6 +46,7 @@ const importInstalledExtensionInjectable = getInjectable({
       return null;
     };
   },
+  causesSideEffects: true,
 });
 
 export default importInstalledExtensionInjectable;

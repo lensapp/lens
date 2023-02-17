@@ -23,13 +23,11 @@ const autoInitExtensionsInjectable = getInjectable({
     const finalizeExtensionLoading = di.inject(finalizeExtensionLoadingInjectable);
 
     return async () => {
-      logger.info("auto initializing extensions");
+      logger.info("🧩 Initializing...");
 
-      const bundledExtensions = await loadBundledExtensions();
-      const userExtensions = await loadUserExtensions(installedExtensions.toJSON());
       const loadedExtensions = await finalizeExtensionLoading([
-        ...bundledExtensions,
-        ...userExtensions,
+        ...await loadBundledExtensions(),
+        ...await loadUserExtensions(installedExtensions.toJSON()),
       ]);
 
       // Setup reaction to load extensions on JSON changes

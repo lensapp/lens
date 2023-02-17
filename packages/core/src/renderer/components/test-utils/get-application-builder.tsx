@@ -249,27 +249,36 @@ export const getApplicationBuilder = () => {
       close: () => {},
       loadFile: async () => {},
       loadUrl: async () => {
+        console.log("+beforeWindowStarts");
+
         for (const callback of beforeWindowStartCallbacks) {
           await callback(windowDi);
         }
 
+        console.log("-beforeWindowStarts");
+
         const startFrame = windowDi.inject(startFrameInjectable);
 
+        console.log("start frame");
         await startFrame();
+        console.log("+afterWindowStarts");
 
         for (const callback of afterWindowStartCallbacks) {
           await callback(windowDi);
         }
-
+        console.log("-afterWindowStarts");
         const history = windowDi.inject(historyInjectable);
 
         const render = renderFor(windowDi);
+
+        console.log("renderFor");
 
         rendered = render(
           <Router history={history}>
             <environment.RootComponent />
           </Router>,
         );
+        console.log("finished application-builder loadUrl");
       },
 
       send: (arg) => {
@@ -294,12 +303,17 @@ export const getApplicationBuilder = () => {
   const startApplication = async ({ shouldStartHidden }: { shouldStartHidden: boolean }) => {
     mainDi.inject(lensProxyPortInjectable).set(42);
 
+    console.log("beforeApplicationStartCallbacks");
+
     for (const callback of beforeApplicationStartCallbacks) {
       await callback(mainDi);
     }
 
     mainDi.override(shouldStartHiddenInjectable, () => shouldStartHidden);
+    console.log("startMainApplication");
     await startMainApplication();
+
+    console.log("afterApplicationStartCallbacks");
 
     for (const callback of afterApplicationStartCallbacks) {
       await callback(mainDi);
