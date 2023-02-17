@@ -9,7 +9,7 @@ import { catalogInitChannel } from "../../common/ipc/catalog";
 import { disposer, toJS } from "../../common/utils";
 import { getStartableStoppable } from "../../common/utils/get-startable-stoppable";
 import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
-import catalogSyncBroadcasterInjectable from "./broadcaster.injectable";
+import broadcastCurrentCatalogEntityRegistryStateInjectable from "../../features/catalog/entities-sync/main/broadcast.injectable";
 
 const catalogSyncToRendererInjectable = getInjectable({
   id: "catalog-sync-to-renderer",
@@ -17,19 +17,19 @@ const catalogSyncToRendererInjectable = getInjectable({
   instantiate: (di) => {
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const ipcMain = di.inject(ipcMainInjectionToken);
-    const catalogSyncBroadcaster = di.inject(catalogSyncBroadcasterInjectable);
+    const broadcastCurrentCatalogEntityRegistryState = di.inject(broadcastCurrentCatalogEntityRegistryStateInjectable);
 
     return getStartableStoppable(
       "catalog-sync",
       () => {
-        const initChannelHandler = () => catalogSyncBroadcaster(toJS(catalogEntityRegistry.items));
+        const initChannelHandler = () => broadcastCurrentCatalogEntityRegistryState(toJS(catalogEntityRegistry.items));
 
         ipcMain.on(catalogInitChannel, initChannelHandler);
 
         return disposer(
           () => ipcMain.off(catalogInitChannel, initChannelHandler),
           reaction(() => toJS(catalogEntityRegistry.items), (items) => {
-            catalogSyncBroadcaster(items);
+            broadcastCurrentCatalogEntityRegistryState(items);
           }, {
             fireImmediately: true,
           }),

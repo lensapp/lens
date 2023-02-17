@@ -4,16 +4,16 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { toJS } from "../../common/utils";
+import broadcastCurrentCatalogEntityRegistryStateInjectable from "../../features/catalog/entities-sync/main/broadcast.injectable";
 import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
-import catalogSyncBroadcasterInjectable from "./broadcaster.injectable";
 
 const pushCatalogToRendererInjectable = getInjectable({
   id: "push-catalog-to-renderer",
   instantiate: (di) => {
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
-    const catalogSyncBroadcaster = di.inject(catalogSyncBroadcasterInjectable);
+    const broadcastCurrentCatalogEntityRegistryState = di.inject(broadcastCurrentCatalogEntityRegistryStateInjectable);
 
-    return () => catalogSyncBroadcaster(toJS(catalogEntityRegistry.items));
+    return () => broadcastCurrentCatalogEntityRegistryState(toJS(catalogEntityRegistry.items));
   },
 });
 
