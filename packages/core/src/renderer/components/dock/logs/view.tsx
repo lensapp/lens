@@ -20,7 +20,6 @@ import type { SubscribeStores } from "../../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../../kube-watch-api/subscribe-stores.injectable";
 import type { PodStore } from "../../+workloads-pods/store";
 import podStoreInjectable from "../../+workloads-pods/store.injectable";
-import { Spinner } from "../../spinner";
 
 export interface LogsDockTabProps {
   className?: string;
@@ -100,11 +99,9 @@ const NonInjectedLogsDockTab = observer(({
 
 
 export const LogsDockTab = withInjectables<Dependencies, LogsDockTabProps>(NonInjectedLogsDockTab, {
-  getPlaceholder: () => <Spinner center data-testid="pod-logs-tab-content-spinner" />,
-  
-  getProps: async (di, props) => ({
+  getProps: (di, props) => ({
     ...props,
-    model: await di.inject(logsViewModelInjectable, props.tab.id),
+    model: di.inject(logsViewModelInjectable, props.tab.id),
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
   }),
