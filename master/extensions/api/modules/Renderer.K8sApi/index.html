@@ -1200,6 +1200,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#requestmetrics" class="md-nav__link">
+    RequestMetrics
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1527,6 +1534,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#requestmetrics_1" class="md-nav__link">
+    requestMetrics
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1648,6 +1662,9 @@
 <li><a href="../../interfaces/Renderer.K8sApi.IKubeApiCluster/">IKubeApiCluster</a></li>
 <li><a href="../../interfaces/Renderer.K8sApi.IgnoredKubeApiOptions/">IgnoredKubeApiOptions</a></li>
 <li><a href="../../interfaces/Renderer.K8sApi.KubeObjectStatus/">KubeObjectStatus</a></li>
+<li><a href="../../interfaces/Renderer.K8sApi.MetricData/">MetricData</a></li>
+<li><a href="../../interfaces/Renderer.K8sApi.MetricResult/">MetricResult</a></li>
+<li><a href="../../interfaces/Renderer.K8sApi.RequestMetricsParams/">RequestMetricsParams</a></li>
 </ul>
 <h3 id="type-aliases">Type Aliases<a class="headerlink" href="#type-aliases" title="Permanent link">#</a></h3>
 <ul>
@@ -1658,6 +1675,7 @@
 <li><a href="./#nodesapi">NodesApi</a></li>
 <li><a href="./#persistentvolumeclaimsapi">PersistentVolumeClaimsApi</a></li>
 <li><a href="./#podsapi">PodsApi</a></li>
+<li><a href="./#requestmetrics">RequestMetrics</a></li>
 </ul>
 <h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">#</a></h3>
 <ul>
@@ -1707,6 +1725,7 @@
 <li><a href="./#forcluster">forCluster</a></li>
 <li><a href="./#forremotecluster">forRemoteCluster</a></li>
 <li><a href="./#isallowedresource">isAllowedResource</a></li>
+<li><a href="./#requestmetrics-1">requestMetrics</a></li>
 </ul>
 <h2 id="references_1">References<a class="headerlink" href="#references_1" title="Permanent link">#</a></h2>
 <h3 id="basekubejsonapiobjectmetadata">BaseKubeJsonApiObjectMetadata<a class="headerlink" href="#basekubejsonapiobjectmetadata" title="Permanent link">#</a></h3>
@@ -1901,6 +1920,9 @@
 <hr />
 <h3 id="podsapi">PodsApi<a class="headerlink" href="#podsapi" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>PodsApi</strong>: <code>PodApi</code></p>
+<hr />
+<h3 id="requestmetrics">RequestMetrics<a class="headerlink" href="#requestmetrics" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>RequestMetrics</strong>: <code>ReturnType</code>&lt;typeof <code>requestMetricsInjectable</code>[<code>"instantiate"</code>]></p>
 <h2 id="variables_1">Variables<a class="headerlink" href="#variables_1" title="Permanent link">#</a></h2>
 <h3 id="deploymentapi_1">DeploymentApi<a class="headerlink" href="#deploymentapi_1" title="Permanent link">#</a></h3>
 <p>• <strong>DeploymentApi</strong>: (<code>opts?</code>: <code>DerivedKubeApiOptions</code>) =&gt; <code>DeploymentApi</code></p>
@@ -2375,6 +2397,89 @@
 </table>
 <h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
 <p><code>boolean</code></p>
+<hr />
+<h3 id="requestmetrics_1">requestMetrics<a class="headerlink" href="#requestmetrics_1" title="Permanent link">#</a></h3>
+<p>▸ <strong>requestMetrics</strong>(<code>query</code>, <code>params?</code>): <code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.MetricData/"><code>MetricData</code></a>></p>
+<h4 id="parameters_12">Parameters<a class="headerlink" href="#parameters_12" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>query</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>params?</code></td>
+<td align="left"><a href="../../interfaces/Renderer.K8sApi.RequestMetricsParams/"><code>RequestMetricsParams</code></a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.MetricData/"><code>MetricData</code></a>></p>
+<p>▸ <strong>requestMetrics</strong>(<code>query</code>, <code>params?</code>): <code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.MetricData/"><code>MetricData</code></a>[]></p>
+<h4 id="parameters_13">Parameters<a class="headerlink" href="#parameters_13" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>query</code></td>
+<td align="left"><code>string</code>[]</td>
+</tr>
+<tr>
+<td align="left"><code>params?</code></td>
+<td align="left"><a href="../../interfaces/Renderer.K8sApi.RequestMetricsParams/"><code>RequestMetricsParams</code></a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<a href="../../interfaces/Renderer.K8sApi.MetricData/"><code>MetricData</code></a>[]></p>
+<p>▸ <strong>requestMetrics</strong>&lt;<code>Keys</code>>(<code>query</code>, <code>params?</code>): <code>Promise</code>&lt;<code>Record</code>&lt;<code>Keys</code>, <a href="../../interfaces/Renderer.K8sApi.MetricData/"><code>MetricData</code></a>>></p>
+<h4 id="type-parameters_6">Type parameters<a class="headerlink" href="#type-parameters_6" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>Keys</code></td>
+<td align="left">extends <code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_14">Parameters<a class="headerlink" href="#parameters_14" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>query</code></td>
+<td align="left"><code>Record</code>&lt;<code>Keys</code>, <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>>>></td>
+</tr>
+<tr>
+<td align="left"><code>params?</code></td>
+<td align="left"><a href="../../interfaces/Renderer.K8sApi.RequestMetricsParams/"><code>RequestMetricsParams</code></a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">#</a></h4>
+<p><code>Promise</code>&lt;<code>Record</code>&lt;<code>Keys</code>, <a href="../../interfaces/Renderer.K8sApi.MetricData/"><code>MetricData</code></a>>></p>
                 
               
               

@@ -1286,6 +1286,21 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.MetricData/</loc>
+         <lastmod>2023-02-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.MetricResult/</loc>
+         <lastmod>2023-02-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.K8sApi.RequestMetricsParams/</loc>
+         <lastmod>2023-02-17</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Navigation.PageParamInit/</loc>
          <lastmod>2023-02-17</lastmod>
          <changefreq>daily</changefreq>
