@@ -12,6 +12,7 @@ import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import directoryForExtensionDataInjectable from "./directory-for-extension-data.injectable";
 import ensureDirInjectable from "../../../common/fs/ensure-dir.injectable";
 import getHashInjectable from "./get-hash.injectable";
+import findKeyContainsInjectable from "../../../common/utils/find-key-contains.injectable";
 
 export type EnsureHashedDirectoryForExtension = (extensionName: string, registeredExtensions: ObservableMap<string, string>) => Promise<string>;
 
@@ -24,8 +25,15 @@ const ensureHashedDirectoryForExtensionInjectable = getInjectable({
     const directoryForExtensionData = di.inject(directoryForExtensionDataInjectable);
     const ensureDirectory = di.inject(ensureDirInjectable);
     const getHash = di.inject(getHashInjectable);
+    const findKeyContains = di.inject(findKeyContainsInjectable)<string>;
 
     return async (extensionName, registeredExtensions) => {
+      const legacyDirPath = findKeyContains(registeredExtensions, extensionName);
+
+      if (legacyDirPath) {
+        return legacyDirPath;
+      }
+
       const dirPath = await getOrInsertWithAsync(registeredExtensions, extensionName, async () => {
         const salt = (await randomBytes(32)).toString("hex");
         const hashedName = getHash(`${extensionName}/${salt}`);
