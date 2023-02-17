@@ -12,7 +12,7 @@ import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type { DiContainer } from "@ogre-tools/injectable";
 import extensionInstallationStateStoreInjectable from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame.injectable";
-import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
+import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame.injectable";
 import { Router } from "react-router";
 import historyInjectable from "./navigation/history.injectable";
 import assert from "assert";
