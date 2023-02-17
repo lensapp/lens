@@ -27,6 +27,10 @@ export interface LensExtensionManifest extends PackageJson {
     npm?: string;
     node?: string;
   };
+
+  // Specify extension name used for persisting data.
+  // Useful if extension is renamed but the data should not be lost.
+  storeName?: string;
 }
 
 export const lensExtensionDependencies = Symbol("lens-extension-dependencies");
@@ -62,7 +66,10 @@ export class LensExtension<
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
     makeObservable(this);
+
+    // id is the name of the manifest
     this.id = id;
+
     this.manifest = manifest;
     this.manifestPath = manifestPath;
     this.isBundled = !!isBundled;
@@ -80,6 +87,11 @@ export class LensExtension<
     return this.manifest.description;
   }
 
+  // Name of extension for persisting data
+  get storeName() {
+    return this.manifest.storeName || this.name;
+  }
+
   /**
    * @ignore
    */
@@ -93,7 +105,8 @@ export class LensExtension<
    * folder name.
    */
   async getExtensionFileFolder(): Promise<string> {
-    return this[lensExtensionDependencies].fileSystemProvisionerStore.requestDirectory(this.id);
+    // storeName is read from the manifest and has a fallback to the manifest name, which equals id
+    return this[lensExtensionDependencies].fileSystemProvisionerStore.requestDirectory(this.storeName);
   }
 
   @action
