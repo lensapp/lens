@@ -7,7 +7,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import setupLensProxyCertificateInjectable from "../../../../start-main-application/runnables/setup-lens-proxy-certificate.injectable";
 import lensProxyCertificateInjectable from "../../../../../common/certificate/lens-proxy-certificate.injectable";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
-import sessionCertificateVerifierInjectable from "../session-certificate-verifier.injectable";
+import sessionCertificateVerifierInjectable, { ChromiumNetError } from "../session-certificate-verifier.injectable";
 
 const externalCertificate = `-----BEGIN CERTIFICATE-----
 MIIFzzCCBLegAwIBAgIQByL1wEn7yGRLqHZvmBzvpTANBgkqhkiG9w0BAQsFADA8
@@ -62,7 +62,7 @@ describe("sessionCertificateVerifier", () => {
       certificate: { data: lensProxyCertificate.cert }, 
     } as any, callback);
 
-    expect(callback).toHaveBeenCalledWith(0);
+    expect(callback).toHaveBeenCalledWith(ChromiumNetError.SUCCESS);
   });
 
   it("passes verification to chromium on non lens proxy certificate", () => {
@@ -73,6 +73,6 @@ describe("sessionCertificateVerifier", () => {
       certificate: { data: externalCertificate }, 
     } as any, callback);
 
-    expect(callback).toHaveBeenCalledWith(-3);
+    expect(callback).toHaveBeenCalledWith(ChromiumNetError.RESULT_FROM_CHROMIUM);
   });
 });

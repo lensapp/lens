@@ -8,7 +8,7 @@ import type { Request } from "electron";
 import lensProxyCertificateInjectable from "../../../../common/certificate/lens-proxy-certificate.injectable";
 
 // see https://www.electronjs.org/docs/latest/api/session#sessetcertificateverifyprocproc
-enum ChromiumNetError {
+export enum ChromiumNetError {
   SUCCESS = 0,
   FAILURE = -2,
   RESULT_FROM_CHROMIUM = -3,
