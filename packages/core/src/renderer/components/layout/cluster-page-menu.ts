@@ -15,6 +15,7 @@ export interface ClusterPageMenuRegistration {
   title: React.ReactNode;
   components: ClusterPageMenuComponents;
   visible?: IComputedValue<boolean>;
+  orderNumber?: number;
 }
 
 export interface ClusterPageMenuComponents {
