@@ -88,6 +88,7 @@ const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & Rel
       </DrawerItem>
 
       <ReleaseValues
+        releaseId={model.id}
         configuration={model.configuration}
         onlyUserSuppliedValuesAreShown={
           model.onlyUserSuppliedValuesAreShown
@@ -153,11 +154,12 @@ const ResourceGroup = ({
 );
 
 interface ReleaseValuesProps {
+  releaseId: string;
   configuration: ConfigurationInput;
   onlyUserSuppliedValuesAreShown: OnlyUserSuppliedValuesAreShownToggle;
 }
 
-const ReleaseValues = observer(({ configuration, onlyUserSuppliedValuesAreShown }: ReleaseValuesProps) => {
+const ReleaseValues = observer(({ releaseId, configuration, onlyUserSuppliedValuesAreShown }: ReleaseValuesProps) => {
   const configurationIsLoading = configuration.isLoading.get();
 
   return (
@@ -174,7 +176,7 @@ const ReleaseValues = observer(({ configuration, onlyUserSuppliedValuesAreShown 
         />
 
         <MonacoEditor
-          id="helm-release-configuration"
+          id={`helm-release-configuration-${releaseId}`}
           style={{ minHeight: 300 }}
           value={configuration.nonSavedValue.get()}
           onChange={configuration.onChange}

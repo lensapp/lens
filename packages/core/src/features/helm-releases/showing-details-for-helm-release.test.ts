@@ -224,14 +224,95 @@ describe("showing details for helm release", () => {
 
             it("closes details for first release", () => {
               expect(
-                rendered.queryByTestId("helm-release-details-for-some-namespace/some-name"),
+                rendered.queryByTestId(
+                  "helm-release-details-for-some-namespace/some-name",
+                ),
               ).not.toBeInTheDocument();
             });
 
             it("opens details for second release", () => {
               expect(
-                rendered.getByTestId("helm-release-details-for-some-other-namespace/some-other-name"),
+                rendered.getByTestId(
+                  "helm-release-details-for-some-other-namespace/some-other-name",
+                ),
               ).toBeInTheDocument();
+            });
+
+            it("shows spinner", () => {
+              expect(
+                rendered.getByTestId("helm-release-detail-content-spinner"),
+              ).toBeInTheDocument();
+            });
+
+            describe("when details for second release resolve", () => {
+              beforeEach(async () => {
+                await requestDetailedHelmReleaseMock.resolve({
+                  callWasSuccessful: true,
+                  response: {
+                    release: {
+                      appVersion: "some-app-version",
+                      chart: "some-chart-1.0.0",
+                      status: "some-status",
+                      updated: "some-updated",
+                      revision: "some-revision",
+                      name: "some-other-name",
+                      namespace: "some-other-namespace",
+                    },
+
+                    details: {
+                      name: "some-other-name",
+                      namespace: "some-other-namespace",
+                      version: "some-version",
+                      config: "some-config",
+                      manifest: "some-manifest",
+
+                      info: {
+                        deleted: "some-deleted",
+                        description: "some-description",
+                        first_deployed: "some-first-deployed",
+                        last_deployed: "some-last-deployed",
+                        notes: "some-notes",
+                        status: "some-status",
+                      },
+
+                      resources: [
+                        {
+                          kind: "some-kind",
+                          apiVersion: "some-api-version",
+                          metadata: {
+                            uid: "some-uid",
+                            name: "some-resource",
+                            namespace: "some-namespace",
+                            creationTimestamp: "2015-10-22T07:28:00Z",
+                          },
+                        },
+                      ],
+                    },
+                  },
+                });
+              });
+
+              it("renders", () => {
+                expect(rendered.baseElement).toMatchSnapshot();
+              });
+
+              it("calls for release configuration", () => {
+                expect(
+                  requestHelmReleaseConfigurationMock,
+                ).toHaveBeenCalledWith("some-other-name", "some-other-namespace", true);
+              });
+
+              describe("when configuration resolves", () => {
+                beforeEach(async () => {
+                  await requestHelmReleaseConfigurationMock.resolve(
+                    "some-other-configuration",
+                  );
+                });
+
+                it("renders", () => {
+                  expect(rendered.baseElement).toMatchSnapshot();
+                });
+              });
             });
           });
 
@@ -410,7 +491,7 @@ describe("showing details for helm release", () => {
               describe("when changing the configuration", () => {
                 beforeEach(() => {
                   const configuration = rendered.getByTestId(
-                    "monaco-editor-for-helm-release-configuration",
+                    "monaco-editor-for-helm-release-configuration-some-namespace/some-name",
                   );
 
                   fireEvent.change(configuration, {
@@ -424,7 +505,7 @@ describe("showing details for helm release", () => {
 
                 it("has the configuration", () => {
                   const input = rendered.getByTestId(
-                    "monaco-editor-for-helm-release-configuration",
+                    "monaco-editor-for-helm-release-configuration-some-namespace/some-name",
                   );
 
                   expect(input).toHaveValue("some-new-configuration");
@@ -466,7 +547,7 @@ describe("showing details for helm release", () => {
 
                     it("overrides the user inputted configuration with new configuration", () => {
                       const input = rendered.getByTestId(
-                        "monaco-editor-for-helm-release-configuration",
+                        "monaco-editor-for-helm-release-configuration-some-namespace/some-name",
                       );
 
                       expect(input).toHaveValue("some-other-configuration");
