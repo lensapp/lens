@@ -17,12 +17,9 @@ import { when } from "mobx";
 import type { Logger } from "../logger";
 import type { FindExtensionInstanceByName } from "../../features/extensions/loader/common/find-instance-by-name.injectable";
 
-// IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
-export const ProtocolHandlerIpcPrefix = "protocol-handler";
-
-export const ProtocolHandlerInternal = `${ProtocolHandlerIpcPrefix}:internal`;
-export const ProtocolHandlerExtension = `${ProtocolHandlerIpcPrefix}:extension`;
-export const ProtocolHandlerInvalid = `${ProtocolHandlerIpcPrefix}:invalid`;
+export const ProtocolHandlerInternal = `protocol-handler:internal`;
+export const ProtocolHandlerExtension = `protocol-handler:extension`;
+export const ProtocolHandlerInvalid = `protocol-handler:invalid`;
 
 /**
  * These two names are long and cumbersome by design so as to decrease the chances

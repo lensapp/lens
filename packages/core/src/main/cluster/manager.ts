@@ -10,7 +10,6 @@ import type { Cluster } from "../../common/cluster/cluster";
 import { isErrnoException } from "../../common/utils";
 import type { KubernetesClusterPrometheusMetrics } from "../../common/catalog-entities/kubernetes-cluster";
 import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../../common/catalog-entities/kubernetes-cluster";
-import { ipcMainOn } from "../../common/ipc";
 import { once } from "lodash";
 import type { ClusterStore } from "../../common/cluster-store/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
@@ -72,9 +71,6 @@ export class ClusterManager {
         this.updateEntityStatus(this.dependencies.catalogEntityRegistry.findById(change.newValue) as KubernetesCluster);
       }
     });
-
-    ipcMainOn("network:offline", this.onNetworkOffline);
-    ipcMainOn("network:online", this.onNetworkOnline);
   });
 
   @action
@@ -232,26 +228,6 @@ export class ClusterManager {
       }
     }
   }
-
-  protected onNetworkOffline = () => {
-    this.dependencies.logger.info(`${logPrefix} network is offline`);
-    this.dependencies.store.clustersList.forEach((cluster) => {
-      if (!cluster.disconnected) {
-        cluster.online = false;
-        cluster.accessible = false;
-        cluster.refreshConnectionStatus().catch((e) => e);
-      }
-    });
-  };
-
-  protected onNetworkOnline = () => {
-    this.dependencies.logger.info(`${logPrefix} network is online`);
-    this.dependencies.store.clustersList.forEach((cluster) => {
-      if (!cluster.disconnected) {
-        cluster.refreshConnectionStatus().catch((e) => e);
-      }
-    });
-  };
 
   stop() {
     this.dependencies.store.clusters.forEach((cluster: Cluster) => {

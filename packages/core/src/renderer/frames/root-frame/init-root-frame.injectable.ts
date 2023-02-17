@@ -7,7 +7,6 @@ import bindProtocolAddRouteHandlersInjectable from "../../protocol-handler/bind-
 import lensProtocolRouterRendererInjectable from "../../protocol-handler/lens-protocol-router-renderer/lens-protocol-router-renderer.injectable";
 import registerIpcListenersInjectable from "../../ipc/register-ipc-listeners.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import { broadcastMessage } from "../../../common/ipc";
 import unmountRootComponentInjectable from "../../window/unmount-root-component.injectable";
 
 const initRootFrameInjectable = getInjectable({
@@ -23,13 +22,6 @@ const initRootFrameInjectable = getInjectable({
       lensProtocolRouterRenderer.init();
 
       bindProtocolAddRouteHandlers();
-
-      window.addEventListener("offline", () =>
-        broadcastMessage("network:offline"),
-      );
-
-      window.addEventListener("online", () => broadcastMessage("network:online"));
-
       registerIpcListeners();
 
       window.addEventListener("beforeunload", () => {
