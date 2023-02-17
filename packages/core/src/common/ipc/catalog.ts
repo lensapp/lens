@@ -7,8 +7,3 @@
  * This is used to activate a specific entity in the renderer main frame
  */
 export const catalogEntityRunListener = "catalog-entity:run";
-
-/**
- * This can be sent from renderer to main to initialize a broadcast of ITEMS
- */
-export const catalogInitChannel = "catalog:init";

@@ -9,3 +9,7 @@ import type { MessageChannel } from "../../../../common/utils/channel/message-ch
 export const currentCatalogEntityRegistryStateChannel: MessageChannel<(CatalogEntityData & CatalogEntityKindData)[]> = {
   id: "current-catalog-entity-registry-state",
 };
+
+export const requestCatalogEntityRegistryStateToBeSentChannel: MessageChannel<void> = {
+  id: "request-catalog-entity-registry-state-to-be-sent",
+};

@@ -11,8 +11,7 @@ import { iter } from "../../../utils";
 import type { Disposer } from "../../../utils";
 import { once } from "lodash";
 import { CatalogRunEvent } from "../../../../common/catalog/catalog-run-event";
-import { ipcRenderer } from "electron";
-import { catalogInitChannel, catalogEntityRunListener } from "../../../../common/ipc/catalog";
+import { catalogEntityRunListener } from "../../../../common/ipc/catalog";
 import { isMainFrame } from "process";
 import type { Navigate } from "../../../navigation/navigate.injectable";
 import type { Logger } from "../../../../common/logger";
@@ -83,9 +82,6 @@ export class CatalogEntityRegistry {
   }
 
   init() {
-    // Make sure that we get items ASAP and not the next time one of them changes
-    ipcRenderer.send(catalogInitChannel);
-
     if (isMainFrame) {
       ipcRendererOn(catalogEntityRunListener, (event, id: string) => {
         const entity = this.getById(id);
