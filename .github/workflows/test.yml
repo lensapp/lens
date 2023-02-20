@@ -33,11 +33,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Get npm cache directory path
+        if: ${{ runner.os != 'Windows' }}
         id: npm-cache-dir-path
         shell: bash
         run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v3
+        if: ${{ runner.os != 'Windows' }}
         id: npm-cache # use this to check for `cache-hit` (`steps.npm-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.npm-cache-dir-path.outputs.dir }}
