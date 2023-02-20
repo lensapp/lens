@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { ReplicaSetDetails } from "../../../+workloads-replicasets";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const replicaSetDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const replicaSetDetailItemInjectable = getInjectable({
 
     return {
       Component: ReplicaSetDetails,
-      enabled: computed(() => isReplicaSet(kubeObject.value.get()?.object)),
+      enabled: computed(() => isReplicaSet(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

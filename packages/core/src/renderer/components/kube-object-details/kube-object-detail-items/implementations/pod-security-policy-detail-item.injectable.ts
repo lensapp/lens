@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { PodSecurityPolicyDetails } from "../../../+pod-security-policies";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const podSecurityPolicyDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const podSecurityPolicyDetailItemInjectable = getInjectable({
 
     return {
       Component: PodSecurityPolicyDetails,
-      enabled: computed(() => isPodSecurityPolicy(kubeObject.value.get()?.object)),
+      enabled: computed(() => isPodSecurityPolicy(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

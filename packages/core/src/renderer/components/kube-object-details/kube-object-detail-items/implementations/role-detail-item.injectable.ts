@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { RoleDetails } from "../../../+user-management/+roles";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const roleDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const roleDetailItemInjectable = getInjectable({
 
     return {
       Component: RoleDetails,
-      enabled: computed(() => isRole(kubeObject.value.get()?.object)),
+      enabled: computed(() => isRole(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

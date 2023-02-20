@@ -6,6 +6,9 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
 import { computed } from "mobx";
 import { NodeDetails } from "../../../+nodes/details";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
 
@@ -17,7 +20,7 @@ const nodeDetailItemInjectable = getInjectable({
 
     return {
       Component: NodeDetails,
-      enabled: computed(() => isNode(kubeObject.value.get()?.object)),
+      enabled: computed(() => isNode(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { JobDetails } from "../../../+workloads-jobs";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const jobDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const jobDetailItemInjectable = getInjectable({
 
     return {
       Component: JobDetails,
-      enabled: computed(() => isJob(kubeObject.value.get()?.object)),
+      enabled: computed(() => isJob(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

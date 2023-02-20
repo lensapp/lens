@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { HpaDetails } from "../../../+config-horizontal-pod-autoscalers";
 import { computed } from "mobx";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const horizontalPodAutoscalerDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const horizontalPodAutoscalerDetailItemInjectable = getInjectable({
 
     return {
       Component: HpaDetails,
-      enabled: computed(() => isHorizontalPodAutoscaler(kubeObject.value.get()?.object)),
+      enabled: computed(() => isHorizontalPodAutoscaler(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

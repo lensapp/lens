@@ -18,11 +18,10 @@ import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable
 import kubeObjectDetailItemsInjectable
   from "./kube-object-detail-items/kube-object-detail-items.injectable";
 import type {
-  KubeObjectDetailsItemComputed,
+  KubeObjectDetailsItem,
+  KubeObjectDetailsComputedValue,
 } from "./current-kube-object-in-details.injectable";
-import {
-  currentKubeObjectInDetailsInjectable2,
-} from "./current-kube-object-in-details.injectable";
+import currentKubeObjectInDetailsInjectable from "./current-kube-object-in-details.injectable";
 
 export interface KubeObjectDetailsProps<Kube extends KubeObject = KubeObject> {
   className?: string;
@@ -31,7 +30,7 @@ export interface KubeObjectDetailsProps<Kube extends KubeObject = KubeObject> {
 
 interface Dependencies {
   detailComponents: IComputedValue<React.ElementType[]>;
-  kubeObject: KubeObjectDetailsItemComputed;
+  kubeObjectDetails: KubeObjectDetailsComputedValue;
   hideDetails: HideDetails;
 }
 
@@ -39,30 +38,38 @@ const NonInjectedKubeObjectDetails = observer((props: Dependencies) => {
   const {
     detailComponents,
     hideDetails,
-    kubeObject,
+    kubeObjectDetails,
   } = props;
 
-  const object = kubeObject.get();
+  const kubeObject = kubeObjectDetails.get();
+  const isError = kubeObject instanceof Error;
+  const isLoading = !kubeObject && !isError;
+
+  const title = (kubeObject instanceof KubeObject)
+    ? `${kubeObject.kind}: ${kubeObject.getName()}`
+    : "KubeResourceDetails";
 
   return (
     <Drawer
       className="KubeObjectDetails flex column"
-      open={!!object}
-      title={
-        object instanceof KubeObject ? `${object.kind}: ${object.getName()}` : ""
-      }
-      toolbar={object && <KubeObjectMenu object={object as KubeObject} toolbar />}
+      open={!!kubeObject}
+      title={title}
+      toolbar={kubeObject &&
+        <KubeObjectMenu object={kubeObject as KubeObjectDetailsItem} toolbar />}
       onClose={hideDetails}
     >
-      {!object && <Spinner center />}
-      {object instanceof Error && (
+      {isLoading && <Spinner center />}
+
+      {isError ? (
         <div className="box center">
-          Resource loading has failed:
-          <b>{object}</b>
+          Resource loading has failed: 
+          {" "}
+          <b>{String(kubeObject)}</b>
         </div>
+      ) : (
+        kubeObject && detailComponents.get()
+          .map((Component, index) => <Component key={index} object={kubeObject} />)
       )}
-      {object && detailComponents.get()
-        .map((Component, index) => <Component key={index} object={object} />)}
     </Drawer>
   );
 });
@@ -72,6 +79,6 @@ export const KubeObjectDetails = withInjectables<Dependencies>(NonInjectedKubeOb
     ...props,
     hideDetails: di.inject(hideDetailsInjectable),
     detailComponents: di.inject(kubeObjectDetailItemsInjectable),
-    kubeObject: di.inject(currentKubeObjectInDetailsInjectable2),
+    kubeObjectDetails: di.inject(currentKubeObjectInDetailsInjectable),
   }),
 });

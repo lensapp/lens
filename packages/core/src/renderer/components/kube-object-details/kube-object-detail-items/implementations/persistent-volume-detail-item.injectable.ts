@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { PersistentVolumeDetails } from "../../../+storage-volumes";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const persistentVolumeDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const persistentVolumeDetailItemInjectable = getInjectable({
 
     return {
       Component: PersistentVolumeDetails,
-      enabled: computed(() => isPersistentVolume(kubeObject.value.get()?.object)),
+      enabled: computed(() => isPersistentVolume(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

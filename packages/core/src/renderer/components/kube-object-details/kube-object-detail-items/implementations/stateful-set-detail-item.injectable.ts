@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { StatefulSetDetails } from "../../../+workloads-statefulsets";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const statefulSetDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const statefulSetDetailItemInjectable = getInjectable({
 
     return {
       Component: StatefulSetDetails,
-      enabled: computed(() => isStatefulSet(kubeObject.value.get()?.object)),
+      enabled: computed(() => isStatefulSet(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

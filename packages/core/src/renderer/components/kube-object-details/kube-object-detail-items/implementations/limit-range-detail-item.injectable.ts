@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { LimitRangeDetails } from "../../../+config-limit-ranges";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const limitRangeDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const limitRangeDetailItemInjectable = getInjectable({
 
     return {
       Component: LimitRangeDetails,
-      enabled: computed(() => isLimitRange(kubeObject.value.get()?.object)),
+      enabled: computed(() => isLimitRange(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

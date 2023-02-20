@@ -7,6 +7,9 @@ import { computed } from "mobx";
 import React from "react";
 import { CustomResourceDetails } from "../+custom-resources";
 import customResourceDefinitionStoreInjectable from "../+custom-resources/definition.store.injectable";
+import type {
+  KubeObjectDetailsItem,
+} from "./current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "./current-kube-object-in-details.injectable";
 import { kubeObjectDetailItemInjectionToken } from "./kube-object-detail-items/kube-object-detail-item-injection-token";
 
@@ -16,13 +19,13 @@ const customResourceDetailItemInjectable = getInjectable({
     const customResourceDefinitionStore = di.inject(customResourceDefinitionStoreInjectable);
     const currentKubeObjectInDetails = di.inject(currentKubeObjectInDetailsInjectable);
     const currentCustomResourceDefinition = computed(() => {
-      const { object } = currentKubeObjectInDetails.value.get() ?? {};
+      const object = currentKubeObjectInDetails.get();
 
       if (!object) {
         return undefined;
       }
 
-      return customResourceDefinitionStore.getByObject(object);
+      return customResourceDefinitionStore.getByObject(object as KubeObjectDetailsItem);
     });
 
     return {

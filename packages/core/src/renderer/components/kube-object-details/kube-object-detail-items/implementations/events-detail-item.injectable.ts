@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { EventDetails } from "../../../+events";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const eventsDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const eventsDetailItemInjectable = getInjectable({
 
     return {
       Component: EventDetails,
-      enabled: computed(() => isEvent(kubeObject.value.get()?.object)),
+      enabled: computed(() => isEvent(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { ConfigMapDetails } from "../../../+config-maps";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const configMapDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const configMapDetailItemInjectable = getInjectable({
 
     return {
       Component: ConfigMapDetails,
-      enabled: computed(() => isConfigMap(kubeObject.value.get()?.object)),
+      enabled: computed(() => isConfigMap(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

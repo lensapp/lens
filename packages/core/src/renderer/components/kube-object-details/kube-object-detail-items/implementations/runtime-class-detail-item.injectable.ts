@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { RuntimeClassesDetails } from "../../../+config-runtime-classes";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const runtimeClassDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const runtimeClassDetailItemInjectable = getInjectable({
 
     return {
       Component: RuntimeClassesDetails,
-      enabled: computed(() => isRuntimeClass(kubeObject.value.get()?.object)),
+      enabled: computed(() => isRuntimeClass(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

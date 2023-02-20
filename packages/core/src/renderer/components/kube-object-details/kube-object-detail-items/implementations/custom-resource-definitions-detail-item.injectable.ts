@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { CRDDetails } from "../../../+custom-resources";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const customResourceDefinitionsDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const customResourceDefinitionsDetailItemInjectable = getInjectable({
 
     return {
       Component: CRDDetails,
-      enabled: computed(() => isCustomResourceDefinition(kubeObject.value.get()?.object)),
+      enabled: computed(() => isCustomResourceDefinition(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

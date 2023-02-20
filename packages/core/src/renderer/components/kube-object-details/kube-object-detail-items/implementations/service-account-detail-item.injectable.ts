@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { ServiceAccountsDetails } from "../../../+user-management/+service-accounts";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const serviceAccountDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const serviceAccountDetailItemInjectable = getInjectable({
 
     return {
       Component: ServiceAccountsDetails,
-      enabled: computed(() => isServiceAccount(kubeObject.value.get()?.object)),
+      enabled: computed(() => isServiceAccount(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { VpaDetails } from "../../../+config-vertical-pod-autoscalers";
 import { computed } from "mobx";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const verticalPodAutoscalerDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const verticalPodAutoscalerDetailItemInjectable = getInjectable({
 
     return {
       Component: VpaDetails,
-      enabled: computed(() => isVerticalPodAutoscaler(kubeObject.value.get()?.object)),
+      enabled: computed(() => isVerticalPodAutoscaler(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

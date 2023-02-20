@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { IngressClassDetails } from "../../../+network-ingresses";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const ingressClassDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const ingressClassDetailItemInjectable = getInjectable({
 
     return {
       Component: IngressClassDetails,
-      enabled: computed(() => isIngressClass(kubeObject.value.get()?.object)),
+      enabled: computed(() => isIngressClass(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

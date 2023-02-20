@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { PriorityClassesDetails } from "../../../+config-priority-classes";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const priorityClassDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const priorityClassDetailItemInjectable = getInjectable({
 
     return {
       Component: PriorityClassesDetails,
-      enabled: computed(() => isPriorityClass(kubeObject.value.get()?.object)),
+      enabled: computed(() => isPriorityClass(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

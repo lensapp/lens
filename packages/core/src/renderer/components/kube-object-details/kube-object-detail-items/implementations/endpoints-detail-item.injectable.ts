@@ -7,6 +7,9 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { EndpointsDetails } from "../../../+network-endpoints";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
+import type {
+  KubeObjectDetailsItem,
+} from "../../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const endpointsDetailItemInjectable = getInjectable({
@@ -17,7 +20,7 @@ const endpointsDetailItemInjectable = getInjectable({
 
     return {
       Component: EndpointsDetails,
-      enabled: computed(() => isEndpoint(kubeObject.value.get()?.object)),
+      enabled: computed(() => isEndpoint(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

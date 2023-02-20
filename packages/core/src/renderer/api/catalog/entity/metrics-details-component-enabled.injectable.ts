@@ -5,6 +5,9 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { ClusterMetricsResourceType } from "../../../../common/cluster-types";
+import type {
+  KubeObjectDetailsItem,
+} from "../../../components/kube-object-details/current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../../../components/kube-object-details/current-kube-object-in-details.injectable";
 import enabledMetricsInjectable from "./metrics-enabled.injectable";
 
@@ -15,13 +18,13 @@ const metricsDetailsComponentEnabledInjectable = getInjectable({
     const currentKubeObjectInDetails = di.inject(currentKubeObjectInDetailsInjectable);
 
     return computed(() => {
-      const current = currentKubeObjectInDetails.value.get();
+      const kubeObject = currentKubeObjectInDetails.get() as KubeObjectDetailsItem;
 
-      if (!current?.object) {
-        return false;
+      if (kubeObject) {
+        return kubeObject.kind == kind && metricsEnabled.get();
       }
 
-      return current.object.kind == kind && metricsEnabled.get();
+      return false;
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({

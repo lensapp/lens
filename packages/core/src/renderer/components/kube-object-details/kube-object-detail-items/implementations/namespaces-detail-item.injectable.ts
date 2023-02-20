@@ -9,20 +9,20 @@ import { NamespaceDetails } from "../../../+namespaces";
 import {
   kubeObjectMatchesToKindAndApiVersion,
 } from "../kube-object-matches-to-kind-and-api-version";
-import {
-  currentKubeObjectInDetailsInjectable2,
+import type {
+  KubeObjectDetailsItem,
 } from "../../current-kube-object-in-details.injectable";
-import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
+import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 
 const namespacesDetailItemInjectable = getInjectable({
   id: "namespaces-detail-item",
 
   instantiate: (di) => {
-    const kubeObject = di.inject(currentKubeObjectInDetailsInjectable2);
+    const kubeObject = di.inject(currentKubeObjectInDetailsInjectable);
 
     return {
       Component: NamespaceDetails,
-      enabled: computed(() => isNamespace(kubeObject.get() as KubeObject)),
+      enabled: computed(() => isNamespace(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

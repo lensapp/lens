@@ -2,59 +2,25 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { action, computed, type IComputedValue, observable, runInAction } from "mobx";
 import { getInjectable } from "@ogre-tools/injectable";
 import kubeDetailsUrlParamInjectable from "../kube-detail-params/kube-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
-import { asyncComputed } from "@ogre-tools/injectable-react";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import type { IComputedValue } from "mobx";
-import { action, computed, observable, runInAction } from "mobx";
 
-export type CurrentKubeObject =
-  | undefined
-  | { object: KubeObject; error?: undefined }
-  | { object?: undefined; error: string };
+export type KubeObjectDetailsItem = KubeObject;
+export type KubeObjectDetailsValue = KubeObjectDetailsItem | Error | undefined;
+export type KubeObjectDetailsComputedValue = IComputedValue<KubeObjectDetailsValue>;
 
 const currentKubeObjectInDetailsInjectable = getInjectable({
   id: "current-kube-object-in-details",
 
-  instantiate: (di) => {
-    const urlParam = di.inject(kubeDetailsUrlParamInjectable);
-    const apiManager = di.inject(apiManagerInjectable);
-
-    return asyncComputed({
-      getValueFromObservedPromise: async (): Promise<CurrentKubeObject> => {
-        const path = urlParam.get();
-        const store = apiManager.getStore(path);
-
-        if (!store) {
-          return undefined;
-        }
-
-        try {
-          const object = await store.loadFromPath(path);
-
-          return { object };
-        } catch (error) {
-          return { error: String(error) };
-        }
-      },
-    });
-  },
-});
-
-export type KubeObjectDetailsItemValue = KubeObject | Error | undefined;
-export type KubeObjectDetailsItemComputed = IComputedValue<KubeObjectDetailsItemValue>;
-
-export const currentKubeObjectInDetailsInjectable2 = getInjectable({
-  id: "current-kube-object-in-details-2",
-
-  instantiate(di): KubeObjectDetailsItemComputed {
+  instantiate(di): KubeObjectDetailsComputedValue {
     const kubeObjectUrlParam = di.inject(kubeDetailsUrlParamInjectable);
     const apiManager = di.inject(apiManagerInjectable);
-    const kubeObject = observable.box<KubeObjectDetailsItemValue>();
+    const kubeObject = observable.box<KubeObjectDetailsValue>();
 
-    return computed(() => {
+    return computed<KubeObjectDetailsValue>(() => {
       const kubeObjUrlPath = kubeObjectUrlParam.get();
 
       if (!kubeObjUrlPath) return; // details panel is hidden

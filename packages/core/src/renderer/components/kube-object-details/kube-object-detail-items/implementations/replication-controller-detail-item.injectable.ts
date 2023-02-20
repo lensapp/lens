@@ -8,21 +8,21 @@ import { computed } from "mobx";
 import {
   kubeObjectMatchesToKindAndApiVersion,
 } from "../kube-object-matches-to-kind-and-api-version";
-import {
-  currentKubeObjectInDetailsInjectable2,
+import type {
+  KubeObjectDetailsItem,
 } from "../../current-kube-object-in-details.injectable";
+import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 import { ReplicationControllerDetails } from "../../../+workloads-replicationcontrollers";
-import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
 
 const replicationControllerDetailItemInjectable = getInjectable({
   id: "replication-controller-detail-item",
 
   instantiate(di) {
-    const kubeObject = di.inject(currentKubeObjectInDetailsInjectable2);
+    const kubeObject = di.inject(currentKubeObjectInDetailsInjectable);
 
     return {
       Component: ReplicationControllerDetails,
-      enabled: computed(() => isReplicationController(kubeObject.get() as KubeObject)),
+      enabled: computed(() => isReplicationController(kubeObject.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

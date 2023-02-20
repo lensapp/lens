@@ -9,6 +9,9 @@ import type { LensRendererExtension } from "../../../../extensions/lens-renderer
 import extensionShouldBeEnabledForClusterFrameInjectable from "../../../extension-loader/extension-should-be-enabled-for-cluster-frame.injectable";
 import { kubeObjectDetailItemInjectionToken } from "./kube-object-detail-item-injection-token";
 import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
+import type {
+  KubeObjectDetailsItem,
+} from "../current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "../current-kube-object-in-details.injectable";
 import { kubeObjectMatchesToKindAndApiVersion } from "./kube-object-matches-to-kind-and-api-version";
 
@@ -55,7 +58,7 @@ const kubeObjectDetailItemRegistratorInjectable = getInjectable({
                   return false;
                 }
 
-                if (!isRelevantKubeObject(kubeObject.value.get()?.object)) {
+                if (!isRelevantKubeObject(kubeObject.get() as KubeObjectDetailsItem)) {
                   return false;
                 }
 
