@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/bump-version-for-cron",
-  "version": "6.4.0-cron.4db172da60",
+  "version": "6.4.0-cron.219a683",
   "description": "CLI to bump the version to during a cron daily alpha release",
   "license": "MIT",
   "scripts": {
