@@ -898,10 +898,10 @@
     "@hapi/hoek" "^9.0.4"
     "@hapi/vise" "^4.0.0"
 
-"@hapi/pez@^5.0.1":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@hapi/pez/-/pez-5.0.3.tgz#b75446e6fef8cbb16816573ab7da1b0522e7a2a1"
-  integrity sha512-mpikYRJjtrbJgdDHG/H9ySqYqwJ+QU/D7FXsYciS9P7NYBXE2ayKDAy3H0ou6CohOCaxPuTV4SZ0D936+VomHA==
+"@hapi/pez@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@hapi/pez/-/pez-5.1.0.tgz#c03a5e01f8be01cfabc4c0017631e619586321c1"
+  integrity sha512-YfB0btnkLB3lb6Ry/1KifnMPBm5ZPfaAHWFskzOMAgDgXgcBgA+zjpIynyEiBfWEz22DBT8o1e2tAaBdlt8zbw==
   dependencies:
     "@hapi/b64" "5.x.x"
     "@hapi/boom" "9.x.x"
@@ -909,17 +909,17 @@
     "@hapi/hoek" "9.x.x"
     "@hapi/nigel" "4.x.x"
 
-"@hapi/subtext@^7.0.4":
-  version "7.0.4"
-  resolved "https://registry.yarnpkg.com/@hapi/subtext/-/subtext-7.0.4.tgz#aa46e4b45aad8115938334d5a3620a17b3b33ee5"
-  integrity sha512-Y72moHhbRuO8kwBHFEnCRw7oOnhNh4Pl+aonxAze18jkyMpE4Gwz4lNID7ei8vd3lpXC2rKdkxXJgtfY+WttRw==
+"@hapi/subtext@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@hapi/subtext/-/subtext-7.1.0.tgz#b4d1ea2aeab1923ac130a24e75921e38fab5b15b"
+  integrity sha512-n94cU6hlvsNRIpXaROzBNEJGwxC+HA69q769pChzej84On8vsU14guHDub7Pphr/pqn5b93zV3IkMPDU5AUiXA==
   dependencies:
     "@hapi/boom" "9.x.x"
     "@hapi/bourne" "2.x.x"
     "@hapi/content" "^5.0.2"
     "@hapi/file" "2.x.x"
     "@hapi/hoek" "9.x.x"
-    "@hapi/pez" "^5.0.1"
+    "@hapi/pez" "^5.1.0"
     "@hapi/wreck" "17.x.x"
 
 "@hapi/topo@^5.0.0":

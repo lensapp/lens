@@ -126,7 +126,7 @@
   "dependencies": {
     "@astronautlabs/jsonpath": "^1.1.0",
     "@hapi/call": "^9.0.1",
-    "@hapi/subtext": "^7.0.4",
+    "@hapi/subtext": "^7.1.0",
     "@k8slens/node-fetch": "^6.4.0-beta.13",
     "@kubernetes/client-node": "^0.18.1",
     "@material-ui/styles": "^4.11.5",
