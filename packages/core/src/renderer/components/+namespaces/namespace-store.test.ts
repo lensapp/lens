@@ -113,8 +113,8 @@ describe("NamespaceStore", () => {
   let di: DiContainer;
   let namespaceStore: NamespaceStore;
   let fetchMock: AsyncFnMock<Fetch>;
-  let deleteNamespaceMock: jest.SpyInstance<Promise<KubeJsonApiData<KubeJsonApiObjectMetadata<KubeObjectScope>, unknown, unknown>>, [DeleteResourceDescriptor]>
-  let removeSubnamespaceMock: jest.Mock<any, any>
+  let deleteNamespaceMock: jest.SpyInstance<Promise<KubeJsonApiData<KubeJsonApiObjectMetadata<KubeObjectScope>, unknown, unknown>>, [DeleteResourceDescriptor]>;
+  let removeSubnamespaceMock: jest.Mock<any, any>;
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
