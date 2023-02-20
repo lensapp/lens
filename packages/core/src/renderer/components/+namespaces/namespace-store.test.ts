@@ -12,6 +12,9 @@ import directoryForUserDataInjectable from "../../../common/app-paths/directory-
 import type { Fetch } from "../../../common/fetch/fetch.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Namespace, NamespaceApi } from "../../../common/k8s-api/endpoints";
+import type { DeleteResourceDescriptor } from "../../../common/k8s-api/kube-api";
+import type { KubeJsonApiData } from "../../../common/k8s-api/kube-json-api";
+import type { KubeJsonApiObjectMetadata, KubeObjectScope } from "../../../common/k8s-api/kube-object";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import createClusterInjectable from "../../cluster/create-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -106,15 +109,12 @@ const levelDeepSubChildA = createNamespace("level-deep-subchild-a", {
   "level-deep-subchild-a.tree.hnc.x-k8s.io/depth": "0",
 });
 
-const deleteNamespaceMock = jest.spyOn(NamespaceApi.prototype, "delete")
-  .mockImplementation();
-
-const removeSubnamespaceMock = jest.fn();
-
 describe("NamespaceStore", () => {
   let di: DiContainer;
   let namespaceStore: NamespaceStore;
   let fetchMock: AsyncFnMock<Fetch>;
+  let deleteNamespaceMock: jest.SpyInstance<Promise<KubeJsonApiData<KubeJsonApiObjectMetadata<KubeObjectScope>, unknown, unknown>>, [DeleteResourceDescriptor]>
+  let removeSubnamespaceMock: jest.Mock<any, any>
 
   beforeEach(async () => {
     di = getDiForUnitTesting({ doGeneralOverrides: true });
@@ -125,6 +125,9 @@ describe("NamespaceStore", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.override(removeSubnamespaceInjectable, () => removeSubnamespaceMock);
+
+    deleteNamespaceMock = jest.spyOn(NamespaceApi.prototype, "delete").mockImplementation();
+    removeSubnamespaceMock = jest.fn();
 
     const createCluster = di.inject(createClusterInjectable);
 
