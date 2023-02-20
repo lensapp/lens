@@ -222,7 +222,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   @action
   async remove(item: Namespace) {
     if (item.isSubnamespace()) {
-      this.dependencies.removeSubnamespace(item.getName());
+      await this.dependencies.removeSubnamespace(item.getName());
 
       return;
     }

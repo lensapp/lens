@@ -38,7 +38,7 @@ const removeSubnamespaceInjectable = getInjectable({
         return;
       }
 
-      store?.remove(anchor);
+      await store?.remove(anchor);
     };
   },
 });
