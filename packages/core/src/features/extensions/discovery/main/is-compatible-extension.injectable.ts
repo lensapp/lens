@@ -5,17 +5,15 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import semver from "semver";
 import extensionApiVersionInjectable from "../../../../common/vars/extension-api-version.injectable";
-import type { LensExtensionManifest } from "../../../../extensions/lens-extension";
 
-export type IsCompatibleExtension = (manifest: LensExtensionManifest) => boolean;
+export type IsCompatibleExtension = (manifestLensEngine: string) => boolean;
 
 const isCompatibleExtensionInjectable = getInjectable({
   id: "is-compatible-extension",
   instantiate: (di): IsCompatibleExtension => {
     const extensionApiVersion = di.inject(extensionApiVersionInjectable);
 
-    return (manifest: LensExtensionManifest): boolean => {
-      const manifestLensEngine = manifest.engines.lens;
+    return (manifestLensEngine) => {
       const validVersion = manifestLensEngine.match(/^[\^0-9]\d*\.\d+\b/); // must start from ^ or number
 
       if (!validVersion) {

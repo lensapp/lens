@@ -6,7 +6,7 @@
 import "@testing-library/jest-dom/extend-expect";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import React from "react";
-import type { InstalledExtension } from "../../../../extensions/extension-discovery/extension-discovery";
+import type { InstalledExtension, LensExtensionId } from "../../../../features/extensions/common/installed-extension";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { Extensions } from "../extensions";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
@@ -24,7 +24,6 @@ import removePathInjectable from "../../../../common/fs/remove.injectable";
 import type { DownloadBinary } from "../../../../common/fetch/download-binary.injectable";
 import downloadBinaryInjectable from "../../../../common/fetch/download-binary.injectable";
 import currentlyInClusterFrameInjectable from "../../../routes/currently-in-cluster-frame.injectable";
-import type { LensExtensionId } from "../../../../extensions/lens-extension";
 import installedExtensionsInjectable from "../../../../features/extensions/common/installed-extensions.injectable";
 import initialDiscoveryLoadCompletedInjectable from "../../../../features/extensions/discovery/common/initial-load-completed.injectable";
 import type { RemoveExtensionFiles } from "../../../../features/extensions/discovery/common/uninstall-extension.injectable";

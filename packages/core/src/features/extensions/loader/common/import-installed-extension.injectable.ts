@@ -5,12 +5,12 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import getDirnameOfPathInjectable from "../../../../common/path/get-dirname.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
-import type { InstalledExtension } from "../../../../extensions/common-api";
 import { extensionEntryPointNameInjectionToken } from "../../../../extensions/extension-loader/entry-point-name";
 import type { LensExtensionConstructor } from "../../../../extensions/lens-extension";
+import type { ExternalInstalledExtension } from "../../common/installed-extension";
 import extensionLoadingLoggerInjectable from "./logger.injectable";
 
-export type ImportInstalledExtension = (extension: InstalledExtension) => Promise<LensExtensionConstructor | null>;
+export type ImportInstalledExtension = (extension: ExternalInstalledExtension) => Promise<LensExtensionConstructor | null>;
 
 const importInstalledExtensionInjectable = getInjectable({
   id: "import-installed-extension",

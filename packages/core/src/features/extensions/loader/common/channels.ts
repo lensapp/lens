@@ -5,8 +5,7 @@
 
 import type { MessageChannel } from "../../../../common/utils/channel/message-channel-listener-injection-token";
 import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
-import type { InstalledExtension } from "../../../../extensions/common-api";
-import type { LensExtensionId } from "../../../../extensions/lens-extension";
+import type { LensExtensionId, InstalledExtension } from "../../common/installed-extension";
 
 export const loadedExtensionsChannel: RequestChannel<void, [LensExtensionId, InstalledExtension][]> = {
   id: "loaded-extensions",

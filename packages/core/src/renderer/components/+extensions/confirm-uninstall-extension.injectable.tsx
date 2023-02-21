@@ -4,8 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
-import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
+import type { InstalledExtension, LensExtensionId } from "../../../features/extensions/common/installed-extension";
 import { extensionDisplayName } from "../../../extensions/lens-extension";
 import type { Confirm } from "../confirm-dialog/confirm.injectable";
 import confirmInjectable from "../confirm-dialog/confirm.injectable";

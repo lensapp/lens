@@ -3,61 +3,102 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { isCompatibleExtension } from "../extension-discovery/is-compatible-extension/is-compatible-extension";
-import type { LensExtensionManifest } from "../lens-extension";
+import type { DiContainer } from "@ogre-tools/injectable";
+import extensionApiVersionInjectable from "../../common/vars/extension-api-version.injectable";
+import type { IsCompatibleExtension } from "../../features/extensions/discovery/main/is-compatible-extension.injectable";
+import isCompatibleExtensionInjectable from "../../features/extensions/discovery/main/is-compatible-extension.injectable";
+import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 
 describe("Extension/App versions compatibility checks", () => {
-  it("is compatible with exact version matching", () => {
-    expect(isCompatible({ extLensEngineVersion: "5.5.0", extensionApiVersion: "5.5.0" })).toBeTruthy();
+  let di: DiContainer;
+
+  beforeEach(() => {
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
   });
 
-  it("is compatible with upper %PATCH versions of base app", () => {
-    expect(isCompatible({ extLensEngineVersion: "5.5.0", extensionApiVersion: "5.5.5" })).toBeTruthy();
+  describe("when extension API version is 5.5.0", () => {
+    let isCompatibleExtension: IsCompatibleExtension;
+
+    beforeEach(() => {
+      di.override(extensionApiVersionInjectable, () => "5.5.0");
+
+      isCompatibleExtension = di.inject(isCompatibleExtensionInjectable);
+    });
+
+    it("an extension specifying '5.5.0' is compatible", () => {
+      expect(isCompatibleExtension("5.5.0")).toBe(true);
+    });
+
+    it("an extension specifying '5.5' is compatible", () => {
+      expect(isCompatibleExtension("5.5")).toBe(true);
+    });
+
+    it("an extension specifying '6.0.0' is not compatible", () => {
+      expect(isCompatibleExtension("6.0.0")).toBe(false);
+    });
   });
 
-  it("is compatible with higher %MINOR version of base app", () => {
-    expect(isCompatible({ extLensEngineVersion: "5.5.0", extensionApiVersion: "5.6.0" })).toBeTruthy();
+  describe("when extension API version is 5.5.5", () => {
+    let isCompatibleExtension: IsCompatibleExtension;
+
+    beforeEach(() => {
+      di.override(extensionApiVersionInjectable, () => "5.5.5");
+
+      isCompatibleExtension = di.inject(isCompatibleExtensionInjectable);
+    });
+
+    it("an extension specifying '5.5.0' is compatible", () => {
+      expect(isCompatibleExtension("5.5.0")).toBe(true);
+    });
+
+    it("an extension specifying '5.5' is compatible", () => {
+      expect(isCompatibleExtension("5.5")).toBe(true);
+    });
+
+    it("an extension specifying '6.0.0' is not compatible", () => {
+      expect(isCompatibleExtension("6.0.0")).toBe(false);
+    });
   });
 
-  it("is not compatible with higher %MAJOR version of base app", () => {
-    expect(isCompatible({ extLensEngineVersion: "5.6.0", extensionApiVersion: "6.0.0" })).toBeFalsy(); // extension for lens@5 not compatible with lens@6
-    expect(isCompatible({ extLensEngineVersion: "6.0.0", extensionApiVersion: "5.6.0" })).toBeFalsy();
+  describe("when extension API version is 5.6.0", () => {
+    let isCompatibleExtension: IsCompatibleExtension;
+
+    beforeEach(() => {
+      di.override(extensionApiVersionInjectable, () => "5.6.0");
+
+      isCompatibleExtension = di.inject(isCompatibleExtensionInjectable);
+    });
+
+    it("an extension specifying '5.5.0' is compatible", () => {
+      expect(isCompatibleExtension("5.5.0")).toBe(true);
+    });
+
+    it("an extension specifying '5.5' is compatible", () => {
+      expect(isCompatibleExtension("5.5")).toBe(true);
+    });
   });
 
-  it("supports short version format for manifest.engines.lens", () => {
-    expect(isCompatible({ extLensEngineVersion: "5.5", extensionApiVersion: "5.5.1" })).toBeTruthy();
-  });
+  describe("when extension API version is 6.0.0", () => {
+    let isCompatibleExtension: IsCompatibleExtension;
 
-  it("throws for incorrect or not supported version format", () => {
-    expect(() => isCompatible({
-      extLensEngineVersion: ">=2.0",
-      extensionApiVersion: "2.0",
-    })).toThrow(/Invalid format/i);
+    beforeEach(() => {
+      di.override(extensionApiVersionInjectable, () => "6.0.0");
 
-    expect(() => isCompatible({
-      extLensEngineVersion: "~2.0",
-      extensionApiVersion: "2.0",
-    })).toThrow(/Invalid format/i);
+      isCompatibleExtension = di.inject(isCompatibleExtensionInjectable);
+    });
 
-    expect(() => isCompatible({
-      extLensEngineVersion: "*",
-      extensionApiVersion: "1.0",
-    })).toThrow(/Invalid format/i);
+    it("an extension specifying '5.5.0' is not compatible", () => {
+      expect(isCompatibleExtension("5.5.0")).toBe(false);
+    });
+
+    it("an extension specifying '5.5' is not compatible", () => {
+      expect(isCompatibleExtension("5.5")).toBe(false);
+    });
+
+    it("throws an error when the manifest lens version is invalid format", () => {
+      expect(() => isCompatibleExtension(">=2.0")).toThrow(/Invalid format/i);
+      expect(() => isCompatibleExtension("~2.0")).toThrow(/Invalid format/i);
+      expect(() => isCompatibleExtension("*")).toThrow(/Invalid format/i);
+    });
   });
 });
-
-function isCompatible({ extLensEngineVersion = "^1.0", extensionApiVersion = "1.0" } = {}): boolean {
-  const extensionManifestMock = getExtensionManifestMock(extLensEngineVersion);
-
-  return isCompatibleExtension({ extensionApiVersion })(extensionManifestMock);
-}
-
-function getExtensionManifestMock(lensEngine = "1.0"): LensExtensionManifest {
-  return {
-    name: "some-extension",
-    version: "1.0",
-    engines: {
-      lens: lensEngine,
-    },
-  };
-}

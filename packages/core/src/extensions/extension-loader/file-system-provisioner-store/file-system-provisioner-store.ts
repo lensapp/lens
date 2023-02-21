@@ -7,8 +7,8 @@ import type { ObservableMap } from "mobx";
 import { action, makeObservable } from "mobx";
 import type { BaseStoreDependencies } from "../../../common/base-store/base-store";
 import { BaseStore } from "../../../common/base-store/base-store";
-import type { LensExtensionId } from "../../lens-extension";
 import { toJS } from "../../../common/utils";
+import type { LensExtensionId } from "../../common-api";
 import type { EnsureHashedDirectoryForExtension } from "./ensure-hashed-directory-for-extension.injectable";
 
 interface FSProvisionModel {
@@ -17,7 +17,7 @@ interface FSProvisionModel {
 
 interface Dependencies extends BaseStoreDependencies {
   ensureHashedDirectoryForExtension: EnsureHashedDirectoryForExtension;
-  registeredExtensions: ObservableMap<LensExtensionId, string>;
+  readonly registeredExtensions: ObservableMap<LensExtensionId, string>;
 }
 
 export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {

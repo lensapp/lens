@@ -10,7 +10,7 @@ import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-p
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
-import type { LensExtension, LensExtensionId } from "../../../extensions/lens-extension";
+import type { LensExtension } from "../../../extensions/lens-extension";
 import type { ObservableMap } from "mobx";
 import { runInAction } from "mobx";
 import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
@@ -24,6 +24,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { InternalRouteRegistration } from "../../../features/deep-linking/common/internal-handler-token";
 import { internalDeepLinkingRouteInjectionToken } from "../../../features/deep-linking/common/internal-handler-token";
 import { LensMainExtension } from "../../../extensions/lens-main-extension";
+import type { LensExtensionId } from "../../../features/extensions/common/installed-extension";
 
 function throwIfDefined(val: any): void {
   if (val != null) {

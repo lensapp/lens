@@ -5,7 +5,7 @@
 
 import styles from "./installed-extensions.module.scss";
 import React, { useMemo } from "react";
-import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
+import type { InstalledExtension, LensExtensionId } from "../../../features/extensions/common/installed-extension";
 import { Icon } from "../icon";
 import { List } from "../list/list";
 import { MenuActions, MenuItem } from "../menu";
@@ -13,7 +13,6 @@ import { Spinner } from "../spinner";
 import { cssNames, toJS } from "../../utils";
 import { observer } from "mobx-react";
 import type { Row } from "react-table";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IComputedValue } from "mobx";
 import initialDiscoveryLoadCompletedInjectable from "../../../features/extensions/discovery/common/initial-load-completed.injectable";

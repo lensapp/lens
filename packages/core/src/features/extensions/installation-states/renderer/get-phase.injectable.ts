@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { LensExtensionId } from "../../../../extensions/lens-extension";
+import type { LensExtensionId } from "../../common/installed-extension";
 import type { InstallationState } from "./states.injectable";
 import extensionInstallationStatesInjectable from "./states.injectable";
 

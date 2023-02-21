@@ -4,4 +4,6 @@
  */
 
 // @experimental
+export type { BundledExtension } from "../features/extensions/common/bundled-extension-token";
+export type { BundledLensExtensionManifest } from "../features/extensions/common/installed-extension";
 export { bundledExtensionInjectionToken } from "../features/extensions/common/bundled-extension-token";

@@ -14,7 +14,7 @@ import {
 } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
-import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
+import type { InstalledExtension, LensExtensionId } from "../../../features/extensions/common/installed-extension";
 import { DropFileInput } from "../input";
 import { Install } from "./install";
 import { InstalledExtensions } from "./installed-extensions";
@@ -31,7 +31,6 @@ import confirmUninstallExtensionInjectable from "./confirm-uninstall-extension.i
 import type { InstallExtensionFromInput } from "./install-extension-from-input.injectable";
 import installExtensionFromInputInjectable from "./install-extension-from-input.injectable";
 import installFromSelectFileDialogInjectable from "./install-from-select-file-dialog.injectable";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
 import type { InstallOnDrop } from "./install-on-drop.injectable";
 import installOnDropInjectable from "./install-on-drop.injectable";
 import { supportedExtensionFormats } from "./supported-extension-formats";

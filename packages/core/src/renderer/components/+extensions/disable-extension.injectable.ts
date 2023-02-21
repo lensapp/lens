@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { action } from "mobx";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
 import getInstalledExtensionInjectable from "../../../features/extensions/common/get-installed-extension.injectable";
+import type { LensExtensionId } from "../../../features/extensions/common/installed-extension";
 
 export type DisableExtension = (id: LensExtensionId) => void;
 

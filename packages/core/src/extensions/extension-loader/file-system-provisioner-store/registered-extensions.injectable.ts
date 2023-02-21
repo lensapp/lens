@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { observable } from "mobx";
-import type { LensExtensionId } from "../../lens-extension";
+import type { LensExtensionId } from "../../common-api";
 
 export const registeredExtensionsInjectable = getInjectable({
   id: "registered-extensions",

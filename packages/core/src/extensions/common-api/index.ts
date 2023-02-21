@@ -16,8 +16,14 @@ export * as Types from "./types";
 export * as Proxy from "./proxy";
 
 export type { Logger } from "../../common/logger";
-export type { LensExtension, LensExtensionManifest } from "../lens-extension";
-export type { InstalledExtension } from "../extension-discovery/extension-discovery";
+export type { LensExtension } from "../lens-extension";
+export type {
+  LensExtensionManifest,
+  InstalledExtension,
+  BundledLensExtensionManifest,
+  BaseInstalledExtension,
+  LensExtensionId,
+} from "../../features/extensions/common/installed-extension";
 export type { PackageJson } from "type-fest";
 
 export const logger = asLegacyGlobalForExtensionApi(loggerInjectable);

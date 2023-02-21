@@ -5,7 +5,7 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 import { observable } from "mobx";
-import type { LensExtensionId } from "../../../../extensions/lens-extension";
+import type { LensExtensionId } from "../../common/installed-extension";
 
 export type InstallationState = ActiveInstallationState | "idle";
 export type ActiveInstallationState = "installing" | "uninstalling";

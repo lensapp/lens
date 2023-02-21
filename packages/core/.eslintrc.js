@@ -259,8 +259,8 @@ module.exports = {
     },
     {
       files: [
-        "src/{common,main,renderer}/**/*.ts",
-        "src/{common,main,renderer}/**/*.tsx",
+        "src/{common,main,renderer,features}/**/*.ts",
+        "src/{common,main,renderer,features}/**/*.tsx",
       ],
       rules: {
         "no-restricted-imports": ["error", {
@@ -280,6 +280,9 @@ module.exports = {
                 "**/extensions/renderer-api/**/*",
                 "**/extensions/main-api/**/*",
                 "**/extensions/common-api/**/*",
+                "**/extensions/renderer-api",
+                "**/extensions/main-api",
+                "**/extensions/common-api",
               ],
               message: "No importing from the extension api definitions in application code",
             },

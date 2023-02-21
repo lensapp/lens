@@ -7,7 +7,7 @@ import { runInAction } from "mobx";
 import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
 import type { EnsureHashedDirectoryForExtension } from "./ensure-hashed-directory-for-extension.injectable";
 import ensureHashedDirectoryForExtensionInjectable from "./ensure-hashed-directory-for-extension.injectable";
-import ensureDirInjectable from "../../../common/fs/ensure-dir.injectable";
+import ensureDirectoryInjectable from "../../../common/fs/ensure-directory.injectable";
 import directoryForExtensionDataInjectable from "./directory-for-extension-data.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { registeredExtensionsInjectable } from "./registered-extensions.injectable";
@@ -22,7 +22,7 @@ describe("ensure-hashed-directory-for-extension", () => {
 
     ensureDirMock = jest.fn();
 
-    di.override(ensureDirInjectable, () => ensureDirMock);
+    di.override(ensureDirectoryInjectable, () => ensureDirMock);
     di.override(directoryForExtensionDataInjectable, () => "some-directory-for-extension-data");
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 

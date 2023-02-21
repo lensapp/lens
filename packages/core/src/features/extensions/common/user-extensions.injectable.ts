@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
+import type { ExternalInstalledExtension, LensExtensionId } from "./installed-extension";
 import installedExtensionsInjectable from "./installed-extensions.injectable";
 
 const installedUserExtensionsInjectable = getInjectable({
@@ -13,7 +14,7 @@ const installedUserExtensionsInjectable = getInjectable({
 
     return computed(() => new Map((
       installedExtensions.toJSON()
-        .filter(([, ext]) => !ext.isBundled)
+        .filter((entry): entry is [LensExtensionId, ExternalInstalledExtension] => !entry[1].isBundled)
     )));
   },
 });

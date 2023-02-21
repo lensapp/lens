@@ -6,7 +6,6 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { validatePackage } from "./validate-package";
 import { getMessageFromError } from "../get-message-from-error/get-message-from-error";
 import React from "react";
-import type { LensExtensionId, LensExtensionManifest } from "../../../../extensions/lens-extension";
 import type { InstallRequest } from "./attempt-install.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import writeFileInjectable from "../../../../common/fs/write-file.injectable";
@@ -14,6 +13,7 @@ import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import tempDirectoryPathInjectable from "../../../../common/os/temp-directory-path.injectable";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
 import extensionsNodeModulesDirectoryPathInjectable from "../../../../features/extensions/discovery/common/extension-node-modules-directory-path.injectable";
+import type { LensExtensionId, LensExtensionManifest } from "../../../../features/extensions/common/installed-extension";
 
 export interface InstallRequestValidated {
   fileName: string;

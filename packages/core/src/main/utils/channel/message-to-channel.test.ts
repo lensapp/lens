@@ -8,7 +8,6 @@ import clusterFramesInjectable from "../../../common/cluster-frames.injectable";
 import type { MessageChannel } from "../../../common/utils/channel/message-channel-listener-injection-token";
 import { sendMessageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { ClusterFrameInfo } from "../../../common/cluster-frames";
 
 describe("message-to-channel", () => {
   let di: DiContainer;
@@ -46,7 +45,7 @@ describe("message-to-channel", () => {
     di.override(
       clusterFramesInjectable,
       () =>
-        new Map<string, ClusterFrameInfo>([
+        new Map([
           [
             "some-cluster-id",
             { frameId: 42, processId: 84 },

@@ -4,7 +4,7 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import type { LensExtensionId } from "../../../../extensions/lens-extension";
+import type { LensExtensionId } from "../../common/installed-extension";
 import extensionInstallationStatesInjectable from "./states.injectable";
 
 export type SetExtensionAsUninstalling = (id: LensExtensionId) => void;

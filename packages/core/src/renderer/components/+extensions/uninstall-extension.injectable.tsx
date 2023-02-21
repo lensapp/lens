@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
 import { extensionDisplayName } from "../../../extensions/lens-extension";
 import React from "react";
 import { when } from "mobx";
@@ -16,6 +15,7 @@ import getInstalledExtensionInjectable from "../../../features/extensions/common
 import removeExtensionFilesInjectable from "../../../features/extensions/discovery/common/uninstall-extension.injectable";
 import clearExtensionAsInstallingInjectable from "../../../features/extensions/installation-states/renderer/clear-as-installing.injectable";
 import setExtensionAsUninstallingInjectable from "../../../features/extensions/installation-states/renderer/set-as-uninstalling.injectable";
+import type { LensExtensionId } from "../../../features/extensions/common/installed-extension";
 
 const uninstallExtensionInjectable = getInjectable({
   id: "uninstall-extension",

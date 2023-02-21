@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import removePathInjectable from "../../../../common/fs/remove.injectable";
-import type { LensExtensionId } from "../../../../extensions/lens-extension";
+import type { LensExtensionId } from "../../common/installed-extension";
 import installedExtensionsInjectable from "../../common/installed-extensions.injectable";
 import extensionDiscoveryLoggerInjectable from "./logger.injectable";
 import removeExtensionSymlinkByNameInjectable from "./remove-extension-symlink-by-name.injectable";

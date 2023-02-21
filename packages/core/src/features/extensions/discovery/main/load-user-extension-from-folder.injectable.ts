@@ -12,12 +12,11 @@ import { manifestFilename } from "../../../../common/vars";
 import isProductionInjectable from "../../../../common/vars/is-production.injectable";
 import isCompatibleExtensionInjectable from "./is-compatible-extension.injectable";
 import extensionsStoreInjectable from "../../../../extensions/extensions-store/extensions-store.injectable";
-import type { LensExtensionManifest } from "../../../../extensions/lens-extension";
 import extensionDiscoveryLoggerInjectable from "../common/logger.injectable";
 import getExtensionInstallPathInjectable from "./get-extension-install-path.injectable";
-import type { InstalledExtension } from "../../common/installed-extension";
+import type { ExternalInstalledExtension, LensExtensionManifest } from "../../common/installed-extension";
 
-export type LoadUserExtensionFromFolder = (folderPath: string) => Promise<InstalledExtension | null>;
+export type LoadUserExtensionFromFolder = (folderPath: string) => Promise<ExternalInstalledExtension | null>;
 
 const loadUserExtensionFromFolderInjectable = getInjectable({
   id: "load-user-extension-from-folder",
@@ -51,7 +50,7 @@ const loadUserExtensionFromFolderInjectable = getInjectable({
           manifest,
           isBundled: false,
           isEnabled: extensionsStore.isEnabled(id),
-          isCompatible: isCompatibleExtension(manifest),
+          isCompatible: isCompatibleExtension(manifest.engines.lens),
         };
       } catch (error) {
         if (isErrnoException(error) && error.code === "ENOTDIR") {

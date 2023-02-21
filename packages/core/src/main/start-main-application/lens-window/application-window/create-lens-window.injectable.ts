@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { ClusterFrameInfo } from "../../../../common/cluster-frames.injectable";
 import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window.injectable";
 import createElectronWindowForInjectable from "./create-electron-window.injectable";
-import type { ClusterFrameInfo } from "../../../../common/cluster-frames";
 
 export interface ElectronWindow {
   show: () => void;

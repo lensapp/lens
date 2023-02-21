@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LensExtensionId } from "../lens-extension";
 import { action, computed, makeObservable, observable } from "mobx";
 import { toJS } from "../../common/utils";
 import type { BaseStoreDependencies } from "../../common/base-store/base-store";
 import { BaseStore } from "../../common/base-store/base-store";
+import type { LensExtensionId } from "../common-api";
 
 export interface LensExtensionsStoreModel {
   extensions: Record<LensExtensionId, LensExtensionState>;

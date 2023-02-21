@@ -3,45 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { BundledInstalledExtension, ExternalInstalledExtension, InstalledExtension } from "./extension-discovery/extension-discovery";
 import { observable } from "mobx";
 import { disposer } from "../common/utils";
 import type { ProtocolHandlerRegistration } from "../common/protocol-handler/registration";
-import type { PackageJson } from "type-fest";
+import assert from "assert";
+import type { BundledInstalledExtension, ExternalInstalledExtension, InstalledExtension, LensExtensionManifest } from "../features/extensions/common/installed-extension";
 import type { FileSystemProvisionerStore } from "./extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import type { Logger } from "../common/logger";
-import assert from "assert";
 
-export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (ext: ExternalInstalledExtension) => LensExtension;
 export type BundledLensExtensionContructor = new (ext: BundledInstalledExtension) => LensExtension;
-
-export interface BundledLensExtensionManifest extends PackageJson {
-  name: string;
-  version: string;
-  publishConfig?: Partial<Record<string, string>>;
-
-  // Specify extension name used for persisting data.
-  // Useful if extension is renamed but the data should not be lost.
-  storeName?: string;
-}
 
 export interface LensExtensionDependencies {
   readonly fileSystemProvisionerStore: FileSystemProvisionerStore;
   readonly logger: Logger;
-}
-
-export interface LensExtensionManifest extends BundledLensExtensionManifest {
-  main?: string; // path to %ext/dist/main.js
-  renderer?: string; // path to %ext/dist/renderer.js
-  /**
-   * Supported Lens version engine by extension could be defined in `manifest.engines.lens`
-   * Only MAJOR.MINOR version is taken in consideration.
-   */
-  engines: {
-    lens: string; // "semver"-package format
-    [x: string]: string | undefined;
-  };
 }
 
 export const Disposers = Symbol("disposers");

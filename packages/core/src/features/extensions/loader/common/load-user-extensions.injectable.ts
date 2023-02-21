@@ -4,9 +4,9 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { isDefined } from "../../../../common/utils";
-import type { ExternalInstalledExtension } from "../../../../extensions/extension-discovery/extension-discovery";
+import type { ExternalInstalledExtension, LensExtensionId } from "../../common/installed-extension";
 import extensionInstancesInjectable from "../../../../extensions/extension-loader/extension-instances.injectable";
-import type { LensExtension, LensExtensionId } from "../../../../extensions/lens-extension";
+import type { LensExtension } from "../../../../extensions/lens-extension";
 import importInstalledExtensionInjectable from "./import-installed-extension.injectable";
 import extensionLoadingLoggerInjectable from "./logger.injectable";
 import extensionsWithoutInstancesByNameInjectable from "./non-instances-by-name.injectable";

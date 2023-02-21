@@ -11,7 +11,7 @@ import readDirectoryInjectable from "../../../../common/fs/read-directory.inject
 import removePathInjectable from "../../../../common/fs/remove.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import { isErrnoException } from "../../../../common/utils";
-import type { InstalledExtension } from "../../../../extensions/extension-discovery/extension-discovery";
+import type { InstalledExtension } from "../../common/installed-extension";
 import installedExtensionsInjectable from "../../common/installed-extensions.injectable";
 import extensionsNodeModulesDirectoryPathInjectable from "../common/extension-node-modules-directory-path.injectable";
 import initialDiscoveryLoadCompletedInjectable from "../common/initial-load-completed.injectable";

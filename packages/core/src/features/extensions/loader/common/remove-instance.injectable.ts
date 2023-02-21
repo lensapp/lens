@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { action } from "mobx";
 import extensionInstancesInjectable from "../../../../extensions/extension-loader/extension-instances.injectable";
 import extensionInjectable from "../../../../extensions/extension-loader/extension/extension.injectable";
-import type { LensExtensionId } from "../../../../extensions/lens-extension";
+import type { LensExtensionId } from "../../common/installed-extension";
 import extensionLoadingLoggerInjectable from "./logger.injectable";
 import extensionsWithoutInstancesByNameInjectable from "./non-instances-by-name.injectable";
 
