@@ -32,11 +32,14 @@ import activeThemeInjectable from "../../../../themes/active.injectable";
 import type { ToHelmRelease } from "../../to-helm-release.injectable";
 import toHelmReleaseInjectable from "../../to-helm-release.injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
+import targetHelmReleaseInjectable from "../target-helm-release.injectable";
 
 const releaseDetailsModelInjectable = getInjectable({
   id: "release-details-model",
 
   instantiate: (di, targetRelease: TargetHelmRelease) => {
+    const detailsHelmRelease = di.inject(targetHelmReleaseInjectable);
+
     const model = new ReleaseDetailsModel({
       requestDetailedHelmRelease: di.inject(requestDetailedHelmReleaseInjectable),
       targetRelease,
@@ -51,9 +54,17 @@ const releaseDetailsModelInjectable = getInjectable({
       toHelmRelease: di.inject(toHelmReleaseInjectable),
     });
 
-    return asyncComputed({
+    return asyncComputed<ReleaseDetailsModel>({
       getValueFromObservedPromise: async () => {
-        await model.load();
+        const currentHelmRelease = detailsHelmRelease.get();
+
+        if (
+          currentHelmRelease
+          && currentHelmRelease.name === targetRelease.name
+          && currentHelmRelease.namespace === targetRelease.namespace
+        ) {
+          await model.load();
+        }
 
         return model;
       },
