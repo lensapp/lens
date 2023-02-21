@@ -139,8 +139,8 @@ const ResourceGroup = ({
       </TableHead>
 
       {resources.map(
-        ({ detailsUrl, name, namespace, uid }) => (
-          <TableRow key={uid}>
+        ({ detailsUrl, name, namespace }) => (
+          <TableRow key={name}>
             <TableCell className="name">
               {detailsUrl ? <Link to={detailsUrl}>{name}</Link> : name}
             </TableCell>
