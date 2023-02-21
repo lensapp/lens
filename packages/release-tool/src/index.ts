@@ -4,10 +4,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import assert from "assert";
+import chalk from "chalk";
 import child_process from "child_process";
 import { readFile } from "fs/promises";
 import inquirer from "inquirer";
-import { EOL } from "os";
 import { createInterface, ReadLine } from "readline";
 import semver from "semver";
 import { promisify } from "util";
@@ -191,10 +191,38 @@ const isBugfixPr = (pr: ExtendedGithubPrData) => pr.labels.some(label => label.n
 
 const cherrypickCommitWith = (rl: ReadLine) => async (commit: string) => {
   try {
-    await spawn("git", ["cherry-pick", commit], {
-      stdio: "inherit",
+    const cherryPick = child_process.spawn("git", ["cherry-pick", commit]);
+
+    cherryPick.stdout.pipe(process.stdout);
+    cherryPick.stderr.pipe(process.stderr);
+
+    await new Promise<void>((resolve, reject) => {
+      const cleaners: (() => void)[] = [];
+      const cleanup = () => cleaners.forEach(cleaner => cleaner());
+
+      const onExit = (code: number | null) => {
+        if (code) {
+          reject(new Error(`git cherry-pick failed with exit code ${code}`));
+          cleanup();
+        }
+
+        resolve();
+        cleanup();
+      };
+
+      cherryPick.once("exit", onExit);
+      cleaners.push(() => cherryPick.off("exit", onExit));
+
+      const onError = (error: Error) => {
+        cleanup();
+        reject(error);
+      };
+
+      cherryPick.once("error", onError);
+      cleaners.push(() => cherryPick.off("error", onError));
     });
   } catch {
+    console.error(chalk.bold("Please resolve conflicts in a seperate terminal and then press enter here..."));
     await new Promise<void>(resolve => rl.once("line", () => resolve()));
   }
 };
@@ -258,7 +286,6 @@ function formatChangelog(previousReleasedVersion: string, prs: ExtendedGithubPrD
 }
 
 async function cherrypickCommits(prs: ExtendedGithubPrData[]): Promise<void> {
-  console.log(`${EOL}If cherry-picking fails for any of these commits, please resolve them in a seperate terminal and then run "git cherry-pick --continue"${EOL}`);
   const rl = createInterface(process.stdin);
   const cherrypickCommit = cherrypickCommitWith(rl);
 
