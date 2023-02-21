@@ -3,15 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import navigateToEntitySettingsInjectable from "../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
-import type { ListNamespaceForbiddenArgs } from "../../common/ipc/cluster";
-import { Button } from "../components/button";
-import type { IpcRendererEvent } from "electron";
+import navigateToEntitySettingsInjectable from "../../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
+import { Button } from "../../../../renderer/components/button";
 import React from "react";
-import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
-import { getMillisecondsFromUnixEpoch } from "../../common/utils/date/get-current-date-time";
-import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
-import showSuccessNotificationInjectable from "../components/notifications/show-success-notification.injectable";
+import { getMillisecondsFromUnixEpoch } from "../../../../common/utils/date/get-current-date-time";
+import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
+import showSuccessNotificationInjectable from "../../../../renderer/components/notifications/show-success-notification.injectable";
+import type { ClusterId } from "../../../../common/cluster-types";
 
 const intervalBetweenNotifications = 1000 * 60; // 60s
 
@@ -20,15 +18,11 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
 
   instantiate: (di) => {
     const navigateToEntitySettings = di.inject(navigateToEntitySettingsInjectable);
-    const notificationsStore = di.inject(notificationsStoreInjectable);
     const getClusterById = di.inject(getClusterByIdInjectable);
     const notificationLastDisplayedAt = new Map<string, number>();
     const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
 
-    return (
-      event: IpcRendererEvent,
-      ...[clusterId]: ListNamespaceForbiddenArgs
-    ): void => {
+    return (clusterId: ClusterId) => {
       const lastDisplayedAt = notificationLastDisplayedAt.get(clusterId);
       const now = getMillisecondsFromUnixEpoch();
 
@@ -42,14 +36,7 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
         return;
       }
 
-      const notificationId = `list-namespaces-forbidden:${clusterId}`;
-
-      if (notificationsStore.getById(notificationId)) {
-        // notification is still visible
-        return;
-      }
-
-      showSuccessNotification(
+      const closeNotification = showSuccessNotification(
         (
           <div className="flex column gaps">
             <b>Add Accessible Namespaces</b>
@@ -65,18 +52,18 @@ const listNamespacesForbiddenHandlerInjectable = getInjectable({
                 label="Go to Accessible Namespaces Settings"
                 onClick={() => {
                   navigateToEntitySettings(clusterId, "namespaces");
-                  notificationsStore.remove(notificationId);
+                  closeNotification();
                 }}
               />
             </div>
           </div>
         ),
         {
-          id: notificationId,
+          id: `list-namespaces-forbidden:${clusterId}`,
           /**
-       * Set the time when the notification is closed as well so that there is at
-       * least a minute between closing the notification as seeing it again
-       */
+           * Set the time when the notification is closed as well so that there is at
+           * least a minute between closing the notification as seeing it again
+           */
           onClose: () => notificationLastDisplayedAt.set(clusterId, getMillisecondsFromUnixEpoch()),
         },
       );
