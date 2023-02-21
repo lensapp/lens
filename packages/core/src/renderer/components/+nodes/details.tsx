@@ -9,7 +9,7 @@ import React from "react";
 import upperFirst from "lodash/upperFirst";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { DrawerItem, DrawerItemLabels } from "../drawer";
+import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { formatNodeTaint, Node } from "../../../common/k8s-api/endpoints";
@@ -23,7 +23,8 @@ import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.inj
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import loadPodsFromAllNamespacesInjectable from "../+workloads-pods/load-pods-from-all-namespaces.injectable";
+import loadPodsFromAllNamespacesInjectable
+  from "../+workloads-pods/load-pods-from-all-namespaces.injectable";
 
 export interface NodeDetailsProps extends KubeObjectDetailsProps<Node> {
 }
@@ -97,14 +98,6 @@ class NonInjectedNodeDetails extends React.Component<NodeDetailsProps & Dependen
             </DrawerItem>
           </>
         )}
-        <DrawerItemLabels
-          name="Labels"
-          labels={node.getLabels()}
-        />
-        <DrawerItemLabels
-          name="Annotations"
-          labels={node.getAnnotations()}
-        />
         {taints.length > 0 && (
           <DrawerItem name="Taints" labelsOnly>
             {taints.map(taint => <Badge key={taint.key} label={formatNodeTaint(taint)} />)}

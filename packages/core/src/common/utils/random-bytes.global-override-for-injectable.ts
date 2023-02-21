@@ -6,7 +6,7 @@
 import { getGlobalOverride } from "../test-utils/get-global-override";
 import randomBytesInjectable from "./random-bytes.injectable";
 
-export default getGlobalOverride(randomBytesInjectable, () => async (size) => {
+export default getGlobalOverride(randomBytesInjectable, () => (size) => {
   const res = Buffer.alloc(size);
 
   for (let i = 0; i < size; i += 1) {

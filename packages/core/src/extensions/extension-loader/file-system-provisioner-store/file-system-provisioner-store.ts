@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, makeObservable, observable } from "mobx";
+import type { ObservableMap } from "mobx";
+import { action, makeObservable } from "mobx";
 import type { BaseStoreDependencies } from "../../../common/base-store/base-store";
 import { BaseStore } from "../../../common/base-store/base-store";
 import type { LensExtensionId } from "../../lens-extension";
@@ -16,11 +17,10 @@ interface FSProvisionModel {
 
 interface Dependencies extends BaseStoreDependencies {
   ensureHashedDirectoryForExtension: EnsureHashedDirectoryForExtension;
+  registeredExtensions: ObservableMap<LensExtensionId, string>;
 }
 
 export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
-  readonly registeredExtensions = observable.map<LensExtensionId, string>();
-
   constructor(protected readonly dependencies: Dependencies) {
     super(dependencies, {
       configName: "lens-filesystem-provisioner-store",
@@ -37,17 +37,17 @@ export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
    * @returns path to the folder that the extension can safely write files to.
    */
   async requestDirectory(extensionName: string): Promise<string> {
-    return this.dependencies.ensureHashedDirectoryForExtension(extensionName, this.registeredExtensions);
+    return this.dependencies.ensureHashedDirectoryForExtension(extensionName);
   }
 
   @action
   protected fromStore({ extensions }: FSProvisionModel = { extensions: {}}): void {
-    this.registeredExtensions.merge(extensions);
+    this.dependencies.registeredExtensions.merge(extensions);
   }
 
   toJSON(): FSProvisionModel {
     return toJS({
-      extensions: Object.fromEntries(this.registeredExtensions),
+      extensions: Object.fromEntries(this.dependencies.registeredExtensions),
     });
   }
 }

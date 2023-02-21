@@ -38,6 +38,8 @@ import kubeEventApiInjectable from "../../common/k8s-api/endpoints/events.api.in
 import roleBindingApiInjectable from "../../common/k8s-api/endpoints/role-binding.api.injectable";
 import customResourceDefinitionApiInjectable from "../../common/k8s-api/endpoints/custom-resource-definition.api.injectable";
 import { shouldShowResourceInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
+import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import requestMetricsInjectable from "../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 
 export function isAllowedResource(resources: KubeResource | KubeResource[]) {
   const di = getLegacyGlobalDiForExtensionApi();
@@ -92,6 +94,17 @@ export const roleBindingApi = asLegacyGlobalForExtensionApi(roleBindingApiInject
 export const crdApi = asLegacyGlobalForExtensionApi(customResourceDefinitionApiInjectable);
 
 export * from "../common-api/k8s-api";
+
+export const requestMetrics = asLegacyGlobalFunctionForExtensionApi(requestMetricsInjectable);
+
+export type {
+  RequestMetrics,
+  RequestMetricsParams,
+} from "../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
+export type {
+  MetricData,
+  MetricResult,
+} from "../../common/k8s-api/endpoints/metrics.api";
 
 export {
   KubeObjectStatusLevel,

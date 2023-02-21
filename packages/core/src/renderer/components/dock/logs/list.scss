@@ -7,10 +7,6 @@
   --overlay-bg: #8cc474b8;
   --overlay-active-bg: orange;
 
-  // fix for `this.logsElement.scrollTop = this.logsElement.scrollHeight`
-  // `overflow: overlay` don't allow scroll to the last line
-  overflow: auto;
-
   position: relative;
   color: var(--logsForeground);
   background: var(--logsBackground);
@@ -21,6 +17,7 @@
 
     .list {
       overflow-x: scroll!important;
+      overflow-y: auto!important;
 
       .LogRow {
         padding: 2px 16px;
