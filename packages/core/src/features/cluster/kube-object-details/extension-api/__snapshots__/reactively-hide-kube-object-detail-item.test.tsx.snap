@@ -79,7 +79,11 @@ exports[`reactively hide kube object detail item renders 1`] = `
             <span
               class="value"
             >
-              some-namespace
+              <a
+                href="/workloads?kube-details=%2Fapi%2Fv1%2Fnamespaces%2Fsome-namespace&kube-selected=%2Fapis%2Fsome-api-version%2Fnamespaces%2Fsome-namespace%2Fsome-kind%2Fsome-name"
+              >
+                some-namespace
+              </a>
             </span>
           </div>
           <div>
@@ -690,7 +694,11 @@ exports[`reactively hide kube object detail item when the item is shown renders 
             <span
               class="value"
             >
-              some-namespace
+              <a
+                href="/workloads?kube-details=%2Fapi%2Fv1%2Fnamespaces%2Fsome-namespace&kube-selected=%2Fapis%2Fsome-api-version%2Fnamespaces%2Fsome-namespace%2Fsome-kind%2Fsome-name"
+              >
+                some-namespace
+              </a>
             </span>
           </div>
           <div

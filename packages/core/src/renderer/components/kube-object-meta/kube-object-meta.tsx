@@ -19,6 +19,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import type { NamespaceApi } from "../../../common/k8s-api/endpoints";
+import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 
 export interface KubeObjectMetaProps {
   object: KubeObject;
@@ -28,20 +30,24 @@ export interface KubeObjectMetaProps {
 interface Dependencies {
   getDetailsUrl: GetDetailsUrl;
   apiManager: ApiManager;
+  namespaceApi: NamespaceApi;
   logger: Logger;
 }
 
-const NonInjectedKubeObjectMeta = observer(({
-  apiManager,
-  getDetailsUrl,
-  object,
-  hideFields = [
-    "uid",
-    "resourceVersion",
-    "selfLink",
-  ],
-  logger,
-}: Dependencies & KubeObjectMetaProps) => {
+const NonInjectedKubeObjectMeta = observer((
+  {
+    apiManager,
+    getDetailsUrl,
+    object,
+    hideFields = [
+      "uid",
+      "resourceVersion",
+      "selfLink",
+    ],
+    logger,
+    namespaceApi,
+  }
+    : Dependencies & KubeObjectMetaProps) => {
   if (!object) {
     return null;
   }
@@ -59,6 +65,10 @@ const NonInjectedKubeObjectMeta = observer(({
     getFinalizers, getId, getName, metadata: { creationTimestamp },
   } = object;
   const ownerRefs = object.getOwnerRefs();
+  const namespace = getNs();
+  const namespaceDetailsUrl = namespace ? getDetailsUrl(
+    namespaceApi.formatUrlForNotListing({ name: namespace }),
+  ) : "";
 
   return (
     <>
@@ -71,8 +81,8 @@ const NonInjectedKubeObjectMeta = observer(({
         {getName()}
         <KubeObjectStatusIcon key="icon" object={object} />
       </DrawerItem>
-      <DrawerItem name="Namespace" hidden={isHidden("namespace") || !getNs()}>
-        {getNs()}
+      <DrawerItem name="Namespace" hidden={isHidden("namespace") || !namespace}>
+        <Link to={namespaceDetailsUrl}>{namespace}</Link>
       </DrawerItem>
       <DrawerItem name="UID" hidden={isHidden("uid")}>
         {getId()}
@@ -122,5 +132,6 @@ export const KubeObjectMeta = withInjectables<Dependencies, KubeObjectMetaProps>
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     apiManager: di.inject(apiManagerInjectable),
     logger: di.inject(loggerInjectable),
+    namespaceApi: di.inject(namespaceApiInjectable),
   }),
 });
