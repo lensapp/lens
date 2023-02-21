@@ -24,7 +24,7 @@ const getClusterForRequestInjectable = getInjectable({
         const cluster = getClusterById(clusterId);
 
         if (cluster) {
-        // we need to swap path prefix so that request is proxied to kube api
+          // we need to swap path prefix so that request is proxied to kube api
           req.url = req.url.replace(`/${clusterId}`, apiKubePrefix);
         }
 
