@@ -3,13 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { ObservableMap } from "mobx";
-import { observable, runInAction } from "mobx";
+import { runInAction } from "mobx";
 import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
 import type { EnsureHashedDirectoryForExtension } from "./ensure-hashed-directory-for-extension.injectable";
 import ensureHashedDirectoryForExtensionInjectable from "./ensure-hashed-directory-for-extension.injectable";
 import ensureDirInjectable from "../../../common/fs/ensure-dir.injectable";
 import directoryForExtensionDataInjectable from "./directory-for-extension-data.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { registeredExtensionsInjectable } from "./registered-extensions.injectable";
 
 describe("ensure-hashed-directory-for-extension", () => {
   let ensureHashedDirectoryForExtension: EnsureHashedDirectoryForExtension;
@@ -29,7 +30,7 @@ describe("ensure-hashed-directory-for-extension", () => {
       ensureHashedDirectoryForExtensionInjectable,
     );
 
-    registeredExtensions = observable.map();
+    registeredExtensions = di.inject(registeredExtensionsInjectable);
   });
 
   it("given registered extension exists, returns existing directory", async () => {
@@ -39,7 +40,6 @@ describe("ensure-hashed-directory-for-extension", () => {
 
     const actual = await ensureHashedDirectoryForExtension(
       "some-extension-name",
-      registeredExtensions,
     );
 
     expect(actual).toBe("some-directory");
@@ -48,7 +48,6 @@ describe("ensure-hashed-directory-for-extension", () => {
   it("given registered extension does not exist, returns random directory", async () => {
     const actual = await ensureHashedDirectoryForExtension(
       "some-extension-name",
-      registeredExtensions,
     );
 
     expect(actual).toBe("some-directory-for-extension-data/a37a1cfefc0391af3733f23cb6b29443f596a2b8ffe6d116c35df7bc3cd99ef6");
@@ -65,7 +64,6 @@ describe("ensure-hashed-directory-for-extension", () => {
     it("returns existing directory", async () => {
       const actual = await ensureHashedDirectoryForExtension(
         "some-extension-name",
-        registeredExtensions,
       );
 
       expect(actual).toBe("some-directory");
@@ -74,7 +72,6 @@ describe("ensure-hashed-directory-for-extension", () => {
     it("ensure dir is called with some directory", async () => {
       await ensureHashedDirectoryForExtension(
         "some-extension-name",
-        registeredExtensions,
       );
 
       expect(ensureDirMock).toHaveBeenCalledWith("some-directory");
@@ -83,7 +80,6 @@ describe("ensure-hashed-directory-for-extension", () => {
     it("is migrated to use the extension name as key", async () => {
       await ensureHashedDirectoryForExtension(
         "some-extension-name",
-        registeredExtensions,
       );
 
       expect(registeredExtensions.get("some-extension-name")).toEqual("some-directory");
@@ -92,7 +88,6 @@ describe("ensure-hashed-directory-for-extension", () => {
     it("old key is removed", async () => {
       await ensureHashedDirectoryForExtension(
         "some-extension-name",
-        registeredExtensions,
       );
 
       expect(registeredExtensions.has("/some-directory-for-user-data/node_modules/some-extension-name/package.json")).toEqual(false);

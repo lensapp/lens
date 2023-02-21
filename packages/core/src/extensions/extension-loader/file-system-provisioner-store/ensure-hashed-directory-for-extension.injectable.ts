@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ObservableMap } from "mobx";
 import { getInjectable } from "@ogre-tools/injectable";
 
 import { getOrInsert } from "../../../common/utils";
@@ -13,9 +12,9 @@ import directoryForExtensionDataInjectable from "./directory-for-extension-data.
 import ensureDirInjectable from "../../../common/fs/ensure-dir.injectable";
 import getHashInjectable from "./get-hash.injectable";
 import getPathToLegacyPackageJsonInjectable from "./get-path-to-legacy-package-json.injectable";
+import { registeredExtensionsInjectable } from "./registered-extensions.injectable";
 
-export type EnsureHashedDirectoryForExtension = (extensionName: string, registeredExtensions: ObservableMap<string, string>) => Promise<string>;
-
+export type EnsureHashedDirectoryForExtension = (extensionName: string) => Promise<string>;
 
 const ensureHashedDirectoryForExtensionInjectable = getInjectable({
   id: "ensure-hashed-directory-for-extension",
@@ -27,8 +26,9 @@ const ensureHashedDirectoryForExtensionInjectable = getInjectable({
     const ensureDirectory = di.inject(ensureDirInjectable);
     const getHash = di.inject(getHashInjectable);
     const getPathToLegacyPackageJson = di.inject(getPathToLegacyPackageJsonInjectable);
+    const registeredExtensions = di.inject(registeredExtensionsInjectable);
 
-    return async (extensionName, registeredExtensions) => {
+    return async (extensionName) => {
       let dirPath: string;
 
       const legacyDirPath = getPathToLegacyPackageJson(extensionName);
