@@ -4,13 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { randomBytes } from "crypto";
-import { promisify } from "util";
 
-export type RandomBytes = (size: number) => Promise<Buffer>;
+export type RandomBytes = (size: number) => Buffer;
 
 const randomBytesInjectable = getInjectable({
   id: "random-bytes",
-  instantiate: (): RandomBytes => promisify(randomBytes),
+  instantiate: (): RandomBytes => randomBytes,
   causesSideEffects: true,
 });
 

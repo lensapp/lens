@@ -3,17 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ObservableMap } from "mobx";
 import { getInjectable } from "@ogre-tools/injectable";
 
-import { getOrInsertWithAsync } from "../../../common/utils";
+import { getOrInsert } from "../../../common/utils";
 import randomBytesInjectable from "../../../common/utils/random-bytes.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import directoryForExtensionDataInjectable from "./directory-for-extension-data.injectable";
 import ensureDirInjectable from "../../../common/fs/ensure-dir.injectable";
 import getHashInjectable from "./get-hash.injectable";
+import getPathToLegacyPackageJsonInjectable from "./get-path-to-legacy-package-json.injectable";
+import { registeredExtensionsInjectable } from "./registered-extensions.injectable";
 
-export type EnsureHashedDirectoryForExtension = (extensionName: string, registeredExtensions: ObservableMap<string, string>) => Promise<string>;
+export type EnsureHashedDirectoryForExtension = (extensionName: string) => Promise<string>;
 
 const ensureHashedDirectoryForExtensionInjectable = getInjectable({
   id: "ensure-hashed-directory-for-extension",
@@ -24,14 +25,27 @@ const ensureHashedDirectoryForExtensionInjectable = getInjectable({
     const directoryForExtensionData = di.inject(directoryForExtensionDataInjectable);
     const ensureDirectory = di.inject(ensureDirInjectable);
     const getHash = di.inject(getHashInjectable);
+    const getPathToLegacyPackageJson = di.inject(getPathToLegacyPackageJsonInjectable);
+    const registeredExtensions = di.inject(registeredExtensionsInjectable);
 
-    return async (extensionName, registeredExtensions) => {
-      const dirPath = await getOrInsertWithAsync(registeredExtensions, extensionName, async () => {
-        const salt = (await randomBytes(32)).toString("hex");
+    return async (extensionName) => {
+      let dirPath: string;
+
+      const legacyDirPath = getPathToLegacyPackageJson(extensionName);
+      const hashedDirectoryForLegacyDirPath = registeredExtensions.get(legacyDirPath);
+
+      if (hashedDirectoryForLegacyDirPath) {
+        registeredExtensions.set(extensionName, hashedDirectoryForLegacyDirPath);
+        registeredExtensions.delete(legacyDirPath);
+        dirPath = hashedDirectoryForLegacyDirPath;
+      } else {
+        const salt = randomBytes(32).toString("hex");
         const hashedName = getHash(`${extensionName}/${salt}`);
 
-        return joinPaths(directoryForExtensionData, hashedName);
-      });
+        const hashedExtensionDirectory = joinPaths(directoryForExtensionData, hashedName);
+
+        dirPath = getOrInsert(registeredExtensions, extensionName, hashedExtensionDirectory);
+      }
 
       await ensureDirectory(dirPath);
 
