@@ -51,7 +51,7 @@ describe("ensure-hashed-directory-for-extension", () => {
       registeredExtensions,
     );
 
-    expect(actual).toBe("some-directory-for-extension-data/12a427eae86fd78610c0404c3c1ef42cb28d8af1605552ed7cf30beaee21e876");
+    expect(actual).toBe("some-directory-for-extension-data/a37a1cfefc0391af3733f23cb6b29443f596a2b8ffe6d116c35df7bc3cd99ef6");
   });
 
   describe("given extension directory was saved based on extension's package.json path", () => {
