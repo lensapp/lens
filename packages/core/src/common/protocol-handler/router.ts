@@ -12,6 +12,7 @@ import { RoutingError, RoutingErrorType } from "./error";
 import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
 import type { LensExtension } from "../../extensions/lens-extension";
 import type { RouteHandler, RouteParams } from "./registration";
+import type { IComputedValue } from "mobx";
 import { when } from "mobx";
 import type { Logger } from "../logger";
 import type { FindExtensionInstanceByName } from "../../features/extensions/loader/common/find-instance-by-name.injectable";
@@ -61,13 +62,13 @@ export function foldAttemptResults(mainAttempt: RouteAttempt, rendererAttempt: R
 export interface LensProtocolRouterDependencies {
   readonly extensionsStore: ExtensionsStore;
   readonly logger: Logger;
-  readonly internalRoutes: Map<string, RouteHandler>;
+  readonly internalRoutes: IComputedValue<Map<string, RouteHandler>>;
   findExtensionInstanceByName: FindExtensionInstanceByName;
 }
 
 export const extensionUrlDeepLinkingSchema = `/:${EXTENSION_PUBLISHER_MATCH}(@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
 
-export abstract class LensProtocolRouter {
+export class LensProtocolRouter {
   constructor(protected readonly dependencies: LensProtocolRouterDependencies) {}
 
   /**
@@ -75,8 +76,8 @@ export abstract class LensProtocolRouter {
    * @param url the parsed URL that initiated the `lens://` protocol
    * @returns true if a route has been found
    */
-  protected _routeToInternal(url: Url<Record<string, string | undefined>>): RouteAttempt {
-    return this._route(this.dependencies.internalRoutes.entries(), url);
+  routeToInternal(url: Url<Record<string, string | undefined>>): RouteAttempt {
+    return this._route(this.dependencies.internalRoutes.get().entries(), url);
   }
 
   /**
@@ -216,7 +217,7 @@ export abstract class LensProtocolRouter {
    * Note: this function modifies its argument, do not reuse
    * @param url the protocol request URI that was "open"-ed
    */
-  protected async _routeToExtension(url: Url<Record<string, string | undefined>>): Promise<RouteAttempt> {
+  async routeToExtension(url: Url<Record<string, string | undefined>>): Promise<RouteAttempt> {
     const extension = await this._findMatchingExtensionByName(url);
 
     if (typeof extension === "string") {

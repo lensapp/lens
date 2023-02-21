@@ -8,9 +8,9 @@ import URLParse from "url-parse";
 import type { LensExtension } from "../../../extensions/lens-extension";
 import { observable, when } from "mobx";
 import type { LensProtocolRouterDependencies, RouteAttempt } from "../../../common/protocol-handler";
-import { ProtocolHandlerInvalid } from "../../../common/protocol-handler";
 import { disposer, noop } from "../../../common/utils";
-import type { BroadcastMessage } from "../../../common/ipc/broadcast-message.injectable";
+import type { SendDeepLinkingAttempt } from "../../../features/deep-linking/main/send-deep-linking-attempt.injectable";
+import type { SendInvalidDeepLinkingAttempt } from "../../../features/deep-linking/main/send-invalid-deep-linking-attempt.injectable";
 
 export interface FallbackHandler {
   (name: string): Promise<boolean>;
@@ -35,7 +35,8 @@ function checkHost<Query>(url: URLParse<Query>): boolean {
 
 export interface LensProtocolRouterMainDependencies extends LensProtocolRouterDependencies {
   showApplicationWindow: () => Promise<void>;
-  broadcastMessage: BroadcastMessage;
+  sendDeepLinkingAttempt: SendDeepLinkingAttempt;
+  sendInvalidDeepLinkingAttempt: SendInvalidDeepLinkingAttempt;
 }
 
 export class LensProtocolRouterMain extends proto.LensProtocolRouter {
@@ -74,12 +75,15 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
       this.dependencies.logger.info(`routing ${url.toString()}`);
 
       if (routeInternally) {
-        this._routeToInternal(url);
+        this.routeToInternal(url);
       } else {
-        await this._routeToExtension(url);
+        await this.routeToExtension(url);
       }
     } catch (error) {
-      this.dependencies.broadcastMessage(ProtocolHandlerInvalid, error ? String(error) : "unknown error", rawUrl);
+      this.dependencies.sendInvalidDeepLinkingAttempt({
+        error: String(error),
+        url: rawUrl,
+      });
 
       if (error instanceof proto.RoutingError) {
         this.dependencies.logger.error(`${error}`, { url: error.url });
@@ -113,10 +117,13 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     return "";
   }
 
-  protected _routeToInternal(url: URLParse<Record<string, string | undefined>>): RouteAttempt {
-    const rawUrl = url.toString(); // for sending to renderer
-    const attempt = super._routeToInternal(url);
-    const broadcastToRenderer = () => this.dependencies.broadcastMessage(proto.ProtocolHandlerInternal, rawUrl, attempt);
+  routeToInternal(url: URLParse<Record<string, string | undefined>>): RouteAttempt {
+    const attempt = super.routeToInternal(url);
+    const broadcastToRenderer = () => this.dependencies.sendDeepLinkingAttempt({
+      previous: attempt,
+      target: "internal",
+      url: url.toString(),
+    });
 
     if (this.rendererLoaded.get()) {
       broadcastToRenderer();
@@ -127,18 +134,20 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     return attempt;
   }
 
-  protected async _routeToExtension(url: URLParse<Record<string, string | undefined>>): Promise<RouteAttempt> {
-    const rawUrl = url.toString(); // for sending to renderer
-
+  async routeToExtension(url: URLParse<Record<string, string | undefined>>): Promise<RouteAttempt> {
     /**
      * This needs to be done first, so that the missing extension handlers can
      * be called before notifying the renderer.
      *
-     * Note: this needs to clone the url because _routeToExtension modifies its
+     * Note: this needs to clone the url because routeToExtension modifies its
      * argument.
      */
-    const attempt = await super._routeToExtension(new URLParse(url.toString(), true));
-    const broadcastToRenderer = () => this.dependencies.broadcastMessage(proto.ProtocolHandlerExtension, rawUrl, attempt);
+    const attempt = await super.routeToExtension(new URLParse(url.toString(), true));
+    const broadcastToRenderer = () => this.dependencies.sendDeepLinkingAttempt({
+      previous: attempt,
+      target: "external",
+      url: url.toString(),
+    });
 
     if (this.rendererLoaded.get()) {
       broadcastToRenderer();

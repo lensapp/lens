@@ -5,7 +5,6 @@
 
 import * as uuid from "uuid";
 
-import { ProtocolHandlerExtension, ProtocolHandlerInternal, ProtocolHandlerInvalid } from "../../../common/protocol-handler";
 import { noop } from "../../../common/utils";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -16,7 +15,14 @@ import type { ObservableMap } from "mobx";
 import { runInAction } from "mobx";
 import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
+import type { SendDeepLinkingAttempt } from "../../../features/deep-linking/main/send-deep-linking-attempt.injectable";
+import type { SendInvalidDeepLinkingAttempt } from "../../../features/deep-linking/main/send-invalid-deep-linking-attempt.injectable";
+import sendDeepLinkingAttemptInjectable from "../../../features/deep-linking/main/send-deep-linking-attempt.injectable";
+import sendInvalidDeepLinkingAttemptInjectable from "../../../features/deep-linking/main/send-invalid-deep-linking-attempt.injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
+import type { InternalRouteRegistration } from "../../../features/deep-linking/common/internal-handler-token";
+import { internalDeepLinkingRouteInjectionToken } from "../../../features/deep-linking/common/internal-handler-token";
 import { LensMainExtension } from "../../../extensions/lens-main-extension";
 
 function throwIfDefined(val: any): void {
@@ -29,10 +35,12 @@ describe("protocol router tests", () => {
   let extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
   let lpr: LensProtocolRouterMain;
   let enabledExtensions: Set<string>;
-  let broadcastMessageMock: jest.Mock;
+  let sendDeepLinkingAttemptMock: jest.MockedFunction<SendDeepLinkingAttempt>;
+  let sendInvalidDeepLinkingAttemptMock: jest.MockedFunction<SendInvalidDeepLinkingAttempt>;
+  let di: DiContainer;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     enabledExtensions = new Set();
 
@@ -42,8 +50,11 @@ describe("protocol router tests", () => {
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 
-    broadcastMessageMock = jest.fn();
-    di.override(broadcastMessageInjectable, () => broadcastMessageMock);
+    sendDeepLinkingAttemptMock = jest.fn();
+    di.override(sendDeepLinkingAttemptInjectable, () => sendDeepLinkingAttemptMock);
+
+    sendInvalidDeepLinkingAttemptMock = jest.fn();
+    di.override(sendInvalidDeepLinkingAttemptInjectable, () => sendInvalidDeepLinkingAttemptMock);
 
     extensionInstances = di.inject(extensionInstancesInjectable);
     lpr = di.inject(lensProtocolRouterMainInjectable);
@@ -55,16 +66,31 @@ describe("protocol router tests", () => {
 
   it("should broadcast invalid protocol on non-lens URLs", async () => {
     await lpr.route("https://google.ca");
-    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInvalid, "invalid protocol", "https://google.ca");
+    expect(sendInvalidDeepLinkingAttemptMock).toBeCalledWith({
+      error: "invalid protocol",
+      url: "https://google.ca",
+    });
   });
 
   it("should broadcast invalid host on non internal or non extension URLs", async () => {
     await lpr.route("lens://foobar");
-    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInvalid, "invalid host", "lens://foobar");
+    expect(sendInvalidDeepLinkingAttemptMock).toBeCalledWith({
+      error: "invalid host",
+      url: "lens://foobar",
+    });
   });
 
   it("should broadcast internal route when called with valid host", async () => {
-    lpr.addInternalHandler("/", noop);
+    runInAction(() => {
+      di.register(getInjectable({
+        id: "some-id",
+        instantiate: () => ({
+          path: "/",
+          handler: noop,
+        }),
+        injectionToken: internalDeepLinkingRouteInjectionToken,
+      }));
+    });
 
     try {
       expect(await lpr.route("lens://app")).toBeUndefined();
@@ -72,7 +98,11 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app", "matched");
+    expect(sendDeepLinkingAttemptMock).toHaveBeenCalledWith({
+      url: "lens://app",
+      previous: "matched",
+      target: "internal",
+    });
   });
 
   it("should broadcast external route when called with valid host", async () => {
@@ -105,13 +135,26 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerExtension, "lens://extension/@mirantis/minikube", "matched");
+    expect(sendDeepLinkingAttemptMock).toHaveBeenCalledWith({
+      url: "lens://extension/@mirantis/minikube",
+      previous: "matched",
+      target: "external",
+    });
   });
 
   it("should call handler if matches", async () => {
     let called = false;
 
-    lpr.addInternalHandler("/page", () => { called = true; });
+    runInAction(() => {
+      di.register(getInjectable({
+        id: "some-id",
+        instantiate: () => ({
+          path: "/page",
+          handler: () => { called = true; },
+        }),
+        injectionToken: internalDeepLinkingRouteInjectionToken,
+      }));
+    });
 
     try {
       expect(await lpr.route("lens://app/page")).toBeUndefined();
@@ -120,14 +163,35 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe(true);
-    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page", "matched");
+
+    expect(sendDeepLinkingAttemptMock).toHaveBeenCalledWith({
+      url: "lens://app/page",
+      previous: "matched",
+      target: "internal",
+    });
   });
 
   it("should call most exact handler", async () => {
     let called: any = 0;
 
-    lpr.addInternalHandler("/page", () => { called = 1; });
-    lpr.addInternalHandler("/page/:id", params => { called = params.pathname.id; });
+    runInAction(() => {
+      di.register(getInjectable({
+        id: "some-id",
+        instantiate: () => ({
+          path: "/page",
+          handler: () => { called = 1; },
+        }),
+        injectionToken: internalDeepLinkingRouteInjectionToken,
+      }));
+      di.register(getInjectable({
+        id: "some-other-id",
+        instantiate: () => ({
+          path: "/page/:id",
+          handler: params => { called = params.pathname.id; },
+        } as InternalRouteRegistration),
+        injectionToken: internalDeepLinkingRouteInjectionToken,
+      }));
+    });
 
     try {
       expect(await lpr.route("lens://app/page/foo")).toBeUndefined();
@@ -136,7 +200,11 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe("foo");
-    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo", "matched");
+    expect(sendDeepLinkingAttemptMock).toHaveBeenCalledWith({
+      url: "lens://app/page/foo",
+      previous: "matched",
+      target: "internal",
+    });
   });
 
   it("should call most exact handler for an extension", async () => {
@@ -176,7 +244,11 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe("foob");
-    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/@foobar/icecream/page/foob", "matched");
+    expect(sendDeepLinkingAttemptMock).toHaveBeenCalledWith({
+      url: "lens://extension/@foobar/icecream/page/foob",
+      previous: "matched",
+      target: "external",
+    });
   });
 
   it("should work with non-org extensions", async () => {
@@ -245,20 +317,67 @@ describe("protocol router tests", () => {
 
 
     expect(called).toBe(1);
-    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/icecream/page", "matched");
+    expect(sendDeepLinkingAttemptMock).toHaveBeenCalledWith({
+      url: "lens://extension/icecream/page",
+      previous: "matched",
+      target: "external",
+    });
   });
 
   it("should throw if urlSchema is invalid", () => {
-    expect(() => lpr.addInternalHandler("/:@", noop)).toThrowError();
+    expect(() => {
+      runInAction(() => {
+        di.register(getInjectable({
+          id: "some-id",
+          instantiate: () => ({
+            path: "/:@",
+            handler: noop,
+          }),
+          injectionToken: internalDeepLinkingRouteInjectionToken,
+        }));
+      });
+    }).toThrowError();
   });
 
   it("should call most exact handler with 3 found handlers", async () => {
     let called: any = 0;
 
-    lpr.addInternalHandler("/", () => { called = 2; });
-    lpr.addInternalHandler("/page", () => { called = 1; });
-    lpr.addInternalHandler("/page/foo", () => { called = 3; });
-    lpr.addInternalHandler("/page/bar", () => { called = 4; });
+    runInAction(() => {
+      di.register(
+        getInjectable({
+          id: "some-id-2",
+          instantiate: () => ({
+            path: "/",
+            handler: () => { called = 2; },
+          }),
+          injectionToken: internalDeepLinkingRouteInjectionToken,
+        }),
+        getInjectable({
+          id: "some-id-1",
+          instantiate: () => ({
+            path: "/page",
+            handler: () => { called = 1; },
+          }),
+          injectionToken: internalDeepLinkingRouteInjectionToken,
+        }),
+        getInjectable({
+          id: "some-id-3",
+          instantiate: () => ({
+            path: "/page/foo",
+            handler: () => { called = 3; },
+          }),
+          injectionToken: internalDeepLinkingRouteInjectionToken,
+        }),
+        getInjectable({
+          id: "some-id-4",
+          instantiate: () => ({
+            path: "/page/bar",
+            handler: () => { called = 4; },
+          }),
+          injectionToken: internalDeepLinkingRouteInjectionToken,
+        }),
+      );
+    });
 
     try {
       expect(await lpr.route("lens://app/page/foo/bar/bat")).toBeUndefined();
@@ -267,15 +386,44 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe(3);
-    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat", "matched");
+    expect(sendDeepLinkingAttemptMock).toHaveBeenCalledWith({
+      url: "lens://app/page/foo/bar/bat",
+      previous: "matched",
+      target: "internal",
+    });
   });
 
   it("should call most exact handler with 2 found handlers", async () => {
     let called: any = 0;
 
-    lpr.addInternalHandler("/", () => { called = 2; });
-    lpr.addInternalHandler("/page", () => { called = 1; });
-    lpr.addInternalHandler("/page/bar", () => { called = 4; });
+    runInAction(() => {
+      di.register(
+        getInjectable({
+          id: "some-id-2",
+          instantiate: () => ({
+            path: "/",
+            handler: () => { called = 2; },
+          }),
+          injectionToken: internalDeepLinkingRouteInjectionToken,
+        }),
+        getInjectable({
+          id: "some-id-1",
+          instantiate: () => ({
+            path: "/page",
+            handler: () => { called = 1; },
+          }),
+          injectionToken: internalDeepLinkingRouteInjectionToken,
+        }),
+        getInjectable({
+          id: "some-id-4",
+          instantiate: () => ({
+            path: "/page/bar",
+            handler: () => { called = 4; },
+          }),
+          injectionToken: internalDeepLinkingRouteInjectionToken,
+        }),
+      );
+    });
 
     try {
       expect(await lpr.route("lens://app/page/foo/bar/bat")).toBeUndefined();
@@ -284,6 +432,10 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe(1);
-    expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat", "matched");
+    expect(sendDeepLinkingAttemptMock).toHaveBeenCalledWith({
+      url: "lens://app/page/foo/bar/bat",
+      previous: "matched",
+      target: "internal",
+    });
   });
 });

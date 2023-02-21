@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronAppInjectable from "../electron-app.injectable";
-import openDeepLinkInjectable from "../../protocol-handler/lens-protocol-router-main/open-deep-link-for-url/open-deep-link.injectable";
+import openDeepLinkInjectable from "../../protocol-handler/lens-protocol-router-main/open-deep-link.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import commandLineArgumentsInjectable from "../../utils/command-line-arguments.injectable";
 import { pipeline } from "@ogre-tools/fp";

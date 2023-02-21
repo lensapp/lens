@@ -3,18 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import lensProtocolRouterMainInjectable from "../lens-protocol-router-main.injectable";
+import lensProtocolRouterMainInjectable from "./lens-protocol-router-main.injectable";
 
 const openDeepLinkInjectable = getInjectable({
   id: "open-deep-link",
-
-  instantiate: (di) => {
-    const getProtocolRouter = () => di.inject(lensProtocolRouterMainInjectable);
-
-    return async (url: string) => {
-      await getProtocolRouter().route(url);
-    };
-  },
+  instantiate: (di) => async (url: string) => di.inject(lensProtocolRouterMainInjectable).route(url),
 });
 
 export default openDeepLinkInjectable;
