@@ -6,19 +6,20 @@ import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import unmountRootComponentInjectable from "../../window/unmount-root-component.injectable";
 
-const initRootFrameInjectable = getInjectable({
-  id: "init-root-frame",
+const handleOnMainFrameCloseInjectable = getInjectable({
+  id: "handle-on-main-frame-close",
   instantiate: (di) => {
     const logger = di.inject(loggerInjectable);
     const unmountRootComponent = di.inject(unmountRootComponentInjectable);
 
-    return async () => {
+    return () => {
       window.addEventListener("beforeunload", () => {
         logger.info("[ROOT-FRAME]: Unload app");
         unmountRootComponent();
       });
     };
   },
+  causesSideEffects: true,
 });
 
-export default initRootFrameInjectable;
+export default handleOnMainFrameCloseInjectable;
