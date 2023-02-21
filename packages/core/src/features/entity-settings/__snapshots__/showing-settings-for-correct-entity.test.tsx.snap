@@ -830,7 +830,40 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
                 >
                   Proxy
                 </h2>
-                <section />
+                <section>
+                  <section>
+                    <div
+                      class="SubTitle"
+                      id="http-proxy"
+                    >
+                      HTTP Proxy
+                       
+                    </div>
+                    <div
+                      class="Input theme round black"
+                    >
+                      <label
+                        class="input-area flex gaps align-center"
+                        id=""
+                      >
+                        <input
+                          class="input box grow"
+                          placeholder="http://<address>:<port>"
+                          spellcheck="false"
+                          value=""
+                        />
+                      </label>
+                      <div
+                        class="input-info flex gaps"
+                      />
+                    </div>
+                    <small
+                      class="hint"
+                    >
+                      HTTP Proxy server. Used for communicating with Kubernetes API.
+                    </small>
+                  </section>
+                </section>
               </section>
             </div>
             <div

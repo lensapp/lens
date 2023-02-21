@@ -6,18 +6,22 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registration";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
+import { registerInjectableReact } from "@ogre-tools/injectable-react";
 import { runInAction } from "mobx";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export function registerInjectables(di: DiContainer) {
   setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
 
+  registerMobX(di);
+  registerInjectableReact(di);
+
   runInAction(() => {
-    registerMobX(di);
 
     autoRegister({
       di,
-      requireContexts: [
+      targetModule: module,
+      getRequireContexts: () => [
         require.context("./", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
         require.context("../common", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
         require.context("../extensions", true, CONTEXT_MATCHER_FOR_NON_FEATURES),

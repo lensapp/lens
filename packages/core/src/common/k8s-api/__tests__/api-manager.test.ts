@@ -4,7 +4,6 @@
  */
 
 import type { DiContainer } from "@ogre-tools/injectable";
-import createClusterInjectable from "../../../main/create-cluster/create-cluster.injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
 import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
@@ -18,6 +17,7 @@ import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import { KubeObjectStore } from "../kube-object.store";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
+import { createClusterInjectionToken } from "../../cluster/create-cluster-injection-token";
 
 // eslint-disable-next-line no-restricted-imports
 import { KubeApi as ExternalKubeApi } from "../../../extensions/common-api/k8s-api";
@@ -43,7 +43,7 @@ describe("ApiManager", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    const createCluster = di.inject(createClusterInjectable);
+    const createCluster = di.inject(createClusterInjectionToken);
 
     di.override(hostedClusterInjectable, () => createCluster({
       contextName: "some-context-name",

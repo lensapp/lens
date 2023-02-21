@@ -16,7 +16,8 @@ export function registerInjectables(di: DiContainer) {
 
     autoRegister({
       di,
-      requireContexts: [
+      targetModule: module,
+      getRequireContexts: () => [
         require.context("./", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
         require.context("../extensions", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
         require.context("../common", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
