@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { DrawerItem, DrawerTitle } from "../../drawer";
 import { stopPropagation } from "../../../utils";
 import { observer } from "mobx-react";
+import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ConfigurationInput, MinimalResourceGroup, OnlyUserSuppliedValuesAreShownToggle, ReleaseDetailsModel } from "./release-details-model/release-details-model.injectable";
 import releaseDetailsModelInjectable from "./release-details-model/release-details-model.injectable";
@@ -29,10 +30,16 @@ interface ReleaseDetailsContentProps {
 }
 
 interface Dependencies {
-  model: ReleaseDetailsModel;
+  computedModel: IAsyncComputed<ReleaseDetailsModel>;
 }
 
-const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & ReleaseDetailsContentProps) => {
+const NonInjectedReleaseDetailsContent = observer(({ computedModel }: Dependencies & ReleaseDetailsContentProps) => {
+  const model = computedModel.value.get();
+
+  if (!model) {
+    return <Spinner center data-testid="helm-release-detail-content-spinner" />;
+  }
+
   const loadingError = model.loadingError.get();
 
   if (loadingError) {
@@ -110,11 +117,9 @@ const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & Rel
 });
 
 export const ReleaseDetailsContent = withInjectables<Dependencies, ReleaseDetailsContentProps>(NonInjectedReleaseDetailsContent, {
-  getPlaceholder: () => <Spinner center data-testid="helm-release-detail-content-spinner" />,
-
-  getProps: async (di, props) => ({
-    model: await di.inject(releaseDetailsModelInjectable, props.targetRelease),
+  getProps: (di, props) => ({
     ...props,
+    computedModel: di.inject(releaseDetailsModelInjectable, props.targetRelease),
   }),
 });
 

@@ -31,11 +31,12 @@ import assert from "assert";
 import activeThemeInjectable from "../../../../themes/active.injectable";
 import type { ToHelmRelease } from "../../to-helm-release.injectable";
 import toHelmReleaseInjectable from "../../to-helm-release.injectable";
+import { asyncComputed } from "@ogre-tools/injectable-react";
 
 const releaseDetailsModelInjectable = getInjectable({
   id: "release-details-model",
 
-  instantiate: async (di, targetRelease: TargetHelmRelease) => {
+  instantiate: (di, targetRelease: TargetHelmRelease) => {
     const model = new ReleaseDetailsModel({
       requestDetailedHelmRelease: di.inject(requestDetailedHelmReleaseInjectable),
       targetRelease,
@@ -50,9 +51,14 @@ const releaseDetailsModelInjectable = getInjectable({
       toHelmRelease: di.inject(toHelmReleaseInjectable),
     });
 
-    await model.load();
+    return asyncComputed({
+      getValueFromObservedPromise: async () => {
+        await model.load();
 
-    return model;
+        return model;
+      },
+      betweenUpdates: "show-latest-value",
+    });
   },
 
   lifecycle: lifecycleEnum.keyedSingleton({
