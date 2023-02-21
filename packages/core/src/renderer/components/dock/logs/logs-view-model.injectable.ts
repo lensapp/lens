@@ -28,7 +28,7 @@ export interface InstantiateArgs {
 const logsViewModelInjectable = getInjectable({
   id: "logs-view-model",
 
-  instantiate: (di, { tabId }: InstantiateArgs) => new LogTabViewModel(tabId, {
+  instantiate: (di, tabId) => new LogTabViewModel(tabId, {
     getLogs: di.inject(getLogsInjectable),
     getLogsWithoutTimestamps: di.inject(getLogsWithoutTimestampsInjectable),
     getTimestampSplitLogs: di.inject(getTimestampSplitLogsInjectable),
@@ -45,7 +45,10 @@ const logsViewModelInjectable = getInjectable({
     downloadAllLogs: di.inject(downloadAllLogsInjectable),
     searchStore: di.inject(searchStoreInjectable),
   }),
-  lifecycle: lifecycleEnum.transient,
+
+  lifecycle: lifecycleEnum.keyedSingleton({
+    getInstanceKey: (di, tabId: TabId) => `log-tab-view-model-${tabId}}`,
+  }),
 });
 
 export default logsViewModelInjectable;

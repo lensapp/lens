@@ -9,7 +9,6 @@
     "build": "swc ./src/index.ts -d ./dist"
   },
   "type": "module",
-  "bin": "./dist/index.js",
   "dependencies": {
     "command-line-args": "^5.2.1",
     "semver": "^7.3.8"
