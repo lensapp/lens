@@ -6,7 +6,7 @@
 import type { ObservableMap } from "mobx";
 import { getInjectable } from "@ogre-tools/injectable";
 
-import { getOrInsertWithAsync } from "../../../common/utils";
+import { getOrInsert } from "../../../common/utils";
 import randomBytesInjectable from "../../../common/utils/random-bytes.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import directoryForExtensionDataInjectable from "./directory-for-extension-data.injectable";
@@ -35,14 +35,16 @@ const ensureHashedDirectoryForExtensionInjectable = getInjectable({
       const hashedDirectoryForLegacyDirPath = registeredExtensions.get(legacyDirPath);
 
       if (hashedDirectoryForLegacyDirPath) {
+        registeredExtensions.set(extensionName, hashedDirectoryForLegacyDirPath);
+        registeredExtensions.delete(legacyDirPath);
         dirPath = hashedDirectoryForLegacyDirPath;
       } else {
-        dirPath = await getOrInsertWithAsync(registeredExtensions, extensionName, async () => {
-          const salt = (await randomBytes(32)).toString("hex");
-          const hashedName = getHash(`${extensionName}/${salt}`);
+        const salt = randomBytes(32).toString("hex");
+        const hashedName = getHash(`${extensionName}/${salt}`);
 
-          return joinPaths(directoryForExtensionData, hashedName);
-        });
+        const hashedExtensionDirectory = joinPaths(directoryForExtensionData, hashedName);
+
+        dirPath = getOrInsert(registeredExtensions, extensionName, hashedExtensionDirectory);
       }
 
       await ensureDirectory(dirPath);

@@ -51,32 +51,51 @@ describe("ensure-hashed-directory-for-extension", () => {
       registeredExtensions,
     );
 
-    expect(actual).not.toBe("some-directory");
+    expect(actual).toBe("some-directory-for-extension-data/12a427eae86fd78610c0404c3c1ef42cb28d8af1605552ed7cf30beaee21e876");
   });
 
-  it("given extension directory was saved based on extension's package.json path, returns existing directory", async () => {
-    runInAction(() => {
-      registeredExtensions.set("/some-directory-for-user-data/node_modules/some-extension-name/package.json", "some-directory");
-    });
-    const actual = await ensureHashedDirectoryForExtension(
-      "some-extension-name",
-      registeredExtensions,
-    );
-
-    expect(actual).toBe("some-directory");
-  });
-
-  it("given extension directory was saved based on extension's package.json path, ensure dir is called with right parameter", async () => {
-    runInAction(() => {
-      registeredExtensions.set("/some-directory-for-user-data/node_modules/some-extension-name/package.json", "some-directory");
+  describe("given extension directory was saved based on extension's package.json path", () => {
+    beforeEach(() => {
+      runInAction(() => {
+        registeredExtensions.set("/some-directory-for-user-data/node_modules/some-extension-name/package.json", "some-directory");
+      });
+      ensureDirMock.mockClear();
     });
 
-    await ensureHashedDirectoryForExtension(
-      "some-extension-name",
-      registeredExtensions,
-    );
+    it("returns existing directory", async () => {
+      const actual = await ensureHashedDirectoryForExtension(
+        "some-extension-name",
+        registeredExtensions,
+      );
 
-    expect(ensureDirMock).toHaveBeenCalledWith("some-directory");
+      expect(actual).toBe("some-directory");
+    });
+
+    it("ensure dir is called with some directory", async () => {
+      await ensureHashedDirectoryForExtension(
+        "some-extension-name",
+        registeredExtensions,
+      );
+
+      expect(ensureDirMock).toHaveBeenCalledWith("some-directory");
+    });
+
+    it("is migrated to use the extension name as key", async () => {
+      await ensureHashedDirectoryForExtension(
+        "some-extension-name",
+        registeredExtensions,
+      );
+
+      expect(registeredExtensions.get("some-extension-name")).toEqual("some-directory");
+    });
+
+    it("old key is removed", async () => {
+      await ensureHashedDirectoryForExtension(
+        "some-extension-name",
+        registeredExtensions,
+      );
+
+      expect(registeredExtensions.has("/some-directory-for-user-data/node_modules/some-extension-name/package.json")).toEqual(false);
+    });
   });
-
 });
