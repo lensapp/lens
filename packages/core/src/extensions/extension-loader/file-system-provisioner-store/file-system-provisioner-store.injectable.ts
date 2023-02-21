@@ -14,6 +14,7 @@ import { persistStateToConfigInjectionToken } from "../../../common/base-store/s
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 import { enlistMessageChannelListenerInjectionToken } from "../../../common/utils/channel/enlist-message-channel-listener-injection-token";
 import ensureHashedDirectoryForExtensionInjectable from "./ensure-hashed-directory-for-extension.injectable";
+import { registeredExtensionsInjectable } from "./registered-extensions.injectable";
 
 const fileSystemProvisionerStoreInjectable = getInjectable({
   id: "file-system-provisioner-store",
@@ -30,6 +31,7 @@ const fileSystemProvisionerStoreInjectable = getInjectable({
     enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
     shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
     ensureHashedDirectoryForExtension: di.inject(ensureHashedDirectoryForExtensionInjectable),
+    registeredExtensions: di.inject(registeredExtensionsInjectable),
   }),
 });
 
