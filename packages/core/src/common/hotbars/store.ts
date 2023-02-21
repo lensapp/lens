@@ -8,10 +8,8 @@ import type { BaseStoreDependencies } from "../base-store/base-store";
 import { BaseStore } from "../base-store/base-store";
 import { toJS } from "../utils";
 import type { CatalogEntity } from "../catalog";
-import { broadcastMessage } from "../ipc";
 import type { Hotbar, CreateHotbarData, CreateHotbarOptions } from "./types";
 import { defaultHotbarCells, getEmptyHotbar } from "./types";
-import { hotbarTooManyItemsChannel } from "../ipc/hotbar";
 import type { GeneralEntity } from "../catalog-entities";
 import type { Logger } from "../logger";
 import assert from "assert";
@@ -24,6 +22,7 @@ export interface HotbarStoreModel {
 interface Dependencies extends BaseStoreDependencies {
   readonly catalogCatalogEntity: GeneralEntity;
   readonly logger: Logger;
+  onTooManyHotbarItems: () => void;
 }
 
 export class HotbarStore extends BaseStore<HotbarStoreModel> {
@@ -195,7 +194,7 @@ export class HotbarStore extends BaseStore<HotbarStoreModel> {
       if (emptyCellIndex != -1) {
         hotbar.items[emptyCellIndex] = newItem;
       } else {
-        broadcastMessage(hotbarTooManyItemsChannel);
+        this.dependencies.onTooManyHotbarItems();
       }
     } else if (0 <= cellIndex && cellIndex < hotbar.items.length) {
       hotbar.items[cellIndex] = newItem;
