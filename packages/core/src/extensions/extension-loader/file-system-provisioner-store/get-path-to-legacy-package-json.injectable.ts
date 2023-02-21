@@ -15,9 +15,7 @@ const getPathToLegacyPackageJson = getInjectable({
     const directoryForUserData = di.inject(directoryForUserDataInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
 
-    return (extensionName: string) => {
-      return joinPaths(directoryForUserData, "node_modules", extensionName, "package.json");
-    };
+    return (extensionName: string) => joinPaths(directoryForUserData, "node_modules", extensionName, "package.json");
   },
 });
 
