@@ -1133,7 +1133,7 @@ exports[`installing helm chart from previously opened tab given tab for installi
                       Version
                     </span>
                     <div
-                      class="Select theme-outlined chart-version css-b62m3t-container"
+                      class="Select theme-dark chart-version css-b62m3t-container"
                     >
                       <span
                         class="css-1f43avz-a11yText-A11yText"
@@ -1208,7 +1208,7 @@ exports[`installing helm chart from previously opened tab given tab for installi
                       Namespace
                     </span>
                     <div
-                      class="Select theme-outlined NamespaceSelect css-b62m3t-container"
+                      class="Select theme-dark NamespaceSelect css-b62m3t-container"
                     >
                       <span
                         class="css-1f43avz-a11yText-A11yText"

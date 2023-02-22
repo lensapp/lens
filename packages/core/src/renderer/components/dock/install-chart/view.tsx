@@ -93,14 +93,12 @@ const NonInjectedInstallChart = observer(
                 options={version.options.get()}
                 onChange={(changed) => version.onChange(changed?.value)}
                 menuPlacement="top"
-                themeName="outlined"
                 id={`install-chart-version-select-for-${tabId}`}
               />
               <span>Namespace</span>
               <NamespaceSelect
                 showIcons={false}
                 menuPlacement="top"
-                themeName="outlined"
                 value={namespace.value.get()}
                 onChange={namespace.onChange}
                 id={`install-chart-namespace-select-for-${tabId}`}

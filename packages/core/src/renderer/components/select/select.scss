@@ -43,10 +43,6 @@ html {
       }
     }
 
-    &__value-container {
-      margin-bottom: 1px;
-    }
-
     &__single-value {
       color: var(--textColorSecondary);
       overflow: visible;
@@ -93,6 +89,8 @@ html {
     &__option {
       white-space: nowrap;
       cursor: pointer;
+      border-radius: 3px;
+      padding: 6px 8px;
 
       &:active {
         background: var(--primary);
@@ -175,21 +173,6 @@ html {
           &--is-disabled:hover {
             color: inherit;
           }
-        }
-      }
-    }
-
-    &.theme-outlined {
-      .Select__control {
-        box-shadow: 0 0 0 1px var(--colorVague);
-        color: var(--primary);
-
-        .Select__value-container {
-          padding: 0 $padding * 0.5;
-        }
-
-        .Select__dropdown-indicator {
-          padding: 3px;
         }
       }
     }

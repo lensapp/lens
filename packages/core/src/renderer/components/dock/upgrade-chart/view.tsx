@@ -81,7 +81,6 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
                 id="char-version-input"
                 className="chart-version"
                 menuPlacement="top"
-                themeName="outlined"
                 value={model.version.value.get()}
                 options={model.versionOptions.get()}
                 onChange={model.version.set}
