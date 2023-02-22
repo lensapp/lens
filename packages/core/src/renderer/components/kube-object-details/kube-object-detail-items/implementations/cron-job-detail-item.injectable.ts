@@ -20,7 +20,7 @@ const cronJobDetailItemInjectable = getInjectable({
 
     return {
       Component: CronJobDetails,
-      enabled: computed(() => isCronJob(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isCronJob(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

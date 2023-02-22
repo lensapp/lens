@@ -20,7 +20,7 @@ const clusterRoleDetailItemInjectable = getInjectable({
 
     return {
       Component: ClusterRoleDetails,
-      enabled: computed(() => isClusterRole(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isClusterRole(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

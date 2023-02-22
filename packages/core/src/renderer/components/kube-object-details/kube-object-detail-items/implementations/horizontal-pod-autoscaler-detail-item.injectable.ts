@@ -20,7 +20,7 @@ const horizontalPodAutoscalerDetailItemInjectable = getInjectable({
 
     return {
       Component: HpaDetails,
-      enabled: computed(() => isHorizontalPodAutoscaler(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isHorizontalPodAutoscaler(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

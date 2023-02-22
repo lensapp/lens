@@ -20,7 +20,7 @@ const podDetailItemInjectable = getInjectable({
 
     return {
       Component: PodDetails,
-      enabled: computed(() => isPod(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isPod(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

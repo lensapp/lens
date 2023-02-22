@@ -13,13 +13,13 @@ import { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Spinner } from "../spinner";
 import { KubeObjectMenu } from "../kube-object-menu";
 import type { HideDetails } from "../kube-detail-params/hide-details.injectable";
-import { withInjectables } from "@ogre-tools/injectable-react";
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
+import { type IAsyncComputed, withInjectables } from "@ogre-tools/injectable-react";
 import kubeObjectDetailItemsInjectable
   from "./kube-object-detail-items/kube-object-detail-items.injectable";
 import type {
   KubeObjectDetailsItem,
-  KubeObjectDetailsComputedValue,
+  KubeObjectDetailsValue,
 } from "./current-kube-object-in-details.injectable";
 import currentKubeObjectInDetailsInjectable from "./current-kube-object-in-details.injectable";
 
@@ -30,7 +30,7 @@ export interface KubeObjectDetailsProps<Kube extends KubeObject = KubeObject> {
 
 interface Dependencies {
   detailComponents: IComputedValue<React.ElementType[]>;
-  kubeObjectDetails: KubeObjectDetailsComputedValue;
+  kubeObjectDetails: IAsyncComputed<KubeObjectDetailsValue>;
   hideDetails: HideDetails;
 }
 
@@ -41,9 +41,9 @@ const NonInjectedKubeObjectDetails = observer((props: Dependencies) => {
     kubeObjectDetails,
   } = props;
 
-  const kubeObject = kubeObjectDetails.get();
+  const kubeObject = kubeObjectDetails.value.get();
   const isError = kubeObject instanceof Error;
-  const isLoading = !kubeObject && !isError;
+  const isLoading = kubeObjectDetails.pending.get();
 
   const title = (kubeObject instanceof KubeObject)
     ? `${kubeObject.kind}: ${kubeObject.getName()}`
@@ -62,7 +62,7 @@ const NonInjectedKubeObjectDetails = observer((props: Dependencies) => {
 
       {isError ? (
         <div className="box center">
-          Resource loading has failed: 
+          Resource loading has failed:
           {" "}
           <b>{String(kubeObject)}</b>
         </div>

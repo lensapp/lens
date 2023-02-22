@@ -58,7 +58,7 @@ const kubeObjectDetailItemRegistratorInjectable = getInjectable({
                   return false;
                 }
 
-                if (!isRelevantKubeObject(kubeObject.get() as KubeObjectDetailsItem)) {
+                if (!isRelevantKubeObject(kubeObject.value.get() as KubeObjectDetailsItem)) {
                   return false;
                 }
 

@@ -20,7 +20,7 @@ const leaseDetailItemInjectable = getInjectable({
 
     return {
       Component: LeaseDetails,
-      enabled: computed(() => isLease(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isLease(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

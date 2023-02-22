@@ -2,41 +2,39 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { action, computed, type IComputedValue, observable, runInAction } from "mobx";
 import { getInjectable } from "@ogre-tools/injectable";
+import { asyncComputed } from "@ogre-tools/injectable-react";
 import kubeDetailsUrlParamInjectable from "../kube-detail-params/kube-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 
 export type KubeObjectDetailsItem = KubeObject;
 export type KubeObjectDetailsValue = KubeObjectDetailsItem | Error | undefined;
-export type KubeObjectDetailsComputedValue = IComputedValue<KubeObjectDetailsValue>;
 
 const currentKubeObjectInDetailsInjectable = getInjectable({
-  id: "current-kube-object-in-details",
+  id: "current-kube-object-in-details-async-computed",
 
-  instantiate(di): KubeObjectDetailsComputedValue {
-    const kubeObjectUrlParam = di.inject(kubeDetailsUrlParamInjectable);
+  instantiate: (di) => {
+    const urlParam = di.inject(kubeDetailsUrlParamInjectable);
     const apiManager = di.inject(apiManagerInjectable);
-    const kubeObject = observable.box<KubeObjectDetailsValue>();
 
-    return computed<KubeObjectDetailsValue>(() => {
-      const kubeObjUrlPath = kubeObjectUrlParam.get();
+    return asyncComputed<KubeObjectDetailsValue>({
+      betweenUpdates: "show-latest-value",
 
-      if (!kubeObjUrlPath) return; // details panel is hidden
+      async getValueFromObservedPromise() {
+        const path = urlParam.get();
+        const store = apiManager.getStore(path);
 
-      const store = apiManager.getStore(kubeObjUrlPath);
-      const object = store?.getByPath(kubeObjUrlPath);
+        if (!store) {
+          return undefined;
+        }
 
-      if (!object) {
-        store?.loadFromPath(kubeObjUrlPath)
-          .then(action((obj) => kubeObject.set(obj)))
-          .catch(action((error) => kubeObject.set(Error(error))));
-      } else {
-        runInAction(() => kubeObject.set(object));
-      }
-
-      return kubeObject.get() ?? object;
+        try {
+          return store.getByPath(path) ?? await store.loadFromPath(path);
+        } catch (error) {
+          return Error(String(error));
+        }
+      },
     });
   },
 });

@@ -20,7 +20,7 @@ const ingressDetailItemInjectable = getInjectable({
 
     return {
       Component: IngressDetails,
-      enabled: computed(() => isIngress(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isIngress(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

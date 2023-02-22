@@ -20,7 +20,7 @@ const serviceDetailItemInjectable = getInjectable({
 
     return {
       Component: ServiceDetails,
-      enabled: computed(() => isService(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isService(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

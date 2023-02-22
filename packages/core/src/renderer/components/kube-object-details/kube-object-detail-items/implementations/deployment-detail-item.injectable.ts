@@ -20,7 +20,7 @@ const deploymentDetailItemInjectable = getInjectable({
 
     return {
       Component: DeploymentDetails,
-      enabled: computed(() => isDeployment(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isDeployment(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

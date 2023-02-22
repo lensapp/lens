@@ -20,7 +20,7 @@ const statefulSetDetailItemInjectable = getInjectable({
 
     return {
       Component: StatefulSetDetails,
-      enabled: computed(() => isStatefulSet(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isStatefulSet(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

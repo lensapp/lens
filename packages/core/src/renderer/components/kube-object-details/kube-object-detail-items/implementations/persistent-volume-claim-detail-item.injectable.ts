@@ -20,7 +20,7 @@ const persistentVolumeClaimDetailItemInjectable = getInjectable({
 
     return {
       Component: PersistentVolumeClaimDetails,
-      enabled: computed(() => isPersistentVolumeClaim(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isPersistentVolumeClaim(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

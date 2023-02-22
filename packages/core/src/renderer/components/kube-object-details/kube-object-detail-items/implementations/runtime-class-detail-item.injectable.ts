@@ -20,7 +20,7 @@ const runtimeClassDetailItemInjectable = getInjectable({
 
     return {
       Component: RuntimeClassesDetails,
-      enabled: computed(() => isRuntimeClass(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isRuntimeClass(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

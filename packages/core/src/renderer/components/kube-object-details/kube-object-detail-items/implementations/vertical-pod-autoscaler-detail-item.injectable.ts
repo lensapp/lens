@@ -20,7 +20,7 @@ const verticalPodAutoscalerDetailItemInjectable = getInjectable({
 
     return {
       Component: VpaDetails,
-      enabled: computed(() => isVerticalPodAutoscaler(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isVerticalPodAutoscaler(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

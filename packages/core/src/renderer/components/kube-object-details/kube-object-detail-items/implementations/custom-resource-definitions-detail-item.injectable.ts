@@ -20,7 +20,7 @@ const customResourceDefinitionsDetailItemInjectable = getInjectable({
 
     return {
       Component: CRDDetails,
-      enabled: computed(() => isCustomResourceDefinition(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isCustomResourceDefinition(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

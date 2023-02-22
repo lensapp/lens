@@ -22,7 +22,7 @@ const replicationControllerDetailItemInjectable = getInjectable({
 
     return {
       Component: ReplicationControllerDetails,
-      enabled: computed(() => isReplicationController(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isReplicationController(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

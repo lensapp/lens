@@ -18,7 +18,7 @@ const metricsDetailsComponentEnabledInjectable = getInjectable({
     const currentKubeObjectInDetails = di.inject(currentKubeObjectInDetailsInjectable);
 
     return computed(() => {
-      const kubeObject = currentKubeObjectInDetails.get() as KubeObjectDetailsItem;
+      const kubeObject = currentKubeObjectInDetails.value.get() as KubeObjectDetailsItem;
 
       if (kubeObject) {
         return kubeObject.kind == kind && metricsEnabled.get();

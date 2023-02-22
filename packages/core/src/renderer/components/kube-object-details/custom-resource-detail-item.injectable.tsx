@@ -19,7 +19,7 @@ const customResourceDetailItemInjectable = getInjectable({
     const customResourceDefinitionStore = di.inject(customResourceDefinitionStoreInjectable);
     const currentKubeObjectInDetails = di.inject(currentKubeObjectInDetailsInjectable);
     const currentCustomResourceDefinition = computed(() => {
-      const object = currentKubeObjectInDetails.get();
+      const object = currentKubeObjectInDetails.value.get();
 
       if (!object) {
         return undefined;

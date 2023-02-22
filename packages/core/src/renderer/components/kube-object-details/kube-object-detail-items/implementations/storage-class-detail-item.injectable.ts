@@ -20,7 +20,7 @@ const storageClassDetailItemInjectable = getInjectable({
 
     return {
       Component: StorageClassDetails,
-      enabled: computed(() => isStorageClass(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isStorageClass(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

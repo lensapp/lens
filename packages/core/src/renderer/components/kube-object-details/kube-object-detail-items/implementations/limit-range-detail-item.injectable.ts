@@ -20,7 +20,7 @@ const limitRangeDetailItemInjectable = getInjectable({
 
     return {
       Component: LimitRangeDetails,
-      enabled: computed(() => isLimitRange(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isLimitRange(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

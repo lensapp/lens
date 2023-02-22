@@ -20,7 +20,7 @@ const eventsDetailItemInjectable = getInjectable({
 
     return {
       Component: EventDetails,
-      enabled: computed(() => isEvent(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isEvent(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

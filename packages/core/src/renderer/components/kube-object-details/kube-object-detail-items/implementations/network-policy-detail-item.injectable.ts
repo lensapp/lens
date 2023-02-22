@@ -20,7 +20,7 @@ const networkPolicyDetailItemInjectable = getInjectable({
 
     return {
       Component: NetworkPolicyDetails,
-      enabled: computed(() => isNetworkPolicy(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isNetworkPolicy(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },

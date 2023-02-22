@@ -20,7 +20,7 @@ const clusterRoleBindingDetailItemInjectable = getInjectable({
 
     return {
       Component: ClusterRoleBindingDetails,
-      enabled: computed(() => isClusterRoleBinding(kubeObject.get() as KubeObjectDetailsItem)),
+      enabled: computed(() => isClusterRoleBinding(kubeObject.value.get() as KubeObjectDetailsItem)),
       orderNumber: 10,
     };
   },
