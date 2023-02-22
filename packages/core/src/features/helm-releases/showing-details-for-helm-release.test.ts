@@ -350,8 +350,8 @@ describe("showing details for helm release", () => {
                 expect(rendered.baseElement).toMatchSnapshot();
               });
 
-              it("does not reload", () => {
-                expect(requestDetailedHelmReleaseMock).not.toHaveBeenCalled();
+              it("does reload", () => {
+                expect(requestDetailedHelmReleaseMock).toHaveBeenCalled();
               });
             });
           });

@@ -31,15 +31,11 @@ import assert from "assert";
 import activeThemeInjectable from "../../../../themes/active.injectable";
 import type { ToHelmRelease } from "../../to-helm-release.injectable";
 import toHelmReleaseInjectable from "../../to-helm-release.injectable";
-import { asyncComputed } from "@ogre-tools/injectable-react";
-import targetHelmReleaseInjectable from "../target-helm-release.injectable";
 
 const releaseDetailsModelInjectable = getInjectable({
   id: "release-details-model",
 
-  instantiate: (di, targetRelease: TargetHelmRelease) => {
-    const detailsHelmRelease = di.inject(targetHelmReleaseInjectable);
-
+  instantiate: async (di, targetRelease: TargetHelmRelease) => {
     const model = new ReleaseDetailsModel({
       requestDetailedHelmRelease: di.inject(requestDetailedHelmReleaseInjectable),
       targetRelease,
@@ -54,27 +50,12 @@ const releaseDetailsModelInjectable = getInjectable({
       toHelmRelease: di.inject(toHelmReleaseInjectable),
     });
 
-    return asyncComputed<ReleaseDetailsModel>({
-      getValueFromObservedPromise: async () => {
-        const currentHelmRelease = detailsHelmRelease.get();
+    await model.load();
 
-        if (
-          currentHelmRelease
-          && currentHelmRelease.name === targetRelease.name
-          && currentHelmRelease.namespace === targetRelease.namespace
-        ) {
-          await model.load();
-        }
-
-        return model;
-      },
-      betweenUpdates: "show-latest-value",
-    });
+    return model;
   },
 
-  lifecycle: lifecycleEnum.keyedSingleton({
-    getInstanceKey: (di, release: TargetHelmRelease) => `${release.namespace}/${release.name}`,
-  }),
+  lifecycle: lifecycleEnum.transient,
 });
 
 export default releaseDetailsModelInjectable;

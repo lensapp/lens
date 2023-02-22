@@ -11,10 +11,7 @@ import { Link } from "react-router-dom";
 import { DrawerItem, DrawerTitle } from "../../drawer";
 import { stopPropagation } from "../../../utils";
 import { observer } from "mobx-react";
-import type { IAsyncComputed } from "@ogre-tools/injectable-react";
-import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ConfigurationInput, MinimalResourceGroup, OnlyUserSuppliedValuesAreShownToggle, ReleaseDetailsModel } from "./release-details-model/release-details-model.injectable";
-import releaseDetailsModelInjectable from "./release-details-model/release-details-model.injectable";
 import { Button } from "../../button";
 import { kebabCase } from "lodash/fp";
 import { Badge } from "../../badge";
@@ -22,36 +19,21 @@ import { SubTitle } from "../../layout/sub-title";
 import { Table, TableCell, TableHead, TableRow } from "../../table";
 import { Checkbox } from "../../checkbox";
 import { MonacoEditor } from "../../monaco-editor";
-import { Spinner } from "../../spinner";
-import type { TargetHelmRelease } from "./target-helm-release.injectable";
 
 interface ReleaseDetailsContentProps {
-  targetRelease: TargetHelmRelease;
+  model: ReleaseDetailsModel;
 }
 
-interface Dependencies {
-  computedModel: IAsyncComputed<ReleaseDetailsModel>;
-}
-
-const NonInjectedReleaseDetailsContent = observer(({ computedModel }: Dependencies & ReleaseDetailsContentProps) => {
-  const model = computedModel.value.get();
-
-  if (!model) {
-    return <Spinner center data-testid="helm-release-detail-content-spinner" />;
-  }
-
+export const ReleaseDetailsContent = observer(({ model }: ReleaseDetailsContentProps) => {
   const loadingError = model.loadingError.get();
 
   if (loadingError) {
     return (
       <div data-testid="helm-release-detail-error">
-        Failed to load release:
-        {" "}
-        {loadingError}
+        {`Failed to load release: ${loadingError}`}
       </div>
     );
   }
-
 
   return (
     <div>
@@ -94,9 +76,7 @@ const NonInjectedReleaseDetailsContent = observer(({ computedModel }: Dependenci
       <ReleaseValues
         releaseId={model.id}
         configuration={model.configuration}
-        onlyUserSuppliedValuesAreShown={
-          model.onlyUserSuppliedValuesAreShown
-        }
+        onlyUserSuppliedValuesAreShown={model.onlyUserSuppliedValuesAreShown}
       />
 
       <DrawerTitle>Notes</DrawerTitle>
@@ -114,13 +94,6 @@ const NonInjectedReleaseDetailsContent = observer(({ computedModel }: Dependenci
       )}
     </div>
   );
-});
-
-export const ReleaseDetailsContent = withInjectables<Dependencies, ReleaseDetailsContentProps>(NonInjectedReleaseDetailsContent, {
-  getProps: (di, props) => ({
-    ...props,
-    computedModel: di.inject(releaseDetailsModelInjectable, props.targetRelease),
-  }),
 });
 
 const ResourceGroup = ({
