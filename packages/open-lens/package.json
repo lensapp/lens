@@ -195,6 +195,7 @@
     }
   },
   "dependencies": {
+    "@k8slens/application": "^6.4.0-beta.13",
     "@k8slens/core": "^6.4.0-beta.13",
     "@k8slens/ensure-binaries": "^6.4.0-beta.13",
     "@k8slens/generate-tray-icons": "^6.4.0-beta.13",

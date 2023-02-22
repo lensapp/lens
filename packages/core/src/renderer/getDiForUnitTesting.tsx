@@ -18,8 +18,8 @@ import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
-import applicationInformationInjectable from "../common/vars/application-information-injectable";
 import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
+import { applicationInformationFakeInjectable } from "../common/vars/application-information-fake-injectable";
 
 export const getDiForUnitTesting = (
   opts: { doGeneralOverrides?: boolean } = {},
@@ -45,9 +45,10 @@ export const getDiForUnitTesting = (
       .filter(isInjectable)
   ) as Injectable<any, any, any>[];
 
+  registerMobX(di);
+
   runInAction(() => {
-    registerMobX(di);
-    di.register(applicationInformationInjectable);
+    di.register(applicationInformationFakeInjectable);
 
     chunk(100)(injectables).forEach((chunkInjectables) => {
       di.register(...chunkInjectables);

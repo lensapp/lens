@@ -29,9 +29,9 @@ import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
-import applicationInformationInjectable from "../common/vars/application-information-injectable";
 import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
+import { applicationInformationFakeInjectable } from "../common/vars/application-information-fake-injectable";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
   const {
@@ -57,9 +57,10 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       .filter(isInjectable)
   ) as Injectable<any, any, any>[];
 
+  registerMobX(di);
+
   runInAction(() => {
-    registerMobX(di);
-    di.register(applicationInformationInjectable);
+    di.register(applicationInformationFakeInjectable);
 
     chunk(100)(injectables).forEach(chunkInjectables => {
       di.register(...chunkInjectables);
