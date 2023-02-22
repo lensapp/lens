@@ -10,7 +10,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
 import type { IComputedValue } from "mobx";
 import { action, computed, makeObservable, observable, reaction, runInAction, when } from "mobx";
-import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
+import type { CatalogEntityStore } from "./catalog-entity-store.injectable";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu } from "../../api/catalog-entity";
 import type { CatalogCategory, CatalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
@@ -27,7 +27,7 @@ import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 import { Avatar } from "../avatar";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import catalogPreviousActiveTabStorageInjectable from "./catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
-import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
+import catalogEntityStoreInjectable from "./catalog-entity-store.injectable";
 import type { GetCategoryColumnsParams, CategoryColumns } from "./columns/get.injectable";
 import getCategoryColumnsInjectable from "./columns/get.injectable";
 import type { RegisteredCustomCategoryViewDecl } from "./custom-views.injectable";
@@ -133,16 +133,19 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
         }
       }, { fireImmediately: true }),
       // If active category is filtered out, automatically switch to the first category
-      reaction(() => catalogCategoryRegistry.filteredItems, () => {
-        if (!catalogCategoryRegistry.filteredItems.find(item => item.getId() === catalogEntityStore.activeCategory.get()?.getId())) {
-          const item = catalogCategoryRegistry.filteredItems[0];
+      reaction(() => [...catalogCategoryRegistry.filteredItems], (categories) => {
+        const currentCategory = catalogEntityStore.activeCategory.get();
+        const someCategory = categories[0];
 
-          runInAction(() => {
-            if (item) {
-              this.activeTab = item.getId();
-              this.props.catalogEntityStore.activeCategory.set(item);
-            }
-          });
+        if (this.routeActiveTab === browseCatalogTab || !someCategory) {
+          return;
+        }
+
+        const currentCategoryShouldBeShown = Boolean(categories.find(item => item.getId() === someCategory.getId()));
+
+        if (!currentCategory || !currentCategoryShouldBeShown) {
+          this.activeTab = someCategory.getId();
+          this.props.catalogEntityStore.activeCategory.set(someCategory);
         }
       }),
     ]);
@@ -174,6 +177,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   }
 
   onTabChange = action((tabId: string | null) => {
+    console.log(tabId);
     const activeCategory = this.categories.find(category => category.getId() === tabId);
 
     this.props.emitEvent({

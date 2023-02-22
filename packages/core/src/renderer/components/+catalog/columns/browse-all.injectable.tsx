@@ -17,6 +17,7 @@ const defaultBrowseAllColumns: RegisteredAdditionalCategoryColumn[] = [
       id: "kind",
       sortBy: "kind",
       title: "Kind",
+      "data-testid": "browse-all-category-column",
     },
     sortCallback: entity => entity.kind,
   },

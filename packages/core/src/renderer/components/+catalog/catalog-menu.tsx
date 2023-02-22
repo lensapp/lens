@@ -7,7 +7,6 @@ import treeStyles from "./catalog-tree.module.scss";
 import styles from "./catalog-menu.module.scss";
 
 import React from "react";
-import type { TreeItemProps } from "@material-ui/lab";
 import { TreeItem, TreeView } from "@material-ui/lab";
 import { Icon } from "../icon";
 import { StylesProvider } from "@material-ui/core";
@@ -36,12 +35,6 @@ function getCategoryIcon(category: CatalogCategory) {
   return null;
 }
 
-function Item(props: TreeItemProps) {
-  return (
-    <TreeItem classes={treeStyles} {...props}/>
-  );
-}
-
 interface Dependencies {
   filteredCategories: IComputedValue<CatalogCategory[]>;
 }
@@ -60,13 +53,17 @@ const NonInjectedCatalogMenu = observer(({
         defaultCollapseIcon={<Icon material="expand_more" />}
         defaultExpandIcon={<Icon material="chevron_right" />}
         selected={activeTab || "browse"}
+        onNodeSelect={console.log}
       >
-        <Item
+        <TreeItem
+          classes={treeStyles}
           nodeId="browse"
           label="Browse"
           data-testid="*-tab"
-          onClick={() => onItemClick("*")} />
-        <Item
+          onClick={() => onItemClick("*")}
+        />
+        <TreeItem
+          classes={treeStyles}
           nodeId="catalog"
           label={<div className={styles.parent}>Categories</div>}
           className={cssNames(styles.bordered)}
@@ -74,16 +71,23 @@ const NonInjectedCatalogMenu = observer(({
           {
             filteredCategories.get()
               .map(category => (
-                <Item
+                <TreeItem
+                  classes={treeStyles}
                   icon={getCategoryIcon(category)}
                   key={category.getId()}
                   nodeId={category.getId()}
                   label={<CatalogCategoryLabel category={category} />}
                   data-testid={`${category.getId()}-tab`}
-                  onClick={() => onItemClick(category.getId())} />
+                  onLabelClick={console.log}
+                  onIconClick={console.log}
+                  onClick={() => {
+                    console.log("clicking", category);
+                    onItemClick(category.getId());
+                  }}
+                />
               ))
           }
-        </Item>
+        </TreeItem>
       </TreeView>
     </div>
   </StylesProvider>
