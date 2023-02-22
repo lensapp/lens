@@ -6,3 +6,4 @@ lens.log
 docs/extensions/api
 site/
 lerna-debug.log
+coverage
