@@ -4103,7 +4103,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       Upgrade version
                     </span>
                     <div
-                      class="Select theme-outlined chart-version css-b62m3t-container"
+                      class="Select theme-dark chart-version css-b62m3t-container"
                     >
                       <span
                         class="css-1f43avz-a11yText-A11yText"
@@ -5098,7 +5098,7 @@ exports[`New Upgrade Helm Chart Dock Tab given a namespace is selected when navi
                       Upgrade version
                     </span>
                     <div
-                      class="Select theme-outlined chart-version css-b62m3t-container"
+                      class="Select theme-dark chart-version css-b62m3t-container"
                     >
                       <span
                         class="css-1f43avz-a11yText-A11yText"
