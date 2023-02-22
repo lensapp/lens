@@ -20,10 +20,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "yarn run webpack --config webpack/extensions.ts",
-    "build:docs": "yarn run typedoc",
+    "build": "webpack --config webpack/extensions.ts",
+    "build:docs": "typedoc",
     "clean": "rimraf dist/",
-    "prepare:dev": "yarn run build"
+    "prepare:dev": "npm run build"
   },
   "dependencies": {
     "@k8slens/core": "^6.4.0-beta.13"
@@ -39,7 +39,7 @@
     "style-loader": "^3.3.1",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
-    "typedoc": "0.23.24",
+    "typedoc": "0.23.25",
     "typedoc-plugin-markdown": "^3.13.6",
     "typescript": "^4.9.5",
     "typescript-plugin-css-modules": "^4.1.1",
