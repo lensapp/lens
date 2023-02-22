@@ -50,8 +50,6 @@ const releaseDetailsModelInjectable = getInjectable({
       toHelmRelease: di.inject(toHelmReleaseInjectable),
     });
 
-    await model.load();
-
     return model;
   },
 
@@ -70,6 +68,7 @@ export interface OnlyUserSuppliedValuesAreShownToggle {
 export interface ConfigurationInput {
   readonly nonSavedValue: IObservableValue<string>;
   readonly isLoading: IObservableValue<boolean>;
+  readonly isLoaded: IObservableValue<boolean>;
   readonly isSaving: IObservableValue<boolean>;
   onChange: (value: string) => void;
   save: () => Promise<void>;
@@ -101,6 +100,7 @@ export class ReleaseDetailsModel {
   readonly configuration: ConfigurationInput = {
     nonSavedValue: observable.box(""),
     isLoading: observable.box(false),
+    isLoaded: observable.box(false),
     isSaving: observable.box(false),
 
     onChange: action((value: string) => {
@@ -201,6 +201,7 @@ export class ReleaseDetailsModel {
 
     runInAction(() => {
       this.configuration.isLoading.set(false);
+      this.configuration.isLoaded.set(true);
       this.configuration.nonSavedValue.set(configuration);
     });
   };

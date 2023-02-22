@@ -28,7 +28,7 @@ const NonInjectedReleaseDetailsDrawerToolbar = observer(({
   model,
   navigateToHelmReleases,
 }: Dependencies & ReleaseDetailsDrawerProps) => (
-  model.loadingError.get()
+  model.loadingError.get() || !model.configuration.isLoaded.get()
     ? null
     : (
       <HelmReleaseMenu

@@ -5,7 +5,7 @@
 
 import "./release-details.scss";
 
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Link } from "react-router-dom";
 import { DrawerItem, DrawerTitle } from "../../drawer";
@@ -34,10 +34,6 @@ interface Dependencies {
 
 const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & ReleaseDetailsContentProps) => {
   const loadingError = model.loadingError.get();
-
-  useEffect(() => {
-    model.load();
-  }, []);
 
   if (loadingError) {
     return (
@@ -115,10 +111,16 @@ const NonInjectedReleaseDetailsContent = observer(({ model }: Dependencies & Rel
 export const ReleaseDetailsContent = withInjectables<Dependencies, ReleaseDetailsContentProps>(NonInjectedReleaseDetailsContent, {
   getPlaceholder: () => <Spinner center data-testid="helm-release-detail-content-spinner" />,
 
-  getProps: async (di, props) => ({
-    model: await di.inject(releaseDetailsModelInjectable, props.targetRelease),
-    ...props,
-  }),
+  getProps: async (di, props) => { 
+    const model = await di.inject(releaseDetailsModelInjectable, props.targetRelease);
+
+    await model.load();
+
+    return {
+      model,
+      ...props,
+    };
+  },
 });
 
 const ResourceGroup = ({
