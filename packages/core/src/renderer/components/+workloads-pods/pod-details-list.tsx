@@ -190,7 +190,7 @@ class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & De
           )}
           className="box grow"
         >
-          <TableHead flat>
+          <TableHead flat sticky={virtual}>
             <TableCell className="name" sortBy={sortBy.name}>Name</TableCell>
             <TableCell className="warning"/>
             <TableCell className="node" sortBy={sortBy.node}>Node</TableCell>
