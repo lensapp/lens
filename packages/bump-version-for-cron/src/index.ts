@@ -48,7 +48,7 @@ try {
     });
   }
 
-  await exec(`npm run bump-version --yes ${newVersion}`);
+  await exec(`npm run bump-version ${newVersion} -- --yes`);
 } catch (error) {
   console.error(error);
   process.exit(1);
