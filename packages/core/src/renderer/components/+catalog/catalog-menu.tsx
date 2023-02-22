@@ -6,17 +6,18 @@
 import treeStyles from "./catalog-tree.module.scss";
 import styles from "./catalog-menu.module.scss";
 
+import type { MouseEventHandler } from "react";
 import React from "react";
 import { TreeItem, TreeView } from "@material-ui/lab";
 import { Icon } from "../icon";
 import { StylesProvider } from "@material-ui/core";
-import { cssNames } from "../../utils";
 import type { CatalogCategory } from "../../api/catalog-entity";
 import { observer } from "mobx-react";
 import { CatalogCategoryLabel } from "./catalog-category-label";
 import type { IComputedValue } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import filteredCategoriesInjectable from "../../../common/catalog/filtered-categories.injectable";
+import { cssNames } from "../../utils";
 
 export interface CatalogMenuProps {
   activeTab: string | undefined;
@@ -34,6 +35,39 @@ function getCategoryIcon(category: CatalogCategory) {
 
   return null;
 }
+
+interface TreeItemEntryProps {
+  tabIndex?: number;
+  onClick?: MouseEventHandler;
+  icon?: React.ReactNode;
+  label?: React.ReactNode;
+  "data-testid"?: string;
+}
+
+const TreeItemEntry = (props: TreeItemEntryProps) => (
+  <li
+    className="MuiTreeItem-root"
+    role="treeitem"
+    tabIndex={props.tabIndex ?? -1}
+    data-testid={props["data-testid"]}
+    onClick={props.onClick}
+  >
+    <div
+      className="MuiTreeItem-content"
+    >
+      <div
+        className="MuiTreeItem-iconContainer"
+      >
+        {props.icon}
+      </div>
+    </div>
+    <div
+      className="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
+    >
+      {props.label}
+    </div>
+  </li>
+);
 
 interface Dependencies {
   filteredCategories: IComputedValue<CatalogCategory[]>;
@@ -55,9 +89,7 @@ const NonInjectedCatalogMenu = observer(({
         selected={activeTab || "browse"}
         onNodeSelect={console.log}
       >
-        <TreeItem
-          classes={treeStyles}
-          nodeId="browse"
+        <TreeItemEntry
           label="Browse"
           data-testid="*-tab"
           onClick={() => onItemClick("*")}
@@ -71,19 +103,12 @@ const NonInjectedCatalogMenu = observer(({
           {
             filteredCategories.get()
               .map(category => (
-                <TreeItem
-                  classes={treeStyles}
-                  icon={getCategoryIcon(category)}
+                <TreeItemEntry
                   key={category.getId()}
-                  nodeId={category.getId()}
+                  icon={getCategoryIcon(category)}
                   label={<CatalogCategoryLabel category={category} />}
                   data-testid={`${category.getId()}-tab`}
-                  onLabelClick={console.log}
-                  onIconClick={console.log}
-                  onClick={() => {
-                    console.log("clicking", category);
-                    onItemClick(category.getId());
-                  }}
+                  onClick={() => onItemClick(category.getId())}
                 />
               ))
           }
