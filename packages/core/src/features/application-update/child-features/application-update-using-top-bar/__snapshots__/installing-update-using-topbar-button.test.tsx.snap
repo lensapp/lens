@@ -107,6 +107,7 @@ exports[`encourage user to update when sufficient time passed since update was d
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -392,6 +393,7 @@ exports[`encourage user to update when sufficient time passed since update was d
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"

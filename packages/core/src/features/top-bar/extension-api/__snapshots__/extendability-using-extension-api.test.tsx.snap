@@ -82,6 +82,7 @@ exports[`extendability-using-extension-api given an extension with a weakly type
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -376,6 +377,7 @@ exports[`extendability-using-extension-api given an extension with top-bar items
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -661,6 +663,7 @@ exports[`extendability-using-extension-api given an extension with top-bar items
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -946,6 +949,7 @@ exports[`extendability-using-extension-api renders 1`] = `
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"

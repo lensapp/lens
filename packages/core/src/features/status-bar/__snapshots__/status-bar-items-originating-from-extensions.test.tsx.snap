@@ -82,6 +82,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"

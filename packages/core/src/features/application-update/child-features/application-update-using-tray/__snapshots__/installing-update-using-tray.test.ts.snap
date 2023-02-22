@@ -82,6 +82,7 @@ exports[`installing update using tray when started renders 1`] = `
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -367,6 +368,7 @@ exports[`installing update using tray when started when user checks for updates 
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -652,6 +654,7 @@ exports[`installing update using tray when started when user checks for updates 
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -962,6 +965,7 @@ exports[`installing update using tray when started when user checks for updates 
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -1272,6 +1276,7 @@ exports[`installing update using tray when started when user checks for updates 
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -1557,6 +1562,7 @@ exports[`installing update using tray when started when user checks for updates 
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"

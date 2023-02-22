@@ -82,6 +82,7 @@ exports[`show-about-using-tray renders 1`] = `
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"

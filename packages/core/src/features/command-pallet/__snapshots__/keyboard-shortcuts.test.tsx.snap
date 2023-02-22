@@ -173,6 +173,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux renders 1`] = `
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -549,6 +550,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing ESC
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -1313,6 +1315,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -1598,6 +1601,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS renders 1`] = `
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -1883,6 +1887,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing ESC
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -2168,6 +2173,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -2465,6 +2471,7 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
