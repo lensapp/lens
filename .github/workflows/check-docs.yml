@@ -24,9 +24,9 @@ jobs:
 
       - name: Generate Extensions API Reference using typedocs
         run: |
-          yarn install
-          yarn run build:docs
+          npm install
+          npm run build:docs
 
       - name: Verify that the markdown is valid
         run: |
-          yarn run mkdocs:verify
+          npm run mkdocs:verify
