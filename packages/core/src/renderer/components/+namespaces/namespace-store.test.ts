@@ -11,7 +11,8 @@ import directoryForKubeConfigsInjectable from "../../../common/app-paths/directo
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { Fetch } from "../../../common/fetch/fetch.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
-import { Namespace, NamespaceApi } from "../../../common/k8s-api/endpoints";
+import { Namespace } from "../../../common/k8s-api/endpoints";
+import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import type { DeleteResourceDescriptor } from "../../../common/k8s-api/kube-api";
 import type { KubeJsonApiData } from "../../../common/k8s-api/kube-json-api";
 import type { KubeJsonApiObjectMetadata, KubeObjectScope } from "../../../common/k8s-api/kube-object";
@@ -126,8 +127,12 @@ describe("NamespaceStore", () => {
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.override(removeSubnamespaceInjectable, () => removeSubnamespaceMock);
 
-    deleteNamespaceMock = jest.spyOn(NamespaceApi.prototype, "delete").mockImplementation();
+    deleteNamespaceMock = jest.fn();
     removeSubnamespaceMock = jest.fn();
+
+    di.override(namespaceApiInjectable, () => ({
+      delete: deleteNamespaceMock,
+    } as any));
 
     const createCluster = di.inject(createClusterInjectable);
 
@@ -154,10 +159,6 @@ describe("NamespaceStore", () => {
       levelDeepChildB,
       levelDeepSubChildA,
     ]);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
   });
 
   it("returns tree for single node", () => {
