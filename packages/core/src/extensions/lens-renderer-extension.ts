@@ -35,6 +35,15 @@ import type { IComputedValue } from "mobx";
 import type { NavigateToRoute } from "../common/front-end-routing/navigate-to-route-injection-token";
 import type { Route } from "../common/front-end-routing/front-end-route-injection-token";
 import type { GetExtensionPageParameters } from "../renderer/routes/get-extension-page-parameters.injectable";
+import type { InstalledExtension } from "./common-api";
+import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import catalogCategoryRegistryInjectable from "../common/catalog/category-registry.injectable";
+import catalogEntityRegistryInjectable from "../renderer/api/catalog/entity/registry.injectable";
+import loggerInjectable from "../common/logger.injectable";
+import getExtensionPageParametersInjectable from "../renderer/routes/get-extension-page-parameters.injectable";
+import navigateToRouteInjectable from "../renderer/routes/navigate-to-route.injectable";
+import routesInjectable from "../renderer/routes/routes.injectable";
+import fileSystemProvisionerStoreInjectable from "./extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
 
 interface LensRendererExtensionDependencies extends LensExtensionDependencies {
   navigateToRoute: NavigateToRoute;
@@ -70,6 +79,21 @@ export class LensRendererExtension extends LensExtension {
    * @ignore
    */
   declare protected readonly dependencies: LensRendererExtensionDependencies;
+
+  constructor(extension: InstalledExtension) {
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.renderer);
+    const deps: LensRendererExtensionDependencies = {
+      categoryRegistry: di.inject(catalogCategoryRegistryInjectable),
+      entityRegistry: di.inject(catalogEntityRegistryInjectable),
+      fileSystemProvisionerStore: di.inject(fileSystemProvisionerStoreInjectable),
+      getExtensionPageParameters: di.inject(getExtensionPageParametersInjectable),
+      navigateToRoute: di.inject(navigateToRouteInjectable),
+      routes: di.inject(routesInjectable),
+      logger: di.inject(loggerInjectable),
+    };
+
+    super(deps, extension);
+  }
 
   async navigate(pageId?: string, params: object = {}) {
     const routes = this.dependencies.routes.get();
