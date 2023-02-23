@@ -21,7 +21,7 @@ import { runInAction, computed, observable } from "mobx";
 import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { flushPromises } from "../../common/test-utils/flush-promises";
-import type { ClusterPageMenuRegistration } from "../../extensions/common-api/types";
+import type { ClusterPageMenuRegistration } from "../../renderer/components/layout/cluster-page-menu";
 
 describe("cluster - sidebar and tab navigation for extensions", () => {
   let applicationBuilder: ApplicationBuilder;
