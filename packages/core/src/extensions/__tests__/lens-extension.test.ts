@@ -7,6 +7,8 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import { LensMainExtension } from "../lens-main-extension";
 
 describe("lens extension", () => {
+  let ext: LensMainExtension;
+
   beforeEach(async () => {
     const builder = getApplicationBuilder();
 
