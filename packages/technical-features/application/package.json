@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/application",
   "private": false,
-  "version": "6.4.0-beta.13",
+  "version": "6.4.0-cron.f212c90",
   "description": "Package for creating Lens applications",
   "type": "commonjs",
   "files": [
