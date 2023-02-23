@@ -22,6 +22,7 @@
   "scripts": {
     "build": "lens-build",
     "build:remove": "lens-remove-build",
+    "dev": "lens-build -- --watch",
     "code-style:fix": "lens-fix-code-style",
     "code-style:verify": "lens-verify-code-style",
     "test": "lens-test"
