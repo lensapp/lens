@@ -43,10 +43,6 @@ await spawn("git", ["add", "lerna.json", "packages/*/package.json"], {
 await spawn("git", ["commit", "-sm", `"Release ${newVersion.format()}"`], {
   stdio: "inherit",
 });
-
-console.log(`new version: ${newVersion.format()}`);
-
-console.log("fetching tags...");
 await spawn("git", ["fetch", "--tags", "--force"], {
   stdio: "inherit",
 });
@@ -55,7 +51,7 @@ const actualTags = (await exec("git tag --list", { encoding: "utf-8" })).stdout.
 const [previousReleasedVersion] = actualTags
   .map((value) => semverValid(value))
   .filter((v): v is string => typeof v === "string")
-  .sort((l, r) => semverRcompare(l, r))
+  .sort(semverRcompare)
   .filter(version => semverLte(version, currentVersion));
 
 const getMergedPrsArgs = [
