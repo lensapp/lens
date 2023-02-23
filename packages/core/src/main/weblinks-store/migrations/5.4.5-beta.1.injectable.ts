@@ -28,10 +28,10 @@ const v545Beta1WeblinkStoreMigrationInjectable = getInjectable({
         lensDocumentationWeblinkLink.id = links.lensDocumentationWeblinkId;
       }
 
-      const lensSlackWeblinkLink = weblinks.find(weblink => weblink.name === links.lensSlackWeblinkName);
+      const lensSlackWeblinkLink = weblinks.find(weblink => weblink.name === links.lensForumsWeblinkName);
 
       if (lensSlackWeblinkLink) {
-        lensSlackWeblinkLink.id = links.lensSlackWeblinkId;
+        lensSlackWeblinkLink.id = links.lensForumsWeblinkId;
       }
 
       const lensTwitterWeblinkLink = weblinks.find(weblink => weblink.name === links.lensTwitterWeblinkName);

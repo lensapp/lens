@@ -11,7 +11,7 @@ import isWindowsInjectable from "../../common/vars/is-windows.injectable";
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import getEnabledExtensionsInjectable from "./get-enabled-extensions/get-enabled-extensions.injectable";
-import { slackUrl, issuesTrackerUrl } from "../../common/vars";
+import { forumsUrl, issuesTrackerUrl } from "../../common/vars";
 import { buildVersionInjectionToken } from "../../common/vars/build-semantic-version.injectable";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
@@ -53,6 +53,10 @@ export const App = {
 
     return di.inject(isLinuxInjectable);
   },
-  slackUrl,
+  /**
+   * @deprecated Slack link is the same as the forums link
+   */
+  slackUrl: forumsUrl,
+  forumsUrl,
   issuesTrackerUrl,
 } as const;
