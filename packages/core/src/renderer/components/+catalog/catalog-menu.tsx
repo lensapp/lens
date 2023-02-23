@@ -6,18 +6,16 @@
 import treeStyles from "./catalog-tree.module.scss";
 import styles from "./catalog-menu.module.scss";
 
-import type { MouseEventHandler } from "react";
 import React from "react";
-import { TreeItem, TreeView } from "@material-ui/lab";
 import { Icon } from "../icon";
-import { StylesProvider } from "@material-ui/core";
 import type { CatalogCategory } from "../../api/catalog-entity";
 import { observer } from "mobx-react";
 import { CatalogCategoryLabel } from "./catalog-category-label";
 import type { IComputedValue } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import filteredCategoriesInjectable from "../../../common/catalog/filtered-categories.injectable";
-import { cssNames } from "../../utils";
+import { TreeGroup, TreeItem, TreeView } from "../tree-view/tree-view";
+import { browseCatalogTab } from "./catalog-browse-tab";
 
 export interface CatalogMenuProps {
   activeTab: string | undefined;
@@ -36,39 +34,6 @@ function getCategoryIcon(category: CatalogCategory) {
   return null;
 }
 
-interface TreeItemEntryProps {
-  tabIndex?: number;
-  onClick?: MouseEventHandler;
-  icon?: React.ReactNode;
-  label?: React.ReactNode;
-  "data-testid"?: string;
-}
-
-const TreeItemEntry = (props: TreeItemEntryProps) => (
-  <li
-    className="MuiTreeItem-root"
-    role="treeitem"
-    tabIndex={props.tabIndex ?? -1}
-    data-testid={props["data-testid"]}
-    onClick={props.onClick}
-  >
-    <div
-      className="MuiTreeItem-content"
-    >
-      <div
-        className="MuiTreeItem-iconContainer"
-      >
-        {props.icon}
-      </div>
-    </div>
-    <div
-      className="MuiTypography-root MuiTreeItem-label MuiTypography-body1"
-    >
-      {props.label}
-    </div>
-  </li>
-);
-
 interface Dependencies {
   filteredCategories: IComputedValue<CatalogCategory[]>;
 }
@@ -77,45 +42,41 @@ const NonInjectedCatalogMenu = observer(({
   activeTab,
   filteredCategories,
   onItemClick,
-}: CatalogMenuProps & Dependencies) => (
-  // Overwrite Material UI styles with injectFirst https://material-ui.com/guides/interoperability/#controlling-priority-4
-  <StylesProvider injectFirst>
+}: CatalogMenuProps & Dependencies) => {
+  console.log(treeStyles);
+
+  return (
     <div className="flex flex-col w-full">
       <div className={styles.catalog}>Catalog</div>
-      <TreeView
-        defaultExpanded={["catalog"]}
-        defaultCollapseIcon={<Icon material="expand_more" />}
-        defaultExpandIcon={<Icon material="chevron_right" />}
-        selected={activeTab || "browse"}
-      >
-        <TreeItemEntry
+      <TreeView>
+        <TreeItem
           label="Browse"
           data-testid="*-tab"
           onClick={() => onItemClick("*")}
-        />
-        <TreeItem
+          selected={activeTab === browseCatalogTab} />
+        <TreeGroup
           classes={treeStyles}
-          nodeId="catalog"
           label={<div className={styles.parent}>Categories</div>}
-          className={cssNames(styles.bordered)}
         >
-          {
-            filteredCategories.get()
-              .map(category => (
-                <TreeItemEntry
-                  key={category.getId()}
-                  icon={getCategoryIcon(category)}
-                  label={<CatalogCategoryLabel category={category} />}
-                  data-testid={`${category.getId()}-tab`}
-                  onClick={() => onItemClick(category.getId())}
-                />
-              ))
-          }
-        </TreeItem>
+          {filteredCategories.get()
+            .map(category => (
+              <TreeItem
+                key={category.getId()}
+                label={(
+                  <>
+                    {getCategoryIcon(category)}
+                    <CatalogCategoryLabel category={category} />
+                  </>
+                )}
+                selected={activeTab === category.getId()}
+                data-testid={`${category.getId()}-tab`}
+                onClick={() => onItemClick(category.getId())} />
+            ))}
+        </TreeGroup>
       </TreeView>
     </div>
-  </StylesProvider>
-));
+  );
+});
 
 export const CatalogMenu = withInjectables<Dependencies, CatalogMenuProps>(NonInjectedCatalogMenu, {
   getProps: (di, props) => ({
