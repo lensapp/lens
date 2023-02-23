@@ -177,7 +177,6 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   }
 
   onTabChange = action((tabId: string | null) => {
-    console.log(tabId);
     const activeCategory = this.categories.find(category => category.getId() === tabId);
 
     this.props.emitEvent({

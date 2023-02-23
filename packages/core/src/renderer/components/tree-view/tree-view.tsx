@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import styles from "./tree-view.module.scss";
 import type { MouseEventHandler } from "react";
 import React, { useState } from "react";
 import { cssNames } from "../../utils";
@@ -20,7 +21,7 @@ export interface TreeViewProps {
 export function TreeView(props: TreeViewProps) {
   return (
     <ul
-      className={props.classes?.root}
+      className={cssNames(props.classes?.root, styles.treeView)}
       role="tree"
     >
       {props.children}
@@ -31,10 +32,14 @@ export function TreeView(props: TreeViewProps) {
 export interface TreeItemClasses {
   root?: string;
   label?: string;
+  selected?: string;
+  hover?: string;
+  iconContainer?: string;
 }
 
 export interface TreeItemProps {
   classes?: TreeItemClasses;
+  icon?: JSX.Element;
   label: JSX.Element | string;
   testId?: string;
   selected?: boolean;
@@ -42,15 +47,31 @@ export interface TreeItemProps {
 }
 
 export function TreeItem(props: TreeItemProps) {
+  const [hovering, setHovering] = useState(false);
+  const optionalCssNames: Partial<Record<string, any>> = {};
+
+  if (props.classes?.selected) {
+    optionalCssNames[props.classes.selected] = props.selected ?? false;
+  }
+
+  if (props.classes?.hover) {
+    optionalCssNames[props.classes.hover] = hovering;
+  }
+
   return (
     <li
-      className={cssNames(props.classes?.root, {
-        selected: props.selected ?? false,
+      className={cssNames(props.classes?.root, optionalCssNames, styles.treeItem, {
+        [styles.selected]: props.selected ?? false,
       })}
       role="treeitem"
       data-testid={props.testId}
       onClick={props.onClick}
+      onMouseOver={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
     >
+      <div className={cssNames(props.classes?.iconContainer, styles.iconContainer)}>
+        {props.icon}
+      </div>
       <div className={props.classes?.label}>
         {props.label}
       </div>
@@ -60,7 +81,7 @@ export function TreeItem(props: TreeItemProps) {
 
 export interface TreeGroupClasses {
   root?: string;
-  header?: string;
+  group?: string;
   iconContainer?: string;
   label?: string;
   contents?: string;
@@ -81,12 +102,15 @@ export function TreeGroup(props: TreeGroupProps) {
 
   return (
     <li
-      className={props.classes?.root}
+      className={cssNames(props.classes?.root, styles.treeGroup)}
       role="group"
       data-testid={props.testId}
     >
-      <div className={props.classes?.header} onClick={() => setExpanded(!expanded)}>
-        <div className={props.classes?.iconContainer}>
+      <div
+        className={cssNames(props.classes?.group, styles.group)}
+        onClick={() => setExpanded(!expanded)}
+      >
+        <div className={cssNames(props.classes?.iconContainer, styles.iconContainer)}>
           {
             expanded
               ? props.collapseIcon ?? <Icon material="expand_more" />
@@ -97,13 +121,13 @@ export function TreeGroup(props: TreeGroupProps) {
           {props.label}
         </div>
       </div>
-      <div className={props.classes?.contents}>
-        {
-          expanded
-            ? props.children
-            : null
-        }
-      </div>
+      <ul
+        className={cssNames(props.classes?.contents, styles.contents, {
+          [styles.expanded]: expanded,
+        })}
+      >
+        {props.children}
+      </ul>
     </li>
   );
 }
