@@ -4,9 +4,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import child_process from "child_process";
-import commandLineArgs from "command-line-args";
-import fse from "fs-extra";
-import { basename } from "path";
+import { readFile } from "fs/promises";
 import { createInterface } from "readline";
 import semver from "semver";
 import { promisify } from "util";
@@ -18,89 +16,40 @@ const {
   lte: semverLte,
 } = semver;
 const exec = promisify(child_process.exec);
-const execFile = promisify(child_process.execFile);
+const spawn = promisify(child_process.spawn);
 
-const options = commandLineArgs([
-  {
-    name: "type",
-    defaultOption: true,
-  },
-  {
-    name: "preid",
-  },
-  {
-    name: "check-commits",
-    type: Boolean,
-  },
-]);
+const repoRoot = (await exec("git rev-parse --show-toplevel")).stdout;
 
-const validReleaseValues = [
-  "major",
-  "minor",
-  "patch",
-];
-const validPrereleaseValues = [
-  "premajor",
-  "preminor",
-  "prepatch",
-  "prerelease",
-];
-const validPreidValues = [
-  "alpha",
-  "beta",
-];
-
-const errorMessages = {
-  noReleaseType: `No release type provided. Valid options are: ${[...validReleaseValues, ...validPrereleaseValues].join(", ")}`,
-  invalidRelease: (invalid: string) => `Invalid release type was provided (value was "${invalid}"). Valid options are: ${[...validReleaseValues, ...validPrereleaseValues].join(", ")}`,
-  noPreid: `No preid was provided. Use '--preid' to specify. Valid options are: ${validPreidValues.join(", ")}`,
-  invalidPreid: (invalid: string) => `Invalid preid was provided (value was "${invalid}"). Valid options are: ${validPreidValues.join(", ")}`,
-  wrongCwd: "It looks like you are running this script from the 'scripts' directory. This script assumes it is run from the root of the git repo",
-};
-
-if (!options.type) {
-  console.error(errorMessages.noReleaseType);
-  process.exit(1);
+if (process.cwd() !== repoRoot) {
+  console.error("It looks like you are running this script from the 'scripts' directory. This script assumes it is run from the root of the git repo");
 }
 
-if (validReleaseValues.includes(options.type)) {
-  // do nothing, is valid
-} else if (validPrereleaseValues.includes(options.type)) {
-  if (!options.preid) {
-    console.error(errorMessages.noPreid);
-    process.exit(1);
-  }
+const currentVersion = new SemVer(JSON.parse((await readFile("./lerna.json", "utf-8"))).version);
 
-  if (!validPreidValues.includes(options.preid)) {
-    console.error(errorMessages.invalidPreid(options.preid));
-    process.exit(1);
-  }
-} else {
-  console.error(errorMessages.invalidRelease(options.type));
-  process.exit(1);
-}
+await spawn("npm", ["run", "bump-version"], {
+  stdio: "inherit",
+});
 
-if (basename(process.cwd()) === "scripts") {
-  console.error(errorMessages.wrongCwd);
-}
-
-const currentVersion = new SemVer((await fse.readJson("./lerna.json")).version);
-
-console.log(`current version: ${currentVersion.format()}`);
-
-const newVersion = currentVersion.inc(options.type, options.preid);
+const newVersion = new SemVer(JSON.parse((await readFile("./lerna.json", "utf-8"))).version);
 const newVersionMilestone = `${newVersion.major}.${newVersion.minor}.${newVersion.patch}`;
 const prBranch = `release/v${newVersion.format()}`;
 
-await exec(`npm run bump-version --yes ${newVersion.format()}`);
-await exec(`git checkout -b ${prBranch}`);
-await exec("git add lerna.json packages/*/package.json");
-await exec(`git commit -sm "Release ${newVersion.format()}"`);
+await spawn("git", ["checkout", "-b", prBranch], {
+  stdio: "inherit",
+});
+await spawn("git", ["add", "lerna.json", "packages/*/package.json"], {
+  stdio: "inherit",
+});
+await spawn("git", ["commit", "-sm", `"Release ${newVersion.format()}"`], {
+  stdio: "inherit",
+});
 
 console.log(`new version: ${newVersion.format()}`);
 
 console.log("fetching tags...");
-await exec("git fetch --tags --force");
+await spawn("git", ["fetch", "--tags", "--force"], {
+  stdio: "inherit",
+});
 
 const actualTags = (await exec("git tag --list", { encoding: "utf-8" })).stdout.split(/\r?\n/).map(line => line.trim());
 const [previousReleasedVersion] = actualTags
@@ -193,9 +142,7 @@ function getPrEntry(pr: ExtendedGithubPrData) {
 }
 
 const rl = createInterface(process.stdin);
-const prBase = newVersion.patch === 0
-  ? "master"
-  : `release/v${newVersion.major}.${newVersion.minor}`;
+const prBase = (await exec("git branch --show-current")).stdout.trim();
 
 function askQuestion(question: string): Promise<boolean> {
   return new Promise<boolean>(resolve => {
@@ -220,20 +167,15 @@ function askQuestion(question: string): Promise<boolean> {
 }
 
 async function handleRelaventPr(pr: ExtendedGithubPrData) {
-  if (options["check-commits"] && !(await askQuestion(`Would you like to use #${pr.number}: ${pr.title}? - Y/N`))) {
+  if (prBase !== "master" && !(await askQuestion(`Would you like to use #${pr.number}: ${pr.title}? - Y/N`))) {
     return;
   }
 
   if (prBase !== "master") {
-    try {
-      const promise = exec(`git cherry-pick ${pr.mergeCommit.oid}`);
-
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      promise.child.stdout!.pipe(process.stdout);
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      promise.child.stderr!.pipe(process.stderr);
-
-      await promise;
+  try {
+      await spawn("git", ["cherry-pick", pr.mergeCommit.oid], {
+        stdio: "inherit",
+      });
     } catch {
       console.error(`Failed to cherry-pick ${pr.mergeCommit.oid}, please resolve conflicts and then press enter here:`);
       await new Promise<void>(resolve => rl.once("line", () => resolve()));
@@ -290,7 +232,10 @@ const prBodyLines = [
   ),
 ];
 const prBody = prBodyLines.join("\n");
-const createPrArgs = [
+
+await exec(`git push --set-upstream origin ${prBranch}`);
+
+await spawn("gh", [
   "pr",
   "create",
   "--base", prBase,
@@ -298,17 +243,7 @@ const createPrArgs = [
   "--label", "skip-changelog",
   "--label", "release",
   "--milestone", `${newVersion.major}.${newVersion.minor}.${newVersion.patch}`,
-  "--body-file", "-",
-];
-
-await exec(`git push --set-upstream origin ${prBranch}`);
-
-const createPrProcess = execFile("gh", createPrArgs);
-
-createPrProcess.child.stdout?.pipe(process.stdout);
-createPrProcess.child.stderr?.pipe(process.stderr);
-
-createPrProcess.child.stdin?.write(prBody);
-createPrProcess.child.stdin?.end();
-
-await createPrProcess;
+  "--body-file", prBody,
+], {
+  stdio: "inherit"
+});
