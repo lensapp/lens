@@ -23,6 +23,7 @@ describe("disable kube object detail items when cluster is not relevant", () => 
   >;
 
   beforeEach(async () => {
+    isEnabledForClusterMock = asyncFn();
     builder = getApplicationBuilder();
     builder.setEnvironmentToClusterFrame();
 
@@ -39,8 +40,6 @@ describe("disable kube object detail items when cluster is not relevant", () => 
       apiManager.registerApi(api);
       apiManager.registerStore(store);
     });
-
-    isEnabledForClusterMock = asyncFn();
 
     const testExtension = {
       id: "test-extension-id",

@@ -3,48 +3,6 @@
 exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissions given no matching component given current url is starting url renders 1`] = `
 <div>
   <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
-    style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-  >
-    <div
-      class="drawer-wrapper flex column"
-    >
-      <div
-        class="drawer-title flex align-center"
-      >
-        <div
-          class="drawer-title-text flex gaps align-center"
-        >
-          
-        </div>
-        <i
-          class="Icon material interactive focusable"
-          tabindex="0"
-        >
-          <span
-            class="icon"
-            data-icon-name="close"
-          >
-            close
-          </span>
-        </i>
-        <div>
-          Close
-        </div>
-      </div>
-      <div
-        class="drawer-content flex column box grow"
-      >
-        <div
-          class="Spinner singleColor center"
-        />
-      </div>
-    </div>
-    <div
-      class="ResizingAnchor horizontal leading"
-    />
-  </div>
-  <div
     class="Notifications flex column align-flex-end"
   />
   <div
@@ -506,48 +464,6 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
 
 exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissions renders 1`] = `
 <div>
-  <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
-    style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-  >
-    <div
-      class="drawer-wrapper flex column"
-    >
-      <div
-        class="drawer-title flex align-center"
-      >
-        <div
-          class="drawer-title-text flex gaps align-center"
-        >
-          
-        </div>
-        <i
-          class="Icon material interactive focusable"
-          tabindex="0"
-        >
-          <span
-            class="icon"
-            data-icon-name="close"
-          >
-            close
-          </span>
-        </i>
-        <div>
-          Close
-        </div>
-      </div>
-      <div
-        class="drawer-content flex column box grow"
-      >
-        <div
-          class="Spinner singleColor center"
-        />
-      </div>
-    </div>
-    <div
-      class="ResizingAnchor horizontal leading"
-    />
-  </div>
   <div
     class="Notifications flex column align-flex-end"
   />
@@ -1017,48 +933,6 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
 
 exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces permissions renders 1`] = `
 <div>
-  <div
-    class="Animate slide-right Drawer KubeObjectDetails flex column right enter"
-    style="--size: 725px; --enter-duration: 100ms; --leave-duration: 100ms;"
-  >
-    <div
-      class="drawer-wrapper flex column"
-    >
-      <div
-        class="drawer-title flex align-center"
-      >
-        <div
-          class="drawer-title-text flex gaps align-center"
-        >
-          
-        </div>
-        <i
-          class="Icon material interactive focusable"
-          tabindex="0"
-        >
-          <span
-            class="icon"
-            data-icon-name="close"
-          >
-            close
-          </span>
-        </i>
-        <div>
-          Close
-        </div>
-      </div>
-      <div
-        class="drawer-content flex column box grow"
-      >
-        <div
-          class="Spinner singleColor center"
-        />
-      </div>
-    </div>
-    <div
-      class="ResizingAnchor horizontal leading"
-    />
-  </div>
   <div
     class="Notifications flex column align-flex-end"
   />

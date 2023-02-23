@@ -1125,18 +1125,6 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
       class="Notifications flex column align-flex-end"
     />
   </div>
-  <div
-    class="Dialog flex center"
-  >
-    <div
-      class="box"
-    >
-      <div
-        class="CommandContainer"
-        data-testid="command-container"
-      />
-    </div>
-  </div>
 </body>
 `;
 
@@ -2367,18 +2355,6 @@ exports[`Command Pallet: keyboard shortcut tests when on macOS when pressing SHI
     <div
       class="Notifications flex column align-flex-end"
     />
-  </div>
-  <div
-    class="Dialog flex center"
-  >
-    <div
-      class="box"
-    >
-      <div
-        class="CommandContainer"
-        data-testid="command-container"
-      />
-    </div>
   </div>
 </body>
 `;

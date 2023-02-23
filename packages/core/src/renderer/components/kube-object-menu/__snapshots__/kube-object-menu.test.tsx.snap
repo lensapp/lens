@@ -307,59 +307,6 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
       </ul>
     </div>
   </div>
-  <div
-    class="Dialog flex center ConfirmDialog modal"
-    data-testid="confirmation-dialog"
-  >
-    <div
-      class="box"
-    >
-      <div
-        class="confirm-content"
-      >
-        <i
-          class="Icon material focusable big"
-        >
-          <span
-            class="icon"
-            data-icon-name="warning"
-          >
-            warning
-          </span>
-        </i>
-         
-        <p>
-          Remove some-kind 
-          <b>
-            some-namespace/some-name
-          </b>
-           from 
-          <b>
-            Some name
-          </b>
-          ?
-        </p>
-      </div>
-      <div
-        class="confirm-buttons"
-      >
-        <button
-          class="Button cancel plain"
-          type="button"
-        >
-          Cancel
-        </button>
-        <button
-          class="Button ok primary"
-          data-testid="confirm"
-          data-waiting="false"
-          type="button"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
-  </div>
 </body>
 `;
 
@@ -400,59 +347,6 @@ exports[`kube-object-menu given kube object without namespace when removing kube
           </span>
         </li>
       </ul>
-    </div>
-  </div>
-  <div
-    class="Dialog flex center ConfirmDialog modal"
-    data-testid="confirmation-dialog"
-  >
-    <div
-      class="box"
-    >
-      <div
-        class="confirm-content"
-      >
-        <i
-          class="Icon material focusable big"
-        >
-          <span
-            class="icon"
-            data-icon-name="warning"
-          >
-            warning
-          </span>
-        </i>
-         
-        <p>
-          Remove some-kind 
-          <b>
-            some-name
-          </b>
-           from 
-          <b>
-            Some name
-          </b>
-          ?
-        </p>
-      </div>
-      <div
-        class="confirm-buttons"
-      >
-        <button
-          class="Button cancel plain"
-          type="button"
-        >
-          Cancel
-        </button>
-        <button
-          class="Button ok primary"
-          data-testid="confirm"
-          data-waiting="false"
-          type="button"
-        >
-          Remove
-        </button>
-      </div>
     </div>
   </div>
 </body>
