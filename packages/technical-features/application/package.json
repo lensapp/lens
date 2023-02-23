@@ -20,12 +20,9 @@
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
-    "build": "lens-build",
-    "build:remove": "lens-remove-build",
-    "dev": "lens-build -- --watch",
-    "code-style:fix": "lens-fix-code-style",
-    "code-style:verify": "lens-verify-code-style",
-    "test": "lens-test"
+    "build": "webpack",
+    "dev": "webpack --mode=development --watch",
+    "test": "jest --coverage --runInBand"
   },
   "peerDependencies": {
     "@ogre-tools/fp": "^12.0.1",

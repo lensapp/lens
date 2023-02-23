@@ -15,9 +15,6 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens",
-  "bin": {
-    "lens-test": "bin/test.sh"
-  },
   "dependencies": {
     "@swc/core": "^1.3.20",
     "@swc/jest": "^0.2.23",
