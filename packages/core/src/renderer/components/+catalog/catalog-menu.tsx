@@ -87,7 +87,6 @@ const NonInjectedCatalogMenu = observer(({
         defaultCollapseIcon={<Icon material="expand_more" />}
         defaultExpandIcon={<Icon material="chevron_right" />}
         selected={activeTab || "browse"}
-        onNodeSelect={console.log}
       >
         <TreeItemEntry
           label="Browse"
