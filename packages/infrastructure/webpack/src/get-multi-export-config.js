@@ -60,7 +60,7 @@ module.exports = (packageJson, dependencies = { nodeConfig, reactConfig, joinPat
   const expectedExports = pipeline(
     packageJson.lensMultiExportConfig,
     keys,
-    map(toExpectedExportFor(dependencies)),
+    map(toExpectedExport),
     fromPairs
   );
 
@@ -79,8 +79,10 @@ module.exports = (packageJson, dependencies = { nodeConfig, reactConfig, joinPat
   );
 };
 
-const toExpectedExportFor = (dependencies) => (externalImportPath) => {
-  const entrypointPath = `./${dependencies.joinPath(
+const toExpectedExport = (externalImportPath) => {
+  const posixJoinForPackageJson = path.posix.join;
+
+  const entrypointPath = `./${posixJoinForPackageJson(
     "./dist",
     externalImportPath,
     "index.js"
@@ -89,7 +91,7 @@ const toExpectedExportFor = (dependencies) => (externalImportPath) => {
   return [
     externalImportPath,
     {
-      types: `./${dependencies.joinPath("./dist", externalImportPath, "index.d.ts")}`,
+      types: `./${posixJoinForPackageJson("./dist", externalImportPath, "index.d.ts")}`,
 
       default: entrypointPath,
       import: entrypointPath,
