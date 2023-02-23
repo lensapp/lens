@@ -15,12 +15,8 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens",
-  "bin": {
-    "lens-build": "bin/build.sh",
-    "lens-remove-build": "bin/remove-build.sh"
-  },
   "scripts": {
-    "test:unit": "lens-test"
+    "test:unit": "jest --coverage --runInBand"
   },
   "dependencies": {
     "@types/webpack-env": "^1.18.0",
