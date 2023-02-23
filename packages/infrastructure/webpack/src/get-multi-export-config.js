@@ -14,7 +14,7 @@ const {
 } = require("lodash/fp");
 const { pipeline } = require("@ogre-tools/fp");
 
-module.exports = (packageJson, dependencies = { nodeConfig, reactConfig }) => {
+module.exports = (packageJson, dependencies = { nodeConfig, reactConfig, joinPath: path.join }) => {
   if (!packageJson.lensMultiExportConfig) {
     throw new Error(
       `Tried to get multi export config for package "${packageJson.name}" but configuration is missing.`
@@ -60,7 +60,7 @@ module.exports = (packageJson, dependencies = { nodeConfig, reactConfig }) => {
   const expectedExports = pipeline(
     packageJson.lensMultiExportConfig,
     keys,
-    map(toExpectedExport),
+    map(toExpectedExportFor(dependencies)),
     fromPairs
   );
 
@@ -79,8 +79,8 @@ module.exports = (packageJson, dependencies = { nodeConfig, reactConfig }) => {
   );
 };
 
-const toExpectedExport = (externalImportPath) => {
-  const entrypointPath = `./${path.join(
+const toExpectedExportFor = (dependencies) => (externalImportPath) => {
+  const entrypointPath = `./${dependencies.joinPath(
     "./dist",
     externalImportPath,
     "index.js"
@@ -89,7 +89,7 @@ const toExpectedExport = (externalImportPath) => {
   return [
     externalImportPath,
     {
-      types: `./${path.join("./dist", externalImportPath, "index.d.ts")}`,
+      types: `./${dependencies.joinPath("./dist", externalImportPath, "index.d.ts")}`,
 
       default: entrypointPath,
       import: entrypointPath,
@@ -114,7 +114,7 @@ const toExportSpecificWebpackConfigFor =
 
       output: {
         ...baseConfig.output,
-        path: path.join(baseConfig.output.path, externalImportPath),
+        path: dependencies.joinPath(baseConfig.output.path, externalImportPath),
       },
     };
   };

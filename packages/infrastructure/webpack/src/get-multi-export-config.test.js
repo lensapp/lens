@@ -1,4 +1,7 @@
 import getMultiExportConfig from "./get-multi-export-config";
+import path from 'path';
+
+const joinPathFake = path.posix.join;
 
 describe("get-multi-export-config", () => {
   let actual;
@@ -52,6 +55,7 @@ describe("get-multi-export-config", () => {
     actual = getMultiExportConfig(maximalPackageJson, {
       nodeConfig: nodeConfigStub,
       reactConfig: reactConfigStub,
+      joinPath: joinPathFake,
     });
 
     expect(actual).toEqual([
@@ -93,6 +97,7 @@ describe("get-multi-export-config", () => {
       getMultiExportConfig(maximalPackageJson, {
         nodeConfig: nodeConfigStub,
         reactConfig: reactConfigStub,
+        joinPath: joinPathFake,
       });
     }).toThrow(
       'Tried to get multi export config but exports of package.json for "some-name" did not match exactly:'
@@ -106,6 +111,7 @@ describe("get-multi-export-config", () => {
       getMultiExportConfig(maximalPackageJson, {
         nodeConfig: nodeConfigStub,
         reactConfig: reactConfigStub,
+        joinPath: joinPathFake,
       });
     }).toThrow(
       'Tried to get multi export config but exports of package.json for "some-name" did not match exactly:'
@@ -119,6 +125,7 @@ describe("get-multi-export-config", () => {
       getMultiExportConfig(maximalPackageJson, {
         nodeConfig: nodeConfigStub,
         reactConfig: reactConfigStub,
+        joinPath: joinPathFake,
       });
     }).toThrow(
       'Tried to get multi export config but exports of package.json for "some-name" did not match exactly:'
@@ -132,6 +139,7 @@ describe("get-multi-export-config", () => {
       getMultiExportConfig(maximalPackageJson, {
         nodeConfig: nodeConfigStub,
         reactConfig: reactConfigStub,
+        joinPath: joinPathFake,
       });
     }).toThrow(
       'Tried to get multi export config for package "some-name" but configuration is missing.'
@@ -145,6 +153,7 @@ describe("get-multi-export-config", () => {
       getMultiExportConfig(maximalPackageJson, {
         nodeConfig: nodeConfigStub,
         reactConfig: reactConfigStub,
+        joinPath: joinPathFake,
       });
     }).toThrow(
       'Tried to get multi export config for package "some-name" but build types "some-invalid" were not any of "node", "react".'
@@ -159,6 +168,7 @@ describe("get-multi-export-config", () => {
       getMultiExportConfig(maximalPackageJson, {
         nodeConfig: nodeConfigStub,
         reactConfig: reactConfigStub,
+        joinPath: joinPathFake,
       });
     }).toThrow(
       'Tried to get multi export config for package "some-name" but entrypoint was missing for "./some-entrypoint".'
