@@ -22,6 +22,7 @@ const repoRoot = (await exec("git rev-parse --show-toplevel")).stdout;
 
 if (process.cwd() !== repoRoot) {
   console.error("It looks like you are running this script from the 'scripts' directory. This script assumes it is run from the root of the git repo");
+  process.exit(1);
 }
 
 const currentVersion = new SemVer(JSON.parse((await readFile("./lerna.json", "utf-8"))).version);
@@ -229,7 +230,9 @@ const prBodyLines = [
 ];
 const prBody = prBodyLines.join("\n");
 
-await exec(`git push --set-upstream origin ${prBranch}`);
+await spawn("git", ["push", "--set-upstream", "origin", prBranch], {
+  stdio: "inherit",
+});
 
 await spawn("gh", [
   "pr",
