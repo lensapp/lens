@@ -18,7 +18,7 @@ const {
 const exec = promisify(child_process.exec);
 const spawn = promisify(child_process.spawn);
 
-const repoRoot = (await exec("git rev-parse --show-toplevel")).stdout;
+const repoRoot = (await exec("git rev-parse --show-toplevel")).stdout.trim();
 
 if (process.cwd() !== repoRoot) {
   console.error("It looks like you are running this script from the 'scripts' directory. This script assumes it is run from the root of the git repo");
