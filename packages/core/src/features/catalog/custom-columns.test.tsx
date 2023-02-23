@@ -33,7 +33,19 @@ describe("custom category columns for catalog", () => {
   });
 
   it("should show the 'Kind' column", () => {
-    expect(renderResult.queryByTestId("browse-all-category-column")).toBeInTheDocument();
+    expect(renderResult.queryByTestId("catalog-kind-column")).toBeInTheDocument();
+  });
+
+  it("should show the 'Status' column", () => {
+    expect(renderResult.queryByTestId("catalog-status-column")).toBeInTheDocument();
+  });
+
+  it("should show the 'Labels' column", () => {
+    expect(renderResult.queryByTestId("catalog-labels-column")).toBeInTheDocument();
+  });
+
+  it("should show the 'Source' column", () => {
+    expect(renderResult.queryByTestId("catalog-source-column")).toBeInTheDocument();
   });
 
   describe("when category is added using default colemns", () => {
@@ -55,7 +67,7 @@ describe("custom category columns for catalog", () => {
       expect(renderResult.queryByTestId("catalog-list-for-browse-all")).toBeInTheDocument();
     });
 
-    describe.only("when the Test category tab is clicked", () => {
+    describe("when the Test category tab is clicked", () => {
       beforeEach(async () => {
         const testCategory = renderResult.getByTestId("foo.bar.bat/Test-tab");
 
@@ -66,8 +78,212 @@ describe("custom category columns for catalog", () => {
         expect(renderResult.baseElement).toMatchSnapshot();
       });
 
-      it.only("shows view for category", () => {
+      it("shows view for category", () => {
         expect(renderResult.queryByTestId("catalog-list-for-Test")).toBeInTheDocument();
+      });
+
+      it("does not show the 'Kind' column", () => {
+        expect(renderResult.queryByTestId("catalog-kind-column")).not.toBeInTheDocument();
+      });
+
+      it("should show the 'Status' column", () => {
+        expect(renderResult.queryByTestId("catalog-status-column")).toBeInTheDocument();
+      });
+
+      it("should show the 'Labels' column", () => {
+        expect(renderResult.queryByTestId("catalog-labels-column")).toBeInTheDocument();
+      });
+
+      it("should show the 'Source' column", () => {
+        expect(renderResult.queryByTestId("catalog-source-column")).toBeInTheDocument();
+      });
+    });
+
+    describe("when an extension is registered with additional custom columns", () => {
+      beforeEach(() => {
+        builder.extensions.enable({
+          id: "some-id",
+          name: "some-name",
+          rendererOptions: {
+            additionalCategoryColumns: [
+              {
+                group: "foo.bar.bat",
+                id: "high",
+                kind: "Test",
+                renderCell: () => "",
+                titleProps: {
+                  title: "High",
+                  "data-testid": "my-high-column",
+                },
+              },
+              {
+                group: "foo.bar",
+                id: "high",
+                kind: "Test",
+                renderCell: () => "",
+                titleProps: {
+                  title: "High2",
+                  "data-testid": "my-high2-column",
+                },
+              },
+            ],
+          },
+        });
+      });
+
+      describe("when the Test category tab is clicked", () => {
+        beforeEach(async () => {
+          const testCategory = renderResult.getByTestId("foo.bar.bat/Test-tab");
+
+          testCategory.click();
+        });
+
+        it("renders", () => {
+          expect(renderResult.baseElement).toMatchSnapshot();
+        });
+
+        it("shows view for category", () => {
+          expect(renderResult.queryByTestId("catalog-list-for-Test")).toBeInTheDocument();
+        });
+
+        it("does not show the 'Kind' column", () => {
+          expect(renderResult.queryByTestId("catalog-kind-column")).not.toBeInTheDocument();
+        });
+
+        it("should show the 'Status' column", () => {
+          expect(renderResult.queryByTestId("catalog-status-column")).toBeInTheDocument();
+        });
+
+        it("should show the 'Labels' column", () => {
+          expect(renderResult.queryByTestId("catalog-labels-column")).toBeInTheDocument();
+        });
+
+        it("should show the 'Source' column", () => {
+          expect(renderResult.queryByTestId("catalog-source-column")).toBeInTheDocument();
+        });
+
+        it("should show the additional column that matches", () => {
+          expect(renderResult.queryByTestId("my-high-column")).toBeInTheDocument();
+        });
+
+        it("should not show the additional column that does not match", () => {
+          expect(renderResult.queryByTestId("my-high2-column")).not.toBeInTheDocument();
+        });
+      });
+    });
+  });
+
+  describe("when category is added with custom columns", () => {
+    beforeEach(() => {
+      const catalogCategoryRegistry = builder.applicationWindow.only.di.inject(catalogCategoryRegistryInjectable);
+
+      catalogCategoryRegistry.add(new TestCategory([{
+        id: "foo",
+        renderCell: () => null,
+        titleProps: {
+          title: "Foo",
+          "data-testid": "my-custom-column",
+        },
+      }]));
+    });
+
+    it("renders", () => {
+      expect(renderResult.baseElement).toMatchSnapshot();
+    });
+
+    it("shows category in sidebar", () => {
+      expect(renderResult.queryByTestId("foo.bar.bat/Test-tab")).toBeInTheDocument();
+    });
+
+    it("still shows 'Browse All' view", () => {
+      expect(renderResult.queryByTestId("catalog-list-for-browse-all")).toBeInTheDocument();
+    });
+
+    describe("when the Test category tab is clicked", () => {
+      beforeEach(async () => {
+        const testCategory = renderResult.getByTestId("foo.bar.bat/Test-tab");
+
+        testCategory.click();
+      });
+
+      it("renders", () => {
+        expect(renderResult.baseElement).toMatchSnapshot();
+      });
+
+      it("shows view for category", () => {
+        expect(renderResult.queryByTestId("catalog-list-for-Test")).toBeInTheDocument();
+      });
+
+      it("does not show the 'Kind' column", () => {
+        expect(renderResult.queryByTestId("catalog-kind-column")).not.toBeInTheDocument();
+      });
+
+      it("does not the 'Status' column", () => {
+        expect(renderResult.queryByTestId("catalog-status-column")).not.toBeInTheDocument();
+      });
+
+      it("does not the 'Labels' column", () => {
+        expect(renderResult.queryByTestId("catalog-labels-column")).not.toBeInTheDocument();
+      });
+
+      it("does not the 'Source' column", () => {
+        expect(renderResult.queryByTestId("catalog-source-column")).not.toBeInTheDocument();
+      });
+
+      it("should show the custom column", () => {
+        expect(renderResult.queryByTestId("my-custom-column")).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe("when category is added without default columns", () => {
+    beforeEach(() => {
+      const catalogCategoryRegistry = builder.applicationWindow.only.di.inject(catalogCategoryRegistryInjectable);
+
+      catalogCategoryRegistry.add(new TestCategory([]));
+    });
+
+    it("renders", () => {
+      expect(renderResult.baseElement).toMatchSnapshot();
+    });
+
+    it("shows category in sidebar", () => {
+      expect(renderResult.queryByTestId("foo.bar.bat/Test-tab")).toBeInTheDocument();
+    });
+
+    it("still shows 'Browse All' view", () => {
+      expect(renderResult.queryByTestId("catalog-list-for-browse-all")).toBeInTheDocument();
+    });
+
+    describe("when the Test category tab is clicked", () => {
+      beforeEach(async () => {
+        const testCategory = renderResult.getByTestId("foo.bar.bat/Test-tab");
+
+        testCategory.click();
+      });
+
+      it("renders", () => {
+        expect(renderResult.baseElement).toMatchSnapshot();
+      });
+
+      it("shows view for category", () => {
+        expect(renderResult.queryByTestId("catalog-list-for-Test")).toBeInTheDocument();
+      });
+
+      it("does not show the 'Kind' column", () => {
+        expect(renderResult.queryByTestId("catalog-kind-column")).not.toBeInTheDocument();
+      });
+
+      it("does not the 'Status' column", () => {
+        expect(renderResult.queryByTestId("catalog-status-column")).not.toBeInTheDocument();
+      });
+
+      it("does not the 'Labels' column", () => {
+        expect(renderResult.queryByTestId("catalog-labels-column")).not.toBeInTheDocument();
+      });
+
+      it("does not the 'Source' column", () => {
+        expect(renderResult.queryByTestId("catalog-source-column")).not.toBeInTheDocument();
       });
     });
   });

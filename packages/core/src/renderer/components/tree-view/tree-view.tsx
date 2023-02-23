@@ -41,7 +41,7 @@ export interface TreeItemProps {
   classes?: TreeItemClasses;
   icon?: JSX.Element;
   label: JSX.Element | string;
-  testId?: string;
+  "data-testid"?: string;
   selected?: boolean;
   onClick?: MouseEventHandler;
 }
@@ -64,7 +64,7 @@ export function TreeItem(props: TreeItemProps) {
         [styles.selected]: props.selected ?? false,
       })}
       role="treeitem"
-      data-testid={props.testId}
+      data-testid={props["data-testid"]}
       onClick={props.onClick}
       onMouseOver={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
@@ -92,7 +92,7 @@ export interface TreeGroupProps {
   children?: JSX.Element[] | JSX.Element;
   defaultExpanded?: boolean;
   label: JSX.Element | string;
-  testId?: string;
+  "data-testid"?: string;
   collapseIcon?: JSX.Element;
   expandIcon?: JSX.Element;
 }
@@ -104,7 +104,7 @@ export function TreeGroup(props: TreeGroupProps) {
     <li
       className={cssNames(props.classes?.root, styles.treeGroup)}
       role="group"
-      data-testid={props.testId}
+      data-testid={props["data-testid"]}
     >
       <div
         className={cssNames(props.classes?.group, styles.group)}
