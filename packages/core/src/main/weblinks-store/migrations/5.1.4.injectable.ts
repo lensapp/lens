@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { docsUrl, slackUrl } from "../../../common/vars";
+import { docsUrl, forumsUrl } from "../../../common/vars";
 import type { WeblinkData } from "../../../common/weblinks-store/weblink-store";
 import { getInjectable } from "@ogre-tools/injectable";
 import { weblinkStoreMigrationInjectionToken } from "../../../common/weblinks-store/migration-token";
@@ -20,7 +20,7 @@ const v514WeblinkStoreMigrationInjectable = getInjectable({
       weblinks.push(
         { id: "https://k8slens.dev", name: links.lensWebsiteLinkName, url: "https://k8slens.dev" },
         { id: docsUrl, name: links.lensDocumentationWeblinkName, url: docsUrl },
-        { id: slackUrl, name: links.lensSlackWeblinkName, url: slackUrl },
+        { id: forumsUrl, name: links.lensForumsWeblinkName, url: forumsUrl },
         { id: "https://twitter.com/k8slens", name: links.lensTwitterWeblinkName, url: "https://twitter.com/k8slens" },
         { id: "https://medium.com/k8slens", name: links.lensBlogWeblinkName, url: "https://medium.com/k8slens" },
         { id: "https://kubernetes.io/docs/home/", name: links.kubernetesDocumentationWeblinkName, url: "https://kubernetes.io/docs/home/" },
