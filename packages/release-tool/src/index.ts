@@ -7,6 +7,7 @@ import assert from "assert";
 import child_process from "child_process";
 import { readFile } from "fs/promises";
 import inquirer from "inquirer";
+import { EOL } from "os";
 import { createInterface, ReadLine } from "readline";
 import semver from "semver";
 import { promisify } from "util";
@@ -194,7 +195,6 @@ const cherrypickCommitWith = (rl: ReadLine) => async (commit: string) => {
       stdio: "inherit",
     });
   } catch {
-    console.error(`Please resolve conflicts and then press enter here...`);
     await new Promise<void>(resolve => rl.once("line", () => resolve()));
   }
 };
@@ -258,6 +258,7 @@ function formatChangelog(previousReleasedVersion: string, prs: ExtendedGithubPrD
 }
 
 async function cherrypickCommits(prs: ExtendedGithubPrData[]): Promise<void> {
+  console.log(`${EOL}If cherry-picking fails for any of these commits, please resolve them in a seperate terminal and then run "git cherry-pick --continue"${EOL}`);
   const rl = createInterface(process.stdin);
   const cherrypickCommit = cherrypickCommitWith(rl);
 
