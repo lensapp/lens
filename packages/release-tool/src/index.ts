@@ -199,7 +199,7 @@ const cherrypickCommitWith = (rl: ReadLine) => async (commit: string) => {
   }
 };
 
-async function pickWhichCommitsToUse(prs: ExtendedGithubPrData[]): Promise<ExtendedGithubPrData[]> {
+async function pickWhichPRsToUse(prs: ExtendedGithubPrData[]): Promise<ExtendedGithubPrData[]> {
   const answers = await inquirer.prompt<{ commits: number[] }>({
     type: "checkbox",
     name: `commits`,
@@ -276,7 +276,7 @@ async function pickRelaventPrs(prs: ExtendedGithubPrData[], isMasterBranch: bool
   let selectedPrs: ExtendedGithubPrData[];
 
   do {
-    selectedPrs = await pickWhichCommitsToUse(prs);
+    selectedPrs = await pickWhichPRsToUse(prs);
   } while (selectedPrs.length === 0 && (console.warn("[WARNING]: must pick at least once commit"), true));
 
   await cherrypickCommits(selectedPrs);
