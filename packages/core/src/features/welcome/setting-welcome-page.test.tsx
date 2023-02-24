@@ -32,7 +32,7 @@ describe("setting-welcome-page", () => {
         windowDi.override(welcomeRouteConfigInjectable, () => "/welcome");
       });
 
-      // enable the extension even though the welcomeRoute is not overriden
+      // enable the extension even though the welcomeRoute is not overridden
       applicationBuilder.extensions.enable(extensionWithWelcomePage);
       rendered = await applicationBuilder.render();
 
@@ -84,8 +84,9 @@ describe("setting-welcome-page", () => {
 
 const extensionWithWelcomePage: FakeExtensionOptions = {
   id: "some-extension-id",
-  name: "some-extension-name",
-
+  manifest: {
+    name: "some-extension-name",
+  },
   rendererOptions: {
     globalPages: [
       {

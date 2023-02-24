@@ -34,10 +34,20 @@ describe("reactively hide kube object status", () => {
 
     someObservable = observable.box(false);
 
-    const testExtension = {
-      id: "test-extension-id",
-      name: "test-extension",
+    rendered = await builder.render();
 
+    const windowDi = builder.applicationWindow.only.di;
+
+    const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
+    const testRoute = windowDi.inject(testRouteInjectable);
+
+    navigateToRoute(testRoute);
+
+    builder.extensions.enable({
+      id: "test-extension-id",
+      manifest: {
+        name: "test-extension",
+      },
       rendererOptions: {
         kubeObjectStatusTexts: [
           {
@@ -53,18 +63,7 @@ describe("reactively hide kube object status", () => {
           },
         ],
       },
-    };
-
-    rendered = await builder.render();
-
-    const windowDi = builder.applicationWindow.only.di;
-
-    const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
-    const testRoute = windowDi.inject(testRouteInjectable);
-
-    navigateToRoute(testRoute);
-
-    builder.extensions.enable(testExtension);
+    });
   });
 
   it("does not show the kube object status", () => {

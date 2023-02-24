@@ -51,8 +51,9 @@ describe("extension special characters in page registrations", () => {
 
 const extensionWithPagesHavingSpecialCharacters: FakeExtensionOptions = {
   id: "some-extension-id",
-  name: "@some-extension-name/",
-
+  manifest: {
+    name: "@some-extension-name/",
+  },
   rendererOptions: {
     globalPages: [
       {

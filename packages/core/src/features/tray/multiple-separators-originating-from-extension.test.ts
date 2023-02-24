@@ -21,17 +21,16 @@ describe("multiple separators originating from extension", () => {
   });
 
   it("given extension with multiple separators, when extension is enabled, does not throw", () => {
-    const someExtension = {
-      id: "some-extension-id",
-      name: "some-extension",
-
-      mainOptions: {
-        trayMenus: [{ type: "separator" as const }, { type: "separator" as const } ],
-      },
-    };
-
     expect(() => {
-      builder.extensions.enable(someExtension);
+      builder.extensions.enable({
+        id: "some-extension-id",
+        manifest: {
+          name: "some-extension",
+        },
+        mainOptions: {
+          trayMenus: [{ type: "separator" as const }, { type: "separator" as const } ],
+        },
+      });
     }).not.toThrow();
   });
 });

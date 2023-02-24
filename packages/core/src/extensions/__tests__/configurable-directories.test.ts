@@ -38,17 +38,9 @@ describe("configurable directories for extension files", () => {
 
       testExtensionOptions = {
         id: "some-extension",
-        name: "some-extension-name",
-
-        mainOptions: {
-          manifest: {
-            name: "irrelevant",
-            storeName: "some-specific-store-name",
-            version: "0",
-            engines: {
-              lens: "0",
-            },
-          },
+        manifest: {
+          name: "some-extension-name",
+          storeName: "some-specific-store-name",
         },
       };
 
@@ -73,17 +65,8 @@ describe("configurable directories for extension files", () => {
 
       testExtensionOptions = {
         id: "some-extension",
-        name: "some-extension-name",
-
-        mainOptions: {
-          manifest: {
-            name: "some-package-name",
-            storeName: undefined,
-            version: "0",
-            engines: {
-              lens: "0",
-            },
-          },
+        manifest: {
+          name: "some-extension-name",
         },
       };
 

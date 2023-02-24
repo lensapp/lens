@@ -33,8 +33,9 @@ describe("extendability-using-extension-api", () => {
     beforeEach(() => {
       testExtension = {
         id: "test-extension",
-        name: "Test Extension",
-
+        manifest: {
+          name: "Test Extension",
+        },
         rendererOptions: {
           topBarItems: [
             {
@@ -78,8 +79,9 @@ describe("extendability-using-extension-api", () => {
     beforeEach(() => {
       const testExtension: FakeExtensionOptions = {
         id: "test-extension",
-        name: "Test Extension",
-
+        manifest: {
+          name: "Test Extension",
+        },
         rendererOptions: {
           topBarItems: [
             {

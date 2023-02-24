@@ -22,10 +22,13 @@ describe("disable sidebar items when cluster is not relevant", () => {
 
     isEnabledForClusterMock = asyncFn();
 
-    const testExtension = {
-      id: "test-extension-id",
-      name: "test-extension",
+    rendered = await builder.render();
 
+    builder.extensions.enable({
+      id: "test-extension-id",
+      manifest: {
+        name: "test-extension",
+      },
       rendererOptions: {
         isEnabledForCluster: isEnabledForClusterMock,
 
@@ -46,11 +49,7 @@ describe("disable sidebar items when cluster is not relevant", () => {
           },
         ],
       },
-    };
-
-    rendered = await builder.render();
-
-    builder.extensions.enable(testExtension);
+    });
   });
 
   describe("given not yet known if extension should be enabled for the cluster", () => {

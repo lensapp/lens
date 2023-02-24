@@ -23,10 +23,13 @@ describe("reactively disable cluster pages", () => {
 
     someObservable = observable.box(false);
 
-    const testExtensionOptions = {
-      id: "test-extension-id",
-      name: "test-extension",
+    rendered = await builder.render();
 
+    builder.extensions.enable({
+      id: "test-extension-id",
+      manifest: {
+        name: "test-extension",
+      },
       rendererOptions: {
         clusterPages: [{
           components: {
@@ -36,11 +39,7 @@ describe("reactively disable cluster pages", () => {
           enabled: computed(() => someObservable.get()),
         }],
       },
-    };
-
-    rendered = await builder.render();
-
-    builder.extensions.enable(testExtensionOptions);
+    });
 
     testExtensionInstance =
       builder.extensions.get("test-extension-id").applicationWindows.only;

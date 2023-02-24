@@ -125,8 +125,9 @@ describe("navigate to extension page", () => {
 
 const extensionWithPagesHavingParameters: FakeExtensionOptions = {
   id: "some-extension-id",
-  name: "some-extension-name",
-
+  manifest: {
+    name: "some-extension-name",
+  },
   rendererOptions: {
     globalPages: [
       {

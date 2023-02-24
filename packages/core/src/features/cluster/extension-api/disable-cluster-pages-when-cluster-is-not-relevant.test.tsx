@@ -24,10 +24,13 @@ describe("disable-cluster-pages-when-cluster-is-not-relevant", () => {
 
     isEnabledForClusterMock = asyncFn();
 
-    const testExtension = {
-      id: "test-extension-id",
-      name: "test-extension",
+    rendered = await builder.render();
 
+    builder.extensions.enable({
+      id: "test-extension-id",
+      manifest: {
+        name: "test-extension",
+      },
       rendererOptions: {
         isEnabledForCluster: isEnabledForClusterMock,
 
@@ -37,11 +40,7 @@ describe("disable-cluster-pages-when-cluster-is-not-relevant", () => {
           },
         }],
       },
-    };
-
-    rendered = await builder.render();
-
-    builder.extensions.enable(testExtension);
+    });
 
     rendererTestExtension =
       builder.extensions.get("test-extension-id").applicationWindows.only;

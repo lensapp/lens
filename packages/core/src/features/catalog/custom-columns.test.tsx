@@ -103,7 +103,9 @@ describe("custom category columns for catalog", () => {
       beforeEach(() => {
         builder.extensions.enable({
           id: "some-id",
-          name: "some-name",
+          manifest: {
+            name: "some-name",
+          },
           rendererOptions: {
             additionalCategoryColumns: [
               {

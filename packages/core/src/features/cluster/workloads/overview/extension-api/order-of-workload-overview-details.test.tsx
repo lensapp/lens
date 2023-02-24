@@ -33,10 +33,11 @@ describe("order of workload overview details", () => {
 
     rendered = await builder.render();
 
-    const testExtension = {
+    builder.extensions.enable({
       id: "some-extension-id",
-      name: "some-extension",
-
+      manifest: {
+        name: "some-extension",
+      },
       rendererOptions: {
         kubeWorkloadsOverviewItems: [
           {
@@ -73,9 +74,7 @@ describe("order of workload overview details", () => {
           },
         ],
       },
-    };
-
-    builder.extensions.enable(testExtension);
+    });
   });
 
   it("shows items in correct order", () => {

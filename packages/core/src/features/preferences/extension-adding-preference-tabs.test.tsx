@@ -32,10 +32,11 @@ describe("preferences: extension adding preference tabs", () => {
 
       someObservable = observable.box(false);
 
-      const testExtension = {
+      builder.extensions.enable({
         id: "some-extension-id",
-        name: "some-extension",
-
+        manifest: {
+          name: "some-extension",
+        },
         rendererOptions: {
           appPreferenceTabs: [
             {
@@ -89,9 +90,7 @@ describe("preferences: extension adding preference tabs", () => {
             },
           ],
         },
-      };
-
-      builder.extensions.enable(testExtension);
+      });
     });
 
     it("renders", () => {

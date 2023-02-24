@@ -50,10 +50,11 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
     beforeEach(() => {
       someObservable = observable.box(false);
 
-      const testExtension = {
+      applicationBuilder.extensions.enable({
         id: "some-extension-id",
-        name: "some-extension-name",
-
+        manifest: {
+          name: "some-extension-name",
+        },
         rendererOptions: {
           clusterPages: [
             {
@@ -124,9 +125,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
             },
           ],
         },
-      };
-
-      applicationBuilder.extensions.enable(testExtension);
+      });
     });
 
     describe("given no state for expanded sidebar items exists, and navigated to child sidebar item, when rendered", () => {
@@ -458,10 +457,11 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
     beforeEach(() => {
       someObservable = observable.box(false);
 
-      const testExtension = {
+      applicationBuilder.extensions.enable({
         id: "some-extension-id",
-        name: "some-extension-name",
-
+        manifest: {
+          name: "some-extension-name",
+        },
         rendererOptions: {
           clusterPages: [
             {
@@ -526,9 +526,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
             },
           ] as ClusterPageMenuRegistration[],
         },
-      };
-
-      applicationBuilder.extensions.enable(testExtension);
+      });
     });
 
     describe("given no state for expanded sidebar items exists, and navigated to child sidebar item, when rendered", () => {

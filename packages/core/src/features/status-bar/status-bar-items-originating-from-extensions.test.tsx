@@ -30,39 +30,40 @@ describe("status-bar-items-originating-from-extensions", () => {
     });
 
     it("when multiple extensions with status bar items are loaded, shows items in correct order", () => {
-      const testExtension1 = {
-        id: "some-id",
-        name: "some-name",
-
-        rendererOptions: {
-          statusBarItems: [
-            {
-              components: {
-                Item: () => <div data-testid="some-testId">extension1</div>,
-                position: "right" as const,
+      applicationBuilder.extensions.enable(
+        {
+          id: "some-id",
+          manifest: {
+            name: "some-name",
+          },
+          rendererOptions: {
+            statusBarItems: [
+              {
+                components: {
+                  Item: () => <div data-testid="some-testId">extension1</div>,
+                  position: "right" as const,
+                },
               },
-            },
-          ],
+            ],
+          },
         },
-      };
-
-      const testExtension2 = {
-        id: "some-other-id",
-        name: "some-other-name",
-
-        rendererOptions: {
-          statusBarItems: [
-            {
-              components: {
-                Item: () => <div data-testid="some-testId">extension2</div>,
-                position: "right" as const,
+        {
+          id: "some-other-id",
+          manifest: {
+            name: "some-other-name",
+          },
+          rendererOptions: {
+            statusBarItems: [
+              {
+                components: {
+                  Item: () => <div data-testid="some-testId">extension2</div>,
+                  position: "right" as const,
+                },
               },
-            },
-          ],
+            ],
+          },
         },
-      };
-
-      applicationBuilder.extensions.enable(testExtension1, testExtension2);
+      );
 
       const rightSide = rendered.getByTestId("status-bar-right");
 
@@ -80,8 +81,9 @@ describe("status-bar-items-originating-from-extensions", () => {
       beforeEach(() => {
         testExtensionOptions = {
           id: "some-id",
-          name: "some-name",
-
+          manifest: {
+            name: "some-name",
+          },
           rendererOptions: {
             statusBarItems: [
               {

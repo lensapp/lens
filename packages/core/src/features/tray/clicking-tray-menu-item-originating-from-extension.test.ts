@@ -34,7 +34,9 @@ describe("clicking tray menu item originating from extension", () => {
 
       someExtension = {
         id: "some-extension-id",
-        name: "some-extension-name",
+        manifest: {
+          name: "some-extension-name",
+        },
         mainOptions: {
           trayMenus: [{ label: "some-label", click: clickMock }],
         },

@@ -31,8 +31,9 @@ describe("<StatusBar />", () => {
 
     builder.extensions.enable({
       id: "some-id",
-      name: "some-name",
-
+      manifest: {
+        name: "some-name",
+      },
       rendererOptions: {
         statusBarItems,
       },
@@ -61,7 +62,7 @@ describe("<StatusBar />", () => {
 
   it("renders items [{item: React.ReactNode}] (4.0.0-rc.1)", async () => {
     const testId = "testId";
-    const text = "heee";
+    const text = "help";
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.override(statusBarItemsInjectable, () => computed(() => ({
@@ -77,7 +78,7 @@ describe("<StatusBar />", () => {
 
   it("renders items [{item: () => React.ReactNode}] (4.0.0-rc.1+)", async () => {
     const testId = "testId";
-    const text = "heee";
+    const text = "help";
 
     statusBarItems.replace([{
       item: () => <span data-testid={testId} >{text}</span>,
@@ -117,8 +118,8 @@ describe("<StatusBar />", () => {
     ]);
 
     const { getAllByTestId } = await builder.render();
-    const elems = getAllByTestId("sortedElem");
-    const positions = elems.map(elem => elem.textContent);
+    const elements = getAllByTestId("sortedElem");
+    const positions = elements.map(elem => elem.textContent);
 
     expect(positions).toEqual(["left1", "left2", "right2", "right1"]);
   });

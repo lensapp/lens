@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LensExtensionDependencies } from "./lens-extension";
+import type { LensExtensionDependencies, LensExtensionParts } from "./lens-extension";
 import { Disposers, LensExtension } from "./lens-extension";
 import type { CatalogEntity, CategoryFilter, CatalogCategoryRegistry } from "../common/catalog";
 import type { Disposer } from "../common/utils";
@@ -51,6 +51,30 @@ interface LensRendererExtensionDependencies extends LensExtensionDependencies {
   readonly routes: IComputedValue<Route<unknown>[]>;
   readonly entityRegistry: CatalogEntityRegistry;
   readonly categoryRegistry: CatalogCategoryRegistry;
+}
+
+export interface LensRendererExtensionParts extends LensExtensionParts {
+  globalPages: PageRegistration[];
+  clusterPages: PageRegistration[];
+  clusterPageMenus: ClusterPageMenuRegistration[];
+  clusterFrameComponents: ClusterFrameChildComponent[];
+  kubeObjectStatusTexts: KubeObjectStatusRegistration[];
+  appPreferences: AppPreferenceRegistration[];
+  appPreferenceTabs: AppPreferenceTabRegistration[];
+  entitySettings: EntitySettingRegistration[];
+  statusBarItems: StatusBarRegistration[];
+  kubeObjectDetailItems: KubeObjectDetailRegistration[];
+  kubeObjectMenuItems: KubeObjectMenuRegistration[];
+  kubeWorkloadsOverviewItems: WorkloadsOverviewDetailRegistration[];
+  commands: CommandRegistration[];
+  welcomeMenus: WelcomeMenuRegistration[];
+  welcomeBanners: WelcomeBannerRegistration[];
+  catalogEntityDetailItems: CatalogEntityDetailRegistration<CatalogEntity>[];
+  topBarItems: TopBarRegistration[];
+  additionalCategoryColumns: AdditionalCategoryColumnRegistration[];
+  customCategoryViews: CustomCategoryViewRegistration[];
+  kubeObjectHandlers: KubeObjectHandlerRegistration[];
+  isEnabledForCluster(cluster: KubernetesCluster): Promise<boolean>;
 }
 
 export class LensRendererExtension extends LensExtension {

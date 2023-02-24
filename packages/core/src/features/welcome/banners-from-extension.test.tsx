@@ -31,7 +31,9 @@ describe("Banners from extensions", () => {
     beforeEach(() => {
       builder.extensions.enable({
         id: "some-id",
-        name: "some-name",
+        manifest: {
+          name: "some-name",
+        },
         rendererOptions: {
           welcomeBanners: [
             {
@@ -55,7 +57,9 @@ describe("Banners from extensions", () => {
     beforeEach(() => {
       builder.extensions.enable({
         id: "some-id",
-        name: "some-name",
+        manifest: {
+          name: "some-name",
+        },
         rendererOptions: {
           welcomeBanners: [
             {

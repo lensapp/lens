@@ -26,10 +26,11 @@ describe("preferences: extension adding tray items", () => {
       someObservableForEnabled = observable.box(false);
       someObservableLabel = observable.box("Some label");
 
-      const testExtension = {
+      builder.extensions.enable({
         id: "some-extension-id",
-        name: "some-extension",
-
+        manifest: {
+          name: "some-extension",
+        },
         mainOptions: {
           trayMenus: [
             {
@@ -80,9 +81,7 @@ describe("preferences: extension adding tray items", () => {
             },
           ],
         },
-      };
-
-      builder.extensions.enable(testExtension);
+      });
     });
 
     describe("given controlled label", () => {
@@ -214,16 +213,15 @@ describe("preferences: extension adding tray items", () => {
 
       const computedTrayMenu = computed(() => menuItems);
 
-      const testExtension = {
+      builder.extensions.enable({
         id: "some-extension-id",
-        name: "some-extension",
-
+        manifest: {
+          name: "some-extension",
+        },
         mainOptions: {
           trayMenus: computedTrayMenu,
         },
-      };
-
-      builder.extensions.enable(testExtension);
+      });
     });
 
     it("given item exists, it's shown", () => {

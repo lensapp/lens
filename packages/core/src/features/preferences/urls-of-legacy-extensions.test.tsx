@@ -28,10 +28,11 @@ describe("preferences: URLs of legacy extensions", () => {
 
       discover = discoverFor(() => rendered);
 
-      const testExtension = {
+      builder.extensions.enable({
         id: "some-extension-id",
-        name: "some-extension",
-
+        manifest: {
+          name: "some-extension",
+        },
         rendererOptions: {
           appPreferenceTabs: [
             {
@@ -71,9 +72,7 @@ describe("preferences: URLs of legacy extensions", () => {
             },
           ],
         },
-      };
-
-      builder.extensions.enable(testExtension);
+      });
 
       navigate = builder.applicationWindow.only.di.inject(navigateInjectable);
     });
@@ -143,10 +142,11 @@ describe("preferences: URLs of legacy extensions", () => {
 
       discover = discoverFor(() => rendered);
 
-      const testExtension = {
+      builder.extensions.enable({
         id: "some-extension-id",
-        name: "some-extension",
-
+        manifest: {
+          name: "some-extension",
+        },
         rendererOptions: {
           appPreferences: [
             {
@@ -160,9 +160,7 @@ describe("preferences: URLs of legacy extensions", () => {
             },
           ],
         },
-      };
-
-      builder.extensions.enable(testExtension);
+      });
 
       navigate = builder.applicationWindow.only.di.inject(navigateInjectable);
     });
@@ -203,10 +201,11 @@ describe("preferences: URLs of legacy extensions", () => {
 
       discover = discoverFor(() => rendered);
 
-      const testExtension = {
+      builder.extensions.enable({
         id: "some-extension-id",
-        name: "some-extension",
-
+        manifest: {
+          name: "some-extension",
+        },
         rendererOptions: {
           appPreferenceTabs: [
             {
@@ -256,9 +255,7 @@ describe("preferences: URLs of legacy extensions", () => {
             },
           ],
         },
-      };
-
-      builder.extensions.enable(testExtension);
+      });
 
       navigate = builder.applicationWindow.only.di.inject(navigateInjectable);
     });

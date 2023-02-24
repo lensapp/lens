@@ -9,7 +9,6 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import navigateToProxyPreferencesInjectable from "./common/navigate-to-proxy-preferences.injectable";
 import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
 import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
-import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 
 describe("preferences - navigation to application preferences", () => {
   let builder: ApplicationBuilder;
@@ -47,9 +46,26 @@ describe("preferences - navigation to application preferences", () => {
 
     describe("when extension with application preference items gets enabled", () => {
       beforeEach(() => {
-        builder.extensions.enable(
-          extensionStubWithApplicationPreferenceItems,
-        );
+        builder.extensions.enable({
+          id: "some-test-extension-id",
+          manifest: {
+            name: "some-test-extension-name",
+          },
+          rendererOptions: {
+            appPreferences: [
+              {
+                title: "Some application-preference item",
+                id: "some-application-preference-item-id",
+                showInPreferencesTab: "application",
+
+                components: {
+                  Hint: () => <div data-testid="some-preference-item-hint" />,
+                  Input: () => <div data-testid="some-preference-item-input" />,
+                },
+              },
+            ],
+          },
+        });
       });
 
       it("renders", () => {
@@ -133,23 +149,3 @@ describe("preferences - navigation to application preferences", () => {
     });
   });
 });
-
-const extensionStubWithApplicationPreferenceItems: FakeExtensionOptions = {
-  id: "some-test-extension-id",
-  name: "some-test-extension-name",
-
-  rendererOptions: {
-    appPreferences: [
-      {
-        title: "Some application-preference item",
-        id: "some-application-preference-item-id",
-        showInPreferencesTab: "application",
-
-        components: {
-          Hint: () => <div data-testid="some-preference-item-hint" />,
-          Input: () => <div data-testid="some-preference-item-input" />,
-        },
-      },
-    ],
-  },
-};

@@ -45,8 +45,9 @@ describe("application-menu-in-legacy-extension-api", () => {
 
       testExtensionOptions = {
         id: "some-test-extension",
-        name: "some-extension-name",
-
+        manifest: {
+          name: "some-extension-name",
+        },
         mainOptions: {
           appMenus: [
             {
@@ -151,8 +152,9 @@ describe("application-menu-in-legacy-extension-api", () => {
     beforeEach(() => {
       const testExtensionOptions: FakeExtensionOptions = {
         id: "some-test-extension",
-        name: "some-extension-name",
-
+        manifest: {
+          name: "some-extension-name",
+        },
         mainOptions: {
           appMenus: [
             {

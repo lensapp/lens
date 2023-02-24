@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LensExtensionDependencies } from "./lens-extension";
+import type { LensExtensionDependencies, LensExtensionParts } from "./lens-extension";
 import { LensExtension } from "./lens-extension";
 import type { CatalogEntity } from "../common/catalog";
 import type { IComputedValue, IObservableArray } from "mobx";
@@ -23,6 +23,11 @@ import navigateForExtensionInjectable from "../main/start-main-application/lens-
 interface LensMainExtensionDependencies extends LensExtensionDependencies {
   readonly entityRegistry: CatalogEntityRegistry;
   readonly navigate: NavigateForExtension;
+}
+
+export interface LensMainExtensionParts extends LensExtensionParts {
+  appMenus: MenuRegistration[] | IComputedValue<MenuRegistration[]>;
+  trayMenus: TrayMenuRegistration[] | IComputedValue<TrayMenuRegistration[]>;
 }
 
 export class LensMainExtension extends LensExtension {

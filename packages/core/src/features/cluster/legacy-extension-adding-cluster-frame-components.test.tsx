@@ -25,10 +25,12 @@ describe("legacy extension adding cluster frame components", () => {
     beforeEach(async () => {
       someObservable = observable.box(false);
 
-      const testExtension = {
+      rendered = await builder.render();
+      builder.extensions.enable({
         id: "some-extension-id",
-        name: "some-extension-name",
-
+        manifest: {
+          name: "some-extension-name",
+        },
         rendererOptions: {
           clusterFrameComponents: [
             {
@@ -43,10 +45,7 @@ describe("legacy extension adding cluster frame components", () => {
             },
           ],
         },
-      };
-
-      rendered = await builder.render();
-      builder.extensions.enable(testExtension);
+      });
     });
 
     it("renders", () => {

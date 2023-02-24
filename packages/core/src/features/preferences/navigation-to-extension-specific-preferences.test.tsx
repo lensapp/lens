@@ -335,8 +335,9 @@ describe("preferences - navigation to extension specific preferences", () => {
 
 const extensionStubWithExtensionSpecificPreferenceItems: FakeExtensionOptions = {
   id: "some-test-extension-id",
-  name: "some-test-extension-id",
-
+  manifest: {
+    name: "some-test-extension-id",
+  },
   rendererOptions: {
     appPreferences: [
       {
@@ -365,8 +366,9 @@ const extensionStubWithExtensionSpecificPreferenceItems: FakeExtensionOptions = 
 
 const someOtherExtensionStubWithExtensionSpecificPreferenceItems: FakeExtensionOptions = {
   id: "some-other-test-extension-id",
-  name: "some-other-test-extension-id",
-
+  manifest: {
+    name: "some-other-test-extension-id",
+  },
   rendererOptions: {
     appPreferences: [
       {
@@ -384,13 +386,16 @@ const someOtherExtensionStubWithExtensionSpecificPreferenceItems: FakeExtensionO
 
 const extensionStubWithoutPreferences: FakeExtensionOptions = {
   id: "without-preferences-id",
-  name: "without-preferences-id",
+  manifest: {
+    name: "without-preferences-id",
+  },
 };
 
 const extensionStubWithShowInPreferencesTab: FakeExtensionOptions = {
   id: "specified-preferences-page-id",
-  name: "specified-preferences-page-name",
-
+  manifest: {
+    name: "specified-preferences-page-name",
+  },
   rendererOptions: {
     appPreferences: [
       {
@@ -409,8 +414,9 @@ const extensionStubWithShowInPreferencesTab: FakeExtensionOptions = {
 
 const extensionStubWithRegisteredTab: FakeExtensionOptions = {
   id: "registered-tab-page-id",
-  name: "registered-tab-page-id",
-
+  manifest: {
+    name: "registered-tab-page-id",
+  },
   rendererOptions: {
     appPreferences: [
       {
@@ -455,8 +461,9 @@ const extensionStubWithRegisteredTab: FakeExtensionOptions = {
 
 const extensionStubWithSameRegisteredTab: FakeExtensionOptions = {
   id: "duplicated-tab-page-id",
-  name: "duplicated-tab-page-id",
-
+  manifest: {
+    name: "duplicated-tab-page-id",
+  },
   rendererOptions: {
     appPreferences: [
       {

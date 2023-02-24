@@ -21,6 +21,10 @@ export interface LensExtensionDependencies {
 
 export const Disposers = Symbol("disposers");
 
+export interface LensExtensionParts {
+  protocolHandlers: ProtocolHandlerRegistration[];
+}
+
 export class LensExtension {
   get id() {
     return this.extension.id;

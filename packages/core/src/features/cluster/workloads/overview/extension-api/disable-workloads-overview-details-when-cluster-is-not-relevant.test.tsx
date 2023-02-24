@@ -25,10 +25,21 @@ describe("disable workloads overview details when cluster is not relevant", () =
 
     isEnabledForClusterMock = asyncFn();
 
-    const testExtension = {
-      id: "test-extension-id",
-      name: "test-extension",
+    rendered = await builder.render();
 
+    const windowDi = builder.applicationWindow.only.di;
+
+    const navigateToWorkloadsOverview = windowDi.inject(
+      navigateToWorkloadsOverviewInjectable,
+    );
+
+    navigateToWorkloadsOverview();
+
+    builder.extensions.enable({
+      id: "test-extension-id",
+      manifest: {
+        name: "test-extension",
+      },
       rendererOptions: {
         isEnabledForCluster: isEnabledForClusterMock,
 
@@ -42,19 +53,7 @@ describe("disable workloads overview details when cluster is not relevant", () =
           },
         ],
       },
-    };
-
-    rendered = await builder.render();
-
-    const windowDi = builder.applicationWindow.only.di;
-
-    const navigateToWorkloadsOverview = windowDi.inject(
-      navigateToWorkloadsOverviewInjectable,
-    );
-
-    navigateToWorkloadsOverview();
-
-    builder.extensions.enable(testExtension);
+    });
   });
 
   describe("given not yet known if extension should be enabled for the cluster", () => {

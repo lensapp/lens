@@ -41,10 +41,18 @@ describe("reactively hide kube object detail item", () => {
 
     someObservable = observable.box(false);
 
-    const testExtension = {
-      id: "test-extension-id",
-      name: "test-extension",
+    rendered = await builder.render();
 
+    const windowDi = builder.applicationWindow.only.di;
+    const showDetails = windowDi.inject(showDetailsInjectable);
+
+    showDetails("/apis/some-api-version/namespaces/some-namespace/some-kind/some-name");
+
+    builder.extensions.enable({
+      id: "test-extension-id",
+      manifest: {
+        name: "test-extension",
+      },
       rendererOptions: {
         kubeObjectDetailItems: [
           {
@@ -63,16 +71,7 @@ describe("reactively hide kube object detail item", () => {
           },
         ],
       },
-    };
-
-    rendered = await builder.render();
-
-    const windowDi = builder.applicationWindow.only.di;
-    const showDetails = windowDi.inject(showDetailsInjectable);
-
-    showDetails("/apis/some-api-version/namespaces/some-namespace/some-kind/some-name");
-
-    builder.extensions.enable(testExtension);
+    });
   });
 
   it("renders", () => {

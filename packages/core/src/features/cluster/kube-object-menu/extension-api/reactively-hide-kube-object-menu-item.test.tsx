@@ -33,10 +33,20 @@ describe("reactively hide kube object menu item", () => {
 
     someObservable = observable.box(false);
 
-    const testExtension = {
-      id: "test-extension-id",
-      name: "test-extension",
+    rendered = await builder.render();
 
+    const windowDi = builder.applicationWindow.only.di;
+
+    const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
+    const testRoute = windowDi.inject(testRouteInjectable);
+
+    navigateToRoute(testRoute);
+
+    builder.extensions.enable({
+      id: "test-extension-id",
+      manifest: {
+        name: "test-extension",
+      },
       rendererOptions: {
         kubeObjectMenuItems: [
           {
@@ -52,18 +62,7 @@ describe("reactively hide kube object menu item", () => {
           },
         ],
       },
-    };
-
-    rendered = await builder.render();
-
-    const windowDi = builder.applicationWindow.only.di;
-
-    const navigateToRoute = windowDi.inject(navigateToRouteInjectionToken);
-    const testRoute = windowDi.inject(testRouteInjectable);
-
-    navigateToRoute(testRoute);
-
-    builder.extensions.enable(testExtension);
+    });
   });
 
   it("does not show the kube object menu item", () => {

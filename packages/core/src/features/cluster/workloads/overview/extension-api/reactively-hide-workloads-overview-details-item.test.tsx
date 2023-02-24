@@ -22,10 +22,21 @@ describe("reactively hide workloads overview details item", () => {
 
     someObservable = observable.box(false);
 
-    const testExtension = {
-      id: "test-extension-id",
-      name: "test-extension",
+    rendered = await builder.render();
 
+    const windowDi = builder.applicationWindow.only.di;
+
+    const navigateToWorkloadsOverview = windowDi.inject(
+      navigateToWorkloadsOverviewInjectable,
+    );
+
+    navigateToWorkloadsOverview();
+
+    builder.extensions.enable({
+      id: "test-extension-id",
+      manifest: {
+        name: "test-extension",
+      },
       rendererOptions: {
         kubeWorkloadsOverviewItems: [
           {
@@ -39,19 +50,7 @@ describe("reactively hide workloads overview details item", () => {
           },
         ],
       },
-    };
-
-    rendered = await builder.render();
-
-    const windowDi = builder.applicationWindow.only.di;
-
-    const navigateToWorkloadsOverview = windowDi.inject(
-      navigateToWorkloadsOverviewInjectable,
-    );
-
-    navigateToWorkloadsOverview();
-
-    builder.extensions.enable(testExtension);
+    });
   });
 
   it("does not show the workload overview detail item", () => {

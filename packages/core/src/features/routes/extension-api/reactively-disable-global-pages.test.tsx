@@ -21,10 +21,13 @@ describe("reactively disable global pages", () => {
 
     someObservable = observable.box(false);
 
-    const testExtension = {
-      id: "test-extension-id",
-      name: "test-extension",
+    rendered = await builder.render();
 
+    builder.extensions.enable({
+      id: "test-extension-id",
+      manifest: {
+        name: "test-extension",
+      },
       rendererOptions: {
         globalPages: [{
           components: {
@@ -34,11 +37,7 @@ describe("reactively disable global pages", () => {
           enabled: computed(() => someObservable.get()),
         }],
       },
-    };
-
-    rendered = await builder.render();
-
-    builder.extensions.enable(testExtension);
+    });
 
     rendererTestExtension = builder.extensions.get("test-extension-id").applicationWindows.only;
   });

@@ -8,7 +8,6 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import navigateToTelemetryPreferencesInjectable from "./common/navigate-to-telemetry-preferences.injectable";
 import sentryDataSourceNameInjectable from "../../common/vars/sentry-dsn-url.injectable";
-import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
 import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
 
@@ -57,9 +56,26 @@ describe("preferences - navigation to telemetry preferences", () => {
 
     describe("when extension with telemetry preference items gets enabled", () => {
       beforeEach(() => {
-        builder.extensions.enable(
-          extensionStubWithTelemetryPreferenceItems,
-        );
+        builder.extensions.enable({
+          id: "some-test-extension-id",
+          manifest: {
+            name: "some-test-extension-name",
+          },
+          rendererOptions: {
+            appPreferences: [
+              {
+                title: "Some telemetry-preference item",
+                id: "some-telemetry-preference-item-id",
+                showInPreferencesTab: "telemetry",
+
+                components: {
+                  Hint: () => <div data-testid="some-preference-item-hint" />,
+                  Input: () => <div data-testid="some-preference-item-input" />,
+                },
+              },
+            ],
+          },
+        });
       });
 
       it("renders", () => {
@@ -107,8 +123,9 @@ describe("preferences - navigation to telemetry preferences", () => {
     it("given extensions but no telemetry preference items, does not show link for telemetry preferences", () => {
       builder.extensions.enable({
         id: "some-test-extension-id",
-        name: "some-test-extension-name",
-
+        manifest: {
+          name: "some-test-extension-name",
+        },
         rendererOptions: {
           appPreferenceTabs: [
             {
@@ -205,23 +222,3 @@ describe("preferences - navigation to telemetry preferences", () => {
     });
   });
 });
-
-const extensionStubWithTelemetryPreferenceItems: FakeExtensionOptions = {
-  id: "some-test-extension-id",
-  name: "some-test-extension-name",
-
-  rendererOptions: {
-    appPreferences: [
-      {
-        title: "Some telemetry-preference item",
-        id: "some-telemetry-preference-item-id",
-        showInPreferencesTab: "telemetry",
-
-        components: {
-          Hint: () => <div data-testid="some-preference-item-hint" />,
-          Input: () => <div data-testid="some-preference-item-input" />,
-        },
-      },
-    ],
-  },
-};

@@ -2,21 +2,26 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import type { LensMainExtensionParts } from "../../../extensions/lens-main-extension";
 import { LensMainExtension } from "../../../extensions/lens-main-extension";
+import type { LensRendererExtensionParts } from "../../../extensions/lens-renderer-extension";
 import { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
-import type { DiContainer } from "@ogre-tools/injectable";
+import type { SetRequired } from "type-fest";
+import type { LensExtensionManifest } from "../../../features/extensions/common/installed-extension";
 
 export class TestExtensionMain extends LensMainExtension {}
 export class TestExtensionRenderer extends LensRendererExtension {}
 
+type FakeManifest = SetRequired<Partial<LensExtensionManifest>, "name">;
+
 export interface FakeExtensionOptions {
   id: string;
-  name: string;
-  rendererOptions?: Partial<LensRendererExtension>;
-  mainOptions?: Partial<LensMainExtension>;
+  manifest: FakeManifest;
+  rendererOptions?: Partial<LensRendererExtensionParts>;
+  mainOptions?: Partial<LensMainExtensionParts>;
 }
 
-export const getExtensionFakeForMain = (di: DiContainer, id: string, name: string, options: Partial<LensMainExtension>) => (
+export const getExtensionFakeForMain = ({ id, manifest, mainOptions: options = {}}: FakeExtensionOptions) => (
   Object.assign(
     new TestExtensionMain({
       id,
@@ -25,11 +30,11 @@ export const getExtensionFakeForMain = (di: DiContainer, id: string, name: strin
       isCompatible: false,
       isEnabled: false,
       manifest: {
-        name,
         version: "1.0.0",
         engines: {
           lens: "^5.5.0",
         },
+        ...manifest,
       },
       manifestPath: "irrelevant",
     }),
@@ -37,7 +42,7 @@ export const getExtensionFakeForMain = (di: DiContainer, id: string, name: strin
   )
 );
 
-export const getExtensionFakeForRenderer = (di: DiContainer, id: string, name: string, options: Partial<LensRendererExtension>) => (
+export const getExtensionFakeForRenderer = ({ id, manifest, rendererOptions: options = {}}: FakeExtensionOptions) => (
   Object.assign(
     new TestExtensionRenderer({
       id,
@@ -46,11 +51,11 @@ export const getExtensionFakeForRenderer = (di: DiContainer, id: string, name: s
       isCompatible: false,
       isEnabled: false,
       manifest: {
-        name,
         version: "1.0.0",
         engines: {
           lens: "^5.5.0",
         },
+        ...manifest,
       },
       manifestPath: "irrelevant",
     }),
