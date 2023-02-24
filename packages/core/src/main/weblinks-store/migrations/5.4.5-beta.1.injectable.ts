@@ -16,40 +16,40 @@ const v545Beta1WeblinkStoreMigrationInjectable = getInjectable({
       const weblinksRaw = store.get("weblinks");
       const weblinks = (Array.isArray(weblinksRaw) ? weblinksRaw : []) as WeblinkData[];
 
-      const lensWebsiteLink = weblinks.find(weblink => weblink.name === links.lensWebsiteLinkName);
+      const lensWebsite = weblinks.find(weblink => weblink.name === links.lensWebsiteLinkName);
 
-      if (lensWebsiteLink) {
-        lensWebsiteLink.id = links.lensWebsiteWeblinkId;
+      if (lensWebsite) {
+        lensWebsite.id = links.lensWebsiteWeblinkId;
       }
 
-      const lensDocumentationWeblinkLink = weblinks.find(weblink => weblink.name === links.lensDocumentationWeblinkName);
+      const lensDocumentationWeblink = weblinks.find(weblink => weblink.name === links.lensDocumentationWeblinkName);
 
-      if (lensDocumentationWeblinkLink) {
-        lensDocumentationWeblinkLink.id = links.lensDocumentationWeblinkId;
+      if (lensDocumentationWeblink) {
+        lensDocumentationWeblink.id = links.lensDocumentationWeblinkId;
       }
 
-      const lensSlackWeblinkLink = weblinks.find(weblink => weblink.name === links.lensForumsWeblinkName);
+      const lensForumsWeblink = weblinks.find(weblink => weblink.name === links.lensForumsWeblinkName);
 
-      if (lensSlackWeblinkLink) {
-        lensSlackWeblinkLink.id = links.lensForumsWeblinkId;
+      if (lensForumsWeblink) {
+        lensForumsWeblink.id = links.lensForumsWeblinkId;
       }
 
-      const lensTwitterWeblinkLink = weblinks.find(weblink => weblink.name === links.lensTwitterWeblinkName);
+      const lensTwitterWeblink = weblinks.find(weblink => weblink.name === links.lensTwitterWeblinkName);
 
-      if (lensTwitterWeblinkLink) {
-        lensTwitterWeblinkLink.id = links.lensTwitterWeblinkId;
+      if (lensTwitterWeblink) {
+        lensTwitterWeblink.id = links.lensTwitterWeblinkId;
       }
 
-      const lensBlogWeblinkLink = weblinks.find(weblink => weblink.name === links.lensBlogWeblinkName);
+      const lensBlogWeblink = weblinks.find(weblink => weblink.name === links.lensBlogWeblinkName);
 
-      if (lensBlogWeblinkLink) {
-        lensBlogWeblinkLink.id = links.lensBlogWeblinkId;
+      if (lensBlogWeblink) {
+        lensBlogWeblink.id = links.lensBlogWeblinkId;
       }
 
-      const kubernetesDocumentationWeblinkLink = weblinks.find(weblink => weblink.name === links.kubernetesDocumentationWeblinkName);
+      const kubernetesDocumentationWeblink = weblinks.find(weblink => weblink.name === links.kubernetesDocumentationWeblinkName);
 
-      if (kubernetesDocumentationWeblinkLink) {
-        kubernetesDocumentationWeblinkLink.id = links.kubernetesDocumentationWeblinkId;
+      if (kubernetesDocumentationWeblink) {
+        kubernetesDocumentationWeblink.id = links.kubernetesDocumentationWeblinkId;
       }
 
       store.set("weblinks", weblinks);
