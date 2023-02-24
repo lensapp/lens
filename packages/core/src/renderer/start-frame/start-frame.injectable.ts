@@ -10,7 +10,6 @@ import currentlyInClusterFrameInjectable from "../routes/currently-in-cluster-fr
 const startFrameInjectable = getInjectable({
   id: "start-frame",
 
-  // TODO: Consolidate contents of bootstrap.tsx here
   instantiate: (di) => {
     const runMany = runManyFor(di);
     const beforeFrameStartsFirst = runMany(tokens.beforeFrameStartsFirstInjectionToken);
