@@ -5,7 +5,7 @@
  */
 import assert from "assert";
 import chalk from "chalk";
-import child_process from "child_process";
+import child_process, { spawn } from "child_process";
 import { readFile } from "fs/promises";
 import inquirer from "inquirer";
 import { createInterface, ReadLine } from "readline";
@@ -16,8 +16,20 @@ type SemVer = semver.SemVer;
 
 const { SemVer } = semver;
 const exec = promisify(child_process.exec);
-const spawn = promisify(child_process.spawn);
 const execFile = promisify(child_process.execFile);
+
+async function pipeExecFile(file: string, args: string[], opts?: { stdin: string }) {
+  const p = execFile(file, args);
+
+  p.child.stdout?.pipe(process.stdout);
+  p.child.stderr?.pipe(process.stderr);
+
+  if (opts) {
+    p.child.stdin?.end(opts.stdin);
+  }
+
+  await p;
+}
 
 interface GithubPrData {
   author: {
@@ -65,9 +77,35 @@ async function fetchAllGitTags(): Promise<string[]> {
     .map(line => line.trim());
 }
 
-async function bumpPackageVersions(): Promise<void> {
-  await spawn("npm", ["run", "bump-version"], {
-    stdio: "inherit",
+function bumpPackageVersions() {
+  const bumpPackages = spawn("npm", ["run", "bump-version"], {
+    stdio: "inherit"
+  });
+  const cleaners: (() => void)[] = [
+    () => bumpPackages.stdout?.unpipe(),
+    () => bumpPackages.stderr?.unpipe(),
+  ];
+  const cleanup = () => cleaners.forEach(clean => clean());
+
+  return new Promise<void>((resolve, reject) => {
+    const onExit = (code: number | null) => {
+      cleanup();
+      if (code) {
+        reject(new Error(`"npm run bump-version" failed with code ${code}`));
+      } else {
+        resolve();
+      }
+    };
+    const onError = (error: Error) => {
+      cleanup();
+      reject(error);
+    };
+
+    bumpPackages.once("error", onError);
+    cleaners.push(() => bumpPackages.off("error", onError));
+
+    bumpPackages.once("exit", onExit);
+    cleaners.push(() => bumpPackages.off("exit", onExit));
   });
 }
 
@@ -110,20 +148,12 @@ function formatSemverForMilestone(version: SemVer): string {
 async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prBody: string): Promise<void> {
   const prBranch = `release/v${version.format()}`;
 
-  await spawn("git", ["checkout", "-b", prBranch], {
-    stdio: "inherit",
-  });
-  await spawn("git", ["add", "lerna.json", "packages/*/package.json"], {
-    stdio: "inherit",
-  });
-  await spawn("git", ["commit", "-sm", `"Release ${version.format()}"`], {
-    stdio: "inherit",
-  });
-  await spawn("git", ["push", "--set-upstream", "origin", prBranch], {
-    stdio: "inherit",
-  });
+  await pipeExecFile("git", ["checkout", "-b", prBranch]);
+  await pipeExecFile("git", ["add", "lerna.json", "packages/*/package.json"]);
+  await pipeExecFile("git", ["commit", "-sm", `Release ${version.format()}`]);
+  await pipeExecFile("git", ["push", "--set-upstream", "origin", prBranch]);
 
-  await spawn("gh", [
+  await pipeExecFile("gh", [
     "pr",
     "create",
     "--base", prBase,
@@ -131,9 +161,9 @@ async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prB
     "--label", "skip-changelog",
     "--label", "release",
     "--milestone", formatSemverForMilestone(version),
-    "--body-file", prBody,
+    "--body-file", "-",
   ], {
-    stdio: "inherit"
+    stdin: prBody,
   });
 }
 
@@ -153,13 +183,13 @@ function sortExtendedGithubPrData(left: ExtendedGithubPrData, right: ExtendedGit
 }
 
 async function getRelevantPRs(milestone: string, previousReleasedVersion: string): Promise<ExtendedGithubPrData[]> {
-  console.log("retreiving previous 500 PRs...");
+  console.log("retrieving previous 200 PRs...");
 
   const getMergedPrsArgs = [
     "gh",
     "pr",
     "list",
-    "--limit=500", // Should be big enough, if not we need to release more often ;)
+    "--limit=200", // Should be big enough, if not we need to release more often ;)
     "--state=merged",
     "--base=master",
     "--json mergeCommit,title,author,labels,number,milestone,mergedAt",
@@ -167,14 +197,14 @@ async function getRelevantPRs(milestone: string, previousReleasedVersion: string
 
   const mergedPrs = JSON.parse((await exec(getMergedPrsArgs.join(" "), { encoding: "utf-8" })).stdout) as GithubPrData[];
   const milestoneRelevantPrs = mergedPrs.filter(pr => pr.milestone?.title === milestone);
-  const relaventPrsQuery = await Promise.all(
+  const relevantPrsQuery = await Promise.all(
     milestoneRelevantPrs.map(async pr => ({
       pr,
       stdout: (await exec(`git tag v${previousReleasedVersion} --no-contains ${pr.mergeCommit.oid}`)).stdout,
     })),
   );
 
-  return relaventPrsQuery
+  return relevantPrsQuery
     .filter(query => query.stdout)
     .map(query => query.pr)
     .filter(pr => pr.labels.every(label => label.name !== "skip-changelog"))
@@ -189,40 +219,11 @@ function formatPrEntry(pr: ExtendedGithubPrData) {
 const isEnhancementPr = (pr: ExtendedGithubPrData) => pr.labels.some(label => label.name === "enhancement");
 const isBugfixPr = (pr: ExtendedGithubPrData) => pr.labels.some(label => label.name === "bug");
 
-const cherrypickCommitWith = (rl: ReadLine) => async (commit: string) => {
+const cherryPickCommitWith = (rl: ReadLine) => async (commit: string) => {
   try {
-    const cherryPick = child_process.spawn("git", ["cherry-pick", commit]);
-
-    cherryPick.stdout.pipe(process.stdout);
-    cherryPick.stderr.pipe(process.stderr);
-
-    await new Promise<void>((resolve, reject) => {
-      const cleaners: (() => void)[] = [];
-      const cleanup = () => cleaners.forEach(cleaner => cleaner());
-
-      const onExit = (code: number | null) => {
-        if (code) {
-          reject(new Error(`git cherry-pick failed with exit code ${code}`));
-          cleanup();
-        }
-
-        resolve();
-        cleanup();
-      };
-
-      cherryPick.once("exit", onExit);
-      cleaners.push(() => cherryPick.off("exit", onExit));
-
-      const onError = (error: Error) => {
-        cleanup();
-        reject(error);
-      };
-
-      cherryPick.once("error", onError);
-      cleaners.push(() => cherryPick.off("error", onError));
-    });
+    await pipeExecFile("git", ["cherry-pick", commit]);
   } catch {
-    console.error(chalk.bold("Please resolve conflicts in a seperate terminal and then press enter here..."));
+    console.error(chalk.bold("Please resolve conflicts in a separate terminal and then press enter here..."));
     await new Promise<void>(resolve => rl.once("line", () => resolve()));
   }
 };
@@ -249,7 +250,7 @@ async function pickWhichPRsToUse(prs: ExtendedGithubPrData[]): Promise<ExtendedG
 function formatChangelog(previousReleasedVersion: string, prs: ExtendedGithubPrData[]): string {
   const enhancementPrLines: string[] = [];
   const bugPrLines: string[] = [];
-  const maintenencePrLines: string[] = [];
+  const maintenancePrLines: string[] = [];
 
   for (const pr of prs) {
     if (isEnhancementPr(pr)) {
@@ -257,7 +258,7 @@ function formatChangelog(previousReleasedVersion: string, prs: ExtendedGithubPrD
     } else if (isBugfixPr(pr)) {
       bugPrLines.push(formatPrEntry(pr));
     } else {
-      maintenencePrLines.push(formatPrEntry(pr));
+      maintenancePrLines.push(formatPrEntry(pr));
     }
   }
 
@@ -271,9 +272,9 @@ function formatChangelog(previousReleasedVersion: string, prs: ExtendedGithubPrD
     bugPrLines.push("");
   }
 
-  if (maintenencePrLines.length > 0) {
-    maintenencePrLines.unshift("## 🧰 Maintenance", "");
-    maintenencePrLines.push("");
+  if (maintenancePrLines.length > 0) {
+    maintenancePrLines.unshift("## 🧰 Maintenance", "");
+    maintenancePrLines.push("");
   }
 
   return [
@@ -281,22 +282,22 @@ function formatChangelog(previousReleasedVersion: string, prs: ExtendedGithubPrD
     "",
     ...enhancementPrLines,
     ...bugPrLines,
-    ...maintenencePrLines,
+    ...maintenancePrLines,
   ].join("\n");
 }
 
-async function cherrypickCommits(prs: ExtendedGithubPrData[]): Promise<void> {
+async function cherryPickCommits(prs: ExtendedGithubPrData[]): Promise<void> {
   const rl = createInterface(process.stdin);
-  const cherrypickCommit = cherrypickCommitWith(rl);
+  const cherryPickCommit = cherryPickCommitWith(rl);
 
   for (const pr of prs) {
-    await cherrypickCommit(pr.mergeCommit.oid);
+    await cherryPickCommit(pr.mergeCommit.oid);
   }
 
   rl.close();
 }
 
-async function pickRelaventPrs(prs: ExtendedGithubPrData[], isMasterBranch: boolean): Promise<ExtendedGithubPrData[]> {
+async function pickRelevantPrs(prs: ExtendedGithubPrData[], isMasterBranch: boolean): Promise<ExtendedGithubPrData[]> {
   if (isMasterBranch) {
     return prs;
   }
@@ -307,7 +308,7 @@ async function pickRelaventPrs(prs: ExtendedGithubPrData[], isMasterBranch: bool
     selectedPrs = await pickWhichPRsToUse(prs);
   } while (selectedPrs.length === 0 && (console.warn("[WARNING]: must pick at least once commit"), true));
 
-  await cherrypickCommits(selectedPrs);
+  await cherryPickCommits(selectedPrs);
 
   return selectedPrs;
 }
@@ -326,8 +327,8 @@ async function createRelease(): Promise<void> {
   }
 
   const prMilestone = formatSemverForMilestone(await getCurrentVersionOfSubPackage("core"));
-  const relaventPrs = await getRelevantPRs(prMilestone, previousReleasedVersion);
-  const selectedPrs = await pickRelaventPrs(relaventPrs, isMasterBranch);
+  const relevantPrs = await getRelevantPRs(prMilestone, previousReleasedVersion);
+  const selectedPrs = await pickRelevantPrs(relevantPrs, isMasterBranch);
   const prBody = formatChangelog(previousReleasedVersion, selectedPrs);
 
   if (!isMasterBranch) {
