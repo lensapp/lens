@@ -107,7 +107,7 @@ exports[`preferences - navigation using application menu renders 1`] = `
                 If you have any questions or feedback, please join our 
                 <a
                   class="link"
-                  href="https://forums.k8slens.dev/"
+                  href="https://forums.k8slens.dev"
                   rel="noreferrer"
                   target="_blank"
                 >
