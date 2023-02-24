@@ -5,7 +5,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { once } from "lodash";
 import prefixedLoggerInjectable from "../../../common/logger/prefixed-logger.injectable";
-import frameRoutingIdInjectable from "../../../features/electron/renderer/frame-routing-id.injectable";
 import clusterFrameClusterInjectable from "../../cluster-frame-context/cluster-frame-cluster.injectable";
 import closeRendererLogFileInjectable from "../../logger/close-renderer-log-file.injectable";
 import unmountRootComponentInjectable from "../../window/unmount-root-component.injectable";
@@ -14,13 +13,12 @@ const handleOnClusterFrameCloseInjectable = getInjectable({
   id: "handle-on-cluster-frame-close",
   instantiate: (di) => {
     const cluster = di.inject(clusterFrameClusterInjectable);
-    const frameRoutingId = di.inject(frameRoutingIdInjectable);
     const logger = di.inject(prefixedLoggerInjectable, "CLUSTER-FRAME");
     const closeFileLogging = di.inject(closeRendererLogFileInjectable);
     const unmountRootComponent = di.inject(unmountRootComponentInjectable);
 
     const onCloseFrame = once(() => {
-      logger.info(`Unload dashboard, clusterId=${(cluster.id)}, frameId=${frameRoutingId}`);
+      logger.info(`Unload dashboard, clusterId=${(cluster.id)}`);
       closeFileLogging();
       unmountRootComponent();
     });
