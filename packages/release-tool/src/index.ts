@@ -13,14 +13,10 @@ import { promisify } from "util";
 
 type SemVer = semver.SemVer;
 
-const {
-  SemVer,
-  valid: semverValid,
-  rcompare: semverRcompare,
-  lte: semverLte,
-} = semver;
+const { SemVer } = semver;
 const exec = promisify(child_process.exec);
 const spawn = promisify(child_process.spawn);
+const execFile = promisify(child_process.execFile);
 
 interface GithubPrData {
   author: {
@@ -59,12 +55,11 @@ async function getAbsolutePathToRepoRoot(): Promise<string> {
 }
 
 async function fetchAllGitTags(): Promise<string[]> {
-  await spawn("git", ["fetch", "--tags", "--force"], {
-    stdio: "inherit",
-  });
+  await execFile("git", ["fetch", "--tags", "--force"]);
 
-  return (await exec("git tag --list", { encoding: "utf-8" }))
-    .stdout
+  const { stdout } = await exec("git tag --list", { encoding: "utf-8" });
+
+  return stdout
     .split(/\r?\n/)
     .map(line => line.trim());
 }
@@ -75,16 +70,21 @@ async function bumpPackageVersions(): Promise<void> {
   });
 }
 
+function isDefined<T>(value: T | null | undefined): value is T {
+  return value != null;
+}
+
 function findClosestVersionTagLessThanVersion(tags: string[], version: SemVer): string {
   const lessThanTags = tags
-    .map((value) => semverValid(value))
-    .filter((v): v is string => typeof v === "string")
-    .sort(semverRcompare)
-    .filter(version => semverLte(version, version));
+    .map((value) => semver.parse(value))
+    .filter(isDefined)
+    .filter(version => !version.prerelease.includes("cron"))
+    .sort(semver.rcompare)
+    .filter(version => semver.lte(version, version));
 
   assert(lessThanTags.length > 0, `Cannot find version tag less than ${version.format()}`);
 
-  return lessThanTags[0];
+  return lessThanTags[0].format();
 }
 
 async function getCurrentVersionOfSubPackage(packageName: string): Promise<SemVer> {
@@ -200,15 +200,21 @@ const cherrypickCommitWith = (rl: ReadLine) => async (commit: string) => {
 };
 
 async function pickWhichCommitsToUse(prs: ExtendedGithubPrData[]): Promise<ExtendedGithubPrData[]> {
-  console.log("Pick which commits to use...");
-  const answers = await inquirer.prompt<Partial<Record<number, boolean>>>(prs.map(pr => ({
-    message: `#${pr.number}: ${pr.title}`,
+  const answers = await inquirer.prompt<{ commits: number[] }>({
     type: "checkbox",
-    default: true,
-    name: pr.number,
-  })));
+    name: `commits`,
+    message: "Pick which commits to use...",
+    default: [],
+    choices: prs.map(pr => ({
+      checked: true,
+      key: pr.number,
+      name: `#${pr.number}: ${pr.title} (https://github.com/lensapp/lens/pull/${pr.number})`,
+      value: pr.number,
+    })),
+    loop: false,
+  });
 
-  return prs.filter(pr => answers[pr.number]);
+  return prs.filter(pr => answers.commits.includes(pr.number));
 }
 
 function formatChangelog(previousReleasedVersion: string, prs: ExtendedGithubPrData[]): string {
@@ -266,7 +272,11 @@ async function pickRelaventPrs(prs: ExtendedGithubPrData[], isMasterBranch: bool
     return prs;
   }
 
-  const selectedPrs = await pickWhichCommitsToUse(prs);
+  let selectedPrs: ExtendedGithubPrData[];
+
+  do {
+    selectedPrs = await pickWhichCommitsToUse(prs);
+  } while (selectedPrs.length === 0 && (console.warn("[WARNING]: must pick at least once commit"), true));
 
   await cherrypickCommits(selectedPrs);
 
