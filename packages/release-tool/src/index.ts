@@ -151,7 +151,7 @@ function sortExtendedGithubPrData(left: ExtendedGithubPrData, right: ExtendedGit
   return -1;
 }
 
-async function getRelaventPRs(milestone: string, previousReleasedVersion: string): Promise<ExtendedGithubPrData[]> {
+async function getRelevantPRs(milestone: string, previousReleasedVersion: string): Promise<ExtendedGithubPrData[]> {
   console.log("retreiving previous 500 PRs...");
 
   const getMergedPrsArgs = [
@@ -297,7 +297,7 @@ async function createRelease(): Promise<void> {
   }
 
   const prMilestone = formatSemverForMilestone(await getCurrentVersionOfSubPackage("core"));
-  const relaventPrs = await getRelaventPRs(prMilestone, previousReleasedVersion);
+  const relaventPrs = await getRelevantPRs(prMilestone, previousReleasedVersion);
   const selectedPrs = await pickRelaventPrs(relaventPrs, isMasterBranch);
   const prBody = formatChangelog(previousReleasedVersion, selectedPrs);
 
