@@ -4,6 +4,8 @@
  */
 
 import type AbortController from "abort-controller";
+import type { Disposer } from "./disposer";
+import { disposer } from "./disposer";
 
 /**
  * Return a promise that will be resolved after at least `timeout` ms have
@@ -12,13 +14,22 @@ import type AbortController from "abort-controller";
  * @param timeout The number of milliseconds before resolving
  * @param failFast An abort controller instance to cause the delay to short-circuit
  */
-export function delay(timeout = 1000, failFast?: AbortController): Promise<void> {
-  return new Promise(resolve => {
+export function delay(timeout = 1000, failFast?: AbortController): Promise<void> & { cancel: Disposer } {
+  const cancel = disposer();
+
+  return Object.assign(new Promise<void>(resolve => {
     const timeoutId = setTimeout(resolve, timeout);
 
-    failFast?.signal.addEventListener("abort", () => {
-      clearTimeout(timeoutId);
-      resolve();
-    });
-  });
+    cancel.push(() => clearTimeout(timeoutId));
+
+    if (failFast) {
+      const onAbort = () => {
+        clearTimeout(timeoutId);
+        resolve();
+      };
+
+      failFast.signal.addEventListener("abort", onAbort);
+      cancel.push(() => failFast.signal.removeEventListener("abort", onAbort));
+    }
+  }), { cancel });
 }
