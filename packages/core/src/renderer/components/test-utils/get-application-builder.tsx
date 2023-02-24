@@ -46,7 +46,6 @@ import { renderFor } from "./renderFor";
 import { RootFrame } from "../../frames/root-frame/root-frame";
 import { ClusterFrame } from "../../frames/cluster-frame/cluster-frame";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
-import activeKubernetesClusterInjectable from "../../cluster-frame-context/active-kubernetes-cluster.injectable";
 import { catalogEntityFromCluster } from "../../../main/cluster/manager";
 import namespaceStoreInjectable from "../+namespaces/store.injectable";
 import createApplicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-application-window.injectable";
@@ -69,6 +68,7 @@ import fsInjectable from "../../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
 import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
+import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -249,36 +249,25 @@ export const getApplicationBuilder = () => {
       close: () => {},
       loadFile: async () => {},
       loadUrl: async () => {
-        console.log("+beforeWindowStarts");
-
         for (const callback of beforeWindowStartCallbacks) {
           await callback(windowDi);
         }
 
-        console.log("-beforeWindowStarts");
-
         const startFrame = windowDi.inject(startFrameInjectable);
 
-        console.log("start frame");
         await startFrame();
-        console.log("+afterWindowStarts");
 
         for (const callback of afterWindowStartCallbacks) {
           await callback(windowDi);
         }
-        console.log("-afterWindowStarts");
-        const history = windowDi.inject(historyInjectable);
 
         const render = renderFor(windowDi);
 
-        console.log("renderFor");
-
-        rendered = render(
-          <Router history={history}>
+        rendered = render((
+          <Router history={windowDi.inject(historyInjectable)}>
             <environment.RootComponent />
-          </Router>,
-        );
-        console.log("finished application-builder loadUrl");
+          </Router>
+        ));
       },
 
       send: (arg) => {
@@ -303,17 +292,12 @@ export const getApplicationBuilder = () => {
   const startApplication = async ({ shouldStartHidden }: { shouldStartHidden: boolean }) => {
     mainDi.inject(lensProxyPortInjectable).set(42);
 
-    console.log("beforeApplicationStartCallbacks");
-
     for (const callback of beforeApplicationStartCallbacks) {
       await callback(mainDi);
     }
 
     mainDi.override(shouldStartHiddenInjectable, () => shouldStartHidden);
-    console.log("startMainApplication");
     await startMainApplication();
-
-    console.log("afterApplicationStartCallbacks");
 
     for (const callback of afterApplicationStartCallbacks) {
       await callback(mainDi);
@@ -519,11 +503,12 @@ export const getApplicationBuilder = () => {
           id: "some-cluster-id",
           accessibleNamespaces: observable.array(),
           shouldShowResource: (kind) => allowedResourcesState.has(formatKubeApiResource(kind)),
+          ready: true,
         } as Partial<Cluster> as Cluster;
 
-        windowDi.override(activeKubernetesClusterInjectable, () =>
-          computed(() => catalogEntityFromCluster(clusterStub)),
-        );
+        windowDi.inject(catalogEntityRegistryInjectable).updateItems([
+          catalogEntityFromCluster(clusterStub),
+        ]);
 
         windowDi.override(hostedClusterIdInjectable, () => clusterStub.id);
         windowDi.override(hostedClusterInjectable, () => clusterStub);
