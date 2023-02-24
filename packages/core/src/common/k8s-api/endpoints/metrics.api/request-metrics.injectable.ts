@@ -37,18 +37,17 @@ export interface RequestMetricsParams {
   namespace?: string;
 }
 
-export interface RequestMetrics {
-  (query: string, params?: RequestMetricsParams): Promise<MetricData>;
-  (query: string[], params?: RequestMetricsParams): Promise<MetricData[]>;
-  <Keys extends string>(query: Record<Keys, Partial<Record<string, string>>>, params?: RequestMetricsParams): Promise<Record<Keys, MetricData>>;
-}
+export type RequestMetrics = ReturnType<typeof requestMetricsInjectable["instantiate"]>;
 
 const requestMetricsInjectable = getInjectable({
   id: "request-metrics",
   instantiate: (di) => {
     const apiBase = di.inject(apiBaseInjectable);
 
-    return (async (query: object, params: RequestMetricsParams = {}) => {
+    function requestMetrics(query: string, params?: RequestMetricsParams): Promise<MetricData>;
+    function requestMetrics(query: string[], params?: RequestMetricsParams): Promise<MetricData[]>;
+    function requestMetrics<Keys extends string>(query: Record<Keys, Partial<Record<string, string>>>, params?: RequestMetricsParams): Promise<Record<Keys, MetricData>>;
+    async function requestMetrics(query: string | string[] | Partial<Record<string, Partial<Record<string, string>>>>, params: RequestMetricsParams = {}): Promise<MetricData | MetricData[] | Partial<Record<string, MetricData>>> {
       const { range = 3600, step = 60, namespace } = params;
       let { start, end } = params;
 
@@ -66,7 +65,9 @@ const requestMetricsInjectable = getInjectable({
           "kubernetes_namespace": namespace,
         },
       });
-    }) as RequestMetrics;
+    }
+
+    return requestMetrics;
   },
 });
 

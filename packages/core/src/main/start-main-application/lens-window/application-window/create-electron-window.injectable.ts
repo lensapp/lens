@@ -13,9 +13,9 @@ import openLinkInBrowserInjectable from "../../../../common/utils/open-link-in-b
 import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path.injectable";
 import lensResourcesDirInjectable from "../../../../common/vars/lens-resources-dir.injectable";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
-import { applicationInformationToken } from "../../../../common/vars/application-information-token";
 import pathExistsSyncInjectable from "../../../../common/fs/path-exists-sync.injectable";
 import lensProxyCertificateInjectable from "../../../../common/certificate/lens-proxy-certificate.injectable";
+import { applicationInformationToken } from "@k8slens/application";
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
 
@@ -27,10 +27,11 @@ export interface UrlSource {
 }
 export type ContentSource = RequireExactlyOne<FileSource & UrlSource>;
 
+// see https://www.electronjs.org/docs/latest/api/session#sessetcertificateverifyprocproc
 enum ChromiumNetError {
   SUCCESS = 0,
-  FAILURE = 1,
-  RESULT_FROM_CHROMIUM,
+  FAILURE = -2,
+  RESULT_FROM_CHROMIUM = -3,
 }
 
 export interface ElectronWindowConfiguration {

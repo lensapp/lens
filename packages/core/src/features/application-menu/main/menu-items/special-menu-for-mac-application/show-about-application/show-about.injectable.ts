@@ -10,6 +10,7 @@ import productNameInjectable from "../../../../../../common/vars/product-name.in
 import buildVersionInjectable from "../../../../../../main/vars/build-version/build-version.injectable";
 import extensionApiVersionInjectable from "../../../../../../common/vars/extension-api-version.injectable";
 import applicationCopyrightInjectable from "../../../../../../common/vars/application-copyright.injectable";
+import aboutBundledExtensionsInjectable from "./about-bundled-extensions.injectable";
 
 const showAboutInjectable = getInjectable({
   id: "show-about",
@@ -22,6 +23,7 @@ const showAboutInjectable = getInjectable({
     const appName = di.inject(appNameInjectable);
     const productName = di.inject(productNameInjectable);
     const applicationCopyright = di.inject(applicationCopyrightInjectable);
+    const aboutBundledExtensions = di.inject(aboutBundledExtensionsInjectable);
 
     return () => {
       const appInfo = [
@@ -30,6 +32,7 @@ const showAboutInjectable = getInjectable({
         `Electron: ${process.versions.electron}`,
         `Chrome: ${process.versions.chrome}`,
         `Node: ${process.versions.node}`,
+        ...aboutBundledExtensions,
         applicationCopyright,
       ];
 

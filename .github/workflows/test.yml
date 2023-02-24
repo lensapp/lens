@@ -32,18 +32,20 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
+      - name: Get npm cache directory path
+        if: ${{ runner.os != 'Windows' }}
+        id: npm-cache-dir-path
         shell: bash
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+        run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        if: ${{ runner.os != 'Windows' }}
+        id: npm-cache # use this to check for `cache-hit` (`steps.npm-cache.outputs.cache-hit != 'true'`)
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ steps.npm-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-npm-
 
       - uses: nick-fields/retry@v2
         name: Install dependencies
@@ -51,9 +53,9 @@ jobs:
           timeout_minutes: 20
           max_attempts: 3
           retry_on: error
-          command: yarn install --frozen-lockfile
+          command: npm ci
 
-      - run: yarn run test:unit
+      - run: npm run test:unit
         name: Run tests
         if: ${{ matrix.type == 'unit' }}
 
@@ -64,15 +66,15 @@ jobs:
           minikube-version: latest
         if: ${{ runner.os == 'Linux' && matrix.type == 'smoke' }}
 
-      - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' yarn run test:integration
+      - run: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' npm run test:integration
         name: Run Linux integration tests
         if: ${{ runner.os == 'Linux' && matrix.type == 'smoke' }}
 
-      - run: yarn run test:integration
+      - run: npm run test:integration
         name: Run macOS integration tests
         shell: bash
         if: ${{ runner.os == 'macOS' && matrix.type == 'smoke' }}
 
-      - run: yarn run test:integration
+      - run: npm run test:integration
         name: Run Windows integration tests
         if: ${{ runner.os == 'Windows' && matrix.type == 'smoke' }}

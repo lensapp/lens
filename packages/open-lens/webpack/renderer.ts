@@ -117,7 +117,8 @@
     new CopyPlugin({
       patterns: [
         {
-          from: "node_modules/@k8slens/core/static/build/library/*.ttf",
+          // TODO: Figure out a way to access without relative path
+          from: "../../node_modules/@k8slens/core/static/build/library/*.ttf",
           to: "[name][ext]",
         },
       ],

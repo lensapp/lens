@@ -4,6 +4,4 @@
  */
 
 // @experimental
-export { applicationInformationToken } from "./vars/application-information-token";
-export type { ApplicationInformation } from "./vars/application-information-token";
 export { bundledExtensionInjectionToken } from "../extensions/extension-discovery/bundled-extension-token";

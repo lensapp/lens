@@ -1,7 +1,13 @@
 {
   "name": "lens-monorepo",
   "private": true,
+
+  "workspaces": [
+    "packages/**/*"
+  ],
+
   "scripts": {
+    "all:install": "npm install",
     "adr:create": "echo \"What is the title?\"; read title; adr new \"$title\"",
     "adr:change-status": "echo \"Decision number?:\"; read decision; adr status $decision",
     "adr:update-readme": "adr update",
@@ -16,16 +22,16 @@
     "mkdocs:serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
     "mkdocs:verify": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
     "test:unit": "lerna run --stream test:unit",
+    "test:unit:watch": "jest --watch",
     "test:integration": "lerna run --stream test:integration",
     "bump-version": "lerna version --no-git-tag-version --no-push",
-    "precreate-release-pr": "cd packages/release-tool && yarn run build",
-    "create-release-pr": "node packages/release-tool/dist/index.js",
-    "postinstall": "lerna bootstrap --ignore open-lens && lerna bootstrap --scope open-lens --include-dependencies"
+    "precreate-release-pr": "cd packages/release-tool && npm run build",
+    "create-release-pr": "node packages/release-tool/dist/index.js"
   },
   "devDependencies": {
     "adr": "^1.4.3",
     "cross-env": "^7.0.3",
-    "lerna": "^6.5.0",
+    "lerna": "^6.5.1",
     "rimraf": "^4.1.2"
   }
 }

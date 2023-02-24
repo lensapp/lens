@@ -142,7 +142,6 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
           options={this.props.createResourceTemplates.get()}
           formatGroupLabel={group => group.label}
           menuPlacement="top"
-          themeName="outlined"
           onChange={(option) => {
             if (option) {
               this.props.createResourceTabStore.setData(this.tabId, option.value);

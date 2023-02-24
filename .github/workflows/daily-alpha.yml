@@ -21,9 +21,9 @@ jobs:
 
       - name: Install deps
         run: |
-          yarn install
+          npm install
           sudo apt-get install -y ripgrep
-          cd packages/bump-version-for-cron && yarn build
+          cd packages/bump-version-for-cron && npm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Bump version
@@ -85,14 +85,14 @@ jobs:
       - name: Build package
         shell: bash
         run: |
-          yarn install --frozen-lockfile
-          yarn run build
+          npm ci
+          npm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Release to GitHub NPM registry
         run: |
           npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-          yarn lerna \
+          npx lerna \
             publish from-package \
             --no-push \
             --no-git-tag-version \

@@ -7,8 +7,8 @@ import { docsUrl, slackUrl } from "../../../common/vars";
 import type { WeblinkData } from "../../../common/weblinks-store/weblink-store";
 import { getInjectable } from "@ogre-tools/injectable";
 import { weblinkStoreMigrationInjectionToken } from "../../../common/weblinks-store/migration-token";
-import { applicationInformationToken } from "../../../common/vars/application-information-token";
 import { lensDocumentationWeblinkId, lensSlackWeblinkId } from "../links";
+import { applicationInformationToken } from "@k8slens/application";
 
 const currentVersionWeblinkStoreMigrationInjectable = getInjectable({
   id: "current-version-weblink-store-migration",

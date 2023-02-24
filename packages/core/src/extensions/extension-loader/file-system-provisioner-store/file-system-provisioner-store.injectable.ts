@@ -15,6 +15,7 @@ import { enlistMessageChannelListenerInjectionToken } from "../../../common/util
 import fileSystemProvisionerStoreMigrationVersionInjectable from "./migration-version.injectable";
 import { sendMessageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
 import ensureHashedDirectoryForExtensionInjectable from "./ensure-hashed-directory-for-extension.injectable";
+import { registeredExtensionsInjectable } from "./registered-extensions.injectable";
 
 const fileSystemProvisionerStoreInjectable = getInjectable({
   id: "file-system-provisioner-store",
@@ -32,6 +33,7 @@ const fileSystemProvisionerStoreInjectable = getInjectable({
     shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
     sendMessageToChannel: di.inject(sendMessageToChannelInjectionToken),
     ensureHashedDirectoryForExtension: di.inject(ensureHashedDirectoryForExtensionInjectable),
+    registeredExtensions: di.inject(registeredExtensionsInjectable),
   }),
 });
 
