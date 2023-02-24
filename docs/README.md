@@ -7,15 +7,15 @@ To install your first extension you should goto the [extension page](lens://app/
 
 This documentation describes:
 
-* How to build, run, test, and publish an extension.
-* How to take full advantage of the Lens Extension API.
-* Where to find [guides](extensions/guides/README.md) and [code samples](https://github.com/lensapp/lens-extension-samples) to help get you started.
+- How to build, run, test, and publish an extension.
+- How to take full advantage of the Lens Extension API.
+- Where to find [guides](extensions/guides/README.md) and [code samples](https://github.com/lensapp/lens-extension-samples) to help get you started.
 
 ## What Extensions Can Do
 
 Here are some examples of what you can achieve with the Extension API:
 
-* Add custom components & views in the UI - Extending the Lens Workbench
+- Add custom components & views in the UI - Extending the Lens Workbench
 
 For an overview of the Lens Extension API, refer to the [Common Capabilities](extensions/capabilities/common-capabilities.md) page. [Extension Guides Overview](extensions/guides/README.md) also includes a list of code samples and guides that illustrate various ways of using the Lens Extension API.
 
@@ -23,11 +23,11 @@ For an overview of the Lens Extension API, refer to the [Common Capabilities](ex
 
 Here is what each section of the Lens Extension API docs can help you with:
 
-* **Getting Started** teaches fundamental concepts for building extensions with the Hello World sample.
-* **Extension Capabilities** dissects Lens's Extension API into smaller categories and points you to more detailed topics.
-* **Extension Guides** includes guides and code samples that explain specific usages of Lens Extension API.
-* **Testing and Publishing** includes in-depth guides on various extension development topics, such as testing and publishing extensions.
-* **API Reference** contains exhaustive references for the Lens Extension API, Contribution Points, and many other topics.
+- **Getting Started** teaches fundamental concepts for building extensions with the Hello World sample.
+- **Extension Capabilities** dissects Lens's Extension API into smaller categories and points you to more detailed topics.
+- **Extension Guides** includes guides and code samples that explain specific usages of Lens Extension API.
+- **Testing and Publishing** includes in-depth guides on various extension development topics, such as testing and publishing extensions.
+- **API Reference** contains exhaustive references for the Lens Extension API, Contribution Points, and many other topics.
 
 ## What's New
 
@@ -45,7 +45,7 @@ See the [Lens v4 to v5 extension migration notes](extensions/extension-migration
 
 ## Looking for Help
 
-If you have questions for extension development, try asking on the [Lens Dev Slack](http://k8slens.slack.com/). It's a public chatroom for Lens developers, where Lens team members chime in from time to time.
+If you have questions for extension development, try asking on the [Lens Forums](http://forums.k8slens.dev/). It's a public chatroom for Lens developers, where Lens team members chime in from time to time.
 
 To provide feedback on the documentation or issues with the Lens Extension API, create new issues at [lensapp/lens](https://github.com/lensapp/lens/issues). Please use the labels `area/documentation` and/or `area/extension`.
 
