@@ -15,7 +15,7 @@ const setupRootMacClassnameInjectable = getInjectable({
       const isMac = di.inject(isMacInjectable);
       const rootElem = di.inject(rootElementInjectable);
 
-      rootElem.classList.toggle("is-mac", isMac);
+      rootElem?.classList.toggle("is-mac", isMac);
     },
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
