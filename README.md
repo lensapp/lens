@@ -1,7 +1,7 @@
 # Lens Desktop Core ("OpenLens")
 
 [![Build Status](https://github.com/lensapp/lens/actions/workflows/test.yml/badge.svg)](https://github.com/lensapp/lens/actions/workflows/test.yml)
-[![Chat on our Forums](https://upload.wikimedia.org/wikipedia/commons/1/17/Discourse_icon.svg)](https://forums.k8slens.dev)
+[![Explore our Forums](https://upload.wikimedia.org/wikipedia/commons/1/17/Discourse_icon.svg)](https://forums.k8slens.dev)
 
 ## The Repository
 
