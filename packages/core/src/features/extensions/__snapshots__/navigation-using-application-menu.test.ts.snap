@@ -287,309 +287,147 @@ exports[`extensions - navigation using application menu renders 1`] = `
 exports[`extensions - navigation using application menu when navigating to extensions using application menu renders 1`] = `
 <div>
   <div
-    class="ClusterManager"
+    class="ErrorBoundary flex column gaps"
   >
+    <h5>
+      App crash at 
+      <span
+        class="contrast"
+      >
+        /
+      </span>
+    </h5>
+    <p>
+      To help us improve the product please report bugs to 
+      <a
+        href="https://k8slens.dev/slack.html"
+        rel="noreferrer"
+        target="_blank"
+      >
+        Slack
+      </a>
+       community or 
+      <a
+        href="https://github.com/lensapp/lens/issues"
+        rel="noreferrer"
+        target="_blank"
+      >
+        Github
+      </a>
+       issues tracker.
+    </p>
     <div
-      class="topBar"
+      class="wrapper"
     >
-      <div
-        class="items"
+      <code
+        class="block"
       >
-        <div
-          class="preventedDragging"
+        <p
+          class="contrast"
         >
-          <i
-            class="Icon material interactive focusable"
-            data-testid="home-button"
-            tabindex="0"
-          >
-            <span
-              class="icon"
-              data-icon-name="home"
-            >
-              home
-            </span>
-          </i>
-        </div>
-        <div
-          class="size-sm"
-        />
-        <div
-          class="preventedDragging"
+          Component stack:
+        </p>
+        
+    at main
+    at div
+    at NonInjectedClusterManager (/Users/sebastianmalton/repos/lens/packages/core/src/renderer/components/cluster-manager/cluster-manager.tsx:31:1)
+    at NonInjectedErrorBoundary (/Users/sebastianmalton/repos/lens/packages/core/src/renderer/components/error-boundary/error-boundary.tsx:72:9)
+    at Component
+    at children (/Users/sebastianmalton/repos/lens/node_modules/mobx-react-lite/src/ObserverComponent.ts:8:30)
+    at NonInjectedRootFrame (/Users/sebastianmalton/repos/lens/packages/core/src/renderer/frames/root-frame/root-frame.tsx:18:1)
+    at Router (/Users/sebastianmalton/repos/lens/node_modules/react-router/cjs/react-router.js:283:30)
+      </code>
+      <code
+        class="block"
+      >
+        <p
+          class="contrast"
         >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-back"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_back"
-            >
-              arrow_back
-            </span>
-          </i>
-        </div>
-        <div
-          class="size-sm"
-        />
-        <div
-          class="preventedDragging"
-        >
-          <i
-            class="Icon material interactive disabled focusable"
-            data-testid="history-forward"
-          >
-            <span
-              class="icon"
-              data-icon-name="arrow_forward"
-            >
-              arrow_forward
-            </span>
-          </i>
-        </div>
-        <div
-          class="separator"
-        />
-      </div>
+          Error stack:
+        </p>
+        Error: Tried to inject non-registered injectable "renderer" -&gt; "NonInjectedExtensions" -&gt; "confirm-uninstall-extension" -&gt; "uninstall-extension" -&gt; "remove-extension-files" -&gt; "remove-extension-symlink-by-name" -&gt; "get-extension-install-path".
+    at E (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:5290)
+    at /Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:1494
+    at Object.inject (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:5056)
+    at Object.inject (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:3948)
+    at inject (/Users/sebastianmalton/repos/lens/packages/core/src/features/extensions/discovery/common/remove-extension-symlink-by-name.injectable.ts:21:40)
+    at instantiateToBeDecorated (/Users/sebastianmalton/repos/lens/packages/core/src/features/telemetry/renderer/telemetry-decorator.injectable.ts:37:30)
+    at /Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:4674
+    at y (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:4223)
+    at /Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:1702
+    at Object.inject (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:5056)
+    at Object.inject (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:3948)
+    at inject (/Users/sebastianmalton/repos/lens/packages/core/src/features/extensions/discovery/common/uninstall-extension.injectable.ts:24:45)
+    at instantiateToBeDecorated (/Users/sebastianmalton/repos/lens/packages/core/src/features/telemetry/renderer/telemetry-decorator.injectable.ts:37:30)
+    at /Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:4674
+    at y (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:4223)
+    at /Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:1702
+    at Object.inject (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:5056)
+    at Object.inject (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:3948)
+    at inject (/Users/sebastianmalton/repos/lens/packages/core/src/renderer/components/+extensions/uninstall-extension.injectable.tsx:29:37)
+    at instantiateToBeDecorated (/Users/sebastianmalton/repos/lens/packages/core/src/features/telemetry/renderer/telemetry-decorator.injectable.ts:37:30)
+    at /Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:4674
+    at y (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:4223)
+    at /Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:1702
+    at Object.inject (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:5056)
+    at Object.inject (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:3948)
+    at inject (/Users/sebastianmalton/repos/lens/packages/core/src/renderer/components/+extensions/confirm-uninstall-extension.injectable.tsx:50:28)
+    at instantiateToBeDecorated (/Users/sebastianmalton/repos/lens/packages/core/src/features/telemetry/renderer/telemetry-decorator.injectable.ts:37:30)
+    at /Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:4674
+    at y (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:4223)
+    at /Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:1702
+    at Object.inject (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:5056)
+    at Object.inject (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable/build/index.js:1:3354)
+    at Object.inject (/Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable-react/build/index.js:1:1284)
+    at inject (/Users/sebastianmalton/repos/lens/packages/core/src/renderer/components/+extensions/extensions.tsx:135:35)
+    at /Users/sebastianmalton/repos/lens/node_modules/@ogre-tools/injectable-react/build/index.js:1:1265
+    at updateContextConsumer (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:18747:19)
+    at beginWork (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:19114:14)
+    at HTMLUnknownElement.callCallback (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:3945:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (/Users/sebastianmalton/repos/lens/node_modules/jest-environment-jsdom/node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+    at innerInvokeEventListeners (/Users/sebastianmalton/repos/lens/node_modules/jest-environment-jsdom/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:340:25)
+    at invokeEventListeners (/Users/sebastianmalton/repos/lens/node_modules/jest-environment-jsdom/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:276:3)
+    at HTMLUnknownElementImpl._dispatch (/Users/sebastianmalton/repos/lens/node_modules/jest-environment-jsdom/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:223:9)
+    at HTMLUnknownElementImpl.dispatchEvent (/Users/sebastianmalton/repos/lens/node_modules/jest-environment-jsdom/node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+    at HTMLUnknownElement.dispatchEvent (/Users/sebastianmalton/repos/lens/node_modules/jest-environment-jsdom/node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:241:34)
+    at Object.invokeGuardedCallbackDev (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:3994:16)
+    at invokeGuardedCallback (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:4056:31)
+    at beginWork$1 (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:23964:7)
+    at performUnitOfWork (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:22779:12)
+    at workLoopSync (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:22707:5)
+    at renderRootSync (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:22670:7)
+    at performSyncWorkOnRoot (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:22293:18)
+    at /Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:11327:26
+    at unstable_runWithPriority (/Users/sebastianmalton/repos/lens/node_modules/scheduler/cjs/scheduler.development.js:468:12)
+    at runWithPriority$1 (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:11276:10)
+    at flushSyncCallbackQueueImpl (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:11322:9)
+    at flushSyncCallbackQueue (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:11309:3)
+    at batchedUpdates$1 (/Users/sebastianmalton/repos/lens/node_modules/react-dom/cjs/react-dom.development.js:22387:7)
+    at fn (/Users/sebastianmalton/repos/lens/node_modules/mobx/src/core/reaction.ts:270:30)
+    at reactionScheduler (/Users/sebastianmalton/repos/lens/node_modules/mobx/src/core/reaction.ts:237:5)
+    at runReactions (/Users/sebastianmalton/repos/lens/node_modules/mobx/src/core/observable.ts:112:9)
+    at endBatch (/Users/sebastianmalton/repos/lens/node_modules/mobx/src/core/action.ts:142:5)
+    at _endAction (/Users/sebastianmalton/repos/lens/node_modules/mobx/src/core/action.ts:74:9)
+    at executeAction (/Users/sebastianmalton/repos/lens/node_modules/mobx/src/api/action.ts:85:12)
+    at /Users/sebastianmalton/repos/lens/packages/core/src/renderer/routes/navigate-to-url.injectable.ts:25:18
+    at instance (/Users/sebastianmalton/repos/lens/packages/core/src/features/telemetry/renderer/telemetry-decorator.injectable.ts:49:24)
+    at Object.navigateToUrl [as handler] (/Users/sebastianmalton/repos/lens/packages/core/src/renderer/navigation/navigation-channel-listener.injectable.ts:29:9)
+    at handler (/Users/sebastianmalton/repos/lens/packages/core/src/test-utils/channel-fakes/override-messaging-from-main-to-window.ts:76:54)
+    at Set.forEach (&lt;anonymous&gt;)
+    at forEach (/Users/sebastianmalton/repos/lens/packages/core/src/test-utils/channel-fakes/override-messaging-from-main-to-window.ts:76:23)
+    at Object.sendToWindow [as send] (/Users/sebastianmalton/repos/lens/packages/core/src/renderer/components/test-utils/get-application-builder.tsx:274:9)
+    at Object.send (/Users/sebastianmalton/repos/lens/packages/core/src/main/start-main-application/lens-window/application-window/create-lens-window.injectable.ts:137:32)
+    at send (/Users/sebastianmalton/repos/lens/packages/core/src/main/start-main-application/lens-window/navigate.injectable.ts:37:25)
+    at /Users/sebastianmalton/repos/lens/packages/core/src/main/navigate-to-url/navigate-to-url.injectable.ts:16:7
+    at /Users/sebastianmalton/repos/lens/packages/core/src/main/navigate-to-route/navigate-to-route.injectable.ts:24:7
+      </code>
     </div>
-    <main>
-      <div
-        id="lens-views"
-      />
-      <div
-        class="SettingLayout DropFileInput Extensions"
-        data-testid="extensions-page"
-      >
-        <div
-          class="contentRegion"
-          id="ScrollSpyRoot"
-        >
-          <div
-            class="content"
-          >
-            <section>
-              <h1>
-                Extensions
-              </h1>
-              <div
-                class="notice"
-              >
-                <p>
-                  Add new features via Lens Extensions. Check out the 
-                  <a
-                    href="https://docs.k8slens.dev/extensions/"
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    docs
-                  </a>
-                   and list of 
-                  <a
-                    href="https://github.com/lensapp/lens-extensions/blob/main/README.md"
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    available extensions
-                  </a>
-                  .
-                </p>
-              </div>
-              <section>
-                <div
-                  class="SubTitle"
-                >
-                  Name or file path or URL to an extension package (tar, tgz)
-                   
-                </div>
-                <div
-                  class="inputs"
-                >
-                  <div />
-                  <div>
-                    <button
-                      class="Button button primary"
-                      data-waiting="false"
-                      type="button"
-                    >
-                      Install
-                    </button>
-                  </div>
-                </div>
-                <small
-                  class="proTip"
-                >
-                  <b>
-                    Pro-Tip
-                  </b>
-                  : you can drag and drop a tarball file to this area
-                </small>
-              </section>
-              <div
-                class="size-md"
-              />
-              <div>
-                <div
-                  class="Spinner singleColor center"
-                />
-              </div>
-            </section>
-          </div>
-          <div
-            class="toolsRegion"
-          >
-            <div
-              class="fixed top-[60px]"
-            >
-              <div>
-                <div
-                  aria-label="Close"
-                  class="closeButton"
-                  role="button"
-                >
-                  <i
-                    class="Icon icon material focusable"
-                  >
-                    <span
-                      class="icon"
-                      data-icon-name="close"
-                    >
-                      close
-                    </span>
-                  </i>
-                </div>
-                <div
-                  aria-hidden="true"
-                  class="esc"
-                >
-                  ESC
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-    <div
-      class="HotbarMenu flex column"
+    <button
+      class="Button box self-flex-start primary"
+      type="button"
     >
-      <div
-        class="HotbarItems flex column gaps"
-      >
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="0"
-        >
-          <div
-            style="z-index: 12; position: absolute;"
-          >
-            <div
-              class="HotbarIcon contextMenuAvailable"
-            >
-              <div
-                class="Avatar rounded disabled avatar"
-                id="hotbarIcon-hotbar-icon-catalog-entity"
-                style="width: 40px; height: 40px; background: rgb(5, 1, 130);"
-              >
-                Ca
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="1"
-        />
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="2"
-        />
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="3"
-        />
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="4"
-        />
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="5"
-        />
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="6"
-        />
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="7"
-        />
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="8"
-        />
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="9"
-        />
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="10"
-        />
-        <div
-          class="HotbarCell isDraggingOwner animateDown"
-          index="11"
-        />
-      </div>
-      <div
-        class="HotbarSelector"
-      >
-        <i
-          class="Icon Icon previous material interactive focusable"
-          tabindex="0"
-        >
-          <span
-            class="icon"
-            data-icon-name="arrow_left"
-          >
-            arrow_left
-          </span>
-        </i>
-        <div
-          class="HotbarIndex"
-        >
-          <div
-            class="badge Badge small clickable"
-            id="hotbarIndex"
-          >
-            1
-          </div>
-        </div>
-        <i
-          class="Icon material interactive focusable"
-          tabindex="0"
-        >
-          <span
-            class="icon"
-            data-icon-name="arrow_right"
-          >
-            arrow_right
-          </span>
-        </i>
-      </div>
-    </div>
-    <div
-      class="StatusBar"
-      data-testid="status-bar"
-    >
-      <div
-        class="leftSide"
-        data-testid="status-bar-left"
-      />
-      <div
-        class="rightSide"
-        data-testid="status-bar-right"
-      />
-    </div>
+      Back
+    </button>
   </div>
   <div
     class="Notifications flex column align-flex-end"

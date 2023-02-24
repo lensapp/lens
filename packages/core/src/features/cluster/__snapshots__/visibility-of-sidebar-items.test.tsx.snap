@@ -56,16 +56,31 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       >
         <div
           class="SidebarCluster"
+          data-testid="sidebar-cluster-dropdown"
+          id="cluster-some-cluster-id"
+          role="menubar"
+          tabindex="0"
         >
           <div
-            class="Avatar rounded loadingAvatar"
-            style="width: 40px; height: 40px;"
+            class="Avatar rounded avatar"
+            style="width: 40px; height: 40px; background: rgb(11, 85, 145);"
           >
             ??
           </div>
           <div
-            class="loadingClusterName"
+            class="clusterName"
+            id="tooltip-cluster-some-cluster-id"
           />
+          <i
+            class="Icon dropdown material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
         </div>
         <div
           class="sidebarNav sidebar-active-status"
@@ -604,16 +619,31 @@ exports[`cluster - visibility of sidebar items given kube resource for route is 
       >
         <div
           class="SidebarCluster"
+          data-testid="sidebar-cluster-dropdown"
+          id="cluster-some-cluster-id"
+          role="menubar"
+          tabindex="0"
         >
           <div
-            class="Avatar rounded loadingAvatar"
-            style="width: 40px; height: 40px;"
+            class="Avatar rounded avatar"
+            style="width: 40px; height: 40px; background: rgb(11, 85, 145);"
           >
             ??
           </div>
           <div
-            class="loadingClusterName"
+            class="clusterName"
+            id="tooltip-cluster-some-cluster-id"
           />
+          <i
+            class="Icon dropdown material focusable"
+          >
+            <span
+              class="icon"
+              data-icon-name="arrow_drop_down"
+            >
+              arrow_drop_down
+            </span>
+          </i>
         </div>
         <div
           class="sidebarNav sidebar-active-status"
