@@ -5,8 +5,8 @@
 
 import type { DiContainer } from "@ogre-tools/injectable";
 import extensionApiVersionInjectable from "../../common/vars/extension-api-version.injectable";
-import type { IsCompatibleExtension } from "../../features/extensions/discovery/main/is-compatible-extension.injectable";
-import isCompatibleExtensionInjectable from "../../features/extensions/discovery/main/is-compatible-extension.injectable";
+import type { IsCompatibleExtension } from "../../features/extensions/discovery/common/is-compatible-extension.injectable";
+import isCompatibleExtensionInjectable from "../../features/extensions/discovery/common/is-compatible-extension.injectable";
 import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 
 describe("Extension/App versions compatibility checks", () => {

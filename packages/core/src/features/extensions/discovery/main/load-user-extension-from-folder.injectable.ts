@@ -10,7 +10,7 @@ import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import { isErrnoException } from "../../../../common/utils";
 import { manifestFilename } from "../../../../common/vars";
 import isProductionInjectable from "../../../../common/vars/is-production.injectable";
-import isCompatibleExtensionInjectable from "./is-compatible-extension.injectable";
+import isCompatibleExtensionInjectable from "../common/is-compatible-extension.injectable";
 import extensionsStoreInjectable from "../../../../extensions/extensions-store/extensions-store.injectable";
 import extensionDiscoveryLoggerInjectable from "../common/logger.injectable";
 import getExtensionInstallPathInjectable from "./get-extension-install-path.injectable";
