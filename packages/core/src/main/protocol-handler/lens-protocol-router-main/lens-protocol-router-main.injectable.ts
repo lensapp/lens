@@ -7,7 +7,7 @@ import { LensProtocolRouterMain } from "./lens-protocol-router-main";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
 import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
 import findExtensionInstanceByNameInjectable from "../../../features/extensions/loader/common/find-instance-by-name.injectable";
-import internalDeepLinkingRoutesInjectable from "../../../features/deep-linking/renderer/internal-deep-linking-routes.injectable";
+import internalDeepLinkingRoutesInjectable from "../../../features/deep-linking/common/internal-deep-linking-routes.injectable";
 import protocolHandlerLoggerInjectable from "../../../common/protocol-handler/logger.injectable";
 import sendDeepLinkingAttemptInjectable from "../../../features/deep-linking/main/send-deep-linking-attempt.injectable";
 import sendInvalidDeepLinkingAttemptInjectable from "../../../features/deep-linking/main/send-invalid-deep-linking-attempt.injectable";

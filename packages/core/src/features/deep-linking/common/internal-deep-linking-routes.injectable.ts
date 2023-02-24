@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { computed } from "mobx";
 import { pathToRegexp } from "path-to-regexp";
-import { internalDeepLinkingRouteInjectionToken } from "../common/internal-handler-token";
+import { internalDeepLinkingRouteInjectionToken } from "./internal-handler-token";
 
 const internalDeepLinkingRoutesInjectable = getInjectable({
   id: "internal-deep-linking-routes",

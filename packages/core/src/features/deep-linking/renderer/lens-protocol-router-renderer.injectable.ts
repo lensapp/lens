@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
 import findExtensionInstanceByNameInjectable from "../../extensions/loader/common/find-instance-by-name.injectable";
-import internalDeepLinkingRoutesInjectable from "./internal-deep-linking-routes.injectable";
+import internalDeepLinkingRoutesInjectable from "../common/internal-deep-linking-routes.injectable";
 import protocolHandlerLoggerInjectable from "../../../common/protocol-handler/logger.injectable";
 import { LensProtocolRouter } from "../../../common/protocol-handler";
 
