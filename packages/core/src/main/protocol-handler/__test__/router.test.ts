@@ -11,13 +11,13 @@ import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-p
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
-import { LensExtension } from "../../../extensions/lens-extension";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
+import type { LensExtension, LensExtensionId } from "../../../extensions/lens-extension";
 import type { ObservableMap } from "mobx";
 import { runInAction } from "mobx";
 import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
+import { LensMainExtension } from "../../../extensions/lens-main-extension";
 
 function throwIfDefined(val: any): void {
   if (val != null) {
@@ -77,7 +77,7 @@ describe("protocol router tests", () => {
 
   it("should broadcast external route when called with valid host", async () => {
     const extId = uuid.v4();
-    const ext = new LensExtension({
+    const ext = new LensMainExtension({
       id: extId,
       manifestPath: "/foo/bar",
       manifest: {
@@ -143,7 +143,7 @@ describe("protocol router tests", () => {
     let called: any = 0;
 
     const extId = uuid.v4();
-    const ext = new LensExtension({
+    const ext = new LensMainExtension({
       id: extId,
       manifestPath: "/foo/bar",
       manifest: {
@@ -184,7 +184,7 @@ describe("protocol router tests", () => {
 
     {
       const extId = uuid.v4();
-      const ext = new LensExtension({
+      const ext = new LensMainExtension({
         id: extId,
         manifestPath: "/foo/bar",
         manifest: {
@@ -210,7 +210,7 @@ describe("protocol router tests", () => {
 
     {
       const extId = uuid.v4();
-      const ext = new LensExtension({
+      const ext = new LensMainExtension({
         id: extId,
         manifestPath: "/foo/bar",
         manifest: {
