@@ -41,19 +41,22 @@ export class ApiManager {
       const apis = chain(this.dependencies.apis.get().values())
         .concat(this.externalApis.values());
       const removedApis = new Set(this.apis.values());
+      const newState = new Map(this.apis);
 
       for (const api of apis) {
         removedApis.delete(api);
-        this.apis.set(api.apiBase, api);
+        newState.set(api.apiBase, api);
       }
 
       for (const api of removedApis) {
-        for (const [apiBase, storedApi] of this.apis) {
+        for (const [apiBase, storedApi] of newState) {
           if (storedApi === api) {
-            this.apis.delete(apiBase);
+            newState.delete(apiBase);
           }
         }
       }
+
+      this.apis.replace(newState);
     });
   }
 
