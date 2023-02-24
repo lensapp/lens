@@ -210,6 +210,7 @@ async function pickWhichCommitsToUse(prs: ExtendedGithubPrData[]): Promise<Exten
       key: pr.number,
       name: `#${pr.number}: ${pr.title} (https://github.com/lensapp/lens/pull/${pr.number})`,
       value: pr.number,
+      short: `#${pr.number}`,
     })),
     loop: false,
   });
