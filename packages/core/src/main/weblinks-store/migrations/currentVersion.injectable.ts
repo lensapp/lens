@@ -32,7 +32,7 @@ const currentVersionWeblinkStoreMigrationInjectable = getInjectable({
           docsWeblink.url = docsUrl;
         }
 
-        const removedSlackLink = weblinks.filter(weblink => weblink.id === "lens-slack-link");
+        const removedSlackLink = weblinks.filter(weblink => weblink.id !== "lens-slack-link");
 
         store.set("weblinks", removedSlackLink);
       },
