@@ -53,5 +53,9 @@ export const App = {
 
     return di.inject(isLinuxInjectable);
   },
+  /**
+   * @deprecated This value is now `""` and is left here for backwards compatability.
+   */
+  slackUrl: "",
   issuesTrackerUrl,
 } as const;
