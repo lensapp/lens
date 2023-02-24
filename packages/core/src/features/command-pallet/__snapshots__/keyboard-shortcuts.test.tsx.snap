@@ -927,6 +927,7 @@ exports[`Command Pallet: keyboard shortcut tests when on linux when pressing SHI
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
