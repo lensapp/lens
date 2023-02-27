@@ -25,6 +25,17 @@ describe("Showing correct entity settings", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
+    builder.beforeWindowStart((windowDi) => {
+      // TODO: remove once ClusterStore can be used without overriding it
+      windowDi.override(getClusterByIdInjectable, () => (clusterId) => {
+        if (clusterId === cluster.id) {
+          return cluster;
+        }
+
+        return undefined;
+      });
+    });
+
     builder.afterWindowStart((windowDi) => {
       const createCluster = windowDi.inject(createClusterInjectable);
 
@@ -78,14 +89,6 @@ describe("Showing correct entity settings", () => {
         clusterServerUrl: "https://localhost:9999",
       });
 
-      // TODO: remove once ClusterStore can be used without overriding it
-      windowDi.override(getClusterByIdInjectable, () => (clusterId) => {
-        if (clusterId === cluster.id) {
-          return cluster;
-        }
-
-        return undefined;
-      });
 
       // TODO: replace with proper entity source once syncing entities between main and windows is injectable
       const catalogEntityRegistry = windowDi.inject(catalogEntityRegistryInjectable);

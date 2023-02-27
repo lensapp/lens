@@ -19,7 +19,7 @@ const withOrphanPromiseInjectable = getInjectable({
           toBeDecorated,
           withErrorLoggingFor(() => "Orphan promise rejection encountered"),
           withErrorSuppression,
-        );
+        ) as ((...args: any[]) => any);
 
         decorated(...args);
       };

@@ -20,6 +20,7 @@ import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injecta
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
 import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
 import { applicationInformationFakeInjectable } from "../common/vars/application-information-fake-injectable";
+import { registerInjectableReact } from "@ogre-tools/injectable-react";
 
 export const getDiForUnitTesting = (
   opts: { doGeneralOverrides?: boolean } = {},
@@ -46,6 +47,7 @@ export const getDiForUnitTesting = (
   ) as Injectable<any, any, any>[];
 
   registerMobX(di);
+  registerInjectableReact(di);
 
   runInAction(() => {
     di.register(applicationInformationFakeInjectable);

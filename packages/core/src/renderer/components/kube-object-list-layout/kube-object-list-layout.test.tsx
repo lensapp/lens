@@ -19,8 +19,8 @@ import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-create
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
-import createClusterInjectable from "../../../main/create-cluster/create-cluster.injectable";
 import type { PodStore } from "../+workloads-pods/store";
+import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
 
 describe("kube-object-list-layout", () => {
   let di: DiContainer;
@@ -34,7 +34,7 @@ describe("kube-object-list-layout", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    const createCluster = di.inject(createClusterInjectable);
+    const createCluster = di.inject(createClusterInjectionToken);
 
     di.override(hostedClusterInjectable, () => createCluster({
       contextName: "some-context-name",
