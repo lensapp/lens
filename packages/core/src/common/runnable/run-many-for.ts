@@ -3,83 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainerForInjection, InjectionToken } from "@ogre-tools/injectable";
-import type { SingleOrMany } from "../utils";
-import { getOrInsert, getOrInsertSetFor, isDefined } from "../utils";
-import * as uuid from "uuid";
-import assert from "assert";
-import type { Asyncify } from "type-fest";
+import { getOrInsert } from "../utils";
 import type TypedEventEmitter from "typed-emitter";
 import EventEmitter from "events";
-
-export interface Runnable<TParameter = void> {
-  id: string;
-  run: Run<TParameter>;
-  runAfter?: SingleOrMany<Runnable<TParameter>>;
-}
-
-type Run<Param> = (parameter: Param) => Promise<void> | void;
+import { convertToWithIdWith, verifyRunnablesAreDAG } from "./helpers";
+import type { RunnableWithId, Runnable, Run } from "./types";
+import type { Asyncify } from "type-fest";
 
 export type RunMany = <Param>(injectionToken: InjectionToken<Runnable<Param>, void>) => Asyncify<Run<Param>>;
-
-const computedNextEdge = (traversed: string[], graph: Map<string, Set<string>>, currentId: string, seenIds: Set<string>) => {
-  seenIds.add(currentId);
-  const currentNode = graph.get(currentId);
-
-  assert(currentNode, `Runnable graph does not contain node with id="${currentId}"`);
-
-  for (const nextId of currentNode.values()) {
-    if (traversed.includes(nextId)) {
-      throw new Error(`Cycle in runnable graph: "${traversed.join(`" -> "`)}" -> "${nextId}"`);
-    }
-
-    computedNextEdge([...traversed, nextId], graph, nextId, seenIds);
-  }
-};
-
-const verifyRunnablesAreDAG = <Param>(injectionToken: InjectionToken<Runnable<Param>, void>, runnables: Runnable<Param>[]) => {
-  const rootId = uuid.v4();
-  const runnableGraph = new Map<string, Set<string>>();
-  const seenIds = new Set<string>();
-  const addRunnableId = getOrInsertSetFor(runnableGraph);
-
-  // Build the Directed graph
-  for (const runnable of runnables) {
-    addRunnableId(runnable.id);
-
-    if (!runnable.runAfter || (Array.isArray(runnable.runAfter) && runnable.runAfter.length === 0)) {
-      addRunnableId(rootId).add(runnable.id);
-    } else if (Array.isArray(runnable.runAfter)) {
-      for (const parentRunnable of runnable.runAfter) {
-        addRunnableId(parentRunnable.id).add(runnable.id);
-      }
-    } else {
-      addRunnableId(runnable.runAfter.id).add(runnable.id);
-    }
-  }
-
-  addRunnableId(rootId);
-
-  // Do a DFS to find any cycles
-  computedNextEdge([], runnableGraph, rootId, seenIds);
-
-  for (const id of runnableGraph.keys()) {
-    if (!seenIds.has(id)) {
-      const runnable = runnables.find(runnable => runnable.id === id);
-
-      if (!runnable) {
-        throw new Error(`Runnable "${id}" is not part of the injection token "${injectionToken.id}"`);
-      }
-
-      const runAfters = [runnable.runAfter]
-        .flat()
-        .filter(isDefined)
-        .map(runnable => runnable.id)
-        .join('", "');
-
-      throw new Error(`Runnable "${id}" is unreachable for injection token "${injectionToken.id}": run afters "${runAfters}" are a part of different injection tokens.`);
-    }
-  }
-};
 
 interface BarrierEvent {
   finish: (id: string) => void;
@@ -116,10 +47,8 @@ class DynamicBarrier {
 const executeRunnableWith = <Param>(param: Param) => {
   const barrier = new DynamicBarrier();
 
-  return async (runnable: Runnable<Param>): Promise<void> => {
-    const parentRunnables = [runnable.runAfter].flat().filter(isDefined);
-
-    for (const parentRunnable of parentRunnables) {
+  return async (runnable: RunnableWithId<Param>): Promise<void> => {
+    for (const parentRunnable of runnable.runAfter) {
       await barrier.blockOn(parentRunnable.id);
     }
 
@@ -129,9 +58,11 @@ const executeRunnableWith = <Param>(param: Param) => {
 };
 
 export function runManyFor(di: DiContainerForInjection): RunMany {
+  const convertToWithId = convertToWithIdWith(di);
+
   return <Param>(injectionToken: InjectionToken<Runnable<Param>, void>) => async (param: Param) => {
     const executeRunnable = executeRunnableWith(param);
-    const allRunnables = di.injectMany(injectionToken);
+    const allRunnables = di.injectManyWithMeta(injectionToken).map(x => convertToWithId(x));
 
     verifyRunnablesAreDAG(injectionToken, allRunnables);
 
