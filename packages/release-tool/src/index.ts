@@ -189,7 +189,7 @@ async function getRelevantPRs(milestone: string, previousReleasedVersion: string
     "gh",
     "pr",
     "list",
-    "--limit=200", // Should be big enough, if not we need to release more often ;)
+    "--limit=500", // Should be big enough, if not we need to release more often ;)
     "--state=merged",
     "--base=master",
     "--json mergeCommit,title,author,labels,number,milestone,mergedAt",
