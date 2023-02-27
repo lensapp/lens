@@ -57,7 +57,7 @@
     "test:unit": "jest --testPathIgnorePatterns integration",
     "test:watch": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
     "lint": "PROD=true eslint --ext js,ts,tsx --max-warnings=0 .",
-    "lint:fix": "npm run lint --fix"
+    "lint:fix": "npm run lint -- --fix"
   },
   "config": {
     "k8sProxyVersion": "0.3.0",
