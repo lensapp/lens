@@ -14,6 +14,7 @@ import createElectronWindowInjectable from "../../main/start-main-application/le
 import splashWindowInjectable from "../../main/start-main-application/lens-window/splash-window/splash-window.injectable";
 import { runInAction } from "mobx";
 import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
+import waitUntilBundledExtensionsAreLoadedInjectable from "../../main/start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 
 describe("opening application window using tray", () => {
   describe("given application has started", () => {
@@ -31,6 +32,8 @@ describe("opening application window using tray", () => {
       focusApplicationMock = jest.fn();
 
       builder = getApplicationBuilder();
+
+      builder.mainDi.override(waitUntilBundledExtensionsAreLoadedInjectable, () => () => Promise.resolve());
 
       builder.beforeApplicationStart((mainDi) => {
         mainDi.override(focusApplicationInjectable, () => focusApplicationMock);
