@@ -18,33 +18,30 @@ const getDeepLinkUrl = (commandLineArguments: string[]) => (
 
 const showInitialWindowInjectable = getInjectable({
   id: "show-initial-window",
-  instantiate: (di) => {
-    const shouldStartHidden = di.inject(shouldStartHiddenInjectable);
-    const shouldStartWindow = !shouldStartHidden;
-    const createFirstApplicationWindow = di.inject(createFirstApplicationWindowInjectable);
-    const splashWindow = di.inject(splashWindowInjectable);
-    const openDeepLink = di.inject(openDeepLinkInjectable);
-    const commandLineArguments = di.inject(commandLineArgumentsInjectable);
+  instantiate: (di) => ({
+    run: async () => {
+      const shouldStartHidden = di.inject(shouldStartHiddenInjectable);
+      const shouldStartWindow = !shouldStartHidden;
+      const createFirstApplicationWindow = di.inject(createFirstApplicationWindowInjectable);
+      const splashWindow = di.inject(splashWindowInjectable);
+      const openDeepLink = di.inject(openDeepLinkInjectable);
+      const commandLineArguments = di.inject(commandLineArgumentsInjectable);
 
-    return {
-      id: "show-initial-window",
-      run: async () => {
-        if (shouldStartWindow) {
-          const deepLinkUrl = getDeepLinkUrl(commandLineArguments);
+      if (shouldStartWindow) {
+        const deepLinkUrl = getDeepLinkUrl(commandLineArguments);
 
-          if (deepLinkUrl) {
-            await openDeepLink(deepLinkUrl);
-          } else {
-            const applicationWindow = createFirstApplicationWindow();
+        if (deepLinkUrl) {
+          await openDeepLink(deepLinkUrl);
+        } else {
+          const applicationWindow = createFirstApplicationWindow();
 
-            await applicationWindow.start();
-          }
-
-          splashWindow.close();
+          await applicationWindow.start();
         }
-      },
-    };
-  },
+
+        splashWindow.close();
+      }
+    },
+  }),
   injectionToken: afterApplicationIsLoadedInjectionToken,
 });
 

@@ -10,18 +10,14 @@ import startTrayInjectable from "../electron-tray/start-tray.injectable";
 const startReactiveTrayMenuItemsInjectable = getInjectable({
   id: "start-reactive-tray-menu-items",
 
-  instantiate: (di) => {
-    const reactiveTrayMenuItems = di.inject(reactiveTrayMenuItemsInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const reactiveTrayMenuItems = di.inject(reactiveTrayMenuItemsInjectable);
 
-    return {
-      id: "start-reactive-tray-menu-items",
-      run: () => {
-        reactiveTrayMenuItems.start();
-      },
-
-      runAfter: di.inject(startTrayInjectable),
-    };
-  },
+      reactiveTrayMenuItems.start();
+    },
+    runAfter: startTrayInjectable,
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

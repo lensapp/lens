@@ -10,7 +10,6 @@ import { beforeFrameStartsSecondInjectionToken } from "../tokens";
 const loadMonacoThemesInjectable = getInjectable({
   id: "load-monaco-themes",
   instantiate: (di) => ({
-    id: "load-monaco-themes",
     run: () => {
       const customThemes = di.injectMany(customMonacoThemeInjectionToken);
       const addNewMonacoTheme = di.inject(addNewMonacoThemeInjectable);

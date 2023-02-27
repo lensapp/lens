@@ -10,23 +10,20 @@ import emitSystemThemeTypeUpdateInjectable from "./emit-update.injectable";
 
 const setupSystemThemeTypeUpdaterEmitterInjectable = getInjectable({
   id: "setup-system-theme-type-updater-emitter",
-  instantiate: (di) => {
-    const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
-    const emitSystemThemeTypeUpdate = di.inject(emitSystemThemeTypeUpdateInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
+      const emitSystemThemeTypeUpdate = di.inject(emitSystemThemeTypeUpdateInjectable);
 
-    return {
-      id: "setup-system-theme-type-updater-emitter",
-      run: () => {
-        reaction(
-          () => operatingSystemTheme.get(),
-          emitSystemThemeTypeUpdate,
-          {
-            fireImmediately: true,
-          },
-        );
-      },
-    };
-  },
+      reaction(
+        () => operatingSystemTheme.get(),
+        emitSystemThemeTypeUpdate,
+        {
+          fireImmediately: true,
+        },
+      );
+    },
+  }),
   injectionToken: onLoadOfApplicationInjectionToken,
 });
 

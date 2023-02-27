@@ -9,18 +9,13 @@ import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 const setupSyncingOfGeneralCatalogEntitiesInjectable = getInjectable({
   id: "setup-syncing-of-general-catalog-entities",
 
-  instantiate: (di) => {
-    const syncGeneralCatalogEntities = di.inject(
-      syncGeneralCatalogEntitiesInjectable,
-    );
+  instantiate: (di) => ({
+    run: () => {
+      const syncGeneralCatalogEntities = di.inject(syncGeneralCatalogEntitiesInjectable);
 
-    return {
-      id: "setup-syncing-of-general-catalog-entities",
-      run: () => {
-        syncGeneralCatalogEntities();
-      },
-    };
-  },
+      syncGeneralCatalogEntities();
+    },
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

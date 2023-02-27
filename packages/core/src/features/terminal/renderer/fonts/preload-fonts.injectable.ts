@@ -10,7 +10,6 @@ import loadTerminalFontInjectable from "./load-font.injectable";
 const preloadTerminalFontsInjectable = getInjectable({
   id: "preload-terminal-fonts",
   instantiate: (di) => ({
-    id: "preload-terminal-fonts",
     run: async () => {
       const terminalFonts = di.inject(terminalFontsInjectable);
       const loadTerminalFont = di.inject(loadTerminalFontInjectable);

@@ -9,10 +9,9 @@ import { WeblinkAddCommand } from "../../components/catalog-entities/weblink-add
 import commandOverlayInjectable from "../../components/command-palette/command-overlay.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../tokens";
 
-const setupWeblickContextMenuOpenInjectable = getInjectable({
-  id: "setup-weblick-context-menu-open",
+const setupWeblinkContextMenuOpenInjectable = getInjectable({
+  id: "setup-weblink-context-menu-open",
   instantiate: (di) => ({
-    id: "setup-weblick-context-menu-open",
     run: () => {
       const catalogCategoryRegistry = di.inject(catalogCategoryRegistryInjectable);
       const commandOverlay = di.inject(commandOverlayInjectable);
@@ -31,4 +30,4 @@ const setupWeblickContextMenuOpenInjectable = getInjectable({
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
-export default setupWeblickContextMenuOpenInjectable;
+export default setupWeblinkContextMenuOpenInjectable;

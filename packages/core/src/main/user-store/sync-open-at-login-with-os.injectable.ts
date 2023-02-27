@@ -10,25 +10,22 @@ import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const setupSyncOpenAtLoginWithOsInjectable = getInjectable({
   id: "setup-sync-open-at-login-with-os",
-  instantiate: (di) => {
-    const setLoginItemSettings = di.inject(setLoginItemSettingsInjectable);
-    const userStore = di.inject(userStoreInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const setLoginItemSettings = di.inject(setLoginItemSettingsInjectable);
+      const userStore = di.inject(userStoreInjectable);
 
-    return {
-      id: "setup-sync-open-at-login-with-os",
-      run: () => {
-        reaction(() => userStore.openAtLogin, openAtLogin => {
-          setLoginItemSettings({
-            openAtLogin,
-            openAsHidden: true,
-            args: ["--hidden"],
-          });
-        }, {
-          fireImmediately: true,
+      reaction(() => userStore.openAtLogin, openAtLogin => {
+        setLoginItemSettings({
+          openAtLogin,
+          openAsHidden: true,
+          args: ["--hidden"],
         });
-      },
-    };
-  },
+      }, {
+        fireImmediately: true,
+      });
+    },
+  }),
   injectionToken: onLoadOfApplicationInjectionToken,
 });
 

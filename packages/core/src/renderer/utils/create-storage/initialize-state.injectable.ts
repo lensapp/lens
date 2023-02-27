@@ -20,7 +20,6 @@ import storageSaveDelayInjectable from "./storage-save-delay.injectable";
 const initializeStateInjectable = getInjectable({
   id: "initialize-lens-local-storage-state",
   instantiate: (di) => ({
-    id: "initialize-lens-local-storage-state",
     run: async () => {
       const joinPaths = di.inject(joinPathsInjectable);
       const directoryForLensLocalStorage = di.inject(directoryForLensLocalStorageInjectable);
@@ -67,7 +66,7 @@ const initializeStateInjectable = getInjectable({
         }
       }
     },
-    runAfter: di.inject(setupAppPathsInjectable),
+    runAfter: setupAppPathsInjectable,
   }),
   injectionToken: beforeFrameStartsFirstInjectionToken,
 });

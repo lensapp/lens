@@ -10,21 +10,18 @@ import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-el
 const setupHardwareAccelerationInjectable = getInjectable({
   id: "setup-hardware-acceleration",
 
-  instantiate: (di) => {
-    const hardwareAccelerationShouldBeDisabled = di.inject(hardwareAccelerationShouldBeDisabledInjectable);
-    const disableHardwareAcceleration = di.inject(disableHardwareAccelerationInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const hardwareAccelerationShouldBeDisabled = di.inject(hardwareAccelerationShouldBeDisabledInjectable);
+      const disableHardwareAcceleration = di.inject(disableHardwareAccelerationInjectable);
 
-    return {
-      id: "setup-hardware-acceleration",
-      run: () => {
-        if (hardwareAccelerationShouldBeDisabled) {
-          disableHardwareAcceleration();
-        }
+      if (hardwareAccelerationShouldBeDisabled) {
+        disableHardwareAcceleration();
+      }
 
-        return undefined;
-      },
-    };
-  },
+      return undefined;
+    },
+  }),
 
   injectionToken: beforeElectronIsReadyInjectionToken,
 });

@@ -10,21 +10,18 @@ import exitAppInjectable from "../features/exit-app.injectable";
 const enforceSingleApplicationInstanceInjectable = getInjectable({
   id: "enforce-single-application-instance",
 
-  instantiate: (di) => {
-    const requestSingleInstanceLock = di.inject(requestSingleInstanceLockInjectable);
-    const exitApp = di.inject(exitAppInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const requestSingleInstanceLock = di.inject(requestSingleInstanceLockInjectable);
+      const exitApp = di.inject(exitAppInjectable);
 
-    return {
-      id: "enforce-single-application-instance",
-      run: () => {
-        if (!requestSingleInstanceLock()) {
-          exitApp();
-        }
+      if (!requestSingleInstanceLock()) {
+        exitApp();
+      }
 
-        return undefined;
-      },
-    };
-  },
+      return undefined;
+    },
+  }),
 
   injectionToken: beforeElectronIsReadyInjectionToken,
 });

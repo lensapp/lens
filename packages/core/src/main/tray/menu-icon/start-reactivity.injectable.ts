@@ -10,18 +10,15 @@ import reactiveTrayMenuIconInjectable from "./reactive.injectable";
 const startReactiveTrayMenuIconInjectable = getInjectable({
   id: "start-reactive-tray-menu-icon",
 
-  instantiate: (di) => {
-    const reactiveTrayMenuIcon = di.inject(reactiveTrayMenuIconInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const reactiveTrayMenuIcon = di.inject(reactiveTrayMenuIconInjectable);
 
-    return {
-      id: "start-reactive-tray-menu-icon",
-      run: () => {
-        reactiveTrayMenuIcon.start();
-      },
+      reactiveTrayMenuIcon.start();
+    },
 
-      runAfter: di.inject(startTrayInjectable),
-    };
-  },
+    runAfter: startTrayInjectable,
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

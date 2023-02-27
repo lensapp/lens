@@ -13,7 +13,6 @@ import applyLensThemeInjectable from "./apply-lens-theme.injectable";
 const setupApplyActiveThemeInjectable = getInjectable({
   id: "setup-apply-active-theme",
   instantiate: (di) => ({
-    id: "setup-apply-active-theme",
     run: () => {
       const activeTheme = di.inject(activeThemeInjectable);
       const applyLensTheme = di.inject(applyLensThemeInjectable);
@@ -27,8 +26,8 @@ const setupApplyActiveThemeInjectable = getInjectable({
       );
     },
     runAfter: [
-      di.inject(initializeSystemThemeTypeInjectable),
-      di.inject(initUserStoreInjectable),
+      initializeSystemThemeTypeInjectable,
+      initUserStoreInjectable,
     ],
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,

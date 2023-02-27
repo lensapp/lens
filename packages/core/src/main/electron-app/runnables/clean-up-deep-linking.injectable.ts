@@ -3,20 +3,21 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
+import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
 import lensProtocolRouterMainInjectable from "../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 
 const cleanUpDeepLinkingInjectable = getInjectable({
   id: "clean-up-deep-linking",
 
-  instantiate: (di) => {
-    const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
 
-    return {
-      id: "clean-up-deep-linking",
-      run: () => void lensProtocolRouterMain.cleanup(),
-    };
-  },
+      lensProtocolRouterMain.cleanup();
+
+      return undefined;
+    },
+  }),
 
   injectionToken: beforeQuitOfBackEndInjectionToken,
 });

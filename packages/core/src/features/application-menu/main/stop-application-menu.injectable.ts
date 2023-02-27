@@ -4,19 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuReactivityInjectable from "./application-menu-reactivity.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../../main/start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
+import { beforeQuitOfBackEndInjectionToken } from "../../../main/start-main-application/runnable-tokens/phases";
 
 const stopApplicationMenuInjectable = getInjectable({
   id: "stop-application-menu",
 
-  instantiate: (di) => {
-    const applicationMenu = di.inject(applicationMenuReactivityInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const applicationMenu = di.inject(applicationMenuReactivityInjectable);
 
-    return {
-      id: "stop-application-menu",
-      run: () => void applicationMenu.stop(),
-    };
-  },
+      applicationMenu.stop();
+
+      return undefined;
+    },
+  }),
 
   injectionToken: beforeQuitOfBackEndInjectionToken,
 });

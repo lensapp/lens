@@ -9,8 +9,11 @@ import injectSystemCAsInjectable from "../../../features/certificate-authorities
 const setupSystemCaInjectable = getInjectable({
   id: "setup-system-ca",
   instantiate: (di) => ({
-    id: "setup-system-ca",
-    run: di.inject(injectSystemCAsInjectable),
+    run: async () => {
+      const injectSystemCAs = di.inject(injectSystemCAsInjectable);
+
+      await injectSystemCAs();
+    },
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });

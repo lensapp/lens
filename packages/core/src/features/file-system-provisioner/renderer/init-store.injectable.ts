@@ -9,7 +9,6 @@ import { beforeFrameStartsSecondInjectionToken } from "../../../renderer/before-
 const initFileSystemProvisionerStoreInjectable = getInjectable({
   id: "init-file-system-provisioner-store",
   instantiate: (di) => ({
-    id: "init-file-system-provisioner-store",
     run: () => {
       const store = di.inject(fileSystemProvisionerStoreInjectable);
 

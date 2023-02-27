@@ -3,26 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { afterRootFrameIsReadyInjectionToken } from "../../runnable-tokens/after-root-frame-is-ready-injection-token";
+import { afterRootFrameIsReadyInjectionToken } from "../../runnable-tokens/phases";
 import lensProtocolRouterMainInjectable from "../../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 import { runInAction } from "mobx";
 
 const flagRendererAsLoadedInjectable = getInjectable({
   id: "flag-renderer-as-loaded",
 
-  instantiate: (di) => {
-    const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
 
-    return {
-      id: "flag-renderer-as-loaded",
-      run: () => {
-        runInAction(() => {
-          // Todo: remove this kludge which enables out-of-place temporal dependency.
-          lensProtocolRouterMain.rendererLoaded = true;
-        });
-      },
-    };
-  },
+      runInAction(() => {
+        // Todo: remove this kludge which enables out-of-place temporal dependency.
+        lensProtocolRouterMain.rendererLoaded = true;
+      });
+    },
+  }),
 
   injectionToken: afterRootFrameIsReadyInjectionToken,
 });

@@ -4,19 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import reactiveTrayMenuItemsInjectable from "./reactive-tray-menu-items.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
+import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
 
 const stopReactiveTrayMenuItemsInjectable = getInjectable({
   id: "stop-reactive-tray-menu-items",
 
-  instantiate: (di) => {
-    const reactiveTrayMenuItems = di.inject(reactiveTrayMenuItemsInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const reactiveTrayMenuItems = di.inject(reactiveTrayMenuItemsInjectable);
 
-    return {
-      id: "stop-reactive-tray-menu-items",
-      run: () => void reactiveTrayMenuItems.stop(),
-    };
-  },
+      reactiveTrayMenuItems.stop();
+
+      return undefined;
+    },
+  }),
 
   injectionToken: beforeQuitOfBackEndInjectionToken,
 });

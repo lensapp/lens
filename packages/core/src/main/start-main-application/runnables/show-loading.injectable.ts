@@ -9,20 +9,18 @@ import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const showLoadingInjectable = getInjectable({
   id: "show-loading",
-  instantiate: (di) => {
-    const shouldStartHidden = di.inject(shouldStartHiddenInjectable);
-    const shouldShowLoadingWindow = !shouldStartHidden;
-    const splashWindow = di.inject(splashWindowInjectable);
 
-    return {
-      id: "show-loading",
-      run: async () => {
-        if (shouldShowLoadingWindow) {
-          await splashWindow.start();
-        }
-      },
-    };
-  },
+  instantiate: (di) => ({
+    run: async () => {
+      const shouldStartHidden = di.inject(shouldStartHiddenInjectable);
+      const shouldShowLoadingWindow = !shouldStartHidden;
+      const splashWindow = di.inject(splashWindowInjectable);
+
+      if (shouldShowLoadingWindow) {
+        await splashWindow.start();
+      }
+    },
+  }),
   injectionToken: onLoadOfApplicationInjectionToken,
 });
 

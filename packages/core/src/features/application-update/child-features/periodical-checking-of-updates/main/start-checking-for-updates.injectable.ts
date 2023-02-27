@@ -10,19 +10,16 @@ import { afterApplicationIsLoadedInjectionToken } from "@k8slens/application";
 const startCheckingForUpdatesInjectable = getInjectable({
   id: "start-checking-for-updates",
 
-  instantiate: (di) => {
-    const periodicalCheckForUpdates = di.inject(periodicalCheckForUpdatesInjectable);
-    const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const periodicalCheckForUpdates = di.inject(periodicalCheckForUpdatesInjectable);
+      const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
 
-    return {
-      id: "start-checking-for-updates",
-      run: () => {
-        if (updatingIsEnabled && !periodicalCheckForUpdates.started) {
-          periodicalCheckForUpdates.start();
-        }
-      },
-    };
-  },
+      if (updatingIsEnabled && !periodicalCheckForUpdates.started) {
+        periodicalCheckForUpdates.start();
+      }
+    },
+  }),
 
   injectionToken: afterApplicationIsLoadedInjectionToken,
 });

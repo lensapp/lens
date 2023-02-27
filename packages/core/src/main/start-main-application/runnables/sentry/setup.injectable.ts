@@ -9,15 +9,16 @@ import initializeSentryOnMainInjectable from "./initialize-on-main.injectable";
 
 const setupSentryInjectable = getInjectable({
   id: "setup-sentry",
-  instantiate: (di) => {
-    const initializeSentryReportingWith = di.inject(initializeSentryReportingWithInjectable);
-    const initializeSentryOnMain = di.inject(initializeSentryOnMainInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const initializeSentryReportingWith = di.inject(initializeSentryReportingWithInjectable);
+      const initializeSentryOnMain = di.inject(initializeSentryOnMainInjectable);
 
-    return {
-      id: "setup-sentry",
-      run: () => void initializeSentryReportingWith(initializeSentryOnMain),
-    };
-  },
+      initializeSentryReportingWith(initializeSentryOnMain);
+
+      return undefined;
+    },
+  }),
   injectionToken: beforeElectronIsReadyInjectionToken,
 });
 
