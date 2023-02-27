@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/typescript",
   "private": false,
-  "version": "0.0.1",
+  "version": "6.4.0-cron.3067e82",
   "description": "Typescript configuration for Lens packages.",
   "type": "commonjs",
   "publishConfig": {
