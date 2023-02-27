@@ -3,53 +3,75 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainerForInjection, InjectionToken } from "@ogre-tools/injectable";
-import type { Composite } from "../utils/composite/get-composite/get-composite";
-import { getCompositeFor } from "../utils/composite/get-composite/get-composite";
-import * as uuid from "uuid";
-
-export interface RunnableSync<TParameter = void> {
-  id: string;
-  run: RunSync<TParameter>;
-  runAfter?: RunnableSync<TParameter>;
-}
-
-/**
- * NOTE: this is the worse of two evils. This makes sure that `RunnableSync` always is sync.
- * If the return type is `void` instead then async functions (those return `Promise<T>`) can
- * coerce to it.
- */
-type RunSync<Param> = (parameter: Param) => undefined;
+import type { Disposer } from "../utils";
+import type { RunnableSync, RunSync, RunnableSyncWithId } from "./types";
+import { convertToWithIdWith, verifyRunnablesAreDAG } from "./helpers";
+import type TypedEventEmitter from "typed-emitter";
+import EventEmitter from "events";
 
 export type RunManySync = <Param>(injectionToken: InjectionToken<RunnableSync<Param>, void>) => RunSync<Param>;
 
-function runCompositeRunnableSyncs<Param>(param: Param, composite: Composite<RunnableSync<Param>>): undefined {
-  composite.value.run(param);
-  composite.children.map(composite => runCompositeRunnableSyncs(param, composite));
+class SyncBarrier {
+  private readonly finishedIds = new Set<string>();
+  private readonly events: TypedEventEmitter<Record<string, () => void>> = new EventEmitter();
 
-  return undefined;
+  setFinished(id: string): void {
+    this.finishedIds.add(id);
+    this.events.emit(id);
+  }
+
+  onceParentsAreFinished(id: string, parentIds: string[], action: () => void) {
+    const finishers = new Map<string, Disposer>();
+
+    const checkAndRun = () => {
+      if (finishers.size === 0) {
+        action();
+        this.setFinished(id);
+      }
+    };
+
+    for (const parentId of parentIds) {
+      if (this.finishedIds.has(parentId)) {
+        continue;
+      }
+
+      const onParentFinished = () => {
+        this.events.removeListener(parentId, onParentFinished);
+        finishers.delete(parentId);
+        checkAndRun();
+      };
+
+      finishers.set(parentId, onParentFinished);
+      this.events.once(parentId, onParentFinished);
+    }
+
+    checkAndRun();
+  }
 }
 
-export function runManySyncFor(di: DiContainerForInjection): RunManySync {
-  return <Param>(injectionToken: InjectionToken<RunnableSync<Param>, void>) => (param: Param): undefined => {
-    const allRunnables = di.injectMany(injectionToken);
-    const rootId = uuid.v4();
-    const getCompositeRunnables = getCompositeFor<RunnableSync<Param>>({
-      getId: (runnable) => runnable.id,
-      getParentId: (runnable) => (
-        runnable.id === rootId
-          ? undefined
-          : runnable.runAfter?.id ?? rootId
-      ),
-    });
-    const composite = getCompositeRunnables([
-      // This is a dummy runnable to conform to the requirements of `getCompositeFor` to only have one root
-      {
-        id: rootId,
-        run: () => undefined,
-      },
-      ...allRunnables,
-    ]);
+const executeRunnableWith = <Param>(param: Param) => {
+  const barrier = new SyncBarrier();
 
-    return runCompositeRunnableSyncs(param, composite);
+  return (runnable: RunnableSyncWithId<Param>) => {
+    barrier.onceParentsAreFinished(
+      runnable.id,
+      runnable.runAfter.map(r => r.id),
+      () => runnable.run(param),
+    );
+  };
+};
+
+export function runManySyncFor(di: DiContainerForInjection): RunManySync {
+  const convertToWithId = convertToWithIdWith(di);
+
+  return <Param>(injectionToken: InjectionToken<RunnableSync<Param>, void>) => (param: Param): undefined => {
+    const executeRunnable = executeRunnableWith(param);
+    const allRunnables = di.injectManyWithMeta(injectionToken).map(convertToWithId);
+
+    verifyRunnablesAreDAG(injectionToken, allRunnables);
+
+    allRunnables.forEach(executeRunnable);
+
+    return undefined;
   };
 }

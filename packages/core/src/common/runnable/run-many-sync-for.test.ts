@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { createContainer, getInjectable, getInjectionToken } from "@ogre-tools/injectable";
-import type { RunnableSync } from "./run-many-sync-for";
 import { runManySyncFor } from "./run-many-sync-for";
+import type { RunnableSync } from "./types";
 
 describe("runManySyncFor", () => {
   describe("given hierarchy, when running many", () => {
@@ -22,7 +22,6 @@ describe("runManySyncFor", () => {
       const someInjectable = getInjectable({
         id: "some-injectable",
         instantiate: () => ({
-          id: "some-injectable",
           run: () => runMock("some-call"),
         }),
         injectionToken: someInjectionTokenForRunnables,
@@ -31,7 +30,6 @@ describe("runManySyncFor", () => {
       const someOtherInjectable = getInjectable({
         id: "some-other-injectable",
         instantiate: () => ({
-          id: "some-other-injectable",
           run: () => runMock("some-other-call"),
         }),
         injectionToken: someInjectionTokenForRunnables,
@@ -66,32 +64,25 @@ describe("runManySyncFor", () => {
 
       const someInjectable1 = getInjectable({
         id: "some-injectable-1",
-
-        instantiate: (di) => ({
-          id: "some-injectable-1",
+        instantiate: () => ({
           run: () => void runMock("third-level-run"),
-          runAfter: di.inject(someInjectable2),
+          runAfter: someInjectable2,
         }),
-
         injectionToken: someInjectionTokenForRunnables,
       });
 
       const someInjectable2 = getInjectable({
         id: "some-injectable-2",
-
-        instantiate: (di) => ({
-          id: "some-injectable-2",
+        instantiate: () => ({
           run: () => void runMock("second-level-run"),
-          runAfter: di.inject(someInjectable3),
+          runAfter: someInjectable3,
         }),
-
         injectionToken: someInjectionTokenForRunnables,
       });
 
       const someInjectable3 = getInjectable({
         id: "some-injectable-3",
         instantiate: () => ({
-          id: "some-injectable-3",
           run: () => void runMock("first-level-run"),
         }),
         injectionToken: someInjectionTokenForRunnables,
@@ -124,24 +115,18 @@ describe("runManySyncFor", () => {
 
     const someInjectable = getInjectable({
       id: "some-runnable-1",
-
-      instantiate: (di) => ({
-        id: "some-runnable-1",
+      instantiate: () => ({
         run: () => runMock("some-runnable-1"),
-        runAfter: di.inject(someOtherInjectable),
+        runAfter: someOtherInjectable,
       }),
-
       injectionToken: someInjectionToken,
     });
 
     const someOtherInjectable = getInjectable({
       id: "some-runnable-2",
-
       instantiate: () => ({
-        id: "some-runnable-2",
         run: () => runMock("some-runnable-2"),
       }),
-
       injectionToken: someOtherInjectionToken,
     });
 
@@ -152,7 +137,7 @@ describe("runManySyncFor", () => {
     );
 
     return expect(() => runMany()).toThrow(
-      /Tried to get a composite but encountered missing parent ids: "some-runnable-2".\n\nAvailable parent ids are:\n"[0-9a-z-]+",\n"some-runnable-1"/,
+      /Runnable "some-runnable-1" is unreachable for injection token "some-injection-token": run afters "some-runnable-2" are a part of different injection tokens./,
     );
   });
 
@@ -172,23 +157,17 @@ describe("runManySyncFor", () => {
 
       const someInjectable = getInjectable({
         id: "some-runnable-1",
-
         instantiate: () => ({
-          id: "some-runnable-1",
           run: (parameter) => void runMock("run-of-some-runnable-1", parameter),
         }),
-
         injectionToken: someInjectionTokenForRunnablesWithParameter,
       });
 
       const someOtherInjectable = getInjectable({
         id: "some-runnable-2",
-
         instantiate: () => ({
-          id: "some-runnable-2",
           run: (parameter) => void runMock("run-of-some-runnable-2", parameter),
         }),
-
         injectionToken: someInjectionTokenForRunnablesWithParameter,
       });
 

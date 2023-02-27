@@ -5,7 +5,7 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { createContainer, getInjectable, getInjectionToken } from "@ogre-tools/injectable";
-import type { Runnable } from "./run-many-for";
+import type { Runnable } from "./types";
 import { runManyFor } from "./run-many-for";
 import { getPromiseStatus } from "../test-utils/get-promise-status";
 import { runInAction } from "mobx";
@@ -28,7 +28,6 @@ describe("runManyFor", () => {
       const someInjectable = getInjectable({
         id: "some-injectable",
         instantiate: () => ({
-          id: "some-injectable",
           run: () => runMock("some-call"),
         }),
         injectionToken: someInjectionTokenForRunnables,
@@ -37,7 +36,6 @@ describe("runManyFor", () => {
       const someOtherInjectable = getInjectable({
         id: "some-other-injectable",
         instantiate: () => ({
-          id: "some-other-injectable",
           run: () => runMock("some-other-call"),
         }),
         injectionToken: someInjectionTokenForRunnables,
@@ -85,32 +83,25 @@ describe("runManyFor", () => {
 
       const someInjectable1 = getInjectable({
         id: "some-injectable-1",
-
-        instantiate: (di) => ({
-          id: "some-injectable-1",
+        instantiate: () => ({
           run: () => runMock("third-level-run"),
-          runAfter: di.inject(someInjectable2),
+          runAfter: someInjectable2,
         }),
-
         injectionToken: someInjectionTokenForRunnables,
       });
 
       const someInjectable2 = getInjectable({
         id: "some-injectable-2",
-
-        instantiate: (di) => ({
-          id: "some-injectable-2",
+        instantiate: () => ({
           run: () => runMock("second-level-run"),
-          runAfter: di.inject(someInjectable3),
+          runAfter: someInjectable3,
         }),
-
         injectionToken: someInjectionTokenForRunnables,
       });
 
       const someInjectable3 = getInjectable({
         id: "some-injectable-3",
         instantiate: () => ({
-          id: "some-injectable-3",
           run: () => runMock("first-level-run"),
         }),
         injectionToken: someInjectionTokenForRunnables,
@@ -197,24 +188,18 @@ describe("runManyFor", () => {
 
     const someInjectable = getInjectable({
       id: "some-runnable-1",
-
-      instantiate: (di) => ({
-        id: "some-runnable-1",
+      instantiate: () => ({
         run: () => runMock("some-runnable-1"),
-        runAfter: di.inject(someOtherInjectable),
+        runAfter: someOtherInjectable,
       }),
-
       injectionToken: someInjectionToken,
     });
 
     const someOtherInjectable = getInjectable({
       id: "some-runnable-2",
-
       instantiate: () => ({
-        id: "some-runnable-2",
         run: () => runMock("some-runnable-2"),
       }),
-
       injectionToken: someOtherInjectionToken,
     });
 
@@ -244,38 +229,29 @@ describe("runManyFor", () => {
 
     const someInjectable = getInjectable({
       id: "some-runnable-1",
-
-      instantiate: (di) => ({
-        id: "some-runnable-1",
+      instantiate: () => ({
         run: () => runMock("some-runnable-1"),
         runAfter: [
-          di.inject(someOtherInjectable),
-          di.inject(someSecondInjectable),
+          someOtherInjectable,
+          someSecondInjectable,
         ],
       }),
-
       injectionToken: someInjectionToken,
     });
 
     const someSecondInjectable = getInjectable({
       id: "some-runnable-2",
-
       instantiate: () => ({
-        id: "some-runnable-2",
         run: () => runMock("some-runnable-2"),
       }),
-
       injectionToken: someInjectionToken,
     });
 
     const someOtherInjectable = getInjectable({
       id: "some-runnable-3",
-
       instantiate: () => ({
-        id: "some-runnable-3",
         run: () => runMock("some-runnable-3"),
       }),
-
       injectionToken: someOtherInjectionToken,
     });
 
@@ -306,23 +282,17 @@ describe("runManyFor", () => {
 
       const someInjectable = getInjectable({
         id: "some-runnable-1",
-
         instantiate: () => ({
-          id: "some-runnable-1",
           run: (parameter) => runMock("run-of-some-runnable-1", parameter),
         }),
-
         injectionToken: someInjectionTokenForRunnablesWithParameter,
       });
 
       const someOtherInjectable = getInjectable({
         id: "some-runnable-2",
-
         instantiate: () => ({
-          id: "some-runnable-2",
           run: (parameter) => runMock("run-of-some-runnable-2", parameter),
         }),
-
         injectionToken: someInjectionTokenForRunnablesWithParameter,
       });
 
@@ -359,7 +329,6 @@ describe("runManyFor", () => {
       const runnableOneInjectable = getInjectable({
         id: "runnable-1",
         instantiate: () => ({
-          id: "runnable-1",
           run: () => runMock("runnable-1"),
         }),
         injectionToken: someInjectionToken,
@@ -368,7 +337,6 @@ describe("runManyFor", () => {
       const runnableTwoInjectable = getInjectable({
         id: "runnable-2",
         instantiate: () => ({
-          id: "runnable-2",
           run: () => runMock("runnable-2"),
           runAfter: [], // shouldn't block being called
         }),
@@ -377,42 +345,38 @@ describe("runManyFor", () => {
 
       const runnableThreeInjectable = getInjectable({
         id: "runnable-3",
-        instantiate: (di) => ({
-          id: "runnable-3",
+        instantiate: () => ({
           run: () => runMock("runnable-3"),
-          runAfter: di.inject(runnableOneInjectable),
+          runAfter: runnableOneInjectable,
         }),
         injectionToken: someInjectionToken,
       });
 
       const runnableFourInjectable = getInjectable({
         id: "runnable-4",
-        instantiate: (di) => ({
-          id: "runnable-4",
+        instantiate: () => ({
           run: () => runMock("runnable-4"),
-          runAfter: [di.inject(runnableThreeInjectable)], // should be the same as an single item
+          runAfter: [runnableThreeInjectable], // should be the same as an single item
         }),
         injectionToken: someInjectionToken,
       });
 
       const runnableFiveInjectable = getInjectable({
         id: "runnable-5",
-        instantiate: (di) => ({
-          id: "runnable-5",
+        instantiate: () => ({
           run: () => runMock("runnable-5"),
-          runAfter: di.inject(runnableThreeInjectable),
+          runAfter: runnableThreeInjectable,
         }),
         injectionToken: someInjectionToken,
       });
 
       const runnableSixInjectable = getInjectable({
         id: "runnable-6",
-        instantiate: (di) => ({
-          id: "runnable-6",
+        instantiate: () => ({
           run: () => runMock("runnable-6"),
           runAfter: [
-            di.inject(runnableFourInjectable),
-            di.inject(runnableFiveInjectable),
+            runnableFourInjectable,
+            runnableFiveInjectable,
           ],
         }),
         injectionToken: someInjectionToken,
@@ -420,12 +384,11 @@ describe("runManyFor", () => {
 
       const runnableSevenInjectable = getInjectable({
         id: "runnable-7",
-        instantiate: (di) => ({
-          id: "runnable-7",
+        instantiate: () => ({
           run: () => runMock("runnable-7"),
           runAfter: [
-            di.inject(runnableFiveInjectable),
-            di.inject(runnableSixInjectable),
+            runnableFiveInjectable,
+            runnableSixInjectable,
           ],
         }),
         injectionToken: someInjectionToken,
