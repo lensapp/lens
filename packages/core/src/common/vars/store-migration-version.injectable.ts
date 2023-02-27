@@ -7,7 +7,7 @@ import { applicationInformationToken } from "./application-information-token";
 
 const storeMigrationVersionInjectable = getInjectable({
   id: "store-migration-version",
-  instantiate: (di) => di.inject(applicationInformationToken).version,
+  instantiate: () => "6.4.0",
 });
 
 export default storeMigrationVersionInjectable;
