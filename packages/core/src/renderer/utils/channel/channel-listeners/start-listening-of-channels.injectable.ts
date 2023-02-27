@@ -10,7 +10,6 @@ const startListeningOfChannelsInjectable = getInjectable({
   id: "start-listening-of-channels-renderer",
 
   instantiate: (di) => ({
-    id: "start-listening-of-channels-renderer",
     run: () => {
       const listeningOfChannels = di.inject(listeningOnMessageChannelsInjectable);
 

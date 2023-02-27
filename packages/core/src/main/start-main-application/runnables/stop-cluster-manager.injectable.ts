@@ -4,23 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import clusterManagerInjectable from "../../cluster/manager.injectable";
-import { beforeQuitOfFrontEndInjectionToken } from "../runnable-tokens/before-quit-of-front-end-injection-token";
+import { beforeQuitOfFrontEndInjectionToken } from "../runnable-tokens/phases";
 
 const stopClusterManagerInjectable = getInjectable({
   id: "stop-cluster-manager",
 
-  instantiate: (di) => {
-    const clusterManager = di.inject(clusterManagerInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const clusterManager = di.inject(clusterManagerInjectable);
 
-    return {
-      id: "stop-cluster-manager",
-      run: () => {
-        clusterManager.stop();
+      clusterManager.stop();
 
-        return undefined;
-      },
-    };
-  },
+      return undefined;
+    },
+  }),
 
   injectionToken: beforeQuitOfFrontEndInjectionToken,
 });

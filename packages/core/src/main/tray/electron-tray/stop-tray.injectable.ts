@@ -4,21 +4,22 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronTrayInjectable from "./electron-tray.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
+import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
 import stopReactiveTrayMenuItemsInjectable from "../reactive-tray-menu-items/stop-reactive-tray-menu-items.injectable";
 
 const stopTrayInjectable = getInjectable({
   id: "stop-tray",
 
-  instantiate: (di) => {
-    const electronTray = di.inject(electronTrayInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const electronTray = di.inject(electronTrayInjectable);
 
-    return {
-      id: "stop-tray",
-      run: () => void electronTray.stop(),
-      runAfter: di.inject(stopReactiveTrayMenuItemsInjectable),
-    };
-  },
+      electronTray.stop();
+
+      return undefined;
+    },
+    runAfter: stopReactiveTrayMenuItemsInjectable,
+  }),
 
   injectionToken: beforeQuitOfBackEndInjectionToken,
 });

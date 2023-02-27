@@ -19,7 +19,6 @@ import maybeKubeApiInjectable from "../../../common/k8s-api/maybe-kube-api.injec
 const setupAutoRegistrationInjectable = getInjectable({
   id: "setup-auto-registration",
   instantiate: (di) => ({
-    id: "setup-auto-registration",
     run: () => {
       const autoRegistrationEmitter = di.inject(autoRegistrationEmitterInjectable);
       const beforeApiManagerInitializationCrds: CustomResourceDefinition[] = [];

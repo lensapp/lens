@@ -14,7 +14,6 @@ import { beforeFrameStartsSecondInjectionToken } from "../tokens";
 const setupKubernetesClusterContextMenuOpenInjectable = getInjectable({
   id: "setup-kubernetes-cluster-context-menu-open",
   instantiate: (di) => ({
-    id: "setup-kubernetes-cluster-context-menu-open",
     run: () => {
       const catalogCategoryRegistry = di.inject(catalogCategoryRegistryInjectable);
       const openDeleteClusterDialog = di.inject(openDeleteClusterDialogInjectable);

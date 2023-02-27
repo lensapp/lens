@@ -4,22 +4,19 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
-import { onLoadOfApplicationInjectionToken } from "../../../../main/start-main-application/runnable-tokens/on-load-of-application-injection-token";
+import { onLoadOfApplicationInjectionToken } from "../../../../main/start-main-application/runnable-tokens/phases";
 import setupSyncingOfGeneralCatalogEntitiesInjectable from "../../../../main/start-main-application/runnables/setup-syncing-of-general-catalog-entities.injectable";
 
 const initHotbarStoreInjectable = getInjectable({
   id: "init-hotbar-store",
-  instantiate: (di) => {
-    const hotbarStore = di.inject(hotbarStoreInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const hotbarStore = di.inject(hotbarStoreInjectable);
 
-    return {
-      id: "init-hotbar-store",
-      run: () => {
-        hotbarStore.load();
-      },
-      runAfter: di.inject(setupSyncingOfGeneralCatalogEntitiesInjectable),
-    };
-  },
+      hotbarStore.load();
+    },
+    runAfter: setupSyncingOfGeneralCatalogEntitiesInjectable,
+  }),
   injectionToken: onLoadOfApplicationInjectionToken,
 });
 

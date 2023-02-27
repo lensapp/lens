@@ -9,7 +9,6 @@ import { beforeFrameStartsFirstInjectionToken } from "../tokens";
 const configureImmerInjectable = getInjectable({
   id: "configure-immer",
   instantiate: () => ({
-    id: "configure-immer",
     run: () => {
       // Docs: https://immerjs.github.io/immer/
       // Required in `utils/storage-helper.ts`

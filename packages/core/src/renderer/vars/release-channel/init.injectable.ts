@@ -10,13 +10,12 @@ import initSemanticBuildVersionInjectable from "../semantic-build-version/init.i
 const initReleaseChannelInjectable = getInjectable({
   id: "init-release-channel",
   instantiate: (di) => ({
-    id: "init-release-channel",
     run: async () => {
       const releaseChannel = di.inject(releaseChannelInjectable);
 
       await releaseChannel.init();
     },
-    runAfter: di.inject(initSemanticBuildVersionInjectable),
+    runAfter: initSemanticBuildVersionInjectable,
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });

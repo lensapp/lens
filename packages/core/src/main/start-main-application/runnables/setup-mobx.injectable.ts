@@ -4,13 +4,12 @@
  */
 import * as Mobx from "mobx";
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeElectronIsReadyInjectionToken } from "../runnable-tokens/before-electron-is-ready-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "../runnable-tokens/phases";
 
 const setupMobxInjectable = getInjectable({
   id: "setup-mobx",
 
   instantiate: () => ({
-    id: "setup-mobx",
     run: () => {
       // Docs: https://mobx.js.org/configuration.html
       Mobx.configure({

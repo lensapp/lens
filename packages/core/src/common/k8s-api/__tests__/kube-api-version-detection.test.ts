@@ -121,7 +121,7 @@ describe("KubeApi", () => {
         ]);
       });
 
-      describe("when resource request fufills with a resource", () => {
+      describe("when resource request fulfills with a resource", () => {
         beforeEach(async () => {
           await fetchMock.resolveSpecific(
             ["https://127.0.0.1:12345/api-kube/apis/networking.k8s.io/v1"],
@@ -283,7 +283,7 @@ describe("KubeApi", () => {
         });
       });
 
-      describe("when resource request fufills with no resource", () => {
+      describe("when resource request fulfills with no resource", () => {
         beforeEach(async () => {
           await fetchMock.resolveSpecific(
             ["https://127.0.0.1:12345/api-kube/apis/networking.k8s.io/v1"],
@@ -307,7 +307,7 @@ describe("KubeApi", () => {
 
 
 
-        describe("when resource request fufills with a resource", () => {
+        describe("when resource request fulfills with a resource", () => {
           beforeEach(async () => {
             await fetchMock.resolveSpecific(
               ["https://127.0.0.1:12345/api-kube/apis/networking.k8s.io/v1beta1"],
@@ -509,7 +509,7 @@ describe("KubeApi", () => {
         ]);
       });
 
-      describe("when resource request fufills with a resource", () => {
+      describe("when resource request fulfills with a resource", () => {
         beforeEach(async () => {
           await fetchMock.resolveSpecific(
             ["https://127.0.0.1:12345/api-kube/apis/extensions"],

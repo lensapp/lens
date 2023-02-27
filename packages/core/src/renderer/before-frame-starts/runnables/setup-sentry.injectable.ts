@@ -10,7 +10,6 @@ import { init } from "@sentry/electron/renderer";
 const setupSentryInjectable = getInjectable({
   id: "setup-sentry",
   instantiate: (di) => ({
-    id: "setup-sentry",
     run: () => {
       const initializeSentryReportingWith = di.inject(initializeSentryReportingWithInjectable);
 

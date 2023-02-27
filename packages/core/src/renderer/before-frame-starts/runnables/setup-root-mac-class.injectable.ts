@@ -9,7 +9,6 @@ import { beforeFrameStartsSecondInjectionToken } from "../tokens";
 const setupRootMacClassnameInjectable = getInjectable({
   id: "setup-root-mac-classname",
   instantiate: (di) => ({
-    id: "setup-root-mac-classname",
     run: () => {
       const isMac = di.inject(isMacInjectable);
       const rootElem = document.getElementById("app");
