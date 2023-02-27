@@ -48,7 +48,7 @@ describe("custom category columns for catalog", () => {
     expect(renderResult.queryByTestId("catalog-source-column")).toBeInTheDocument();
   });
 
-  describe("when category is added using default colemns", () => {
+  describe("when category is added using default columns", () => {
     beforeEach(() => {
       const catalogCategoryRegistry = builder.applicationWindow.only.di.inject(catalogCategoryRegistryInjectable);
 

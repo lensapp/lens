@@ -569,7 +569,7 @@ exports[`custom category columns for catalog renders 1`] = `
 </body>
 `;
 
-exports[`custom category columns for catalog when category is added using default colemns renders 1`] = `
+exports[`custom category columns for catalog when category is added using default columns renders 1`] = `
 <body>
   <div>
     <div
@@ -1169,7 +1169,7 @@ exports[`custom category columns for catalog when category is added using defaul
 </body>
 `;
 
-exports[`custom category columns for catalog when category is added using default colemns when an extension is registered with additional custom columns when the Test category tab is clicked renders 1`] = `
+exports[`custom category columns for catalog when category is added using default columns when an extension is registered with additional custom columns when the Test category tab is clicked renders 1`] = `
 <body>
   <div>
     <div
@@ -1759,7 +1759,7 @@ exports[`custom category columns for catalog when category is added using defaul
 </body>
 `;
 
-exports[`custom category columns for catalog when category is added using default colemns when the Test category tab is clicked renders 1`] = `
+exports[`custom category columns for catalog when category is added using default columns when the Test category tab is clicked renders 1`] = `
 <body>
   <div>
     <div
