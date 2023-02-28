@@ -12,6 +12,11 @@ describe("lens extension", () => {
   beforeEach(async () => {
     const builder = getApplicationBuilder();
 
+    /**
+     * This is required because it sets up `AppPaths` which are required by LensMainExtension.
+     *
+     * That type isn't used internally so it needs to use "legacy global DI" to get its dependencies.
+     */
     await builder.render();
 
     ext = new LensMainExtension({
