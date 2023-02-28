@@ -10,8 +10,8 @@ export const lensWebsiteLinkName = "Lens Website";
 export const lensDocumentationWeblinkId = "lens-documentation-link";
 export const lensDocumentationWeblinkName = "Lens Documentation";
 
-export const lensSlackWeblinkId = "lens-slack-link";
-export const lensSlackWeblinkName = "Lens Community Slack";
+export const lensForumsWeblinkId = "lens-forums-link";
+export const lensForumsWeblinkName = "Lens Forums";
 
 export const lensTwitterWeblinkId = "lens-twitter-link";
 export const lensTwitterWeblinkName = "Lens on Twitter";

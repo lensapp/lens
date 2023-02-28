@@ -15,7 +15,6 @@ import setupAutoRegistrationInjectable from "../../../renderer/before-frame-star
 import { createMockResponseFromString } from "../../../test-utils/mock-responses";
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import createClusterInjectable from "../../../main/create-cluster/create-cluster.injectable";
 import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
 import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import apiManagerInjectable from "../api-manager/manager.injectable";
@@ -23,6 +22,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import ingressApiInjectable from "../endpoints/ingress.api.injectable";
 import loggerInjectable from "../../logger.injectable";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
+import { createClusterInjectionToken } from "../../cluster/create-cluster-injection-token";
 
 describe("KubeApi", () => {
   let fetchMock: AsyncFnMock<Fetch>;
@@ -39,7 +39,7 @@ describe("KubeApi", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    const createCluster = di.inject(createClusterInjectable);
+    const createCluster = di.inject(createClusterInjectionToken);
 
     di.override(hostedClusterInjectable, () => createCluster({
       contextName: "some-context-name",
