@@ -15,7 +15,7 @@ export interface TreeViewClasses {
 
 export interface TreeViewProps {
   classes?: TreeViewClasses;
-  children: JSX.Element[] | JSX.Element;
+  children: React.ReactNode;
 }
 
 export function TreeView(props: TreeViewProps) {
@@ -47,33 +47,41 @@ export interface TreeItemProps {
 }
 
 export function TreeItem(props: TreeItemProps) {
+  const {
+    label,
+    "data-testid": dataTestId,
+    classes,
+    icon,
+    onClick,
+    selected = false,
+  } = props;
   const [hovering, setHovering] = useState(false);
   const optionalCssNames: Partial<Record<string, any>> = {};
 
-  if (props.classes?.selected) {
-    optionalCssNames[props.classes.selected] = props.selected ?? false;
+  if (classes?.selected) {
+    optionalCssNames[classes.selected] = selected;
   }
 
-  if (props.classes?.hover) {
-    optionalCssNames[props.classes.hover] = hovering;
+  if (classes?.hover) {
+    optionalCssNames[classes.hover] = hovering;
   }
 
   return (
     <li
-      className={cssNames(props.classes?.root, optionalCssNames, styles.treeItem, {
-        [styles.selected]: props.selected ?? false,
+      className={cssNames(classes?.root, optionalCssNames, styles.treeItem, {
+        [styles.selected]: selected,
       })}
       role="treeitem"
-      data-testid={props["data-testid"]}
-      onClick={props.onClick}
+      data-testid={dataTestId}
+      onClick={onClick}
       onMouseOver={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
-      <div className={cssNames(props.classes?.iconContainer, styles.iconContainer)}>
-        {props.icon}
+      <div className={cssNames(classes?.iconContainer, styles.iconContainer)}>
+        {icon}
       </div>
-      <div className={props.classes?.label}>
-        {props.label}
+      <div className={classes?.label}>
+        {label}
       </div>
     </li>
   );
@@ -98,35 +106,44 @@ export interface TreeGroupProps {
 }
 
 export function TreeGroup(props: TreeGroupProps) {
-  const [expanded, setExpanded] = useState(props.defaultExpanded ?? true);
+  const {
+    label,
+    "data-testid": dataTestId,
+    children,
+    classes,
+    collapseIcon,
+    defaultExpanded = true,
+    expandIcon,
+  } = props;
+  const [expanded, setExpanded] = useState(defaultExpanded);
 
   return (
     <li
-      className={cssNames(props.classes?.root, styles.treeGroup)}
+      className={cssNames(classes?.root, styles.treeGroup)}
       role="group"
-      data-testid={props["data-testid"]}
+      data-testid={dataTestId}
     >
       <div
-        className={cssNames(props.classes?.group, styles.group)}
+        className={cssNames(classes?.group, styles.group)}
         onClick={() => setExpanded(!expanded)}
       >
-        <div className={cssNames(props.classes?.iconContainer, styles.iconContainer)}>
+        <div className={cssNames(classes?.iconContainer, styles.iconContainer)}>
           {
             expanded
-              ? props.collapseIcon ?? <Icon material="expand_more" />
-              : props.expandIcon ?? <Icon material="chevron_right" />
+              ? collapseIcon ?? <Icon material="expand_more" />
+              : expandIcon ?? <Icon material="chevron_right" />
           }
         </div>
-        <div className={props.classes?.label}>
-          {props.label}
+        <div className={classes?.label}>
+          {label}
         </div>
       </div>
       <ul
-        className={cssNames(props.classes?.contents, styles.contents, {
+        className={cssNames(classes?.contents, styles.contents, {
           [styles.expanded]: expanded,
         })}
       >
-        {props.children}
+        {children}
       </ul>
     </li>
   );
