@@ -13,7 +13,6 @@ import loggerInjectable from "../../../common/logger.injectable";
 import { delay } from "../../../common/utils";
 import { broadcastMessage } from "../../../common/ipc";
 import { bundledExtensionsLoaded } from "../../../common/ipc/extension-handling";
-import closeRendererLogFileInjectable from "../../logger/close-renderer-log-file.injectable";
 
 const initRootFrameInjectable = getInjectable({
   id: "init-root-frame",
@@ -25,7 +24,6 @@ const initRootFrameInjectable = getInjectable({
     const lensProtocolRouterRenderer = di.inject(lensProtocolRouterRendererInjectable);
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
     const logger = di.inject(loggerInjectable);
-    const closeRendererLogFile = di.inject(closeRendererLogFileInjectable);
 
     return async (unmountRoot: () => void) => {
       catalogEntityRegistry.init();
@@ -61,7 +59,7 @@ const initRootFrameInjectable = getInjectable({
 
       window.addEventListener("beforeunload", () => {
         logger.info("[ROOT-FRAME]: Unload app");
-        closeRendererLogFile();
+
         unmountRoot();
       });
     };
