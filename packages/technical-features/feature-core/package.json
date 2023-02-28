@@ -1,0 +1,30 @@
+{
+  "name": "@k8slens/feature-core",
+  "private": false,
+  "version": "0.0.1",
+  "description": "Code that is common to all Features and those registering them.",
+  "type": "commonjs",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack --mode=development --watch",
+    "test": "jest --coverage --runInBand"
+  },
+  "peerDependencies": {
+    "@ogre-tools/injectable": "^15.1.1"
+  }
+}
