@@ -22,7 +22,10 @@ const pickHighestAccuracy = (prev: ClusterDetectionResult, curr: ClusterDetectio
 
 const detectMetadataWithFor = (cluster: Cluster) => async (clusterMetadataDetector: ClusterMetadataDetector) => {
   try {
-    return await clusterMetadataDetector.detect(cluster);
+    return {
+      key: clusterMetadataDetector.key,
+      result: await clusterMetadataDetector.detect(cluster),
+    };
   } catch {
     return null;
   }
@@ -39,7 +42,12 @@ const detectClusterMetadataInjectable = getInjectable({
         filter(isDefined),
         (arg) => groupBy(arg, "key"),
         (arg) => object.entries(arg),
-        map(([ key, results ]) => [key, reduce(results, pickHighestAccuracy)] as const),
+        map(([ key, detectionResults ]) => {
+          const results = detectionResults.map(({ result }) => result as ClusterDetectionResult);
+          const highestAccuracyResult = reduce(results, pickHighestAccuracy)?.value;
+
+          return [key, highestAccuracyResult] as const;
+        }),
         filter(hasDefinedTupleValue),
       );
 
