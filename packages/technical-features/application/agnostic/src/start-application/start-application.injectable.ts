@@ -4,7 +4,7 @@ import { beforeApplicationIsLoadingInjectionToken } from "./timeslots/before-app
 import { onLoadOfApplicationInjectionToken } from "./timeslots/on-load-of-application-injection-token";
 import { afterApplicationIsLoadedInjectionToken } from "./timeslots/after-application-is-loaded-injection-token";
 
-export type StartApplication = () => void;
+export type StartApplication = () => Promise<void>;
 
 export const startApplicationInjectionToken =
   getInjectionToken<StartApplication>({
