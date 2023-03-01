@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { DiContainerForInjection, Injectable, InjectionInstanceWithMeta } from "@ogre-tools/injectable";
+import type { DiContainerForInjection, InjectionInstanceWithMeta } from "@ogre-tools/injectable";
 import { getOrInsertSetFor, isDefined } from "../utils";
 import * as uuid from "uuid";
 import assert from "assert";
@@ -75,33 +75,20 @@ export function verifyRunnablesAreDAG<Param>(tokenId: string, runnables: (Runnab
   }
 }
 
+export interface ConvertToWithId {
+  <Param>(src: InjectionInstanceWithMeta<Runnable<Param>>): RunnableWithId<Param>;
+  <Param>(src: InjectionInstanceWithMeta<RunnableSync<Param>>): RunnableSyncWithId<Param>;
+}
+
 export const convertToWithIdWith = (di: DiContainerForInjection) => {
-  const convertToWithIdPlain = <Param>(injectable: Injectable<Runnable<Param>, Runnable<Param>, void>): RunnableWithId<Param> => {
-    const instance = di.inject(injectable);
+  const convert = <Param>(meta: { id: string }, instance: Runnable<Param>): RunnableWithId<Param> => ({
+    id: meta.id,
+    run: instance.run,
+    runAfter: [instance.runAfter]
+      .flat()
+      .filter(isDefined)
+      .map((injectable) => convert(injectable, di.inject(injectable))),
+  });
 
-    return ({
-      id: injectable.id,
-      run: instance.run,
-      runAfter: [instance.runAfter]
-        .flat()
-        .filter(isDefined)
-        .map(convertToWithIdPlain),
-    });
-  };
-
-  function convertToWithId<Param>(src: InjectionInstanceWithMeta<Runnable<Param>>): RunnableWithId<Param>;
-  function convertToWithId<Param>(src: InjectionInstanceWithMeta<RunnableSync<Param>>): RunnableSyncWithId<Param>;
-
-  function convertToWithId<Param>(src: InjectionInstanceWithMeta<Runnable<Param>> | InjectionInstanceWithMeta<RunnableSync<Param>>): RunnableWithId<Param> | RunnableSyncWithId<Param> {
-    return ({
-      id: src.meta.id,
-      run: src.instance.run,
-      runAfter: [src.instance.runAfter]
-        .flat()
-        .filter(isDefined)
-        .map(convertToWithIdPlain),
-    });
-  }
-
-  return convertToWithId;
+  return ((src) => convert(src.meta, src.instance)) as ConvertToWithId;
 };
