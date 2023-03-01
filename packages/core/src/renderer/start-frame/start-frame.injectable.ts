@@ -6,11 +6,13 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { runManyFor } from "../../common/runnable/run-many-for";
 import * as tokens from "../before-frame-starts/tokens";
 import currentlyInClusterFrameInjectable from "../routes/currently-in-cluster-frame.injectable";
+import {
+  afterApplicationIsLoadedInjectionToken,
+} from "@k8slens/application";
 
 const startFrameInjectable = getInjectable({
   id: "start-frame",
 
-  // TODO: Consolidate contents of bootstrap.tsx here
   instantiate: (di) => {
     const runMany = runManyFor(di);
     const beforeFrameStartsFirst = runMany(tokens.beforeFrameStartsFirstInjectionToken);
@@ -21,24 +23,28 @@ const startFrameInjectable = getInjectable({
     const beforeClusterFrameStartsSecond = runMany(tokens.beforeClusterFrameStartsSecondInjectionToken);
     const currentlyInClusterFrame = di.inject(currentlyInClusterFrameInjectable);
 
-    return async () => {
-      await beforeFrameStartsFirst();
+    return {
+      run: async () => {
+        await beforeFrameStartsFirst();
 
-      if (currentlyInClusterFrame) {
-        await beforeClusterFrameStartsFirst();
-      } else {
-        await beforeMainFrameStartsFirst();
-      }
+        if (currentlyInClusterFrame) {
+          await beforeClusterFrameStartsFirst();
+        } else {
+          await beforeMainFrameStartsFirst();
+        }
 
-      await beforeFrameStartsSecond();
+        await beforeFrameStartsSecond();
 
-      if (currentlyInClusterFrame) {
-        await beforeClusterFrameStartsSecond();
-      } else {
-        await beforeMainFrameStartsSecond();
-      }
+        if (currentlyInClusterFrame) {
+          await beforeClusterFrameStartsSecond();
+        } else {
+          await beforeMainFrameStartsSecond();
+        }
+      },
     };
   },
+
+  injectionToken: afterApplicationIsLoadedInjectionToken,
 });
 
 export default startFrameInjectable;

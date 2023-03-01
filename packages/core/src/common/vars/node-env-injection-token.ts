@@ -4,7 +4,7 @@
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
 
-const nodeEnvInjectionToken = getInjectionToken<string | undefined>({
+export const nodeEnvInjectionToken = getInjectionToken<string | undefined>({
   id: "node-env-injection-token",
 });
 
