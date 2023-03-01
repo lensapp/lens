@@ -5,8 +5,7 @@
 
 import { noop, chunk } from "lodash/fp";
 import type { Injectable } from "@ogre-tools/injectable";
-import { createContainer, isInjectable, getInjectable } from "@ogre-tools/injectable";
-import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { isInjectable, getInjectable } from "@ogre-tools/injectable";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
@@ -14,20 +13,19 @@ import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id
 import { runInAction } from "mobx";
 import requestAnimationFrameInjectable from "./components/animate/request-animation-frame.injectable";
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
 import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
 import { applicationInformationFakeInjectable } from "../common/vars/application-information-fake-injectable";
-import { registerInjectableReact } from "@ogre-tools/injectable-react";
+import { getDi } from "./getDi";
 
 export const getDiForUnitTesting = (
   opts: { doGeneralOverrides?: boolean } = {},
 ) => {
   const { doGeneralOverrides = false } = opts;
 
-  const di = createContainer("renderer");
+  const di = getDi();
 
   di.register(getInjectable({
     id: "node-env",
@@ -37,17 +35,12 @@ export const getDiForUnitTesting = (
 
   di.preventSideEffects();
 
-  setLegacyGlobalDiForExtensionApi(di, Environments.renderer);
-
   const injectables = (
     global.injectablePaths.renderer.paths
       .map(path => require(path))
       .flatMap(Object.values)
       .filter(isInjectable)
   ) as Injectable<any, any, any>[];
-
-  registerMobX(di);
-  registerInjectableReact(di);
 
   runInAction(() => {
     di.register(applicationInformationFakeInjectable);
