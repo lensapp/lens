@@ -68,7 +68,7 @@ export function runManySyncFor(di: DiContainerForInjection): RunManySync {
     const executeRunnable = executeRunnableWith(param);
     const allRunnables = di.injectManyWithMeta(injectionToken).map(convertToWithId);
 
-    verifyRunnablesAreDAG(injectionToken, allRunnables);
+    verifyRunnablesAreDAG(injectionToken.id, allRunnables);
 
     allRunnables.forEach(executeRunnable);
 

@@ -64,7 +64,7 @@ export function runManyFor(di: DiContainerForInjection): RunMany {
     const executeRunnable = executeRunnableWith(param);
     const allRunnables = di.injectManyWithMeta(injectionToken).map(x => convertToWithId(x));
 
-    verifyRunnablesAreDAG(injectionToken, allRunnables);
+    verifyRunnablesAreDAG(injectionToken.id, allRunnables);
 
     await Promise.all(allRunnables.map(executeRunnable));
   };
