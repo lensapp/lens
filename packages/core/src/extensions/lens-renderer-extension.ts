@@ -36,7 +36,7 @@ import type { NavigateToRoute } from "../common/front-end-routing/navigate-to-ro
 import type { Route } from "../common/front-end-routing/front-end-route-injection-token";
 import type { GetExtensionPageParameters } from "../renderer/routes/get-extension-page-parameters.injectable";
 import type { InstalledExtension } from "./common-api";
-import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import catalogCategoryRegistryInjectable from "../common/catalog/category-registry.injectable";
 import catalogEntityRegistryInjectable from "../renderer/api/catalog/entity/registry.injectable";
 import loggerInjectable from "../common/logger.injectable";
@@ -81,7 +81,7 @@ export class LensRendererExtension extends LensExtension {
   declare protected readonly dependencies: LensRendererExtensionDependencies;
 
   constructor(extension: InstalledExtension) {
-    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.renderer);
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi("renderer");
     const deps: LensRendererExtensionDependencies = {
       categoryRegistry: di.inject(catalogCategoryRegistryInjectable),
       entityRegistry: di.inject(catalogEntityRegistryInjectable),

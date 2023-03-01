@@ -11,7 +11,7 @@ import { isObservableArray } from "mobx";
 import type { MenuRegistration } from "../features/application-menu/main/menu-registration";
 import type { TrayMenuRegistration } from "../main/tray/tray-menu-registration";
 import type { ShellEnvModifier } from "../main/shell-session/shell-env-modifier/shell-env-modifier-registration";
-import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import type { InstalledExtension } from "./common-api";
 import type { CatalogEntityRegistry } from "../main/catalog";
 import type { NavigateForExtension } from "../main/start-main-application/lens-window/navigate-for-extension.injectable";
@@ -35,7 +35,7 @@ export class LensMainExtension extends LensExtension {
   declare readonly dependencies: LensMainExtensionDependencies;
 
   constructor(extension: InstalledExtension) {
-    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi("main");
     const deps: LensMainExtensionDependencies = {
       entityRegistry: di.inject(catalogEntityRegistryInjectable),
       fileSystemProvisionerStore: di.inject(fileSystemProvisionerStoreInjectable),

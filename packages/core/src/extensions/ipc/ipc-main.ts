@@ -10,7 +10,7 @@ import type { Disposer } from "../../common/utils";
 import { once } from "lodash";
 import { ipcMainHandle } from "../../common/ipc";
 import type { Logger } from "../common-api";
-import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import loggerInjectable from "../../common/logger.injectable";
 
 interface Dependencies {
@@ -23,7 +23,7 @@ export abstract class IpcMain extends IpcRegistrar {
   constructor(extension: LensMainExtension) {
     super(extension);
 
-    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.main);
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi("main");
 
     this.dependencies = {
       logger: di.inject(loggerInjectable),
