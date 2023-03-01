@@ -65,6 +65,16 @@ const installExtensionInjectable = getInjectable({
 
     const packageJsonPath = joinPaths(extensionPackageRootDirectory, "package.json");
 
+    /**
+     * NOTES:
+     *   - We have to keep the `package.json` because `npm install` removes files from `node_modules`
+     *     if they are no longer in the `package.json`
+     *   - In v6.2.X we saved bundled extensions as `"dependencies"` and external extensions as
+     *     `"optionalDependencies"` at startup. This was done because `"optionalDependencies"` can
+     *     fail to install and that is OK.
+     *   - We continue to maintain this behavior here by only installing new dependencies as
+     *     `"optionalDependencies"`
+     */
     const fixupPackageJson = once(async () => {
       try {
         const packageJson = await readJsonFile(packageJsonPath) as PackageJson;
