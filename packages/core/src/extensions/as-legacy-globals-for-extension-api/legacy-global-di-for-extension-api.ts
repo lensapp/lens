@@ -4,17 +4,11 @@
  */
 import type { DiContainer } from "@ogre-tools/injectable";
 
+export type Environments = "main" | "renderer";
+
 const legacyGlobalDis = new Map<Environments, DiContainer>();
 
-export enum Environments {
-  renderer,
-  main,
-}
-
-export const setLegacyGlobalDiForExtensionApi = (
-  di: DiContainer,
-  environment: Environments,
-) => {
+export const setLegacyGlobalDiForExtensionApi = (di: DiContainer, environment: Environments) => {
   legacyGlobalDis.set(environment, di);
 };
 
