@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { Environments, getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import type { CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus } from "../catalog";
 import { CatalogCategory, CatalogEntity, categoryVersion } from "../catalog/catalog-entity";
 import productNameInjectable from "../vars/product-name.injectable";
@@ -32,7 +32,7 @@ export class WebLink extends CatalogEntity<CatalogEntityMetadata, WebLinkStatus,
 
   onContextMenuOpen(context: CatalogEntityContextMenuContext) {
     // NOTE: this is safe because `onContextMenuOpen` is only supposed to be called in the renderer
-    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi(Environments.renderer);
+    const di = getEnvironmentSpecificLegacyGlobalDiForExtensionApi("renderer");
     const productName = di.inject(productNameInjectable);
     const weblinkStore = di.inject(weblinkStoreInjectable);
 
