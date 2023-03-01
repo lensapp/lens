@@ -7,7 +7,7 @@ import type { FSWatcher } from "chokidar";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import extensionDiscoveryInjectable from "../extension-discovery/extension-discovery.injectable";
 import type { ExtensionDiscovery } from "../extension-discovery/extension-discovery";
-import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
+import installExtensionInjectable from "../install-extension/install-extension.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { delay } from "../../renderer/utils";
 import { observable, runInAction, when } from "mobx";

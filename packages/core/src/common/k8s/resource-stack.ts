@@ -51,7 +51,7 @@ export class ResourceStack {
 
     this.dependencies.logger.warn(`[RESOURCE-STACK]: failed to apply resources: ${result.error}`);
 
-    return "";
+    throw new Error(result.error);
   }
 
   /**

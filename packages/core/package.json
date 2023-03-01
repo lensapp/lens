@@ -3,7 +3,7 @@
   "productName": "",
   "description": "Lens Desktop Core",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.4.0-beta.17",
+  "version": "6.4.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
