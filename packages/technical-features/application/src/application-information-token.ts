@@ -17,6 +17,7 @@ export type ApplicationInformation = {
   contentSecurityPolicy: string,
   welcomeRoute: string,
   updatingIsEnabled: boolean;
+  dependencies: Partial<Record<string, string>>;
 }
 
 export const applicationInformationToken = getInjectionToken<ApplicationInformation>({
