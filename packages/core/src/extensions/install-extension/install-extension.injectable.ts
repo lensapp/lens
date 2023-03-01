@@ -13,6 +13,7 @@ import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import type { PackageJson } from "../common-api";
 import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable";
 import { once } from "lodash";
+import { isErrnoException } from "../../common/utils";
 
 const baseNpmInstallArgs = [
   "install",
@@ -65,11 +66,19 @@ const installExtensionInjectable = getInjectable({
     const packageJsonPath = joinPaths(extensionPackageRootDirectory, "package.json");
 
     const fixupPackageJson = once(async () => {
-      const packageJson = await readJsonFile(packageJsonPath) as PackageJson;
+      try {
+        const packageJson = await readJsonFile(packageJsonPath) as PackageJson;
 
-      delete packageJson.dependencies;
+        delete packageJson.dependencies;
 
-      await writeJsonFile(packageJsonPath, packageJson);
+        await writeJsonFile(packageJsonPath, packageJson);
+      } catch (error) {
+        if (isErrnoException(error) && error.code === "ENOENT") {
+          return;
+        }
+
+        throw error;
+      }
     });
 
     const installLock = new AwaitLock();
