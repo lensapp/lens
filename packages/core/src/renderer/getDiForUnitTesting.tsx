@@ -4,8 +4,7 @@
  */
 
 import { noop, chunk } from "lodash/fp";
-import type { Injectable } from "@ogre-tools/injectable";
-import { isInjectable, getInjectable } from "@ogre-tools/injectable";
+import { isInjectable } from "@ogre-tools/injectable";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
@@ -16,8 +15,6 @@ import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-st
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
-import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
-import { applicationInformationFakeInjectable } from "../common/vars/application-information-fake-injectable";
 import { getDi } from "./getDi";
 
 export const getDiForUnitTesting = (
@@ -27,27 +24,17 @@ export const getDiForUnitTesting = (
 
   const di = getDi();
 
-  di.register(getInjectable({
-    id: "node-env",
-    instantiate: () => "production",
-    injectionToken: nodeEnvInjectionToken,
-  }));
-
   di.preventSideEffects();
 
-  const injectables = (
-    global.injectablePaths.renderer.paths
+  runInAction(() => {
+    const injectables = global.injectablePaths.renderer.paths
       .map(path => require(path))
       .flatMap(Object.values)
-      .filter(isInjectable)
-  ) as Injectable<any, any, any>[];
+      .filter(isInjectable);
 
-  runInAction(() => {
-    di.register(applicationInformationFakeInjectable);
-
-    chunk(100)(injectables).forEach((chunkInjectables) => {
-      di.register(...chunkInjectables);
-    });
+    for (const block of chunk(100)(injectables)) {
+      di.register(...block);
+    }
   });
 
   if (doGeneralOverrides) {

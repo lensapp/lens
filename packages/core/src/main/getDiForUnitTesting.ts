@@ -4,8 +4,8 @@
  */
 
 import { chunk } from "lodash/fp";
-import type { DiContainer, Injectable } from "@ogre-tools/injectable";
-import { isInjectable, getInjectable } from "@ogre-tools/injectable";
+import type { DiContainer } from "@ogre-tools/injectable";
+import { isInjectable } from "@ogre-tools/injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
 import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
@@ -27,9 +27,7 @@ import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-applicat
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
-import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
-import { applicationInformationFakeInjectable } from "../common/vars/application-information-fake-injectable";
 import { getDi } from "./getDi";
 
 export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
@@ -39,27 +37,17 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   const di = getDi();
 
-  di.register(getInjectable({
-    id: "node-env",
-    instantiate: () => "production",
-    injectionToken: nodeEnvInjectionToken,
-  }));
-
   di.preventSideEffects();
 
-  const injectables = (
-    global.injectablePaths.main.paths
+  runInAction(() => {
+    const injectables = global.injectablePaths.main.paths
       .map(path => require(path))
       .flatMap(Object.values)
-      .filter(isInjectable)
-  ) as Injectable<any, any, any>[];
+      .filter(isInjectable);
 
-  runInAction(() => {
-    di.register(applicationInformationFakeInjectable);
-
-    chunk(100)(injectables).forEach(chunkInjectables => {
-      di.register(...chunkInjectables);
-    });
+    for (const block of chunk(100)(injectables)) {
+      di.register(...block);
+    }
   });
 
   if (doGeneralOverrides) {
