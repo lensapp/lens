@@ -25,6 +25,7 @@
   "dependencies": {
     "@types/webpack-env": "^1.18.0",
     "css-loader": "^6.7.2",
+    "fork-ts-checker-webpack-plugin": "^7.3.0",
     "mini-css-extract-plugin": "^2.7.0",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.1",
