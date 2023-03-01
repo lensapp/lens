@@ -14,7 +14,7 @@
  import CopyPlugin from "copy-webpack-plugin";
  import type { WebpackPluginInstance } from "webpack";
  import { DefinePlugin } from "webpack";
- import { assetsFolderName, isDevelopment, rendererDir, buildDir, htmlTemplate, publicPath, sassCommonVars } from "./vars";
+ import { assetsFolderName, isDevelopment, rendererDir, buildDir, htmlTemplate, publicPath } from "./vars";
  import { platform } from "process";
 
  const renderer: webpack.Configuration = {
@@ -23,7 +23,7 @@
   mode: isDevelopment ? "development" : "production",
   // https://webpack.js.org/configuration/devtool/ (see description of each option)
   devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
-  cache: isDevelopment ? { type: "filesystem" } : false,
+  cache: false, //isDevelopment ? { type: "filesystem" } : false,
   entry: {
     lens: path.resolve(rendererDir, "index.ts"),
   },

@@ -5,8 +5,14 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registration";
 import { runInAction } from "mobx";
+import {
+  Environments,
+  setLegacyGlobalDiForExtensionApi
+} from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
-export function registerInjectables(di: DiContainer) {
+export function registerLensCore(di: DiContainer, environment: Environments) {
+  setLegacyGlobalDiForExtensionApi(di, environment);
+
   runInAction(() => {
     autoRegister({
       di,

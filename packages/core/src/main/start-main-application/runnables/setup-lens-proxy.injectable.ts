@@ -9,7 +9,7 @@ import loggerInjectable from "../../../common/logger.injectable";
 import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
-import { beforeApplicationIsLoadingInjectionToken } from "../runnable-tokens/before-application-is-loading-injection-token";
+import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import initializeBuildVersionInjectable from "../../vars/build-version/init.injectable";
 import lensProxyCertificateInjectable from "../../../common/certificate/lens-proxy-certificate.injectable";

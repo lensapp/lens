@@ -196,6 +196,7 @@
   },
   "dependencies": {
     "@k8slens/application": "^6.4.0-beta.13",
+    "@k8slens/application-for-electron-main": "^6.4.0-beta.13",
     "@k8slens/core": "^6.4.0-beta.13",
     "@k8slens/ensure-binaries": "^6.4.0-beta.13",
     "@k8slens/generate-tray-icons": "^6.4.0-beta.13",
@@ -204,6 +205,7 @@
     "@ogre-tools/injectable-extension-for-auto-registration": "^15.1.2",
     "@ogre-tools/injectable-extension-for-mobx": "^15.1.2",
     "@ogre-tools/injectable-react": "^15.1.2",
+    "@ogre-tools/injectable-utils": "^15.1.2",
     "mobx": "^6.8.0",
     "rimraf": "^4.1.2"
   },

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeElectronIsReadyInjectionToken } from "../../start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
 import requestSingleInstanceLockInjectable from "../features/request-single-instance-lock.injectable";
 import exitAppInjectable from "../features/exit-app.injectable";
 

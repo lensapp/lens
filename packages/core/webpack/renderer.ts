@@ -21,7 +21,7 @@ export function webpackLensRenderer(): webpack.Configuration {
     mode: isDevelopment ? "development" : "production",
     // https://webpack.js.org/configuration/devtool/ (see description of each option)
     devtool: isDevelopment ? "cheap-module-source-map" : "source-map",
-    cache: isDevelopment ? { type: "filesystem" } : false,
+    cache: false,//isDevelopment ? { type: "filesystem" } : false,
     entry: {
       renderer: path.resolve(__dirname, "..", "src", "renderer", "library.ts"),
     },
