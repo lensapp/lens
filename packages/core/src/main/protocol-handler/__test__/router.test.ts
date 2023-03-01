@@ -25,6 +25,7 @@ import type { InternalRouteRegistration } from "../../../features/deep-linking/c
 import { internalDeepLinkingRouteInjectionToken } from "../../../features/deep-linking/common/internal-handler-token";
 import { LensMainExtension } from "../../../extensions/lens-main-extension";
 import type { LensExtensionId } from "../../../features/extensions/common/installed-extension";
+import internalDeepLinkingRoutesInjectable from "../../../features/deep-linking/common/internal-deep-linking-routes.injectable";
 
 function throwIfDefined(val: any): void {
   if (val != null) {
@@ -337,7 +338,11 @@ describe("protocol router tests", () => {
           injectionToken: internalDeepLinkingRouteInjectionToken,
         }));
       });
-    }).toThrowError();
+
+      const internalDeepLinkingRoutes = di.inject(internalDeepLinkingRoutesInjectable);
+
+      internalDeepLinkingRoutes.get();
+    }).toThrowError("Missing parameter name at 1");
   });
 
   it("should call most exact handler with 3 found handlers", async () => {
