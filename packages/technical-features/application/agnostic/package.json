@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lensapp/monorepo.git"
+    "url": "git+https://github.com/lensapp/lens.git"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
