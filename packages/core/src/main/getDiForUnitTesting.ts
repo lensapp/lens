@@ -53,7 +53,7 @@ export function getDiForUnitTesting() {
   });
 
   for (const globalOverridePath of global.injectablePaths.main.globalOverridePaths) {
-    const globalOverride = require(globalOverridePath).default as GlobalOverride;
+    const globalOverride = require(globalOverridePath).default as GlobalOverride<unknown, unknown>;
 
     di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
   }

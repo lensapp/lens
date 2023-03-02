@@ -5,7 +5,7 @@
 
 import { compile } from "path-to-regexp";
 import type { RouteProps } from "react-router";
-import { isDefined } from "@k8slens/utilities";
+import { isDefined } from "./type-narrowing";
 
 export interface UrlRouteProps extends RouteProps {
   path: string;

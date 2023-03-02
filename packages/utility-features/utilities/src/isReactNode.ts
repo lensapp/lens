@@ -6,7 +6,7 @@
 // Type guard for checking valid react node to use in render
 import type { ReactNode } from "react";
 import React from "react";
-import { isObject } from "@k8slens/utilities";
+import { isObject } from "./type-narrowing";
 
 export function isReactNode(node: unknown): node is ReactNode {
   return (isObject(node) && React.isValidElement(node))

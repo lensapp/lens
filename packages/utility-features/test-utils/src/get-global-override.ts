@@ -4,15 +4,15 @@
  */
 import type { Injectable, Instantiate } from "@ogre-tools/injectable";
 
-export interface GlobalOverride<Instance extends Token, Token, Param> {
-  injectable: Injectable<Instance, Token, Param>;
+export interface GlobalOverride<Instance, Param> {
+  injectable: Injectable<Instance, unknown, Param>;
   overridingInstantiate: Instantiate<Instance, Param>;
 }
 
-export const getGlobalOverride = <Instance extends Token, Token, Param>(
-  injectable: Injectable<Instance, Token, Param>,
+export const getGlobalOverride = <Instance, Param>(
+  injectable: Injectable<Instance, unknown, Param>,
   overridingInstantiate: (typeof injectable)["instantiate"],
 ) => ({
-    injectable,
-    overridingInstantiate,
-  });
+  injectable,
+  overridingInstantiate,
+});
