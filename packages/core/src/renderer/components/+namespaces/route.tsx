@@ -77,6 +77,9 @@ const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog }: 
       addRemoveButtons={{
         addTooltip: "Add Namespace",
         onAdd: openAddNamespaceDialog,
+        onRemove: () => {
+          namespaceStore.selectedItems.forEach(namespace => namespaceStore.remove(namespace));
+        },
       }}
       renderItemMenu={namespace => (
         <NamespaceMenu
