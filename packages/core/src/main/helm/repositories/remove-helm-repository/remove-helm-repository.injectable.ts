@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
 import type { HelmRepo } from "../../../../common/helm/helm-repo";
 import loggerInjectable from "../../../../common/logger.injectable";
-import type { AsyncResult } from "../../../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 
 const removeHelmRepositoryInjectable = getInjectable({
   id: "remove-helm-repository",
@@ -15,7 +15,7 @@ const removeHelmRepositoryInjectable = getInjectable({
     const execHelm = di.inject(execHelmInjectable);
     const logger = di.inject(loggerInjectable);
 
-    return async (repo: HelmRepo): Promise<AsyncResult<void, string>> => {
+    return async (repo: HelmRepo): AsyncResult<void, string> => {
       logger.info(`[HELM]: removing repo ${repo.name} (${repo.url})`);
 
       const result = await execHelm([

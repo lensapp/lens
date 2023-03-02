@@ -5,7 +5,7 @@
 import { getDiForUnitTesting } from "../../../../../getDiForUnitTesting";
 import type { ExecFileWithInput } from "./exec-file-with-input.injectable";
 import execFileWithInputInjectable from "./exec-file-with-input.injectable";
-import type { AsyncResult } from "../../../../../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import nonPromiseExecFileInjectable from "./non-promise-exec-file.injectable";
 import { getPromiseStatus } from "@k8slens/test-utils";
 import EventEmitter from "events";
@@ -56,7 +56,7 @@ describe("exec-file-with-input", () => {
   });
 
   describe("when called", () => {
-    let actualPromise: Promise<AsyncResult<string, unknown>>;
+    let actualPromise: AsyncResult<string, unknown>;
 
     beforeEach(() => {
       actualPromise = execFileWithInput({

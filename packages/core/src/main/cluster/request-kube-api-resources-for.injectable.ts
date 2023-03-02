@@ -6,11 +6,11 @@ import type { V1APIResourceList } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { KubeApiResource } from "../../common/rbac";
-import type { AsyncResult } from "../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import k8sRequestInjectable from "../k8s-request.injectable";
 import type { KubeResourceListGroup } from "./request-api-versions";
 
-export type RequestKubeApiResources = (grouping: KubeResourceListGroup) => Promise<AsyncResult<KubeApiResource[], Error>>;
+export type RequestKubeApiResources = (grouping: KubeResourceListGroup) => AsyncResult<KubeApiResource[], Error>;
 
 export type RequestKubeApiResourcesFor = (cluster: Cluster) => RequestKubeApiResources;
 

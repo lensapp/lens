@@ -5,9 +5,9 @@
 
 import * as uuid from "uuid";
 import { action, comparer, computed, makeObservable, observable, reaction, runInAction } from "mobx";
-import type { StorageLayer } from "@k8slens/utilities";
-import { autoBind } from "@k8slens/utilities";
 import throttle from "lodash/throttle";
+import type { StorageLayer } from "../../../utils/storage-helper";
+import autoBind from "auto-bind";
 
 export type TabId = string;
 

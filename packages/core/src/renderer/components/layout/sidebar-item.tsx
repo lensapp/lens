@@ -7,7 +7,6 @@ import styles from  "./sidebar-items.module.scss";
 
 import React from "react";
 import { computed, makeObservable } from "mobx";
-import type { StorageLayer } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
@@ -16,6 +15,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";
 import sidebarStorageInjectable from "./sidebar-storage/sidebar-storage.injectable";
 import type { HierarchicalSidebarItem } from "./sidebar-items.injectable";
+import type { StorageLayer } from "../../utils/storage-helper";
 
 interface Dependencies {
   sidebarStorage: StorageLayer<SidebarStorageState>;

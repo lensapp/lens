@@ -61,7 +61,7 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
       >
         <InfoPanel
           tabId={tabId}
-          error={model.configration.error.get()}
+          error={model.configuration.error.get()}
           submit={this.upgrade}
           submitLabel="Upgrade"
           submittingMessage="Updating.."
@@ -90,9 +90,9 @@ export class NonInjectedUpgradeChart extends React.Component<UpgradeChartProps &
         />
         <EditorPanel
           tabId={tabId}
-          value={model.configration.value.get()}
-          onChange={model.configration.set}
-          onError={model.configration.setError}
+          value={model.configuration.value.get()}
+          onChange={model.configuration.set}
+          onError={model.configuration.setError}
         />
       </div>
     );
