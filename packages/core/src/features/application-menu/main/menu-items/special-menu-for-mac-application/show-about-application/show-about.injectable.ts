@@ -10,7 +10,7 @@ import productNameInjectable from "../../../../../../common/vars/product-name.in
 import buildVersionInjectable from "../../../../../../main/vars/build-version/build-version.injectable";
 import extensionApiVersionInjectable from "../../../../../../common/vars/extension-api-version.injectable";
 import applicationCopyrightInjectable from "../../../../../../common/vars/application-copyright.injectable";
-import aboutBundledExtensionsInjectable from "./about-bundled-extensions.injectable";
+import specificVersionsInjectable from "./about-bundled-extensions.injectable";
 
 const showAboutInjectable = getInjectable({
   id: "show-about",
@@ -23,7 +23,7 @@ const showAboutInjectable = getInjectable({
     const appName = di.inject(appNameInjectable);
     const productName = di.inject(productNameInjectable);
     const applicationCopyright = di.inject(applicationCopyrightInjectable);
-    const aboutBundledExtensions = di.inject(aboutBundledExtensionsInjectable);
+    const specificVersions = di.inject(specificVersionsInjectable);
 
     return () => {
       const appInfo = [
@@ -32,14 +32,26 @@ const showAboutInjectable = getInjectable({
         `Electron: ${process.versions.electron}`,
         `Chrome: ${process.versions.chrome}`,
         `Node: ${process.versions.node}`,
-        ...aboutBundledExtensions,
         applicationCopyright,
       ];
+
+      if (specificVersions.length > 0) {
+        appInfo.push(
+          "",
+          "",
+          ...specificVersions,
+        );
+      }
 
       showMessagePopup(
         `${isWindows ? " ".repeat(2) : ""}${appName}`,
         productName,
         appInfo.join("\r\n"),
+        {
+          textWidth: specificVersions.length > 0
+            ? 300
+            : undefined,
+        },
       );
     };
   },

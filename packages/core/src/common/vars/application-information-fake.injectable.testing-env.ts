@@ -24,6 +24,7 @@ export const applicationInformationFakeInjectable = getInjectable({
     welcomeRoute: "/welcome",
     copyright: "some-copyright-information",
     description: "some-descriptive-text",
+    dependencies: {},
   }),
 
   injectionToken: applicationInformationToken,
