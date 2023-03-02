@@ -10,7 +10,7 @@ import { autorun,  action, observable } from "mobx";
 import type { KubeApi } from "../kube-api";
 import type { KubeObject, ObjectReference } from "../kube-object";
 import { parseKubeApi, createKubeApiURL } from "../kube-api-parse";
-import { chain, find } from "@k8slens/utilities/src/iter";
+import { chain, find } from "@k8slens/utilities";
 
 export type RegisterableStore<Store> = Store extends KubeObjectStore<any, any, any>
   ? Store

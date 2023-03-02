@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { urlBuilderFor } from "@k8slens/utilities/src/buildUrl";
+import { urlBuilderFor } from "@k8slens/utilities";
 import { HelmChart } from "../helm-charts.api";
 import type { RawHelmChart } from "../helm-charts.api";
 import { isDefined } from "@k8slens/utilities";

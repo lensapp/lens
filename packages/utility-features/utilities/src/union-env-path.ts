@@ -4,7 +4,7 @@
  */
 
 import path from "path";
-import * as iter from "@k8slens/utilities/src/iter";
+import { iter } from "./iter";
 
 /**
  * Join all entires with a PATH env var delimited string together

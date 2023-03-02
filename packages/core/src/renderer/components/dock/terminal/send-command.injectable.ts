@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { when } from "mobx";
 import loggerInjectable from "../../../../common/logger.injectable";
 import { TerminalChannels } from "../../../../common/terminal/channels";
-import { waitUntilDefined } from "@k8slens/utilities/src/wait";
+import { waitUntilDefined } from "@k8slens/utilities";
 import { noop } from "@k8slens/utilities";
 import showSuccessNotificationInjectable from "../../notifications/show-success-notification.injectable";
 import selectDockTabInjectable from "../dock/select-dock-tab.injectable";

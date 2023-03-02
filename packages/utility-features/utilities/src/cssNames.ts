@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import * as iter from "./iter";
-import * as object from "./object";
+import { iter } from "./iter";
+import { object } from "./object";
 import { isObject } from "./type-narrowing";
 
 export type IgnoredClassNames = number | symbol | Function;
