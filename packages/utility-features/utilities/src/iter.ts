@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export type Falsey = false | 0 | "" | null | undefined;
+export type Falsy = false | 0 | "" | null | undefined;
 
 interface Iterator<T> extends Iterable<T> {
   filter(fn: (val: T) => unknown): Iterator<T>;
-  filterMap<U>(fn: (val: T) => Falsey | U): Iterator<U>;
+  filterMap<U>(fn: (val: T) => Falsy | U): Iterator<U>;
   find(fn: (val: T) => unknown): T | undefined;
   collect<U>(fn: (values: Iterable<T>) => U): U;
   map<U>(fn: (val: T) => U): Iterator<U>;
@@ -67,11 +67,11 @@ export function* map<T, U>(src: Iterable<T>, fn: (from: T) => U): IterableIterat
 }
 
 /**
- * The single layer flattening of an iterator, discarding `Falsey` values.
+ * The single layer flattening of an iterator, discarding `Falsy` values.
  * @param src A type that can be iterated over
- * @param fn The function that returns either an iterable over items that should be filtered out or a `Falsey` value indicating that it should be ignored
+ * @param fn The function that returns either an iterable over items that should be filtered out or a `Falsy` value indicating that it should be ignored
  */
-export function* filterFlatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U | Falsey> | Falsey): IterableIterator<U> {
+export function* filterFlatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U | Falsy> | Falsy): IterableIterator<U> {
   for (const from of src) {
     if (!from) {
       continue;
@@ -122,7 +122,7 @@ export function* filter<T>(src: Iterable<T>, fn: (from: T) => any): IterableIter
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value
  */
-export function* filterMap<T, U>(src: Iterable<T>, fn: (from: T) => U | Falsey): IterableIterator<U> {
+export function* filterMap<T, U>(src: Iterable<T>, fn: (from: T) => U | Falsy): IterableIterator<U> {
   for (const from of src) {
     const res = fn(from);
 
@@ -166,9 +166,9 @@ export function find<T>(src: Iterable<T>, match: (i: T) => any): T | undefined {
 
 /**
  * Iterate over `src` calling `reducer` with the previous produced value and the current
- * yielded value until `src` is exausted. Then return the final value.
+ * yielded value until `src` is exhausted. Then return the final value.
  * @param src The value to iterate over
- * @param reducer A function for producing the next item from an accumilation and the current item
+ * @param reducer A function for producing the next item from an accumulation and the current item
  * @param initial The initial value for the iteration
  */
 export function reduce<T, R extends Iterable<any>>(src: Iterable<T>, reducer: (acc: R, cur: T) => R, initial: R): R;
@@ -224,7 +224,7 @@ export function first<T>(src: Iterable<T>): T | undefined {
 }
 
 /**
- * Iterate through `src` and return `true` if `fn` returns a thruthy value for every yielded value.
+ * Iterate through `src` and return `true` if `fn` returns a truthy value for every yielded value.
  * Otherwise, return `false`. This function short circuits.
  * @param src The type to be iterated over
  * @param fn A function to check each iteration
@@ -245,4 +245,36 @@ export function* concat<T>(...sources: IterableIterator<T>[]): IterableIterator<
       yield val;
     }
   }
+}
+
+/**
+ * Split an iterable into several arrays with matching fields
+ * @param from The iterable of items to split up
+ * @param field The field of each item to split over
+ * @param parts What each array will be filtered to
+ * @returns A `parts.length` tuple of `T[]` where each array has matching `field` values
+ */
+export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: []): [];
+export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field]]): [T[]];
+export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field], T[typeof field]]): [T[], T[]];
+export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field], T[typeof field], T[typeof field]]): [T[], T[], T[]];
+
+export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: T[typeof field][]): T[][] {
+  if (new Set(parts).size !== parts.length) {
+    throw new TypeError("Duplicate parts entries");
+  }
+
+  const res = Array.from(parts, () => [] as T[]);
+
+  for (const item of from) {
+    const index = parts.indexOf(item[field]);
+
+    if (index < 0) {
+      continue;
+    }
+
+    res[index].push(item);
+  }
+
+  return res;
 }

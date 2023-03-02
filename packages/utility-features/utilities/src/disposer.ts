@@ -5,8 +5,6 @@
 
 import type { SingleOrMany } from "./types";
 
-
-
 export interface Disposer {
   (): void;
 }
@@ -16,7 +14,7 @@ export interface Disposable {
 }
 
 export interface ExtendableDisposer extends Disposer {
-  push(...vals: (Disposer | ExtendableDisposer | Disposable)[]): void;
+  push(...values: (Disposer | ExtendableDisposer | Disposable)[]): void;
 }
 
 export function disposer(...items: SingleOrMany<Disposer | Disposable | undefined | null>[]): ExtendableDisposer {

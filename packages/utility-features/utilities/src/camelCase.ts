@@ -7,7 +7,7 @@
 import { camelCase } from "lodash";
 import type { SingleOrMany } from "./types";
 import { isObject, isString } from "./type-narrowing";
-import * as object from "./objects";
+import * as object from "./object";
 
 export function toCamelCase<T extends Record<string, unknown>[]>(obj: T): T;
 export function toCamelCase<T extends Record<string, unknown>>(obj: T): T;

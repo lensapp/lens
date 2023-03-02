@@ -4,7 +4,7 @@
  */
 
 import assert from "assert";
-import * as iter from "./iter";
+import { iter } from "@k8slens/utilities";
 
 // Helper to convert memory from units Ki, Mi, Gi, Ti, Pi to bytes and vise versa
 

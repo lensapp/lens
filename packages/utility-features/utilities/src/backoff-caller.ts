@@ -5,7 +5,7 @@
 
 import type { AsyncResult } from "./async-result";
 import { delay } from "./delay";
-import { noop } from "./noop";
+import { noop } from "@k8slens/utilities/src/noop";
 
 /**
  * @param error The error that resulted in the failure
