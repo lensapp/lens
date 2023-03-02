@@ -15,7 +15,7 @@ import type { CreateKubeApiForRemoteCluster } from "../create-kube-api-for-remot
 import createKubeApiForRemoteClusterInjectable from "../create-kube-api-for-remote-cluster.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { flushPromises } from "../../test-utils/flush-promises";
+import { flushPromises } from "@k8slens/test-utils";
 import createKubeJsonApiInjectable from "../create-kube-json-api.injectable";
 import type { IKubeWatchEvent } from "../kube-watch-event";
 import type { KubeJsonApiDataFor } from "../kube-object";

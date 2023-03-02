@@ -8,7 +8,7 @@ import type { IComputedValue } from "mobx";
 import { computed, observe } from "mobx";
 import React from "react";
 import { observer } from "mobx-react";
-import { advanceFakeTime, testUsingFakeTime } from "../../test-utils/use-fake-time";
+import { advanceFakeTime, testUsingFakeTime } from "@k8slens/test-utils";
 import { reactiveNow } from "./reactive-now";
 
 describe("reactiveNow", () => {

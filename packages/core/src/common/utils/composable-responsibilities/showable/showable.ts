@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { isBoolean } from "@k8slens/utilities";
 import type { IComputedValue } from "mobx";
-import { isBoolean } from "../../type-narrowing";
 
 export interface Showable {
   readonly isShown: IComputedValue<boolean> | boolean;

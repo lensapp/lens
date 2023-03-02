@@ -5,12 +5,12 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import { onLoadOfApplicationInjectionToken } from "../../../main/start-main-application/runnable-tokens/phases";
-import { unionPATHs } from "../../../common/utils/union-env-path";
 import isSnapPackageInjectable from "../../../common/vars/is-snap-package.injectable";
 import electronAppInjectable from "../../../main/electron-app/electron-app.injectable";
 import computeShellEnvironmentInjectable from "./compute-shell-environment.injectable";
 import userShellSettingInjectable from "../../../common/user-store/shell-setting.injectable";
 import emitShellSyncFailedInjectable from "./emit-failure.injectable";
+import { unionPATHs } from "@k8slens/utilities";
 
 const setupShellInjectable = getInjectable({
   id: "setup-shell",
