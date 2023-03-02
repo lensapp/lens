@@ -6,7 +6,7 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { ChildProcessWithoutNullStreams } from "child_process";
 import EventEmitter from "events";
-import { flushPromises } from "../../../common/test-utils/flush-promises";
+import { flushPromises } from "@k8slens/test-utils";
 import type { Spawn } from "../../../main/child-process/spawn.injectable";
 import spawnInjectable from "../../../main/child-process/spawn.injectable";
 import randomUUIDInjectable from "../../../main/crypto/random-uuid.injectable";

@@ -4,7 +4,7 @@
  */
 import type { IpcRenderer } from "electron";
 import ipcRendererInjectable from "./ipc-renderer.injectable";
-import { getGlobalOverride } from "../../../common/test-utils/get-global-override";
+import { getGlobalOverride } from "@k8slens/test-utils";
 
 export default getGlobalOverride(ipcRendererInjectable, () => ({
   invoke: () => {},

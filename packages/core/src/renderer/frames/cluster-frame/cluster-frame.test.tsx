@@ -22,7 +22,7 @@ import legacyOnChannelListenInjectable from "../../ipc/legacy-channel-listen.inj
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
-import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
+import { testUsingFakeTime } from "@k8slens/test-utils";
 import currentlyInClusterFrameInjectable from "../../routes/currently-in-cluster-frame.injectable";
 
 describe("<ClusterFrame />", () => {

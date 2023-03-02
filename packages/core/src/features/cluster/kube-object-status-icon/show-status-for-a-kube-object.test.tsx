@@ -5,7 +5,7 @@
 import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import React from "react";
-import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
+import { testUsingFakeTime } from "@k8slens/test-utils";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IAtom } from "mobx";

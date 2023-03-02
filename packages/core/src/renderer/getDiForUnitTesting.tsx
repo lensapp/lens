@@ -14,14 +14,9 @@ import requestAnimationFrameInjectable from "./components/animate/request-animat
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
-import type { GlobalOverride } from "../common/test-utils/get-global-override";
-
-import {
-  setLegacyGlobalDiForExtensionApi,
-} from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import {
-  registerMobX,
-} from "@ogre-tools/injectable-extension-for-mobx";
+import type { GlobalOverride } from "@k8slens/test-utils";
+import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerInjectableReact } from "@ogre-tools/injectable-react";
 
 export const getDiForUnitTesting = () => {
