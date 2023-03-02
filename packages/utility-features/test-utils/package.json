@@ -1,0 +1,27 @@
+{
+  "name": "@k8slens/test-utils",
+  "version": "1.0.0",
+  "description": "A collection of utilities for testing",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "private": false,
+  "files": [
+    "dist"
+  ],
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack --mode=development --watch",
+    "test": "jest --coverage --runInBand"
+  }
+}
