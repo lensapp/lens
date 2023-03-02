@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { metricUnitsToNumber } from "../metricUnitsToNumber";
+import { metricUnitsToNumber } from "./metricUnitsToNumber";
 
 describe("metricUnitsToNumber tests", () => {
   test("plain number", () => {
