@@ -18,6 +18,8 @@ import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
 import loggerInjectable from "../../common/logger.injectable";
+import execFileInjectable from "../../common/fs/exec-file.injectable";
+import unlinkInjectable from "../../common/fs/unlink.injectable";
 
 export type CreateKubectl = (version: string) => Kubectl;
 
@@ -39,6 +41,8 @@ const createKubectlInjectable = getInjectable({
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
       joinPaths: di.inject(joinPathsInjectable),
       getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
+      execFile: di.inject(execFileInjectable),
+      unlink: di.inject(unlinkInjectable),
     };
 
     return (version) => new Kubectl(dependencies, version);

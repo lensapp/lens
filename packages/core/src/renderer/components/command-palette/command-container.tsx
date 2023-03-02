@@ -22,7 +22,7 @@ import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.inje
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import isMacInjectable from "../../../common/vars/is-mac.injectable";
 import legacyOnChannelListenInjectable from "../../ipc/legacy-channel-listen.injectable";
-import { onKeyboardShortcut } from "../../utils/on-keyboard-shortcut";
+import { onKeyboardShortcut } from "@k8slens/utilities";
 
 interface Dependencies {
   addWindowEventListener: AddWindowEventListener;

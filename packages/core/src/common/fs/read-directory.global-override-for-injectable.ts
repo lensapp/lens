@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getGlobalOverride } from "../test-utils/get-global-override";
+import { getGlobalOverride } from "@k8slens/test-utils";
 import readDirectoryInjectable from "./read-directory.injectable";
 
 export default getGlobalOverride(readDirectoryInjectable, () => async () => {

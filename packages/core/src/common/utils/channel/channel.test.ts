@@ -16,7 +16,7 @@ import { requestFromChannelInjectionToken } from "./request-from-channel-injecti
 import type { RequestChannel } from "./request-channel-listener-injection-token";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { getPromiseStatus } from "../../test-utils/get-promise-status";
+import { getPromiseStatus } from "@k8slens/test-utils";
 import { runInAction } from "mobx";
 import type { RequestChannelHandler } from "../../../main/utils/channel/channel-listeners/listener-tokens";
 import {
