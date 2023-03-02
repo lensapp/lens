@@ -63,7 +63,6 @@ const telemetryDecoratorInjectable = getInjectable({
 
 const shouldEmitTelemetryFor =
   (whiteList: string[]) => (injectable: Injectable<any, any, any>) =>
-    injectable.tags?.includes("emit-telemetry") ||
     whiteList.includes(injectable.id);
 
 export default telemetryDecoratorInjectable;

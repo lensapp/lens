@@ -28,18 +28,15 @@ describe("emit-telemetry-from-specific-function-calls", () => {
       di.override(emitEventInjectable, () => emitEventMock);
     });
 
-    describe("given instances of white-listed, non-white-listed and tagged functions", () => {
+    describe("given instances of white-listed, non-white-listed", () => {
       let whiteListedFunctionMock: jest.Mock;
       let nonWhiteListedFunctionMock: jest.Mock;
-      let taggedFunctionMock: jest.Mock;
       let injectedWhiteListedFunction: jest.Mock;
       let injectedNonWhiteListedFunction: jest.Mock;
-      let injectedTaggedFunction: jest.Mock;
 
       beforeEach(() => {
         whiteListedFunctionMock = jest.fn();
         nonWhiteListedFunctionMock = jest.fn();
-        taggedFunctionMock = jest.fn();
 
         const whiteListedInjectable = getInjectable({
           id: "some-white-listed-function",
@@ -51,28 +48,19 @@ describe("emit-telemetry-from-specific-function-calls", () => {
           instantiate: () => nonWhiteListedFunctionMock,
         });
 
-        const taggedInjectable = getInjectable({
-          id: "some-tagged-function",
-          instantiate: () => taggedFunctionMock,
-          tags: ["emit-telemetry"],
-        });
-
         runInAction(() => {
-          di.register(whiteListedInjectable);
-          di.register(nonWhiteListedInjectable);
-          di.register(taggedInjectable);
+          di.register(whiteListedInjectable, nonWhiteListedInjectable);
         });
 
         injectedWhiteListedFunction = di.inject(whiteListedInjectable);
         injectedNonWhiteListedFunction = di.inject(nonWhiteListedInjectable);
-        injectedTaggedFunction = di.inject(taggedInjectable);
       });
 
       it("telemetry is not emitted yet", () => {
         expect(emitEventMock).not.toHaveBeenCalled();
       });
 
-      describe("when the white-listed function is called", () => {
+      describe("when the white-listed function is called with parameters", () => {
         beforeEach(() => {
           injectedWhiteListedFunction("some-arg", "some-other-arg");
         });
@@ -124,21 +112,6 @@ describe("emit-telemetry-from-specific-function-calls", () => {
 
         it("telemetry is not emitted", () => {
           expect(emitEventMock).not.toHaveBeenCalled();
-        });
-      });
-
-      describe("when the tagged, but not white-listed function is called", () => {
-        beforeEach(() => {
-          injectedTaggedFunction("some-arg", "some-other-arg");
-        });
-
-        it("telemetry is emitted in event bus", () => {
-          expect(emitEventMock).toHaveBeenCalledWith({
-            destination: "auto-capture",
-            action: "telemetry-from-business-action",
-            name: "some-tagged-function",
-            params: { args: ["some-arg", "some-other-arg"] },
-          });
         });
       });
     });
