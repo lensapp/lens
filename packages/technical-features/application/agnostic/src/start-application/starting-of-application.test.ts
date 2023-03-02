@@ -4,7 +4,7 @@ import {
   getInjectable,
 } from "@ogre-tools/injectable";
 import { registerFeature } from "@k8slens/feature-core";
-import { feature } from "../feature";
+import { applicationFeature } from "../feature";
 import { startApplicationInjectionToken } from "./start-application.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "./timeslots/before-application-is-loading-injection-token";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
@@ -21,7 +21,7 @@ describe("starting-of-application", () => {
   beforeEach(() => {
     di = createContainer("irrelevant");
 
-    registerFeature(di, feature);
+    registerFeature(di, applicationFeature);
 
     beforeApplicationIsLoadingMock = asyncFn();
     onLoadOfApplicationMock = asyncFn();
