@@ -15,7 +15,7 @@ import { Wizard, WizardStep } from "../../wizard";
 import type { Deployment, DeploymentApi } from "../../../../common/k8s-api/endpoints";
 import { Icon } from "../../icon";
 import { Slider } from "../../slider";
-import { cssNames } from "../../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import deploymentApiInjectable from "../../../../common/k8s-api/endpoints/deployment.api.injectable";
 import deploymentScaleDialogStateInjectable from "./dialog-state.injectable";

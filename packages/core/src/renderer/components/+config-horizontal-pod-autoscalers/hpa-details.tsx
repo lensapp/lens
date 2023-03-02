@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricTarget } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
 import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
 import { Table, TableCell, TableHead, TableRow } from "../table";

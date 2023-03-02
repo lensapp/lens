@@ -8,7 +8,7 @@ import clusterStoreInjectable from "../../../../common/cluster-store/cluster-sto
 import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import removePathInjectable from "../../../../common/fs/remove.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
-import { noop } from "../../../../common/utils";
+import { noop } from "@k8slens/utilities";
 import { getRequestChannelListenerInjectable } from "../../../../main/utils/channel/channel-listeners/listener-tokens";
 import { deleteClusterChannel } from "../common/delete-channel";
 

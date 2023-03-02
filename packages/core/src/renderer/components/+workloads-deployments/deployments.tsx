@@ -9,7 +9,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { Deployment } from "../../../common/k8s-api/endpoints";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

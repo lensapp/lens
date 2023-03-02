@@ -6,9 +6,9 @@
 import type { KubeObjectMetadata, KubeObjectScope, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
-import { autoBind } from "../../utils";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
+import autoBind from "auto-bind";
 
 export enum SecretType {
   Opaque = "Opaque",

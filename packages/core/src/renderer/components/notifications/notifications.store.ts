@@ -5,10 +5,10 @@
 
 import type React from "react";
 import { action, observable, makeObservable } from "mobx";
-import { autoBind } from "../../utils";
 import uniqueId from "lodash/uniqueId";
 import type { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 import type { SetRequired } from "type-fest";
+import autoBind from "auto-bind";
 
 export type NotificationId = string | number;
 export type NotificationMessage = string | React.ReactElement | React.ReactElement[] | JsonApiErrorParsed | Error;

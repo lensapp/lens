@@ -13,6 +13,9 @@
 import * as mobx from "mobx";
 import { isObservable, observable } from "mobx";
 
+/**
+ * @deprecated Switch to doing toJS on each field instead
+ */
 export function toJS<T>(data: T): T {
   // make data observable for recursive toJS()-output
   if (typeof data === "object" && !isObservable(data)) {

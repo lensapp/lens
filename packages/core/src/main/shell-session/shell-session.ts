@@ -10,7 +10,7 @@ import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
 import os from "os";
 import type * as pty from "node-pty";
-import { getOrInsertWith } from "../../common/utils";
+import { getOrInsertWith } from "@k8slens/utilities";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 import type { Logger } from "../../common/logger";
 import type { ComputeShellEnvironment } from "../../features/shell-sync/main/compute-shell-environment.injectable";

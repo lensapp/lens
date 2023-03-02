@@ -4,7 +4,7 @@
  */
 
 import type { ElectronApplication, Page } from "playwright";
-import * as utils from "../helpers/utils";
+import * as utils from "@k8slens/utilities";
 
 describe("Lens command palette", () => {
   let window: Page;

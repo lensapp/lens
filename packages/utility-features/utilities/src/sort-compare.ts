@@ -46,12 +46,12 @@ export function sortCompare<T>(left: T, right: T): Ordering {
 }
 
 /**
- * This function sorts of list of items that have what should be a semver version formated string
- * as the field `version` but if it is not loosely coercable to semver falls back to sorting them
+ * This function sorts of list of items that have what should be a semver version formatted string
+ * as the field `version` but if it is not loosely coercible to semver falls back to sorting them
  * alphanumerically
  */
-export function sortBySemverVersion<T extends { version: string }>(versioneds: T[]): T[] {
-  return versioneds
+export function sortBySemverVersion<T extends { version: string }>(versioned: T[]): T[] {
+  return versioned
     .map(versioned => ({
       __version: coerce(versioned.version, { loose: true }),
       raw: versioned,

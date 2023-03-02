@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { JsonObject } from "type-fest";
-import { json } from "../../../../../common/utils";
+import { json } from "@k8slens/utilities";
 import yaml from "js-yaml";
 import execFileWithInputInjectable from "./exec-file-with-input/exec-file-with-input.injectable";
 import { getErrorMessage } from "../../../../../common/utils/get-error-message";

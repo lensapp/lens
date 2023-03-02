@@ -5,7 +5,7 @@
 
 import type { ClusterScopedMetadata, LabelSelector, ObjectReference, TypedLocalObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import { unitsToBytes } from "../../utils";
+import { unitsToBytes } from "@k8slens/utilities";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { ResourceRequirements } from "./types/resource-requirements";

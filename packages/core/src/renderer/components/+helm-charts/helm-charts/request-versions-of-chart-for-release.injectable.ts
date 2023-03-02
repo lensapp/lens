@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { HelmChart } from "../../../../common/k8s-api/endpoints/helm-charts.api";
 import requestHelmChartVersionsInjectable from "../../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
-import { sortBySemverVersion } from "../../../utils";
+import { sortBySemverVersion } from "@k8slens/utilities";
 import type { HelmChartVersion } from "./versions";
 
 /**

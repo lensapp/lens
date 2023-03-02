@@ -17,8 +17,8 @@ import type { CatalogCategory, CatalogCategoryRegistry, CatalogEntity } from "..
 import { CatalogAddButton } from "./catalog-add-button";
 import type { ShowNotification } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
-import type { StorageLayer } from "../../utils";
-import { prevDefault } from "../../utils";
+import type { StorageLayer } from "@k8slens/utilities";
+import { prevDefault } from "@k8slens/utilities";
 import { CatalogEntityDetails } from "./entity-details/view";
 import { CatalogMenu } from "./catalog-menu";
 import { RenderDelay } from "../render-delay/render-delay";

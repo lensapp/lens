@@ -6,7 +6,7 @@
 import "./nodes.scss";
 import React from "react";
 import { observer } from "mobx-react";
-import { cssNames, interval } from "../../utils";
+import { cssNames, interval } from "@k8slens/utilities";
 import { TabLayout } from "../layout/tab-layout-2";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { Node } from "../../../common/k8s-api/endpoints/node.api";

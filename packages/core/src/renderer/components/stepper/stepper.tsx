@@ -5,7 +5,7 @@
 
 import "./stepper.scss";
 import React from "react";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 
 export interface StepperProps extends React.HTMLProps<any> {
   step: number;

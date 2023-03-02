@@ -8,8 +8,8 @@ import { computed, observable, reaction } from "mobx";
 import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry";
 import type { CatalogEntity } from "../../../api/catalog-entity";
 import type { CatalogCategory, CatalogCategoryRegistry } from "../../../../common/catalog";
-import type { Disposer } from "../../../../common/utils";
-import { disposer } from "../../../../common/utils";
+import type { Disposer } from "@k8slens/utilities";
+import { disposer } from "@k8slens/utilities";
 import type { ItemListStore } from "../../item-object-list";
 
 type EntityRegistry = Pick<CatalogEntityRegistry, "getItemsForCategory" | "filteredItems" | "onRun">;

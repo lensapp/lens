@@ -8,7 +8,7 @@ import "./pod-details-container.scss";
 import React from "react";
 import type { Container, PodContainerStatus, Pod } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
-import { cssNames, isDefined } from "../../utils";
+import { cssNames, isDefined } from "@k8slens/utilities";
 import { StatusBrick } from "../status-brick";
 import { Badge } from "../badge";
 import { ContainerEnvironment } from "./pod-container-env";

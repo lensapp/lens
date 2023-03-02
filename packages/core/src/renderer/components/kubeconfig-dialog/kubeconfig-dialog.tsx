@@ -7,7 +7,7 @@ import styles from "./kubeconfig-dialog.module.scss";
 import React from "react";
 import type { IObservableValue } from "mobx";
 import { observer } from "mobx-react";
-import { cssNames, saveFileDialog } from "../../utils";
+import { cssNames, saveFileDialog } from "@k8slens/utilities";
 import { Button } from "../button";
 import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";

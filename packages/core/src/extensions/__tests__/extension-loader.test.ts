@@ -7,7 +7,7 @@ import type { ExtensionLoader } from "../extension-loader";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 import { runInAction } from "mobx";
 import updateExtensionsStateInjectable from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
-import { delay } from "../../renderer/utils";
+import { delay } from "@k8slens/utilities";
 import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";

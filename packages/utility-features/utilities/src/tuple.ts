@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import * as array from "./array";
+import { array } from "./array";
 
 /**
  * A strict N-tuple of type T
@@ -24,11 +24,10 @@ type TupleOfImpl<T, N extends number, R extends unknown[]> = R["length"] extends
  * @yields A tuple of the next element from each of the sources
  * @returns The tuple of all the sources as soon as at least one of the sources is exausted
  */
-export function zip<T>(...sources: Tuple<T[], 0>): Iterator<Tuple<T, 0>, Tuple<T[], 0>>;
-export function zip<T>(...sources: Tuple<T[], 1>): Iterator<Tuple<T, 1>, Tuple<T[], 1>>;
-export function zip<T>(...sources: Tuple<T[], 2>): Iterator<Tuple<T, 2>, Tuple<T[], 2>>;
-
-export function* zip<T, N extends number>(...sources: Tuple<T[], N>): Iterator<Tuple<T, N>, Tuple<T[], N>> {
+function zip<T>(...sources: Tuple<T[], 0>): Iterator<Tuple<T, 0>, Tuple<T[], 0>>;
+function zip<T>(...sources: Tuple<T[], 1>): Iterator<Tuple<T, 1>, Tuple<T[], 1>>;
+function zip<T>(...sources: Tuple<T[], 2>): Iterator<Tuple<T, 2>, Tuple<T[], 2>>;
+function* zip<T, N extends number>(...sources: Tuple<T[], N>): Iterator<Tuple<T, N>, Tuple<T[], N>> {
   const maxSafeLength = Math.min(...sources.map(source => source.length));
 
   for (let i = 0; i < maxSafeLength; i += 1) {
@@ -43,13 +42,19 @@ export function* zip<T, N extends number>(...sources: Tuple<T[], N>): Iterator<T
  * @param length The size of the tuple
  * @param value The value for each of the tuple entries
  */
-export function filled<T, L extends number>(length: L, value: T): Tuple<T, L> {
+function filled<T, L extends number>(length: L, value: T): Tuple<T, L> {
   return array.filled(length, value) as Tuple<T, L>;
 }
 
 /**
  * A function for converting an explicit array to a tuple but without the `readonly` typing
  */
-export function from<T extends any[]>(...args: T): [...T] {
+function from<T extends any[]>(...args: T): [...T] {
   return args;
 }
+
+export const tuple = {
+  zip,
+  filled,
+  from,
+};

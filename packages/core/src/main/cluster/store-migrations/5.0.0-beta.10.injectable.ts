@@ -8,7 +8,7 @@ import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-sto
 import type { ClusterModel } from "../../../common/cluster-types";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
-import { isErrnoException } from "../../../common/utils";
+import { isErrnoException } from "@k8slens/utilities";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {

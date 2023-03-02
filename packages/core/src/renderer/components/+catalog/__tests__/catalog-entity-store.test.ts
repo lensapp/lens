@@ -6,7 +6,7 @@
 import type { CatalogCategoryMetadata, CatalogCategorySpec } from "../../../../common/catalog";
 import { CatalogEntity, categoryVersion } from "../../../../common/catalog";
 import { CatalogCategory } from "../../../api/catalog-entity";
-import { noop } from "../../../utils";
+import { noop } from "@k8slens/utilities";
 import type { CatalogEntityStore } from "../catalog-entity-store/catalog-entity.store";
 import { catalogEntityStore } from "../catalog-entity-store/catalog-entity.store";
 

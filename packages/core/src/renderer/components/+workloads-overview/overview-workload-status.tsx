@@ -10,7 +10,7 @@ import capitalize from "lodash/capitalize";
 import { observer } from "mobx-react";
 import type { PieChartData } from "../chart";
 import { PieChart } from "../chart";
-import { object } from "../../utils";
+import { object } from "@k8slens/utilities";
 import type { LensTheme } from "../../themes/lens-theme";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { PascalCase } from "type-fest";

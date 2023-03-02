@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { bytesToUnits, unitsToBytes } from "../convertMemory";
+import { bytesToUnits, unitsToBytes } from "./convertMemory";
 
 describe("unitsToBytes", () => {
   it("without any units, just parse as float", () => {

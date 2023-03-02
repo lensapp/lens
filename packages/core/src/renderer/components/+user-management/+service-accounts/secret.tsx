@@ -9,7 +9,7 @@ import moment from "moment";
 import React from "react";
 
 import type { Secret } from "../../../../common/k8s-api/endpoints/secret.api";
-import { prevDefault } from "../../../utils";
+import { prevDefault } from "@k8slens/utilities";
 import { Icon } from "../../icon";
 
 export interface ServiceAccountsSecretProps {

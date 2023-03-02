@@ -20,7 +20,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import loggerInjectable from "../../../common/logger.injectable";
 
 export interface EventDetailsProps extends KubeObjectDetailsProps<KubeEvent> {

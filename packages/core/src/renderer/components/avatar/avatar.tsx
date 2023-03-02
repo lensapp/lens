@@ -9,8 +9,8 @@ import type { ImgHTMLAttributes, MouseEventHandler } from "react";
 import React from "react";
 import randomColor from "randomcolor";
 import GraphemeSplitter from "grapheme-splitter";
-import type { SingleOrMany } from "../../utils";
-import { cssNames, isDefined, iter } from "../../utils";
+import type { SingleOrMany } from "@k8slens/utilities";
+import { cssNames, isDefined, iter } from "@k8slens/utilities";
 
 export interface AvatarProps {
   title: string;

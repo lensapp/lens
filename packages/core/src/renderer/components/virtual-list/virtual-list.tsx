@@ -12,7 +12,7 @@ import React, { createRef, forwardRef, useCallback, useEffect, useImperativeHand
 import { observer } from "mobx-react";
 import type { Align, ListChildComponentProps, ListOnScrollProps } from "react-window";
 import { VariableSizeList } from "react-window";
-import { cssNames, noop } from "../../utils";
+import { cssNames, noop } from "@k8slens/utilities";
 import type { TableRowProps } from "../table/table-row";
 import isEqual from "lodash/isEqual";
 import AutoSizer from "react-virtualized-auto-sizer";

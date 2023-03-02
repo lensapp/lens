@@ -8,7 +8,7 @@ import { computed, makeObservable } from "mobx";
 import type { Node, NodeApi } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { autoBind } from "../../utils";
+import { autoBind } from "@k8slens/utilities";
 
 export class NodeStore extends KubeObjectStore<Node, NodeApi> {
   constructor(dependencies: KubeObjectStoreDependencies, api: NodeApi, opts?: KubeObjectStoreOptions) {

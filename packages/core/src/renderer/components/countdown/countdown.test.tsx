@@ -13,7 +13,7 @@ import type { RenderResult } from "@testing-library/react";
 import { advanceFakeTime, testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
 import type { IComputedValue } from "mobx";
 import { observe } from "mobx";
-import { noop } from "../../../common/utils";
+import { noop } from "@k8slens/utilities";
 
 describe("countdown", () => {
   let di: DiContainer;

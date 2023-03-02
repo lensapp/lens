@@ -10,7 +10,7 @@ import { computed } from "mobx";
 import { observer } from "mobx-react";
 import type { SelectProps } from "../select";
 import { Select } from "../select";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import type { NamespaceStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";

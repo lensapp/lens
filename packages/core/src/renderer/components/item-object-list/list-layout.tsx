@@ -11,8 +11,8 @@ import type { IComputedValue } from "mobx";
 import { computed, makeObservable, untracked } from "mobx";
 import type { ConfirmDialogParams } from "../confirm-dialog";
 import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } from "../table";
-import type { IClassName, SingleOrMany, StorageLayer } from "../../utils";
-import { autoBind, cssNames, noop } from "../../utils";
+import type { IClassName, SingleOrMany } from "@k8slens/utilities";
+import { cssNames, noop } from "@k8slens/utilities";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
 import type { ItemObject } from "../../../common/item.store";
 import type { SearchInputUrlProps } from "../input";
@@ -30,6 +30,8 @@ import type { Primitive } from "type-fest";
 import type { SubscribableStore } from "../../kube-watch-api/kube-watch-api";
 import selectedFilterNamespacesInjectable from "../../../common/k8s-api/selected-filter-namespaces.injectable";
 import pageFiltersStoreInjectable from "./page-filters/store.injectable";
+import type { StorageLayer } from "../../utils/storage-helper";
+import autoBindReact from "auto-bind/react";
 
 export type SearchFilter<I extends ItemObject> = (item: I) => SingleOrMany<string | number | undefined | null>;
 export type SearchFilters<I extends ItemObject> = Record<string, SearchFilter<I>>;
@@ -176,7 +178,7 @@ class NonInjectedItemListLayout<I extends ItemObject, PreLoadStores extends bool
   constructor(props: ItemListLayoutProps<I, PreLoadStores> & Dependencies) {
     super(props);
     makeObservable(this);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   async componentDidMount() {

@@ -7,7 +7,7 @@ import styles from "./sidebar.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { SidebarItem } from "./sidebar-item";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import { SidebarCluster } from "./sidebar-cluster";

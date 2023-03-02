@@ -7,8 +7,8 @@ import styles from  "./sidebar-items.module.scss";
 
 import React from "react";
 import { computed, makeObservable } from "mobx";
-import type { StorageLayer } from "../../utils";
-import { cssNames } from "../../utils";
+import type { StorageLayer } from "@k8slens/utilities";
+import { cssNames } from "@k8slens/utilities";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
 import { Icon } from "../icon";

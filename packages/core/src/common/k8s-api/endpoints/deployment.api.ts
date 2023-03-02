@@ -10,7 +10,7 @@ import { KubeApi } from "../kube-api";
 import type { PodSpec } from "./pod.api";
 import type { KubeObjectStatus, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import { hasTypedProperty, isNumber, isObject } from "../../utils";
+import { hasTypedProperty, isNumber, isObject } from "@k8slens/utilities";
 
 export class DeploymentApi extends KubeApi<Deployment> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {

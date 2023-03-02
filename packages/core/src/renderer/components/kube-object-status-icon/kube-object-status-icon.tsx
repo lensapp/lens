@@ -7,7 +7,7 @@ import "./kube-object-status-icon.scss";
 
 import React from "react";
 import { Icon } from "../icon";
-import { cssNames, formatDuration, getOrInsert, isDefined } from "../../utils";
+import { cssNames, formatDuration, getOrInsert, isDefined } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeObjectStatusTextsForObjectInjectable from "./kube-object-status-texts-for-object.injectable";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";

@@ -6,7 +6,7 @@ import { ipcRenderer } from "electron";
 import { IpcPrefix, IpcRegistrar } from "./ipc-registrar";
 import { Disposers } from "../lens-extension";
 import type { LensRendererExtension } from "../lens-renderer-extension";
-import type { Disposer } from "../../common/utils";
+import type { Disposer } from "@k8slens/utilities";
 import { once } from "lodash";
 
 export abstract class IpcRenderer extends IpcRegistrar {

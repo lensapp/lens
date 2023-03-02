@@ -11,10 +11,10 @@ import type { Kubectl } from "../../main/kubectl/kubectl";
 import type { KubeconfigManager } from "../../main/kubeconfig-manager/kubeconfig-manager";
 import type { KubeApiResource, KubeApiResourceDescriptor } from "../rbac";
 import { formatKubeApiResource } from "../rbac";
-import plimit from "p-limit";
 import type { ClusterState, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate, ClusterConfigData } from "../cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus, clusterModelIdChecker, updateClusterModelChecker } from "../cluster-types";
-import { disposer, isDefined, isRequestError, toJS } from "../utils";
+import { disposer, isDefined, isRequestError, withConcurrencyLimit } from "@k8slens/utilities";
+import { toJS } from "../utils";
 import { clusterListNamespaceForbiddenChannel } from "../ipc/cluster";
 import type { CanI } from "./authorization-review.injectable";
 import type { ListNamespaces } from "./list-namespaces.injectable";
@@ -683,10 +683,11 @@ export class Cluster implements ClusterModel {
       return [];
     }
 
+    const apiLimit = withConcurrencyLimit(5);
+
     try {
-      const apiLimit = plimit(5); // 5 concurrent api requests
       const canListResourceCheckers = await Promise.all((
-        this.allowedNamespaces.map(namespace => apiLimit(() => requestNamespaceListPermissions(namespace)))
+        this.allowedNamespaces.map(namespace => apiLimit(() => requestNamespaceListPermissions(namespace))())
       ));
       const canListNamespacedResource: CanListResource = (resource) => canListResourceCheckers.some(fn => fn(resource));
 

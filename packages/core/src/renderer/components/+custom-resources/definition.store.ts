@@ -6,11 +6,11 @@
 import { computed, reaction, makeObservable } from "mobx";
 import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { autoBind } from "../../utils";
 import type { CustomResourceDefinition, CustomResourceDefinitionApi } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import type TypedEventEmitter from "typed-emitter";
 import type { LegacyAutoRegistration } from "../../../common/k8s-api/api-manager/auto-registration-emitter.injectable";
+import autoBind from "auto-bind";
 
 export interface CustomResourceDefinitionStoreDependencies extends KubeObjectStoreDependencies {
   readonly autoRegistration: TypedEventEmitter<LegacyAutoRegistration>;

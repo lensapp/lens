@@ -6,7 +6,7 @@
 import "./terminal-dock-tab.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { autoBind, cssNames } from "../../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { DockTabProps } from "../dock-tab";
 import { DockTab } from "../dock-tab";
 import { Icon } from "../../icon";
@@ -16,6 +16,7 @@ import { reaction } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "../dock/store.injectable";
 import terminalStoreInjectable from "./store.injectable";
+import autoBindReact from "auto-bind/react";
 
 export interface TerminalTabProps extends DockTabProps {
 }
@@ -29,7 +30,7 @@ interface Dependencies {
 class NonInjectedTerminalTab<Props extends TerminalTabProps & Dependencies> extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   componentDidMount() {

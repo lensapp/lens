@@ -8,7 +8,7 @@ import type { PageParamInit } from "../navigation/page-param";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
 import { map } from "lodash/fp";
 import createPageParamInjectable from "../navigation/create-page-param.injectable";
-import { object } from "../utils";
+import { object } from "@k8slens/utilities";
 import type { PageRegistration } from "./page-registration";
 
 export interface ExtensionPageParametersInstantiationParam {

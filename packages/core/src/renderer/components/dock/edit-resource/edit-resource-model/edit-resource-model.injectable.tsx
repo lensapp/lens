@@ -5,7 +5,7 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import type { CallForResource } from "./call-for-resource/call-for-resource.injectable";
 import callForResourceInjectable from "./call-for-resource/call-for-resource.injectable";
-import { waitUntilDefined } from "../../../../../common/utils";
+import { waitUntilDefined } from "@k8slens/utilities";
 import editResourceTabStoreInjectable from "../store.injectable";
 import type { EditResourceTabStore } from "../store";
 import { action, computed, makeObservable, observable, runInAction } from "mobx";

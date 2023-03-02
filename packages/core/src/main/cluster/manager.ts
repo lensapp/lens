@@ -7,7 +7,7 @@ import "../../common/ipc/cluster";
 import type { IObservableValue, ObservableSet } from "mobx";
 import { action, makeObservable, observe, reaction, toJS } from "mobx";
 import type { Cluster } from "../../common/cluster/cluster";
-import { isErrnoException } from "../../common/utils";
+import { isErrnoException } from "@k8slens/utilities";
 import type { KubernetesClusterPrometheusMetrics } from "../../common/catalog-entities/kubernetes-cluster";
 import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../../common/ipc";

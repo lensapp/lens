@@ -8,7 +8,7 @@ import styles from "./hotbar-icon.module.scss";
 import React, { useState } from "react";
 
 import type { CatalogEntityContextMenu } from "../../../common/catalog";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Menu, MenuItem } from "../menu";
 import { observer } from "mobx-react";
 import type { AvatarProps } from "../avatar";

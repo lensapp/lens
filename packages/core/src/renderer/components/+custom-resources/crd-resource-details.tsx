@@ -7,14 +7,13 @@ import "./crd-resource-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { cssNames } from "../../utils";
+import { cssNames, safeJSONPathValue } from "@k8slens/utilities";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Input } from "../input";
 import type { AdditionalPrinterColumnsV1 } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
 import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
-import { safeJSONPathValue } from "../../utils/jsonPath";
 import type { KubeObjectMetadata, KubeObjectStatus } from "../../../common/k8s-api/kube-object";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { Logger } from "../../../common/logger";

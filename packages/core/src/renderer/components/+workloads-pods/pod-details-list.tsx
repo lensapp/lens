@@ -10,7 +10,7 @@ import kebabCase from "lodash/kebabCase";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { Pod } from "../../../common/k8s-api/endpoints";
-import { autoBind, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
+import { bytesToUnits, cssNames, interval, prevDefault } from "@k8slens/utilities";
 import { LineProgress } from "../line-progress";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -22,6 +22,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import podStoreInjectable from "./store.injectable";
 import type { ShowDetails } from "../kube-detail-params/show-details.injectable";
 import showDetailsInjectable from "../kube-detail-params/show-details.injectable";
+import autoBindReact from "auto-bind/react";
 
 enum sortBy {
   name = "name",
@@ -47,7 +48,7 @@ interface Dependencies {
 class NonInjectedPodDetailsList extends React.Component<PodDetailsListProps & Dependencies> {
   constructor(props: PodDetailsListProps & Dependencies) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   private metricsWatcher = interval(120, () => {

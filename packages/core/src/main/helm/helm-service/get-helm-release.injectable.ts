@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import loggerInjectable from "../../../common/logger.injectable";
-import { isObject, json } from "../../../common/utils";
+import { isObject, json } from "@k8slens/utilities";
 import execHelmInjectable from "../exec-helm/exec-helm.injectable";
 import getHelmReleaseResourcesInjectable from "./get-helm-release-resources/get-helm-release-resources.injectable";
 

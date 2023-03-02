@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { autoBind } from "../../utils";
+import autoBind from "auto-bind";
 import type { KubeObjectMetadata, KubeObjectScope, NamespaceScopedMetadata, ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";

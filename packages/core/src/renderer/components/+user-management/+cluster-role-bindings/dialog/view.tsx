@@ -18,7 +18,7 @@ import { Icon } from "../../../icon";
 import { SubTitle } from "../../../layout/sub-title";
 import { onMultiSelectFor, Select } from "../../../select";
 import { Wizard, WizardStep } from "../../../wizard";
-import { ObservableHashSet, nFircate } from "../../../../utils";
+import { ObservableHashSet, nFircate } from "@k8slens/utilities";
 import { Input } from "../../../input";
 import { TooltipPosition } from "../../../tooltip";
 import type { Subject } from "../../../../../common/k8s-api/endpoints/types/subject";

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { tuple } from "../../utils";
+import { tuple } from "./tuple";
 
 describe("tuple tests", () => {
   describe("zip()", () => {

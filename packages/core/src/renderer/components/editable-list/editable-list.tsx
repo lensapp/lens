@@ -11,8 +11,8 @@ import React from "react";
 import { Icon } from "../icon";
 import type { InputProps, InputValidator } from "../input";
 import { Input } from "../input";
-import { autoBind } from "../../utils";
-import type { SingleOrMany } from "../../utils";
+import type { SingleOrMany } from "@k8slens/utilities";
+import autoBindReact from "auto-bind/react";
 
 export interface EditableListProps<T> {
   items: T[];
@@ -39,7 +39,7 @@ class DefaultedEditableList<T> extends React.Component<EditableListProps<T> & ty
 
   constructor(props: EditableListProps<T> & typeof defaultProps) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   onSubmit(val: string, evt: React.KeyboardEvent) {

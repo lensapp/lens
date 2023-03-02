@@ -8,9 +8,10 @@ import type { TableSortBy, TableSortParams } from "./table";
 
 import type { ReactNode } from "react";
 import React from "react";
-import { autoBind, cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
+import autoBindReact from "auto-bind/react";
 
 export type TableCellElem = React.ReactElement<TableCellProps>;
 
@@ -75,7 +76,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
 export class TableCell extends React.Component<TableCellProps> {
   constructor(props: TableCellProps) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   onClick(evt: React.MouseEvent<HTMLDivElement>) {

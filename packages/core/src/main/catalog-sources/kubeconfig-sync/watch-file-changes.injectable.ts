@@ -13,8 +13,8 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import statInjectable from "../../../common/fs/stat.injectable";
 import type { Watcher } from "../../../common/fs/watch/watch.injectable";
 import watchInjectable from "../../../common/fs/watch/watch.injectable";
-import type { Disposer } from "../../../common/utils";
-import { getOrInsertWith, iter } from "../../../common/utils";
+import type { Disposer } from "@k8slens/utilities";
+import { getOrInsertWith, iter } from "@k8slens/utilities";
 import diffChangedKubeconfigInjectable from "./diff-changed-kubeconfig.injectable";
 import kubeconfigSyncLoggerInjectable from "./logger.injectable";
 

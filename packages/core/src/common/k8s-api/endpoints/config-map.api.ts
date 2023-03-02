@@ -8,7 +8,7 @@ import { KubeObject } from "../kube-object";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { autoBind } from "../../utils";
+import autoBind from "auto-bind";
 
 export interface ConfigMapData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Namespace>, void, void> {
   data?: Partial<Record<string, string>>;

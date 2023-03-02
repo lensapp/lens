@@ -3,14 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { HashSet, ObservableHashSet } from "../hash-set";
+import { HashSet, ObservableHashSet } from "./hash-set";
 
 describe("ObservableHashSet<T>", () => {
   it("should not throw on creation", () => {
     expect(() => new ObservableHashSet<{ a: number }>([], item => item.a.toString())).not.toThrowError();
   });
 
-  it("should be initializable", () => {
+  it("should be initialized", () => {
     const res = new ObservableHashSet([
       { a: 1 },
       { a: 2 },
@@ -263,7 +263,7 @@ describe("HashSet<T>", () => {
     expect(() => new HashSet<{ a: number }>([], item => item.a.toString())).not.toThrowError();
   });
 
-  it("should be initializable", () => {
+  it("should be initialized", () => {
     const res = new HashSet([
       { a: 1 },
       { a: 2 },

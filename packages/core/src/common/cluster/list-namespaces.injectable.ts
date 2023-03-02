@@ -5,7 +5,7 @@
 import type { KubeConfig } from "@kubernetes/client-node";
 import { CoreV1Api } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
-import { isDefined } from "../utils";
+import { isDefined } from "@k8slens/utilities";
 
 export type ListNamespaces = () => Promise<string[]>;
 

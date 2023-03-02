@@ -7,7 +7,7 @@ import type { KubeConfig } from "@kubernetes/client-node";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { ClusterContextHandler } from "../context-handler/context-handler";
 import { dumpConfigYaml } from "../../common/kube-helpers";
-import { isErrnoException } from "../../common/utils";
+import { isErrnoException } from "@k8slens/utilities";
 import type { PartialDeep } from "type-fest";
 import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
