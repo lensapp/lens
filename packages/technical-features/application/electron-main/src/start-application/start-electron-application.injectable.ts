@@ -33,13 +33,15 @@ const startElectronApplicationInjectable = getInjectable({
           ...args: unknown[]
         ) => unknown;
 
-        return async (...startApplicationArgs: unknown[]) => {
+        return (...startApplicationArgs: unknown[]) => {
           beforeAnything();
           beforeElectronIsReady();
 
-          await whenAppIsReady();
+          return (async () => {
+            await whenAppIsReady();
 
-          return startApplication(...startApplicationArgs);
+            return startApplication(...startApplicationArgs);
+          })()
         };
       },
 
