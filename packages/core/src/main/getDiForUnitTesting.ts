@@ -52,7 +52,7 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
 
   if (doGeneralOverrides) {
     for (const globalOverridePath of global.injectablePaths.main.globalOverridePaths) {
-      const globalOverride = require(globalOverridePath).default as GlobalOverride;
+      const globalOverride = require(globalOverridePath).default as GlobalOverride<unknown, unknown>;
 
       di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
     }
