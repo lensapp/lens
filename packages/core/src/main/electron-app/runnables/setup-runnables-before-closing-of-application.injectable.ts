@@ -7,7 +7,7 @@ import { beforeElectronIsReadyInjectionToken, beforeQuitOfFrontEndInjectionToken
 import electronAppInjectable from "../electron-app.injectable";
 import isIntegrationTestingInjectable from "../../../common/vars/is-integration-testing.injectable";
 import autoUpdaterInjectable from "../features/auto-updater.injectable";
-import { runManySyncFor } from "../../../common/runnable/run-many-sync-for";
+import { runManySyncFor } from "@k8slens/run-many";
 
 const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
   id: "setup-closing-of-application",

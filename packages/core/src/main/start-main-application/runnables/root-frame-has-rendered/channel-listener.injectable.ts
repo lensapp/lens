@@ -4,7 +4,7 @@
  */
 import { getMessageChannelListenerInjectable } from "../../../../common/utils/channel/message-channel-listener-injection-token";
 import { rootFrameHasRenderedChannel } from "../../../../common/root-frame/root-frame-rendered-channel";
-import { runManyFor } from "../../../../common/runnable/run-many-for";
+import { runManyFor } from "@k8slens/run-many";
 import { afterRootFrameIsReadyInjectionToken } from "../../runnable-tokens/phases";
 
 const rootFrameRenderedChannelListenerInjectable = getMessageChannelListenerInjectable({

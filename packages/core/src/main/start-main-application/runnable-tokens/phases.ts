@@ -4,7 +4,7 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { Runnable, RunnableSync } from "../../../common/runnable/types";
+import type { Runnable, RunnableSync } from "@k8slens/run-many";
 
 /**
  * These tokens are here so that the importing of their respective dependencies

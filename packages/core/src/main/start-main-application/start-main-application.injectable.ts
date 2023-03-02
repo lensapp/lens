@@ -4,8 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 
-import { runManyFor } from "../../common/runnable/run-many-for";
-import { runManySyncFor } from "../../common/runnable/run-many-sync-for";
+import { runManyFor, runManySyncFor } from "@k8slens/run-many";
 import * as phases from "./runnable-tokens/phases";
 import waitForElectronToBeReadyInjectable from "../electron-app/features/wait-for-electron-to-be-ready.injectable";
 
