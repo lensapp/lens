@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getConvertedParts } from "../name-parts";
+import { getConvertedParts } from "./name-parts";
 
 describe("getConvertedParts", () => {
   it.each([

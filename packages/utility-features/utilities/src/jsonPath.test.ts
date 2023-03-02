@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { convertKubectlJsonPathToNodeJsonPath, safeJSONPathValue } from "../jsonPath";
+import { convertKubectlJsonPathToNodeJsonPath, safeJSONPathValue } from "./jsonPath";
 
 describe("convertKubectlJsonPathToNodeJsonPath", () => {
   it("should convert \\. to use indexed notation", () => {
