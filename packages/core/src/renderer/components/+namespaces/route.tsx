@@ -17,6 +17,7 @@ import namespaceStoreInjectable from "./store.injectable";
 import { KubeObjectAge } from "../kube-object/age";
 import openAddNamepaceDialogInjectable from "./add-dialog/open.injectable";
 import { SubnamespaceBadge } from "./subnamespace-badge";
+import { NamespaceMenu } from "./namespace-menu";
 
 enum columnId {
   name = "name",
@@ -77,6 +78,11 @@ const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog }: 
         addTooltip: "Add Namespace",
         onAdd: openAddNamespaceDialog,
       }}
+      renderItemMenu={namespace => (
+        <NamespaceMenu
+          namespace={namespace}
+        />
+      )}
     />
     <AddNamespaceDialog/>
   </TabLayout>
