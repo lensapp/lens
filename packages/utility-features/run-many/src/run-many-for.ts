@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainerForInjection, InjectionToken } from "@ogre-tools/injectable";
-import { getOrInsert } from "../utils";
+import { getOrInsert } from "@k8slens/utilities";
 import type TypedEventEmitter from "typed-emitter";
 import EventEmitter from "events";
 import { convertToWithIdWith, verifyRunnablesAreDAG } from "./helpers";
@@ -21,7 +21,7 @@ class DynamicBarrier {
   private readonly events: TypedEventEmitter<BarrierEvent> = new EventEmitter();
 
   private initFinishingPromise(id: string): Promise<void> {
-    return getOrInsert(this.finishedIds, id, new Promise(resolve => {
+    return getOrInsert(this.finishedIds, id, new Promise<void>(resolve => {
       const handler = (finishedId: string) => {
         if (finishedId === id) {
           resolve();

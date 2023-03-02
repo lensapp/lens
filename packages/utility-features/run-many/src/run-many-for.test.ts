@@ -7,9 +7,8 @@ import asyncFn from "@async-fn/jest";
 import { createContainer, getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import type { Runnable } from "./types";
 import { runManyFor } from "./run-many-for";
-import { getPromiseStatus } from "../test-utils/get-promise-status";
+import { getPromiseStatus, flushPromises } from "@k8slens/test-utils";
 import { runInAction } from "mobx";
-import { flushPromises } from "../test-utils/flush-promises";
 
 describe("runManyFor", () => {
   describe("given no hierarchy, when running many", () => {
