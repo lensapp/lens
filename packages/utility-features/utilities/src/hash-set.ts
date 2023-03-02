@@ -4,7 +4,7 @@
  */
 
 import type { IInterceptable, IInterceptor, IListenable, ISetWillChange, ObservableMap } from "mobx";
-import { action, observable, ObservableSet } from "mobx";
+import { observable, ObservableSet, runInAction } from "mobx";
 
 export function makeIterableIterator<T>(iterator: Iterator<T>): IterableIterator<T> {
   (iterator as IterableIterator<T>)[Symbol.iterator] = () => iterator as IterableIterator<T>;
@@ -138,23 +138,24 @@ export class ObservableHashSet<T> implements Set<T>, IInterceptable<ISetWillChan
     this.#hashmap = observable.map<string, T>(Array.from(initialValues, value => [this.hasher(value), value]), undefined);
   }
 
-  @action
   replace(other: ObservableHashSet<T> | ObservableSet<T> | Set<T> | readonly T[]): this {
-    if (other === null || other === undefined) {
+    return runInAction(() => {
+      if (other === null || other === undefined) {
+        return this;
+      }
+
+      if (!(Array.isArray(other) || other instanceof Set || other instanceof ObservableHashSet || other instanceof ObservableSet)) {
+        throw new Error(`ObservableHashSet: Cannot initialize set from ${other}`);
+      }
+
+      this.clear();
+
+      for (const value of other) {
+        this.add(value);
+      }
+
       return this;
-    }
-
-    if (!(Array.isArray(other) || other instanceof Set || other instanceof ObservableHashSet || other instanceof ObservableSet)) {
-      throw new Error(`ObservableHashSet: Cannot initialize set from ${other}`);
-    }
-
-    this.clear();
-
-    for (const value of other) {
-      this.add(value);
-    }
-
-    return this;
+    });
   }
 
   clear(): void {
@@ -167,15 +168,16 @@ export class ObservableHashSet<T> implements Set<T>, IInterceptable<ISetWillChan
     return this;
   }
 
-  @action
   toggle(value: T): void {
-    const hash = this.hasher(value);
+    runInAction(() => {
+      const hash = this.hasher(value);
 
-    if (this.#hashmap.has(hash)) {
-      this.#hashmap.delete(hash);
-    } else {
-      this.#hashmap.set(hash, value);
-    }
+      if (this.#hashmap.has(hash)) {
+        this.#hashmap.delete(hash);
+      } else {
+        this.#hashmap.set(hash, value);
+      }
+    });
   }
 
   delete(value: T): boolean {

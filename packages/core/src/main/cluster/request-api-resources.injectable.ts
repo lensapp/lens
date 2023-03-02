@@ -8,7 +8,7 @@ import loggerInjectable from "../../common/logger.injectable";
 import type { KubeApiResource } from "../../common/rbac";
 import type { Cluster } from "../../common/cluster/cluster";
 import { requestApiVersionsInjectionToken } from "./request-api-versions";
-import { withConcurrencyLimit } from "@k8slens/utilities/src/with-concurrency-limit";
+import { withConcurrencyLimit } from "@k8slens/utilities";
 import requestKubeApiResourcesForInjectable from "./request-kube-api-resources-for.injectable";
 import type { AsyncResult } from "../../common/utils/async-result";
 import { backoffCaller } from "../../common/utils/backoff-caller";

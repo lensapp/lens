@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { AsyncResult } from "./async-result";
+import type { AsyncResult, Result } from "./result";
 import { delay } from "./delay";
-import { noop } from "@k8slens/utilities/src/noop";
+import { noop } from "./noop";
 
 /**
  * @param error The error that resulted in the failure
@@ -41,7 +41,7 @@ export interface BackoffCallerOptions<E> {
  * @param fn The function to repeatedly attempt
  * @returns The first success or the last failure
  */
-export const backoffCaller = async <T, E, R extends AsyncResult<T, E>>(fn: () => Promise<R>, options?: BackoffCallerOptions<E>): Promise<R> => {
+export const backoffCaller = async <T, E>(fn: () => AsyncResult<T, E>, options?: BackoffCallerOptions<E>): AsyncResult<T, E> => {
   const {
     initialTimeout = 1000,
     maxAttempts = 5,
@@ -51,7 +51,7 @@ export const backoffCaller = async <T, E, R extends AsyncResult<T, E>>(fn: () =>
 
   let timeout = initialTimeout;
   let attempt = 0;
-  let result: R;
+  let result: Result<T, E>;
 
   do {
     result = await fn();

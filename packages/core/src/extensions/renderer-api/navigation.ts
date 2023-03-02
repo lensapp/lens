@@ -14,7 +14,7 @@ import navigateInjectable from "../../renderer/navigation/navigate.injectable";
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 
 export type { PageParamInit, PageParam } from "../../renderer/navigation/page-param";
-export type { URLParams } from "@k8slens/utilities/src/buildUrl";
+export type { URLParams } from "@k8slens/utilities";
 
 export const getDetailsUrl = asLegacyGlobalFunctionForExtensionApi(getDetailsUrlInjectable);
 export const showDetails = asLegacyGlobalFunctionForExtensionApi(showDetailsInjectable);

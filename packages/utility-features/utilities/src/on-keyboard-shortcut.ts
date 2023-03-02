@@ -3,8 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { WindowEventListener } from "../window/event-listener.injectable";
-
 function parseKeyDownDescriptor(descriptor: string): (event: KeyboardEvent) => boolean {
   const parts = new Set((
     descriptor
@@ -43,7 +41,7 @@ function parseKeyDownDescriptor(descriptor: string): (event: KeyboardEvent) => b
   };
 }
 
-export function onKeyboardShortcut(descriptor: string, action: () => void): WindowEventListener<"keydown"> {
+export function onKeyboardShortcut(descriptor: string, action: () => void): (this: Window, ev: WindowEventMap["keydown"]) => any {
   const isMatchingEvent = parseKeyDownDescriptor(descriptor);
 
   return (event) => {
