@@ -10,10 +10,10 @@ import type { Cluster } from "../../common/cluster/cluster";
 import { requestApiVersionsInjectionToken } from "./request-api-versions";
 import { withConcurrencyLimit } from "@k8slens/utilities";
 import requestKubeApiResourcesForInjectable from "./request-kube-api-resources-for.injectable";
-import type { AsyncResult } from "../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import { backoffCaller } from "../../common/utils/backoff-caller";
 
-export type RequestApiResources = (cluster: Cluster) => Promise<AsyncResult<KubeApiResource[], Error>>;
+export type RequestApiResources = (cluster: Cluster) => AsyncResult<KubeApiResource[], Error>;
 
 export interface KubeResourceListGroup {
   group: string;

@@ -72,7 +72,7 @@ export class ResourceStack {
     return "";
   }
 
-  protected async applyResources(resources: string[], extraArgs: string[] = []): Promise<AsyncResult<string, string>> {
+  protected async applyResources(resources: string[], extraArgs: string[] = []): AsyncResult<string, string> {
     const kubectlArgs = [...extraArgs, ...this.getAdditionalArgs(extraArgs)];
 
     return this.dependencies.kubectlApplyAll({
@@ -82,7 +82,7 @@ export class ResourceStack {
     });
   }
 
-  protected async deleteResources(resources: string[], extraArgs: string[] = []): Promise<AsyncResult<string, string>> {
+  protected async deleteResources(resources: string[], extraArgs: string[] = []): AsyncResult<string, string> {
     const kubectlArgs = [...extraArgs, ...this.getAdditionalArgs(extraArgs)];
 
     return this.dependencies.kubectlDeleteAll({

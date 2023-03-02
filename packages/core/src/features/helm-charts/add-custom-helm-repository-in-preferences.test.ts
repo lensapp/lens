@@ -17,7 +17,7 @@ import requestPublicHelmRepositoriesInjectable from "./child-features/preference
 import isPathInjectable from "../../renderer/components/input/validators/is-path.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
-import type { AsyncResult } from "../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import { testUsingFakeTime } from "@k8slens/test-utils";
 
 describe("add custom helm repository in preferences", () => {
@@ -26,7 +26,7 @@ describe("add custom helm repository in preferences", () => {
   let showErrorNotificationMock: jest.Mock;
   let rendered: RenderResult;
   let execFileMock: AsyncFnMock<ExecFile>;
-  let getActiveHelmRepositoriesMock: AsyncFnMock<() => Promise<AsyncResult<HelmRepo[]>>>;
+  let getActiveHelmRepositoriesMock: AsyncFnMock<() => AsyncResult<HelmRepo[]>>;
 
   beforeEach(async () => {
     jest.useFakeTimers();

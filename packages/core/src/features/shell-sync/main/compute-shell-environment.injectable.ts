@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { AsyncResult } from "../../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import computeUnixShellEnvironmentInjectable from "./compute-unix-shell-environment.injectable";
 
 export type EnvironmentVariables = Partial<Record<string, string>>;
-export type ComputeShellEnvironment = (shell: string) => Promise<AsyncResult<EnvironmentVariables | undefined, string>>;
+export type ComputeShellEnvironment = (shell: string) => AsyncResult<EnvironmentVariables | undefined, string>;
 
 const computeShellEnvironmentInjectable = getInjectable({
   id: "compute-shell-environment",

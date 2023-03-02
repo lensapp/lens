@@ -5,14 +5,14 @@
 
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { Cluster } from "../../common/cluster/cluster";
-import type { AsyncResult } from "../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 
 export interface KubeResourceListGroup {
   group: string;
   path: string;
 }
 
-export type RequestApiVersions = (cluster: Cluster) => Promise<AsyncResult<KubeResourceListGroup[], Error>>;
+export type RequestApiVersions = (cluster: Cluster) => AsyncResult<KubeResourceListGroup[], Error>;
 
 export const requestApiVersionsInjectionToken = getInjectionToken<RequestApiVersions>({
   id: "request-api-versions-token",

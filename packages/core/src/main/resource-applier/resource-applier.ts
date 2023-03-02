@@ -14,7 +14,7 @@ import type { WriteFile } from "../../common/fs/write-file.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
-import type { AsyncResult } from "../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 
 export interface ResourceApplierDependencies {
   emitAppEvent: EmitAppEvent;
@@ -67,13 +67,13 @@ export class ResourceApplier {
     throw result.error.stderr || result.error.message;
   }
 
-  async create(resource: string): Promise<AsyncResult<string, string>> {
+  async create(resource: string): AsyncResult<string, string> {
     this.dependencies.emitAppEvent({ name: "resource", action: "apply" });
 
     return this.kubectlApply(this.sanitizeObject(resource));
   }
 
-  protected async kubectlApply(content: string): Promise<AsyncResult<string, string>> {
+  protected async kubectlApply(content: string): AsyncResult<string, string> {
     const kubectl = await this.cluster.ensureKubectl();
     const kubectlPath = await kubectl.getPath();
     const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
@@ -112,15 +112,15 @@ export class ResourceApplier {
     }
   }
 
-  public async kubectlApplyAll(resources: string[], extraArgs = ["-o", "json"]): Promise<AsyncResult<string, string>> {
+  public async kubectlApplyAll(resources: string[], extraArgs = ["-o", "json"]): AsyncResult<string, string> {
     return this.kubectlCmdAll("apply", resources, extraArgs);
   }
 
-  public async kubectlDeleteAll(resources: string[], extraArgs?: string[]): Promise<AsyncResult<string, string>> {
+  public async kubectlDeleteAll(resources: string[], extraArgs?: string[]): AsyncResult<string, string> {
     return this.kubectlCmdAll("delete", resources, extraArgs);
   }
 
-  protected async kubectlCmdAll(subCmd: string, resources: string[], parentArgs: string[] = []): Promise<AsyncResult<string, string>> {
+  protected async kubectlCmdAll(subCmd: string, resources: string[], parentArgs: string[] = []): AsyncResult<string, string> {
     const kubectl = await this.cluster.ensureKubectl();
     const kubectlPath = await kubectl.getPath();
     const proxyKubeconfigPath = await this.cluster.getProxyKubeconfigPath();
