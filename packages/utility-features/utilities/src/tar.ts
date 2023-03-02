@@ -7,7 +7,6 @@
 // Docs: https://github.com/npm/node-tar
 import tar from "tar";
 import path from "path";
-import { parse } from "./json";
 import type { JsonValue } from "type-fest";
 
 export type ReadFileFromTarOpts<ParseJson extends boolean> = {
@@ -43,7 +42,7 @@ export function readFileFromTar<ParseJson extends boolean>({ tarPath, filePath, 
         });
         entry.once("end", () => {
           const data = Buffer.concat(fileChunks);
-          const result = parseJson ? parse(data.toString("utf8")) : data;
+          const result = parseJson ? JSON.parse(data.toString("utf8")) : data;
 
           resolve(result);
         });

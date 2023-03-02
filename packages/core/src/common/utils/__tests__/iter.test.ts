@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { join, nth, reduce, concat } from "../iter";
+import { join, nth, reduce, concat } from "@k8slens/utilities/src/iter";
 
 describe("iter", () => {
   describe("reduce", () => {

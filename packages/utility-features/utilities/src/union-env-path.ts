@@ -4,10 +4,10 @@
  */
 
 import path from "path";
-import * as iter from "./iter";
+import * as iter from "@k8slens/utilities/src/iter";
 
 /**
- * Join all entires with a PATH env var delimated string together
+ * Join all entires with a PATH env var delimited string together
  * @param PATHs Any number of PATH env variables
  *
  * NOTE: This function does not attempt to handle any sort of escape sequences since after testing

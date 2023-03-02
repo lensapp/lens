@@ -4,8 +4,8 @@
  */
 
 import { observable, runInAction } from "mobx";
-import { getOrInsertMap } from "../collection-functions";
-import { noop } from "../noop";
+import { getOrInsertMap } from "./collection-functions";
+import { noop } from "./noop";
 
 export interface ObservableCrate<T> {
   get(): T;

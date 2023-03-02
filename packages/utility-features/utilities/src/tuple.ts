@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import * as array from "../utils/array";
+import * as array from "./array";
 
 /**
  * A strict N-tuple of type T

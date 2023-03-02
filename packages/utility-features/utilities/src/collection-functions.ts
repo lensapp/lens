@@ -19,7 +19,6 @@ export function getOrInsert<K, V>(map: Map<K, V>, key: K, value: V): V {
     map.set(key, value);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return map.get(key)!;
 }
 
@@ -67,7 +66,6 @@ export function getOrInsertWith<K extends object, V>(map: Map<K, V> | WeakMap<K,
     map.set(key, builder());
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return map.get(key)!;
 }
 
@@ -107,7 +105,6 @@ export function strictGet<K, V>(map: Map<K, V>, key: K): V {
     throw new TypeError(`Map does not contains key: ${inspect(key)}`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return map.get(key)!;
 }
 

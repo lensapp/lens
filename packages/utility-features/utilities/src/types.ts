@@ -14,7 +14,7 @@ export type RemoveUndefinedFromValues<K> = {
  */
 export type Defaulted<Params, DefaultParams extends keyof Params> = RemoveUndefinedFromValues<Required<Pick<Params, DefaultParams>>> & Omit<Params, DefaultParams>;
 
-export type OptionVarient<Key, Base, RequiredKey extends keyof Base> = {
+export type OptionVariant<Key, Base, RequiredKey extends keyof Base> = {
   type: Key;
 } & Pick<Base, RequiredKey> & {
   [OtherKey in Exclude<keyof Base, RequiredKey>]?: undefined;

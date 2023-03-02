@@ -10,6 +10,6 @@ export function debouncePromise<T, F extends any[]>(func: (...args: F) => T | Pr
 
   return (...params: F) => new Promise(resolve => {
     clearTimeout(timer);
-    timer = global.setTimeout(() => resolve(func(...params)), timeout);
+    timer = setTimeout(() => resolve(func(...params)), timeout);
   });
 }
