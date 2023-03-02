@@ -15,12 +15,11 @@ import pathExistsInjectable from "../../common/fs/path-exists.injectable";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import { navigateToRouteInjectionToken } from "../../common/front-end-routing/navigate-to-route-injection-token";
 import assert from "assert";
-import { advanceFakeTime, testUsingFakeTime } from "@k8slens/test-utils";
+import { advanceFakeTime, testUsingFakeTime, flushPromises } from "@k8slens/test-utils";
 import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import storageSaveDelayInjectable from "../../renderer/utils/create-storage/storage-save-delay.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import { flushPromises } from "@k8slens/test-utils";
 import type { ClusterPageMenuRegistration } from "../../extensions/common-api/types";
 
 describe("cluster - sidebar and tab navigation for extensions", () => {
