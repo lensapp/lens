@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainerForInjection, InjectionToken } from "@ogre-tools/injectable";
-import type { Disposer } from "../utils";
+import type { Disposer } from "@k8slens/utilities";
 import type { RunnableSync, RunSync, RunnableSyncWithId } from "./types";
 import { convertToWithIdWith, verifyRunnablesAreDAG } from "./helpers";
 import type TypedEventEmitter from "typed-emitter";

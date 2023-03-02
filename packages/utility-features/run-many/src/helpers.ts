@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainerForInjection, InjectionInstanceWithMeta } from "@ogre-tools/injectable";
-import { getOrInsertSetFor, isDefined } from "../utils";
+import { getOrInsertSetFor, isDefined } from "@k8slens/utilities";
 import * as uuid from "uuid";
 import assert from "assert";
 import type { Runnable, RunnableSync, RunnableSyncWithId, RunnableWithId } from "./types";
