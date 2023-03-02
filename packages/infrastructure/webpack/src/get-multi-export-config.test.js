@@ -1,7 +1,12 @@
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import getMultiExportConfig from "./get-multi-export-config";
+import path from "path";
+const getReactConfigFor = require("./get-react-config");
+
+const resolvePathFake = path.posix.resolve;
 
 describe("get-multi-export-config", () => {
-  let actual;
+  let configs;
   let maximalPackageJson;
 
   beforeEach(() => {
@@ -48,42 +53,69 @@ describe("get-multi-export-config", () => {
     };
   });
 
-  it("given maximal package.json, when creating configuration, works", () => {
-    actual = getMultiExportConfig(maximalPackageJson, {
-      nodeConfig: nodeConfigStub,
-      reactConfig: reactConfigStub,
+  describe("given maximal package.json, when creating configuration", () => {
+    beforeEach(() => {
+      configs = getMultiExportConfig(maximalPackageJson, {
+        resolvePath: resolvePathFake,
+        workingDirectory: "/some-working-directory",
+
+        getReactConfig: getReactConfigFor({
+          miniCssExtractPluginLoader: { some: "miniCssExtractPluginLoader" },
+        }),
+      });
     });
 
-    expect(actual).toEqual([
+    it("works", () => {
+      expect(configs).toMatchSnapshot();
+    });
+
+    [
       {
-        name: "./index.ts",
-        stub: "node",
-        entry: { index: "./index.ts" },
-        output: { some: "value", path: "/some-build-directory" },
+        name: "config for node export in default entrypoint",
+        entrypoint: "./index.ts",
+        outputDirectory: "/some-working-directory/dist",
       },
-
       {
-        name: "./some-entrypoint/index.ts",
-        stub: "node",
-        entry: { index: "./some-entrypoint/index.ts" },
-
-        output: {
-          some: "value",
-          path: "/some-build-directory/some-entrypoint",
-        },
+        name: "config for node export in a non-default entrypoint",
+        entrypoint: "./some-entrypoint/index.ts",
+        outputDirectory: "/some-working-directory/dist/some-entrypoint",
       },
-
       {
-        name: "./some-other-entrypoint/index.ts",
-        stub: "react",
-        entry: { index: "./some-other-entrypoint/index.ts" },
-
-        output: {
-          some: "other-value",
-          path: "/some-build-directory/some-other-entrypoint",
-        },
+        name: "config for react export in a non-default entrypoint",
+        entrypoint: "./some-other-entrypoint/index.ts",
+        outputDirectory: "/some-working-directory/dist/some-other-entrypoint",
       },
-    ]);
+    ].forEach((scenario) => {
+      describe(scenario.name, () => {
+        let config;
+
+        beforeEach(() => {
+          config = configs.find(({ name }) => name === scenario.entrypoint);
+        });
+
+        it("has correct entrypoint", () => {
+          expect(config).toHaveProperty("entry.index", scenario.entrypoint);
+        });
+
+        it("has correct output directory", () => {
+          expect(config).toHaveProperty(
+            "output.path",
+            scenario.outputDirectory
+          );
+        });
+
+        it("has correct declaration directory", () => {
+          expect(
+            config.plugins.find(
+              ({ constructor }) => constructor === ForkTsCheckerPlugin
+            )
+          ).toHaveProperty(
+            "options.typescript.configOverwrite.compilerOptions.declarationDir",
+            scenario.outputDirectory
+          );
+        });
+      });
+    });
   });
 
   it("given maximal package.json but path for entrypoint in exports do not match output, when creating configuration, throws", () => {
@@ -91,8 +123,9 @@ describe("get-multi-export-config", () => {
 
     expect(() => {
       getMultiExportConfig(maximalPackageJson, {
-        nodeConfig: nodeConfigStub,
-        reactConfig: reactConfigStub,
+        getNodeConfig: () => nodeConfigStub,
+        getReactConfig: () => reactConfigStub,
+        joinPath: resolvePathFake,
       });
     }).toThrow(
       'Tried to get multi export config but exports of package.json for "some-name" did not match exactly:'
@@ -104,8 +137,9 @@ describe("get-multi-export-config", () => {
 
     expect(() => {
       getMultiExportConfig(maximalPackageJson, {
-        nodeConfig: nodeConfigStub,
-        reactConfig: reactConfigStub,
+        getNodeConfig: () => nodeConfigStub,
+        getReactConfig: () => reactConfigStub,
+        joinPath: resolvePathFake,
       });
     }).toThrow(
       'Tried to get multi export config but exports of package.json for "some-name" did not match exactly:'
@@ -117,8 +151,9 @@ describe("get-multi-export-config", () => {
 
     expect(() => {
       getMultiExportConfig(maximalPackageJson, {
-        nodeConfig: nodeConfigStub,
-        reactConfig: reactConfigStub,
+        getNodeConfig: () => nodeConfigStub,
+        getReactConfig: () => reactConfigStub,
+        joinPath: resolvePathFake,
       });
     }).toThrow(
       'Tried to get multi export config but exports of package.json for "some-name" did not match exactly:'
@@ -130,8 +165,9 @@ describe("get-multi-export-config", () => {
 
     expect(() => {
       getMultiExportConfig(maximalPackageJson, {
-        nodeConfig: nodeConfigStub,
-        reactConfig: reactConfigStub,
+        getNodeConfig: () => nodeConfigStub,
+        getReactConfig: () => reactConfigStub,
+        joinPath: resolvePathFake,
       });
     }).toThrow(
       'Tried to get multi export config for package "some-name" but configuration is missing.'
@@ -143,8 +179,9 @@ describe("get-multi-export-config", () => {
 
     expect(() => {
       getMultiExportConfig(maximalPackageJson, {
-        nodeConfig: nodeConfigStub,
-        reactConfig: reactConfigStub,
+        getNodeConfig: () => nodeConfigStub,
+        getReactConfig: () => reactConfigStub,
+        joinPath: resolvePathFake,
       });
     }).toThrow(
       'Tried to get multi export config for package "some-name" but build types "some-invalid" were not any of "node", "react".'
@@ -157,8 +194,9 @@ describe("get-multi-export-config", () => {
 
     expect(() => {
       getMultiExportConfig(maximalPackageJson, {
-        nodeConfig: nodeConfigStub,
-        reactConfig: reactConfigStub,
+        getNodeConfig: () => nodeConfigStub,
+        getReactConfig: () => reactConfigStub,
+        joinPath: resolvePathFake,
       });
     }).toThrow(
       'Tried to get multi export config for package "some-name" but entrypoint was missing for "./some-entrypoint".'

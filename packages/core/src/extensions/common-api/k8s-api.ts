@@ -47,17 +47,29 @@ const getKubeApiDeps = (): KubeApiDependencies => {
   };
 };
 
+export interface ExternalKubeApiOptions {
+  /**
+   * If `true` then on creation of the `KubeApi`instance a call to `apiManager.registerApi` will be
+   * made. This is `true` by default to maintain backwards compatability.
+   *
+   * Setting this to `false` might make `KubeObject`'s details drawer stop working.
+   *
+   * @default true
+   */
+  autoRegister?: boolean;
+}
+
 // NOTE: this is done to preserve `instanceOf` behaviour
 function KubeApiCstr<
   Object extends KubeObject = KubeObject,
   Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
->(opts: KubeApiOptions<Object, Data>) {
+>({ autoRegister = true, ...opts }: KubeApiOptions<Object, Data> & ExternalKubeApiOptions) {
   const api = new InternalKubeApi(getKubeApiDeps(), opts);
 
   const di = getLegacyGlobalDiForExtensionApi();
   const storesAndApisCanBeCreated = di.inject(storesAndApisCanBeCreatedInjectionToken);
 
-  if (storesAndApisCanBeCreated) {
+  if (storesAndApisCanBeCreated && autoRegister) {
     apiManager.registerApi(api);
   }
 
@@ -72,7 +84,7 @@ export type KubeApi<
 export const KubeApi = KubeApiCstr as unknown as new<
   Object extends KubeObject = KubeObject,
   Data extends KubeJsonApiDataFor<Object> = KubeJsonApiDataFor<Object>,
->(opts: KubeApiOptions<Object, Data>) => InternalKubeApi<Object, Data>;
+>(opts: KubeApiOptions<Object, Data> & ExternalKubeApiOptions) => InternalKubeApi<Object, Data>;
 
 /**
  * @deprecated Switch to using `Common.createResourceStack` instead

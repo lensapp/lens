@@ -4,15 +4,17 @@
  */
 
 import { createContainer } from "@ogre-tools/injectable";
-import { runInAction } from "mobx";
-import applicationInformationInjectable from "../common/vars/application-information-injectable";
+import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
+import { registerInjectableReact } from "@ogre-tools/injectable-react";
+import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export const getDi = () => {
-  const di = createContainer("renderer");
+  const environment = "renderer";
+  const di = createContainer(environment);
 
-  runInAction(() => {
-    di.register(applicationInformationInjectable);
-  });
+  registerMobX(di);
+  registerInjectableReact(di);
+  setLegacyGlobalDiForExtensionApi(di, environment);
 
   return di;
 };

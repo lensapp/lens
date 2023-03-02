@@ -1,0 +1,226 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get-multi-export-config given maximal package.json, when creating configuration works 1`] = `
+Array [
+  Object {
+    "entry": Object {
+      "index": "./index.ts",
+    },
+    "externals": Array [
+      [Function],
+      [Function],
+    ],
+    "externalsPresets": Object {
+      "node": true,
+    },
+    "mode": "production",
+    "module": Object {
+      "rules": Array [
+        Object {
+          "loader": "ts-loader",
+          "test": /\\\\\\.ts\\(x\\)\\?\\$/,
+        },
+      ],
+    },
+    "name": "./index.ts",
+    "node": Object {
+      "__dirname": true,
+      "__filename": true,
+    },
+    "output": Object {
+      "filename": [Function],
+      "libraryTarget": "commonjs2",
+      "path": "/some-working-directory/dist",
+    },
+    "performance": Object {
+      "hints": "error",
+      "maxEntrypointSize": 100000,
+    },
+    "plugins": Array [
+      ForkTsCheckerWebpackPlugin {
+        "options": Object {
+          "typescript": Object {
+            "configOverwrite": Object {
+              "compilerOptions": Object {
+                "declaration": true,
+                "declarationDir": "/some-working-directory/dist",
+              },
+              "include": Array [
+                "./index.ts",
+              ],
+            },
+            "mode": "write-dts",
+          },
+        },
+      },
+    ],
+    "resolve": Object {
+      "extensions": Array [
+        ".ts",
+        ".tsx",
+      ],
+    },
+    "target": "node",
+  },
+  Object {
+    "entry": Object {
+      "index": "./some-entrypoint/index.ts",
+    },
+    "externals": Array [
+      [Function],
+      [Function],
+    ],
+    "externalsPresets": Object {
+      "node": true,
+    },
+    "mode": "production",
+    "module": Object {
+      "rules": Array [
+        Object {
+          "loader": "ts-loader",
+          "test": /\\\\\\.ts\\(x\\)\\?\\$/,
+        },
+      ],
+    },
+    "name": "./some-entrypoint/index.ts",
+    "node": Object {
+      "__dirname": true,
+      "__filename": true,
+    },
+    "output": Object {
+      "filename": [Function],
+      "libraryTarget": "commonjs2",
+      "path": "/some-working-directory/dist/some-entrypoint",
+    },
+    "performance": Object {
+      "hints": "error",
+      "maxEntrypointSize": 100000,
+    },
+    "plugins": Array [
+      ForkTsCheckerWebpackPlugin {
+        "options": Object {
+          "typescript": Object {
+            "configOverwrite": Object {
+              "compilerOptions": Object {
+                "declaration": true,
+                "declarationDir": "/some-working-directory/dist/some-entrypoint",
+              },
+              "include": Array [
+                "./some-entrypoint/index.ts",
+              ],
+            },
+            "mode": "write-dts",
+          },
+        },
+      },
+    ],
+    "resolve": Object {
+      "extensions": Array [
+        ".ts",
+        ".tsx",
+      ],
+    },
+    "target": "node",
+  },
+  Object {
+    "entry": Object {
+      "index": "./some-other-entrypoint/index.ts",
+    },
+    "externals": Array [
+      [Function],
+      [Function],
+    ],
+    "externalsPresets": Object {
+      "node": true,
+    },
+    "mode": "production",
+    "module": Object {
+      "rules": Array [
+        Object {
+          "loader": "ts-loader",
+          "test": /\\\\\\.ts\\(x\\)\\?\\$/,
+        },
+        Object {
+          "test": /\\\\\\.s\\?css\\$/,
+          "use": Array [
+            Object {
+              "some": "miniCssExtractPluginLoader",
+            },
+            Object {
+              "loader": "css-loader",
+              "options": Object {
+                "modules": Object {
+                  "auto": /\\\\\\.module\\\\\\./i,
+                  "localIdentName": "[name]__[local]--[hash:base64:5]",
+                  "mode": "local",
+                },
+                "sourceMap": false,
+              },
+            },
+            Object {
+              "loader": "sass-loader",
+              "options": Object {
+                "sourceMap": false,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    "name": "./some-other-entrypoint/index.ts",
+    "node": Object {
+      "__dirname": true,
+      "__filename": true,
+    },
+    "output": Object {
+      "filename": [Function],
+      "libraryTarget": "commonjs2",
+      "path": "/some-working-directory/dist/some-other-entrypoint",
+    },
+    "performance": Object {
+      "hints": "error",
+      "maxEntrypointSize": 100000,
+    },
+    "plugins": Array [
+      ForkTsCheckerWebpackPlugin {
+        "options": Object {
+          "typescript": Object {
+            "configOverwrite": Object {
+              "compilerOptions": Object {
+                "declaration": true,
+                "declarationDir": "/some-working-directory/dist/some-other-entrypoint",
+              },
+              "include": Array [
+                "./some-other-entrypoint/index.ts",
+              ],
+            },
+            "mode": "write-dts",
+          },
+        },
+      },
+      MiniCssExtractPlugin {
+        "_sortedModulesCache": WeakMap {},
+        "options": Object {
+          "chunkFilename": "[name].css",
+          "experimentalUseImportModule": undefined,
+          "filename": "[name].css",
+          "ignoreOrder": false,
+          "runtime": true,
+        },
+        "runtimeOptions": Object {
+          "attributes": undefined,
+          "insert": undefined,
+          "linkType": "text/css",
+        },
+      },
+    ],
+    "resolve": Object {
+      "extensions": Array [
+        ".ts",
+        ".tsx",
+      ],
+    },
+    "target": "node",
+  },
+]
+`;

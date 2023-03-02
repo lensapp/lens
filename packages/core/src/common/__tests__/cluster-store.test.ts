@@ -74,8 +74,7 @@ describe("cluster-store", () => {
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
-    createCluster = di.inject(createClusterInjectionToken);
-    getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
+
     writeJsonSync = di.inject(writeJsonSyncInjectable);
     writeFileSync = di.inject(writeFileSyncInjectable);
     writeBufferSync = di.inject(writeBufferSyncInjectable);
@@ -85,6 +84,9 @@ describe("cluster-store", () => {
 
   describe("empty config", () => {
     beforeEach(async () => {
+      createCluster = di.inject(createClusterInjectionToken);
+      getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
+
       writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {});
       clusterStore = di.inject(clusterStoreInjectable);
       clusterStore.load();
@@ -198,6 +200,10 @@ describe("cluster-store", () => {
           },
         ],
       });
+
+      createCluster = di.inject(createClusterInjectionToken);
+      getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
+
       clusterStore = di.inject(clusterStoreInjectable);
       clusterStore.load();
     });
@@ -249,6 +255,10 @@ describe("cluster-store", () => {
           },
         ],
       });
+
+      createCluster = di.inject(createClusterInjectionToken);
+      getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
+
       clusterStore = di.inject(clusterStoreInjectable);
       clusterStore.load();
     });
@@ -262,6 +272,11 @@ describe("cluster-store", () => {
 
   describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     beforeEach(() => {
+      di.override(storeMigrationVersionInjectable, () => "3.6.0");
+
+      createCluster = di.inject(createClusterInjectionToken);
+      getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
+
       writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {
         __internal__: {
           migrations: {
@@ -281,7 +296,6 @@ describe("cluster-store", () => {
       });
       writeBufferSync("/some-directory-for-user-data/icon_path", testDataIcon);
 
-      di.override(storeMigrationVersionInjectable, () => "3.6.0");
 
       clusterStore = di.inject(clusterStoreInjectable);
       clusterStore.load();

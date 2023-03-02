@@ -1,5 +1,5 @@
-const nodeConfig = require("./node-config");
-const reactConfig = require("./react-config");
+const getNodeConfig = require("./get-node-config");
+const getReactConfigFor = require("./get-react-config");
 const path = require("path");
 const {
   map,
@@ -14,7 +14,15 @@ const {
 } = require("lodash/fp");
 const { pipeline } = require("@ogre-tools/fp");
 
-module.exports = (packageJson, dependencies = { nodeConfig, reactConfig }) => {
+module.exports = (
+  packageJson,
+
+  dependencies = {
+    resolvePath: path.resolve,
+    workingDirectory: process.cwd(),
+    getReactConfig: getReactConfigFor()
+  }
+) => {
   if (!packageJson.lensMultiExportConfig) {
     throw new Error(
       `Tried to get multi export config for package "${packageJson.name}" but configuration is missing.`
@@ -72,15 +80,20 @@ module.exports = (packageJson, dependencies = { nodeConfig, reactConfig }) => {
     );
   }
 
+  const toExportSpecificWebpackConfig =
+    toExportSpecificWebpackConfigFor(dependencies);
+
   return pipeline(
     packageJson.lensMultiExportConfig,
     toPairs,
-    map(toExportSpecificWebpackConfigFor(dependencies))
+    map(toExportSpecificWebpackConfig)
   );
 };
 
 const toExpectedExport = (externalImportPath) => {
-  const entrypointPath = `./${path.join(
+  const posixJoinForPackageJson = path.posix.join;
+
+  const entrypointPath = `./${posixJoinForPackageJson(
     "./dist",
     externalImportPath,
     "index.js"
@@ -89,7 +102,11 @@ const toExpectedExport = (externalImportPath) => {
   return [
     externalImportPath,
     {
-      types: `./${path.join("./dist", externalImportPath, "index.d.ts")}`,
+      types: `./${posixJoinForPackageJson(
+        "./dist",
+        externalImportPath,
+        "index.d.ts"
+      )}`,
 
       default: entrypointPath,
       import: entrypointPath,
@@ -101,20 +118,19 @@ const toExpectedExport = (externalImportPath) => {
 const toExportSpecificWebpackConfigFor =
   (dependencies) =>
   ([externalImportPath, { buildType, entrypoint }]) => {
-    const baseConfig =
-      buildType === "node" ? dependencies.nodeConfig : dependencies.reactConfig;
+    const outputDirectory = dependencies.resolvePath(
+      dependencies.workingDirectory,
+      "dist",
+      externalImportPath
+    );
 
-    return {
-      ...baseConfig,
-      name: entrypoint,
-
-      entry: {
-        index: entrypoint,
-      },
-
-      output: {
-        ...baseConfig.output,
-        path: path.join(baseConfig.output.path, externalImportPath),
-      },
-    };
+    return buildType === "node"
+      ? getNodeConfig({
+          entrypointFilePath: entrypoint,
+          outputDirectory,
+        })
+      : dependencies.getReactConfig({
+          entrypointFilePath: entrypoint,
+          outputDirectory,
+        });
   };

@@ -30,9 +30,9 @@ describe("user store tests", () => {
       get: () => "latest" as const,
       init: async () => {},
     }));
+
     await di.inject(defaultUpdateChannelInjectable).init();
 
-    userStore = di.inject(userStoreInjectable);
   });
 
   describe("for an empty config", () => {
@@ -41,6 +41,8 @@ describe("user store tests", () => {
 
       writeJsonSync("/some-directory-for-user-data/lens-user-store.json", {});
       writeJsonSync("/some-directory-for-user-data/kube_config", {});
+
+      userStore = di.inject(userStoreInjectable);
 
       userStore.load();
     });
@@ -89,6 +91,8 @@ describe("user store tests", () => {
       writeFileSync("/some/other/path", "is file");
 
       di.override(storeMigrationVersionInjectable, () => "10.0.0");
+
+      userStore = di.inject(userStoreInjectable);
 
       userStore.load();
     });
