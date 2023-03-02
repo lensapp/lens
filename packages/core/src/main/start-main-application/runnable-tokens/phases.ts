@@ -4,7 +4,7 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { Runnable, RunnableSync } from "../../../common/runnable/types";
+import type { Runnable, RunnableSync } from "@k8slens/run-many";
 
 export const beforeQuitOfFrontEndInjectionToken = getInjectionToken<RunnableSync>({
   id: "before-quit-of-front-end",
