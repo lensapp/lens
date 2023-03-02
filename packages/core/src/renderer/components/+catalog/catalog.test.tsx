@@ -25,7 +25,7 @@ import { computed } from "mobx";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { flushPromises } from "../../../common/test-utils/flush-promises";
+import { flushPromises } from "@k8slens/test-utils";
 import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import releaseChannelInjectable from "../../../common/vars/release-channel.injectable";
 import defaultUpdateChannelInjectable from "../../../features/application-update/common/selected-update-channel/default-update-channel.injectable";

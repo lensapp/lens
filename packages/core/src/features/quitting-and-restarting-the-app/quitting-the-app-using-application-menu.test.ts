@@ -9,7 +9,7 @@ import type { ClusterManager } from "../../main/cluster/manager";
 import exitAppInjectable from "../../main/electron-app/features/exit-app.injectable";
 import clusterManagerInjectable from "../../main/cluster/manager.injectable";
 import stopServicesAndExitAppInjectable from "../../main/stop-services-and-exit-app.injectable";
-import { advanceFakeTime, testUsingFakeTime } from "../../common/test-utils/use-fake-time";
+import { advanceFakeTime, testUsingFakeTime } from "@k8slens/test-utils";
 
 describe("quitting the app using application menu", () => {
   describe("given application has started", () => {

@@ -14,7 +14,7 @@ import requestAnimationFrameInjectable from "./components/animate/request-animat
 import startTopbarStateSyncInjectable from "./components/layout/top-bar/start-state-sync.injectable";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
-import type { GlobalOverride } from "../common/test-utils/get-global-override";
+import type { GlobalOverride } from "@k8slens/test-utils";
 import { getDi } from "./getDi";
 
 export const getDiForUnitTesting = (

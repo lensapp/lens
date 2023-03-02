@@ -4,7 +4,7 @@
  */
 
 import EventEmitter from "events";
-import { getGlobalOverride } from "../../../common/test-utils/get-global-override";
+import { getGlobalOverride } from "@k8slens/test-utils";
 import nativeThemeInjectable from "./native-theme.injectable";
 
 export default getGlobalOverride(nativeThemeInjectable, () => Object.assign(new EventEmitter(), {

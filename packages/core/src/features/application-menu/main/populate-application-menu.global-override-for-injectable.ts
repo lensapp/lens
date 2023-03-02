@@ -3,6 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import populateApplicationMenuInjectable from "./populate-application-menu.injectable";
-import { getGlobalOverride } from "../../../common/test-utils/get-global-override";
+import { getGlobalOverride } from "@k8slens/test-utils";
 
 export default getGlobalOverride(populateApplicationMenuInjectable, () => () => {});

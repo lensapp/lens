@@ -68,7 +68,7 @@ import shouldStartHiddenInjectable from "../../../main/electron-app/features/sho
 import fsInjectable from "../../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
-import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
+import { testUsingFakeTime } from "@k8slens/test-utils";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 

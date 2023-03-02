@@ -10,7 +10,7 @@ import { renderFor } from "../test-utils/renderFor";
 import { Countdown } from "./countdown";
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
-import { advanceFakeTime, testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
+import { advanceFakeTime, testUsingFakeTime } from "@k8slens/test-utils";
 import type { IComputedValue } from "mobx";
 import { observe } from "mobx";
 import { noop } from "@k8slens/utilities";

@@ -9,7 +9,7 @@ import electronInjectable from "./electron.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type electron from "electron";
-import { getPromiseStatus } from "../../../common/test-utils/get-promise-status";
+import { getPromiseStatus } from "@k8slens/test-utils";
 import logErrorInjectable from "../../../common/log-error.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 
