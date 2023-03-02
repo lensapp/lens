@@ -22,6 +22,11 @@ describe("emit-telemetry-from-specific-function-calls", () => {
     beforeEach(() => {
       di.override(telemetryWhiteListForFunctionsInjectable, () => [
         "some-white-listed-function",
+
+        {
+          id: "some-white-listed-function-with-white-listed-argument",
+          getParams: (irrelevantArg, arg) => ({ someParam: arg }),
+        },
       ]);
 
       emitEventMock = jest.fn();
@@ -32,6 +37,7 @@ describe("emit-telemetry-from-specific-function-calls", () => {
       let whiteListedFunctionMock: jest.Mock;
       let nonWhiteListedFunctionMock: jest.Mock;
       let injectedWhiteListedFunction: jest.Mock;
+      let injectedWhiteListedFunctionWithArgument: jest.Mock;
       let injectedNonWhiteListedFunction: jest.Mock;
 
       beforeEach(() => {
@@ -43,16 +49,30 @@ describe("emit-telemetry-from-specific-function-calls", () => {
           instantiate: () => whiteListedFunctionMock,
         });
 
+        const whiteListedInjectableWithArgument = getInjectable({
+          id: "some-white-listed-function-with-white-listed-argument",
+          instantiate: () => whiteListedFunctionMock,
+        });
+
         const nonWhiteListedInjectable = getInjectable({
           id: "some-non-white-listed-function",
           instantiate: () => nonWhiteListedFunctionMock,
         });
 
         runInAction(() => {
-          di.register(whiteListedInjectable, nonWhiteListedInjectable);
+          di.register(
+            whiteListedInjectable,
+            whiteListedInjectableWithArgument,
+            nonWhiteListedInjectable
+          );
         });
 
         injectedWhiteListedFunction = di.inject(whiteListedInjectable);
+
+        injectedWhiteListedFunctionWithArgument = di.inject(
+          whiteListedInjectableWithArgument
+        );
+
         injectedNonWhiteListedFunction = di.inject(nonWhiteListedInjectable);
       });
 
@@ -60,22 +80,51 @@ describe("emit-telemetry-from-specific-function-calls", () => {
         expect(emitEventMock).not.toHaveBeenCalled();
       });
 
-      describe("when the white-listed function is called with parameters", () => {
+      describe("when a normal white-listed function is called with arguments", () => {
         beforeEach(() => {
           injectedWhiteListedFunction("some-arg", "some-other-arg");
         });
 
-        it("telemetry is emitted in event bus", () => {
+        it("telemetry is emitted in event bus without the arguments", () => {
           expect(emitEventMock).toHaveBeenCalledWith({
             destination: "auto-capture",
             action: "telemetry-from-business-action",
             name: "some-white-listed-function",
-            params: { args: ["some-arg", "some-other-arg"] },
           });
         });
       });
 
-      describe("when the white-listed function is called with MobX reactive content", () => {
+      describe("when a white-listed function with a white-listed argument is called with arguments", () => {
+        beforeEach(() => {
+          injectedWhiteListedFunctionWithArgument("some-arg", "some-other-arg");
+        });
+
+        it("telemetry is emitted in event bus with the arguments as params", () => {
+          expect(emitEventMock).toHaveBeenCalledWith({
+            action: "telemetry-from-business-action",
+            destination: "auto-capture",
+            name: "some-white-listed-function-with-white-listed-argument",
+            params: { someParam: "some-other-arg" },
+          });
+        });
+      });
+
+      describe("when a white-listed function with a white-listed argument is called without arguments", () => {
+        beforeEach(() => {
+          injectedWhiteListedFunctionWithArgument();
+        });
+
+        it("telemetry is emitted in event bus without params", () => {
+          expect(emitEventMock).toHaveBeenCalledWith({
+            action: "telemetry-from-business-action",
+            destination: "auto-capture",
+            name: "some-white-listed-function-with-white-listed-argument",
+            params: { someParam: undefined },
+          });
+        });
+      });
+
+      describe("when the white-listed function with a white-listed argument is called with MobX reactive content", () => {
         beforeEach(() => {
           const someComputedProperty = computed(() => "some-computed-value");
 
@@ -84,22 +133,23 @@ describe("emit-telemetry-from-specific-function-calls", () => {
             someComputedProperty,
           };
 
-          injectedWhiteListedFunction(someObservable);
+          injectedWhiteListedFunctionWithArgument(
+            "irrelevant-argument",
+            someObservable
+          );
         });
 
         it("telemetry is emitted in event bus without MobX internals or computeds", () => {
           expect(emitEventMock).toHaveBeenCalledWith({
             destination: "auto-capture",
             action: "telemetry-from-business-action",
-            name: "some-white-listed-function",
+            name: "some-white-listed-function-with-white-listed-argument",
 
             params: {
-              args: [
-                {
-                  someStaticProperty: "some-static-value",
-                  someComputedProperty: "some-computed-value",
-                },
-              ],
+              someParam: {
+                someStaticProperty: "some-static-value",
+                someComputedProperty: "some-computed-value",
+              },
             },
           });
         });
