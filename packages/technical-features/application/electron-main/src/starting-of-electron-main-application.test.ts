@@ -4,7 +4,7 @@ import {
   getInjectable,
 } from "@ogre-tools/injectable";
 import { registerFeature } from "@k8slens/feature-core";
-import { feature } from "./feature";
+import { applicationFeatureForElectronMain } from "./applicationFeatureForElectronMain";
 import {
   beforeApplicationIsLoadingInjectionToken,
   startApplicationInjectionToken,
@@ -30,7 +30,7 @@ describe("starting-of-electron-main-application", () => {
     beforeApplicationIsLoadingMock = asyncFn();
     whenAppIsReadyMock = asyncFn();
 
-    registerFeature(di, feature);
+    registerFeature(di, applicationFeatureForElectronMain);
 
     const beforeAnythingIsLoadingInjectable = getInjectable({
       id: "before-anything",

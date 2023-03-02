@@ -1,4 +1,4 @@
-export { feature } from "./src/feature";
+export { applicationFeature } from "./src/feature";
 
 export { onLoadOfApplicationInjectionToken } from "./src/start-application/timeslots/on-load-of-application-injection-token";
 export { beforeApplicationIsLoadingInjectionToken } from "./src/start-application/timeslots/before-application-is-loading-injection-token";

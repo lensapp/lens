@@ -1,5 +1,5 @@
 import { createContainer, DiContainer } from "@ogre-tools/injectable";
-import { feature } from "../../feature";
+import { applicationFeatureForElectronMain } from "../../applicationFeatureForElectronMain";
 import { registerFeature } from "@k8slens/feature-core";
 import whenAppIsReadyInjectable from "../when-app-is-ready.injectable";
 import { getPromiseStatus } from "@ogre-tools/test-utils";
@@ -14,7 +14,7 @@ describe("when-app-is-ready", () => {
   beforeEach(() => {
     di = createContainer("irrelevant");
 
-    registerFeature(di, feature);
+    registerFeature(di, applicationFeatureForElectronMain);
 
     whenReadyMock = asyncFn();
 
