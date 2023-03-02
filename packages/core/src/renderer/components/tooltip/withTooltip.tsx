@@ -11,7 +11,7 @@ import type { TooltipProps } from "./tooltip";
 import { Tooltip } from "./tooltip";
 import { isReactNode } from "../../utils/isReactNode";
 import uniqueId from "lodash/uniqueId";
-import type { SingleOrMany } from "../../utils";
+import type { SingleOrMany } from "@k8slens/utilities";
 
 export interface TooltipDecoratorProps {
   tooltip?: ReactNode | Omit<TooltipProps, "targetId">;

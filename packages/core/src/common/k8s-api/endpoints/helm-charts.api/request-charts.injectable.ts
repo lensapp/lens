@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RawHelmChart } from "../helm-charts.api";
 import { HelmChart } from "../helm-charts.api";
-import { isDefined } from "../../../utils";
+import { isDefined } from "@k8slens/utilities";
 import apiBaseInjectable from "../../api-base.injectable";
 
 export type RequestHelmCharts = () => Promise<HelmChart[]>;

@@ -16,7 +16,7 @@ interface Iterator<T> extends Iterable<T> {
   join(sep?: string): string;
 }
 
-export function chain<T>(src: IterableIterator<T>): Iterator<T> {
+function chain<T>(src: IterableIterator<T>): Iterator<T> {
   return {
     filter: (fn) => chain(filter(src, fn)),
     filterMap: (fn) => chain(filterMap(src, fn)),
@@ -34,7 +34,7 @@ export function chain<T>(src: IterableIterator<T>): Iterator<T> {
  * Create a new type safe empty Iterable
  * @returns An `Iterable` that yields 0 items
  */
-export function* newEmpty<T>(): IterableIterator<T> {}
+function* newEmpty<T>(): IterableIterator<T> {}
 
 /**
  * Creates a new `Iterable` that yields at most n items from src.
@@ -42,7 +42,7 @@ export function* newEmpty<T>(): IterableIterator<T> {}
  * @param src An initial iterator
  * @param n The maximum number of elements to take from src. Yields up to the floor of `n` and 0 items if n < 0
  */
-export function* take<T>(src: Iterable<T>, n: number): IterableIterator<T> {
+function* take<T>(src: Iterable<T>, n: number): IterableIterator<T> {
   outer: for (let i = 0; i < n; i += 1) {
     for (const item of src) {
       yield item;
@@ -60,7 +60,7 @@ export function* take<T>(src: Iterable<T>, n: number): IterableIterator<T> {
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value
  */
-export function* map<T, U>(src: Iterable<T>, fn: (from: T) => U): IterableIterator<U> {
+function* map<T, U>(src: Iterable<T>, fn: (from: T) => U): IterableIterator<U> {
   for (const from of src) {
     yield fn(from);
   }
@@ -71,7 +71,7 @@ export function* map<T, U>(src: Iterable<T>, fn: (from: T) => U): IterableIterat
  * @param src A type that can be iterated over
  * @param fn The function that returns either an iterable over items that should be filtered out or a `Falsy` value indicating that it should be ignored
  */
-export function* filterFlatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U | Falsy> | Falsy): IterableIterator<U> {
+function* filterFlatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U | Falsy> | Falsy): IterableIterator<U> {
   for (const from of src) {
     if (!from) {
       continue;
@@ -96,7 +96,7 @@ export function* filterFlatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable
  * @param src A type that can be iterated over
  * @param fn A function that returns an iterator
  */
-export function* flatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U>): IterableIterator<U> {
+function* flatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U>): IterableIterator<U> {
   for (const from of src) {
     yield* fn(from);
   }
@@ -108,7 +108,7 @@ export function* flatMap<T, U>(src: Iterable<T>, fn: (from: T) => Iterable<U>): 
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value
  */
-export function* filter<T>(src: Iterable<T>, fn: (from: T) => any): IterableIterator<T> {
+function* filter<T>(src: Iterable<T>, fn: (from: T) => any): IterableIterator<T> {
   for (const from of src) {
     if (fn(from)) {
       yield from;
@@ -122,7 +122,7 @@ export function* filter<T>(src: Iterable<T>, fn: (from: T) => any): IterableIter
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value
  */
-export function* filterMap<T, U>(src: Iterable<T>, fn: (from: T) => U | Falsy): IterableIterator<U> {
+function* filterMap<T, U>(src: Iterable<T>, fn: (from: T) => U | Falsy): IterableIterator<U> {
   for (const from of src) {
     const res = fn(from);
 
@@ -138,7 +138,7 @@ export function* filterMap<T, U>(src: Iterable<T>, fn: (from: T) => U | Falsy): 
  * @param src A type that can be iterated over
  * @param fn The function that is called for each value
  */
-export function* filterMapStrict<T, U>(src: Iterable<T>, fn: (from: T) => U | null | undefined): IterableIterator<U> {
+function* filterMapStrict<T, U>(src: Iterable<T>, fn: (from: T) => U | null | undefined): IterableIterator<U> {
   for (const from of src) {
     const res = fn(from);
 
@@ -154,7 +154,7 @@ export function* filterMapStrict<T, U>(src: Iterable<T>, fn: (from: T) => U | nu
  * @param match A function that should return a truthy value for the item that you want to find
  * @returns The first entry that `match` returns a truthy value for, or `undefined`
  */
-export function find<T>(src: Iterable<T>, match: (i: T) => any): T | undefined {
+function find<T>(src: Iterable<T>, match: (i: T) => any): T | undefined {
   for (const from of src) {
     if (match(from)) {
       return from;
@@ -171,9 +171,9 @@ export function find<T>(src: Iterable<T>, match: (i: T) => any): T | undefined {
  * @param reducer A function for producing the next item from an accumulation and the current item
  * @param initial The initial value for the iteration
  */
-export function reduce<T, R extends Iterable<any>>(src: Iterable<T>, reducer: (acc: R, cur: T) => R, initial: R): R;
+function reduce<T, R extends Iterable<any>>(src: Iterable<T>, reducer: (acc: R, cur: T) => R, initial: R): R;
 
-export function reduce<T, R = T>(src: Iterable<T>, reducer: (acc: R, cur: T) => R, initial: R): R {
+function reduce<T, R = T>(src: Iterable<T>, reducer: (acc: R, cur: T) => R, initial: R): R {
   let acc = initial;
 
   for (const item of src) {
@@ -189,7 +189,7 @@ export function reduce<T, R = T>(src: Iterable<T>, reducer: (acc: R, cur: T) => 
  * @param connector The string value to intersperse between the yielded values
  * @returns The concatenated entries of `src` interspersed with copies of `connector`
  */
-export function join(src: IterableIterator<unknown>, connector = ","): string {
+function join(src: IterableIterator<unknown>, connector = ","): string {
   const iterSrc = src[Symbol.iterator]();
   const first = iterSrc.next();
 
@@ -205,7 +205,7 @@ export function join(src: IterableIterator<unknown>, connector = ","): string {
  * @param src The value to iterate over
  * @param n The zero-index value for the item to return to.
  */
-export function nth<T>(src: Iterable<T>, n: number): T | undefined {
+function nth<T>(src: Iterable<T>, n: number): T | undefined {
   const iterator = src[Symbol.iterator]();
 
   while (n --> 0) {
@@ -219,7 +219,7 @@ export function nth<T>(src: Iterable<T>, n: number): T | undefined {
  * A convenience function to get the first item of an iterator
  * @param src The value to iterate over
  */
-export function first<T>(src: Iterable<T>): T | undefined {
+function first<T>(src: Iterable<T>): T | undefined {
   return nth(src, 0);
 }
 
@@ -229,7 +229,7 @@ export function first<T>(src: Iterable<T>): T | undefined {
  * @param src The type to be iterated over
  * @param fn A function to check each iteration
  */
-export function every<T>(src: Iterable<T>, fn: (val: T) => any): boolean {
+function every<T>(src: Iterable<T>, fn: (val: T) => any): boolean {
   for (const val of src) {
     if (!fn(val)) {
       return false;
@@ -239,7 +239,7 @@ export function every<T>(src: Iterable<T>, fn: (val: T) => any): boolean {
   return true;
 }
 
-export function* concat<T>(...sources: IterableIterator<T>[]): IterableIterator<T> {
+function* concat<T>(...sources: IterableIterator<T>[]): IterableIterator<T> {
   for (const source of sources) {
     for (const val of source) {
       yield val;
@@ -254,12 +254,11 @@ export function* concat<T>(...sources: IterableIterator<T>[]): IterableIterator<
  * @param parts What each array will be filtered to
  * @returns A `parts.length` tuple of `T[]` where each array has matching `field` values
  */
-export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: []): [];
-export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field]]): [T[]];
-export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field], T[typeof field]]): [T[], T[]];
-export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field], T[typeof field], T[typeof field]]): [T[], T[], T[]];
-
-export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: T[typeof field][]): T[][] {
+function nFircate<T>(from: Iterable<T>, field: keyof T, parts: []): [];
+function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field]]): [T[]];
+function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field], T[typeof field]]): [T[], T[]];
+function nFircate<T>(from: Iterable<T>, field: keyof T, parts: [T[typeof field], T[typeof field], T[typeof field]]): [T[], T[], T[]];
+function nFircate<T>(from: Iterable<T>, field: keyof T, parts: T[typeof field][]): T[][] {
   if (new Set(parts).size !== parts.length) {
     throw new TypeError("Duplicate parts entries");
   }
@@ -278,3 +277,23 @@ export function nFircate<T>(from: Iterable<T>, field: keyof T, parts: T[typeof f
 
   return res;
 }
+
+export const iter = {
+  chain,
+  concat,
+  every,
+  filter,
+  filterFlatMap,
+  filterMap,
+  filterMapStrict,
+  find,
+  first,
+  flatMap,
+  join,
+  map,
+  nFircate,
+  newEmpty,
+  nth,
+  reduce,
+  take,
+};

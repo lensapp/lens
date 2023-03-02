@@ -20,7 +20,7 @@ import type { SelectOption } from "../../../select";
 import { onMultiSelectFor, Select } from "../../../select";
 import { Wizard, WizardStep } from "../../../wizard";
 import { Input } from "../../../input";
-import { ObservableHashSet, nFircate } from "../../../../utils";
+import { ObservableHashSet, nFircate } from "@k8slens/utilities";
 import type { Subject } from "../../../../../common/k8s-api/endpoints/types/subject";
 import type { RoleBindingDialogState } from "./state.injectable";
 import type { RoleBindingStore } from "../store";

@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { MenuActionsProps } from "../menu";
 import { MenuItem, MenuActions } from "../menu";

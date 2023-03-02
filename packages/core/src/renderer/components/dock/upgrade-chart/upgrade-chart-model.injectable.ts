@@ -14,7 +14,7 @@ import updateReleaseInjectable from "../../+helm-releases/update-release/update-
 import type { HelmRelease } from "../../../../common/k8s-api/endpoints/helm-releases.api";
 import requestHelmReleaseConfigurationInjectable from "../../../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import type { AsyncResult } from "../../../../common/utils/async-result";
-import { waitUntilDefined } from "../../../utils";
+import { waitUntilDefined } from "@k8slens/utilities";
 import type { SelectOption } from "../../select";
 import type { DockTab } from "../dock/store";
 import upgradeChartTabDataInjectable from "./tab-data.injectable";

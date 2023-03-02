@@ -5,7 +5,7 @@
 
 import React from "react";
 import type { HelmRelease } from "../../../common/k8s-api/endpoints/helm-releases.api";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { MenuActionsProps } from "../menu/menu-actions";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";

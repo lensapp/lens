@@ -9,7 +9,7 @@ import { defaultHotbarCells, getEmptyHotbar } from "../../../common/hotbars/type
 import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import catalogCatalogEntityInjectable from "../../../common/catalog-entities/general-catalog-entities/implementations/catalog-catalog-entity.injectable";
-import { isDefined, isErrnoException } from "../../../common/utils";
+import { isDefined, isErrnoException } from "@k8slens/utilities";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { hotbarStoreMigrationInjectionToken } from "../../../common/hotbars/migrations-token";

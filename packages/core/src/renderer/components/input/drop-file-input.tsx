@@ -5,13 +5,14 @@
 
 import "./drop-file-input.scss";
 import React from "react";
-import type { IClassName } from "../../utils";
-import { autoBind, cssNames } from "../../utils";
+import type { IClassName } from "@k8slens/utilities";
+import { cssNames } from "@k8slens/utilities";
 import { observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import loggerInjectable from "../../../common/logger.injectable";
+import autoBindReact from "auto-bind/react";
 
 export interface DropFileInputProps<T extends HTMLElement> extends React.DOMAttributes<T> {
   className?: IClassName;
@@ -35,7 +36,7 @@ class NonInjectedDropFileInput<T extends HTMLElement> extends React.Component<Dr
   constructor(props: DropFileInputProps<T> & Dependencies) {
     super(props);
     makeObservable(this);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   onDragEnter() {

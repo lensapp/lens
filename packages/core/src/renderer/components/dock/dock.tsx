@@ -6,7 +6,7 @@
 import "./dock.scss";
 import React from "react";
 import { observer } from "mobx-react";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";

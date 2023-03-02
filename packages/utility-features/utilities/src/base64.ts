@@ -12,7 +12,7 @@ import * as Utf8 from "crypto-js/enc-utf8";
  * @param data A Base64 encoded string
  * @returns The original utf-8 string
  */
-export function decode(data: string): string {
+function decode(data: string): string {
   return Base64.parse(data).toString(Utf8);
 }
 
@@ -21,6 +21,11 @@ export function decode(data: string): string {
  * @param data A normal string
  * @returns A base64 encoded version
  */
-export function encode(data: string): string {
+function encode(data: string): string {
   return Utf8.parse(data).toString(Base64);
 }
+
+export const base64 = {
+  encode,
+  decode,
+};

@@ -5,7 +5,7 @@
 
 import "./drawer-item.scss";
 import React from "react";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 
 export interface DrawerItemProps extends React.HTMLAttributes<HTMLDivElement> {
   name: React.ReactNode;

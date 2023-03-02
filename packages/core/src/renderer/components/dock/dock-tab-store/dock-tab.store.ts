@@ -4,10 +4,11 @@
  */
 
 import { action, observable, reaction } from "mobx";
-import type { StorageLayer } from "../../../utils";
-import { autoBind, toJS } from "../../../utils";
+import type { StorageLayer } from "../../../utils/storage-helper";
 import type { CreateStorage } from "../../../utils/create-storage/create-storage.injectable";
 import type { TabId } from "../dock/store";
+import autoBind from "auto-bind";
+import { toJS } from "../../../../common/utils";
 
 export interface DockTabStoreOptions {
   autoInit?: boolean; // load data from storage when `storageKey` is provided and bind events, default: true

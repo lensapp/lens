@@ -4,8 +4,8 @@
  */
 
 import { action, computed, observable } from "mobx";
-import { disposer } from "../../renderer/utils";
-import type { ExtendableDisposer } from "../../renderer/utils";
+import { disposer } from "@k8slens/utilities";
+import type { ExtendableDisposer } from "@k8slens/utilities";
 import * as uuid from "uuid";
 import { broadcastMessage } from "../../common/ipc";
 import { ipcRenderer } from "electron";

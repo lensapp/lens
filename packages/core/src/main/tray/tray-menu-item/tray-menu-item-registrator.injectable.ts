@@ -15,7 +15,7 @@ import { withErrorSuppression } from "../../../common/utils/with-error-suppressi
 import type { WithErrorLoggingFor } from "../../../common/utils/with-error-logging/with-error-logging.injectable";
 import withErrorLoggingInjectable from "../../../common/utils/with-error-logging/with-error-logging.injectable";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
-import { isBoolean, isString } from "../../../common/utils";
+import { isBoolean, isString } from "@k8slens/utilities";
 
 const trayMenuItemRegistratorInjectable = getInjectable({
   id: "tray-menu-item-registrator",

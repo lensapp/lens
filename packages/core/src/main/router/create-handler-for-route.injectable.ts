@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ServerResponse } from "http";
 import loggerInjectable from "../../common/logger.injectable";
-import { object } from "../../common/utils";
+import { object } from "@k8slens/utilities";
 import type { LensApiRequest, Route } from "./route";
 import { contentTypes } from "./router-content-types";
 

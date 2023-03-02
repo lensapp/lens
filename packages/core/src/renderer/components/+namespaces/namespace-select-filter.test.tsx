@@ -20,8 +20,8 @@ import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
-import type { Disposer } from "../../utils";
-import { disposer } from "../../utils";
+import type { Disposer } from "@k8slens/utilities";
+import { disposer } from "@k8slens/utilities";
 import { renderFor } from "../test-utils/renderFor";
 import { NamespaceSelectFilter } from "./namespace-select-filter";
 import type { NamespaceStore } from "./store";

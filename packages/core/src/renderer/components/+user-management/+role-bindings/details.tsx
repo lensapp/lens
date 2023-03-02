@@ -9,7 +9,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import type { RoleBinding } from "../../../../common/k8s-api/endpoints";
-import { prevDefault } from "../../../utils";
+import { prevDefault } from "@k8slens/utilities";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";

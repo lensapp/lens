@@ -8,7 +8,7 @@
  * @param length The number of entries
  * @param value The value of each of the indices
  */
-export function filled<T>(length: number, value: T): T[] {
+function filled<T>(length: number, value: T): T[] {
   return Array(length).fill(value);
 }
 
@@ -23,7 +23,7 @@ export function filled<T>(length: number, value: T): T[] {
  * @returns the left and right sub-arrays which when conjoined with `element`
  *          is the same as `array`, and `true`
  */
-export function split<T>(src: T[], element: T): [T[], T[], boolean] {
+function split<T>(src: T[], element: T): [T[], T[], boolean] {
   const index = src.indexOf(element);
 
   if (index < 0) {
@@ -33,7 +33,7 @@ export function split<T>(src: T[], element: T): [T[], T[], boolean] {
   return [src.slice(0, index), src.slice(index + 1, src.length), true];
 }
 
-export function bifurcate<T>(src: T[], condition: (item: T) => any): [falses: T[], trues: T[]] {
+function bifurcate<T>(src: T[], condition: (item: T) => any): [falses: T[], trues: T[]] {
   const trues: T[] = [];
   const falses: T[] = [];
 
@@ -47,3 +47,9 @@ export function bifurcate<T>(src: T[], condition: (item: T) => any): [falses: T[
 
   return [falses, trues];
 }
+
+export const array = {
+  bifurcate,
+  filled,
+  split,
+};

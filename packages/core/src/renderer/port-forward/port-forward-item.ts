@@ -5,7 +5,7 @@
 
 
 import type { ItemObject } from "../../common/item.store";
-import { autoBind } from "../../common/utils";
+import { autoBind } from "@k8slens/utilities";
 
 export type ForwardedPortStatus = "Active" | "Disabled";
 export interface ForwardedPort {

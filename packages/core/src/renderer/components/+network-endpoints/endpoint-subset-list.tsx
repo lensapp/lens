@@ -11,11 +11,11 @@ import type { EndpointSubset, Endpoints, EndpointAddress } from "../../../common
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";
-import { autoBind } from "../../../common/utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import autoBindReact from "auto-bind/react";
 
 export interface EndpointSubsetListProps {
   subset: Required<EndpointSubset>;
@@ -31,7 +31,7 @@ interface Dependencies {
 class NonInjectedEndpointSubsetList extends React.Component<EndpointSubsetListProps & Dependencies> {
   constructor(props: EndpointSubsetListProps & Dependencies) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   getAddressTableRow(ip: string) {

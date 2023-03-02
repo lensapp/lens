@@ -4,7 +4,7 @@
  */
 import React from "react";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { cssNames } from "../../../../../utils";
+import { cssNames } from "@k8slens/utilities";
 import styles from "../../top-bar.module.scss";
 import isLinuxInjectable from "../../../../../../common/vars/is-linux.injectable";
 import toggleMaximizeWindowInjectable from "../../toggle-maximize-window/toggle-maximize-window.injectable";

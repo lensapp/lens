@@ -7,8 +7,8 @@ import styles from "./main-layout.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { StorageLayer } from "../../utils";
-import { cssNames } from "../../utils";
+import type { StorageLayer } from "@k8slens/utilities";
+import { cssNames } from "@k8slens/utilities";
 import { ErrorBoundary } from "../error-boundary";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
 import { withInjectables } from "@ogre-tools/injectable-react";

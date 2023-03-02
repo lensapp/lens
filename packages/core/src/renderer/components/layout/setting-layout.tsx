@@ -7,8 +7,8 @@ import "./setting-layout.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { IClassName } from "../../utils";
-import { cssNames } from "../../utils";
+import type { IClassName } from "@k8slens/utilities";
+import { cssNames } from "@k8slens/utilities";
 import { CloseButton } from "./close-button";
 import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";

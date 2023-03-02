@@ -4,8 +4,8 @@
  */
 
 import { action, computed, makeObservable, observable, reaction } from "mobx";
-import type { Disposer } from "../utils";
-import { waitUntilDefined, autoBind, includes, rejectPromiseBy } from "../utils";
+import type { Disposer } from "@k8slens/utilities";
+import { waitUntilDefined, includes, rejectPromiseBy, object } from "@k8slens/utilities";
 import type { KubeJsonApiDataFor, KubeObject } from "./kube-object";
 import { KubeStatus } from "./kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-event";
@@ -17,9 +17,9 @@ import type { Patch } from "rfc6902";
 import type { Logger } from "../logger";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
-import { entries } from "../utils/objects";
 import AbortController from "abort-controller";
 import type { ClusterContext } from "../../renderer/cluster-frame-context/cluster-frame-context";
+import autoBind from "auto-bind";
 
 export type OnLoadFailure = (error: unknown) => void;
 
@@ -179,7 +179,7 @@ export abstract class KubeObjectStore<
       return this.items.filter((item: K) => {
         const itemLabels = item.metadata.labels || {};
 
-        return entries(labels)
+        return object.entries(labels)
           .every(([key, value]) => itemLabels[key] === value);
       });
     }

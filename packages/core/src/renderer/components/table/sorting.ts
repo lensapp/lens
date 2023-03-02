@@ -4,7 +4,7 @@
  */
 
 import type { TableOrderBy, TableSortCallback } from "./table";
-import { Ordering, rectifyOrdering, sortCompare, tuple } from "../../utils";
+import { Ordering, rectifyOrdering, sortCompare, tuple } from "@k8slens/utilities";
 
 export function getSorted<T>(rawItems: T[], sortingCallback: TableSortCallback<T> | undefined, orderBy: TableOrderBy = "asc"): T[] {
   if (typeof sortingCallback !== "function") {

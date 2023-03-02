@@ -6,9 +6,9 @@
 import type { IComputedValue } from "mobx";
 import { observable } from "mobx";
 import type { PodLogsQuery, Pod } from "../../../../common/k8s-api/endpoints";
-import { waitUntilDefined } from "../../../../common/utils/wait";
-import type { IntervalFn } from "../../../utils";
-import { getOrInsertWith, interval } from "../../../utils";
+import { waitUntilDefined } from "@k8slens/utilities/src/wait";
+import type { IntervalFn } from "@k8slens/utilities";
+import { getOrInsertWith, interval } from "@k8slens/utilities";
 import type { TabId } from "../dock/store";
 import type { CallForLogs } from "./call-for-logs.injectable";
 import type { LogTabData } from "./tab-store";

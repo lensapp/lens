@@ -8,7 +8,7 @@ import { groupBy, reduce } from "lodash";
 import { filter, map } from "lodash/fp";
 import type { ClusterMetadata } from "../../common/cluster-types";
 import type { Cluster } from "../../common/cluster/cluster";
-import { hasDefinedTupleValue, isDefined, object } from "../../common/utils";
+import { hasDefinedTupleValue, isDefined, object } from "@k8slens/utilities";
 import type { ClusterDetectionResult, ClusterMetadataDetector } from "./token";
 import { clusterMetadataDetectorInjectionToken } from "./token";
 

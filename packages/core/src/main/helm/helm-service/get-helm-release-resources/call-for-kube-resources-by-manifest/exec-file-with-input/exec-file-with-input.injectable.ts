@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { AsyncResult } from "../../../../../../common/utils/async-result";
 import nonPromiseExecFileInjectable from "./non-promise-exec-file.injectable";
-import { isNumber } from "../../../../../../common/utils";
+import { isNumber } from "@k8slens/utilities";
 import assert from "assert";
 import type { ChildProcess } from "child_process";
 

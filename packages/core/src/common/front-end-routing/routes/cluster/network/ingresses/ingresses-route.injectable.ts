@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { shouldShowResourceInjectionToken } from "../../../../../cluster-store/allowed-resources-injection-token";
-import { computedOr } from "../../../../../utils/computed-or";
+import { computedOr } from "@k8slens/utilities";
 import { frontEndRouteInjectionToken } from "../../../../front-end-route-injection-token";
 
 const ingressesRouteInjectable = getInjectable({

@@ -8,7 +8,7 @@ import type { WeblinkStore } from "../../common/weblinks-store/weblink-store";
 import { WebLink } from "../../common/catalog-entities";
 import type { CatalogEntityRegistry } from "../catalog";
 import got from "got";
-import type { Disposer } from "../../common/utils";
+import type { Disposer } from "@k8slens/utilities";
 import { random } from "lodash";
 
 async function validateLink(link: WebLink) {

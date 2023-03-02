@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { AsyncResult } from "../utils/async-result";
-import { isErrnoException } from "../utils";
+import type { AsyncResult } from "@k8slens/utilities";
+import { isErrnoException } from "@k8slens/utilities";
 import type { Stats } from "fs-extra";
 import { lowerFirst } from "lodash/fp";
 import statInjectable from "./stat.injectable";
 
-export type ValidateDirectory = (path: string) => Promise<AsyncResult<undefined>>;
+export type ValidateDirectory = (path: string) => AsyncResult<undefined>;
 
 function getUserReadableFileType(stats: Stats): string {
   if (stats.isFile()) {

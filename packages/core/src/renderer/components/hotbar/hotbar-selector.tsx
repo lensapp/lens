@@ -14,7 +14,7 @@ import { observer } from "mobx-react";
 import type { Hotbar } from "../../../common/hotbars/types";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { HotbarStore } from "../../../common/hotbars/store";
 
 interface Dependencies {

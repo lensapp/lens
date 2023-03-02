@@ -4,7 +4,7 @@
  */
 
 import moment from "moment";
-import { formatDuration } from "../formatDuration";
+import { formatDuration } from "./formatDuration";
 
 const second = 1000;
 const minute = 60 * second;

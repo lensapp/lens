@@ -12,7 +12,7 @@ import { editor, Uri } from "monaco-editor";
 import type { MonacoTheme } from "./monaco-themes";
 import { type MonacoValidator, monacoValidators } from "./monaco-validators";
 import { debounce, merge } from "lodash";
-import { autoBind, cssNames, disposer } from "../../utils";
+import { cssNames, disposer } from "@k8slens/utilities";
 import type { UserStore } from "../../../common/user-store";
 import type { LensTheme } from "../../themes/lens-theme";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -21,6 +21,7 @@ import activeThemeInjectable from "../../themes/active.injectable";
 import getEditorHeightFromLinesCountInjectable from "./get-editor-height-from-lines-number.injectable";
 import type { Logger } from "../../../common/logger";
 import loggerInjectable from "../../../common/logger.injectable";
+import autoBindReact from "auto-bind/react";
 
 export type MonacoEditorId = string;
 
@@ -82,7 +83,7 @@ class NonInjectedMonacoEditor extends React.Component<MonacoEditorProps & Depend
   constructor(props: MonacoEditorProps & Dependencies) {
     super(props);
     makeObservable(this);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   @computed get id(): MonacoEditorId {

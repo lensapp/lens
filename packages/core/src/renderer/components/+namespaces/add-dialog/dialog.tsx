@@ -20,9 +20,9 @@ import namespaceStoreInjectable from "../store.injectable";
 import addNamespaceDialogStateInjectable
   from "./state.injectable";
 import type { NamespaceStore } from "../store";
-import { autoBind } from "../../../utils";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
+import autoBindReact from "auto-bind/react";
 
 export interface AddNamespaceDialogProps extends DialogProps {
   onSuccess?(ns: Namespace): void;
@@ -42,7 +42,7 @@ class NonInjectedAddNamespaceDialog extends React.Component<AddNamespaceDialogPr
   constructor(props: AddNamespaceDialogProps & Dependencies) {
     super(props);
     makeObservable(this);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   @action

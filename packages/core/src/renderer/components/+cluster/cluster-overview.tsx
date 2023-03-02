@@ -11,7 +11,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { NodeStore } from "../+nodes/store";
 import type { PodStore } from "../+workloads-pods/store";
-import { interval } from "../../utils";
+import { interval } from "@k8slens/utilities";
 import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
 import { ClusterIssues } from "./cluster-issues";

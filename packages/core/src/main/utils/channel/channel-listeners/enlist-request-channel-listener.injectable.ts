@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IpcMainInvokeEvent } from "electron";
-import type { Disposer } from "../../../../common/utils";
+import type { Disposer } from "@k8slens/utilities";
 import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
 import type { RequestChannelListener } from "./listener-tokens";
 import ipcMainInjectionToken from "../../../../common/ipc/ipc-main-injection-token";

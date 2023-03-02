@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 import React, { Component } from "react";
 import { computed, observable, reaction, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";

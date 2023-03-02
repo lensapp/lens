@@ -5,7 +5,7 @@
 import { applicationInformationToken } from "@k8slens/application";
 import { getInjectable } from "@ogre-tools/injectable";
 import { bundledExtensionInjectionToken } from "../../../../../../common/library";
-import { object } from "../../../../../../common/utils";
+import { object } from "@k8slens/utilities";
 import buildSemanticVersionInjectable from "../../../../../../common/vars/build-semantic-version.injectable";
 
 const specificVersionsInjectable = getInjectable({

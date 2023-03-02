@@ -10,9 +10,9 @@ import catalogCategoryRegistryInjectable from "../../../../common/catalog/catego
 import { CatalogCategory } from "../../../api/catalog-entity";
 import catalogEntityRegistryInjectable from "../../../api/catalog/entity/registry.injectable";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import { noop } from "../../../utils";
 import type { CatalogEntityStore } from "../catalog-entity-store.injectable";
 import catalogEntityStoreInjectable from "../catalog-entity-store.injectable";
+import { noop } from "@k8slens/utilities";
 
 class TestEntityOne extends CatalogEntity {
   public static readonly apiVersion: string = "entity.k8slens.dev/v1alpha1";

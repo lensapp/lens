@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { object } from "../../../common/utils";
+import { object } from "@k8slens/utilities";
 import getActiveHelmRepositoriesInjectable from "../repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
 import type { HelmRepo } from "../../../common/helm/helm-repo";
 import helmChartManagerInjectable from "../helm-chart-manager.injectable";

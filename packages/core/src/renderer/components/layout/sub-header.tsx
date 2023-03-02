@@ -5,8 +5,8 @@
 
 import "./sub-header.scss";
 import React from "react";
-import type { SingleOrMany } from "../../utils";
-import { cssNames } from "../../utils";
+import type { SingleOrMany } from "@k8slens/utilities";
+import { cssNames } from "@k8slens/utilities";
 
 export interface SubHeaderProps {
   className?: string;
