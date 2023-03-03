@@ -30,6 +30,9 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
     autoBind(this);
   }
 
+  /**
+   * @deprecated
+   */
   public onContextChange(callback: (namespaces: string[]) => void, opts: { fireImmediately?: boolean } = {}): IReactionDisposer {
     return reaction(() => Array.from(this.contextNamespaces), callback, {
       fireImmediately: opts.fireImmediately,
@@ -45,12 +48,16 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
     return this.dependencies.storage.get() ?? [];
   }
 
+  /**
+   * @deprecated
+   */
   @computed get allowedNamespaces(): string[] {
     return this.items.map(item => item.getName());
   }
 
   /**
    * The list of selected namespace names (for filtering)
+   * @deprecated
    */
   @computed get contextNamespaces() {
     if (!this.selectedNamespaces.length) {
@@ -62,6 +69,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
 
   /**
    * The set of select namespace names (for filtering)
+   * @deprecated
    */
   @computed get selectedNames(): Set<string> {
     return new Set(this.contextNamespaces);
@@ -72,6 +80,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
    *
    * Namely, this will be true if the user has deselected all namespaces from
    * the filter or if the user has clicked the "All Namespaces" option
+   * @deprecated
    */
   @computed get areAllSelectedImplicitly(): boolean {
     return this.selectedNamespaces.length === 0;
@@ -101,12 +110,18 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
     return super.loadItems(params);
   }
 
+  /**
+   * @deprecated
+   */
   @action selectNamespaces = (namespace: string | string[]) => {
     const namespaces = Array.from(new Set([namespace].flat()));
 
     this.dependencies.storage.set(namespaces);
   };
 
+  /**
+   * @deprecated
+   */
   @action
   clearSelected(namespaces?: string | string[]) {
     if (namespaces) {
@@ -120,6 +135,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   /**
+   * @deprecated
    * Checks if namespace names are selected for filtering
    * @param namespaces One or several names of namespaces to check if they are selected
    * @returns `true` if all the provided names are selected
@@ -131,6 +147,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   /**
+   * @deprecated
    * Is `true` if all available namespaces are selected, otherwise `false`
    */
   @computed get hasAllContexts(): boolean {
@@ -138,6 +155,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   /**
+   * @deprecated
    * Acts like `toggleSingle` but can work on several at a time
    * @param namespaces One or many names of namespaces to select
    */
@@ -153,6 +171,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   /**
+   * @deprecated
    * Toggles the selection state of `namespace`. Namely, if it was previously
    * specifically or implicitly selected then after this call it will be
    * explicitly deselected.
@@ -166,6 +185,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   /**
+   * @deprecated
    * Makes the given namespace the sole selected namespace
    */
   selectSingle(namespace: string) {
@@ -173,6 +193,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   /**
+   * @deprecated
    * Selects all available namespaces.
    *
    * Note: If new namespaces appear in the future those will be selected too
@@ -201,12 +222,6 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
       namespace: root,
       children: children.map(this.getNamespaceTree),
     };
-  }
-
-  @action
-  async remove(item: Namespace) {
-    await super.remove(item);
-    this.clearSelected(item.getName());
   }
 }
 
