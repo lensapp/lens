@@ -657,6 +657,8 @@ export class Cluster implements ClusterModel {
 
   protected async requestAllowedNamespaces(proxyConfig: KubeConfig) {
     if (this.accessibleNamespaces.length) {
+      this.dependencies.logger.info(`[CLUSTER]: using specified accessible namespaces`, { clusterId: this.id });
+
       return this.accessibleNamespaces;
     }
 
@@ -666,16 +668,15 @@ export class Cluster implements ClusterModel {
       return await listNamespaces();
     } catch (error) {
       const ctx = proxyConfig.getContextObject(this.contextName);
-      const namespaceList = [ctx?.namespace].filter(isDefined);
+      const namespaces = [ctx?.namespace].filter(isDefined);
 
-      if (namespaceList.length === 0 && error instanceof HttpError && error.statusCode === 403) {
-        const { response } = error as HttpError & { response: { body: unknown }};
+      this.dependencies.logger.info(`[CLUSTER]: failed to list namespaces, falling back to namespace in config`, { namespaces, clusterId: this.id });
 
-        this.dependencies.logger.info("[CLUSTER]: listing namespaces is forbidden, broadcasting", { clusterId: this.id, error: response.body });
+      if (namespaces.length === 0 && error instanceof HttpError && error.statusCode === 403) {
         this.dependencies.broadcastMessage(clusterListNamespaceForbiddenChannel, this.id);
       }
 
-      return namespaceList;
+      return namespaces;
     }
   }
 
