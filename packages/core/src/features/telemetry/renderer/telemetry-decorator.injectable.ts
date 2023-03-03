@@ -14,9 +14,8 @@ import assert from "assert";
 import { isFunction } from "lodash/fp";
 import emitTelemetryInjectable from "./emit-telemetry.injectable";
 
-import telemetryWhiteListForFunctionsInjectable, {
-  WhiteListItem,
-} from "./telemetry-white-list-for-functions.injectable";
+import type { WhiteListItem } from "./telemetry-white-list-for-functions.injectable";
+import telemetryWhiteListForFunctionsInjectable from "./telemetry-white-list-for-functions.injectable";
 
 const telemetryDecoratorInjectable = getInjectable({
   id: "telemetry-decorator",
@@ -25,7 +24,7 @@ const telemetryDecoratorInjectable = getInjectable({
     const emitTelemetry = diForDecorator.inject(emitTelemetryInjectable);
 
     const whiteList = diForDecorator.inject(
-      telemetryWhiteListForFunctionsInjectable
+      telemetryWhiteListForFunctionsInjectable,
     );
 
     const whitleListMap = getWhitleListMap(whiteList);
@@ -33,32 +32,32 @@ const telemetryDecoratorInjectable = getInjectable({
     return {
       decorate:
         (instantiateToBeDecorated: any) =>
-        (di: DiContainerForInjection, instantiationParameter: any) => {
-          const instance = instantiateToBeDecorated(di, instantiationParameter);
+          (di: DiContainerForInjection, instantiationParameter: any) => {
+            const instance = instantiateToBeDecorated(di, instantiationParameter);
 
-          if (isFunction(instance)) {
-            return (...args: any[]) => {
-              const currentContext = di.context.at(-1);
+            if (isFunction(instance)) {
+              return (...args: any[]) => {
+                const currentContext = di.context.at(-1);
 
-              assert(currentContext);
+                assert(currentContext);
 
-              const whiteListed = whitleListMap.get(
-                currentContext.injectable.id
-              );
+                const whiteListed = whitleListMap.get(
+                  currentContext.injectable.id,
+                );
 
-              if (whiteListed) {
-                emitTelemetry({
-                  action: currentContext.injectable.id,
-                  params: whiteListed.getParams(...args),
-                });
-              }
+                if (whiteListed) {
+                  emitTelemetry({
+                    action: currentContext.injectable.id,
+                    params: whiteListed.getParams(...args),
+                  });
+                }
 
-              return instance(...args);
-            };
-          }
+                return instance(...args);
+              };
+            }
 
-          return instance;
-        },
+            return instance;
+          },
     };
   },
 
@@ -73,18 +72,18 @@ const getWhitleListMap = (whiteList: WhiteListItem[]) =>
     whiteList.map((item) =>
       typeof item === "string"
         ? [
-            item,
-            {
-              getParams: (...args: any[]) => undefined,
-            },
-          ]
+          item,
+          {
+            getParams: () => undefined,
+          },
+        ]
         : [
-            item.id,
-            {
-              getParams: item.getParams,
-            },
-          ]
-    )
+          item.id,
+          {
+            getParams: item.getParams,
+          },
+        ],
+    ),
   );
 
 export default telemetryDecoratorInjectable;

@@ -63,14 +63,14 @@ describe("emit-telemetry-from-specific-function-calls", () => {
           di.register(
             whiteListedInjectable,
             whiteListedInjectableWithArgument,
-            nonWhiteListedInjectable
+            nonWhiteListedInjectable,
           );
         });
 
         injectedWhiteListedFunction = di.inject(whiteListedInjectable);
 
         injectedWhiteListedFunctionWithArgument = di.inject(
-          whiteListedInjectableWithArgument
+          whiteListedInjectableWithArgument,
         );
 
         injectedNonWhiteListedFunction = di.inject(nonWhiteListedInjectable);
@@ -135,7 +135,7 @@ describe("emit-telemetry-from-specific-function-calls", () => {
 
           injectedWhiteListedFunctionWithArgument(
             "irrelevant-argument",
-            someObservable
+            someObservable,
           );
         });
 
