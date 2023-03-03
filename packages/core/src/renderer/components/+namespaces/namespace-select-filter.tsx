@@ -9,12 +9,12 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { PlaceholderProps } from "react-select";
 import { components } from "react-select";
-import type { NamespaceStore } from "./store";
 import { Select } from "../select";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { NamespaceSelectFilterModel, NamespaceSelectFilterOption, SelectAllNamespaces } from "./namespace-select-filter-model/namespace-select-filter-model";
 import namespaceSelectFilterModelInjectable from "./namespace-select-filter-model/namespace-select-filter-model.injectable";
-import namespaceStoreInjectable from "./store.injectable";
+import type { StorageLayer } from "../../utils";
+import selectedNamespaceStorageInjectable from "./namespace-storage.injectable";
 
 interface NamespaceSelectFilterProps {
   id: string;
@@ -62,22 +62,20 @@ export const NamespaceSelectFilter = withInjectables<Dependencies, NamespaceSele
 export interface CustomPlaceholderProps extends PlaceholderProps<NamespaceSelectFilterOption, true> {}
 
 interface PlaceholderDependencies {
-  namespaceStore: NamespaceStore;
+  storage: StorageLayer<string[]>;
 }
 
-const NonInjectedPlaceholder = observer(({ namespaceStore, ...props }: CustomPlaceholderProps & PlaceholderDependencies) => {
+const NonInjectedPlaceholder = observer(({ storage, ...props }: CustomPlaceholderProps & PlaceholderDependencies) => {
   const getPlaceholder = () => {
-    const namespaces = namespaceStore.contextNamespaces;
-
-    if (namespaceStore.areAllSelectedImplicitly || namespaces.length === 0) {
+    if (storage.get().length === 0) {
       return "All namespaces";
     }
 
-    const prefix = namespaces.length === 1
+    const prefix = storage.get().length === 1
       ? "Namespace"
       : "Namespaces";
 
-    return `${prefix}: ${namespaces.join(", ")}`;
+    return `${prefix}: ${storage.get().join(", ")}`;
   };
 
   return (
@@ -89,7 +87,7 @@ const NonInjectedPlaceholder = observer(({ namespaceStore, ...props }: CustomPla
 
 const Placeholder = withInjectables<PlaceholderDependencies, CustomPlaceholderProps>( NonInjectedPlaceholder, {
   getProps: (di, props) => ({
-    namespaceStore: di.inject(namespaceStoreInjectable),
     ...props,
+    storage: di.inject(selectedNamespaceStorageInjectable),
   }),
 });
