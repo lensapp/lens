@@ -13,7 +13,7 @@ import { Icon } from "../icon";
 import { MenuItem } from "../menu";
 import type { MenuActionsProps } from "../menu/menu-actions";
 import { MenuActions } from "../menu/menu-actions";
-import removeSubnamespaceInjectable from "./remove-subnamespace.injectable";
+import deleteNamespaceInjectable from "./delete-namespace.injectable";
 import type { NamespaceStore } from "./store";
 import namespaceStoreInjectable from "./store.injectable";
 
@@ -22,22 +22,17 @@ export interface NamespaceMenuProps extends MenuActionsProps {
 }
 
 interface Dependencies {
-  readonly removeSubnamespace: (name: string) => Promise<void>;
   readonly namespaceStore: NamespaceStore;
   readonly createEditResourceTab: (kubeObject: KubeObject) => void;
   readonly withConfirmation: WithConfirmation;
+  readonly deleteNamespace: (namespace: Namespace) => Promise<void>;
 }
 
 function NonInjectedNamespaceMenu(props: NamespaceMenuProps & Dependencies) {
-  const { namespace, removeSubnamespace, namespaceStore, createEditResourceTab, withConfirmation } = props;
+  const { namespace, namespaceStore, deleteNamespace, createEditResourceTab, withConfirmation } = props;
 
   const remove = async () => {
-    if (namespace.isSubnamespace()) {
-      await removeSubnamespace(namespace.getName());
-    } else {
-      await namespaceStore.remove(namespace);
-    }
-
+    deleteNamespace(namespace);
     namespaceStore.clearSelected();
   };
 
@@ -70,9 +65,9 @@ function NonInjectedNamespaceMenu(props: NamespaceMenuProps & Dependencies) {
 export const NamespaceMenu = withInjectables<Dependencies, NamespaceMenuProps>(NonInjectedNamespaceMenu, {
   getProps: (di, props) => ({
     ...props,
-    removeSubnamespace: di.inject(removeSubnamespaceInjectable),
     namespaceStore: di.inject(namespaceStoreInjectable),
     createEditResourceTab: di.inject(createEditResourceTabInjectable),
     withConfirmation: di.inject(withConfirmationInjectable),
+    deleteNamespace: di.inject(deleteNamespaceInjectable),
   }),
 });

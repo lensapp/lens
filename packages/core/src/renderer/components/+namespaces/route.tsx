@@ -20,6 +20,8 @@ import { SubnamespaceBadge } from "./subnamespace-badge";
 import { NamespaceMenu } from "./namespace-menu";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
+import type { Namespace } from "../../../common/k8s-api/endpoints";
+import deleteNamespaceInjectable from "./delete-namespace.injectable";
 
 enum columnId {
   name = "name",
@@ -32,21 +34,24 @@ interface Dependencies {
   namespaceStore: NamespaceStore;
   openAddNamespaceDialog: () => void;
   openConfirmDialog: OpenConfirmDialog;
+  deleteNamespace: (namespace: Namespace) => Promise<void>;
 }
 
-const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog, openConfirmDialog }: Dependencies) => {
+const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog, openConfirmDialog, deleteNamespace }: Dependencies) => {
   function onConfirm() {
-    namespaceStore.removeSelectedItems();
+    const namespaces = namespaceStore.selectedItems;
+
+    namespaces.forEach(deleteNamespace);
   }
 
-  function openRemoveNamespaceDialog() {
+  const openRemoveNamespaceDialog = () => {
     const namespaces = namespaceStore.selectedItems;
     const message = (
       <div>
         <>
           Remove following namespaces?
           {" "}
-          <div style={{ overflow: "auto", maxHeight: "200px" }}>
+          <div className="confirm-dialog-scrollable-content">
             {namespaces.map(namespace => (
               <li key={namespace.getId()}>{namespace.getName()}</li>
             ))}
@@ -127,5 +132,6 @@ export const NamespacesRoute = withInjectables<Dependencies>(NonInjectedNamespac
     namespaceStore: di.inject(namespaceStoreInjectable),
     openAddNamespaceDialog: di.inject(openAddNamepaceDialogInjectable),
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
+    deleteNamespace: di.inject(deleteNamespaceInjectable),
   }),
 });
