@@ -26,6 +26,7 @@ import type { RequestApiResources } from "../../main/cluster/request-api-resourc
 import type { DetectClusterMetadata } from "../../main/cluster-detectors/detect-cluster-metadata.injectable";
 import type { FalibleOnlyClusterMetadataDetector } from "../../main/cluster-detectors/token";
 import { withConcurrencyLimit } from "../utils/with-concurrency-limit";
+import { inspect } from "util";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
@@ -498,7 +499,10 @@ export class Cluster implements ClusterModel {
 
     this.allowedResources.replace(await this.getAllowedResources(requestNamespaceListPermissions));
     this.ready = this.knownResources.length > 0;
-    this.dependencies.logger.info(`[CLUSTER]: refreshed accessibility data`, this.getState());
+    this.dependencies.logger.info(`[CLUSTER]: refreshed accessibility data: %s`, inspect(this.getState(), {
+      colors: true,
+      depth: Infinity,
+    }));
   }
 
   /**
