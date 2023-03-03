@@ -11,7 +11,6 @@ import type { Kubectl } from "../../main/kubectl/kubectl";
 import type { KubeconfigManager } from "../../main/kubeconfig-manager/kubeconfig-manager";
 import type { KubeApiResource, KubeApiResourceDescriptor } from "../rbac";
 import { formatKubeApiResource } from "../rbac";
-import plimit from "p-limit";
 import type { ClusterState, ClusterMetricsResourceType, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, KubeAuthUpdate, ClusterConfigData } from "../cluster-types";
 import { ClusterMetadataKey, initialNodeShellImage, ClusterStatus, clusterModelIdChecker, updateClusterModelChecker } from "../cluster-types";
 import { disposer, isDefined, isRequestError, toJS } from "../utils";
@@ -22,10 +21,11 @@ import assert from "assert";
 import type { Logger } from "../logger";
 import type { BroadcastMessage } from "../ipc/broadcast-message.injectable";
 import type { LoadConfigfromFile } from "../kube-helpers/load-config-from-file.injectable";
-import type { CanListResource, RequestNamespaceListPermissions, RequestNamespaceListPermissionsFor } from "./request-namespace-list-permissions.injectable";
+import type { RequestNamespaceListPermissions, RequestNamespaceListPermissionsFor } from "./request-namespace-list-permissions.injectable";
 import type { RequestApiResources } from "../../main/cluster/request-api-resources.injectable";
 import type { DetectClusterMetadata } from "../../main/cluster-detectors/detect-cluster-metadata.injectable";
 import type { FalibleOnlyClusterMetadataDetector } from "../../main/cluster-detectors/token";
+import { withConcurrencyLimit } from "../utils/with-concurrency-limit";
 
 export interface ClusterDependencies {
   readonly directoryForKubeConfigs: string;
@@ -684,19 +684,12 @@ export class Cluster implements ClusterModel {
       return [];
     }
 
-    try {
-      const apiLimit = plimit(5); // 5 concurrent api requests
-      const canListResourceCheckers = await Promise.all((
-        this.allowedNamespaces.map(namespace => apiLimit(() => requestNamespaceListPermissions(namespace)))
-      ));
-      const canListNamespacedResource: CanListResource = (resource) => canListResourceCheckers.some(fn => fn(resource));
+    const request = withConcurrencyLimit(5)(requestNamespaceListPermissions);
+    const canListResourceCheckers = await Promise.all(this.allowedNamespaces.map(request));
 
-      return this.knownResources
-        .filter(canListNamespacedResource)
-        .map(formatKubeApiResource);
-    } catch (error) {
-      return [];
-    }
+    return this.knownResources
+      .filter((resource) => canListResourceCheckers.some(fn => fn(resource)))
+      .map(formatKubeApiResource);
   }
 
   shouldShowResource(resource: KubeApiResourceDescriptor): boolean {
