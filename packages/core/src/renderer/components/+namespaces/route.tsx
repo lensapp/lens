@@ -22,6 +22,7 @@ import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 import type { Namespace } from "../../../common/k8s-api/endpoints";
 import deleteNamespaceInjectable from "./delete-namespace.injectable";
+import { observer } from "mobx-react";
 
 enum columnId {
   name = "name",
@@ -37,7 +38,7 @@ interface Dependencies {
   deleteNamespace: (namespace: Namespace) => Promise<void>;
 }
 
-const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog, openConfirmDialog, deleteNamespace }: Dependencies) => {
+const NonInjectedNamespacesRoute = observer(({ namespaceStore, openAddNamespaceDialog, openConfirmDialog, deleteNamespace }: Dependencies) => {
   function onConfirm() {
     const namespaces = namespaceStore.selectedItems;
 
@@ -113,7 +114,7 @@ const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog, op
         addRemoveButtons={{
           addTooltip: "Add Namespace",
           onAdd: openAddNamespaceDialog,
-          onRemove: openRemoveNamespaceDialog,
+          onRemove: namespaceStore.selectedItems.length > 0 ? openRemoveNamespaceDialog : undefined,
         }}
         renderItemMenu={namespace => (
           <NamespaceMenu
@@ -124,7 +125,7 @@ const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog, op
       <AddNamespaceDialog/>
     </TabLayout>
   );
-}
+});
 
 
 export const NamespacesRoute = withInjectables<Dependencies>(NonInjectedNamespacesRoute, {
