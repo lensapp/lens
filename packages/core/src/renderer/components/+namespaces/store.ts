@@ -21,6 +21,7 @@ export interface NamespaceTree {
 interface Dependencies extends KubeObjectStoreDependencies {
   readonly storage: StorageLayer<string[] | undefined>;
   readonly clusterConfiguredAccessibleNamespaces: IComputedValue<string[]>;
+  deleteSubnamespace: (name: string) => Promise<void>
 }
 
 export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
@@ -220,7 +221,12 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
 
   @action
   async remove(item: Namespace) {
-    await super.remove(item);
+    if (item.isSubnamespace()) {
+      this.dependencies.deleteSubnamespace(item.getName())
+    } else {
+      await super.remove(item);
+    }
+
     this.clearSelected(item.getName());
   }
 }
