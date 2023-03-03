@@ -498,6 +498,7 @@ export class Cluster implements ClusterModel {
 
     this.allowedResources.replace(await this.getAllowedResources(requestNamespaceListPermissions));
     this.ready = this.knownResources.length > 0;
+    this.dependencies.logger.info(`[CLUSTER]: refreshed accessibility data`, this.getState());
   }
 
   /**
