@@ -166,6 +166,8 @@ describe("entity running technical tests", () => {
 
         rendered.getByTestId("detail-panel-hot-bar-icon").click();
 
+        await flushPromises();
+
         expect(onRun).not.toHaveBeenCalled();
       });
 

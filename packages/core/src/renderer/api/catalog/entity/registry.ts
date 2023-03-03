@@ -249,6 +249,8 @@ export class CatalogEntityRegistry {
 
       if (!doOnRun) {
         this.dependencies.logger.debug(`onBeforeRun for ${entity.getId()} returned false`);
+
+        return;
       }
 
       await entity.onRun?.({
