@@ -48,8 +48,8 @@ const requestNamespaceListPermissionsForInjectable = getInjectable({
 
           return (resource) => {
             const resourceRule = resourceRules.find(({
-              apiGroups = [],
-              resources = [],
+              apiGroups = ["*"],
+              resources = ["*"],
             }) => {
               const isAboutRelevantApiGroup = apiGroups.includes("*") || apiGroups.includes(resource.group);
               const isAboutResource = resources.includes("*") || resources.includes(resource.apiName);
