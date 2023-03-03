@@ -15,6 +15,8 @@ import type { Fetch } from "../../../common/fetch/fetch.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import { createMockResponseFromString } from "../../../test-utils/mock-responses";
+import type { NamespaceScopedClusterContext } from "../../cluster-frame-context/cluster-frame-context";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import createClusterInjectable from "../../cluster/create-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -43,6 +45,7 @@ function createNamespace(name: string): Namespace {
 describe("<NamespaceSelectFilter />", () => {
   let di: DiContainer;
   let namespaceStore: NamespaceStore;
+  let context: NamespaceScopedClusterContext;
   let fetchMock: AsyncFnMock<Fetch>;
   let result: RenderResult;
   let cleanup: Disposer;
@@ -69,6 +72,7 @@ describe("<NamespaceSelectFilter />", () => {
     }));
 
     namespaceStore = di.inject(namespaceStoreInjectable);
+    context = di.inject(clusterFrameContextForNamespacedResourcesInjectable);
 
     const subscribeStores = di.inject(subscribeStoresInjectable);
 
@@ -138,7 +142,7 @@ describe("<NamespaceSelectFilter />", () => {
         });
 
         it("has only 'test-2' is selected in the store", () => {
-          expect(namespaceStore.contextNamespaces).toEqual(["test-2"]);
+          expect(context.contextNamespaces).toEqual(["test-2"]);
         });
 
         it("closes menu", () => {
@@ -172,7 +176,7 @@ describe("<NamespaceSelectFilter />", () => {
             });
 
             it("has only 'test-1' is selected in the store", () => {
-              expect(namespaceStore.contextNamespaces).toEqual(["test-1"]);
+              expect(context.contextNamespaces).toEqual(["test-1"]);
             });
 
             it("closes menu", () => {
@@ -197,7 +201,7 @@ describe("<NamespaceSelectFilter />", () => {
                 });
 
                 it("has both 'test-1' and 'test-3' as selected in the store", () => {
-                  expect(new Set(namespaceStore.contextNamespaces)).toEqual(new Set(["test-1", "test-3"]));
+                  expect(new Set(context.contextNamespaces)).toEqual(new Set(["test-1", "test-3"]));
                 });
 
                 it("keeps menu open", () => {
@@ -214,7 +218,7 @@ describe("<NamespaceSelectFilter />", () => {
                   });
 
                   it("has all of 'test-1', 'test-3', and 'test-13' selected in the store", () => {
-                    expect(new Set(namespaceStore.contextNamespaces)).toEqual(new Set(["test-1", "test-3", "test-13"]));
+                    expect(new Set(context.contextNamespaces)).toEqual(new Set(["test-1", "test-3", "test-13"]));
                   });
 
                   it("'test-13' is not sorted to the top of the list", () => {

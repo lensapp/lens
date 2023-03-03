@@ -3,16 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import namespaceStoreInjectable from "../store.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../../cluster-frame-context/for-namespaced-resources.injectable";
 
 export type FilterByNamespace = (namespace: string) => void;
 
 const filterByNamespaceInjectable = getInjectable({
   id: "filter-by-namespace",
   instantiate: (di): FilterByNamespace => {
-    const namespaceStore = di.inject(namespaceStoreInjectable);
+    const context = di.inject(clusterFrameContextForNamespacedResourcesInjectable);
 
-    return (namespace) => namespaceStore.selectSingle(namespace);
+    return (namespace) => context.selectNamespace(namespace);
   },
 });
 

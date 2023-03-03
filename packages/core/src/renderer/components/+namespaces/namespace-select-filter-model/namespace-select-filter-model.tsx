@@ -5,16 +5,15 @@
 import React from "react";
 import type { IComputedValue } from "mobx";
 import { observable, action, computed, comparer } from "mobx";
-import type { NamespaceStore } from "../store";
 import type { ActionMeta, MultiValue } from "react-select";
 import { Icon } from "../../icon";
 import type { SelectOption } from "../../select";
 import { observableCrate } from "../../../utils";
 import type { IsMultiSelectionKey } from "./is-selection-key.injectable";
+import type { NamespaceScopedClusterContext } from "../../../cluster-frame-context/cluster-frame-context";
 
 interface Dependencies {
   context: NamespaceScopedClusterContext;
-  namespaceStore: NamespaceStore;
   isMultiSelectionKey: IsMultiSelectionKey;
 }
 
@@ -45,7 +44,7 @@ enum SelectMenuState {
 }
 
 export function namespaceSelectFilterModelFor(dependencies: Dependencies): NamespaceSelectFilterModel {
-  const { isMultiSelectionKey, namespaceStore, context } = dependencies;
+  const { isMultiSelectionKey, context } = dependencies;
 
   let didToggle = false;
   let isMultiSelection = false;
@@ -111,7 +110,7 @@ export function namespaceSelectFilterModelFor(dependencies: Dependencies): Names
     onChange: (_, action) => {
       switch (action.action) {
         case "clear":
-          namespaceStore.selectAll();
+          context.selectAllNamespaces();
           break;
         case "deselect-option":
         case "select-option":
@@ -119,11 +118,11 @@ export function namespaceSelectFilterModelFor(dependencies: Dependencies): Names
             didToggle = true;
 
             if (action.option.value === selectAllNamespaces) {
-              namespaceStore.selectAll();
+              context.selectAllNamespaces();
             } else if (isMultiSelection) {
-              namespaceStore.toggleSingle(action.option.value);
+              context.toggleNamespace(action.option.value);
             } else {
-              namespaceStore.selectSingle(action.option.value);
+              context.selectNamespace(action.option.value);
             }
           }
           break;
