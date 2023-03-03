@@ -16,18 +16,20 @@ import emitTelemetryInjectable from "./emit-telemetry.injectable";
 
 import type { WhiteListItem } from "./telemetry-white-list-for-functions.injectable";
 import telemetryWhiteListForFunctionsInjectable from "./telemetry-white-list-for-functions.injectable";
+import logErrorInjectable from "../../../common/log-error.injectable";
 
 const telemetryDecoratorInjectable = getInjectable({
   id: "telemetry-decorator",
 
   instantiate: (diForDecorator) => {
     const emitTelemetry = diForDecorator.inject(emitTelemetryInjectable);
+    const logError = diForDecorator.inject(logErrorInjectable);
 
     const whiteList = diForDecorator.inject(
       telemetryWhiteListForFunctionsInjectable,
     );
 
-    const whitleListMap = getWhitleListMap(whiteList);
+    const whiteListMap = getWhiteListMap(whiteList);
 
     return {
       decorate:
@@ -41,14 +43,30 @@ const telemetryDecoratorInjectable = getInjectable({
 
                 assert(currentContext);
 
-                const whiteListed = whitleListMap.get(
+                const whiteListed = whiteListMap.get(
                   currentContext.injectable.id,
                 );
 
                 if (whiteListed) {
+                  let params;
+
+                  try {
+                    params = whiteListed.getParams(...args);
+                  } catch (e) {
+                    params = {
+                      error:
+                      "Tried to produce params for telemetry, but getParams() threw an error",
+                    };
+
+                    logError(
+                      `Tried to produce params for telemetry of "${currentContext.injectable.id}", but getParams() threw an error`,
+                      e,
+                    );
+                  }
+
                   emitTelemetry({
                     action: currentContext.injectable.id,
-                    params: whiteListed.getParams(...args),
+                    params,
                   });
                 }
 
@@ -67,7 +85,7 @@ const telemetryDecoratorInjectable = getInjectable({
   injectionToken: instantiationDecoratorToken,
 });
 
-const getWhitleListMap = (whiteList: WhiteListItem[]) =>
+const getWhiteListMap = (whiteList: WhiteListItem[]) =>
   new Map(
     whiteList.map((item) =>
       typeof item === "string"
