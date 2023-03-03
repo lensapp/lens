@@ -41,6 +41,11 @@
       font-size: small;
       margin-top: $margin;
     }
+
+    .confirm-dialog-scrollable-content {
+      overflow: auto;
+      max-height: 200px;
+    }
   }
 
   .confirm-buttons {
