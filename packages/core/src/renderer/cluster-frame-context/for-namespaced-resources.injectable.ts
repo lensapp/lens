@@ -4,37 +4,23 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { NamespaceScopedClusterContext } from "./cluster-frame-context";
-import namespaceStoreInjectable from "../components/+namespaces/store.injectable";
 import hostedClusterInjectable from "./hosted-cluster.injectable";
 import assert from "assert";
 import { computed } from "mobx";
 import selectedNamespaceStorageInjectable from "../components/+namespaces/namespace-storage.injectable";
 import { toggle } from "../utils";
+import allNamespacesInjectable from "./all-namespaces.injectable";
 
 const clusterFrameContextForNamespacedResourcesInjectable = getInjectable({
   id: "cluster-frame-context-for-namespaced-resources",
 
   instantiate: (di): NamespaceScopedClusterContext => {
     const cluster = di.inject(hostedClusterInjectable);
-    const namespaceStore = di.inject(namespaceStoreInjectable);
     const selectedNamespaceStorage = di.inject(selectedNamespaceStorageInjectable);
 
     assert(cluster, "This can only be injected within a cluster frame");
 
-    const allNamespaces = computed(() => {
-      // user given list of namespaces
-      if (cluster.accessibleNamespaces.length) {
-        return cluster.accessibleNamespaces.slice();
-      }
-
-      if (namespaceStore.items.length > 0) {
-        // namespaces from kubernetes api
-        return namespaceStore.items.map((namespace) => namespace.getName());
-      }
-
-      // fallback to cluster resolved namespaces because we could not load list
-      return cluster.allowedNamespaces.slice();
-    });
+    const allNamespaces = di.inject(allNamespacesInjectable);
     const contextNamespaces = computed(() => {
       const storedState = selectedNamespaceStorage.get();
 
