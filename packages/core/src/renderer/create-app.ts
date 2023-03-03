@@ -5,19 +5,16 @@
 import "./components/app.scss";
 
 import { bootstrap } from "./bootstrap";
-import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
 import { runInAction } from "mobx";
 import { registerInjectables } from "./register-injectables";
+import type { CreateApplication } from "../common/create-app";
+import { getDi } from "./getDi";
 
-interface AppConfig {
-  di: DiContainer;
-  mode: string;
-}
-
-export function createApp(conf: AppConfig) {
-  const { di, mode } = conf;
+export const createApplication: CreateApplication = (config) => {
+  const { mode } = config;
+  const di = getDi();
 
   runInAction(() => {
     di.register(getInjectable({
@@ -25,10 +22,12 @@ export function createApp(conf: AppConfig) {
       instantiate: () => mode,
       injectionToken: nodeEnvInjectionToken,
     }));
+
     registerInjectables(di);
   });
-  
+
   return {
     start: () => bootstrap(di),
+    di,
   };
-}
+};

@@ -4,16 +4,10 @@
  */
 import type { DiContainer } from "@ogre-tools/injectable";
 import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registration";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { runInAction } from "mobx";
-import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export function registerInjectables(di: DiContainer) {
-  setLegacyGlobalDiForExtensionApi(di, Environments.main);
-
   runInAction(() => {
-    registerMobX(di);
-
     autoRegister({
       di,
       targetModule: module,
@@ -25,6 +19,4 @@ export function registerInjectables(di: DiContainer) {
       ],
     });
   });
-
-  return di;
 }
