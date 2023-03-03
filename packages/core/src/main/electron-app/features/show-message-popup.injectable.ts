@@ -5,7 +5,11 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import electronDialogInjectable from "./electron-dialog.injectable";
 
-export type ShowMessagePopup = (title: string, message: string, detail: string) => void;
+export interface ShowMessagePopupOptions {
+  textWidth?: number;
+}
+
+export type ShowMessagePopup = (title: string, message: string, detail: string, options?: ShowMessagePopupOptions) => void;
 
 const showMessagePopupInjectable = getInjectable({
   id: "show-message-popup",
@@ -13,13 +17,14 @@ const showMessagePopupInjectable = getInjectable({
   instantiate: (di): ShowMessagePopup => {
     const dialog = di.inject(electronDialogInjectable);
 
-    return async (title, message, detail) => {
+    return async (title, message, detail, options = {}) => {
       await dialog.showMessageBox({
         title,
         message,
         detail,
         type: "info",
         buttons: ["Close"],
+        ...options,
       });
     };
   },

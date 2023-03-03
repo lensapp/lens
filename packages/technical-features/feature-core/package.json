@@ -1,9 +1,15 @@
 {
   "name": "@k8slens/feature-core",
   "private": false,
-  "version": "0.0.1",
+  "version": "6.5.0-alpha.0",
   "description": "Code that is common to all Features and those registering them.",
   "type": "commonjs",
+
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+
   "files": [
     "dist"
   ],

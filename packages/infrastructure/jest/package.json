@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/jest",
   "private": false,
-  "version": "0.0.1",
+  "version": "6.5.0-alpha.0",
   "description": "Jest configuration and scripts for Lens packages.",
   "type": "commonjs",
   "publishConfig": {
@@ -20,7 +20,7 @@
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens",
   "dependencies": {
-    "@swc/core": "^1.3.20",
+    "@swc/core": "^1.3.37",
     "@swc/jest": "^0.2.23",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
