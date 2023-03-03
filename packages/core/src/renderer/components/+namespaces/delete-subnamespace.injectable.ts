@@ -16,8 +16,8 @@ const deleteSubnamespaceInjectable = getInjectable({
 
     return async (namespace: string) => (
       removeSubnamespace(namespace)
-    )
-  }
+    );
+  },
 });
 
 export default deleteSubnamespaceInjectable;

@@ -28,7 +28,7 @@ const namespaceStoreInjectable = getInjectable({
       storage: createStorage<string[] | undefined>("selected_namespaces", undefined),
       clusterConfiguredAccessibleNamespaces: di.inject(clusterConfiguredAccessibleNamespacesInjectable),
       logger: di.inject(loggerInjectable),
-      deleteSubnamespace: di.inject(deleteSubnamespaceInjectable)
+      deleteSubnamespace: di.inject(deleteSubnamespaceInjectable),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,
