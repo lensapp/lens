@@ -5,17 +5,17 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
-import namespaceStoreInjectable from "../../../+namespaces/store.injectable";
 import daemonsetsStoreInjectable from "../../../+workloads-daemonsets/store.injectable";
 import navigateToDaemonsetsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/daemonsets/navigate-to-daemonsets.injectable";
 import { computed } from "mobx";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../../../cluster-frame-context/for-namespaced-resources.injectable";
 
 const daemonsetsWorkloadInjectable = getInjectable({
   id: "daemonsets-workload",
 
   instantiate: (di) => {
     const navigate = di.inject(navigateToDaemonsetsInjectable);
-    const namespaceStore = di.inject(namespaceStoreInjectable);
+    const context = di.inject(clusterFrameContextForNamespacedResourcesInjectable);
     const store = di.inject(daemonsetsStoreInjectable);
 
     return {
@@ -26,11 +26,11 @@ const daemonsetsWorkloadInjectable = getInjectable({
       open: navigate,
 
       amountOfItems: computed(
-        () => store.getAllByNs(namespaceStore.contextNamespaces).length,
+        () => store.getAllByNs(context.contextNamespaces).length,
       ),
 
       status: computed(() =>
-        store.getStatuses(store.getAllByNs(namespaceStore.contextNamespaces)),
+        store.getStatuses(store.getAllByNs(context.contextNamespaces)),
       ),
 
       title: ResourceNames.daemonsets,
