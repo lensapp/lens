@@ -504,6 +504,7 @@ export const getApplicationBuilder = () => {
         const clusterStub = {
           id: "some-cluster-id",
           accessibleNamespaces: observable.array(),
+          allowedNamespaces: observable.array(),
           shouldShowResource: (kind) => allowedResourcesState.has(formatKubeApiResource(kind)),
         } as Partial<Cluster> as Cluster;
 
