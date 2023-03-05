@@ -85,7 +85,7 @@ export class KubeconfigManager {
 
       return this.tempFilePath = await this.createProxyKubeconfig();
     } catch (error) {
-      throw new Error(`Failed to creat temp config for auth-proxy: ${error}`);
+      throw new Error(`Failed to create temp config for auth-proxy: ${error}`);
     }
   }
 

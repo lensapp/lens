@@ -10,20 +10,20 @@ import clusterStoreInjectable from "../../common/cluster-store/cluster-store.inj
 import type { Cluster } from "../../common/cluster/cluster";
 import createAuthorizationApiInjectable from "../../common/cluster/create-authorization-api.injectable";
 import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable";
-import createContextHandlerInjectable from "../../main/context-handler/create-context-handler.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import url from "url";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
 import type { PartialDeep } from "type-fest";
 import { anyObject } from "jest-mock-extended";
-import { flushPromises } from "../../common/test-utils/flush-promises";
 import createCoreApiInjectable from "../../common/cluster/create-core-api.injectable";
 import type { K8sRequest } from "../../main/k8s-request.injectable";
 import k8sRequestInjectable from "../../main/k8s-request.injectable";
 import type { DetectClusterMetadata } from "../../main/cluster-detectors/detect-cluster-metadata.injectable";
 import detectClusterMetadataInjectable from "../../main/cluster-detectors/detect-cluster-metadata.injectable";
-import { delay } from "../../common/utils";
+import type { ClusterConnection } from "../../main/cluster/cluster-connection.injectable";
+import clusterConnectionInjectable from "../../main/cluster/cluster-connection.injectable";
+import { flushPromises } from "@k8slens/test-utils";
+import { setTimeout } from "timers/promises";
 
 describe("Refresh Cluster Accessibility Technical Tests", () => {
   let builder: ApplicationBuilder;
@@ -34,9 +34,7 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
   let detectClusterMetadataMock: AsyncFnMock<DetectClusterMetadata>;
 
   beforeEach(async () => {
-    builder = getApplicationBuilder({
-      fakeTime: false,
-    });
+    builder = getApplicationBuilder();
 
     const mainDi = builder.mainDi;
 
@@ -47,15 +45,6 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
 
     k8sRequestMock = asyncFn();
     mainDi.override(k8sRequestInjectable, () => k8sRequestMock);
-
-    mainDi.override(createContextHandlerInjectable, () => (cluster) => {
-      const clusterUrl = url.parse(cluster.apiUrl);
-
-      return {
-        clusterUrl,
-        ensureServer: async () => {},
-      };
-    });
 
     createSelfSubjectRulesReviewMock = asyncFn();
     createSelfSubjectAccessReviewMock = asyncFn();
@@ -74,6 +63,7 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
 
   describe("given a cluster with no configured preferences", () => {
     let cluster: Cluster;
+    let clusterConnection: ClusterConnection;
     let refreshPromise: Promise<void>;
 
     beforeEach(async () => {
@@ -109,11 +99,12 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
       });
 
       cluster = clusterStore.getById("some-cluster-id") ?? (() => { throw new Error("missing cluster"); })();
-      refreshPromise = cluster.refreshAccessibilityAndMetadata();
+      clusterConnection = mainDi.inject(clusterConnectionInjectable, cluster);
+      refreshPromise = clusterConnection.refreshAccessibilityAndMetadata();
 
       // NOTE: I don't know why these are all are required to get the tests to pass
       await flushPromises();
-      await delay(50);
+      await setTimeout(50);
       await flushPromises();
     });
 
@@ -272,17 +263,11 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
                           });
 
                           it("should have the cluster displaying 'pods'", () => {
-                            expect(cluster.shouldShowResource({
-                              apiName: "pods",
-                              group: "",
-                            })).toBe(true);
+                            expect(cluster.resourcesToShow.has("pods")).toBe(true);
                           });
 
                           it("should have the cluster displaying 'namespaces'", () => {
-                            expect(cluster.shouldShowResource({
-                              apiName: "namespaces",
-                              group: "",
-                            })).toBe(true);
+                            expect(cluster.resourcesToShow.has("namespaces")).toBe(true);
                           });
                         });
                       });
@@ -324,17 +309,11 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
                           });
 
                           it("should have the cluster displaying 'pods'", () => {
-                            expect(cluster.shouldShowResource({
-                              apiName: "pods",
-                              group: "",
-                            })).toBe(false);
+                            expect(cluster.resourcesToShow.has("pods")).toBe(false);
                           });
 
                           it("should have the cluster not displaying 'namespaces'", () => {
-                            expect(cluster.shouldShowResource({
-                              apiName: "namespaces",
-                              group: "",
-                            })).toBe(false);
+                            expect(cluster.resourcesToShow.has("namespaces")).toBe(false);
                           });
                         });
                       });
@@ -376,17 +355,11 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
                           });
 
                           it("should have the cluster displaying 'pods'", () => {
-                            expect(cluster.shouldShowResource({
-                              apiName: "pods",
-                              group: "",
-                            })).toBe(true);
+                            expect(cluster.resourcesToShow.has("pods")).toBe(true);
                           });
 
                           it("should have the cluster not displaying 'namespaces'", () => {
-                            expect(cluster.shouldShowResource({
-                              apiName: "namespaces",
-                              group: "",
-                            })).toBe(false);
+                            expect(cluster.resourcesToShow.has("namespaces")).toBe(false);
                           });
                         });
                       });
@@ -428,17 +401,11 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
                           });
 
                           it("should have the cluster displaying 'pods'", () => {
-                            expect(cluster.shouldShowResource({
-                              apiName: "pods",
-                              group: "",
-                            })).toBe(true);
+                            expect(cluster.resourcesToShow.has("pods")).toBe(true);
                           });
 
                           it("should have the cluster not displaying 'namespaces'", () => {
-                            expect(cluster.shouldShowResource({
-                              apiName: "namespaces",
-                              group: "",
-                            })).toBe(false);
+                            expect(cluster.resourcesToShow.has("namespaces")).toBe(false);
                           });
                         });
                       });
