@@ -7,11 +7,12 @@ import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import type { KubeApiResource } from "../../common/rbac";
 import type { Cluster } from "../../common/cluster/cluster";
-import { requestApiVersionsInjectionToken } from "./request-api-versions";
+import { apiVersionsRequesterInjectionToken } from "./request-api-versions";
 import { backoffCaller, withConcurrencyLimit } from "@k8slens/utilities";
 import requestKubeApiResourcesForInjectable from "./request-kube-api-resources-for.injectable";
 import type { AsyncResult } from "@k8slens/utilities";
 import broadcastConnectionUpdateInjectable from "./broadcast-connection-update.injectable";
+import { byOrderNumber } from "../../common/utils/composable-responsibilities/orderable/orderable";
 
 export type RequestApiResources = (cluster: Cluster) => AsyncResult<KubeApiResource[], Error>;
 
@@ -24,7 +25,8 @@ const requestApiResourcesInjectable = getInjectable({
   id: "request-api-resources",
   instantiate: (di): RequestApiResources => {
     const logger = di.inject(loggerInjectable);
-    const apiVersionRequesters = di.injectMany(requestApiVersionsInjectionToken);
+    const apiVersionRequesters = di.injectMany(apiVersionsRequesterInjectionToken)
+      .sort(byOrderNumber);
     const requestKubeApiResourcesFor = di.inject(requestKubeApiResourcesForInjectable);
 
     return async (...args) => {
@@ -35,7 +37,7 @@ const requestApiResourcesInjectable = getInjectable({
       const groupLists: KubeResourceListGroup[] = [];
 
       for (const apiVersionRequester of apiVersionRequesters) {
-        const result = await backoffCaller(() => apiVersionRequester(cluster), {
+        const result = await backoffCaller(() => apiVersionRequester.request(cluster), {
           onIntermediateError: (error, attempt) => {
             broadcastConnectionUpdate({
               message: `Failed to list kube API resource kinds, attempt ${attempt}: ${error}`,

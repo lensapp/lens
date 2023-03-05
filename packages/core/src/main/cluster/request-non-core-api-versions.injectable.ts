@@ -6,35 +6,40 @@ import type { V1APIGroupList } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
 import { iter } from "@k8slens/utilities";
 import k8sRequestInjectable from "../k8s-request.injectable";
-import { requestApiVersionsInjectionToken } from "./request-api-versions";
+import { apiVersionsRequesterInjectionToken } from "./request-api-versions";
 
 const requestNonCoreApiVersionsInjectable = getInjectable({
   id: "request-non-core-api-versions",
   instantiate: (di) => {
     const k8sRequest = di.inject(k8sRequestInjectable);
 
-    return async (cluster) => {
-      try {
-        const { groups } = await k8sRequest(cluster, "/apis") as V1APIGroupList;
+    return {
+      request: async (cluster) => {
+        try {
+          const { groups } = (await k8sRequest(cluster, "/apis")) as V1APIGroupList;
 
-        return {
-          callWasSuccessful: true,
-          response: iter.chain(groups.values())
-            .flatMap(group => group.versions.map(version => ({
-              group: group.name,
-              path: `/apis/${version.groupVersion}`,
-            })))
-            .collect(v => [...v]),
-        };
-      } catch (error) {
-        return {
-          callWasSuccessful: false,
-          error: error as Error,
-        };
-      }
+          return {
+            callWasSuccessful: true,
+            response: iter.chain(groups.values())
+              .flatMap((group) =>
+                group.versions.map((version) => ({
+                  group: group.name,
+                  path: `/apis/${version.groupVersion}`,
+                })),
+              )
+              .collect((v) => [...v]),
+          };
+        } catch (error) {
+          return {
+            callWasSuccessful: false,
+            error: error as Error,
+          };
+        }
+      },
+      orderNumber: 20,
     };
   },
-  injectionToken: requestApiVersionsInjectionToken,
+  injectionToken: apiVersionsRequesterInjectionToken,
 });
 
 export default requestNonCoreApiVersionsInjectable;
