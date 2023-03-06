@@ -4,7 +4,7 @@ import {
   getInjectable,
 } from "@ogre-tools/injectable";
 import { registerFeature } from "@k8slens/feature-core";
-import { applicationFeatureForElectronMain } from "./applicationFeatureForElectronMain";
+import { applicationFeatureForElectronMain } from "./feature";
 import {
   beforeApplicationIsLoadingInjectionToken,
   startApplicationInjectionToken,

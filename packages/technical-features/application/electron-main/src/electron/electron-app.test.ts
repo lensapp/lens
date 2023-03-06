@@ -1,7 +1,7 @@
 import electronAppInjectable from "./electron-app.injectable";
 import { app } from 'electron';
 import { createContainer } from "@ogre-tools/injectable";
-import { applicationFeatureForElectronMain } from "../applicationFeatureForElectronMain";
+import { applicationFeatureForElectronMain } from "../feature";
 import { registerFeature } from "@k8slens/feature-core";
 
 describe('electron-app', () => {
