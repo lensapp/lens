@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/ensure-binaries",
-  "version": "6.5.0-alpha.0",
+  "version": "6.5.0-cron.a917494",
   "description": "CLI for downloading configured versions of the bundled versions of CLIs",
   "main": "dist/index.js",
   "license": "MIT",

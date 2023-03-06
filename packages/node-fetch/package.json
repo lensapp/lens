@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/node-fetch",
-  "version": "6.5.0-alpha.0",
+  "version": "6.5.0-cron.a917494",
   "description": "Node fetch for Lens",
   "license": "MIT",
   "private": false,

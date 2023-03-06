@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/generate-tray-icons",
-  "version": "6.5.0-alpha.0",
+  "version": "6.5.0-cron.a917494",
   "description": "CLI generating tray icons for building a lens-like application",
   "license": "MIT",
   "scripts": {
