@@ -2,7 +2,7 @@
   "name": "@k8slens/extensions",
   "productName": "OpenLens extensions",
   "description": "OpenLens - Open Source Kubernetes IDE: extensions",
-  "version": "6.4.1",
+  "version": "6.4.2",
   "copyright": "© 2022 OpenLens Authors",
   "license": "MIT",
   "main": "dist/extension-api.js",
@@ -26,7 +26,7 @@
     "prepare:dev": "yarn run build"
   },
   "dependencies": {
-    "@k8slens/core": "^6.4.1"
+    "@k8slens/core": "^6.4.2"
   },
   "devDependencies": {
     "@types/node": "^16.18.6",
@@ -39,6 +39,7 @@
     "style-loader": "^3.3.1",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
+    "typed-emitter": "^2.1.0",
     "typedoc": "0.23.25",
     "typedoc-plugin-markdown": "^3.13.6",
     "typescript": "^4.9.5",
