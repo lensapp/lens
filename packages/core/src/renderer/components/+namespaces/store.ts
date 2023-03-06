@@ -61,7 +61,10 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
   }
 
   @computed get allowedNamespaces(): string[] {
-    return this.items.map(item => item.getName());
+    return Array.from(new Set([
+      ...this.dependencies.context.allNamespaces, // allowed namespaces from cluster (main)
+      ...this.items.map(item => item.getName()), // loaded namespaces from k8s api
+    ].flat()));
   }
 
   /**
