@@ -11,6 +11,10 @@
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/binaries" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/core/static/build" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/technical-features/application/agnostic/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/technical-features/application/electron-main/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/open-lens/static/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

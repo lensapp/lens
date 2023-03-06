@@ -8,7 +8,7 @@ import { startApplicationInjectionToken } from "@k8slens/application";
 import whenAppIsReadyInjectable from "./when-app-is-ready.injectable";
 import { beforeAnythingInjectionToken } from "./timeslots/before-anything-injection-token";
 import { beforeElectronIsReadyInjectionToken } from "./timeslots/before-electron-is-ready-injection-token";
-import { runManySyncFor } from "@ogre-tools/injectable-utils";
+import { runManySyncFor } from "@k8slens/run-many";
 
 const startElectronApplicationInjectable = getInjectable({
   id: "start-electron-application",

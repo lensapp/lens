@@ -1,5 +1,5 @@
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
-import { runManyFor } from "@ogre-tools/injectable-utils";
+import { runManyFor } from "@k8slens/run-many";
 import { beforeApplicationIsLoadingInjectionToken } from "./timeslots/before-application-is-loading-injection-token";
 import { onLoadOfApplicationInjectionToken } from "./timeslots/on-load-of-application-injection-token";
 import { afterApplicationIsLoadedInjectionToken } from "./timeslots/after-application-is-loaded-injection-token";
