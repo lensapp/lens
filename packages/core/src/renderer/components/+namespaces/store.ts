@@ -60,15 +60,16 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
     return this.dependencies.storage.get() ?? [];
   }
 
+  /**
+   * @deprecated This doesn't contain the namespaces from cluster settings or from cluster context
+   */
   @computed get allowedNamespaces(): string[] {
-    return Array.from(new Set([
-      ...this.dependencies.context.allNamespaces, // allowed namespaces from cluster (main)
-      ...this.items.map(item => item.getName()), // loaded namespaces from k8s api
-    ].flat()));
+    return this.items.map(item => item.getName());
   }
 
   /**
    * The list of selected namespace names (for filtering)
+   * @deprecated This doesn't contain the namespaces from cluster settings or from cluster context
    */
   @computed get contextNamespaces() {
     if (!this.selectedNamespaces.length) {
@@ -80,6 +81,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
 
   /**
    * The set of select namespace names (for filtering)
+   * @deprecated This doesn't contain the namespaces from cluster settings or from cluster context
    */
   @computed get selectedNames(): Set<string> {
     return new Set(this.contextNamespaces);
