@@ -3,25 +3,27 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeElectronIsReadyInjectionToken } from "../../start-main-application/runnable-tokens/phases";
+import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
 import requestSingleInstanceLockInjectable from "../features/request-single-instance-lock.injectable";
 import exitAppInjectable from "../features/exit-app.injectable";
 
 const enforceSingleApplicationInstanceInjectable = getInjectable({
   id: "enforce-single-application-instance",
 
-  instantiate: (di) => ({
-    run: () => {
-      const requestSingleInstanceLock = di.inject(requestSingleInstanceLockInjectable);
-      const exitApp = di.inject(exitAppInjectable);
+  instantiate: (di) => {
+    const requestSingleInstanceLock = di.inject(requestSingleInstanceLockInjectable);
+    const exitApp = di.inject(exitAppInjectable);
 
-      if (!requestSingleInstanceLock()) {
-        exitApp();
-      }
+    return {
+      run: () => {
+        if (!requestSingleInstanceLock()) {
+          exitApp();
+        }
 
-      return undefined;
-    },
-  }),
+        return undefined;
+      },
+    };
+  },
 
   injectionToken: beforeElectronIsReadyInjectionToken,
 });

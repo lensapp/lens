@@ -700,6 +700,11 @@ export class Cluster implements ClusterModel {
   }
 
   shouldShowResource(resource: KubeApiResourceDescriptor): boolean {
+    if (this.allowedResources.size === 0) {
+      // better to show than hide everything
+      return true;
+    }
+
     return this.allowedResources.has(formatKubeApiResource(resource));
   }
 

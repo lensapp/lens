@@ -31,6 +31,6 @@
     "test": "jest --coverage --runInBand"
   },
   "peerDependencies": {
-    "@ogre-tools/injectable": "^15.1.1"
+    "@ogre-tools/injectable": "^15.1.2"
   }
 }

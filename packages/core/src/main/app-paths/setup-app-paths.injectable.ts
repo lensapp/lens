@@ -13,7 +13,7 @@ import { fromPairs, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import appNameInjectable from "../../common/vars/app-name.injectable";
-import { appPathsRunnablePhaseInjectionToken } from "../start-main-application/runnable-tokens/phases";
+import { beforeAnythingInjectionToken } from "@k8slens/application-for-electron-main";
 
 const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",
@@ -48,7 +48,7 @@ const setupAppPathsInjectable = getInjectable({
     },
   }),
 
-  injectionToken: appPathsRunnablePhaseInjectionToken,
+  injectionToken: beforeAnythingInjectionToken,
 });
 
 export default setupAppPathsInjectable;

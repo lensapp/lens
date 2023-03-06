@@ -4,26 +4,28 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { reaction } from "mobx";
-import { onLoadOfApplicationInjectionToken } from "../../../../main/start-main-application/runnable-tokens/phases";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import operatingSystemThemeInjectable from "../../../../main/theme/operating-system-theme.injectable";
 import emitSystemThemeTypeUpdateInjectable from "./emit-update.injectable";
 
 const setupSystemThemeTypeUpdaterEmitterInjectable = getInjectable({
   id: "setup-system-theme-type-updater-emitter",
-  instantiate: (di) => ({
-    run: () => {
-      const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
-      const emitSystemThemeTypeUpdate = di.inject(emitSystemThemeTypeUpdateInjectable);
+  instantiate: (di) => {
+    const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
+    const emitSystemThemeTypeUpdate = di.inject(emitSystemThemeTypeUpdateInjectable);
 
-      reaction(
-        () => operatingSystemTheme.get(),
-        emitSystemThemeTypeUpdate,
-        {
-          fireImmediately: true,
-        },
-      );
-    },
-  }),
+    return {
+      run: () => {
+        reaction(
+          () => operatingSystemTheme.get(),
+          emitSystemThemeTypeUpdate,
+          {
+            fireImmediately: true,
+          },
+        );
+      },
+    };
+  },
   injectionToken: onLoadOfApplicationInjectionToken,
 });
 

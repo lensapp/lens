@@ -3,19 +3,21 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { onLoadOfApplicationInjectionToken } from "../../start-main-application/runnable-tokens/phases";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import electronTrayInjectable from "./electron-tray.injectable";
 
 const startTrayInjectable = getInjectable({
   id: "start-tray",
 
-  instantiate: (di) => ({
-    run: () => {
-      const electronTray = di.inject(electronTrayInjectable);
+  instantiate: (di) => {
+    const electronTray = di.inject(electronTrayInjectable);
 
-      electronTray.start();
-    },
-  }),
+    return {
+      run: () => {
+        electronTray.start();
+      },
+    };
+  },
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

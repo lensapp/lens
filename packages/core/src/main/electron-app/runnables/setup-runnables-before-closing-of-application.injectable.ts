@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeElectronIsReadyInjectionToken, beforeQuitOfFrontEndInjectionToken, beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
+import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
+import { beforeQuitOfFrontEndInjectionToken, beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
 import electronAppInjectable from "../electron-app.injectable";
 import isIntegrationTestingInjectable from "../../../common/vars/is-integration-testing.injectable";
 import autoUpdaterInjectable from "../features/auto-updater.injectable";
@@ -12,36 +13,37 @@ import { runManySyncFor } from "@k8slens/run-many";
 const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
   id: "setup-closing-of-application",
 
-  instantiate: (di) => ({
-    run: () => {
-      const runManySync = runManySyncFor(di);
-      const runRunnablesBeforeQuitOfFrontEnd = runManySync(beforeQuitOfFrontEndInjectionToken);
-      const runRunnablesBeforeQuitOfBackEnd = runManySync(beforeQuitOfBackEndInjectionToken);
-      const app = di.inject(electronAppInjectable);
-      const isIntegrationTesting = di.inject(isIntegrationTestingInjectable);
-      const autoUpdater = di.inject(autoUpdaterInjectable);
-      let isAutoUpdating = false;
+  instantiate: (di) => {
+    const runManySync = runManySyncFor(di);
+    const runRunnablesBeforeQuitOfFrontEnd = runManySync(beforeQuitOfFrontEndInjectionToken);
+    const runRunnablesBeforeQuitOfBackEnd = runManySync(beforeQuitOfBackEndInjectionToken);
+    const app = di.inject(electronAppInjectable);
+    const isIntegrationTesting = di.inject(isIntegrationTestingInjectable);
+    const autoUpdater = di.inject(autoUpdaterInjectable);
 
-      autoUpdater.on("before-quit-for-update", () => {
-        isAutoUpdating = true;
-      });
+    return {
+      run: () => {
+        let isAutoUpdating = false;
 
-      app.on("will-quit", (event) => {
-        runRunnablesBeforeQuitOfFrontEnd();
+        autoUpdater.on("before-quit-for-update", () => {
+          isAutoUpdating = true;
+        });
 
-        const shouldQuitBackEnd = isIntegrationTesting || isAutoUpdating;
+        app.on("will-quit", (event) => {
+          runRunnablesBeforeQuitOfFrontEnd();
 
-        if (shouldQuitBackEnd) {
-          runRunnablesBeforeQuitOfBackEnd();
-        } else {
-          // IMPORTANT: This cannot be destructured as it would break binding of "this" for the Electron event
-          event.preventDefault();
-        }
-      });
+          const shouldQuitBackEnd = isIntegrationTesting || isAutoUpdating;
 
-      return undefined;
-    },
-  }),
+          if (shouldQuitBackEnd) {
+            runRunnablesBeforeQuitOfBackEnd();
+          } else {
+            // IMPORTANT: This cannot be destructured as it would break binding of "this" for the Electron event
+            event.preventDefault();
+          }
+        });
+      },
+    };
+  },
 
   injectionToken: beforeElectronIsReadyInjectionToken,
 });

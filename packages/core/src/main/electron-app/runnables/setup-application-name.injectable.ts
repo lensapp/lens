@@ -4,22 +4,22 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import appNameInjectable from "../../../common/vars/app-name.injectable";
-import { beforeElectronIsReadyInjectionToken } from "../../start-main-application/runnable-tokens/phases";
+import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
 import electronAppInjectable from "../electron-app.injectable";
 
 const setupApplicationNameInjectable = getInjectable({
   id: "setup-application-name",
 
-  instantiate: (di) => ({
-    run: () => {
-      const app = di.inject(electronAppInjectable);
-      const appName = di.inject(appNameInjectable);
+  instantiate: (di) => {
+    const app = di.inject(electronAppInjectable);
+    const appName = di.inject(appNameInjectable);
 
-      app.setName(appName);
-
-      return undefined;
-    },
-  }),
+    return {
+      run: () => {
+        app.setName(appName);
+      },
+    };
+  },
 
   injectionToken: beforeElectronIsReadyInjectionToken,
 });

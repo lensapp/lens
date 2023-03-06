@@ -5,23 +5,23 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import disableHardwareAccelerationInjectable from "../../electron-app/features/disable-hardware-acceleration.injectable";
 import hardwareAccelerationShouldBeDisabledInjectable from "../../vars/hardware-acceleration-should-be-disabled.injectable";
-import { beforeElectronIsReadyInjectionToken } from "../runnable-tokens/phases";
+import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
 
 const setupHardwareAccelerationInjectable = getInjectable({
   id: "setup-hardware-acceleration",
 
-  instantiate: (di) => ({
-    run: () => {
-      const hardwareAccelerationShouldBeDisabled = di.inject(hardwareAccelerationShouldBeDisabledInjectable);
-      const disableHardwareAcceleration = di.inject(disableHardwareAccelerationInjectable);
+  instantiate: (di) => {
+    const hardwareAccelerationShouldBeDisabled = di.inject(hardwareAccelerationShouldBeDisabledInjectable);
+    const disableHardwareAcceleration = di.inject(disableHardwareAccelerationInjectable);
 
-      if (hardwareAccelerationShouldBeDisabled) {
-        disableHardwareAcceleration();
-      }
-
-      return undefined;
-    },
-  }),
+    return {
+      run: () => {
+        if (hardwareAccelerationShouldBeDisabled) {
+          disableHardwareAcceleration();
+        }
+      },
+    };
+  },
 
   injectionToken: beforeElectronIsReadyInjectionToken,
 });

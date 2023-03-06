@@ -4,18 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import syncGeneralCatalogEntitiesInjectable from "../../catalog-sources/sync-general-catalog-entities.injectable";
-import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/phases";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const setupSyncingOfGeneralCatalogEntitiesInjectable = getInjectable({
   id: "setup-syncing-of-general-catalog-entities",
 
-  instantiate: (di) => ({
-    run: () => {
-      const syncGeneralCatalogEntities = di.inject(syncGeneralCatalogEntitiesInjectable);
+  instantiate: (di) => {
+    const syncGeneralCatalogEntities = di.inject(syncGeneralCatalogEntitiesInjectable);
 
-      syncGeneralCatalogEntities();
-    },
-  }),
+    return {
+      run: () => {
+        syncGeneralCatalogEntities();
+      },
+    };
+  },
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

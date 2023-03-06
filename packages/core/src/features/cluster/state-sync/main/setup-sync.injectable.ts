@@ -7,7 +7,7 @@ import { isEqual } from "lodash";
 import { autorun } from "mobx";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import type { ClusterId, ClusterState } from "../../../../common/cluster-types";
-import { beforeApplicationIsLoadingInjectionToken } from "../../../../main/start-main-application/runnable-tokens/phases";
+import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import initClusterStoreInjectable from "../../store/main/init.injectable";
 import emitClusterStateUpdateInjectable from "./emit-update.injectable";
 

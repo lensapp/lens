@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import fileSystemProvisionerStoreInjectable from "../../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
-import { onLoadOfApplicationInjectionToken } from "../../../main/start-main-application/runnable-tokens/phases";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const initFileSystemProvisionerStoreInjectable = getInjectable({
   id: "init-file-system-provisioner-store",

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { setAutoFreeze, enableMapSet } from "immer";
-import { beforeElectronIsReadyInjectionToken } from "../runnable-tokens/phases";
+import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
 
 const setupImmerInjectable = getInjectable({
   id: "setup-immer",
@@ -15,8 +15,6 @@ const setupImmerInjectable = getInjectable({
       // Required in `utils/storage-helper.ts`
       setAutoFreeze(false); // allow to merge mobx observables
       enableMapSet(); // allow to merge maps and sets
-
-      return undefined;
     },
   }),
 

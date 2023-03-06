@@ -145,6 +145,14 @@ function formatSemverForMilestone(version: SemVer): string {
   return `${version.major}.${version.minor}.${version.patch}`;
 }
 
+function formatVersionForPickingPrs(version: SemVer): string {
+  if (version.prerelease.length > 0) {
+    return `${version.major}.${version.minor}.${version.patch}`;
+  }
+
+  return `${version.major}.${version.minor}.${version.patch+1}`;
+}
+
 async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prBody: string): Promise<void> {
   const prBranch = `release/v${version.format()}`;
 
@@ -182,9 +190,10 @@ function sortExtendedGithubPrData(left: ExtendedGithubPrData, right: ExtendedGit
   return -1;
 }
 
-async function getRelevantPRs(milestone: string, previousReleasedVersion: string): Promise<ExtendedGithubPrData[]> {
+async function getRelevantPRs(previousReleasedVersion: string): Promise<ExtendedGithubPrData[]> {
   console.log("retrieving previous 200 PRs...");
 
+  const milestone = formatVersionForPickingPrs(await getCurrentVersionOfSubPackage("core"));
   const getMergedPrsArgs = [
     "gh",
     "pr",
@@ -326,8 +335,7 @@ async function createRelease(): Promise<void> {
     await bumpPackageVersions();
   }
 
-  const prMilestone = formatSemverForMilestone(await getCurrentVersionOfSubPackage("core"));
-  const relevantPrs = await getRelevantPRs(prMilestone, previousReleasedVersion);
+  const relevantPrs = await getRelevantPRs(previousReleasedVersion);
   const selectedPrs = await pickRelevantPrs(relevantPrs, isMasterBranch);
   const prBody = formatChangelog(previousReleasedVersion, selectedPrs);
 

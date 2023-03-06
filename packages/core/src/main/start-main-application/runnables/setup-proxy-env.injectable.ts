@@ -3,37 +3,39 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeElectronIsReadyInjectionToken } from "../runnable-tokens/phases";
+import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
 import getCommandLineSwitchInjectable from "../../electron-app/features/get-command-line-switch.injectable";
 
 const setupProxyEnvInjectable = getInjectable({
   id: "setup-proxy-env",
 
-  instantiate: (di) => ({
-    run: () => {
-      const getCommandLineSwitch = di.inject(getCommandLineSwitchInjectable);
-      const switchValue = getCommandLineSwitch("proxy-server");
+  instantiate: (di) => {
+    const getCommandLineSwitch = di.inject(getCommandLineSwitchInjectable);
 
-      let httpsProxy = process.env.HTTPS_PROXY || process.env.HTTP_PROXY || "";
+    return {
+      run: () => {
+        const switchValue = getCommandLineSwitch("proxy-server");
 
-      delete process.env.HTTPS_PROXY;
-      delete process.env.HTTP_PROXY;
+        let httpsProxy =
+          process.env.HTTPS_PROXY || process.env.HTTP_PROXY || "";
 
-      if (switchValue !== "") {
-        httpsProxy = switchValue;
-      }
+        delete process.env.HTTPS_PROXY;
+        delete process.env.HTTP_PROXY;
 
-      if (httpsProxy !== "") {
-        process.env.APP_HTTPS_PROXY = httpsProxy;
-      }
+        if (switchValue !== "") {
+          httpsProxy = switchValue;
+        }
 
-      if (getCommandLineSwitch("proxy-server") !== "") {
-        process.env.HTTPS_PROXY = getCommandLineSwitch("proxy-server");
-      }
+        if (httpsProxy !== "") {
+          process.env.APP_HTTPS_PROXY = httpsProxy;
+        }
 
-      return undefined;
-    },
-  }),
+        if (getCommandLineSwitch("proxy-server") !== "") {
+          process.env.HTTPS_PROXY = getCommandLineSwitch("proxy-server");
+        }
+      },
+    };
+  },
 
   injectionToken: beforeElectronIsReadyInjectionToken,
 });

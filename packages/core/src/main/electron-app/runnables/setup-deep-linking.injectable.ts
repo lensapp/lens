@@ -7,63 +7,67 @@ import electronAppInjectable from "../electron-app.injectable";
 import openDeepLinkInjectable from "../../protocol-handler/lens-protocol-router-main/open-deep-link-for-url/open-deep-link.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import commandLineArgumentsInjectable from "../../utils/command-line-arguments.injectable";
-import { startsWith, toLower } from "lodash/fp";
-import { onLoadOfApplicationInjectionToken } from "../../start-main-application/runnable-tokens/phases";
+import { pipeline } from "@ogre-tools/fp";
+import { find, startsWith, toLower, map } from "lodash/fp";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
 
 const setupDeepLinkingInjectable = getInjectable({
   id: "setup-deep-linking",
 
-  instantiate: (di) => ({
-    run: async () => {
-      const app = di.inject(electronAppInjectable);
-      const logger = di.inject(loggerInjectable);
-      const openDeepLinkForUrl = di.inject(openDeepLinkInjectable);
-      const showApplicationWindow = di.inject(showApplicationWindowInjectable);
-      const firstInstanceCommandLineArguments = di.inject(commandLineArgumentsInjectable);
+  instantiate: (di) => {
+    const app = di.inject(electronAppInjectable);
+    const logger = di.inject(loggerInjectable);
+    const openDeepLinkForUrl = di.inject(openDeepLinkInjectable);
+    const showApplicationWindow = di.inject(showApplicationWindowInjectable);
 
-      logger.info(`📟 Setting protocol client for lens://`);
+    const firstInstanceCommandLineArguments = di.inject(
+      commandLineArgumentsInjectable,
+    );
 
-      if (app.setAsDefaultProtocolClient("lens")) {
-        logger.info("📟 Protocol client register succeeded ✅");
-      } else {
-        logger.info("📟 Protocol client register failed ❗");
-      }
+    return {
+      run: async () => {
+        logger.info(`📟 Setting protocol client for lens://`);
 
-      const url = getDeepLinkUrl(firstInstanceCommandLineArguments);
+        if (app.setAsDefaultProtocolClient("lens")) {
+          logger.info("📟 Protocol client register succeeded ✅");
+        } else {
+          logger.info("📟 Protocol client register failed ❗");
+        }
 
-      if (url) {
-        await openDeepLinkForUrl(url);
-      }
+        const url = getDeepLinkUrl(firstInstanceCommandLineArguments);
 
-      app.on("open-url", async (event, url) => {
-        event.preventDefault();
+        if (url) {
+          await openDeepLinkForUrl(url);
+        }
 
-        await openDeepLinkForUrl(url);
-      });
+        app.on("open-url", async (event, url) => {
+          event.preventDefault();
 
-      app.on(
-        "second-instance",
-        async (_, secondInstanceCommandLineArguments) => {
-          const url = getDeepLinkUrl(secondInstanceCommandLineArguments);
+          await openDeepLinkForUrl(url);
+        });
 
-          await showApplicationWindow();
+        app.on(
+          "second-instance",
 
-          if (url) {
-            await openDeepLinkForUrl(url);
-          }
-        },
-      );
-    },
-  }),
+          async (_, secondInstanceCommandLineArguments) => {
+            const url = getDeepLinkUrl(secondInstanceCommandLineArguments);
+
+            await showApplicationWindow();
+
+            if (url) {
+              await openDeepLinkForUrl(url);
+            }
+          },
+        );
+      },
+    };
+  },
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default setupDeepLinkingInjectable;
 
-const getDeepLinkUrl = (commandLineArguments: string[]) => (
-  commandLineArguments
-    .map(toLower)
-    .find(startsWith("lens://"))
-);
+const getDeepLinkUrl = (commandLineArguments: string[]) =>
+  pipeline(commandLineArguments, map(toLower), find(startsWith("lens://")));
