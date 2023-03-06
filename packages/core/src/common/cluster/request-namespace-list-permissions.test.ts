@@ -273,7 +273,7 @@ describe("requestNamespaceListPermissions", () => {
   });
 
   describe("when resourceRules has matching resource without list verb", () => {
-    it("return truthy function", async () => {
+    it("return falsy function", async () => {
       const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
         new Promise((resolve) => resolve({
           body: {
@@ -304,7 +304,7 @@ describe("requestNamespaceListPermissions", () => {
   });
 
   describe("when resourceRules has no matching resource with list verb", () => {
-    it("return truthy function", async () => {
+    it("return falsy function", async () => {
       const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
         new Promise((resolve) => resolve({
           body: {
