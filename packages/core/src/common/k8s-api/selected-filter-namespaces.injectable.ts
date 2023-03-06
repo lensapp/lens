@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import namespaceStoreInjectable from "../../renderer/components/+namespaces/store.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
 import { storesAndApisCanBeCreatedInjectionToken } from "./stores-apis-can-be-created.token";
 
 const selectedFilterNamespacesInjectable = getInjectable({
@@ -15,9 +15,9 @@ const selectedFilterNamespacesInjectable = getInjectable({
       return computed(() => []);
     }
 
-    const store = di.inject(namespaceStoreInjectable);
+    const context = di.inject(clusterFrameContextForNamespacedResourcesInjectable);
 
-    return computed(() => [...store.contextNamespaces]);
+    return computed(() => [...context.contextNamespaces]);
   },
 });
 

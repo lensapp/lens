@@ -103,7 +103,7 @@ export class KubeWatchApi {
       return () => this.#watch.dec(store);
     }
 
-    namespaces ??= this.dependencies.clusterContext?.contextNamespaces ?? [];
+    namespaces ??= this.dependencies.clusterContext.contextNamespaces ?? [];
 
     let childController = new WrappedAbortController(parent);
     const unsubscribe = disposer();

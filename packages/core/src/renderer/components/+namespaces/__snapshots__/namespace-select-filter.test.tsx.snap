@@ -1412,7 +1412,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
               </span>
             </i>
             <span>
-              test-10
+              test-2
             </span>
           </div>
         </div>
@@ -1436,7 +1436,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
               </span>
             </i>
             <span>
-              test-11
+              test-10
             </span>
           </div>
         </div>
@@ -1460,7 +1460,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
               </span>
             </i>
             <span>
-              test-12
+              test-11
             </span>
           </div>
         </div>
@@ -1484,7 +1484,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
               </span>
             </i>
             <span>
-              test-13
+              test-12
             </span>
           </div>
         </div>
@@ -1508,7 +1508,7 @@ exports[`<NamespaceSelectFilter /> once the subscribe resolves when clicked when
               </span>
             </i>
             <span>
-              test-2
+              test-13
             </span>
           </div>
         </div>
