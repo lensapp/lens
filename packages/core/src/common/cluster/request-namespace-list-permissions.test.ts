@@ -38,7 +38,7 @@ describe("requestNamespaceListPermissions", () => {
         })),
       ) as any);
 
-      const permissionCheck = await requestPermissions("fake-namespace");
+      const permissionCheck = await requestPermissions("irrelevant-namespace");
 
       expect(permissionCheck({
         apiName: "pods",
@@ -55,7 +55,7 @@ describe("requestNamespaceListPermissions", () => {
         new Promise((resolve, reject) => reject("unknown error")),
       ) as any);
 
-      const permissionCheck = await requestPermissions("fake-namespace");
+      const permissionCheck = await requestPermissions("irrelevant-namespace");
 
       expect(permissionCheck({
         apiName: "pods",
@@ -89,7 +89,7 @@ describe("requestNamespaceListPermissions", () => {
         })),
       ) as any);
 
-      const permissionCheck = await requestPermissions("fake-namespace");
+      const permissionCheck = await requestPermissions("irrelevant-namespace");
 
       expect(permissionCheck({
         apiName: "pods",
@@ -123,7 +123,7 @@ describe("requestNamespaceListPermissions", () => {
         })),
       ) as any);
 
-      const permissionCheck = await requestPermissions("fake-namespace");
+      const permissionCheck = await requestPermissions("irrelevant-namespace");
 
       expect(permissionCheck({
         apiName: "pods",
@@ -158,7 +158,7 @@ describe("requestNamespaceListPermissions", () => {
         })),
       ) as any);
 
-      const permissionCheck = await requestPermissions("fake-namespace");
+      const permissionCheck = await requestPermissions("irrelevant-namespace");
 
       expect(permissionCheck({
         apiName: "pods",
@@ -192,7 +192,7 @@ describe("requestNamespaceListPermissions", () => {
         })),
       ) as any);
 
-      const permissionCheck = await requestPermissions("fake-namespace");
+      const permissionCheck = await requestPermissions("irrelevant-namespace");
 
       expect(permissionCheck({
         apiName: "pods",
@@ -226,7 +226,7 @@ describe("requestNamespaceListPermissions", () => {
         })),
       ) as any);
 
-      const permissionCheck = await requestPermissions("fake-namespace");
+      const permissionCheck = await requestPermissions("irrelevant-namespace");
 
       expect(permissionCheck({
         apiName: "pods",
@@ -261,7 +261,7 @@ describe("requestNamespaceListPermissions", () => {
         })),
       ) as any);
 
-      const permissionCheck = await requestPermissions("fake-namespace");
+      const permissionCheck = await requestPermissions("irrelevant-namespace");
 
       expect(permissionCheck({
         apiName: "pods",
@@ -292,7 +292,7 @@ describe("requestNamespaceListPermissions", () => {
         })),
       ) as any);
 
-      const permissionCheck = await requestPermissions("fake-namespace");
+      const permissionCheck = await requestPermissions("irrelevant-namespace");
 
       expect(permissionCheck({
         apiName: "pods",
@@ -323,7 +323,7 @@ describe("requestNamespaceListPermissions", () => {
         })),
       ) as any);
 
-      const permissionCheck = await requestPermissions("fake-namespace");
+      const permissionCheck = await requestPermissions("irrelevant-namespace");
 
       expect(permissionCheck({
         apiName: "pods",
