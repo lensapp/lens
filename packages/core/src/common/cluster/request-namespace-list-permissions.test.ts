@@ -9,9 +9,9 @@ import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import type { RequestNamespaceListPermissionsFor } from "./request-namespace-list-permissions.injectable";
 import requestNamespaceListPermissionsForInjectable from "./request-namespace-list-permissions.injectable";
 
-const createFakeProxyConfig = (statusResponse: Promise<V1SubjectRulesReviewStatus>) => ({
+const createFakeProxyConfig = (statusResponse: Promise<{ body: { status: V1SubjectRulesReviewStatus }}>) => ({
   makeApiClient: () => ({
-    createSelfSubjectRulesReview: (): Promise<V1SubjectRulesReviewStatus> => statusResponse,
+    createSelfSubjectRulesReview: (): Promise<{ body: { status: V1SubjectRulesReviewStatus }}> => statusResponse,
   }),
 });
 
@@ -28,9 +28,13 @@ describe("requestNamespaceListPermissions", () => {
     it("returns truthy function", async () => {
       const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
         new Promise((resolve) => resolve({
-          incomplete: true,
-          resourceRules: [],
-          nonResourceRules: [],
+          body: {
+            status: {
+              incomplete: true,
+              resourceRules: [],
+              nonResourceRules: [],
+            },
+          },
         })),
       ) as any);
 
@@ -66,18 +70,22 @@ describe("requestNamespaceListPermissions", () => {
     it("return truthy function", async () => {
       const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
         new Promise((resolve) => resolve({
-          incomplete: false,
-          resourceRules: [
-            {
-              apiGroups: ["*"],
-              verbs: ["*"],
+          body: {
+            status: {
+              incomplete: false,
+              resourceRules: [
+                {
+                  apiGroups: ["*"],
+                  verbs: ["*"],
+                },
+                {
+                  apiGroups: ["*"],
+                  verbs: ["get"],
+                },
+              ],
+              nonResourceRules: [],
             },
-            {
-              apiGroups: ["*"],
-              verbs: ["get"],
-            },
-          ],
-          nonResourceRules: [],
+          },
         })),
       ) as any);
 
@@ -96,18 +104,22 @@ describe("requestNamespaceListPermissions", () => {
     it("return truthy function", async () => {
       const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
         new Promise((resolve) => resolve({
-          incomplete: false,
-          resourceRules: [
-            {
-              apiGroups: ["*"],
-              verbs: ["list"],
+          body: {
+            status: {
+              incomplete: false,
+              resourceRules: [
+                {
+                  apiGroups: ["*"],
+                  verbs: ["list"],
+                },
+                {
+                  apiGroups: ["*"],
+                  verbs: ["get"],
+                },
+              ],
+              nonResourceRules: [],
             },
-            {
-              apiGroups: ["*"],
-              verbs: ["get"],
-            },
-          ],
-          nonResourceRules: [],
+          },
         })),
       ) as any);
 
@@ -126,19 +138,23 @@ describe("requestNamespaceListPermissions", () => {
     it("return truthy function", async () => {
       const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
         new Promise((resolve) => resolve({
-          incomplete: false,
-          resourceRules: [
-            {
-              apiGroups: [""],
-              resources: ["pods"],
-              verbs: ["list"],
+          body: {
+            status: {
+              incomplete: false,
+              resourceRules: [
+                {
+                  apiGroups: [""],
+                  resources: ["pods"],
+                  verbs: ["list"],
+                },
+                {
+                  apiGroups: ["*"],
+                  verbs: ["get"],
+                },
+              ],
+              nonResourceRules: [],
             },
-            {
-              apiGroups: ["*"],
-              verbs: ["get"],
-            },
-          ],
-          nonResourceRules: [],
+          },
         })),
       ) as any);
 
@@ -157,18 +173,22 @@ describe("requestNamespaceListPermissions", () => {
     it("return truthy function", async () => {
       const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
         new Promise((resolve) => resolve({
-          incomplete: false,
-          resourceRules: [
-            {
-              apiGroups: ["*"],
-              verbs: ["get"],
+          body: {
+            status: {
+              incomplete: false,
+              resourceRules: [
+                {
+                  apiGroups: ["*"],
+                  verbs: ["get"],
+                },
+                {
+                  apiGroups: ["*"],
+                  verbs: ["*"],
+                },
+              ],
+              nonResourceRules: [],
             },
-            {
-              apiGroups: ["*"],
-              verbs: ["*"],
-            },
-          ],
-          nonResourceRules: [],
+          },
         })),
       ) as any);
 
@@ -187,18 +207,22 @@ describe("requestNamespaceListPermissions", () => {
     it("return truthy function", async () => {
       const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
         new Promise((resolve) => resolve({
-          incomplete: false,
-          resourceRules: [
-            {
-              apiGroups: ["*"],
-              verbs: ["get"],
+          body: {
+            status: {
+              incomplete: false,
+              resourceRules: [
+                {
+                  apiGroups: ["*"],
+                  verbs: ["get"],
+                },
+                {
+                  apiGroups: ["*"],
+                  verbs: ["list"],
+                },
+              ],
+              nonResourceRules: [],
             },
-            {
-              apiGroups: ["*"],
-              verbs: ["list"],
-            },
-          ],
-          nonResourceRules: [],
+          },
         })),
       ) as any);
 
@@ -217,19 +241,23 @@ describe("requestNamespaceListPermissions", () => {
     it("return truthy function", async () => {
       const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
         new Promise((resolve) => resolve({
-          incomplete: false,
-          resourceRules: [
-            {
-              apiGroups: ["*"],
-              verbs: ["get"],
+          body: {
+            status: {
+              incomplete: false,
+              resourceRules: [
+                {
+                  apiGroups: ["*"],
+                  verbs: ["get"],
+                },
+                {
+                  apiGroups: [""],
+                  resources: ["pods"],
+                  verbs: ["list"],
+                },
+              ],
+              nonResourceRules: [],
             },
-            {
-              apiGroups: [""],
-              resources: ["pods"],
-              verbs: ["list"],
-            },
-          ],
-          nonResourceRules: [],
+          },
         })),
       ) as any);
 
@@ -241,6 +269,68 @@ describe("requestNamespaceListPermissions", () => {
         kind: "Pod",
         namespaced: true,
       })).toBeTruthy();
+    });
+  });
+
+  describe("when resourceRules has matching resource without list verb", () => {
+    it("return truthy function", async () => {
+      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+        new Promise((resolve) => resolve({
+          body: {
+            status: {
+              incomplete: false,
+              resourceRules: [
+                {
+                  apiGroups: [""],
+                  resources: ["pods"],
+                  verbs: ["get"],
+                },
+              ],
+              nonResourceRules: [],
+            },
+          },
+        })),
+      ) as any);
+
+      const permissionCheck = await requestPermissions("fake-namespace");
+
+      expect(permissionCheck({
+        apiName: "pods",
+        group: "",
+        kind: "Pod",
+        namespaced: true,
+      })).toBeFalsy();
+    });
+  });
+
+  describe("when resourceRules has no matching resource with list verb", () => {
+    it("return truthy function", async () => {
+      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+        new Promise((resolve) => resolve({
+          body: {
+            status: {
+              incomplete: false,
+              resourceRules: [
+                {
+                  apiGroups: [""],
+                  resources: ["services"],
+                  verbs: ["list"],
+                },
+              ],
+              nonResourceRules: [],
+            },
+          },
+        })),
+      ) as any);
+
+      const permissionCheck = await requestPermissions("fake-namespace");
+
+      expect(permissionCheck({
+        apiName: "pods",
+        group: "",
+        kind: "Pod",
+        namespaced: true,
+      })).toBeFalsy();
     });
   });
 });
