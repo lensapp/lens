@@ -4,7 +4,7 @@
  */
 import * as Mobx from "mobx";
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeElectronIsReadyInjectionToken } from "../runnable-tokens/before-electron-is-ready-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
 
 const setupMobxInjectable = getInjectable({
   id: "setup-mobx",

@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import shouldStartHiddenInjectable from "../../electron-app/features/should-start-hidden.injectable";
 import splashWindowInjectable from "../lens-window/splash-window/splash-window.injectable";
-import { showLoadingRunnablePhaseInjectionToken } from "../runnable-tokens/phases";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const showLoadingInjectable = getInjectable({
   id: "show-loading",
@@ -23,7 +23,7 @@ const showLoadingInjectable = getInjectable({
       },
     };
   },
-  injectionToken: showLoadingRunnablePhaseInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default showLoadingInjectable;
