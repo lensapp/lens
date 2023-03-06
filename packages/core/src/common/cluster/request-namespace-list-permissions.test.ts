@@ -9,7 +9,7 @@ import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import type { RequestNamespaceListPermissionsFor } from "./request-namespace-list-permissions.injectable";
 import requestNamespaceListPermissionsForInjectable from "./request-namespace-list-permissions.injectable";
 
-const createFakeProxyConfig = (statusResponse: Promise<{ body: { status: V1SubjectRulesReviewStatus }}>) => ({
+const createStubProxyConfig = (statusResponse: Promise<{ body: { status: V1SubjectRulesReviewStatus }}>) => ({
   makeApiClient: () => ({
     createSelfSubjectRulesReview: (): Promise<{ body: { status: V1SubjectRulesReviewStatus }}> => statusResponse,
   }),
@@ -26,7 +26,7 @@ describe("requestNamespaceListPermissions", () => {
 
   describe("when api returns incomplete data", () => {
     it("returns truthy function", async () => {
-      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+      const requestPermissions = requestNamespaceListPermissions(createStubProxyConfig(
         new Promise((resolve) => resolve({
           body: {
             status: {
@@ -51,7 +51,7 @@ describe("requestNamespaceListPermissions", () => {
 
   describe("when api rejects", () => {
     it("returns truthy function", async () => {
-      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+      const requestPermissions = requestNamespaceListPermissions(createStubProxyConfig(
         new Promise((resolve, reject) => reject("unknown error")),
       ) as any);
 
@@ -68,7 +68,7 @@ describe("requestNamespaceListPermissions", () => {
 
   describe("when first resourceRule has all permissions for everything", () => {
     it("return truthy function", async () => {
-      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+      const requestPermissions = requestNamespaceListPermissions(createStubProxyConfig(
         new Promise((resolve) => resolve({
           body: {
             status: {
@@ -102,7 +102,7 @@ describe("requestNamespaceListPermissions", () => {
 
   describe("when first resourceRule has list permissions for everything", () => {
     it("return truthy function", async () => {
-      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+      const requestPermissions = requestNamespaceListPermissions(createStubProxyConfig(
         new Promise((resolve) => resolve({
           body: {
             status: {
@@ -136,7 +136,7 @@ describe("requestNamespaceListPermissions", () => {
 
   describe("when first resourceRule has list permissions for asked resource", () => {
     it("return truthy function", async () => {
-      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+      const requestPermissions = requestNamespaceListPermissions(createStubProxyConfig(
         new Promise((resolve) => resolve({
           body: {
             status: {
@@ -171,7 +171,7 @@ describe("requestNamespaceListPermissions", () => {
 
   describe("when last resourceRule has all permissions for everything", () => {
     it("return truthy function", async () => {
-      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+      const requestPermissions = requestNamespaceListPermissions(createStubProxyConfig(
         new Promise((resolve) => resolve({
           body: {
             status: {
@@ -205,7 +205,7 @@ describe("requestNamespaceListPermissions", () => {
 
   describe("when last resourceRule has list permissions for everything", () => {
     it("return truthy function", async () => {
-      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+      const requestPermissions = requestNamespaceListPermissions(createStubProxyConfig(
         new Promise((resolve) => resolve({
           body: {
             status: {
@@ -239,7 +239,7 @@ describe("requestNamespaceListPermissions", () => {
 
   describe("when last resourceRule has list permissions for asked resource", () => {
     it("return truthy function", async () => {
-      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+      const requestPermissions = requestNamespaceListPermissions(createStubProxyConfig(
         new Promise((resolve) => resolve({
           body: {
             status: {
@@ -274,7 +274,7 @@ describe("requestNamespaceListPermissions", () => {
 
   describe("when resourceRules has matching resource without list verb", () => {
     it("return falsy function", async () => {
-      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+      const requestPermissions = requestNamespaceListPermissions(createStubProxyConfig(
         new Promise((resolve) => resolve({
           body: {
             status: {
@@ -305,7 +305,7 @@ describe("requestNamespaceListPermissions", () => {
 
   describe("when resourceRules has no matching resource with list verb", () => {
     it("return falsy function", async () => {
-      const requestPermissions = requestNamespaceListPermissions(createFakeProxyConfig(
+      const requestPermissions = requestNamespaceListPermissions(createStubProxyConfig(
         new Promise((resolve) => resolve({
           body: {
             status: {
