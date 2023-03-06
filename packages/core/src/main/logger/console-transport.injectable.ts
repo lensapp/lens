@@ -30,6 +30,7 @@ const consoleLoggerTransportInjectable = getInjectable({
     ),
   }),
   injectionToken: loggerTransportInjectionToken,
+  decorable: false,
 });
 
 export default consoleLoggerTransportInjectable;
