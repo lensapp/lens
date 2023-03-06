@@ -21,63 +21,62 @@ import logErrorInjectable from "../../../common/log-error.injectable";
 const telemetryDecoratorInjectable = getInjectable({
   id: "telemetry-decorator",
 
-  instantiate: (diForDecorator) => {
-    const emitTelemetry = diForDecorator.inject(emitTelemetryInjectable);
-    const logError = diForDecorator.inject(logErrorInjectable);
+  instantiate: (diForDecorator) => ({
+    decorate:
+      (instantiateToBeDecorated: any) =>
+        (di: DiContainerForInjection, instantiationParameter: any) => {
+          const instance = instantiateToBeDecorated(di, instantiationParameter);
 
-    const whiteList = diForDecorator.inject(
-      telemetryWhiteListForFunctionsInjectable,
-    );
+          if (isFunction(instance)) {
+            return (...args: any[]) => {
+              const currentContext = di.context.at(-1);
 
-    const whiteListMap = getWhiteListMap(whiteList);
+              assert(currentContext);
 
-    return {
-      decorate:
-        (instantiateToBeDecorated: any) =>
-          (di: DiContainerForInjection, instantiationParameter: any) => {
-            const instance = instantiateToBeDecorated(di, instantiationParameter);
+              const emitTelemetry = diForDecorator.inject(
+                emitTelemetryInjectable,
+              );
 
-            if (isFunction(instance)) {
-              return (...args: any[]) => {
-                const currentContext = di.context.at(-1);
+              const logError = diForDecorator.inject(logErrorInjectable);
 
-                assert(currentContext);
+              const whiteList = diForDecorator.inject(
+                telemetryWhiteListForFunctionsInjectable,
+              );
 
-                const whiteListed = whiteListMap.get(
-                  currentContext.injectable.id,
-                );
+              const whiteListMap = getWhiteListMap(whiteList);
 
-                if (whiteListed) {
-                  let params;
+              const whiteListed = whiteListMap.get(currentContext.injectable.id);
 
-                  try {
-                    params = whiteListed.getParams(...args);
-                  } catch (e) {
-                    params = {
-                      error:
-                      "Tried to produce params for telemetry, but getParams() threw an error",
-                    };
+              if (whiteListed) {
+                let params;
 
-                    logError(
-                      `Tried to produce params for telemetry of "${currentContext.injectable.id}", but getParams() threw an error`,
-                      e,
-                    );
-                  }
+                try {
+                  params = whiteListed.getParams(...args);
+                } catch (e) {
+                  params = {
+                    error:
+                    "Tried to produce params for telemetry, but getParams() threw an error",
+                  };
 
-                  emitTelemetry({
-                    action: currentContext.injectable.id,
-                    params,
-                  });
+                  logError(
+                    `Tried to produce params for telemetry of "${currentContext.injectable.id}", but getParams() threw an error`,
+                    e,
+                  );
                 }
 
-                return instance(...args);
-              };
-            }
+                emitTelemetry({
+                  action: currentContext.injectable.id,
+                  params,
+                });
+              }
 
-            return instance;
-          },
-    };
-  },
+              return instance(...args);
+            };
+          }
+
+          return instance;
+        },
+  }),
 
   decorable: false,
   // Todo: this is required because of imperfect typing in injectable.
