@@ -45,8 +45,8 @@ const clusterFrameContextForNamespacedResourcesInjectable = getInjectable({
       const namespaces = new Set(contextNamespaces.get());
 
       return allNamespaces.get().length > 1
-      && cluster.accessibleNamespaces.length === 0
-      && allNamespaces.get().every(ns => namespaces.has(ns));
+        && cluster.accessibleNamespaces.length === 0
+        && allNamespaces.get().every(ns => namespaces.has(ns));
     });
 
     return {
