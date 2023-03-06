@@ -69,6 +69,7 @@ import fsInjectable from "../../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
 import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
+import selectedNamespacesStorageInjectable from "../../../features/namespace-filtering/renderer/storage.injectable";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -369,7 +370,12 @@ export const getApplicationBuilder = () => {
         namespaces.add(namespace);
         namespaceItems.replace(createNamespacesFor(namespaces));
       }),
-      select: action((namespace) => selectedNamespaces.add(namespace)),
+      select: action((namespace) => {
+        const selectedNamespacesStorage = builder.applicationWindow.only.di.inject(selectedNamespacesStorageInjectable);
+
+        selectedNamespaces.add(namespace);
+        selectedNamespacesStorage.set([...selectedNamespaces]);
+      }),
     },
     applicationMenu: {
       get items() {

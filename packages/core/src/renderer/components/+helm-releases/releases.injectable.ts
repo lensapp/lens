@@ -25,7 +25,7 @@ const releasesInjectable = getInjectable({
         const releaseArrays = await (
           clusterContext.hasSelectedAll
             ? requestHelmReleases()
-            : Promise.all(clusterContext.contextNamespaces.map(requestHelmReleases))
+            : Promise.all(clusterContext.contextNamespaces.map((namespace) => requestHelmReleases(namespace)))
         );
 
         return releaseArrays.flat().map(toHelmRelease);
