@@ -1,18 +1,16 @@
 {
-  "name": "@k8slens/feature-core",
+  "name": "@k8slens/application-for-electron-main",
   "private": false,
   "version": "6.5.0-alpha.0",
-  "description": "Code that is common to all Features and those registering them.",
+  "description": "Electron's main specifics for creating Lens applications",
   "type": "commonjs",
-
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-
-  "files": [
-    "dist"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -31,6 +29,16 @@
     "test": "jest --coverage --runInBand"
   },
   "peerDependencies": {
-    "@ogre-tools/injectable": "^15.1.2"
+    "@k8slens/feature-core": "^6.5.0-alpha.0",
+    "@k8slens/application": "^6.5.0-alpha.0",
+    "@ogre-tools/injectable": "^15.1.2",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^15.1.2",
+    "@ogre-tools/injectable-utils": "^15.1.2",
+    "electron": "^19.1.9"
+  },
+
+  "devDependencies": {
+    "@async-fn/jest": "^1.6.4",
+    "@ogre-tools/test-utils": "^15.1.2"
   }
 }
