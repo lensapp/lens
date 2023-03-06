@@ -2,33 +2,34 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type {
-  DiContainerForInjection,
-  Injectable,
-} from "@ogre-tools/injectable";
+import type { DiContainerForInjection } from "@ogre-tools/injectable";
 
 import {
-  lifecycleEnum,
   getInjectable,
   instantiationDecoratorToken,
+  lifecycleEnum,
 } from "@ogre-tools/injectable";
-import assert from "assert";
 
+import assert from "assert";
 import { isFunction } from "lodash/fp";
 import emitTelemetryInjectable from "./emit-telemetry.injectable";
+
+import type { WhiteListItem } from "./telemetry-white-list-for-functions.injectable";
 import telemetryWhiteListForFunctionsInjectable from "./telemetry-white-list-for-functions.injectable";
+import logErrorInjectable from "../../../common/log-error.injectable";
 
 const telemetryDecoratorInjectable = getInjectable({
   id: "telemetry-decorator",
 
   instantiate: (diForDecorator) => {
     const emitTelemetry = diForDecorator.inject(emitTelemetryInjectable);
+    const logError = diForDecorator.inject(logErrorInjectable);
 
     const whiteList = diForDecorator.inject(
       telemetryWhiteListForFunctionsInjectable,
     );
 
-    const shouldEmitTelemetry = shouldEmitTelemetryFor(whiteList);
+    const whiteListMap = getWhiteListMap(whiteList);
 
     return {
       decorate:
@@ -42,8 +43,31 @@ const telemetryDecoratorInjectable = getInjectable({
 
                 assert(currentContext);
 
-                if (shouldEmitTelemetry(currentContext.injectable)) {
-                  emitTelemetry({ action: currentContext.injectable.id, args });
+                const whiteListed = whiteListMap.get(
+                  currentContext.injectable.id,
+                );
+
+                if (whiteListed) {
+                  let params;
+
+                  try {
+                    params = whiteListed.getParams(...args);
+                  } catch (e) {
+                    params = {
+                      error:
+                      "Tried to produce params for telemetry, but getParams() threw an error",
+                    };
+
+                    logError(
+                      `Tried to produce params for telemetry of "${currentContext.injectable.id}", but getParams() threw an error`,
+                      e,
+                    );
+                  }
+
+                  emitTelemetry({
+                    action: currentContext.injectable.id,
+                    params,
+                  });
                 }
 
                 return instance(...args);
@@ -61,9 +85,23 @@ const telemetryDecoratorInjectable = getInjectable({
   injectionToken: instantiationDecoratorToken,
 });
 
-const shouldEmitTelemetryFor =
-  (whiteList: string[]) => (injectable: Injectable<any, any, any>) =>
-    injectable.tags?.includes("emit-telemetry") ||
-    whiteList.includes(injectable.id);
+const getWhiteListMap = (whiteList: WhiteListItem[]) =>
+  new Map(
+    whiteList.map((item) =>
+      typeof item === "string"
+        ? [
+          item,
+          {
+            getParams: () => undefined,
+          },
+        ]
+        : [
+          item.id,
+          {
+            getParams: item.getParams,
+          },
+        ],
+    ),
+  );
 
 export default telemetryDecoratorInjectable;
