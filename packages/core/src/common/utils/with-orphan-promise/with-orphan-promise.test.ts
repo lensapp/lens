@@ -14,7 +14,7 @@ describe("with orphan promise, when called", () => {
   let logErrorMock: jest.Mock;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     logErrorMock = jest.fn();
 

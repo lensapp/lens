@@ -16,7 +16,7 @@ describe("Helm Service tests", () => {
   let getActiveHelmRepositoriesMock: jest.Mock<Promise<AsyncResult<HelmRepo[]>>>;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     getActiveHelmRepositoriesMock = jest.fn();
 

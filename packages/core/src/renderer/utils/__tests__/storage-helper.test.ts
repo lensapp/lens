@@ -20,7 +20,7 @@ describe("renderer/utils/StorageHelper", () => {
   let createStorageHelper: CreateStorageHelper;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     createStorageHelper = di.inject(createStorageHelperInjectable);
   });

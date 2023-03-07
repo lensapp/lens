@@ -44,7 +44,7 @@ describe("Custom Category Columns", () => {
   let getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     di.override(hotbarStoreInjectable, () => ({}));
     di.override(currentlyInClusterFrameInjectable, () => false);

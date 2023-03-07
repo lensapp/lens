@@ -31,7 +31,7 @@ describe("create clusters", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
     const clusterServerUrl = "https://192.168.64.3:8443";
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");

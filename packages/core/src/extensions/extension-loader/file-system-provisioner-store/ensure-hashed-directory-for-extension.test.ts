@@ -18,7 +18,7 @@ describe("ensure-hashed-directory-for-extension", () => {
   let registeredExtensions: ObservableMap<string, string>;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({  doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     ensureDirMock = jest.fn();
 

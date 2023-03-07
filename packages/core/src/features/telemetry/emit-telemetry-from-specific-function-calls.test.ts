@@ -9,12 +9,15 @@ import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import telemetryWhiteListForFunctionsInjectable from "./renderer/telemetry-white-list-for-functions.injectable";
 import emitEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import logErrorInjectable from "../../common/log-error.injectable";
+import telemetryDecoratorInjectable from "./renderer/telemetry-decorator.injectable";
 
 describe("emit-telemetry-from-specific-function-calls", () => {
   let di: DiContainer;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
+
+    di.unoverride(telemetryDecoratorInjectable);
   });
 
   describe("given a telemetry white-list for injectables which instantiate a function", () => {

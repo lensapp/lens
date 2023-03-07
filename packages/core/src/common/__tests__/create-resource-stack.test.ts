@@ -17,7 +17,7 @@ describe("create resource stack tests", () => {
   let cluster: KubernetesCluster;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
     cluster = {
       getId: () => "test-cluster",
     } as any;

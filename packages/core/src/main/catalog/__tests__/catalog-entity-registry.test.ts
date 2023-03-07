@@ -65,7 +65,7 @@ describe("CatalogEntityRegistry", () => {
   });
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     entityRegistry = di.inject(catalogEntityRegistryInjectable);
   });

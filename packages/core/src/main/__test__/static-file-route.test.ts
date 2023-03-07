@@ -11,7 +11,7 @@ describe("static-file-route", () => {
   let handleStaticFileRoute: Route<Buffer, "/{path*}">;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     handleStaticFileRoute = di.inject(staticFileRouteInjectable);
   });

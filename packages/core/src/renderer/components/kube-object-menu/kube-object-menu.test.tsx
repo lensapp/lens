@@ -32,7 +32,7 @@ describe("kube-object-menu", () => {
   let render: DiRender;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     runInAction(() => {
       di.register(

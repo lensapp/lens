@@ -26,6 +26,8 @@ describe("download-platform-update", () => {
   beforeEach(() => {
     di = getDiForUnitTesting();
 
+    di.unoverride(downloadPlatformUpdateInjectable);
+
     downloadUpdateMock = asyncFn();
     electronUpdaterOnMock = jest.fn();
     electronUpdaterOffMock = jest.fn();

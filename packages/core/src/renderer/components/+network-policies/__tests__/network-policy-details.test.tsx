@@ -15,7 +15,7 @@ describe("NetworkPolicyDetails", () => {
   let render: DiRender;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     render = renderFor(di);
   });

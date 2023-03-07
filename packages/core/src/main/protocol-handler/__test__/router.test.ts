@@ -37,7 +37,7 @@ describe("protocol router tests", () => {
   let broadcastMessageMock: jest.Mock;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(pathExistsInjectable, () => () => { throw new Error("tried call pathExists without override"); });
     di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });

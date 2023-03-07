@@ -70,7 +70,7 @@ describe("CatalogEntityStore", () => {
   let di: DiContainer;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
   });
 
   describe("getTotalCount", () => {
