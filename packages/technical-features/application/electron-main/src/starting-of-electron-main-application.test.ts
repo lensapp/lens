@@ -1,8 +1,4 @@
-import {
-  createContainer,
-  DiContainer,
-  getInjectable,
-} from "@ogre-tools/injectable";
+import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injectable";
 import { registerFeature } from "@k8slens/feature-core";
 import { applicationFeatureForElectronMain } from "./feature";
 import {
@@ -52,7 +48,7 @@ describe("starting-of-electron-main-application", () => {
     di.register(
       beforeAnythingIsLoadingInjectable,
       beforeElectronIsReadyIsLoadingInjectable,
-      beforeApplicationIsLoadingInjectable
+      beforeApplicationIsLoadingInjectable,
     );
 
     di.override(whenAppIsReadyInjectable, () => whenAppIsReadyMock);
@@ -62,7 +58,7 @@ describe("starting-of-electron-main-application", () => {
     beforeEach(() => {
       const startApplication = di.inject(startApplicationInjectionToken);
 
-      startApplication();
+      void startApplication();
     });
 
     it("calls for synchronous runnables for before anything", () => {

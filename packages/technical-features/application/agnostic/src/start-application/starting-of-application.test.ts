@@ -1,8 +1,4 @@
-import {
-  createContainer,
-  DiContainer,
-  getInjectable,
-} from "@ogre-tools/injectable";
+import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injectable";
 import { registerFeature } from "@k8slens/feature-core";
 import { applicationFeature } from "../feature";
 import { startApplicationInjectionToken } from "./start-application.injectable";
@@ -46,7 +42,7 @@ describe("starting-of-application", () => {
     di.register(
       beforeApplicationIsLoadingInjectable,
       onLoadOfApplicationInjectable,
-      afterApplicationIsLoadedInjectable
+      afterApplicationIsLoadedInjectable,
     );
   });
 
@@ -54,7 +50,7 @@ describe("starting-of-application", () => {
     beforeEach(() => {
       const startApplication = di.inject(startApplicationInjectionToken);
 
-      startApplication();
+      void startApplication();
     });
 
     it("calls runnables registered in before application is loading", () => {

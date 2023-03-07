@@ -1,10 +1,5 @@
 import { registerFeature } from "./register-feature";
-import {
-  createContainer,
-  DiContainer,
-  getInjectable,
-  Injectable,
-} from "@ogre-tools/injectable";
+import { createContainer, DiContainer, getInjectable, Injectable } from "@ogre-tools/injectable";
 import type { Feature } from "./feature";
 import { getFeature } from "./feature";
 import { deregisterFeature } from "./deregister-feature";
@@ -90,9 +85,7 @@ describe("register-feature", () => {
     it("when a Feature is registered again, throws", () => {
       expect(() => {
         registerFeature(di, someFeature);
-      }).toThrow(
-        'Tried to register feature "some-feature-1", but it was already registered.'
-      );
+      }).toThrow('Tried to register feature "some-feature-1", but it was already registered.');
     });
 
     it("given a Feature deregistered, when deregistered again, throws", () => {
@@ -100,15 +93,14 @@ describe("register-feature", () => {
 
       expect(() => {
         deregisterFeature(di, someFeature);
-      }).toThrow(
-        'Tried to deregister feature "some-feature-1", but it was not registered.'
-      );
+      }).toThrow('Tried to deregister feature "some-feature-1", but it was not registered.');
     });
   });
 
   it("given di-container and registered Features with injectables forming a cycle, when an injectable is injected, throws with namespaced error about cycle", () => {
     const someInjectable: Injectable<any> = getInjectable({
       id: "some-injectable-1",
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       instantiate: (di) => di.inject(someInjectable2),
     });
 
@@ -140,8 +132,9 @@ describe("register-feature", () => {
     expect(() => {
       di.inject(someInjectable);
     }).toThrow(
-      // 'Cycle of injectables encountered: "some-container" -> "some-feature-1:some-injectable-1" -> "some-feature-2:some-injectable-2" -> "some-feature-1:some-injectable-1"'
-      'Maximum call stack size exceeded'
+      // 'Cycle of injectables encountered: "some-container" -> "some-feature-1:some-injectable-1"
+      // -> "some-feature-2:some-injectable-2" -> "some-feature-1:some-injectable-1"'
+      "Maximum call stack size exceeded",
     );
   });
 });
