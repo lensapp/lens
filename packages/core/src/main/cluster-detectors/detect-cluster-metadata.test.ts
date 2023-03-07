@@ -24,7 +24,7 @@ describe("detect-cluster-metadata", () => {
   let cluster: Cluster;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     const lastSeenDetectMock = jest.fn().mockReturnValue(Promise.resolve({ value: "some-time-stamp", accuracy: 100 }));
     const nodeCountDetectMock = jest.fn().mockReturnValue(Promise.resolve({ value: 42, accuracy: 100 }));

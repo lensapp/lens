@@ -26,9 +26,7 @@ describe("technical unit tests for local shell sessions", () => {
   let di: DiContainer;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({
-      doGeneralOverrides: true,
-    });
+    di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(buildVersionInjectable, () => ({

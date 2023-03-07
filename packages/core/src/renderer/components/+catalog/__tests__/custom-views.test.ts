@@ -16,7 +16,7 @@ describe("Custom Category Views", () => {
   let di: DiContainer;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
   });
 
   it("should order items correctly over all extensions", () => {

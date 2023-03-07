@@ -43,7 +43,7 @@ describe("HotbarStore", () => {
   let loggerMock: jest.Mocked<Logger>;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     testCluster = getMockCatalogEntity({
       apiVersion: "v1",

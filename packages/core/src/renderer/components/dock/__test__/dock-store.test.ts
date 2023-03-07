@@ -22,7 +22,7 @@ describe("DockStore", () => {
   let dockStore: DockStore;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(hostedClusterIdInjectable, () => "some-cluster-id");
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");

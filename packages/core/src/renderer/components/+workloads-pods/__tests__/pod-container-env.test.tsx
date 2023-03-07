@@ -21,7 +21,7 @@ describe("<ContainerEnv />", () => {
   let configMapStore: jest.Mocked<Pick<ConfigMapStore, "load" | "getByName">>;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     secretStore = ({
       load: jest.fn().mockImplementation(async () => {

@@ -24,11 +24,7 @@ import {
 } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerInjectableReact } from "@ogre-tools/injectable-react";
 
-export const getDiForUnitTesting = (
-  opts: { doGeneralOverrides?: boolean } = {},
-) => {
-  const { doGeneralOverrides = false } = opts;
-
+export const getDiForUnitTesting = () => {
   const environment = "renderer";
   const di = createContainer(environment);
 
@@ -49,34 +45,32 @@ export const getDiForUnitTesting = (
     }
   });
 
-  if (doGeneralOverrides) {
-    for (const globalOverridePath of global.injectablePaths.renderer.globalOverridePaths) {
-      const globalOverride = require(globalOverridePath).default as GlobalOverride;
+  for (const globalOverridePath of global.injectablePaths.renderer.globalOverridePaths) {
+    const globalOverride = require(globalOverridePath).default as GlobalOverride;
 
-      di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
-    }
-
-    [
-      startTopbarStateSyncInjectable,
-    ].forEach((injectable) => {
-      di.override(injectable, () => ({
-        id: injectable.id,
-        run: () => {},
-      }));
-    });
-
-    di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
-    di.override(hostedClusterIdInjectable, () => undefined);
-
-    di.override(legacyOnChannelListenInjectable, () => () => noop);
-
-    di.override(requestAnimationFrameInjectable, () => (callback) => callback());
-    di.override(watchHistoryStateInjectable, () => () => () => {});
-
-    di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));
-
-    getOverrideFsWithFakes()(di);
+    di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
   }
+
+  [
+    startTopbarStateSyncInjectable,
+  ].forEach((injectable) => {
+    di.override(injectable, () => ({
+      id: injectable.id,
+      run: () => {},
+    }));
+  });
+
+  di.override(terminalSpawningPoolInjectable, () => document.createElement("div"));
+  di.override(hostedClusterIdInjectable, () => undefined);
+
+  di.override(legacyOnChannelListenInjectable, () => () => noop);
+
+  di.override(requestAnimationFrameInjectable, () => (callback) => callback());
+  di.override(watchHistoryStateInjectable, () => () => () => {});
+
+  di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));
+
+  getOverrideFsWithFakes()(di);
 
   return di;
 };

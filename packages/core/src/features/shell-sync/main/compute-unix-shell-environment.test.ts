@@ -37,9 +37,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
   let unixShellEnv: ReturnType<ComputeUnixShellEnvironment>;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({
-      doGeneralOverrides: true,
-    });
+    di = getDiForUnitTesting();
 
     spawnMock = jest.fn().mockImplementation((spawnfile, spawnargs) => {
       shellStdin = new MemoryStream();

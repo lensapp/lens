@@ -28,7 +28,7 @@ describe("router", () => {
   beforeEach(async () => {
     routeHandlerMock = asyncFn();
 
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(parseRequestInjectable, () => () => Promise.resolve({
       payload: "some-payload",

@@ -26,7 +26,7 @@ describe("enlist request channel listener in main", () => {
   let offMock: jest.Mock;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     handleMock = jest.fn();
     offMock = jest.fn();

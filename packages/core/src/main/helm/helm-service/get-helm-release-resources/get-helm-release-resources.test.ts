@@ -21,7 +21,7 @@ describe("get helm release resources", () => {
   let execFileWithStreamInputMock: AsyncFnMock<ExecFileWithInput>;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     execHelmMock = asyncFn();
     execFileWithStreamInputMock = asyncFn();

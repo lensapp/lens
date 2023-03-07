@@ -23,6 +23,8 @@ describe("check-for-platform-updates", () => {
   beforeEach(() => {
     const di = getDiForUnitTesting();
 
+    di.unoverride(checkForPlatformUpdatesInjectable)
+
     checkForUpdatesMock = asyncFn();
 
     electronUpdaterFake = {

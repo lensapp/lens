@@ -48,7 +48,7 @@ describe("<NamespaceSelectFilter />", () => {
   let cleanup: Disposer;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
     di.unoverride(subscribeStoresInjectable);
 
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");

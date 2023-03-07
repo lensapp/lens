@@ -14,7 +14,7 @@ describe("emit-telemetry-from-specific-function-calls", () => {
   let di: DiContainer;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
   });
 
   describe("given a telemetry white-list for injectables which instantiate a function", () => {

@@ -12,7 +12,7 @@ describe("kubernetesClusterCategory", () => {
   let kubernetesClusterCategory: KubernetesClusterCategory;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     kubernetesClusterCategory = di.inject(kubernetesClusterCategoryInjectable);
   });

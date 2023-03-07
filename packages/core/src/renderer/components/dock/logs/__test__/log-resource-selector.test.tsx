@@ -107,7 +107,7 @@ describe("<LogResourceSelector />", () => {
   let render: DiRender;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     const { ensureDirSync } = di.inject(fsInjectable);
 

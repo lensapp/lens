@@ -18,7 +18,7 @@ describe("with-error-logging", () => {
     let logErrorMock: jest.Mock;
 
     beforeEach(() => {
-      const di = getDiForUnitTesting({ doGeneralOverrides: true });
+      const di = getDiForUnitTesting();
 
       logErrorMock = jest.fn();
 
@@ -116,7 +116,7 @@ describe("with-error-logging", () => {
     let logErrorMock: jest.Mock;
 
     beforeEach(() => {
-      const di = getDiForUnitTesting({ doGeneralOverrides: true });
+      const di = getDiForUnitTesting();
 
       logErrorMock = jest.fn();
 

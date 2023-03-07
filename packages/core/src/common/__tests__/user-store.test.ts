@@ -21,7 +21,7 @@ describe("user store tests", () => {
   let di: DiContainer;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     di.override(writeFileInjectable, () => () => Promise.resolve());
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");

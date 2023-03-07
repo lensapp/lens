@@ -20,7 +20,7 @@ describe("requestNamespaceListPermissions", () => {
   let requestNamespaceListPermissions: RequestNamespaceListPermissionsFor;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
     requestNamespaceListPermissions = di.inject(requestNamespaceListPermissionsForInjectable);
   });
 

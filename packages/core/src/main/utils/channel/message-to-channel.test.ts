@@ -15,7 +15,7 @@ describe("message-to-channel", () => {
   let sendToWindowMock: jest.Mock;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     sendToWindowMock = jest.fn();
 

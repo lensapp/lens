@@ -39,7 +39,7 @@ describe("Extensions", () => {
   let downloadBinary: jest.MockedFunction<DownloadBinary>;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(directoryForDownloadsInjectable, () => "some-directory-for-downloads");

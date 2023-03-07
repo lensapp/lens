@@ -39,7 +39,7 @@ describe("kube auth proxy tests", () => {
   let getBasenameOfPath: GetBasenameOfPath;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
