@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import type { LogEntry, transports } from "winston";
 
 type IpcFileLoggerOptions = Omit<transports.FileTransportOptions, "filename">;
@@ -9,7 +13,7 @@ class IpcFileLogger {
     private options: IpcFileLoggerOptions,
     private createNewFileTransport: (
       options: transports.FileTransportOptions
-    ) => transports.FileTransportInstance
+    ) => transports.FileTransportInstance,
   ) {}
 
   log({ fileId, entry }: { fileId: string; entry: LogEntry }) {
@@ -20,6 +24,7 @@ class IpcFileLogger {
 
   close(fileId: string) {
     const transport = this.fileTransports.get(fileId);
+
     if (transport) {
       transport.close?.();
       this.fileTransports.delete(fileId);

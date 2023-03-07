@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import windowLocationInjectable from "../../common/k8s-api/window-location.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import currentlyInClusterFrameInjectable from "../routes/currently-in-cluster-frame.injectable";
@@ -7,9 +11,11 @@ describe("renderer log file id", () => {
 
   it("clearly names log for renderer main frame", () => {
     const di = getDiForUnitTesting({ doGeneralOverrides: false });
+
     di.override(currentlyInClusterFrameInjectable, () => false);
 
     const mainFileId = di.inject(rendererLogFileIdInjectable);
+
     expect(mainFileId).toBe("renderer-main");
   });
 
@@ -22,6 +28,7 @@ describe("renderer log file id", () => {
       port: "irrelevant",
     }));
     const clusterFileId = di.inject(rendererLogFileIdInjectable);
+
     expect(clusterFileId).toBe("renderer-cluster-some-cluster");
   });
 });

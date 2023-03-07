@@ -1,9 +1,14 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import winstonLoggerInjectable from "../../common/winston-logger.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import closeRendererLogFileInjectable from "./close-renderer-log-file.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type winston from "winston";
-import { SendMessageToChannel, sendMessageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
+import type { SendMessageToChannel } from "../../common/utils/channel/message-to-channel-injection-token";
+import { sendMessageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 import ipcLogTransportInjectable from "./ipc-transport.injectable";
 import type IpcLogTransport from "./ipc-transport";
@@ -30,16 +35,18 @@ describe("close renderer file logging", () => {
 
   it("sends the ipc close message with correct log id", () => {
     const closeLog = di.inject(closeRendererLogFileInjectable);
+
     closeLog();
 
     expect(sendIpcMock).toHaveBeenCalledWith(
       { id: "close-ipc-file-logger-channel" },
-      "some-log-id"
+      "some-log-id",
     );
   });
 
   it("removes the transport to prevent further logging to closed file", () => {
     const closeLog = di.inject(closeRendererLogFileInjectable);
+
     closeLog();
 
     expect(winstonMock.remove).toHaveBeenCalledWith({

@@ -1,5 +1,10 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import type { LogEntry } from "winston";
-import TransportStream, { TransportStreamOptions } from "winston-transport";
+import type { TransportStreamOptions } from "winston-transport";
+import TransportStream from "winston-transport";
 
 interface IpcLogTransportOptions extends TransportStreamOptions {
   sendIpcLogMessage: (entry: LogEntry) => void;
@@ -13,6 +18,7 @@ class IpcLogTransport extends TransportStream {
 
   constructor(options: IpcLogTransportOptions) {
     const { sendIpcLogMessage, closeIpcLogging, ...winstonOptions } = options;
+
     super(winstonOptions);
 
     this.sendIpcLogMessage = sendIpcLogMessage;

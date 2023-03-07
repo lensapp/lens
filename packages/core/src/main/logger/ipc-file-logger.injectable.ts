@@ -17,7 +17,7 @@ const ipcFileLoggerInjectable = getInjectable({
         maxFiles: 2,
         tailable: true,
       },
-      (options: transports.FileTransportOptions) => new transports.File(options)
+      (options: transports.FileTransportOptions) => new transports.File(options),
     ),
 });
 

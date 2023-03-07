@@ -1,5 +1,10 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import type { DiContainer } from "@ogre-tools/injectable";
-import { SendMessageToChannel, sendMessageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
+import type { SendMessageToChannel } from "../../common/utils/channel/message-to-channel-injection-token";
+import { sendMessageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 import ipcLogTransportInjectable from "./ipc-transport.injectable";
@@ -18,13 +23,14 @@ describe("renderer log transport through ipc", () => {
 
   it("send serialized ipc messages on log", () => {
     const logTransport = di.inject(ipcLogTransportInjectable);
+
     logTransport.log(
       {
         level: "info",
         message: "some log text",
         [MESSAGE]: "actual winston log text",
       },
-      () => {}
+      () => {},
     );
 
     expect(sendIpcMock).toHaveBeenCalledWith(
@@ -36,7 +42,7 @@ describe("renderer log transport through ipc", () => {
           internalMessage: "actual winston log text",
         },
         fileId: "some-log-id",
-      }
+      },
     );
   });
 });

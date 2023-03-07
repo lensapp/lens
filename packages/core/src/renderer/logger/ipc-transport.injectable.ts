@@ -9,10 +9,11 @@ import { MESSAGE } from "triple-beam";
 
 import IpcLogTransport from "./ipc-transport";
 import { sendMessageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
+import type {
+  IpcFileLogObject } from "../../common/logger/ipc-file-logger-channel";
 import {
   closeIpcFileLoggerChannel,
   ipcFileLoggerChannel,
-  IpcFileLogObject,
 } from "../../common/logger/ipc-file-logger-channel";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 
@@ -23,7 +24,7 @@ import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
  */
 function serializeLogForIpc(
   fileId: string,
-  entry: winston.LogEntry
+  entry: winston.LogEntry,
 ): IpcFileLogObject {
   return {
     fileId,
@@ -45,7 +46,7 @@ const ipcLogTransportInjectable = getInjectable({
       sendIpcLogMessage: (entry) =>
         messageToChannel(
           ipcFileLoggerChannel,
-          serializeLogForIpc(fileId, entry)
+          serializeLogForIpc(fileId, entry),
         ),
       closeIpcLogging: () =>
         messageToChannel(closeIpcFileLoggerChannel, fileId),
