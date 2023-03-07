@@ -39,7 +39,7 @@ export const initClusterFrame =
     catalogEntityRegistry.init();
 
     logger.info(
-      `${logPrefix} Init dashboard, clusterId=${hostedCluster.id}, frameId=${frameRoutingId}`
+      `${logPrefix} Init dashboard, clusterId=${hostedCluster.id}, frameId=${frameRoutingId}`,
     );
 
     await requestSetClusterFrameId(hostedCluster.id);
@@ -57,11 +57,9 @@ export const initClusterFrame =
         onError: (error) => {
           logger.warn("[CLUSTER-FRAME]: error from activeEntity when()", error);
 
-          showErrorNotification(
-            "Failed to get KubernetesCluster for this view. Extensions will not be loaded."
-          );
+          showErrorNotification("Failed to get KubernetesCluster for this view. Extensions will not be loaded.");
         },
-      }
+      },
     );
 
     setTimeout(() => {
@@ -74,12 +72,12 @@ export const initClusterFrame =
       });
     });
 
-    window.addEventListener("beforeunload", () => {
+    window.onbeforeunload = () => {
       logger.info(
         `${logPrefix} Unload dashboard, clusterId=${hostedCluster.id}, frameId=${frameRoutingId}`
       );
 
       unmountRoot();
       closeFileLogging();
-    });
+    };
   };
