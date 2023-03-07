@@ -1,7 +1,7 @@
 # Release Guide
 
 Releases for this repository are made via running the `create-release-pr` script defined in the `package.json`.
-All releases will be made by creating a PR which bumps the version field in the `package.json` and, if necessary, cherry pick the relavent commits from master.
+All releases will be made by creating a PR which bumps the version field in the `package.json` and, if necessary, cherry pick the relevant commits from master.
 
 ## Prerequisites
 
@@ -20,3 +20,4 @@ All releases will be made by creating a PR which bumps the version field in the 
 1. If you released a major or minor version, create a new patch milestone and move all bug issues to that milestone and all enhancement issues to the next minor milestone.
 1. If you released a patch version, create a new patch milestone for the next patch version and move all the issues and PRs (open or closed) that weren't included in the current release to that milestone.
 1. Close the milestone related to the release that was just made (if not a prerelease release).
+1. If you released a patch version and it contains PRs that targeted `release/v<MAJOR>.<MINOR>` make a new PR targeting master and include all the relevant PRs as cherry-picks. This PR should have the `skip-changelog` label and have a milestone of the next minor.
