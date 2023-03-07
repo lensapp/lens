@@ -127,7 +127,13 @@ export class KubernetesCluster<
         context.menuItems.push({
           title: "Disconnect",
           icon: "link_off",
-          onClick: () => requestClusterDisconnection(this.getId()),
+          onClick: () => {
+            requestClusterDisconnection(this.getId());
+            broadcastMessage(
+              IpcRendererNavigationEvents.NAVIGATE_IN_APP,
+              "/catalog",
+            )
+          },
         });
         break;
       case LensKubernetesClusterStatus.DISCONNECTED:
