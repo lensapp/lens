@@ -19,7 +19,7 @@ describe("requestNonCoreApiVersions", () => {
   let requestNonCoreApiVersions: RequestApiVersions;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     k8sRequestMock = asyncFn();
     di.override(k8sRequestInjectable, () => k8sRequestMock);
