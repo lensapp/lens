@@ -34,50 +34,50 @@ export const initClusterFrame =
     showErrorNotification,
     closeFileLogging,
   }: Dependencies) =>
-  async (unmountRoot: () => void) => {
+    async (unmountRoot: () => void) => {
     // TODO: Make catalogEntityRegistry already initialized when passed as dependency
-    catalogEntityRegistry.init();
+      catalogEntityRegistry.init();
 
-    logger.info(
-      `${logPrefix} Init dashboard, clusterId=${hostedCluster.id}, frameId=${frameRoutingId}`,
-    );
-
-    await requestSetClusterFrameId(hostedCluster.id);
-    await when(() => hostedCluster.ready.get()); // cluster.activate() is done at this point
-
-    catalogEntityRegistry.activeEntity = hostedCluster.id;
-
-    // Only load the extensions once the catalog has been populated.
-    // Note that the Catalog might still have unprocessed entities until the extensions are fully loaded.
-    when(
-      () => catalogEntityRegistry.items.get().length > 0,
-      () => loadExtensions(),
-      {
-        timeout: 15_000,
-        onError: (error) => {
-          logger.warn("[CLUSTER-FRAME]: error from activeEntity when()", error);
-
-          showErrorNotification("Failed to get KubernetesCluster for this view. Extensions will not be loaded.");
-        },
-      },
-    );
-
-    setTimeout(() => {
-      emitAppEvent({
-        name: "cluster",
-        action: "open",
-        params: {
-          clusterId: hostedCluster.id,
-        },
-      });
-    });
-
-    window.onbeforeunload = () => {
       logger.info(
-        `${logPrefix} Unload dashboard, clusterId=${hostedCluster.id}, frameId=${frameRoutingId}`
+        `${logPrefix} Init dashboard, clusterId=${hostedCluster.id}, frameId=${frameRoutingId}`,
       );
 
-      unmountRoot();
-      closeFileLogging();
+      await requestSetClusterFrameId(hostedCluster.id);
+      await when(() => hostedCluster.ready.get()); // cluster.activate() is done at this point
+
+      catalogEntityRegistry.activeEntity = hostedCluster.id;
+
+      // Only load the extensions once the catalog has been populated.
+      // Note that the Catalog might still have unprocessed entities until the extensions are fully loaded.
+      when(
+        () => catalogEntityRegistry.items.get().length > 0,
+        () => loadExtensions(),
+        {
+          timeout: 15_000,
+          onError: (error) => {
+            logger.warn("[CLUSTER-FRAME]: error from activeEntity when()", error);
+
+            showErrorNotification("Failed to get KubernetesCluster for this view. Extensions will not be loaded.");
+          },
+        },
+      );
+
+      setTimeout(() => {
+        emitAppEvent({
+          name: "cluster",
+          action: "open",
+          params: {
+            clusterId: hostedCluster.id,
+          },
+        });
+      });
+
+      window.onbeforeunload = () => {
+        logger.info(
+          `${logPrefix} Unload dashboard, clusterId=${hostedCluster.id}, frameId=${frameRoutingId}`,
+        );
+
+        unmountRoot();
+        closeFileLogging();
+      };
     };
-  };

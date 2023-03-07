@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
 import IpcFileLogger from "./ipc-file-logger";
 
 describe("ipc file logger in main", () => {
@@ -19,7 +23,7 @@ describe("ipc file logger in main", () => {
         maxFiles: 1,
         tailable: true,
       },
-      createFileTransportMock
+      createFileTransportMock,
     );
   });
 
@@ -122,9 +126,11 @@ describe("ipc file logger in main", () => {
       if (options.filename === "lens-some-log-file.log") {
         return { log: someLogMock };
       }
+
       if (options.filename === "lens-some-other-log-file.log") {
         return { log: someOthertLogMock };
       }
+
       return null;
     });
 
