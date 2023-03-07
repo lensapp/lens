@@ -168,9 +168,7 @@ interface Environment {
 }
 
 export const getApplicationBuilder = () => {
-  const mainDi = getMainDi({
-    doGeneralOverrides: true,
-  });
+  const mainDi = getMainDi();
 
   runInAction(() => {
     registerFeature(
@@ -236,7 +234,7 @@ export const getApplicationBuilder = () => {
   const createElectronWindowFake: CreateElectronWindow = (configuration) => {
     const windowId = configuration.id;
 
-    const windowDi = getRendererDi({ doGeneralOverrides: true });
+    const windowDi = getRendererDi();
 
     overrideForWindow(windowDi, windowId);
     overrideFsWithFakes(windowDi);
