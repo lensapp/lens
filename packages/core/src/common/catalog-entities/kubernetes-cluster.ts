@@ -132,7 +132,7 @@ export class KubernetesCluster<
             broadcastMessage(
               IpcRendererNavigationEvents.NAVIGATE_IN_APP,
               "/catalog",
-            )
+            );
           },
         });
         break;
