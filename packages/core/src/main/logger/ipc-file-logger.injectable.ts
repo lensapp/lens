@@ -19,6 +19,7 @@ const ipcFileLoggerInjectable = getInjectable({
       },
       (options: transports.FileTransportOptions) => new transports.File(options),
     ),
+  causesSideEffects: true,
 });
 
 export default ipcFileLoggerInjectable;
