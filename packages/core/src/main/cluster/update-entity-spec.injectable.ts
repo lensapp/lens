@@ -11,7 +11,7 @@ export type UpdateEntitySpec = (entity: KubernetesCluster, cluster: Cluster) => 
 const updateEntitySpecInjectable = getInjectable({
   id: "update-entity-spec",
 
-  instantiate: (di): UpdateEntitySpec => {
+  instantiate: (): UpdateEntitySpec => {
     return (entity, cluster) => {
       entity.spec.metrics ||= { source: "local" };
 

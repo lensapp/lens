@@ -18,7 +18,7 @@ describe("update-entity-spec", () => {
   let updateEntitySpec: UpdateEntitySpec;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(appPathsStateInjectable, () => ({

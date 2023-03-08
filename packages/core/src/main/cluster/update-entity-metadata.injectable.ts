@@ -13,7 +13,7 @@ export type UpdateEntityMetadata = (entity: KubernetesCluster, cluster: Cluster)
 const updateEntityMetadataInjectable =  getInjectable({
   id: "update-entity-metadata",
 
-  instantiate: (di): UpdateEntityMetadata => {
+  instantiate: (): UpdateEntityMetadata => {
     return (entity, cluster) => {
       entity.metadata.labels = {
         ...entity.metadata.labels,
