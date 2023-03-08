@@ -127,7 +127,7 @@ describe("update-entity-spec", () => {
   });
 
   it("given entity has no metrics, updates entity spec with prometheus provider", () => {
-    entity.spec.metrics = undefined;
+    expect(entity.spec.metrics).toBeUndefined();
 
     cluster.preferences.prometheusProvider = {
       type: "some-prometheus-provider-type",
