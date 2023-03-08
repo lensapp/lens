@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "useWorkspaces": true,
-  "version": "6.5.0-alpha.0",
+  "version": "6.5.0-cron.094758f",
   "npmClient": "npm",
   "npmClientArgs": [
     "--network-timeout=100000"

@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/application",
   "private": false,
-  "version": "6.5.0-alpha.0",
+  "version": "6.5.0-cron.094758f",
   "description": "Package for creating Lens applications",
   "type": "commonjs",
   "files": [
@@ -36,7 +36,6 @@
     "@ogre-tools/injectable-utils": "^15.1.2",
     "lodash": "^4.17.15"
   },
-
   "devDependencies": {
     "@async-fn/jest": "^1.6.4"
   }
