@@ -10,7 +10,7 @@ import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 describe("renderer log file id", () => {
 
   it("clearly names log for renderer main frame", () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: false });
+    const di = getDiForUnitTesting();
 
     di.override(currentlyInClusterFrameInjectable, () => false);
 
@@ -20,7 +20,7 @@ describe("renderer log file id", () => {
   });
 
   it("includes cluster id in renderer log file names", () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: false });
+    const di = getDiForUnitTesting();
 
     di.override(currentlyInClusterFrameInjectable, () => true);
     di.override(windowLocationInjectable, () => ({

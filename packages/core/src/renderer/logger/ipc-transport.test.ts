@@ -16,7 +16,7 @@ describe("renderer log transport through ipc", () => {
 
   beforeEach(() => {
     sendIpcMock = jest.fn();
-    di = getDiForUnitTesting({ doGeneralOverrides: false });
+    di = getDiForUnitTesting();
     di.override(sendMessageToChannelInjectionToken, () => sendIpcMock);
     di.override(rendererLogFileIdInjectable, () => "some-log-id");
   });
