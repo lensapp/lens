@@ -30,7 +30,7 @@ import type { RequestDetailedHelmRelease } from "../../../renderer/components/+h
 import requestDetailedHelmReleaseInjectable from "../../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 import type { RequestHelmReleases } from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
 import requestHelmReleasesInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
-import { flushPromises } from "../../../common/test-utils/flush-promises";
+import { flushPromises } from "@k8slens/test-utils";
 
 describe("installing helm chart from new tab", () => {
   let builder: ApplicationBuilder;

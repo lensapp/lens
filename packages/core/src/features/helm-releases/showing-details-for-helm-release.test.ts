@@ -15,7 +15,6 @@ import type { RequestHelmReleaseConfiguration } from "../../common/k8s-api/endpo
 import requestHelmReleaseConfigurationInjectable from "../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import type { RequestHelmReleaseUpdate } from "../../common/k8s-api/endpoints/helm-releases.api/request-update.injectable";
 import requestHelmReleaseUpdateInjectable from "../../common/k8s-api/endpoints/helm-releases.api/request-update.injectable";
-import { testUsingFakeTime } from "@k8slens/test-utils";
 import type { RequestDetailedHelmRelease } from "../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 import requestDetailedHelmReleaseInjectable from "../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
@@ -30,6 +29,7 @@ import requestHelmChartVersionsInjectable from "../../common/k8s-api/endpoints/h
 import requestHelmChartReadmeInjectable from "../../common/k8s-api/endpoints/helm-charts.api/request-readme.injectable";
 import requestHelmChartValuesInjectable from "../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
 import { HelmChart } from "../../common/k8s-api/endpoints/helm-charts.api";
+import { testUsingFakeTime } from "../../test-utils/use-fake-time";
 
 describe("showing details for helm release", () => {
   let builder: ApplicationBuilder;

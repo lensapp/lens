@@ -17,10 +17,10 @@ import type { RequestHelmReleaseConfiguration } from "../../../common/k8s-api/en
 import requestHelmReleaseConfigurationInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import type { RequestHelmReleases } from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
 import requestHelmReleasesInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
-import { advanceFakeTime, testUsingFakeTime } from "@k8slens/test-utils";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import type { ApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
+import { testUsingFakeTime, advanceFakeTime } from "../../../test-utils/use-fake-time";
 
 describe("New Upgrade Helm Chart Dock Tab", () => {
   let builder: ApplicationBuilder;

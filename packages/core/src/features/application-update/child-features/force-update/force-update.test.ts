@@ -14,11 +14,11 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import processCheckingForUpdatesInjectable from "../../main/process-checking-for-updates.injectable";
 import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
-import { advanceFakeTime, testUsingFakeTime } from "@k8slens/test-utils";
 import quitAndInstallUpdateInjectable from "../../main/quit-and-install-update.injectable";
 import timeAfterUpdateMustBeInstalledInjectable from "./renderer/force-update-modal/time-after-update-must-be-installed.injectable";
 import secondsAfterInstallStartsInjectable from "./renderer/force-update-modal/seconds-after-install-starts.injectable";
 import forceUpdateModalRootFrameComponentInjectable from "./renderer/force-update-modal/force-update-modal-root-frame-component.injectable";
+import { testUsingFakeTime, advanceFakeTime } from "../../../../test-utils/use-fake-time";
 
 const TIME_AFTER_UPDATE_MUST_BE_INSTALLED = 1000;
 const TIME_AFTER_INSTALL_STARTS = 5 * 1000;

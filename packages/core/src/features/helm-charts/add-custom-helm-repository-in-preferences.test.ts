@@ -18,7 +18,7 @@ import isPathInjectable from "../../renderer/components/input/validators/is-path
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../renderer/components/notifications/show-error-notification.injectable";
 import type { AsyncResult } from "@k8slens/utilities";
-import { testUsingFakeTime } from "@k8slens/test-utils";
+import { testUsingFakeTime } from "../../test-utils/use-fake-time";
 
 describe("add custom helm repository in preferences", () => {
   let builder: ApplicationBuilder;

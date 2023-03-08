@@ -16,7 +16,7 @@ import type { ApplicationBuilder } from "../../../../renderer/components/test-ut
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import processCheckingForUpdatesInjectable from "../../main/process-checking-for-updates.injectable";
 import quitAndInstallUpdateInjectable from "../../main/quit-and-install-update.injectable";
-import { advanceFakeTime, testUsingFakeTime } from "@k8slens/test-utils";
+import { testUsingFakeTime, advanceFakeTime } from "../../../../test-utils/use-fake-time";
 
 function daysToMilliseconds(days: number) {
   return Math.round(days * 24 * 60 * 60 * 1000);
