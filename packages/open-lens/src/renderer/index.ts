@@ -15,7 +15,7 @@ import { createContainer } from "@ogre-tools/injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerInjectableReact } from "@ogre-tools/injectable-react";
 
-const environment = "main";
+const environment = "renderer";
 
 const di = createContainer(environment);
 
