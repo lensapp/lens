@@ -27,7 +27,7 @@ See [Development](https://docs.k8slens.dev/contributing/development/) page.
 
 ## Contributing
 
-See [Contributing](https://docs.k8slens.dev/contributing/) page.
+See [Contributing](https://docs.k8slens.dev/contributing/contribute-to-lens/) page.
 
 ## License
 
