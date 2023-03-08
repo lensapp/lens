@@ -20,7 +20,7 @@ describe("close renderer file logging", () => {
   let ipcTransportMock: IpcLogTransport;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: false });
+    di = getDiForUnitTesting();
     sendIpcMock = jest.fn();
     winstonMock = {
       remove: jest.fn(),
