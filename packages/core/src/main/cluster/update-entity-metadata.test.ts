@@ -13,10 +13,6 @@ import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import type { UpdateEntityMetadata } from "./update-entity-metadata.injectable";
 import updateEntityMetadataInjectable from "./update-entity-metadata.injectable";
 
-/**
- * Copyright (c) OpenLens Authors. All rights reserved.
- * Licensed under MIT License. See LICENSE in root directory for more information.
- */
 describe("update-entity-metadata", () => {
   let cluster: Cluster;
   let entity: KubernetesCluster;
