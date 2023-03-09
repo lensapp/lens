@@ -6,6 +6,7 @@
 import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { CronJob, CronJobApi } from "../../../common/k8s-api/endpoints/cron-job.api";
+import { CronJobStatusPhase } from "../../../common/k8s-api/endpoints/cron-job.api";
 import type { GetJobsByOwner } from "../+workloads-jobs/get-jobs-by-owner.injectable";
 
 interface Dependencies extends KubeObjectStoreDependencies {
@@ -18,18 +19,19 @@ export class CronJobStore extends KubeObjectStore<CronJob, CronJobApi> {
   }
 
   getStatuses(cronJobs?: CronJob[]) {
-    const status = { scheduled: 0, suspended: 0 };
+    const statuses = { scheduled: 0, suspended: 0 };
 
     cronJobs?.forEach(cronJob => {
-      if (cronJob.spec.suspend) {
-        status.suspended++;
-      }
-      else {
-        status.scheduled++;
+      const status = cronJob.getStatus();
+
+      if (status === CronJobStatusPhase.SUSPENDED) {
+        statuses.suspended++;
+      } else {
+        statuses.scheduled++;
       }
     });
 
-    return status;
+    return statuses;
   }
 
   getActiveJobsNum(cronJob: CronJob) {
