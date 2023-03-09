@@ -5,13 +5,22 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 import type { KubeApiResourceDescriptor } from "../../../../common/rbac";
-import type { WorkloadStatus } from "../overview-workload-status";
+
+export type WorkloadStatusPhase =
+  "Terminated"
+  | "Failed"
+  | "Pending"
+  | "Running"
+  | "Succeeded"
+  | "Evicted"
+  | "Suspended"
+  | "Scheduled";
 
 export interface Workload {
   resource: KubeApiResourceDescriptor;
   open: () => void;
   amountOfItems: IComputedValue<number>;
-  status: IComputedValue<WorkloadStatus>;
+  status: IComputedValue<Map<string, WorkloadStatusPhase[]>>;
   title: string;
   orderNumber: number;
 }

@@ -5,52 +5,35 @@
 
 import type { PodStatusPhase } from "../../common/k8s-api/endpoints";
 import { getOrInsert } from "../../common/utils";
-import { foldPodStatusPhase } from "./fold-pod-status-phase";
 import { getInjectable } from "@ogre-tools/injectable";
 import podStoreInjectable from "../components/+workloads-pods/store.injectable";
 import { computed } from "mobx";
 import type { KubeObject } from "../../common/k8s-api/kube-object";
 
-export interface StatusCounts {
-  running: number;
-  failed: number;
-  pending: number;
-}
-
-const computeStatusCountsForOwnersInjectable = getInjectable({
-  id: "compute-status-counts-for-owners",
+const computeStatusesOfObjectsBasedOnOwnedPodsInjectable = getInjectable({
+  id: "compute-statuses-of-objects-based-on-owned-pods",
   instantiate: (di) => {
     const podStore = di.inject(podStoreInjectable);
 
-    const podsByOwnerId = computed(() => {
-      const podsByOwnerId = new Map<string, ({ status: PodStatusPhase })[]>();
+    const podStatusesByOwnerId = computed(() => {
+      const podsByOwnerId = new Map<string, PodStatusPhase[]>();
 
       for (const pod of podStore.contextItems) {
         for (const ownerRef of pod.getOwnerRefs()) {
-          getOrInsert(podsByOwnerId, ownerRef.uid, []).push({
-            status: pod.getStatus(),
-          });
+          getOrInsert(podsByOwnerId, ownerRef.uid, []).push(pod.getStatus());
         }
       }
 
       return podsByOwnerId;
     });
 
-    return (possibleOwners: KubeObject[]): StatusCounts => {
-      const statuses = { running: 0, failed: 0, pending: 0 };
+    return (owners: KubeObject[]) => new Map(owners.map(owner => {
+      const statuses = podStatusesByOwnerId.get().get(owner.getId()) ?? [];
 
-      for (const possibleOwner of possibleOwners) {
-        const status = (podsByOwnerId.get().get(possibleOwner.getId()) ?? [])
-          .map(pod => pod.status)
-          .reduce(foldPodStatusPhase, "running");
-
-        statuses[status]++;
-      }
-
-      return statuses;
-    };
+      return [owner.getId(), statuses];
+    }));
   },
 });
 
-export default computeStatusCountsForOwnersInjectable;
+export default computeStatusesOfObjectsBasedOnOwnedPodsInjectable;
 

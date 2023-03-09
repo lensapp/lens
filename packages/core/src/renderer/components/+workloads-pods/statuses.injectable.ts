@@ -11,7 +11,10 @@ const totalStatusesForPodsInSelectedNamespacesInjectable = getInjectable({
   instantiate: (di) => {
     const podStore = di.inject(podStoreInjectable);
 
-    return computed(() => podStore.getStatuses(podStore.contextItems));
+    return computed(() => new Map(podStore.contextItems.map(pod => [
+      pod.getId(),
+      [pod.getStatus()],
+    ])));
   },
 });
 

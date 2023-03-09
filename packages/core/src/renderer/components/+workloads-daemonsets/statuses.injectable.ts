@@ -4,16 +4,16 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import computeStatusCountsForOwnersInjectable from "../../utils/compute-status-counts.injectable";
+import computeStatusesOfObjectsBasedOnOwnedPodsInjectable from "../../utils/compute-status-counts.injectable";
 import daemonSetStoreInjectable from "./store.injectable";
 
 const totalStatusesForDaemonSetsInSelectedNamespacesInjectable = getInjectable({
   id: "total-statuses-for-daemon-sets-in-selected-namespaces",
   instantiate: (di) => {
     const daemonSetStore = di.inject(daemonSetStoreInjectable);
-    const computeStatusCountsForOwners = di.inject(computeStatusCountsForOwnersInjectable);
+    const computeStatusesOfObjectsBasedOnOwnedPods = di.inject(computeStatusesOfObjectsBasedOnOwnedPodsInjectable);
 
-    return computed(() => computeStatusCountsForOwners(daemonSetStore.contextItems));
+    return computed(() => computeStatusesOfObjectsBasedOnOwnedPods(daemonSetStore.contextItems));
   },
 });
 

@@ -10,17 +10,20 @@ import capitalize from "lodash/capitalize";
 import { observer } from "mobx-react";
 import type { PieChartData } from "../chart";
 import { PieChart } from "../chart";
-import { object } from "../../utils";
+import { iter, object } from "../../utils";
 import type { LensTheme } from "../../themes/lens-theme";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { PascalCase } from "type-fest";
 import type { IComputedValue } from "mobx";
 import activeThemeInjectable from "../../themes/active.injectable";
 import type { Workload } from "./workloads/workload-injection-token";
+import { foldWorkloadStatusPhase } from "../../utils/fold-workload-status-phase";
 
 export type LowercaseOrPascalCase<T extends string> = Lowercase<T> | PascalCase<T>;
 
-export type WorkloadStatus = Partial<Record<LowercaseOrPascalCase<keyof typeof statusBackgroundColorMapping>, number>>;
+export type WorkloadStatusCounts = Partial<Record<LowercaseOrPascalCase<WorkloadStatus>, number>>;
+
+export type WorkloadStatus = keyof typeof backgroundColourMapping;
 
 function toLowercase<T extends string>(src: T): Lowercase<T> {
   return src.toLowerCase() as Lowercase<T>;
@@ -34,18 +37,24 @@ interface Dependencies {
   activeTheme: IComputedValue<LensTheme>;
 }
 
-const statusBackgroundColorMapping = {
-  "running": "colorOk",
-  "scheduled": "colorOk",
-  "pending": "colorWarning",
+const cronJobStatusBackgroundColourMapping = {
   "suspended": "colorWarning",
-  "evicted": "colorError",
-  "succeeded": "colorSuccess",
+  "scheduled": "colorOk",
+} as const;
+
+const podStatusBackgroundColourMapping = {
   "failed": "colorError",
+  "evicted": "colorError",
+  "pending": "colorWarning",
+  "running": "colorOk",
+  "succeeded": "colorSuccess",
   "terminated": "colorTerminated",
-  "terminating": "colorTerminated",
   "unknown": "colorVague",
-  "complete": "colorSuccess",
+} as const;
+
+const backgroundColourMapping = {
+  ...podStatusBackgroundColourMapping,
+  ...cronJobStatusBackgroundColourMapping,
 } as const;
 
 const NonInjectedOverviewWorkloadStatus = observer((props: OverviewWorkloadStatusProps & Dependencies) => {
@@ -54,7 +63,12 @@ const NonInjectedOverviewWorkloadStatus = observer((props: OverviewWorkloadStatu
     activeTheme,
   } = props;
 
-  const statusesToBeShown = object.entries(workload.status.get()).filter(([, val]) => val > 0);
+  const statuses = workload.status.get();
+  const statusCounts = iter.chain(statuses.values())
+    .map(phases => phases.reduce(foldWorkloadStatusPhase, "unknown"))
+    .count();
+
+  const statusesToBeShown = object.entries(statusCounts).filter(([, val]) => val > 0);
   const theme = activeTheme.get();
 
   const emptyDataSet = {
@@ -66,7 +80,7 @@ const NonInjectedOverviewWorkloadStatus = observer((props: OverviewWorkloadStatu
     label: "Status",
     data: statusesToBeShown.map(([, value]) => value),
     backgroundColor: statusesToBeShown.map(([status]) => (
-      theme.colors[statusBackgroundColorMapping[toLowercase(status)]]
+      theme.colors[backgroundColourMapping[toLowercase(status)]]
     )),
     tooltipLabels: statusesToBeShown.map(([status]) => (
       (percent: string) => `${capitalize(status)}: ${percent}`
