@@ -9,7 +9,7 @@
   TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
   cluster and vice versa.
 */
-import * as utils from "@k8slens/utilities";
+import * as utils from "../helpers/utils";
 import { minikubeReady } from "../helpers/minikube";
 import type { Frame, Page } from "playwright";
 import { groupBy, toPairs } from "lodash/fp";

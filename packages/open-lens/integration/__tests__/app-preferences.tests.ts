@@ -10,7 +10,7 @@
   cluster and vice versa.
 */
 import type { ElectronApplication, Page } from "playwright";
-import * as utils from "@k8slens/utilities";
+import * as utils from "../helpers/utils";
 
 describe("preferences page tests", () => {
   let window: Page;
