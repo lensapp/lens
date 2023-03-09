@@ -142,7 +142,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: 'Shell did not exit sucessfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
+          error: 'Shell did not exit successfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
     });
@@ -155,7 +155,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: 'Shell did not exit sucessfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
+          error: 'Shell did not exit successfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
     });
@@ -248,7 +248,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: 'Shell did not exit sucessfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
+          error: 'Shell did not exit successfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
     });
@@ -261,7 +261,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: 'Shell did not exit sucessfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
+          error: 'Shell did not exit successfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
     });
@@ -353,7 +353,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: 'Shell did not exit sucessfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
+          error: 'Shell did not exit successfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
     });
@@ -366,7 +366,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: 'Shell did not exit sucessfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
+          error: 'Shell did not exit successfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
     });
@@ -457,7 +457,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: 'Shell did not exit sucessfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
+          error: 'Shell did not exit successfully: {\n    "code": 1,\n    "signal": null,\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
     });
@@ -470,7 +470,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
       it("should resolve with a failed call", async () => {
         await expect(unixShellEnv).resolves.toEqual({
           callWasSuccessful: false,
-          error: 'Shell did not exit sucessfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
+          error: 'Shell did not exit successfully: {\n    "code": 0,\n    "signal": "SIGKILL",\n    "stdout": "",\n    "stderr": ""\n}',
         });
       });
     });
