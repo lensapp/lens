@@ -5,38 +5,24 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
-import namespaceStoreInjectable from "../../../+namespaces/store.injectable";
-import jobStoreInjectable from "../../../+workloads-jobs/store.injectable";
 import navigateToJobsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/jobs/navigate-to-jobs.injectable";
-import { computed } from "mobx";
+import totalCountOfJobsInSelectedNamespacesInjectable from "../../../+workloads-jobs/total-count.injectable";
+import statusCountsForAllJobsInSelectedNamespacesInjectable from "../../../+workloads-jobs/statuses.injectable";
 
 const jobsWorkloadInjectable = getInjectable({
   id: "jobs-workload",
 
-  instantiate: (di) => {
-    const navigate = di.inject(navigateToJobsInjectable);
-    const namespaceStore = di.inject(namespaceStoreInjectable);
-    const store = di.inject(jobStoreInjectable);
-
-    return {
-      resource: {
-        apiName: "jobs",
-        group: "batch",
-      },
-      open: navigate,
-
-      amountOfItems: computed(
-        () => store.getAllByNs(namespaceStore.contextNamespaces).length,
-      ),
-
-      status: computed(() =>
-        store.getStatuses(store.getAllByNs(namespaceStore.contextNamespaces)),
-      ),
-
-      title: ResourceNames.jobs,
-      orderNumber: 60,
-    };
-  },
+  instantiate: (di) => ({
+    resource: {
+      apiName: "jobs",
+      group: "batch",
+    },
+    open: di.inject(navigateToJobsInjectable),
+    amountOfItems: di.inject(totalCountOfJobsInSelectedNamespacesInjectable),
+    status: di.inject(statusCountsForAllJobsInSelectedNamespacesInjectable),
+    title: ResourceNames.jobs,
+    orderNumber: 60,
+  }),
 
   injectionToken: workloadInjectionToken,
 });
