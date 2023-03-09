@@ -30,7 +30,7 @@ describe("KubeApi", () => {
   let di: DiContainer;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);

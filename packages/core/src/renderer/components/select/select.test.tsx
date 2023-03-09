@@ -20,7 +20,7 @@ describe("<Select />", () => {
   let render: DiRender;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
     render = renderFor(di);
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");

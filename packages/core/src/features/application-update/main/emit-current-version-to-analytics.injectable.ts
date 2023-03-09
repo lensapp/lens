@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { afterApplicationIsLoadedInjectionToken } from "../../../main/start-main-application/runnable-tokens/after-application-is-loaded-injection-token";
+import { afterApplicationIsLoadedInjectionToken } from "@k8slens/application";
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import { getCurrentDateTime } from "../../../common/utils/date/get-current-date-time";
 import buildVersionInjectable from "../../../main/vars/build-version/build-version.injectable";

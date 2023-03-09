@@ -67,7 +67,7 @@ describe("cluster-store", () => {
   let writeFileSyncAndReturnPath: (filePath: string, contents: string) => string;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "/some-temp-directory");

@@ -32,7 +32,7 @@ describe("<ClusterFrame />", () => {
   let cluster: Cluster;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
     render = () => testingLibraryRender((
       <DiContextProvider value={{ di }}>
         <Router history={di.inject(historyInjectable)}>

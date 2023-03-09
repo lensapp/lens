@@ -32,7 +32,7 @@ describe("ExtensionDiscovery", () => {
   let homeDirectoryPath: string;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(installExtensionInjectable, () => () => Promise.resolve());

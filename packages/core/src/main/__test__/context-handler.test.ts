@@ -53,7 +53,7 @@ describe("ContextHandler", () => {
   let di: DiContainer;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
     di.override(createKubeAuthProxyInjectable, () => ({} as any));
 
     createContextHandler = di.inject(createContextHandlerInjectable);

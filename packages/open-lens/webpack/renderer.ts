@@ -14,7 +14,7 @@
  import CopyPlugin from "copy-webpack-plugin";
  import type { WebpackPluginInstance } from "webpack";
  import { DefinePlugin } from "webpack";
- import { assetsFolderName, isDevelopment, rendererDir, buildDir, htmlTemplate, publicPath, sassCommonVars } from "./vars";
+ import { assetsFolderName, isDevelopment, rendererDir, buildDir, htmlTemplate, publicPath } from "./vars";
  import { platform } from "process";
 
  const renderer: webpack.Configuration = {

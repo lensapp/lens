@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { reaction } from "mobx";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import setLoginItemSettingsInjectable from "../electron-app/features/set-login-item-settings.injectable";
-import { onLoadOfApplicationInjectionToken } from "../start-main-application/runnable-tokens/on-load-of-application-injection-token";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const setupSyncOpenAtLoginWithOsInjectable = getInjectable({
   id: "setup-sync-open-at-login-with-os",

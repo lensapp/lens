@@ -57,6 +57,7 @@ interface GithubPrData {
 
 interface ExtendedGithubPrData extends Omit<GithubPrData, "mergedAt"> {
   mergedAt: Date;
+  shouldAttemptCherryPick: boolean;
 }
 
 async function getCurrentBranch(): Promise<string> {
@@ -145,6 +146,14 @@ function formatSemverForMilestone(version: SemVer): string {
   return `${version.major}.${version.minor}.${version.patch}`;
 }
 
+function formatVersionForPickingPrs(version: SemVer): string {
+  if (version.prerelease.length > 0) {
+    return `${version.major}.${version.minor}.${version.patch}`;
+  }
+
+  return `${version.major}.${version.minor}.${version.patch+1}`;
+}
+
 async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prBody: string): Promise<void> {
   const prBranch = `release/v${version.format()}`;
 
@@ -182,16 +191,17 @@ function sortExtendedGithubPrData(left: ExtendedGithubPrData, right: ExtendedGit
   return -1;
 }
 
-async function getRelevantPRs(milestone: string, previousReleasedVersion: string): Promise<ExtendedGithubPrData[]> {
+async function getRelevantPRs(previousReleasedVersion: string, baseBranch: string): Promise<ExtendedGithubPrData[]> {
   console.log("retrieving previous 200 PRs...");
 
+  const milestone = formatVersionForPickingPrs(await getCurrentVersionOfSubPackage("core"));
   const getMergedPrsArgs = [
     "gh",
     "pr",
     "list",
     "--limit=500", // Should be big enough, if not we need to release more often ;)
     "--state=merged",
-    "--base=master",
+    `--base=${baseBranch}`,
     "--json mergeCommit,title,author,labels,number,milestone,mergedAt",
   ];
 
@@ -208,7 +218,11 @@ async function getRelevantPRs(milestone: string, previousReleasedVersion: string
     .filter(query => query.stdout)
     .map(query => query.pr)
     .filter(pr => pr.labels.every(label => label.name !== "skip-changelog"))
-    .map(pr => ({ ...pr, mergedAt: new Date(pr.mergedAt) } as ExtendedGithubPrData))
+    .map(pr => ({
+      ...pr,
+      mergedAt: new Date(pr.mergedAt),
+      shouldAttemptCherryPick: baseBranch === "master",
+    }))
     .sort(sortExtendedGithubPrData);
 }
 
@@ -291,7 +305,11 @@ async function cherryPickCommits(prs: ExtendedGithubPrData[]): Promise<void> {
   const cherryPickCommit = cherryPickCommitWith(rl);
 
   for (const pr of prs) {
-    await cherryPickCommit(pr.mergeCommit.oid);
+    if (pr.shouldAttemptCherryPick) {
+      await cherryPickCommit(pr.mergeCommit.oid);
+    } else {
+      console.log(`Skipping cherry picking of #${pr.number} - ${pr.title}`);
+    }
   }
 
   rl.close();
@@ -326,8 +344,12 @@ async function createRelease(): Promise<void> {
     await bumpPackageVersions();
   }
 
-  const prMilestone = formatSemverForMilestone(await getCurrentVersionOfSubPackage("core"));
-  const relevantPrs = await getRelevantPRs(prMilestone, previousReleasedVersion);
+  const relevantPrs = await getRelevantPRs(previousReleasedVersion, "master");
+
+  if (prBase !== "master") {
+    relevantPrs.push(...await getRelevantPRs(previousReleasedVersion, prBase));
+  }
+
   const selectedPrs = await pickRelevantPrs(relevantPrs, isMasterBranch);
   const prBody = formatChangelog(previousReleasedVersion, selectedPrs);
 

@@ -15,7 +15,7 @@ describe("enlist message channel listener in renderer", () => {
   let offMock: jest.Mock;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     onMock = jest.fn();
     offMock = jest.fn();

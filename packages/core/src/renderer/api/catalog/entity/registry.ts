@@ -23,7 +23,7 @@ export type CatalogEntityOnBeforeRun = (event: CatalogRunEvent) => void | Promis
 interface Dependencies {
   navigate: Navigate;
   readonly categoryRegistry: CatalogCategoryRegistry;
-  logger: Logger;
+  readonly logger: Logger;
 }
 
 export class CatalogEntityRegistry {
@@ -243,20 +243,24 @@ export class CatalogEntityRegistry {
    * Perform the onBeforeRun check and, if successful, then proceed to call `entity`'s onRun method
    * @param entity The instance to invoke the hooks and then execute the onRun
    */
-  onRun(entity: CatalogEntity): void {
-    this.onBeforeRun(entity)
-      .then(doOnRun => {
-        if (doOnRun) {
-          return entity.onRun?.({
-            navigate: this.dependencies.navigate,
-            setCommandPaletteContext: (entity) => {
-              this.activeEntity = entity;
-            },
-          });
-        } else {
-          this.dependencies.logger.debug(`onBeforeRun for ${entity.getId()} returned false`);
-        }
-      })
-      .catch(error => this.dependencies.logger.error(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onRun threw an error`, error));
+  async onRun(entity: CatalogEntity) {
+    try {
+      const doOnRun = await this.onBeforeRun(entity);
+
+      if (!doOnRun) {
+        this.dependencies.logger.debug(`onBeforeRun for ${entity.getId()} returned false`);
+
+        return;
+      }
+
+      await entity.onRun?.({
+        navigate: this.dependencies.navigate,
+        setCommandPaletteContext: (entity) => {
+          this.activeEntity = entity;
+        },
+      });
+    } catch (error) {
+      this.dependencies.logger.error(`[CATALOG-ENTITY-REGISTRY]: entity ${entity.getId()} onRun threw an error`, error);
+    }
   }
 }

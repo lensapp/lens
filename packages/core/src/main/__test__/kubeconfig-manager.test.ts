@@ -46,7 +46,7 @@ describe("kubeconfig manager tests", () => {
   let ensureServerMock: AsyncFnMock<() => Promise<void>>;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");

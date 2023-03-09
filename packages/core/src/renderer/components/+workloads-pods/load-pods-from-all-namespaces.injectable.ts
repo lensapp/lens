@@ -4,7 +4,7 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import namespaceStoreInjectable from "../+namespaces/store.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 import podStoreInjectable from "./store.injectable";
 
@@ -12,12 +12,12 @@ const loadPodsFromAllNamespacesInjectable = getInjectable({
   id: "load-pods-from-all-namespaces",
   instantiate: (di) => {
     const podStore = di.inject(podStoreInjectable);
-    const namespaceStore = di.inject(namespaceStoreInjectable);
+    const context = di.inject(clusterFrameContextForNamespacedResourcesInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
-  
+
     return () => {
       podStore.loadAll({
-        namespaces: [...namespaceStore.getItems().map(ns => ns.getName())],
+        namespaces: context.allNamespaces,
         onLoadFailure: error =>
           showErrorNotification(`Can not load Pods. ${String(error)}`),
       });

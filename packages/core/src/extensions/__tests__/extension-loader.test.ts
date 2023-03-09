@@ -23,7 +23,7 @@ describe("ExtensionLoader", () => {
   let updateExtensionStateMock: jest.Mock;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(currentlyInClusterFrameInjectable, () => false);

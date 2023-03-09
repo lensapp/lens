@@ -19,7 +19,7 @@ export interface NamespaceTree {
 }
 
 interface Dependencies extends KubeObjectStoreDependencies {
-  readonly storage: StorageLayer<string[] | undefined>;
+  readonly storage: StorageLayer<string[]>;
   readonly clusterConfiguredAccessibleNamespaces: IComputedValue<string[]>;
   deleteSubnamespace: (name: string) => Promise<void>;
 }
@@ -29,21 +29,6 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
     super(dependencies, api);
     makeObservable(this);
     autoBind(this);
-
-    // initialize allowed namespaces
-    const { allowedNamespaces } = this;
-    const selectedNamespaces = this.dependencies.storage.get(); // raw namespaces, undefined on first load
-
-    // return previously saved namespaces from local-storage (if any)
-    if (Array.isArray(selectedNamespaces)) {
-      this.selectNamespaces(selectedNamespaces.filter(namespace => allowedNamespaces.includes(namespace)));
-    } else if (allowedNamespaces.includes("default")) {
-      this.selectNamespaces(["default"]);
-    } else if (allowedNamespaces.length) {
-      this.selectNamespaces([allowedNamespaces[0]]);
-    } else {
-      this.selectNamespaces([]);
-    }
   }
 
   public onContextChange(callback: (namespaces: string[]) => void, opts: { fireImmediately?: boolean } = {}): IReactionDisposer {
@@ -61,12 +46,16 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
     return this.dependencies.storage.get() ?? [];
   }
 
+  /**
+   * @deprecated This doesn't contain the namespaces from cluster settings or from cluster context
+   */
   @computed get allowedNamespaces(): string[] {
     return this.items.map(item => item.getName());
   }
 
   /**
    * The list of selected namespace names (for filtering)
+   * @deprecated This doesn't contain the namespaces from cluster settings or from cluster context
    */
   @computed get contextNamespaces() {
     if (!this.selectedNamespaces.length) {
@@ -78,6 +67,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace, NamespaceApi> {
 
   /**
    * The set of select namespace names (for filtering)
+   * @deprecated This doesn't contain the namespaces from cluster settings or from cluster context
    */
   @computed get selectedNames(): Set<string> {
     return new Set(this.contextNamespaces);

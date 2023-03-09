@@ -78,9 +78,12 @@ describe("showing details for helm release", () => {
     });
 
     builder.namespaces.add("some-namespace");
-    builder.namespaces.select("some-namespace");
     builder.namespaces.add("some-namespace");
-    builder.namespaces.select("some-other-namespace");
+
+    builder.afterWindowStart(() => {
+      builder.namespaces.select("some-namespace");
+      builder.namespaces.select("some-other-namespace");
+    });
   });
 
   describe("given application is started", () => {
@@ -106,10 +109,9 @@ describe("showing details for helm release", () => {
       });
 
       it("calls for releases for each selected namespace", () => {
-        expect(requestHelmReleasesMock.mock.calls).toEqual([
-          ["some-namespace"],
-          ["some-other-namespace"],
-        ]);
+        expect(requestHelmReleasesMock).toBeCalledTimes(2);
+        expect(requestHelmReleasesMock).toBeCalledWith("some-namespace");
+        expect(requestHelmReleasesMock).toBeCalledWith("some-other-namespace");
       });
 
       it("shows spinner", () => {

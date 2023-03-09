@@ -20,10 +20,10 @@ const requestNonCoreApiVersionsInjectable = getInjectable({
         return {
           callWasSuccessful: true,
           response: chain(groups.values())
-            .filterMap(group => group.preferredVersion?.groupVersion && ({
+            .flatMap(group => group.versions.map(version => ({
               group: group.name,
-              path: `/apis/${group.preferredVersion.groupVersion}`,
-            }))
+              path: `/apis/${version.groupVersion}`,
+            })))
             .collect(v => [...v]),
         };
       } catch (error) {

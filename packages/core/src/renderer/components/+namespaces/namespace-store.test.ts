@@ -118,7 +118,7 @@ describe("NamespaceStore", () => {
   let removeSubnamespaceMock: jest.Mock<any, any>;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);

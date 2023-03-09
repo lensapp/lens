@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import electronAppInjectable from "../electron-app.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import { onLoadOfApplicationInjectionToken } from "../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
 
 const setupMainWindowVisibilityAfterActivationInjectable = getInjectable({

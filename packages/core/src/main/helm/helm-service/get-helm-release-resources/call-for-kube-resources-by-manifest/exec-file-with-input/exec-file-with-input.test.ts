@@ -21,7 +21,7 @@ describe("exec-file-with-input", () => {
   };
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.unoverride(execFileWithInputInjectable);
 

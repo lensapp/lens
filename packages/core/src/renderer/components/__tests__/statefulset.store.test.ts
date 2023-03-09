@@ -138,7 +138,7 @@ describe("StatefulSet Store tests", () => {
   let statefulSetStore: StatefulSetStore;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");

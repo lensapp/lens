@@ -9,7 +9,7 @@ import React from "react";
 import { computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { Disposer } from "../../utils";
-import { cssNames, isDefined } from "../../utils";
+import { hasTypedProperty, isObject, isString, cssNames, isDefined } from "../../utils";
 import type { KubeJsonApiDataFor, KubeObject } from "../../../common/k8s-api/kube-object";
 import type { ItemListLayoutProps } from "../item-object-list/list-layout";
 import { ItemListLayout } from "../item-object-list/list-layout";
@@ -61,6 +61,10 @@ const getLoadErrorMessage = (error: unknown): string => {
       return `${error.message}: ${getLoadErrorMessage(error.cause)}`;
     }
 
+    return error.message;
+  }
+
+  if (isObject(error) && hasTypedProperty(error, "message", isString)) {
     return error.message;
   }
 

@@ -20,7 +20,7 @@ jest.mock("../../kube-object-meta/kube-object-meta", () => ({
 
 describe("SecretDetails tests", () => {
   it("should show the visibility toggle when the secret value is ''", () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
     const render = renderFor(di);
 
     di.override(directoryForUserDataInjectable, () => "/some-user-data");

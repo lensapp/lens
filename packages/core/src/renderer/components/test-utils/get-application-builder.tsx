@@ -23,8 +23,6 @@ import type { NavigateToHelmCharts } from "../../../common/front-end-routing/rou
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
-import startMainApplicationInjectable from "../../../main/start-main-application/start-main-application.injectable";
-import startFrameInjectable from "../../start-frame/start-frame.injectable";
 import type { NamespaceStore } from "../+namespaces/store";
 import historyInjectable from "../../navigation/history.injectable";
 import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/electron-tray.injectable";
@@ -69,6 +67,17 @@ import fsInjectable from "../../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
 import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
+import selectedNamespacesStorageInjectable from "../../../features/namespace-filtering/renderer/storage.injectable";
+import { registerFeature } from "@k8slens/feature-core";
+import {
+  applicationFeatureForElectronMain,
+  testUtils as applicationForElectronTestUtils,
+} from "@k8slens/application-for-electron-main";
+import {
+  applicationFeature,
+  startApplicationInjectionToken,
+} from "@k8slens/application";
+
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -160,13 +169,19 @@ interface Environment {
 }
 
 export const getApplicationBuilder = () => {
-  const mainDi = getMainDi({
-    doGeneralOverrides: true,
-  });
+  const mainDi = getMainDi();
 
   runInAction(() => {
+    registerFeature(
+      mainDi,
+      applicationFeature,
+      applicationFeatureForElectronMain,
+    );
+
     mainDi.register(mainExtensionsStateInjectable);
   });
+
+  applicationForElectronTestUtils.overrideSideEffectsWithFakes(mainDi);
 
   testUsingFakeTime();
 
@@ -220,12 +235,17 @@ export const getApplicationBuilder = () => {
   const createElectronWindowFake: CreateElectronWindow = (configuration) => {
     const windowId = configuration.id;
 
-    const windowDi = getRendererDi({ doGeneralOverrides: true });
+    const windowDi = getRendererDi();
 
     overrideForWindow(windowDi, windowId);
     overrideFsWithFakes(windowDi);
 
     runInAction(() => {
+      registerFeature(
+        windowDi,
+        applicationFeature,
+      );
+
       windowDi.register(rendererExtensionsStateInjectable);
     });
 
@@ -253,9 +273,9 @@ export const getApplicationBuilder = () => {
           await callback(windowDi);
         }
 
-        const startFrame = windowDi.inject(startFrameInjectable);
+        const startApplication = windowDi.inject(startApplicationInjectionToken);
 
-        await startFrame();
+        await startApplication();
 
         for (const callback of afterWindowStartCallbacks) {
           await callback(windowDi);
@@ -289,9 +309,9 @@ export const getApplicationBuilder = () => {
   const namespaces = observable.set<string>();
   const namespaceItems = observable.array<Namespace>();
   const selectedNamespaces = observable.set<string>();
-  const startMainApplication = mainDi.inject(startMainApplicationInjectable);
+  const startApplication = mainDi.inject(startApplicationInjectionToken);
 
-  const startApplication = async ({ shouldStartHidden }: { shouldStartHidden: boolean }) => {
+  const startApp = async ({ shouldStartHidden }: { shouldStartHidden: boolean }) => {
     mainDi.inject(lensProxyPortInjectable).set(42);
 
     for (const callback of beforeApplicationStartCallbacks) {
@@ -299,7 +319,7 @@ export const getApplicationBuilder = () => {
     }
 
     mainDi.override(shouldStartHiddenInjectable, () => shouldStartHidden);
-    await startMainApplication();
+    await startApplication();
 
     for (const callback of afterApplicationStartCallbacks) {
       await callback(mainDi);
@@ -369,7 +389,12 @@ export const getApplicationBuilder = () => {
         namespaces.add(namespace);
         namespaceItems.replace(createNamespacesFor(namespaces));
       }),
-      select: action((namespace) => selectedNamespaces.add(namespace)),
+      select: action((namespace) => {
+        const selectedNamespacesStorage = builder.applicationWindow.only.di.inject(selectedNamespacesStorageInjectable);
+
+        selectedNamespaces.add(namespace);
+        selectedNamespacesStorage.set([...selectedNamespaces]);
+      }),
     },
     applicationMenu: {
       get items() {
@@ -504,6 +529,7 @@ export const getApplicationBuilder = () => {
         const clusterStub = {
           id: "some-cluster-id",
           accessibleNamespaces: observable.array(),
+          allowedNamespaces: observable.array(),
           shouldShowResource: (kind) => allowedResourcesState.has(formatKubeApiResource(kind)),
         } as Partial<Cluster> as Cluster;
 
@@ -671,11 +697,11 @@ export const getApplicationBuilder = () => {
     },
 
     startHidden: async () => {
-      await startApplication({ shouldStartHidden: true });
+      await startApp({ shouldStartHidden: true });
     },
 
     async render() {
-      await startApplication({ shouldStartHidden: false });
+      await startApp({ shouldStartHidden: false });
 
       return builder
         .applicationWindow

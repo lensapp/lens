@@ -21,7 +21,7 @@ describe("ClusterLocalTerminalSettings", () => {
   let statMock: jest.Mock;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     showErrorNotificationMock = jest.fn();
 

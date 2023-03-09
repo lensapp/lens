@@ -8,7 +8,7 @@ import openDeepLinkInjectable from "../../protocol-handler/lens-protocol-router-
 import commandLineArgumentsInjectable from "../../utils/command-line-arguments.injectable";
 import createFirstApplicationWindowInjectable from "../lens-window/application-window/create-first-application-window.injectable";
 import splashWindowInjectable from "../lens-window/splash-window/splash-window.injectable";
-import { showInitialWindowRunnablePhaseInjectionToken } from "../runnable-tokens/phases";
+import { afterApplicationIsLoadedInjectionToken } from "@k8slens/application";
 
 const getDeepLinkUrl = (commandLineArguments: string[]) => (
   commandLineArguments
@@ -45,7 +45,7 @@ const showInitialWindowInjectable = getInjectable({
       },
     };
   },
-  injectionToken: showInitialWindowRunnablePhaseInjectionToken,
+  injectionToken: afterApplicationIsLoadedInjectionToken,
 });
 
 export default showInitialWindowInjectable;

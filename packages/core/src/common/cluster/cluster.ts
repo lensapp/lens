@@ -498,6 +498,7 @@ export class Cluster implements ClusterModel {
 
     this.allowedResources.replace(await this.getAllowedResources(requestNamespaceListPermissions));
     this.ready = this.knownResources.length > 0;
+    this.dependencies.logger.debug(`[CLUSTER]: refreshed accessibility data`, this.getState());
   }
 
   /**
@@ -699,6 +700,11 @@ export class Cluster implements ClusterModel {
   }
 
   shouldShowResource(resource: KubeApiResourceDescriptor): boolean {
+    if (this.allowedResources.size === 0) {
+      // better to show than hide everything
+      return true;
+    }
+
     return this.allowedResources.has(formatKubeApiResource(resource));
   }
 

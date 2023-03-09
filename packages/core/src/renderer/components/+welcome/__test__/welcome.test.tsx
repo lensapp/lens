@@ -23,7 +23,7 @@ describe("<Welcome/>", () => {
   let welcomeBannersStub: WelcomeBannerRegistration[];
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     di.override(currentlyInClusterFrameInjectable, () => false);
 

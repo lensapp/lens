@@ -43,7 +43,7 @@ describe("kubeconfig-sync.source tests", () => {
   let di: DiContainer;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "/some-directory-for-temp");

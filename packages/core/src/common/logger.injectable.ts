@@ -26,6 +26,8 @@ const loggerInjectable = getInjectable({
       silly: (message, ...data) => baseLogger.silly(message, ...data),
     };
   },
+
+  decorable: false,
 });
 
 export default loggerInjectable;

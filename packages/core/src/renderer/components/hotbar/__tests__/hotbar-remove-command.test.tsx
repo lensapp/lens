@@ -30,7 +30,7 @@ describe("<HotbarRemoveCommand />", () => {
   let render: DiRender;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
