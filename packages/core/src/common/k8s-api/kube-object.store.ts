@@ -84,6 +84,22 @@ export type KubeApiDataFrom<K extends KubeObject, A> = A extends KubeApi<K, infe
 
 export type JsonPatch = Patch;
 
+interface ObjectWithLabels {
+  metadata: {
+    labels: Partial<Record<string, string>>;
+  };
+}
+
+export const byLabels = (labels: Partial<Record<string, string>>) => (obj: ObjectWithLabels) => {
+  for (const key in labels) {
+    if (obj.metadata.labels[key] !== labels[key]) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export interface KubeObjectStoreDependencies {
   readonly context: ClusterContext;
   readonly logger: Logger;
