@@ -5,38 +5,24 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { workloadInjectionToken } from "../workload-injection-token";
 import { ResourceNames } from "../../../../utils/rbac";
-import namespaceStoreInjectable from "../../../+namespaces/store.injectable";
-import daemonsetsStoreInjectable from "../../../+workloads-daemonsets/store.injectable";
 import navigateToDaemonsetsInjectable from "../../../../../common/front-end-routing/routes/cluster/workloads/daemonsets/navigate-to-daemonsets.injectable";
-import { computed } from "mobx";
+import totalCountOfDaemonSetsInSelectedNamespacesInjectable from "../../../+workloads-daemonsets/total-count.injectable";
+import totalStatusesForDaemonSetsInSelectedNamespacesInjectable from "../../../+workloads-daemonsets/statuses.injectable";
 
 const daemonsetsWorkloadInjectable = getInjectable({
   id: "daemonsets-workload",
 
-  instantiate: (di) => {
-    const navigate = di.inject(navigateToDaemonsetsInjectable);
-    const namespaceStore = di.inject(namespaceStoreInjectable);
-    const store = di.inject(daemonsetsStoreInjectable);
-
-    return {
-      resource: {
-        apiName: "daemonsets",
-        group: "apps",
-      },
-      open: navigate,
-
-      amountOfItems: computed(
-        () => store.getAllByNs(namespaceStore.contextNamespaces).length,
-      ),
-
-      status: computed(() =>
-        store.getStatuses(store.getAllByNs(namespaceStore.contextNamespaces)),
-      ),
-
-      title: ResourceNames.daemonsets,
-      orderNumber: 30,
-    };
-  },
+  instantiate: (di) => ({
+    resource: {
+      apiName: "daemonsets",
+      group: "apps",
+    },
+    open: di.inject(navigateToDaemonsetsInjectable),
+    amountOfItems: di.inject(totalCountOfDaemonSetsInSelectedNamespacesInjectable),
+    status: di.inject(totalStatusesForDaemonSetsInSelectedNamespacesInjectable),
+    title: ResourceNames.daemonsets,
+    orderNumber: 30,
+  }),
 
   injectionToken: workloadInjectionToken,
 });
