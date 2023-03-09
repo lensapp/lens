@@ -1141,6 +1141,16 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.ResourceMetricsProps/</loc>
+         <lastmod>2023-03-09</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.ResourceMetricsValue/</loc>
+         <lastmod>2023-03-09</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Renderer.Component.SearchInputProps/</loc>
          <lastmod>2023-03-09</lastmod>
          <changefreq>daily</changefreq>
