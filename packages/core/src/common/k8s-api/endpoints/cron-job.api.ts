@@ -66,6 +66,11 @@ export interface CronJobStatus {
   active?: ObjectReference[];
 }
 
+export enum CronJobStatusPhase {
+  SUSPENDED = "Suspended",
+  SCHEDULED = "Scheduled",
+}
+
 export class CronJob extends KubeObject<
   NamespaceScopedMetadata,
   CronJobStatus,
@@ -88,6 +93,14 @@ export class CronJob extends KubeObject<
 
   getSchedule() {
     return this.spec.schedule;
+  }
+
+  getStatus() {
+    if (this.isSuspend()) {
+      return CronJobStatusPhase.SUSPENDED;
+    }
+
+    return CronJobStatusPhase.SCHEDULED;
   }
 
   isNeverRun() {
