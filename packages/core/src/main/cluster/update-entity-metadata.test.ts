@@ -20,7 +20,7 @@ describe("update-entity-metadata", () => {
   let detectedMetadata: Record<ClusterMetadataKey, any>;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting();
+    const di = getDiForUnitTesting({ doGeneralOverrides: true });
 
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(appPathsStateInjectable, () => ({
