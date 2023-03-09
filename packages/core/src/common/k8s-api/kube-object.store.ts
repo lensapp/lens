@@ -113,15 +113,15 @@ export abstract class KubeObjectStore<
     this.bindWatchEventsUpdater();
   }
 
-  // TODO: Circular dependency: KubeObjectStore -> ClusterFrameContext -> NamespaceStore -> KubeObjectStore
   @computed get contextItems(): K[] {
+    if (!this.api.isNamespaced) {
+      return this.items;
+    }
+
     const namespaces = this.dependencies.context.contextNamespaces;
 
-    return this.items.filter(item => {
-      const itemNamespace = item.getNs();
-
-      return !itemNamespace /* cluster-wide */ || namespaces.includes(itemNamespace);
-    });
+    return this.items
+      .filter(item => namespaces.includes(item.getNs() as string));
   }
 
   getTotalCount(): number {

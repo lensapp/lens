@@ -24,15 +24,10 @@ const replicasetsWorkloadInjectable = getInjectable({
         group: "apps",
       },
       open: navigate,
-
-      amountOfItems: computed(
-        () => store.getAllByNs(namespaceStore.contextNamespaces).length,
-      ),
-
+      amountOfItems: computed(() => store.getTotalCount()),
       status: computed(() =>
         store.getStatuses(store.getAllByNs(namespaceStore.contextNamespaces)),
       ),
-
       title: ResourceNames.replicasets,
       orderNumber: 50,
     };
