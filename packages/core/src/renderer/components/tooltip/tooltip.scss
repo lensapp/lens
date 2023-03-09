@@ -78,7 +78,7 @@
       .name {
         color: var(--textColorAccent);
         text-align: right;
-        min-width: 15%;
+        flex-basis: 12%;
       }
 
       .value {
