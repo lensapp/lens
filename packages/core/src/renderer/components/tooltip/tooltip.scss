@@ -64,6 +64,7 @@
 
     &.tableView {
       min-width: 200px;
+      padding: calc(var(--padding) * 1.5);
 
       > :not(:last-child) {
         margin-bottom: var(--flex-gap);
@@ -77,13 +78,15 @@
       .name {
         color: var(--textColorAccent);
         text-align: right;
-        flex: 0 0 35%;
+        min-width: 15%;
       }
 
       .value {
+        flex-grow: 1;
         text-align: left;
-        max-width: 300px;
-        word-break: break-word;
+        white-space: pre-wrap;
+        word-break: break-all;
+        color: var(--textColorSecondary);
       }
     }
   }

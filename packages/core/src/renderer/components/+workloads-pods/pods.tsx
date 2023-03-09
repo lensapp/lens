@@ -86,6 +86,7 @@ class NonInjectedPods extends React.Component<Dependencies> {
             tooltip={{
               formatters: {
                 tableView: true,
+                nowrap: true,
               },
               children: (
                 <>
