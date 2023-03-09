@@ -8,7 +8,6 @@ import type { IObservableValue, ObservableSet } from "mobx";
 import { action, makeObservable, observe, reaction, toJS } from "mobx";
 import type { Cluster } from "../../common/cluster/cluster";
 import { isErrnoException } from "../../common/utils";
-import type { KubernetesClusterPrometheusMetrics } from "../../common/catalog-entities/kubernetes-cluster";
 import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../../common/ipc";
 import { once } from "lodash";
@@ -16,6 +15,8 @@ import type { ClusterStore } from "../../common/cluster-store/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
 import type { CatalogEntityRegistry } from "../catalog";
 import type { Logger } from "../../common/logger";
+import type { UpdateEntityMetadata } from "./update-entity-metadata.injectable";
+import type { UpdateEntitySpec } from "./update-entity-spec.injectable";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
@@ -27,6 +28,8 @@ interface Dependencies {
   readonly clustersThatAreBeingDeleted: ObservableSet<ClusterId>;
   readonly visibleCluster: IObservableValue<ClusterId | null>;
   readonly logger: Logger;
+  readonly updateEntityMetadata: UpdateEntityMetadata;
+  readonly updateEntitySpec: UpdateEntitySpec;
 }
 
 export class ClusterManager {
@@ -97,42 +100,8 @@ export class ClusterManager {
 
     this.updateEntityStatus(entity, cluster);
 
-    entity.metadata.labels = {
-      ...entity.metadata.labels,
-      ...cluster.labels,
-    };
-    entity.metadata.distro = cluster.distribution;
-    entity.metadata.kubeVersion = cluster.version;
-
-    if (cluster.preferences?.clusterName) {
-      /**
-       * Only set the name if the it is overriden in preferences. If it isn't
-       * set then the name of the entity has been explicitly set by its source
-       */
-      entity.metadata.name = cluster.preferences.clusterName;
-    }
-
-    entity.spec.metrics ||= { source: "local" };
-
-    if (entity.spec.metrics.source === "local") {
-      const prometheus: KubernetesClusterPrometheusMetrics = entity.spec?.metrics?.prometheus || {};
-
-      prometheus.type = cluster.preferences.prometheusProvider?.type;
-      prometheus.address = cluster.preferences.prometheus;
-      entity.spec.metrics.prometheus = prometheus;
-    }
-
-    if (cluster.preferences.icon) {
-      entity.spec.icon ??= {};
-      entity.spec.icon.src = cluster.preferences.icon;
-    } else if (cluster.preferences.icon === null) {
-      /**
-       * NOTE: only clear the icon if set to `null` by ClusterIconSettings.
-       * We can then also clear that value too
-       */
-      entity.spec.icon = undefined;
-      cluster.preferences.icon = undefined;
-    }
+    this.dependencies.updateEntityMetadata(entity, cluster);
+    this.dependencies.updateEntitySpec(entity, cluster);
 
     this.dependencies.catalogEntityRegistry.items.splice(index, 1, entity);
   }
