@@ -14,6 +14,7 @@ interface Iterator<T> extends Iterable<T> {
   flatMap<U>(fn: (val: T) => U[]): Iterator<U>;
   concat(src2: IterableIterator<T>): Iterator<T>;
   join(sep?: string): string;
+  count(): T extends string ? { [P in T]?: number; } : never;
 }
 
 export function chain<T>(src: IterableIterator<T>): Iterator<T> {
@@ -26,6 +27,7 @@ export function chain<T>(src: IterableIterator<T>): Iterator<T> {
     join: (sep) => join(src, sep),
     collect: (fn) => fn(src),
     concat: (src2) => chain(concat(src, src2)),
+    count: () => countBy(src as unknown as Iterable<string>) as any,
     [Symbol.iterator]: () => src,
   };
 }
@@ -245,4 +247,16 @@ export function* concat<T>(...sources: IterableIterator<T>[]): IterableIterator<
       yield val;
     }
   }
+}
+
+export function countBy<K extends string>(src: Iterable<K>): Partial<Record<K, number>> {
+  const result: Partial<Record<K, number>> = {};
+
+  for (const item of src) {
+    result[item] ??= 0;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    result[item]! += 1;
+  }
+
+  return result;
 }
