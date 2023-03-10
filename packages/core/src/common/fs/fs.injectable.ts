@@ -21,6 +21,7 @@ const fsInjectable = getInjectable({
         rm,
         access,
         stat,
+        unlink,
       },
       ensureDir,
       ensureDirSync,
@@ -56,6 +57,7 @@ const fsInjectable = getInjectable({
       ensureDirSync,
       createReadStream,
       stat,
+      unlink,
     };
   },
   causesSideEffects: true,

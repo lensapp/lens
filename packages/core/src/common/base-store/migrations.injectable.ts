@@ -7,7 +7,7 @@ import { lifecycleEnum, getInjectable } from "@ogre-tools/injectable";
 import type Conf from "conf/dist/source";
 import type { Migrations } from "conf/dist/source/types";
 import loggerInjectable from "../logger.injectable";
-import { getOrInsert, iter } from "../utils";
+import { getOrInsert, iter } from "@k8slens/utilities";
 
 export interface MigrationDeclaration {
   version: string;

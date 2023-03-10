@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import execFileInjectable from "../../../common/fs/exec-file.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import type { AsyncResult } from "../../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import { requestSystemCAsInjectionToken } from "../common/request-system-cas-token";
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet#other_assertions
@@ -17,7 +17,7 @@ const requestSystemCAsInjectable = getInjectable({
     const execFile = di.inject(execFileInjectable);
     const logger = di.inject(loggerInjectable);
 
-    const execSecurity = async (...args: string[]): Promise<AsyncResult<string[]>> => {
+    const execSecurity = async (...args: string[]): AsyncResult<string[]> => {
       const result = await execFile("/usr/bin/security", args);
 
       if (!result.callWasSuccessful) {

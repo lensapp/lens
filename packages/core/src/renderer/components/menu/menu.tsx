@@ -8,7 +8,7 @@ import "./menu.scss";
 import type { ReactElement, ReactNode } from "react";
 import React, { Fragment } from "react";
 import { createPortal } from "react-dom";
-import { autoBind, cssNames, noop } from "../../utils";
+import { cssNames, noop } from "@k8slens/utilities";
 import { Animate } from "../animate";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
@@ -16,6 +16,7 @@ import isEqual from "lodash/isEqual";
 import type { RequestAnimationFrame } from "../animate/request-animation-frame.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import requestAnimationFrameInjectable from "../animate/request-animation-frame.injectable";
+import autoBindReact from "auto-bind/react";
 
 export const MenuContext = React.createContext<MenuContextValue | null>(null);
 export interface MenuContextValue {
@@ -78,7 +79,7 @@ class NonInjectedMenu extends React.Component<MenuProps & Dependencies, State> {
 
   constructor(props: MenuProps & Dependencies) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
   private opener: HTMLElement | null = null;
   private elem: HTMLUListElement | null = null;
@@ -431,7 +432,7 @@ export class MenuItem extends React.Component<MenuItemProps> {
 
   constructor(props: MenuItemProps) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   get isFocusable() {

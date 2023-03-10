@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import autoBind from "auto-bind";
 import orderBy from "lodash/orderBy";
-import { autoBind } from "./utils";
 import { action, computed, observable, when, makeObservable } from "mobx";
 
 export interface ItemObject {

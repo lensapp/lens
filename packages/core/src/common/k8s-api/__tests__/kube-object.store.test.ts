@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { noop } from "../../utils";
+import { noop } from "@k8slens/utilities";
 import type { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import type { KubeObjectStoreLoadingParams } from "../kube-object.store";

@@ -6,7 +6,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { ClusterId } from "../../../common/cluster-types";
-import { isDefined } from "../../../common/utils";
+import { isDefined } from "@k8slens/utilities";
 import mainExtensionsInjectable from "../../../extensions/main-extensions.injectable";
 import catalogEntityRegistryInjectable from "../../catalog/entity-registry.injectable";
 

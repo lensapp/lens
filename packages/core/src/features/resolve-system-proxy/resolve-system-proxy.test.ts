@@ -9,7 +9,7 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import type { ResolveSystemProxy } from "../../common/utils/resolve-system-proxy/resolve-system-proxy-injection-token";
 import { resolveSystemProxyInjectionToken } from "../../common/utils/resolve-system-proxy/resolve-system-proxy-injection-token";
 import resolveSystemProxyFromElectronInjectable from "../../main/utils/resolve-system-proxy/resolve-system-proxy-from-electron.injectable";
-import { getPromiseStatus } from "../../common/test-utils/get-promise-status";
+import { getPromiseStatus } from "@k8slens/test-utils";
 
 describe("resolve-system-proxy", () => {
   let builder: ApplicationBuilder;

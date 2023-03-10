@@ -66,18 +66,11 @@ import shouldStartHiddenInjectable from "../../../main/electron-app/features/sho
 import fsInjectable from "../../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
-import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
 import selectedNamespacesStorageInjectable from "../../../features/namespace-filtering/renderer/storage.injectable";
 import { registerFeature } from "@k8slens/feature-core";
-import {
-  applicationFeatureForElectronMain,
-  testUtils as applicationForElectronTestUtils,
-} from "@k8slens/application-for-electron-main";
-import {
-  applicationFeature,
-  startApplicationInjectionToken,
-} from "@k8slens/application";
-
+import { applicationFeatureForElectronMain, testUtils as applicationForElectronTestUtils } from "@k8slens/application-for-electron-main";
+import { applicationFeature, startApplicationInjectionToken } from "@k8slens/application";
+import { testUsingFakeTime } from "../../../test-utils/use-fake-time";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 

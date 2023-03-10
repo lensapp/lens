@@ -7,13 +7,13 @@ import styles from "./main-layout.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { StorageLayer } from "../../utils";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { ErrorBoundary } from "../error-boundary";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";
 import sidebarStorageInjectable, { defaultSidebarWidth } from "./sidebar-storage/sidebar-storage.injectable";
+import type { StorageLayer } from "../../utils/storage-helper";
 
 export interface MainLayoutProps {
   sidebar: React.ReactNode;

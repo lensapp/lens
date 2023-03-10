@@ -5,12 +5,13 @@
 
 import { action, makeObservable, observable, when } from "mobx";
 import type { ClusterId } from "../../../common/cluster-types";
-import type { Disposer } from "../../utils";
-import { getClusterFrameUrl, onceDefined } from "../../utils";
+import type { Disposer } from "@k8slens/utilities";
+import { onceDefined } from "@k8slens/utilities";
 import assert from "assert";
 import type { Logger } from "../../../common/logger";
 import type { GetClusterById } from "../../../common/cluster-store/get-by-id.injectable";
 import type { EmitClusterVisibility } from "./emit-cluster-visibility.injectable";
+import { getClusterFrameUrl } from "../../../common/utils";
 
 export interface LensView {
   isLoaded: boolean;

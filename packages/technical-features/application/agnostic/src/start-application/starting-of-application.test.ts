@@ -6,10 +6,8 @@ import {
 import { registerFeature } from "@k8slens/feature-core";
 import { applicationFeature } from "../feature";
 import { startApplicationInjectionToken } from "./start-application.injectable";
-import { beforeApplicationIsLoadingInjectionToken } from "./timeslots/before-application-is-loading-injection-token";
+import * as timeSlots from "./time-slots";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
-import { onLoadOfApplicationInjectionToken } from "./timeslots/on-load-of-application-injection-token";
-import { afterApplicationIsLoadedInjectionToken } from "./timeslots/after-application-is-loaded-injection-token";
 
 describe("starting-of-application", () => {
   let di: DiContainer;
@@ -30,19 +28,19 @@ describe("starting-of-application", () => {
     const beforeApplicationIsLoadingInjectable = getInjectable({
       id: "before-application-is-loading",
       instantiate: () => ({ run: beforeApplicationIsLoadingMock }),
-      injectionToken: beforeApplicationIsLoadingInjectionToken,
+      injectionToken: timeSlots.beforeApplicationIsLoadingInjectionToken,
     });
 
     const onLoadOfApplicationInjectable = getInjectable({
       id: "on-load-of-application",
       instantiate: () => ({ run: onLoadOfApplicationMock }),
-      injectionToken: onLoadOfApplicationInjectionToken,
+      injectionToken: timeSlots.onLoadOfApplicationInjectionToken,
     });
 
     const afterApplicationIsLoadedInjectable = getInjectable({
       id: "after-application-is-loaded",
       instantiate: () => ({ run: afterApplicationIsLoadedMock }),
-      injectionToken: afterApplicationIsLoadedInjectionToken,
+      injectionToken: timeSlots.afterApplicationIsLoadedInjectionToken,
     });
 
     di.register(

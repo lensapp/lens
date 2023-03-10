@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { NodeApi, Pod } from "../../../common/k8s-api/endpoints";
 import { StatusBrick } from "../status-brick";
-import { cssNames, getConvertedParts, object, stopPropagation } from "../../utils";
+import { cssNames, getConvertedParts, object, stopPropagation } from "@k8slens/utilities";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";

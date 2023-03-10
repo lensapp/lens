@@ -11,7 +11,7 @@ import type { TreeItemProps } from "@material-ui/lab";
 import { TreeItem, TreeView } from "@material-ui/lab";
 import { Icon } from "../icon";
 import { StylesProvider } from "@material-ui/core";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { CatalogCategory } from "../../api/catalog-entity";
 import { observer } from "mobx-react";
 import { CatalogCategoryLabel } from "./catalog-category-label";

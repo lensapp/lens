@@ -5,14 +5,14 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ExecFileException, ExecFileOptions } from "child_process";
 import { execFile } from "child_process";
-import type { AsyncResult } from "../utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 
 export type ExecFileError = ExecFileException & { stderr: string };
 
 export interface ExecFile {
-  (filePath: string): Promise<AsyncResult<string, ExecFileError>>;
-  (filePath: string, argsOrOptions: string[] | ExecFileOptions): Promise<AsyncResult<string, ExecFileError>>;
-  (filePath: string, args: string[], options: ExecFileOptions): Promise<AsyncResult<string, ExecFileError>>;
+  (filePath: string): AsyncResult<string, ExecFileError>;
+  (filePath: string, argsOrOptions: string[] | ExecFileOptions): AsyncResult<string, ExecFileError>;
+  (filePath: string, args: string[], options: ExecFileOptions): AsyncResult<string, ExecFileError>;
 }
 
 const execFileInjectable = getInjectable({

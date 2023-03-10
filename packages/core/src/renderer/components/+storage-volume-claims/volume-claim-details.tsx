@@ -19,7 +19,7 @@ import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.inject
 import type { PodStore } from "../+workloads-pods/store";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
-import { stopPropagation } from "../../../renderer/utils";
+import { stopPropagation } from "@k8slens/utilities";
 import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 

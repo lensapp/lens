@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { disposer } from "../../../../common/utils";
+import { disposer } from "@k8slens/utilities";
 import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
 import { getStartableStoppable } from "../../../../common/utils/get-startable-stoppable";
 import enlistRequestChannelListenerInjectable from "./enlist-request-channel-listener.injectable";

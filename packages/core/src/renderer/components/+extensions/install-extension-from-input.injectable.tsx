@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import React from "react";
-import type { ExtendableDisposer } from "../../../common/utils";
+import type { ExtendableDisposer } from "@k8slens/utilities";
 import { InputValidators } from "../input";
 import { getMessageFromError } from "./get-message-from-error/get-message-from-error";
 import { getInjectable } from "@ogre-tools/injectable";

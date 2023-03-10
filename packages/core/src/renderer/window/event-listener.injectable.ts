@@ -4,7 +4,7 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Disposer } from "../utils";
+import type { Disposer } from "@k8slens/utilities";
 
 export type AddWindowEventListener = typeof addWindowEventListener;
 export type WindowEventListener<K extends keyof WindowEventMap> = (this: Window, ev: WindowEventMap[K]) => any;

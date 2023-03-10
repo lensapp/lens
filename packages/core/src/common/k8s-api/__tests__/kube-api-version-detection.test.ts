@@ -10,7 +10,7 @@ import type { Fetch } from "../../fetch/fetch.injectable";
 import fetchInjectable from "../../fetch/fetch.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { flushPromises } from "../../test-utils/flush-promises";
+import { flushPromises } from "@k8slens/test-utils";
 import setupAutoRegistrationInjectable from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
 import { createMockResponseFromString } from "../../../test-utils/mock-responses";
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
@@ -119,7 +119,7 @@ describe("KubeApi", () => {
         ]);
       });
 
-      describe("when resource request fufills with a resource", () => {
+      describe("when resource request fulfills with a resource", () => {
         beforeEach(async () => {
           await fetchMock.resolveSpecific(
             ["https://127.0.0.1:12345/api-kube/apis/networking.k8s.io/v1"],
@@ -281,7 +281,7 @@ describe("KubeApi", () => {
         });
       });
 
-      describe("when resource request fufills with no resource", () => {
+      describe("when resource request fulfills with no resource", () => {
         beforeEach(async () => {
           await fetchMock.resolveSpecific(
             ["https://127.0.0.1:12345/api-kube/apis/networking.k8s.io/v1"],
@@ -305,7 +305,7 @@ describe("KubeApi", () => {
 
 
 
-        describe("when resource request fufills with a resource", () => {
+        describe("when resource request fulfills with a resource", () => {
           beforeEach(async () => {
             await fetchMock.resolveSpecific(
               ["https://127.0.0.1:12345/api-kube/apis/networking.k8s.io/v1beta1"],
@@ -507,7 +507,7 @@ describe("KubeApi", () => {
         ]);
       });
 
-      describe("when resource request fufills with a resource", () => {
+      describe("when resource request fulfills with a resource", () => {
         beforeEach(async () => {
           await fetchMock.resolveSpecific(
             ["https://127.0.0.1:12345/api-kube/apis/extensions"],

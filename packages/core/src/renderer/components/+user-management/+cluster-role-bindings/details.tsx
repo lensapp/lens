@@ -10,7 +10,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 
 import type { ClusterRoleBinding } from "../../../../common/k8s-api/endpoints";
-import { autoBind, ObservableHashSet, prevDefault } from "../../../utils";
+import { ObservableHashSet, prevDefault } from "@k8slens/utilities";
 import { AddRemoveButtons } from "../../add-remove-buttons";
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
@@ -23,6 +23,7 @@ import type { ClusterRoleBindingStore } from "./store";
 import type { OpenClusterRoleBindingDialog } from "./dialog/open.injectable";
 import openClusterRoleBindingDialogInjectable from "./dialog/open.injectable";
 import clusterRoleBindingStoreInjectable from "./store.injectable";
+import autoBindReact from "auto-bind/react";
 
 export interface ClusterRoleBindingDetailsProps extends KubeObjectDetailsProps<ClusterRoleBinding> {
 }
@@ -39,7 +40,7 @@ class NonInjectedClusterRoleBindingDetails extends React.Component<ClusterRoleBi
 
   constructor(props: ClusterRoleBindingDetailsProps & Dependencies) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   async componentDidMount() {

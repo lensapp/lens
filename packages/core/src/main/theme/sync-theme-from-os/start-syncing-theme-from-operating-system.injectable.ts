@@ -9,16 +9,13 @@ import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 const startSyncingThemeFromOperatingSystemInjectable = getInjectable({
   id: "start-syncing-theme-from-operating-system",
 
-  instantiate: (di) => {
-    const syncTheme = di.inject(syncThemeFromOperatingSystemInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const syncTheme = di.inject(syncThemeFromOperatingSystemInjectable);
 
-    return {
-      id: "start-syncing-theme-from-operating-system",
-      run: () => {
-        syncTheme.start();
-      },
-    };
-  },
+      syncTheme.start();
+    },
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

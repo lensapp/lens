@@ -8,9 +8,10 @@ import "./tooltip.scss";
 import React from "react";
 import { createPortal } from "react-dom";
 import { observer } from "mobx-react";
-import type { IClassName } from "../../utils";
-import { cssNames, autoBind } from "../../utils";
+import type { IClassName } from "@k8slens/utilities";
+import { cssNames } from "@k8slens/utilities";
 import { observable, makeObservable, action } from "mobx";
+import autoBindReact from "auto-bind/react";
 
 export enum TooltipPosition {
   TOP = "top",
@@ -61,7 +62,7 @@ export class Tooltip extends React.Component<TooltipProps> {
   constructor(props: TooltipProps) {
     super(props);
     makeObservable(this);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   get targetElem(): HTMLElement | null {

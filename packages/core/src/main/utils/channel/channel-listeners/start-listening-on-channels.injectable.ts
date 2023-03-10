@@ -10,18 +10,15 @@ import listeningOnRequestChannelsInjectable from "./listening-on-request-channel
 const startListeningOnChannelsInjectable = getInjectable({
   id: "start-listening-on-channels-main",
 
-  instantiate: (di) => {
-    const listeningOnMessageChannels = di.inject(listeningOnMessageChannelsInjectable);
-    const listeningOnRequestChannels = di.inject(listeningOnRequestChannelsInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const listeningOnMessageChannels = di.inject(listeningOnMessageChannelsInjectable);
+      const listeningOnRequestChannels = di.inject(listeningOnRequestChannelsInjectable);
 
-    return {
-      id: "start-listening-on-channels-main",
-      run: () => {
-        listeningOnMessageChannels.start();
-        listeningOnRequestChannels.start();
-      },
-    };
-  },
+      listeningOnMessageChannels.start();
+      listeningOnRequestChannels.start();
+    },
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

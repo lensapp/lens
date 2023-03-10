@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import execHelmInjectable from "../exec-helm/exec-helm.injectable";
-import type { AsyncResult } from "../../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 
 export type HelmEnv = Record<string, string> & {
   HELM_REPOSITORY_CACHE?: string;
@@ -17,7 +17,7 @@ const getHelmEnvInjectable = getInjectable({
   instantiate: (di) => {
     const execHelm = di.inject(execHelmInjectable);
 
-    return async (): Promise<AsyncResult<HelmEnv>> => {
+    return async (): AsyncResult<HelmEnv> => {
       const result = await execHelm(["env"]);
 
       if (!result.callWasSuccessful) {

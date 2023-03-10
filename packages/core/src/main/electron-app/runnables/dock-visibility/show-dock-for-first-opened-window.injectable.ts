@@ -4,21 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronAppInjectable from "../../electron-app.injectable";
-import { afterWindowIsOpenedInjectionToken } from "../../../start-main-application/runnable-tokens/after-window-is-opened-injection-token";
+import { afterWindowIsOpenedInjectionToken } from "../../../start-main-application/runnable-tokens/phases";
 
 const showDockForFirstOpenedWindowInjectable = getInjectable({
   id: "show-dock-for-first-opened-window",
 
-  instantiate: (di) => {
-    const app = di.inject(electronAppInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const app = di.inject(electronAppInjectable);
 
-    return {
-      id: "show-dock-for-first-opened-window",
-      run: () => {
-        app.dock?.show();
-      },
-    };
-  },
+      app.dock?.show();
+    },
+  }),
 
   injectionToken: afterWindowIsOpenedInjectionToken,
 });

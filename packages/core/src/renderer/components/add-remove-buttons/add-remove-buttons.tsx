@@ -6,7 +6,7 @@
 import "./add-remove-buttons.scss";
 
 import React from "react";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Button } from "../button";
 import { Icon } from "../icon";
 

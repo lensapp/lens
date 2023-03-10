@@ -7,7 +7,7 @@ import "./list.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Badge } from "../../badge";
-import { cssNames } from "../../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { Filter, PageFiltersStore } from "./store";
 import { FilterIcon } from "../filter-icon";
 import { Icon } from "../../icon";

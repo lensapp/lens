@@ -10,14 +10,12 @@ import initDefaultUpdateChannelInjectable from "../vars/default-update-channel/i
 const initUserStoreInjectable = getInjectable({
   id: "init-user-store",
   instantiate: (di) => ({
-    id: "init-user-store",
     run: () => {
-      // This must be done here so as to actually only be instantiated after the dependencies are
       const userStore = di.inject(userStoreInjectable);
 
       return userStore.load();
     },
-    runAfter: di.inject(initDefaultUpdateChannelInjectable),
+    runAfter: initDefaultUpdateChannelInjectable,
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });

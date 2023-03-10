@@ -10,13 +10,12 @@ import initUserStoreInjectable from "../../../../renderer/stores/init-user-store
 const initClusterStoreInjectable = getInjectable({
   id: "init-cluster-store",
   instantiate: (di) => ({
-    id: "init-cluster-store",
     run: () => {
       const clusterStore = di.inject(clusterStoreInjectable);
 
       clusterStore.load();
     },
-    runAfter: di.inject(initUserStoreInjectable),
+    runAfter: initUserStoreInjectable,
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });

@@ -7,12 +7,12 @@ import { action, observable, reaction, when, makeObservable } from "mobx";
 import type { KubeObjectStoreDependencies } from "../../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import type { Cluster, ClusterApi } from "../../../../common/k8s-api/endpoints";
-import type { StorageLayer } from "../../../utils";
-import { autoBind } from "../../../utils";
+import type { StorageLayer } from "../../../utils/storage-helper";
 import type { NodeStore } from "../../+nodes/store";
 import type { ClusterMetricData, RequestClusterMetricsByNodeNames } from "../../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
 import type { RequestMetricsParams } from "../../../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 import { normalizeMetrics } from "../../../../common/k8s-api/endpoints/metrics.api";
+import autoBind from "auto-bind";
 
 export enum MetricType {
   MEMORY = "memory",

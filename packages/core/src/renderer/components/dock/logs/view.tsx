@@ -15,7 +15,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import logsViewModelInjectable from "./logs-view-model.injectable";
 import type { LogTabViewModel } from "./logs-view-model";
 import type { DockTab } from "../dock/store";
-import { cssNames } from "../../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { SubscribeStores } from "../../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../../kube-watch-api/subscribe-stores.injectable";
 import type { PodStore } from "../../+workloads-pods/store";

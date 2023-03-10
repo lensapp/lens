@@ -11,25 +11,22 @@ import buildVersionInjectable from "../../../main/vars/build-version/build-versi
 const emitCurrentVersionToAnalyticsInjectable = getInjectable({
   id: "emit-current-version-to-analytics",
 
-  instantiate: (di) => {
-    const emitAppEvent = di.inject(emitAppEventInjectable);
-    const buildVersion = di.inject(buildVersionInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const emitAppEvent = di.inject(emitAppEventInjectable);
+      const buildVersion = di.inject(buildVersionInjectable);
 
-    return {
-      id: "emit-current-version-to-analytics",
-      run: () => {
-        emitAppEvent({
-          name: "app",
-          action: "current-version",
+      emitAppEvent({
+        name: "app",
+        action: "current-version",
 
-          params: {
-            version: buildVersion.get(),
-            currentDateTime: getCurrentDateTime(),
-          },
-        });
-      },
-    };
-  },
+        params: {
+          version: buildVersion.get(),
+          currentDateTime: getCurrentDateTime(),
+        },
+      });
+    },
+  }),
 
   injectionToken: afterApplicationIsLoadedInjectionToken,
 });

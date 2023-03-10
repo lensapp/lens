@@ -5,12 +5,13 @@
 
 import type { IComputedValue, IReactionDisposer } from "mobx";
 import { action, comparer, computed, makeObservable, reaction } from "mobx";
-import type { StorageLayer } from "../../utils";
-import { autoBind, noop, toggle } from "../../utils";
+import type { StorageLayer } from "../../utils/storage-helper";
+import { noop, toggle } from "@k8slens/utilities";
 import type { KubeObjectStoreDependencies, KubeObjectStoreLoadingParams } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import type { NamespaceApi } from "../../../common/k8s-api/endpoints/namespace.api";
 import { Namespace } from "../../../common/k8s-api/endpoints/namespace.api";
+import autoBind from "auto-bind";
 
 export interface NamespaceTree {
   id: string;

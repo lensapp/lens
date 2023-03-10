@@ -5,7 +5,7 @@
 
 import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import customResourcesRouteInjectable from "../../front-end-routing/routes/cluster/custom-resources/custom-resources/custom-resources-route.injectable";
-import { buildURL } from "../../utils/buildUrl";
+import { buildURL } from "@k8slens/utilities";
 import type { BaseKubeObjectCondition, ClusterScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";

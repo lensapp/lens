@@ -7,7 +7,7 @@ import "./table.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { autoBind, cssNames, isDefined } from "../../utils";
+import { cssNames, isDefined } from "@k8slens/utilities";
 import type { TableRowElem, TableRowProps } from "./table-row";
 import { TableRow } from "./table-row";
 import type { TableHeadElem } from "./table-head";
@@ -24,6 +24,7 @@ import type { ItemObject } from "../../../common/item.store";
 import assert from "assert";
 import orderByUrlParamInjectable from "./order-by-url-param.injectable";
 import sortByUrlParamInjectable from "./sort-by-url-param.injectable";
+import autoBindReact from "auto-bind/react";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc";
@@ -97,7 +98,7 @@ class NonInjectedTable<Item extends ItemObject> extends React.Component<TablePro
   constructor(props: TableProps<Item> & Dependencies) {
     super(props);
     makeObservable(this);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   componentDidMount() {

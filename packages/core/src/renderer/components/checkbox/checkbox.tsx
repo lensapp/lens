@@ -5,8 +5,8 @@
 
 import "./checkbox.scss";
 import React from "react";
-import type { SingleOrMany } from "../../utils";
-import { cssNames, noop } from "../../utils";
+import type { SingleOrMany } from "@k8slens/utilities";
+import { cssNames, noop } from "@k8slens/utilities";
 
 export interface CheckboxProps {
   className?: string;

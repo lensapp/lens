@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { ContainerScalingMode, ControlledValues, ResourceName, UpdateMode, VerticalPodAutoscaler } from "../../../common/k8s-api/endpoints/vertical-pod-autoscaler.api";
 import type { PodUpdatePolicy, PodResourcePolicy, VerticalPodAutoscalerStatus } from "../../../common/k8s-api/endpoints/vertical-pod-autoscaler.api";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
@@ -165,7 +165,7 @@ class NonInjectedVpaDetails extends React.Component<VpaDetailsProps & Dependenci
       </div>
     );
   }
-  
+
   render() {
     const { object: vpa, apiManager, getDetailsUrl, logger } = this.props;
 

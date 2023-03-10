@@ -10,7 +10,7 @@ import { ClusterMetadataKey } from "../../../common/cluster-types";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { clusterRoute } from "../../router/route";
 import { isObject } from "lodash";
-import { isRequestError, object } from "../../../common/utils";
+import { isRequestError, object } from "@k8slens/utilities";
 import type { GetMetrics } from "../../get-metrics.injectable";
 import getMetricsInjectable from "../../get-metrics.injectable";
 import loggerInjectable from "../../../common/logger.injectable";

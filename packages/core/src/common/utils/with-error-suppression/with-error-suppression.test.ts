@@ -5,7 +5,7 @@
 
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { getPromiseStatus } from "../../test-utils/get-promise-status";
+import { getPromiseStatus } from "@k8slens/test-utils";
 import { withErrorSuppression } from "./with-error-suppression";
 
 describe("with-error-suppression", () => {

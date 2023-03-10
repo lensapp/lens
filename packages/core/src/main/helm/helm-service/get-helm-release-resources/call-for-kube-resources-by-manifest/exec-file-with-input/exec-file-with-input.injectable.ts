@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { AsyncResult } from "../../../../../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import nonPromiseExecFileInjectable from "./non-promise-exec-file.injectable";
-import { isNumber } from "../../../../../../common/utils";
+import { isNumber } from "@k8slens/utilities";
 import assert from "assert";
 import type { ChildProcess } from "child_process";
 
@@ -13,7 +13,7 @@ export type ExecFileWithInput = (options: {
   filePath: string;
   commandArguments: string[];
   input: string;
-}) => Promise<AsyncResult<string, unknown>>;
+}) => AsyncResult<string, unknown>;
 
 const execFileWithInputInjectable = getInjectable({
   id: "exec-file-with-input",

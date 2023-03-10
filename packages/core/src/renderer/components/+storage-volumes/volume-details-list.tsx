@@ -9,7 +9,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { PersistentVolume } from "../../../common/k8s-api/endpoints/persistent-volume.api";
 import { TableRow } from "../table/table-row";
-import { cssNames, prevDefault } from "../../utils";
+import { cssNames, prevDefault } from "@k8slens/utilities";
 import { TableCell } from "../table/table-cell";
 import { Spinner } from "../spinner/spinner";
 import { DrawerTitle } from "../drawer/drawer-title";

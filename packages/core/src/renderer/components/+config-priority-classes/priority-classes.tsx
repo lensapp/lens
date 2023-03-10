@@ -13,10 +13,10 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
-import { autoBind } from "../../../common/utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import priorityClassStoreInjectable from "./store.injectable";
 import type { PriorityClassStore } from "./store";
+import autoBindReact from "auto-bind/react";
 
 enum columnId {
   name = "name",
@@ -36,7 +36,7 @@ interface Dependencies {
 class NonInjectedPriorityClasses extends React.Component<PriorityClassesProps & Dependencies> {
   constructor(props: PriorityClassesProps & Dependencies) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   render() {

@@ -7,7 +7,7 @@ import styles from "./dock-tab.module.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { autoBind, cssNames, prevDefault, isMiddleClick } from "../../utils";
+import { cssNames, prevDefault, isMiddleClick } from "@k8slens/utilities";
 import type { DockStore, DockTab as DockTabModel } from "./dock/store";
 import type { TabProps } from "../tabs";
 import { Tab } from "../tabs";
@@ -18,6 +18,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import isMacInjectable from "../../../common/vars/is-mac.injectable";
+import autoBindReact from "auto-bind/react";
 
 export interface DockTabProps extends TabProps<DockTabModel> {
   moreActions?: React.ReactNode;
@@ -34,7 +35,7 @@ class NonInjectedDockTab extends React.Component<DockTabProps & Dependencies> {
 
   constructor(props: DockTabProps & Dependencies) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   close(id: string) {

@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { autoBind, cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { PortForwardItem, PortForwardStore } from "../../port-forward";
 import type { MenuActionsProps } from "../menu/menu-actions";
 import { MenuActions } from "../menu/menu-actions";
@@ -17,6 +17,7 @@ import portForwardStoreInjectable from "../../port-forward/port-forward-store/po
 import type { OpenPortForward } from "../../port-forward/open-port-forward.injectable";
 import openPortForwardInjectable from "../../port-forward/open-port-forward.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import autoBindReact from "auto-bind/react";
 
 export interface PortForwardMenuProps extends MenuActionsProps {
   portForward: PortForwardItem;
@@ -33,7 +34,7 @@ interface Dependencies {
 class NonInjectedPortForwardMenu<Props extends PortForwardMenuProps & Dependencies> extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   remove() {

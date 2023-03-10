@@ -15,8 +15,8 @@ import type { PartialDeep, ValueOf } from "type-fest";
 import { EventEmitter } from "../../common/event-emitter";
 import type { Logger } from "../../common/logger";
 import type { Fetch } from "../fetch/fetch.injectable";
-import type { Defaulted } from "../utils";
-import { json } from "../utils";
+import type { Defaulted } from "@k8slens/utilities";
+import { isObject, isString, json } from "@k8slens/utilities";
 
 export interface JsonApiData {}
 
@@ -184,20 +184,17 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
     const res = await this.dependencies.fetch(reqUrl, reqInit);
 
-    return this.parseResponse<OutData>(res, infoLog);
+    return await this.parseResponse(res, infoLog) as OutData;
   }
 
-  protected async parseResponse<OutData>(res: Response, log: JsonApiLog): Promise<OutData> {
+  protected async parseResponse(res: Response, log: JsonApiLog): Promise<Data> {
     const { status } = res;
 
     const text = await res.text();
-    let data: any;
-
-    try {
-      data = text ? json.parse(text) : ""; // DELETE-requests might not have response-body
-    } catch (e) {
-      data = text;
-    }
+    const parseResponse = json.parse(text || "{}");
+    const data = parseResponse.callWasSuccessful
+      ? parseResponse.response as Data
+      : text as Data;
 
     if (status >= 200 && status < 300) {
       this.onData.emit(data, res);
@@ -211,7 +208,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
       throw data;
     }
 
-    const error = new JsonApiErrorParsed(data, this.parseError(data, res));
+    const error = new JsonApiErrorParsed(data as JsonApiError, this.parseError(data, res));
 
     this.onError.emit(error, res);
     this.writeLog({ ...log, error });
@@ -219,16 +216,20 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
     throw error;
   }
 
-  protected parseError(error: JsonApiError | string, res: Response): string[] {
-    if (typeof error === "string") {
+  protected parseError(error: unknown, res: Response): string[] {
+    if (isString(error)) {
       return [error];
+    }
+
+    if (!isObject(error)) {
+      return [];
     }
 
     if (Array.isArray(error.errors)) {
       return error.errors.map(error => error.title);
     }
 
-    if (error.message) {
+    if (isString(error.message)) {
       return [error.message];
     }
 

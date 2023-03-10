@@ -12,21 +12,18 @@ import addKubeconfigSyncAsEntitySourceInjectable from "./add-source.injectable";
 const startKubeConfigSyncInjectable = getInjectable({
   id: "start-kubeconfig-sync",
 
-  instantiate: (di) => {
-    const directoryForKubeConfigs = di.inject(directoryForKubeConfigsInjectable);
-    const kubeConfigSyncManager = di.inject(kubeconfigSyncManagerInjectable);
-    const ensureDir = di.inject(ensureDirInjectable);
+  instantiate: (di) => ({
+    run: async () => {
+      const directoryForKubeConfigs = di.inject(directoryForKubeConfigsInjectable);
+      const kubeConfigSyncManager = di.inject(kubeconfigSyncManagerInjectable);
+      const ensureDir = di.inject(ensureDirInjectable);
 
-    return {
-      id: "start-kubeconfig-sync",
-      run: async () => {
-        await ensureDir(directoryForKubeConfigs);
+      await ensureDir(directoryForKubeConfigs);
 
-        kubeConfigSyncManager.startSync();
-      },
-      runAfter: di.inject(addKubeconfigSyncAsEntitySourceInjectable),
-    };
-  },
+      kubeConfigSyncManager.startSync();
+    },
+    runAfter: addKubeconfigSyncAsEntitySourceInjectable,
+  }),
 
   injectionToken: afterApplicationIsLoadedInjectionToken,
 });

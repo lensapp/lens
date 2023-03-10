@@ -20,7 +20,7 @@ import type { SelectOption } from "../../../select";
 import { onMultiSelectFor, Select } from "../../../select";
 import { Wizard, WizardStep } from "../../../wizard";
 import { Input } from "../../../input";
-import { ObservableHashSet, nFircate } from "../../../../utils";
+import { ObservableHashSet, iter } from "@k8slens/utilities";
 import type { Subject } from "../../../../../common/k8s-api/endpoints/types/subject";
 import type { RoleBindingDialogState } from "./state.injectable";
 import type { RoleBindingStore } from "../store";
@@ -147,7 +147,7 @@ class NonInjectedRoleBindingDialog extends React.Component<RoleBindingDialogProp
     this.bindingName = binding.getName();
     this.bindingNamespace = binding.getNs();
 
-    const [saSubjects, uSubjects, gSubjects] = nFircate(binding.getSubjects(), "kind", ["ServiceAccount", "User", "Group"]);
+    const [saSubjects, uSubjects, gSubjects] = iter.nFircate(binding.getSubjects(), "kind", ["ServiceAccount", "User", "Group"]);
     const accountNames = new Set(saSubjects.map(acc => acc.name));
 
     this.selectedAccounts.replace(

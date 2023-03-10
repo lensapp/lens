@@ -9,7 +9,7 @@ import { KubernetesCluster, WebLink } from "../../common/catalog-entities";
 import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
 import { Cluster } from "../../common/cluster/cluster";
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import { advanceFakeTime, testUsingFakeTime } from "../../common/test-utils/use-fake-time";
+import { advanceFakeTime, testUsingFakeTime } from "../../test-utils/use-fake-time";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
 import showEntityDetailsInjectable from "../../renderer/components/+catalog/entity-details/show.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";

@@ -5,7 +5,7 @@
 
 import fse from "fs-extra";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import { isErrnoException } from "../utils";
+import { isErrnoException } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import joinPathsInjectable from "../path/join-paths.injectable";
 

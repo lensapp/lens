@@ -9,7 +9,6 @@ import { beforeFrameStartsFirstInjectionToken } from "../tokens";
 const configureMobxInjectable = getInjectable({
   id: "configure-mobx",
   instantiate: () => ({
-    id: "configure-mobx",
     run: () => {
       // Docs: https://mobx.js.org/configuration.html
       configure({

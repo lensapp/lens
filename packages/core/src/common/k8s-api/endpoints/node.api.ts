@@ -5,7 +5,7 @@
 
 import type { BaseKubeObjectCondition, ClusterScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import { cpuUnitsToNumber, unitsToBytes, isObject } from "../../../renderer/utils";
+import { cpuUnitsToNumber, unitsToBytes, isObject } from "@k8slens/utilities";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { TypedRegEx } from "typed-regex";

@@ -8,16 +8,13 @@ import clusterManagerInjectable from "./manager.injectable";
 
 const initializeClusterManagerInjectable = getInjectable({
   id: "initialize-cluster-manager",
-  instantiate: (di) => {
-    const clusterManager = di.inject(clusterManagerInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const clusterManager = di.inject(clusterManagerInjectable);
 
-    return {
-      id: "initialize-cluster-manager",
-      run: () => {
-        clusterManager.init();
-      },
-    };
-  },
+      clusterManager.init();
+    },
+  }),
   injectionToken: onLoadOfApplicationInjectionToken,
   causesSideEffects: true,
 });

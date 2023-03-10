@@ -9,7 +9,6 @@ import buildVersionInjectable from "./build-version.injectable";
 const initializeBuildVersionInjectable = getInjectable({
   id: "initialize-build-version",
   instantiate: (di) => ({
-    id: "initialize-build-version",
     run: async () => {
       const buildVersion = di.inject(buildVersionInjectable);
 

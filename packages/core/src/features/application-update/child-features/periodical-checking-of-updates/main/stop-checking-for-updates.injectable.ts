@@ -4,25 +4,22 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import periodicalCheckForUpdatesInjectable from "./periodical-check-for-updates.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../../../../main/start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
+import { beforeQuitOfBackEndInjectionToken } from "../../../../../main/start-main-application/runnable-tokens/phases";
 
 const stopCheckingForUpdatesInjectable = getInjectable({
   id: "stop-checking-for-updates",
 
-  instantiate: (di) => {
-    const periodicalCheckForUpdates = di.inject(periodicalCheckForUpdatesInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const periodicalCheckForUpdates = di.inject(periodicalCheckForUpdatesInjectable);
 
-    return {
-      id: "stop-checking-for-updates",
-      run: () => {
-        if (periodicalCheckForUpdates.started) {
-          periodicalCheckForUpdates.stop();
-        }
+      if (periodicalCheckForUpdates.started) {
+        periodicalCheckForUpdates.stop();
+      }
 
-        return undefined;
-      },
-    };
-  },
+      return undefined;
+    },
+  }),
 
   injectionToken: beforeQuitOfBackEndInjectionToken,
 });

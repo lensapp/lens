@@ -10,7 +10,7 @@ import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { HorizontalPodAutoscaler } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
 import { Badge } from "../badge";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";

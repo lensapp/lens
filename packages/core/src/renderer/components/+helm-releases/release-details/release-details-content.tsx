@@ -9,7 +9,7 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 import { DrawerItem, DrawerTitle } from "../../drawer";
-import { stopPropagation } from "../../../utils";
+import { stopPropagation } from "@k8slens/utilities";
 import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ConfigurationInput, MinimalResourceGroup, OnlyUserSuppliedValuesAreShownToggle, ReleaseDetailsModel } from "./release-details-model/release-details-model.injectable";

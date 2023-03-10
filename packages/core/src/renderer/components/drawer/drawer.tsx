@@ -8,8 +8,8 @@ import "./drawer.scss";
 import React from "react";
 import { clipboard } from "electron";
 import { createPortal } from "react-dom";
-import type { SingleOrMany, StorageLayer } from "../../utils";
-import { cssNames, noop } from "../../utils";
+import type { SingleOrMany } from "@k8slens/utilities";
+import { cssNames, noop } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import type { AnimateName } from "../animate";
 import { Animate } from "../animate";
@@ -18,6 +18,7 @@ import drawerStorageInjectable, { defaultDrawerWidth } from "./drawer-storage/dr
 import { withInjectables } from "@ogre-tools/injectable-react";
 import historyInjectable from "../../navigation/history.injectable";
 import type { History } from "history";
+import type { StorageLayer } from "../../utils/storage-helper";
 
 export type DrawerPosition = "top" | "left" | "right" | "bottom";
 

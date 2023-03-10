@@ -5,7 +5,7 @@
 
 import "./wizard.scss";
 import React from "react";
-import { cssNames, prevDefault } from "../../utils";
+import { cssNames, prevDefault } from "@k8slens/utilities";
 import { Button } from "../button";
 import { Stepper } from "../stepper";
 import { SubTitle } from "../layout/sub-title";

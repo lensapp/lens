@@ -5,7 +5,7 @@
 import type {  MessageChannelListener } from "../../common/utils/channel/message-channel-listener-injection-token";
 import enlistMessageChannelListenerInjectableInRenderer from "../../renderer/utils/channel/channel-listeners/enlist-message-channel-listener.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import { getOrInsert, getOrInsertSet } from "../../common/utils";
+import { getOrInsert, getOrInsertSet } from "@k8slens/utilities";
 import type { SendToViewArgs } from "../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import { deserialize, serialize } from "v8";
 

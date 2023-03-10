@@ -10,13 +10,12 @@ import initClusterStoreInjectable from "../../../cluster/store/renderer/init.inj
 const initHotbarStoreInjectable = getInjectable({
   id: "init-hotbar-store",
   instantiate: (di) => ({
-    id: "init-hotbar-store",
     run: () => {
       const hotbarStore = di.inject(hotbarStoreInjectable);
 
       hotbarStore.load();
     },
-    runAfter: di.inject(initClusterStoreInjectable),
+    runAfter: initClusterStoreInjectable,
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });

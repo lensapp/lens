@@ -6,7 +6,7 @@ import type { Injectable } from "@ogre-tools/injectable";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { difference, find, map } from "lodash";
 import { reaction, runInAction } from "mobx";
-import { disposer } from "../../../common/utils/disposer";
+import { disposer } from "@k8slens/utilities";
 import type { LensExtension } from "../../lens-extension";
 import { extensionRegistratorInjectionToken } from "../extension-registrator-injection-token";
 
@@ -43,7 +43,7 @@ const extensionInjectable = getInjectable({
 
               reactionDisposer.push(
                 // injectables is either an array or a computed array, in which case
-                // we need to update the registered injectables with a reaction every time they change 
+                // we need to update the registered injectables with a reaction every time they change
                 reaction(
                   () => Array.isArray(injectables) ? injectables : injectables.get(),
                   (currentInjectables, previousInjectables = []) => {

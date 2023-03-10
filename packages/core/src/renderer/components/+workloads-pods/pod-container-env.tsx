@@ -11,7 +11,7 @@ import type { Container, EnvVarKeySelector, Secret } from "../../../common/k8s-a
 import { DrawerItem } from "../drawer";
 import { autorun } from "mobx";
 import { Icon } from "../icon";
-import { base64, cssNames, object } from "../../utils";
+import { base64, cssNames, object } from "@k8slens/utilities";
 import _ from "lodash";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ConfigMapStore } from "../+config-maps/store";

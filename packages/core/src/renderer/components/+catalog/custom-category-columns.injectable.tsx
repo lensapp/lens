@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { computed } from "mobx";
-import { getOrInsert, getOrInsertMap } from "../../utils";
+import { getOrInsert, getOrInsertMap } from "@k8slens/utilities";
 import { customCatalogCategoryColumnInjectionToken } from "./columns/custom-token";
 import type { RegisteredAdditionalCategoryColumn } from "./custom-category-columns";
 
