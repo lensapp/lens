@@ -22,8 +22,10 @@ import type { DetectClusterMetadata } from "../../main/cluster-detectors/detect-
 import detectClusterMetadataInjectable from "../../main/cluster-detectors/detect-cluster-metadata.injectable";
 import type { ClusterConnection } from "../../main/cluster/cluster-connection.injectable";
 import clusterConnectionInjectable from "../../main/cluster/cluster-connection.injectable";
+import type { KubeAuthProxy } from "../../main/kube-auth-proxy/create-kube-auth-proxy.injectable";
+import createKubeAuthProxyInjectable from "../../main/kube-auth-proxy/create-kube-auth-proxy.injectable";
+import type { Mocked } from "../../test-utils/mock-interface";
 import { flushPromises } from "@k8slens/test-utils";
-import { setTimeout } from "timers/promises";
 
 describe("Refresh Cluster Accessibility Technical Tests", () => {
   let builder: ApplicationBuilder;
@@ -32,6 +34,7 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
   let listNamespaceMock: AsyncFnMock<CoreV1Api["listNamespace"]>;
   let k8sRequestMock: AsyncFnMock<K8sRequest>;
   let detectClusterMetadataMock: AsyncFnMock<DetectClusterMetadata>;
+  let kubeAuthProxyMock: Mocked<KubeAuthProxy>;
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
@@ -39,6 +42,14 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
     const mainDi = builder.mainDi;
 
     mainDi.override(broadcastMessageInjectable, () => async () => {});
+
+    kubeAuthProxyMock = {
+      apiPrefix: "/some-api-prefix",
+      port: 0,
+      exit: jest.fn(),
+      run: asyncFn(),
+    };
+    mainDi.override(createKubeAuthProxyInjectable, () => () => kubeAuthProxyMock);
 
     detectClusterMetadataMock = asyncFn();
     mainDi.override(detectClusterMetadataInjectable, () => detectClusterMetadataMock);
@@ -101,326 +112,333 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
       cluster = clusterStore.getById("some-cluster-id") ?? (() => { throw new Error("missing cluster"); })();
       clusterConnection = mainDi.inject(clusterConnectionInjectable, cluster);
       refreshPromise = clusterConnection.refreshAccessibilityAndMetadata();
-
-      // NOTE: I don't know why these are all are required to get the tests to pass
-      await flushPromises();
-      await setTimeout(50);
-      await flushPromises();
     });
 
-    it("requests if cluster has admin permissions", async () => {
-      expect(createSelfSubjectAccessReviewMock).toBeCalledWith(anyObject({
-        spec: {
-          namespace: "kube-system",
-          resource: "*",
-          verb: "create",
-        },
-      }));
+    it("starts kubeAuthProxy", () => {
+      expect(kubeAuthProxyMock.run).toBeCalled();
     });
 
-    describe.each([ true, false ])("when cluster admin request resolves to %p", (isAdmin) => {
+    describe("when kubeAuthProxy has started running and its port is found", () => {
       beforeEach(async () => {
-        await createSelfSubjectAccessReviewMock.resolve({
-          body: {
-            status: {
-              allowed: isAdmin,
-            },
-          } as PartialDeep<V1SelfSubjectAccessReview>,
-        } as any);
+        kubeAuthProxyMock.port = 1235;
+        await kubeAuthProxyMock.run.resolve();
+        await flushPromises();
       });
 
-      it("requests if cluster has global watch permissions", () => {
+      it("requests if cluster has admin permissions", async () => {
         expect(createSelfSubjectAccessReviewMock).toBeCalledWith(anyObject({
           spec: {
-            verb: "watch",
+            namespace: "kube-system",
             resource: "*",
+            verb: "create",
           },
         }));
       });
 
-      describe.each([ true, false ])("when cluster global watch request resolves with %p", (globalWatch) => {
+      describe.each([ true, false ])("when cluster admin request resolves to %p", (isAdmin) => {
         beforeEach(async () => {
           await createSelfSubjectAccessReviewMock.resolve({
             body: {
               status: {
-                allowed: globalWatch,
+                allowed: isAdmin,
               },
             } as PartialDeep<V1SelfSubjectAccessReview>,
           } as any);
         });
 
-        it("requests namespaces", () => {
-          expect(listNamespaceMock).toBeCalled();
+        it("requests if cluster has global watch permissions", () => {
+          expect(createSelfSubjectAccessReviewMock).toBeCalledWith(anyObject({
+            spec: {
+              verb: "watch",
+              resource: "*",
+            },
+          }));
         });
 
-        describe("when list namespaces resolves", () => {
+        describe.each([ true, false ])("when cluster global watch request resolves with %p", (globalWatch) => {
           beforeEach(async () => {
-            await listNamespaceMock.resolve(listNamespaceResponse);
+            await createSelfSubjectAccessReviewMock.resolve({
+              body: {
+                status: {
+                  allowed: globalWatch,
+                },
+              } as PartialDeep<V1SelfSubjectAccessReview>,
+            } as any);
           });
 
-          it("requests core api versions", () => {
-            expect(k8sRequestMock).toBeCalledWith(
-              anyObject({ id: "some-cluster-id" }),
-              "/api",
-            );
+          it("requests namespaces", () => {
+            expect(listNamespaceMock).toBeCalled();
           });
 
-          describe("when core api versions request resolves", () => {
+          describe("when list namespaces resolves", () => {
             beforeEach(async () => {
-              await k8sRequestMock.resolve({
-                serverAddressByClientCIDRs: [],
-                versions: [
-                  "v1",
-                ],
-              } as V1APIVersions);
+              await listNamespaceMock.resolve(listNamespaceResponse);
             });
 
-            it("requests non-core api resource kinds", () => {
+            it("requests core api versions", () => {
               expect(k8sRequestMock).toBeCalledWith(
                 anyObject({ id: "some-cluster-id" }),
-                "/apis",
+                "/api",
               );
             });
 
-            describe("when non-core api resource kinds request resolves", () => {
+            describe("when core api versions request resolves", () => {
               beforeEach(async () => {
-                await k8sRequestMock.resolve(nonCoreApiResponse);
+                await k8sRequestMock.resolve({
+                  serverAddressByClientCIDRs: [],
+                  versions: [
+                    "v1",
+                  ],
+                } as V1APIVersions);
               });
 
-              it("requests specific resource kinds in core", () => {
+              it("requests non-core api resource kinds", () => {
                 expect(k8sRequestMock).toBeCalledWith(
                   anyObject({ id: "some-cluster-id" }),
-                  "/api/v1",
+                  "/apis",
                 );
               });
 
-              describe("when core specific resource kinds request resolves", () => {
+              describe("when non-core api resource kinds request resolves", () => {
                 beforeEach(async () => {
-                  await k8sRequestMock.resolve(coreApiKindsResponse);
+                  await k8sRequestMock.resolve(nonCoreApiResponse);
                 });
 
-                it("requests specific resources kinds from the first non-core response", () => {
+                it("requests specific resource kinds in core", () => {
                   expect(k8sRequestMock).toBeCalledWith(
                     anyObject({ id: "some-cluster-id" }),
-                    "/apis/node.k8s.io/v1",
+                    "/api/v1",
                   );
                 });
 
-                describe("when first specific resource kinds request resolves", () => {
+                describe("when core specific resource kinds request resolves", () => {
                   beforeEach(async () => {
-                    await k8sRequestMock.resolve(nodeK8sIoKindsResponse);
+                    await k8sRequestMock.resolve(coreApiKindsResponse);
                   });
 
-                  it("requests specific resources kinds from the second non-core response", () => {
+                  it("requests specific resources kinds from the first non-core response", () => {
                     expect(k8sRequestMock).toBeCalledWith(
                       anyObject({ id: "some-cluster-id" }),
-                      "/apis/discovery.k8s.io/v1",
+                      "/apis/node.k8s.io/v1",
                     );
                   });
 
-                  describe("when second specific resource kinds request resolves", () => {
+                  describe("when first specific resource kinds request resolves", () => {
                     beforeEach(async () => {
-                      await k8sRequestMock.resolve(discoveryK8sIoKindsResponse);
+                      await k8sRequestMock.resolve(nodeK8sIoKindsResponse);
                     });
 
-                    it("requests namespace list permissions for 'default' namespace", () => {
-                      expect(createSelfSubjectRulesReviewMock).toBeCalledWith(anyObject({
-                        spec: {
-                          namespace: "default",
-                        },
-                      }));
+                    it("requests specific resources kinds from the second non-core response", () => {
+                      expect(k8sRequestMock).toBeCalledWith(
+                        anyObject({ id: "some-cluster-id" }),
+                        "/apis/discovery.k8s.io/v1",
+                      );
                     });
 
-                    describe("when the permissions are incomplete", () => {
+                    describe("when second specific resource kinds request resolves", () => {
                       beforeEach(async () => {
-                        await createSelfSubjectRulesReviewMock.resolve(defaultIncompletePermissions);
+                        await k8sRequestMock.resolve(discoveryK8sIoKindsResponse);
                       });
 
-                      it("requests namespace list permissions for 'my-namespace' namespace", () => {
+                      it("requests namespace list permissions for 'default' namespace", () => {
                         expect(createSelfSubjectRulesReviewMock).toBeCalledWith(anyObject({
                           spec: {
-                            namespace: "my-namespace",
+                            namespace: "default",
                           },
                         }));
                       });
 
-                      describe("when the permissions request for 'my-namespace' resolves as empty", () => {
+                      describe("when the permissions are incomplete", () => {
+                        beforeEach(async () => {
+                          await createSelfSubjectRulesReviewMock.resolve(defaultIncompletePermissions);
+                        });
+
+                        it("requests namespace list permissions for 'my-namespace' namespace", () => {
+                          expect(createSelfSubjectRulesReviewMock).toBeCalledWith(anyObject({
+                            spec: {
+                              namespace: "my-namespace",
+                            },
+                          }));
+                        });
+
+                        describe("when the permissions request for 'my-namespace' resolves as empty", () => {
+                          beforeEach(async () => {
+                            await createSelfSubjectRulesReviewMock.resolve(emptyPermissions);
+                          });
+
+                          it("requests cluster metadata", () => {
+                            expect(detectClusterMetadataMock).toBeCalledWith(anyObject({ id: "some-cluster-id" }));
+                          });
+
+                          describe("when cluster metadata request resolves", () => {
+                            beforeEach(async () => {
+                              await detectClusterMetadataMock.resolve({});
+                            });
+
+                            it("allows the call to refreshAccessibilityAndMetadata to resolve", async () => {
+                              await refreshPromise;
+                            });
+
+                            it("should have the cluster displaying 'pods'", () => {
+                              expect(cluster.resourcesToShow.has("pods")).toBe(true);
+                            });
+
+                            it("should have the cluster displaying 'namespaces'", () => {
+                              expect(cluster.resourcesToShow.has("namespaces")).toBe(true);
+                            });
+                          });
+                        });
+
+                        describe.skip("when the permissions are incomplete", () => {});
+                        describe.skip("when the permissions resolve to a single entry with 'list' verb", () => {});
+                        describe.skip("when the permissions resolve to multiple entries with the 'list' verb not on the first entry", () => {});
+                      });
+
+                      describe("when the permissions resolve to an empty list", () => {
                         beforeEach(async () => {
                           await createSelfSubjectRulesReviewMock.resolve(emptyPermissions);
                         });
 
-                        it("requests cluster metadata", () => {
-                          expect(detectClusterMetadataMock).toBeCalledWith(anyObject({ id: "some-cluster-id" }));
+                        it("requests namespace list permissions for 'my-namespace' namespace", () => {
+                          expect(createSelfSubjectRulesReviewMock).toBeCalledWith(anyObject({
+                            spec: {
+                              namespace: "my-namespace",
+                            },
+                          }));
                         });
 
-                        describe("when cluster metadata request resolves", () => {
+                        describe("when the permissions request for 'my-namespace' resolves as empty", () => {
                           beforeEach(async () => {
-                            await detectClusterMetadataMock.resolve({});
+                            await createSelfSubjectRulesReviewMock.resolve(emptyPermissions);
                           });
 
-                          it("allows the call to refreshAccessibilityAndMetadata to resolve", async () => {
-                            await refreshPromise;
+                          it("requests cluster metadata", () => {
+                            expect(detectClusterMetadataMock).toBeCalledWith(anyObject({ id: "some-cluster-id" }));
                           });
 
-                          it("should have the cluster displaying 'pods'", () => {
-                            expect(cluster.resourcesToShow.has("pods")).toBe(true);
-                          });
+                          describe("when cluster metadata request resolves", () => {
+                            beforeEach(async () => {
+                              await detectClusterMetadataMock.resolve({});
+                            });
 
-                          it("should have the cluster displaying 'namespaces'", () => {
-                            expect(cluster.resourcesToShow.has("namespaces")).toBe(true);
+                            it("allows the call to refreshAccessibilityAndMetadata to resolve", async () => {
+                              await refreshPromise;
+                            });
+
+                            it("should have the cluster displaying 'pods'", () => {
+                              expect(cluster.resourcesToShow.has("pods")).toBe(false);
+                            });
+
+                            it("should have the cluster not displaying 'namespaces'", () => {
+                              expect(cluster.resourcesToShow.has("namespaces")).toBe(false);
+                            });
                           });
                         });
+
+                        describe.skip("when the permissions are incomplete", () => {});
+                        describe.skip("when the permissions resolve to a single entry with 'list' verb", () => {});
+                        describe.skip("when the permissions resolve to multiple entries with the 'list' verb not on the first entry", () => {});
                       });
 
-                      describe.skip("when the permissions are incomplete", () => {});
-                      describe.skip("when the permissions resolve to a single entry with 'list' verb", () => {});
-                      describe.skip("when the permissions resolve to multiple entries with the 'list' verb not on the first entry", () => {});
-                    });
-
-                    describe("when the permissions resolve to an empty list", () => {
-                      beforeEach(async () => {
-                        await createSelfSubjectRulesReviewMock.resolve(emptyPermissions);
-                      });
-
-                      it("requests namespace list permissions for 'my-namespace' namespace", () => {
-                        expect(createSelfSubjectRulesReviewMock).toBeCalledWith(anyObject({
-                          spec: {
-                            namespace: "my-namespace",
-                          },
-                        }));
-                      });
-
-                      describe("when the permissions request for 'my-namespace' resolves as empty", () => {
+                      describe("when the permissions resolve to a single entry with 'list' verb", () => {
                         beforeEach(async () => {
-                          await createSelfSubjectRulesReviewMock.resolve(emptyPermissions);
+                          await createSelfSubjectRulesReviewMock.resolve(defaultSingleListPermissions);
                         });
 
-                        it("requests cluster metadata", () => {
-                          expect(detectClusterMetadataMock).toBeCalledWith(anyObject({ id: "some-cluster-id" }));
+                        it("requests namespace list permissions for 'my-namespace' namespace", () => {
+                          expect(createSelfSubjectRulesReviewMock).toBeCalledWith(anyObject({
+                            spec: {
+                              namespace: "my-namespace",
+                            },
+                          }));
                         });
 
-                        describe("when cluster metadata request resolves", () => {
+                        describe("when the permissions request for 'my-namespace' resolves as empty", () => {
                           beforeEach(async () => {
-                            await detectClusterMetadataMock.resolve({});
+                            await createSelfSubjectRulesReviewMock.resolve(emptyPermissions);
                           });
 
-                          it("allows the call to refreshAccessibilityAndMetadata to resolve", async () => {
-                            await refreshPromise;
+                          it("requests cluster metadata", () => {
+                            expect(detectClusterMetadataMock).toBeCalledWith(anyObject({ id: "some-cluster-id" }));
                           });
 
-                          it("should have the cluster displaying 'pods'", () => {
-                            expect(cluster.resourcesToShow.has("pods")).toBe(false);
-                          });
+                          describe("when cluster metadata request resolves", () => {
+                            beforeEach(async () => {
+                              await detectClusterMetadataMock.resolve({});
+                            });
 
-                          it("should have the cluster not displaying 'namespaces'", () => {
-                            expect(cluster.resourcesToShow.has("namespaces")).toBe(false);
+                            it("allows the call to refreshAccessibilityAndMetadata to resolve", async () => {
+                              await refreshPromise;
+                            });
+
+                            it("should have the cluster displaying 'pods'", () => {
+                              expect(cluster.resourcesToShow.has("pods")).toBe(true);
+                            });
+
+                            it("should have the cluster not displaying 'namespaces'", () => {
+                              expect(cluster.resourcesToShow.has("namespaces")).toBe(false);
+                            });
                           });
                         });
+
+                        describe.skip("when the permissions are incomplete", () => {});
+                        describe.skip("when the permissions resolve to a single entry with 'list' verb", () => {});
+                        describe.skip("when the permissions resolve to multiple entries with the 'list' verb not on the first entry", () => {});
                       });
 
-                      describe.skip("when the permissions are incomplete", () => {});
-                      describe.skip("when the permissions resolve to a single entry with 'list' verb", () => {});
-                      describe.skip("when the permissions resolve to multiple entries with the 'list' verb not on the first entry", () => {});
-                    });
-
-                    describe("when the permissions resolve to a single entry with 'list' verb", () => {
-                      beforeEach(async () => {
-                        await createSelfSubjectRulesReviewMock.resolve(defaultSingleListPermissions);
-                      });
-
-                      it("requests namespace list permissions for 'my-namespace' namespace", () => {
-                        expect(createSelfSubjectRulesReviewMock).toBeCalledWith(anyObject({
-                          spec: {
-                            namespace: "my-namespace",
-                          },
-                        }));
-                      });
-
-                      describe("when the permissions request for 'my-namespace' resolves as empty", () => {
+                      describe("when the permissions resolve to multiple entries with the 'list' verb not on the first entry", () => {
                         beforeEach(async () => {
-                          await createSelfSubjectRulesReviewMock.resolve(emptyPermissions);
+                          await createSelfSubjectRulesReviewMock.resolve(defaultMultipleListPermissions);
                         });
 
-                        it("requests cluster metadata", () => {
-                          expect(detectClusterMetadataMock).toBeCalledWith(anyObject({ id: "some-cluster-id" }));
+                        it("requests namespace list permissions for 'my-namespace' namespace", () => {
+                          expect(createSelfSubjectRulesReviewMock).toBeCalledWith(anyObject({
+                            spec: {
+                              namespace: "my-namespace",
+                            },
+                          }));
                         });
 
-                        describe("when cluster metadata request resolves", () => {
+                        describe("when the permissions request for 'my-namespace' resolves as empty", () => {
                           beforeEach(async () => {
-                            await detectClusterMetadataMock.resolve({});
+                            await createSelfSubjectRulesReviewMock.resolve(emptyPermissions);
                           });
 
-                          it("allows the call to refreshAccessibilityAndMetadata to resolve", async () => {
-                            await refreshPromise;
+                          it("requests cluster metadata", () => {
+                            expect(detectClusterMetadataMock).toBeCalledWith(anyObject({ id: "some-cluster-id" }));
                           });
 
-                          it("should have the cluster displaying 'pods'", () => {
-                            expect(cluster.resourcesToShow.has("pods")).toBe(true);
-                          });
+                          describe("when cluster metadata request resolves", () => {
+                            beforeEach(async () => {
+                              await detectClusterMetadataMock.resolve({});
+                            });
 
-                          it("should have the cluster not displaying 'namespaces'", () => {
-                            expect(cluster.resourcesToShow.has("namespaces")).toBe(false);
+                            it("allows the call to refreshAccessibilityAndMetadata to resolve", async () => {
+                              await refreshPromise;
+                            });
+
+                            it("should have the cluster displaying 'pods'", () => {
+                              expect(cluster.resourcesToShow.has("pods")).toBe(true);
+                            });
+
+                            it("should have the cluster not displaying 'namespaces'", () => {
+                              expect(cluster.resourcesToShow.has("namespaces")).toBe(false);
+                            });
                           });
                         });
-                      });
 
-                      describe.skip("when the permissions are incomplete", () => {});
-                      describe.skip("when the permissions resolve to a single entry with 'list' verb", () => {});
-                      describe.skip("when the permissions resolve to multiple entries with the 'list' verb not on the first entry", () => {});
+                        describe.skip("when the permissions are incomplete", () => {});
+                        describe.skip("when the permissions resolve to a single entry with 'list' verb", () => {});
+                        describe.skip("when the permissions resolve to multiple entries with the 'list' verb not on the first entry", () => {});
+                      });
                     });
 
-                    describe("when the permissions resolve to multiple entries with the 'list' verb not on the first entry", () => {
-                      beforeEach(async () => {
-                        await createSelfSubjectRulesReviewMock.resolve(defaultMultipleListPermissions);
-                      });
-
-                      it("requests namespace list permissions for 'my-namespace' namespace", () => {
-                        expect(createSelfSubjectRulesReviewMock).toBeCalledWith(anyObject({
-                          spec: {
-                            namespace: "my-namespace",
-                          },
-                        }));
-                      });
-
-                      describe("when the permissions request for 'my-namespace' resolves as empty", () => {
-                        beforeEach(async () => {
-                          await createSelfSubjectRulesReviewMock.resolve(emptyPermissions);
-                        });
-
-                        it("requests cluster metadata", () => {
-                          expect(detectClusterMetadataMock).toBeCalledWith(anyObject({ id: "some-cluster-id" }));
-                        });
-
-                        describe("when cluster metadata request resolves", () => {
-                          beforeEach(async () => {
-                            await detectClusterMetadataMock.resolve({});
-                          });
-
-                          it("allows the call to refreshAccessibilityAndMetadata to resolve", async () => {
-                            await refreshPromise;
-                          });
-
-                          it("should have the cluster displaying 'pods'", () => {
-                            expect(cluster.resourcesToShow.has("pods")).toBe(true);
-                          });
-
-                          it("should have the cluster not displaying 'namespaces'", () => {
-                            expect(cluster.resourcesToShow.has("namespaces")).toBe(false);
-                          });
-                        });
-                      });
-
-                      describe.skip("when the permissions are incomplete", () => {});
-                      describe.skip("when the permissions resolve to a single entry with 'list' verb", () => {});
-                      describe.skip("when the permissions resolve to multiple entries with the 'list' verb not on the first entry", () => {});
-                    });
+                    describe.skip("when second specific resource kinds rejects", () => {});
                   });
-
-                  describe.skip("when second specific resource kinds rejects", () => {});
                 });
-              });
 
-              describe.skip("when first specific resource kinds rejects", () => {});
+                describe.skip("when first specific resource kinds rejects", () => {});
+              });
             });
           });
         });
