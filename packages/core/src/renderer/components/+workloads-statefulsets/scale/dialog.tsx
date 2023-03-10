@@ -15,7 +15,7 @@ import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
 import { Icon } from "../../icon";
 import { Slider } from "../../slider";
-import { cssNames } from "../../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import statefulSetApiInjectable from "../../../../common/k8s-api/endpoints/stateful-set.api.injectable";
 import statefulSetDialogStateInjectable from "./dialog-state.injectable";

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { Disposer } from "../disposer";
+import type { Disposer } from "@k8slens/utilities";
 import type { MessageChannel, MessageChannelListener } from "./message-channel-listener-injection-token";
 
 export type EnlistMessageChannelListener = (listener: MessageChannelListener<MessageChannel<unknown>>) => Disposer;

@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import styles from "../catalog.module.scss";
 import type { CatalogEntity } from "../../../../common/catalog";
-import { prevDefault } from "../../../utils";
+import { prevDefault } from "@k8slens/utilities";
 import { Avatar } from "../../avatar";
 import { Icon } from "../../icon";
 import React from "react";

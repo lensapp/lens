@@ -7,7 +7,7 @@ import styles from "./kubeconfig-dialog.module.scss";
 import React from "react";
 import type { IObservableValue } from "mobx";
 import { observer } from "mobx-react";
-import { cssNames, saveFileDialog } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Button } from "../button";
 import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
@@ -19,6 +19,7 @@ import { clipboard } from "electron";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
 import kubeconfigDialogStateInjectable from "./state.injectable";
+import { saveFileDialog } from "../../utils/saveFile";
 
 export interface KubeconfigDialogData {
   title?: React.ReactNode;

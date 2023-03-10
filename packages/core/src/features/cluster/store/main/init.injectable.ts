@@ -9,17 +9,14 @@ import initUserStoreInjectable from "../../../../main/stores/init-user-store.inj
 
 const initClusterStoreInjectable = getInjectable({
   id: "init-cluster-store",
-  instantiate: (di) => {
-    const clusterStore = di.inject(clusterStoreInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const clusterStore = di.inject(clusterStoreInjectable);
 
-    return {
-      id: "init-cluster-store",
-      run: () => {
-        clusterStore.load();
-      },
-      runAfter: di.inject(initUserStoreInjectable),
-    };
-  },
+      clusterStore.load();
+    },
+    runAfter: initUserStoreInjectable,
+  }),
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });
 

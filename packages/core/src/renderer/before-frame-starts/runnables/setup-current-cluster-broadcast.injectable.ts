@@ -12,7 +12,6 @@ import { beforeMainFrameStartsFirstInjectionToken } from "../tokens";
 const setupCurrentClusterBroadcastInjectable = getInjectable({
   id: "setup-current-cluster-broadcast",
   instantiate: (di) => ({
-    id: "setup-current-cluster-broadcast",
     run: () => {
       const matchedClusterId = di.inject(matchedClusterIdInjectable);
       const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);

@@ -8,7 +8,7 @@ import { computed } from "mobx";
 import type { TabId } from "../dock/store";
 import type { SearchStore } from "../../../search-store/search-store";
 import type { Pod, PodLogsQuery } from "../../../../common/k8s-api/endpoints";
-import { isDefined } from "../../../utils";
+import { isDefined } from "@k8slens/utilities";
 import assert from "assert";
 import type { GetPodById } from "../../+workloads-pods/get-pod-by-id.injectable";
 import type { GetPodsByOwnerId } from "../../+workloads-pods/get-pods-by-owner-id.injectable";

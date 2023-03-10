@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import loggerInjectable from "../../../common/logger.injectable";
+import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 import type { RollbackHelmReleaseData } from "../rollback-helm-release.injectable";
 import rollbackHelmReleaseInjectable from "../rollback-helm-release.injectable";
 
@@ -16,11 +17,12 @@ const rollbackClusterHelmReleaseInjectable = getInjectable({
     const rollbackHelmRelease = di.inject(rollbackHelmReleaseInjectable);
 
     return async (cluster: Cluster, data: RollbackHelmReleaseData) => {
-      const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
+      const proxyKubeconfigManager = di.inject(kubeconfigManagerInjectable, cluster);
+      const proxyKubeconfigPath = await proxyKubeconfigManager.ensurePath();
 
       logger.debug(`[CLUSTER]: rolling back helm release for clusterId=${cluster.id}`, data);
 
-      await rollbackHelmRelease(proxyKubeconfig, data);
+      await rollbackHelmRelease(proxyKubeconfigPath, data);
     };
   },
 });

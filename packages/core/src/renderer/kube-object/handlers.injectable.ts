@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import rendererExtensionsInjectable from "../../extensions/renderer-extensions.injectable";
-import { getOrInsert, getOrInsertMap, readonly } from "../utils";
+import { getOrInsert, getOrInsertMap, readonly } from "@k8slens/utilities";
 import type { KubeObjectHandlerRegistration, KubeObjectHandlers } from "./handler";
 import { staticKubeObjectHandlerInjectionToken } from "./handler";
 

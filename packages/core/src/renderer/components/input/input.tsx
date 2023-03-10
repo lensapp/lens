@@ -7,8 +7,8 @@ import "./input.scss";
 
 import type { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import React from "react";
-import type { SingleOrMany } from "../../utils";
-import { autoBind, cssNames, debouncePromise, getRandId, isPromiseSettledFulfilled } from "../../utils";
+import type { SingleOrMany } from "@k8slens/utilities";
+import { debouncePromise, isPromiseSettledFulfilled, cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import type { TooltipProps } from "../tooltip";
 import { Tooltip } from "../tooltip";
@@ -16,6 +16,8 @@ import * as Validators from "./input_validators";
 import type { InputValidator, InputValidation, InputValidationResult, SyncValidationMessage } from "./input_validators";
 import uniqueId from "lodash/uniqueId";
 import { debounce } from "lodash";
+import * as uuid from "uuid";
+import autoBindReact from "auto-bind/react";
 
 const {
   conditionalValidators,
@@ -113,7 +115,7 @@ export class Input extends React.Component<InputProps, State> {
 
   constructor(props: InputProps) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   componentWillUnmount(): void {
@@ -428,7 +430,7 @@ export class Input extends React.Component<InputProps, State> {
       </div>
     );
     const componentId = id || showErrorsAsTooltip
-      ? getRandId({ prefix: "input_tooltip_id" })
+      ? `input_tooltip_id_${uuid.v4()}`
       : undefined;
     let tooltipError: React.ReactNode;
 

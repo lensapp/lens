@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { generalCatalogEntityInjectionToken } from "../general-catalog-entity-injection-token";
 import { GeneralEntity } from "../../index";
-import { buildURL } from "../../../utils/buildUrl";
+import { buildURL } from "@k8slens/utilities";
 import welcomeRouteInjectable from "../../../front-end-routing/routes/welcome/welcome-route.injectable";
 
 const welcomeCatalogEntityInjectable = getInjectable({

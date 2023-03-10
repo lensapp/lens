@@ -7,7 +7,7 @@ import styles from "./cluster-no-metrics.module.scss";
 
 import React from "react";
 import { Icon } from "../icon";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { NavigateToEntitySettings } from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import navigateToEntitySettingsInjectable from "../../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";

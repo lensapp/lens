@@ -7,11 +7,11 @@ import { RenderDelay } from "../render-delay";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import { advanceFakeTime, testUsingFakeTime } from "../../../../common/test-utils/use-fake-time";
 import cancelIdleCallbackInjectable from "../cancel-idle-callback.injectable";
 import requestIdleCallbackInjectable from "../request-idle-callback.injectable";
 import type { RenderResult } from "@testing-library/react";
 import idleCallbackTimeoutInjectable from "../idle-callback-timeout.injectable";
+import { testUsingFakeTime, advanceFakeTime } from "../../../../test-utils/use-fake-time";
 
 describe("<RenderDelay/>", () => {
   let render: DiRender;

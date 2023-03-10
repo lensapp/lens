@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { runManyFor } from "../../common/runnable/run-many-for";
+import { runManyFor } from "@k8slens/run-many";
 import * as tokens from "../before-frame-starts/tokens";
 import currentlyInClusterFrameInjectable from "../routes/currently-in-cluster-frame.injectable";
 import {

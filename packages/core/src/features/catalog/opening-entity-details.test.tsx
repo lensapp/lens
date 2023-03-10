@@ -7,11 +7,10 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import { KubernetesCluster, WebLink } from "../../common/catalog-entities";
 import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
-import type { Cluster } from "../../common/cluster/cluster";
+import { Cluster } from "../../common/cluster/cluster";
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import { advanceFakeTime, testUsingFakeTime } from "../../common/test-utils/use-fake-time";
+import { advanceFakeTime, testUsingFakeTime } from "../../test-utils/use-fake-time";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
-import createClusterInjectable from "../../renderer/cluster/create-cluster.injectable";
 import showEntityDetailsInjectable from "../../renderer/components/+catalog/entity-details/show.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 
@@ -41,8 +40,6 @@ describe("opening catalog entity details panel", () => {
     testUsingFakeTime();
 
     builder.afterWindowStart((windowDi) => {
-      const createCluster = windowDi.inject(createClusterInjectable);
-
       clusterEntity = new KubernetesCluster({
         metadata: {
           labels: {},
@@ -85,7 +82,7 @@ describe("opening catalog entity details panel", () => {
           phase: "available",
         },
       });
-      cluster = createCluster({
+      cluster = new Cluster({
         contextName: clusterEntity.spec.kubeconfigContext,
         id: clusterEntity.getId(),
         kubeConfigPath: clusterEntity.spec.kubeconfigPath,

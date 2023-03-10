@@ -1,8 +1,4 @@
-import {
-  createContainer,
-  DiContainer,
-  getInjectable,
-} from "@ogre-tools/injectable";
+import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injectable";
 import { registerFeature } from "@k8slens/feature-core";
 import { applicationFeatureForElectronMain } from "./feature";
 import {
@@ -11,8 +7,7 @@ import {
 } from "@k8slens/application";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 import whenAppIsReadyInjectable from "./start-application/when-app-is-ready.injectable";
-import { beforeAnythingInjectionToken } from "./start-application/timeslots/before-anything-injection-token";
-import { beforeElectronIsReadyInjectionToken } from "./start-application/timeslots/before-electron-is-ready-injection-token";
+import { beforeAnythingInjectionToken, beforeElectronIsReadyInjectionToken } from "./start-application/time-slots";
 
 describe("starting-of-electron-main-application", () => {
   let di: DiContainer;
@@ -53,7 +48,7 @@ describe("starting-of-electron-main-application", () => {
     di.register(
       beforeAnythingIsLoadingInjectable,
       beforeElectronIsReadyIsLoadingInjectable,
-      beforeApplicationIsLoadingInjectable
+      beforeApplicationIsLoadingInjectable,
     );
 
     di.override(whenAppIsReadyInjectable, () => whenAppIsReadyMock);
@@ -63,7 +58,7 @@ describe("starting-of-electron-main-application", () => {
     beforeEach(() => {
       const startApplication = di.inject(startApplicationInjectionToken);
 
-      startApplication();
+      void startApplication();
     });
 
     it("calls for synchronous runnables for before anything", () => {

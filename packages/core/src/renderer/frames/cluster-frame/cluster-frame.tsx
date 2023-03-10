@@ -9,7 +9,7 @@ import type { NamespaceStore } from "../../components/+namespaces/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable  from "../../components/+namespaces/store.injectable";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
-import { disposer } from "../../utils";
+import { disposer } from "@k8slens/utilities";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import type { ClusterFrameChildComponent } from "./cluster-frame-child-component-injection-token";
 import { clusterFrameChildComponentInjectionToken } from "./cluster-frame-child-component-injection-token";

@@ -9,16 +9,13 @@ import electronTrayInjectable from "./electron-tray.injectable";
 const startTrayInjectable = getInjectable({
   id: "start-tray",
 
-  instantiate: (di) => {
-    const electronTray = di.inject(electronTrayInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const electronTray = di.inject(electronTrayInjectable);
 
-    return {
-      id: "start-tray",
-      run: () => {
-        electronTray.start();
-      },
-    };
-  },
+      electronTray.start();
+    },
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

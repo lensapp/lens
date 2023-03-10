@@ -22,7 +22,7 @@ import navigateToPreferencesInjectable from "../../../features/preferences/commo
 import type { NavigateToHelmCharts } from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
-import type { Cluster } from "../../../common/cluster/cluster";
+import { Cluster } from "../../../common/cluster/cluster";
 import type { NamespaceStore } from "../+namespaces/store";
 import historyInjectable from "../../navigation/history.injectable";
 import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/electron-tray.injectable";
@@ -66,18 +66,11 @@ import shouldStartHiddenInjectable from "../../../main/electron-app/features/sho
 import fsInjectable from "../../../common/fs/fs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
-import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
 import selectedNamespacesStorageInjectable from "../../../features/namespace-filtering/renderer/storage.injectable";
 import { registerFeature } from "@k8slens/feature-core";
-import {
-  applicationFeatureForElectronMain,
-  testUtils as applicationForElectronTestUtils,
-} from "@k8slens/application-for-electron-main";
-import {
-  applicationFeature,
-  startApplicationInjectionToken,
-} from "@k8slens/application";
-
+import { applicationFeatureForElectronMain, testUtils as applicationForElectronTestUtils } from "@k8slens/application-for-electron-main";
+import { applicationFeature, startApplicationInjectionToken } from "@k8slens/application";
+import { testUsingFakeTime } from "../../../test-utils/use-fake-time";
 
 type Callback = (di: DiContainer) => void | Promise<void>;
 
@@ -227,8 +220,6 @@ export const getApplicationBuilder = () => {
       trayMenuIconPath = path;
     },
   }));
-
-  const allowedResourcesState = observable.set<string>();
 
   const windowHelpers = new Map<string, { di: DiContainer; getRendered: () => RenderResult }>();
 
@@ -526,19 +517,20 @@ export const getApplicationBuilder = () => {
       environment = environments.clusterFrame;
 
       builder.beforeWindowStart((windowDi) => {
-        const clusterStub = {
+        const cluster = new Cluster({
           id: "some-cluster-id",
-          accessibleNamespaces: observable.array(),
-          allowedNamespaces: observable.array(),
-          shouldShowResource: (kind) => allowedResourcesState.has(formatKubeApiResource(kind)),
-        } as Partial<Cluster> as Cluster;
+          contextName: "some-context-name",
+          kubeConfigPath: "/some-path-to-kube-config",
+        }, {
+          clusterServerUrl: "https://localhost:12345",
+        });
 
         windowDi.override(activeKubernetesClusterInjectable, () =>
-          computed(() => catalogEntityFromCluster(clusterStub)),
+          computed(() => catalogEntityFromCluster(cluster)),
         );
 
-        windowDi.override(hostedClusterIdInjectable, () => clusterStub.id);
-        windowDi.override(hostedClusterInjectable, () => clusterStub);
+        windowDi.override(hostedClusterIdInjectable, () => cluster.id);
+        windowDi.override(hostedClusterInjectable, () => cluster);
 
         // TODO: Figure out a way to remove this stub.
         windowDi.override(namespaceStoreInjectable, () => ({
@@ -645,8 +637,11 @@ export const getApplicationBuilder = () => {
     allowKubeResource: (resource) => {
       environment.onAllowKubeResource();
 
+      const windowDi = builder.applicationWindow.only.di;
+      const cluster = windowDi.inject(hostedClusterInjectable);
+
       runInAction(() => {
-        allowedResourcesState.add(formatKubeApiResource(resource));
+        cluster?.resourcesToShow.add(formatKubeApiResource(resource));
       });
 
       return builder;

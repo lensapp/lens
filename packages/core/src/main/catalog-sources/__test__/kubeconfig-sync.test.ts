@@ -3,14 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { observable, ObservableMap } from "mobx";
+import { observable, ObservableMap, runInAction } from "mobx";
 import type { CatalogEntity } from "../../../common/catalog";
 import { loadFromOptions } from "../../../common/kube-helpers";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
-import { iter, strictGet } from "../../../common/utils";
+import { iter, strictGet } from "@k8slens/utilities";
 import type { ComputeKubeconfigDiff } from "../kubeconfig-sync/compute-diff.injectable";
 import computeKubeconfigDiffInjectable from "../kubeconfig-sync/compute-diff.injectable";
 import type { ConfigToModels } from "../kubeconfig-sync/config-to-models.injectable";
@@ -34,6 +34,8 @@ import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.inject
 import pathExistsInjectable from "../../../common/fs/path-exists.injectable";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
+import type { KubeconfigManager } from "../../kubeconfig-manager/kubeconfig-manager";
+import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 
 describe("kubeconfig-sync.source tests", () => {
   let computeKubeconfigDiff: ComputeKubeconfigDiff;
@@ -51,6 +53,10 @@ describe("kubeconfig-sync.source tests", () => {
     di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
     di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
     di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
+
+    di.override(kubeconfigManagerInjectable, () => ({
+      ensurePath: async () => "/some-proxy-kubeconfig-file",
+    } as Partial<KubeconfigManager> as KubeconfigManager));
 
     clusters = new Map();
     di.override(getClusterByIdInjectable, () => id => clusters.get(id));
@@ -79,7 +85,7 @@ describe("kubeconfig-sync.source tests", () => {
       const config = loadFromOptions({
         clusters: [{
           name: "cluster-name",
-          server: "1.2.3.4",
+          server: "https://1.2.3.4",
           skipTLSVerify: false,
         }],
         users: [{
@@ -117,7 +123,7 @@ describe("kubeconfig-sync.source tests", () => {
         clusters: [{
           name: "cluster-name",
           cluster: {
-            server: "1.2.3.4",
+            server: "https://1.2.3.4",
           },
           skipTLSVerify: false,
         }],
@@ -149,8 +155,10 @@ describe("kubeconfig-sync.source tests", () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const c = (iter.first(rootSource.values())!)[0];
 
-      expect(c.kubeConfigPath).toBe("/bar");
-      expect(c.contextName).toBe("context-name");
+      runInAction(() => {
+        expect(c.kubeConfigPath.get()).toBe("/bar");
+        expect(c.contextName.get()).toBe("context-name");
+      });
     });
 
     it("should remove a cluster when it is removed from the contents", () => {
@@ -158,7 +166,7 @@ describe("kubeconfig-sync.source tests", () => {
         clusters: [{
           name: "cluster-name",
           cluster: {
-            server: "1.2.3.4",
+            server: "https://1.2.3.4",
           },
           skipTLSVerify: false,
         }],
@@ -190,8 +198,8 @@ describe("kubeconfig-sync.source tests", () => {
 
       const c = rootSource.values().next().value[0] as Cluster;
 
-      expect(c.kubeConfigPath).toBe("/bar");
-      expect(c.contextName).toBe("context-name");
+      expect(c.kubeConfigPath.get()).toBe("/bar");
+      expect(c.contextName.get()).toBe("context-name");
 
       computeKubeconfigDiff("{}", rootSource, filePath);
 
@@ -203,7 +211,7 @@ describe("kubeconfig-sync.source tests", () => {
         clusters: [{
           name: "cluster-name",
           cluster: {
-            server: "1.2.3.4",
+            server: "https://1.2.3.4",
           },
           skipTLSVerify: false,
         }],
@@ -243,15 +251,17 @@ describe("kubeconfig-sync.source tests", () => {
       {
         const c = rootSource.values().next().value[0] as Cluster;
 
-        expect(c.kubeConfigPath).toBe("/bar");
-        expect(["context-name", "context-name-2"].includes(c.contextName)).toBe(true);
+        runInAction(() => {
+          expect(c.kubeConfigPath.get()).toBe("/bar");
+          expect(["context-name", "context-name-2"].includes(c.contextName.get())).toBe(true);
+        });
       }
 
       const newContents = JSON.stringify({
         clusters: [{
           name: "cluster-name",
           cluster: {
-            server: "1.2.3.4",
+            server: "https://1.2.3.4",
           },
           skipTLSVerify: false,
         }],
@@ -283,8 +293,8 @@ describe("kubeconfig-sync.source tests", () => {
       {
         const c = rootSource.values().next().value[0] as Cluster;
 
-        expect(c.kubeConfigPath).toBe("/bar");
-        expect(c.contextName).toBe("context-name");
+        expect(c.kubeConfigPath.get()).toBe("/bar");
+        expect(c.contextName.get()).toBe("context-name");
       }
     });
   });
@@ -444,7 +454,7 @@ const foobarConfig = JSON.stringify({
   clusters: [{
     name: "cluster-name",
     cluster: {
-      server: "1.2.3.4",
+      server: "https://1.2.3.4",
     },
     skipTLSVerify: false,
   }],

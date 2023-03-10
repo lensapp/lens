@@ -9,16 +9,13 @@ import syncWeblinksInjectable from "../../catalog-sources/sync-weblinks.injectab
 const setupSyncingOfWeblinksInjectable = getInjectable({
   id: "setup-syncing-of-weblinks",
 
-  instantiate: (di) => {
-    const syncWeblinks = di.inject(syncWeblinksInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const syncWeblinks = di.inject(syncWeblinksInjectable);
 
-    return {
-      id: "setup-syncing-of-weblinks",
-      run: () => {
-        syncWeblinks();
-      },
-    };
-  },
+      syncWeblinks();
+    },
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 import React, { createRef } from "react";
 import { NavLink } from "react-router-dom";
 import type { LocationDescriptor } from "history";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
 import Configuration from "./configuration.svg";

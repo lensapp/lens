@@ -10,13 +10,12 @@ import defaultUpdateChannelInjectable from "../../../features/application-update
 const initDefaultUpdateChannelInjectable = getInjectable({
   id: "init-default-update-channel",
   instantiate: (di) => ({
-    id: "init-default-update-channel",
     run: async () => {
       const defaultUpdateChannel = di.inject(defaultUpdateChannelInjectable);
 
       await defaultUpdateChannel.init();
     },
-    runAfter: di.inject(initReleaseChannelInjectable),
+    runAfter: initReleaseChannelInjectable,
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });

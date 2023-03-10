@@ -7,11 +7,11 @@ import groupBy from "lodash/groupBy";
 import compact from "lodash/compact";
 import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { autoBind } from "../../utils";
 import type { KubeEvent, KubeEventApi } from "../../../common/k8s-api/endpoints/events.api";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import { Pod } from "../../../common/k8s-api/endpoints/pod.api";
 import type { GetPodById } from "../+workloads-pods/get-pod-by-id.injectable";
+import autoBind from "auto-bind";
 
 export interface EventStoreDependencies extends KubeObjectStoreDependencies {
   getPodById: GetPodById;

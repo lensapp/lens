@@ -7,7 +7,7 @@ import "./resizing-anchor.scss";
 import React from "react";
 import { action, observable, makeObservable } from "mobx";
 import _ from "lodash";
-import { cssNames, noop } from "../../utils";
+import { cssNames, noop } from "@k8slens/utilities";
 import { observer } from "mobx-react";
 
 export enum ResizeDirection {

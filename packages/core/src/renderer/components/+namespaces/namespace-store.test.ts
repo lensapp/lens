@@ -11,13 +11,13 @@ import directoryForKubeConfigsInjectable from "../../../common/app-paths/directo
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { Fetch } from "../../../common/fetch/fetch.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
+import { Cluster } from "../../../common/cluster/cluster";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import type { DeleteResourceDescriptor } from "../../../common/k8s-api/kube-api";
 import type { KubeJsonApiData } from "../../../common/k8s-api/kube-json-api";
 import type { KubeJsonApiObjectMetadata, KubeObjectScope } from "../../../common/k8s-api/kube-object";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
-import createClusterInjectable from "../../cluster/create-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import removeSubnamespaceInjectable from "./remove-subnamespace.injectable";
@@ -134,9 +134,7 @@ describe("NamespaceStore", () => {
       delete: deleteNamespaceMock,
     } as any));
 
-    const createCluster = di.inject(createClusterInjectable);
-
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",

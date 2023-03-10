@@ -14,7 +14,6 @@ import { beforeFrameStartsSecondInjectionToken } from "../tokens";
 const setupKubernetesClusterCatalogAddMenuListenerInjectable = getInjectable({
   id: "setup-kubernetes-cluster-catalog-add-menu-listener",
   instantiate: (di) => ({
-    id: "setup-kubernetes-cluster-catalog-add-menu-listener",
     run: () => {
       const navigateToAddCluster = di.inject(navigateToAddClusterInjectable);
       const addSyncEntries = di.inject(addSyncEntriesInjectable);

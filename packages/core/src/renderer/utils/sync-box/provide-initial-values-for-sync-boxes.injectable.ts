@@ -15,7 +15,6 @@ const provideInitialValuesForSyncBoxesInjectable = getInjectable({
   id: "provide-initial-values-for-sync-boxes",
 
   instantiate: (di) => ({
-    id: "provide-initial-values-for-sync-boxes",
     run: async () => {
       const requestFromChannel = di.inject(requestFromChannelInjectionToken);
       const syncBoxes = di.injectMany(syncBoxInjectionToken);

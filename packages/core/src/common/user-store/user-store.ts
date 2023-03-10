@@ -6,7 +6,7 @@
 import { action, observable, makeObservable, isObservableArray, isObservableSet, isObservableMap } from "mobx";
 import type { BaseStoreDependencies } from "../base-store/base-store";
 import { BaseStore } from "../base-store/base-store";
-import { getOrInsertSet, toggle, toJS, object } from "../../renderer/utils";
+import { getOrInsertSet, toggle, object } from "@k8slens/utilities";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
 
@@ -14,6 +14,7 @@ import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
 import type { SelectedUpdateChannel } from "../../features/application-update/common/selected-update-channel/selected-update-channel.injectable";
 import type { ReleaseChannel } from "../../features/application-update/common/update-channels";
 import type { PreferenceDescriptors } from "./preference-descriptors.injectable";
+import { toJS } from "../utils";
 
 export interface UserStoreModel {
   preferences: UserPreferencesModel;

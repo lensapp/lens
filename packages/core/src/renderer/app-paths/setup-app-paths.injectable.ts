@@ -12,7 +12,6 @@ const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",
 
   instantiate: (di) => ({
-    id: "setup-app-paths",
     run: async () => {
       const requestFromChannel = di.inject(requestFromChannelInjectionToken);
       const appPathsState = di.inject(appPathsStateInjectable);

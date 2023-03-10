@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { LensProxy } from "./lens-proxy";
-import { kubeApiUpgradeRequest } from "./proxy-functions";
 import routerInjectable from "../router/router.injectable";
 import httpProxy from "http-proxy";
 import shellApiRequestInjectable from "./proxy-functions/shell-api-request.injectable";
@@ -14,6 +13,8 @@ import emitAppEventInjectable from "../../common/app-event-bus/emit-event.inject
 import loggerInjectable from "../../common/logger.injectable";
 import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
 import getClusterForRequestInjectable from "./get-cluster-for-request.injectable";
+import kubeAuthProxyServerInjectable from "../cluster/kube-auth-proxy-server.injectable";
+import kubeApiUpgradeRequestInjectable from "./proxy-functions/kube-api-upgrade-request.injectable";
 
 const lensProxyInjectable = getInjectable({
   id: "lens-proxy",
@@ -21,7 +22,7 @@ const lensProxyInjectable = getInjectable({
   instantiate: (di) => new LensProxy({
     router: di.inject(routerInjectable),
     proxy: httpProxy.createProxy(),
-    kubeApiUpgradeRequest,
+    kubeApiUpgradeRequest: di.inject(kubeApiUpgradeRequestInjectable),
     shellApiRequest: di.inject(shellApiRequestInjectable),
     getClusterForRequest: di.inject(getClusterForRequestInjectable),
     lensProxyPort: di.inject(lensProxyPortInjectable),
@@ -29,6 +30,7 @@ const lensProxyInjectable = getInjectable({
     emitAppEvent: di.inject(emitAppEventInjectable),
     logger: di.inject(loggerInjectable),
     certificate: di.inject(lensProxyCertificateInjectable).get(),
+    getKubeAuthProxyServer: (cluster) => di.inject(kubeAuthProxyServerInjectable, cluster),
   }),
 });
 

@@ -6,7 +6,7 @@
 import * as uuid from "uuid";
 
 import { ProtocolHandlerExtension, ProtocolHandlerInternal, ProtocolHandlerInvalid } from "../../../common/protocol-handler";
-import { delay, noop } from "../../../common/utils";
+import { delay, noop } from "@k8slens/utilities";
 import type { ExtensionsStore, IsEnabledExtensionDescriptor } from "../../../extensions/extensions-store/extensions-store";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";

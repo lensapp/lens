@@ -9,16 +9,13 @@ import watchIfUpdateShouldHappenOnQuitInjectable from "./watch-if-update-should-
 const startWatchingIfUpdateShouldHappenOnQuitInjectable = getInjectable({
   id: "start-watching-if-update-should-happen-on-quit",
 
-  instantiate: (di) => {
-    const watchIfUpdateShouldHappenOnQuit = di.inject(watchIfUpdateShouldHappenOnQuitInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const watchIfUpdateShouldHappenOnQuit = di.inject(watchIfUpdateShouldHappenOnQuitInjectable);
 
-    return {
-      id: "start-watching-if-update-should-happen-on-quit",
-      run: () => {
-        watchIfUpdateShouldHappenOnQuit.start();
-      },
-    };
-  },
+      watchIfUpdateShouldHappenOnQuit.start();
+    },
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

@@ -8,13 +8,17 @@ import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-sto
 import type { ClusterModel } from "../../../common/cluster-types";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
-import { isErrnoException } from "../../../common/utils";
+import { isErrnoException } from "@k8slens/utilities";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
     id: string;
     name: string;
   }[];
+}
+
+interface Pre500ClusterModel extends ClusterModel {
+  workspace?: string;
 }
 
 const v500Beta10ClusterStoreMigrationInjectable = getInjectable({
@@ -35,7 +39,7 @@ const v500Beta10ClusterStoreMigrationInjectable = getInjectable({
             workspaces.set(id, name);
           }
 
-          const clusters = (store.get("clusters") ?? []) as ClusterModel[];
+          const clusters = (store.get("clusters") ?? []) as Pre500ClusterModel[];
 
           for (const cluster of clusters) {
             if (cluster.workspace) {

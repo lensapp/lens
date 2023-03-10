@@ -8,8 +8,6 @@ import type { GetCustomKubeConfigFilePath } from "../app-paths/get-custom-kube-c
 import getCustomKubeConfigFilePathInjectable from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { CreateCluster } from "../cluster/create-cluster-injection-token";
-import { createClusterInjectionToken } from "../cluster/create-cluster-injection-token";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import assert from "assert";
@@ -27,6 +25,7 @@ import type { WriteFileSync } from "../fs/write-file-sync.injectable";
 import writeFileSyncInjectable from "../fs/write-file-sync.injectable";
 import type { WriteBufferSync } from "../fs/write-buffer-sync.injectable";
 import writeBufferSyncInjectable from "../fs/write-buffer-sync.injectable";
+import { Cluster } from "../cluster/cluster";
 
 // NOTE: this is intended to read the actual file system
 const testDataIcon = readFileSync("test-data/cluster-store-migration-icon.png");
@@ -58,7 +57,6 @@ users:
 describe("cluster-store", () => {
   let di: DiContainer;
   let clusterStore: ClusterStore;
-  let createCluster: CreateCluster;
   let writeJsonSync: WriteJsonSync;
   let writeFileSync: WriteFileSync;
   let writeBufferSync: WriteBufferSync;
@@ -74,7 +72,6 @@ describe("cluster-store", () => {
     di.override(kubectlBinaryNameInjectable, () => "kubectl");
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
-
     writeJsonSync = di.inject(writeJsonSyncInjectable);
     writeFileSync = di.inject(writeFileSyncInjectable);
     writeBufferSync = di.inject(writeBufferSyncInjectable);
@@ -84,7 +81,6 @@ describe("cluster-store", () => {
 
   describe("empty config", () => {
     beforeEach(async () => {
-      createCluster = di.inject(createClusterInjectionToken);
       getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
 
       writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {});
@@ -94,7 +90,7 @@ describe("cluster-store", () => {
 
     describe("with foo cluster added", () => {
       beforeEach(() => {
-        const cluster = createCluster({
+        const cluster = new Cluster({
           id: "foo",
           contextName: "foo",
           preferences: {
@@ -201,7 +197,6 @@ describe("cluster-store", () => {
         ],
       });
 
-      createCluster = di.inject(createClusterInjectionToken);
       getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
 
       clusterStore = di.inject(clusterStoreInjectable);
@@ -256,7 +251,6 @@ describe("cluster-store", () => {
         ],
       });
 
-      createCluster = di.inject(createClusterInjectionToken);
       getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
 
       clusterStore = di.inject(clusterStoreInjectable);
@@ -274,7 +268,6 @@ describe("cluster-store", () => {
     beforeEach(() => {
       di.override(storeMigrationVersionInjectable, () => "3.6.0");
 
-      createCluster = di.inject(createClusterInjectionToken);
       getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
 
       writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {
@@ -302,9 +295,9 @@ describe("cluster-store", () => {
     });
 
     it("migrates to modern format with kubeconfig in a file", async () => {
-      const config = clusterStore.clustersList[0].kubeConfigPath;
+      const configPath = clusterStore.clustersList[0].kubeConfigPath.get();
 
-      expect(readFileSync(config)).toBe(minimalValidKubeConfig);
+      expect(readFileSync(configPath)).toBe(minimalValidKubeConfig);
     });
 
     it("migrates to modern format with icon not in file", async () => {

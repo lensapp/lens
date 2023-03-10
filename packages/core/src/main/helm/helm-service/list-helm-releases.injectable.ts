@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import loggerInjectable from "../../../common/logger.injectable";
+import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 import listHelmReleasesInjectable from "../list-helm-releases.injectable";
 
 const listClusterHelmReleasesInjectable = getInjectable({
@@ -15,11 +16,12 @@ const listClusterHelmReleasesInjectable = getInjectable({
     const listHelmReleases = di.inject(listHelmReleasesInjectable);
 
     return async (cluster: Cluster, namespace?: string) => {
-      const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
+      const proxyKubeconfigManager = di.inject(kubeconfigManagerInjectable, cluster);
+      const proxyKubeconfigPath = await proxyKubeconfigManager.ensurePath();
 
       logger.debug(`[CLUSTER]: listing helm releases for clusterId=${cluster.id}`, { namespace });
 
-      return listHelmReleases(proxyKubeconfig, namespace);
+      return listHelmReleases(proxyKubeconfigPath, namespace);
     };
   },
 });

@@ -4,7 +4,7 @@
  */
 import type { V1APIGroupList } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
-import { chain } from "../../common/utils/iter";
+import { iter } from "@k8slens/utilities";
 import k8sRequestInjectable from "../k8s-request.injectable";
 import { requestApiVersionsInjectionToken } from "./request-api-versions";
 
@@ -19,7 +19,7 @@ const requestNonCoreApiVersionsInjectable = getInjectable({
 
         return {
           callWasSuccessful: true,
-          response: chain(groups.values())
+          response: iter.chain(groups.values())
             .flatMap(group => group.versions.map(version => ({
               group: group.name,
               path: `/apis/${version.groupVersion}`,

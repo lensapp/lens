@@ -8,7 +8,6 @@ import { action, makeObservable } from "mobx";
 import type { BaseStoreDependencies } from "../../../common/base-store/base-store";
 import { BaseStore } from "../../../common/base-store/base-store";
 import type { LensExtensionId } from "../../lens-extension";
-import { toJS } from "../../../common/utils";
 import type { EnsureHashedDirectoryForExtension } from "./ensure-hashed-directory-for-extension.injectable";
 
 interface FSProvisionModel {
@@ -46,8 +45,8 @@ export class FileSystemProvisionerStore extends BaseStore<FSProvisionModel> {
   }
 
   toJSON(): FSProvisionModel {
-    return toJS({
-      extensions: Object.fromEntries(this.dependencies.registeredExtensions),
-    });
+    return {
+      extensions: Object.fromEntries(this.dependencies.registeredExtensions.toJSON()),
+    };
   }
 }

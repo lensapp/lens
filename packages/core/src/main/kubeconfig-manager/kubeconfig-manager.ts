@@ -4,10 +4,8 @@
  */
 
 import type { KubeConfig } from "@kubernetes/client-node";
-import type { Cluster } from "../../common/cluster/cluster";
-import type { ClusterContextHandler } from "../context-handler/context-handler";
 import { dumpConfigYaml } from "../../common/kube-helpers";
-import { isErrnoException } from "../../common/utils";
+import { isErrnoException } from "@k8slens/utilities";
 import type { PartialDeep } from "type-fest";
 import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
@@ -16,17 +14,22 @@ import type { PathExists } from "../../common/fs/path-exists.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { WriteFile } from "../../common/fs/write-file.injectable";
 import type { SelfSignedCert } from "selfsigned";
+import type { Cluster } from "../../common/cluster/cluster";
+import type { LoadKubeconfig } from "../../common/cluster/load-kubeconfig.injectable";
+import type { KubeAuthProxyServer } from "../cluster/kube-auth-proxy-server.injectable";
 
-export interface KubeconfigManagerDependencies {
+interface KubeconfigManagerDependencies {
   readonly directoryForTemp: string;
   readonly logger: Logger;
-  readonly lensProxyPort: { get: () => number };
+  readonly certificate: SelfSignedCert;
+  readonly kubeAuthProxyServer: KubeAuthProxyServer;
+  readonly kubeAuthProxyUrl: string;
   joinPaths: JoinPaths;
   getDirnameOfPath: GetDirnameOfPath;
   pathExists: PathExists;
   removePath: RemovePath;
   writeFile: WriteFile;
-  certificate: SelfSignedCert;
+  loadKubeconfig: LoadKubeconfig;
 }
 
 export class KubeconfigManager {
@@ -38,17 +41,16 @@ export class KubeconfigManager {
    */
   protected tempFilePath: string | null = null;
 
-  protected readonly contextHandler: ClusterContextHandler;
-
-  constructor(private readonly dependencies: KubeconfigManagerDependencies, protected cluster: Cluster) {
-    this.contextHandler = cluster.contextHandler;
-  }
+  constructor(
+    private readonly dependencies: KubeconfigManagerDependencies,
+    private readonly cluster: Cluster,
+  ) {}
 
   /**
    *
    * @returns The path to the temporary kubeconfig
    */
-  async getPath(): Promise<string> {
+  async ensurePath(): Promise<string> {
     if (this.tempFilePath === null || !(await this.dependencies.pathExists(this.tempFilePath))) {
       return await this.ensureFile();
     }
@@ -79,7 +81,7 @@ export class KubeconfigManager {
 
   protected async ensureFile() {
     try {
-      await this.contextHandler.ensureServer();
+      await this.dependencies.kubeAuthProxyServer.ensureRunning();
 
       return this.tempFilePath = await this.createProxyKubeconfig();
     } catch (error) {
@@ -87,31 +89,26 @@ export class KubeconfigManager {
     }
   }
 
-  get resolveProxyUrl() {
-    return `https://127.0.0.1:${this.dependencies.lensProxyPort.get()}/${this.cluster.id}`;
-  }
-
   /**
    * Creates new "temporary" kubeconfig that point to the kubectl-proxy.
    * This way any user of the config does not need to know anything about the auth etc. details.
    */
   protected async createProxyKubeconfig(): Promise<string> {
-    const { cluster } = this;
-    const { contextName, id } = cluster;
+    const { id, preferences: { defaultNamespace }} = this.cluster;
+    const contextName = this.cluster.contextName.get();
     const tempFile = this.dependencies.joinPaths(
       this.dependencies.directoryForTemp,
       `kubeconfig-${id}`,
     );
-    const kubeConfig = await cluster.getKubeconfig();
-    const { certificate } = this.dependencies;
+    const kubeConfig = await this.dependencies.loadKubeconfig();
     const proxyConfig: PartialDeep<KubeConfig> = {
       currentContext: contextName,
       clusters: [
         {
           name: contextName,
-          server: this.resolveProxyUrl,
+          server: this.dependencies.kubeAuthProxyUrl,
           skipTLSVerify: false,
-          caData: Buffer.from(certificate.cert).toString("base64"),
+          caData: Buffer.from(this.dependencies.certificate.cert).toString("base64"),
         },
       ],
       users: [
@@ -122,7 +119,7 @@ export class KubeconfigManager {
           user: "proxy",
           name: contextName,
           cluster: contextName,
-          namespace: cluster.defaultNamespace || kubeConfig.getContextObject(contextName)?.namespace,
+          namespace: defaultNamespace || kubeConfig.getContextObject(contextName)?.namespace,
         },
       ],
     };

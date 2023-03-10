@@ -17,8 +17,7 @@ import type { CatalogCategory, CatalogCategoryRegistry, CatalogEntity } from "..
 import { CatalogAddButton } from "./catalog-add-button";
 import type { ShowNotification } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
-import type { StorageLayer } from "../../utils";
-import { prevDefault } from "../../utils";
+import { prevDefault } from "@k8slens/utilities";
 import { CatalogMenu } from "./catalog-menu";
 import { RenderDelay } from "../render-delay/render-delay";
 import { Icon } from "../icon";
@@ -54,6 +53,7 @@ import type { ShowEntityDetails } from "./entity-details/show.injectable";
 import showEntityDetailsInjectable from "./entity-details/show.injectable";
 import type { OnCatalogEntityListClick } from "./entity-details/on-catalog-click.injectable";
 import onCatalogEntityListClickInjectable from "./entity-details/on-catalog-click.injectable";
+import type { StorageLayer } from "../../utils/storage-helper";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: StorageLayer<string | null>;

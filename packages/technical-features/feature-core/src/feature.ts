@@ -8,5 +8,4 @@ export interface Feature {
 
 export interface GetFeatureArgs extends Feature {}
 
-export const getFeature = (getFeatureArgs: GetFeatureArgs): Feature =>
-  getFeatureArgs;
+export const getFeature = (getFeatureArgs: GetFeatureArgs): Feature => getFeatureArgs;

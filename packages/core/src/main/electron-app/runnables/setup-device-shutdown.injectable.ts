@@ -10,19 +10,14 @@ import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 const setupDeviceShutdownInjectable = getInjectable({
   id: "setup-device-shutdown",
 
-  instantiate: (di) => {
-    const powerMonitor = di.inject(powerMonitorInjectable);
-    const exitApp = di.inject(exitAppInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const powerMonitor = di.inject(powerMonitorInjectable);
+      const exitApp = di.inject(exitAppInjectable);
 
-    return {
-      id: "setup-device-shutdown",
-      run: () => {
-        powerMonitor.on("shutdown", async () => {
-          exitApp();
-        });
-      },
-    };
-  },
+      powerMonitor.on("shutdown", exitApp);
+    },
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

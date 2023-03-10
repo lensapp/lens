@@ -17,7 +17,7 @@ const bootstrapInjectable = getInjectable({
       await bootstrap(di);
     },
 
-    runAfter: di.inject(startFrameInjectable),
+    runAfter: startFrameInjectable,
   }),
 
   causesSideEffects: true,

@@ -40,7 +40,7 @@ export const initClusterFrame = ({
     );
 
     await requestSetClusterFrameId(hostedCluster.id);
-    await hostedCluster.whenReady; // cluster.activate() is done at this point
+    await when(() => hostedCluster.ready.get()); // cluster.activate() is done at this point
 
     catalogEntityRegistry.activeEntity = hostedCluster.id;
 

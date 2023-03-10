@@ -9,17 +9,14 @@ import setupSyncingOfGeneralCatalogEntitiesInjectable from "../../../../main/sta
 
 const initHotbarStoreInjectable = getInjectable({
   id: "init-hotbar-store",
-  instantiate: (di) => {
-    const hotbarStore = di.inject(hotbarStoreInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const hotbarStore = di.inject(hotbarStoreInjectable);
 
-    return {
-      id: "init-hotbar-store",
-      run: () => {
-        hotbarStore.load();
-      },
-      runAfter: di.inject(setupSyncingOfGeneralCatalogEntitiesInjectable),
-    };
-  },
+      hotbarStore.load();
+    },
+    runAfter: setupSyncingOfGeneralCatalogEntitiesInjectable,
+  }),
   injectionToken: onLoadOfApplicationInjectionToken,
 });
 

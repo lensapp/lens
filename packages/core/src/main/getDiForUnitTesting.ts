@@ -26,7 +26,7 @@ import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-qui
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
-import type { GlobalOverride } from "../common/test-utils/get-global-override";
+import type { GlobalOverride } from "@k8slens/test-utils";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import {
   setLegacyGlobalDiForExtensionApi,
@@ -53,7 +53,7 @@ export function getDiForUnitTesting() {
   });
 
   for (const globalOverridePath of global.injectablePaths.main.globalOverridePaths) {
-    const globalOverride = require(globalOverridePath).default as GlobalOverride;
+    const globalOverride = require(globalOverridePath).default as GlobalOverride<unknown, unknown>;
 
     di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
   }

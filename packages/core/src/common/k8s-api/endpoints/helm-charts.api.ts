@@ -3,7 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { autoBind, bifurcateArray } from "../../utils";
+import { array } from "@k8slens/utilities";
+import autoBind from "auto-bind";
 import Joi from "joi";
 
 export interface RawHelmChart {
@@ -263,7 +264,7 @@ export class HelmChart implements HelmChartData {
       return new HelmChart(result.value);
     }
 
-    const [actualErrors, unknownDetails] = bifurcateArray(result.error.details, ({ type }) => type === "object.unknown");
+    const [actualErrors, unknownDetails] = array.bifurcate(result.error.details, ({ type }) => type === "object.unknown");
 
     if (unknownDetails.length > 0) {
       console.warn("HelmChart data has unexpected fields", { original: data, unknownFields: unknownDetails.flatMap(d => d.path) });

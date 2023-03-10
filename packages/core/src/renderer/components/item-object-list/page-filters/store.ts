@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import autoBind from "auto-bind";
 import { computed, observable, reaction, makeObservable, action } from "mobx";
 import type { PageParam } from "../../../navigation/page-param";
-import { autoBind } from "../../../utils";
 
 export enum FilterType {
   SEARCH = "search",

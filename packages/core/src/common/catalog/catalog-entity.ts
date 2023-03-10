@@ -7,8 +7,8 @@ import EventEmitter from "events";
 import type TypedEmitter from "typed-emitter";
 import { observable, makeObservable } from "mobx";
 import { once } from "lodash";
-import type { Disposer } from "../utils";
-import { iter } from "../utils";
+import type { Disposer } from "@k8slens/utilities";
+import { iter } from "@k8slens/utilities";
 import type { CategoryColumnRegistration, TitleCellProps } from "../../renderer/components/+catalog/custom-category-columns";
 
 export type { CategoryColumnRegistration, TitleCellProps };
@@ -241,7 +241,7 @@ export interface CatalogEntityMetadata extends EntityMetadataObject {
   shortName?: string;
   description?: string;
   source?: string;
-  labels: Record<string, string>;
+  labels: Partial<Record<string, string>>;
 }
 
 export interface CatalogEntityStatus {

@@ -4,7 +4,7 @@
  */
 
 import periodicalCheckForUpdatesInjectable from "./periodical-check-for-updates.injectable";
-import { getGlobalOverride } from "../../../../../common/test-utils/get-global-override";
+import { getGlobalOverride } from "@k8slens/test-utils";
 
 export default getGlobalOverride(periodicalCheckForUpdatesInjectable, () => ({
   start: () => {},

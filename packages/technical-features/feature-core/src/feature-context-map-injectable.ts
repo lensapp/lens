@@ -11,10 +11,9 @@ export type FeatureContextMap = Map<
   }
 >;
 
-export const featureContextMapInjectionToken =
-  getInjectionToken<FeatureContextMap>({
-    id: "feature-context-map-injection-token",
-  });
+export const featureContextMapInjectionToken = getInjectionToken<FeatureContextMap>({
+  id: "feature-context-map-injection-token",
+});
 
 const featureContextMapInjectable = getInjectable({
   id: "feature-store",

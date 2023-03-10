@@ -16,7 +16,7 @@ import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.inject
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import { SubnamespaceBadge } from "./subnamespace-badge";
 import hierarchicalNamespacesInjectable from "./hierarchical-namespaces.injectable";
-import { prevDefault } from "../../utils";
+import { prevDefault } from "@k8slens/utilities";
 import type { NamespaceTree } from "./store";
 
 interface NamespaceTreeViewProps {

@@ -6,7 +6,7 @@
 import "./spinner.scss";
 
 import React from "react";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 
 export interface SpinnerProps extends React.HTMLProps<any> {
   singleColor?: boolean;

@@ -7,8 +7,7 @@ import appPathsStateInjectable from "../../common/app-paths/app-paths-state.inje
 import directoryForKubeConfigsInjectable from "../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { ClusterMetadataKey } from "../../common/cluster-types";
-import type { Cluster } from "../../common/cluster/cluster";
-import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
+import { Cluster } from "../../common/cluster/cluster";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import clusterDistributionDetectorInjectable from "./cluster-distribution-detector.injectable";
 import clusterIdDetectorFactoryInjectable from "./cluster-id-detector.injectable";
@@ -64,9 +63,7 @@ describe("detect-cluster-metadata", () => {
 
     detectClusterMetadata = di.inject(detectClusterMetadataInjectable);
 
-    const createCluster = di.inject(createClusterInjectionToken);
-
-    cluster = createCluster({
+    cluster = new Cluster({
       id: "some-id",
       contextName: "some-context",
       kubeConfigPath: "minikube-config.yml",

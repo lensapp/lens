@@ -13,10 +13,10 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
-import { autoBind } from "../../../common/utils";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import runtimeClassStoreInjectable from "./store.injectable";
 import type { RuntimeClassStore } from "./store";
+import autoBindReact from "auto-bind/react";
 
 enum columnId {
   name = "name",
@@ -35,7 +35,7 @@ interface Dependencies {
 class NonInjectedRuntimeClasses extends React.Component<RuntimeClassesProps & Dependencies> {
   constructor(props: RuntimeClassesProps & Dependencies) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   render() {

@@ -5,7 +5,7 @@
 
 import type { NamespaceScopedMetadata, TypedLocalObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import { hasTypedProperty, isString, iter } from "../../utils";
+import { hasTypedProperty, isString, iter } from "@k8slens/utilities";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { RequireExactlyOne } from "type-fest";

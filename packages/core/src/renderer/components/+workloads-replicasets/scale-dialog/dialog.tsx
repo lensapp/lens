@@ -14,7 +14,7 @@ import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
 import { Icon } from "../../icon";
 import { Slider } from "../../slider";
-import { cssNames } from "../../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { ReplicaSet, ReplicaSetApi } from "../../../../common/k8s-api/endpoints";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import replicaSetApiInjectable from "../../../../common/k8s-api/endpoints/replica-set.api.injectable";

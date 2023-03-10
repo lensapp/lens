@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import { object } from "../utils";
+import { object } from "@k8slens/utilities";
 import type { LensTheme } from "./lens-theme";
 
 export type ApplyLensTheme = (theme: LensTheme) => void;

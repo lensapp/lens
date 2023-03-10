@@ -6,7 +6,7 @@
 import moment from "moment";
 import type { NamespaceScopedMetadata, ObjectReference } from "../kube-object";
 import { KubeObject } from "../kube-object";
-import { formatDuration } from "../../utils/formatDuration";
+import { formatDuration } from "@k8slens/utilities";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { JobTemplateSpec } from "./types/job-template-spec";

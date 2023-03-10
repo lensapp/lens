@@ -10,7 +10,7 @@ import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.i
 import registerIpcListenersInjectable from "../../ipc/register-ipc-listeners.injectable";
 import loadExtensionsInjectable from "../load-extensions.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import { delay } from "../../../common/utils";
+import { delay } from "@k8slens/utilities";
 import { broadcastMessage } from "../../../common/ipc";
 import { bundledExtensionsLoaded } from "../../../common/ipc/extension-handling";
 

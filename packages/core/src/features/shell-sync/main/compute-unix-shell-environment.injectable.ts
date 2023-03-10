@@ -10,14 +10,14 @@ import randomUUIDInjectable from "../../../main/crypto/random-uuid.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import processExecPathInjectable from "./execPath.injectable";
 import processEnvInjectable from "./env.injectable";
-import { object } from "../../../common/utils";
-import type { AsyncResult } from "../../../common/utils/async-result";
+import { object } from "@k8slens/utilities";
+import type { AsyncResult } from "@k8slens/utilities";
 
 export interface UnixShellEnvOptions {
   signal: AbortSignal;
 }
 
-export type ComputeUnixShellEnvironment = (shell: string, opts: UnixShellEnvOptions) => Promise<AsyncResult<EnvironmentVariables, string>>;
+export type ComputeUnixShellEnvironment = (shell: string, opts: UnixShellEnvOptions) => AsyncResult<EnvironmentVariables, string>;
 
 /**
  * @param src The object containing the current environment variables
@@ -36,9 +36,9 @@ const getResetProcessEnv = (src: Partial<Record<string, string>>, overrides: Par
       ...overrides,
     },
     resetEnvPairs: (target) => {
-      for (const [name, orginalValue] of originals) {
-        if (typeof orginalValue === "string") {
-          target[name] = orginalValue;
+      for (const [name, originalValue] of originals) {
+        if (typeof originalValue === "string") {
+          target[name] = originalValue;
         } else {
           delete target[name];
         }
@@ -61,7 +61,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
     const processExecPath = di.inject(processExecPathInjectable);
     const processEnv = di.inject(processEnvInjectable);
 
-    const getShellSpecifices = (shellName: string) => {
+    const getShellSpecifics = (shellName: string) => {
       const mark = randomUUID().replace(/-/g, "");
       const regex = new RegExp(`${mark}(\\{.*\\})${mark}`);
 
@@ -100,7 +100,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
         TERM: "screen-256color-bce", // required for fish
       });
       const shellName = getBasenameOfPath(shellPath);
-      const { command, shellArgs, regex } = getShellSpecifices(shellName);
+      const { command, shellArgs, regex } = getShellSpecifics(shellName);
 
       logger.info(`[UNIX-SHELL-ENV]: running against ${shellPath}`, { command, shellArgs });
 
@@ -143,7 +143,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
           if (code || signal) {
             return resolve({
               callWasSuccessful: false,
-              error: `Shell did not exit sucessfully: ${getErrorContext({ code, signal })}`,
+              error: `Shell did not exit successfully: ${getErrorContext({ code, signal })}`,
             });
           }
 
@@ -157,7 +157,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
             if (!matchedOutput) {
               return resolve({
                 callWasSuccessful: false,
-                error: "Something has blocked the shell from producing the environement variables",
+                error: "Something has blocked the shell from producing the environment variables",
               });
             }
 

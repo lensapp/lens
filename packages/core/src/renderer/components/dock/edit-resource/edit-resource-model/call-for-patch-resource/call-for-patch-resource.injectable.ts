@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { AsyncResult } from "../../../../../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import apiManagerInjectable from "../../../../../../common/k8s-api/api-manager/manager.injectable";
 import type { JsonPatch } from "../../../../../../common/k8s-api/kube-object.store";
 import type { KubeObject } from "../../../../../../common/k8s-api/kube-object";
@@ -13,7 +13,7 @@ import { getErrorMessage } from "../../../../../../common/utils/get-error-messag
 export type CallForPatchResource = (
   item: KubeObject,
   patch: JsonPatch
-) => Promise<AsyncResult<{ name: string; kind: string }>>;
+) => AsyncResult<{ name: string; kind: string }>;
 
 const callForPatchResourceInjectable = getInjectable({
   id: "call-for-patch-resource",

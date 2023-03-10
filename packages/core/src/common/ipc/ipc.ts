@@ -11,7 +11,7 @@ import { ipcMain, ipcRenderer, webContents } from "electron";
 import { toJS } from "../utils/toJS";
 import type { ClusterFrameInfo } from "../cluster-frames";
 import { clusterFrameMap } from "../cluster-frames";
-import type { Disposer } from "../utils";
+import type { Disposer } from "@k8slens/utilities";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
 import loggerInjectable from "../logger.injectable";

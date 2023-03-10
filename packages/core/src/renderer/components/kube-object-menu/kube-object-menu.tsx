@@ -4,14 +4,14 @@
  */
 
 import React from "react";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
 import type { MenuActionsProps } from "../menu";
 import { MenuItem, MenuActions } from "../menu";
 import identity from "lodash/identity";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import clusterNameInjectable from "./dependencies/cluster-name.injectable";
+import clusterNameInjectable from "./cluster-name.injectable";
 import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
 import kubeObjectMenuItemsInjectable from "./kube-object-menu-items.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
@@ -38,7 +38,7 @@ export interface KubeObjectMenuProps<TKubeObject extends KubeObject> extends Men
 interface Dependencies {
   apiManager: ApiManager;
   kubeObjectMenuItems: IComputedValue<React.ElementType[]>;
-  clusterName: string | undefined;
+  clusterName: IComputedValue<string | undefined>;
   hideDetails: HideDetails;
   createEditResourceTab: (kubeObject: KubeObject) => void;
   onContextMenuOpen: OnKubeObjectContextMenuOpen;
@@ -65,7 +65,7 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
         {`Remove ${object.kind} `}
         <b>{breadcrumb}</b>
         {" from "}
-        <b>{this.props.clusterName}</b>
+        <b>{this.props.clusterName.get()}</b>
         ?
       </p>
     );

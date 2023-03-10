@@ -5,14 +5,14 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { KubeObject } from "../../../../../../common/k8s-api/kube-object";
 import { parseKubeApi } from "../../../../../../common/k8s-api/kube-api-parse";
-import type { AsyncResult } from "../../../../../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import { getErrorMessage } from "../../../../../../common/utils/get-error-message";
 import apiManagerInjectable from "../../../../../../common/k8s-api/api-manager/manager.injectable";
-import { waitUntilDefined } from "../../../../../../common/utils";
+import { waitUntilDefined } from "@k8slens/utilities";
 
 export type CallForResource = (
   selfLink: string
-) => Promise<AsyncResult<KubeObject | undefined>>;
+) => AsyncResult<KubeObject | undefined>;
 
 const callForResourceInjectable = getInjectable({
   id: "call-for-resource",

@@ -10,13 +10,13 @@ import { homedir } from "os";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import type { CatalogEntity } from "../../../common/catalog";
 import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
-import type { Cluster } from "../../../common/cluster/cluster";
+import { Cluster } from "../../../common/cluster/cluster";
 import { loadConfigFromString } from "../../../common/kube-helpers";
 import clustersThatAreBeingDeletedInjectable from "../../cluster/are-being-deleted.injectable";
 import { catalogEntityFromCluster } from "../../cluster/manager";
-import createClusterInjectable from "../../create-cluster/create-cluster.injectable";
 import configToModelsInjectable from "./config-to-models.injectable";
 import kubeconfigSyncLoggerInjectable from "./logger.injectable";
+import clusterConnectionInjectable from "../../cluster/cluster-connection.injectable";
 
 export type ComputeKubeconfigDiff = (contents: string, source: ObservableMap<string, [Cluster, CatalogEntity]>, filePath: string) => void;
 
@@ -24,7 +24,6 @@ const computeKubeconfigDiffInjectable = getInjectable({
   id: "compute-kubeconfig-diff",
   instantiate: (di): ComputeKubeconfigDiff => {
     const directoryForKubeConfigs = di.inject(directoryForKubeConfigsInjectable);
-    const createCluster = di.inject(createClusterInjectable);
     const clustersThatAreBeingDeleted = di.inject(clustersThatAreBeingDeletedInjectable);
     const configToModels = di.inject(configToModelsInjectable);
     const logger = di.inject(kubeconfigSyncLoggerInjectable);
@@ -51,7 +50,9 @@ const computeKubeconfigDiffInjectable = getInjectable({
             // remove from the deleting set, so that if a new context of the same name is added, it isn't marked as deleting
             clustersThatAreBeingDeleted.delete(value[0].id);
 
-            value[0].disconnect();
+            const clusterConnection = di.inject(clusterConnectionInjectable, value[0]);
+
+            clusterConnection.disconnect();
             source.delete(contextName);
             logger.debug(`Removed old cluster from sync`, { filePath, contextName });
             continue;
@@ -71,9 +72,9 @@ const computeKubeconfigDiffInjectable = getInjectable({
           // add new clusters to the source
           try {
             const clusterId = createHash("md5").update(`${filePath}:${contextName}`).digest("hex");
-            const cluster = getClusterById(clusterId) ?? createCluster({ ...model, id: clusterId }, configData);
+            const cluster = getClusterById(clusterId) ?? new Cluster({ ...model, id: clusterId }, configData);
 
-            if (!cluster.apiUrl) {
+            if (!cluster.apiUrl.get()) {
               throw new Error("Cluster constructor failed, see above error");
             }
 

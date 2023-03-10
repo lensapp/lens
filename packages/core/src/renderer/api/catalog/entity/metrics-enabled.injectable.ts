@@ -5,14 +5,22 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { ClusterMetricsResourceType } from "../../../../common/cluster-types";
-import getActiveClusterEntityInjectable from "./get-active-cluster-entity.injectable";
+import activeEntityInternalClusterInjectable from "./get-active-cluster-entity.injectable";
 
 const enabledMetricsInjectable = getInjectable({
   id: "enabled-metrics",
   instantiate: (di, kind) => {
-    const getActiveClusterEntity = di.inject(getActiveClusterEntityInjectable);
+    const activeEntityInternalCluster = di.inject(activeEntityInternalClusterInjectable);
 
-    return computed(() => !getActiveClusterEntity()?.isMetricHidden(kind));
+    return computed(() => {
+      const cluster = activeEntityInternalCluster.get();
+
+      if (!cluster?.preferences.hiddenMetrics) {
+        return false;
+      }
+
+      return cluster.preferences.hiddenMetrics.includes(kind);
+    });
   },
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di, kind: ClusterMetricsResourceType) => kind,

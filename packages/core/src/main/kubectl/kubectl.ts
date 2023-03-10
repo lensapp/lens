@@ -4,7 +4,6 @@
  */
 
 import fs from "fs";
-import { promiseExecFile } from "../../common/utils/promise-exec";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
 import { SemVer, coerce } from "semver";
@@ -18,6 +17,9 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { GetBasenameOfPath } from "../../common/path/get-basename.injectable";
 import type { NormalizedPlatform } from "../../common/vars/normalized-platform.injectable";
 import type { Logger } from "../../common/logger";
+import type { ExecFile } from "../../common/fs/exec-file.injectable";
+import { hasTypedProperty, isObject, isString, json } from "@k8slens/utilities";
+import type { Unlink } from "../../common/fs/unlink.injectable";
 
 const initScriptVersionString = "# lens-initscript v3";
 
@@ -40,6 +42,8 @@ export interface KubectlDependencies {
   joinPaths: JoinPaths;
   getDirnameOfPath: GetDirnameOfPath;
   getBasenameOfPath: GetBasenameOfPath;
+  execFile: ExecFile;
+  unlink: Unlink;
 }
 
 export class Kubectl {
@@ -145,38 +149,64 @@ export class Kubectl {
   public async checkBinary(path: string, checkVersion = true) {
     const exists = await pathExists(path);
 
-    if (exists) {
-      try {
-        const args = [
-          "version",
-          "--client",
-          "--output", "json",
-        ];
-        const { stdout } = await promiseExecFile(path, args);
-        const output = JSON.parse(stdout);
-
-        if (!checkVersion) {
-          return true;
-        }
-        let version: string = output.clientVersion.gitVersion;
-
-        if (version[0] === "v") {
-          version = version.slice(1);
-        }
-
-        if (version === this.kubectlVersion) {
-          this.dependencies.logger.debug(`Local kubectl is version ${this.kubectlVersion}`);
-
-          return true;
-        }
-        this.dependencies.logger.error(`Local kubectl is version ${version}, expected ${this.kubectlVersion}, unlinking`);
-      } catch (error) {
-        this.dependencies.logger.error(`Local kubectl failed to run properly (${error}), unlinking`);
-      }
-      await fs.promises.unlink(this.path);
+    if (!exists) {
+      return false;
     }
 
-    return false;
+    const args = [
+      "version",
+      "--client",
+      "--output", "json",
+    ];
+    const execResult = await this.dependencies.execFile(path, args);
+
+    if (!execResult.callWasSuccessful) {
+      this.dependencies.logger.error(`Local kubectl failed to run properly (${execResult.error}), unlinking`);
+      await this.dependencies.unlink(this.path);
+
+      return;
+    }
+
+    const parseResult = json.parse(execResult.response);
+
+    if (!parseResult.callWasSuccessful) {
+      this.dependencies.logger.error(`Local kubectl failed to run properly (${parseResult.error}), unlinking`);
+      await this.dependencies.unlink(this.path);
+
+      return;
+    }
+
+    if (!checkVersion) {
+      return true;
+    }
+
+    const { response: output } = parseResult;
+
+    if (
+      !isObject(output)
+      || !hasTypedProperty(output, "clientVersion", isObject)
+      || !hasTypedProperty(output.clientVersion, "gitVersion", isString)
+    ) {
+      this.dependencies.logger.error(`Local kubectl failed to return correct shaped response, unlinking`);
+      await this.dependencies.unlink(this.path);
+
+      return;
+    }
+
+    const version = output.clientVersion.gitVersion;
+
+    switch (output.clientVersion.gitVersion) {
+      case this.kubectlVersion:
+      case `v${this.kubectlVersion}`:
+        this.dependencies.logger.debug(`Local kubectl is version ${this.kubectlVersion}`);
+
+        return true;
+      default:
+        this.dependencies.logger.error(`Local kubectl is version ${version}, expected ${this.kubectlVersion}, unlinking`);
+        await this.dependencies.unlink(this.path);
+
+        return false;
+    }
   }
 
   protected async checkBundled(): Promise<boolean> {
@@ -266,7 +296,7 @@ export class Kubectl {
       await fs.promises.chmod(this.path, 0o755);
       this.dependencies.logger.debug("kubectl binary download finished");
     } catch (error) {
-      await fs.promises.unlink(this.path).catch(noop);
+      await this.dependencies.unlink(this.path).catch(noop);
       throw error;
     }
   }

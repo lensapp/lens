@@ -6,9 +6,9 @@
 import { ipcMain, ipcRenderer } from "electron";
 import { isEqual } from "lodash";
 import type { ObservableMap } from "mobx";
-import { action, computed, makeObservable, observable, observe, reaction, when } from "mobx";
+import { action, computed, makeObservable, toJS, observable, observe, reaction, when } from "mobx";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
-import { isDefined, toJS } from "../../common/utils";
+import { isDefined } from "@k8slens/utilities";
 import type { InstalledExtension } from "../extension-discovery/extension-discovery";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
 import type { LensExtensionState } from "../extensions-store/extensions-store";

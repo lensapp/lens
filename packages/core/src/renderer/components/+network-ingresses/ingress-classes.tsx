@@ -13,7 +13,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IngressClassStore } from "./ingress-class-store";
 import ingressClassStoreInjectable from "./ingress-class-store.injectable";
 import type { IngressClass } from "../../../common/k8s-api/endpoints/ingress-class.api";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 
 enum columnId {

@@ -13,7 +13,7 @@ import { Icon } from "../icon";
 import { List } from "../list/list";
 import { MenuActions, MenuItem } from "../menu";
 import { Spinner } from "../spinner";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { observer } from "mobx-react";
 import type { Row } from "react-table";
 import type { LensExtensionId } from "../../../extensions/lens-extension";

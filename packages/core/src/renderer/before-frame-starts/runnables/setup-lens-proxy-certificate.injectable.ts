@@ -10,7 +10,6 @@ import requestLensProxyCertificateInjectable from "../../certificate/request-len
 const setupLensProxyCertificateInjectable = getInjectable({
   id: "setup-lens-proxy-certificate",
   instantiate: (di) => ({
-    id: "setup-lens-proxy-certificate",
     run: async () => {
       const requestLensProxyCertificate = di.inject(requestLensProxyCertificateInjectable);
       const lensProxyCertificate = di.inject(lensProxyCertificateInjectable);

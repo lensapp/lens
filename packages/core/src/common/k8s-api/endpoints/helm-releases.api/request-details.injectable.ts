@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { KubeJsonApiData } from "../../kube-json-api";
-import { urlBuilderFor } from "../../../utils/buildUrl";
+import { urlBuilderFor } from "@k8slens/utilities";
 import apiBaseInjectable from "../../api-base.injectable";
 
 export interface HelmReleaseDetails {

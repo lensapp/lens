@@ -5,13 +5,13 @@
 
 import React from "react";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { autoBind } from "../../utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import type { KubernetesCluster } from "../../../common/catalog-entities";
 import { FilePicker, OverSizeLimitStyle } from "../file-picker";
 import { MenuActions, MenuItem } from "../menu";
 import { Avatar } from "../avatar";
+import autoBindReact from "auto-bind/react";
 
 enum GeneralInputStatus {
   CLEAN = "clean",
@@ -30,7 +30,7 @@ export class ClusterIconSetting extends React.Component<ClusterIconSettingProps>
 
   constructor(props: ClusterIconSettingProps) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   private element = React.createRef<HTMLDivElement>();

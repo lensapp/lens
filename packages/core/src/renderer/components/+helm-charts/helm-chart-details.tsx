@@ -9,7 +9,7 @@ import React, { Component } from "react";
 import type { HelmChart } from "../../../common/k8s-api/endpoints/helm-charts.api";
 import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
-import { autoBind, stopPropagation } from "../../utils";
+import { stopPropagation } from "@k8slens/utilities";
 import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
 import { Button } from "../button";
@@ -25,6 +25,7 @@ import versionsOfSelectedHelmChartInjectable from "./details/versions-of-selecte
 import type { HelmChartDetailsVersionSelection } from "./details/versions/helm-chart-details-version-selection.injectable";
 import helmChartDetailsVersionSelectionInjectable from "./details/versions/helm-chart-details-version-selection.injectable";
 import assert from "assert";
+import autoBindReact from "auto-bind/react";
 
 export interface HelmChartDetailsProps {
   hideDetails(): void;
@@ -48,7 +49,7 @@ interface Dependencies {
 class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Dependencies> {
   constructor(props: HelmChartDetailsProps & Dependencies) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   get chart() {

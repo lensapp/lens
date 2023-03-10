@@ -8,11 +8,49 @@ import buildVersionInjectable from "../../main/vars/build-version/build-version.
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
-export { Singleton } from "../../common/utils";
-export { prevDefault, stopPropagation } from "../../renderer/utils/prevDefault";
+export { Singleton } from "../../common/utils/singleton";
 
-export type { IClassName, IgnoredClassNames } from "../../renderer/utils";
-export { cssNames } from "../../renderer/utils/cssNames";
+export {
+  /**
+   * @deprecated Switch to using the `@k8slens/utilities` package
+   */
+  prevDefault,
+  /**
+   * @deprecated Switch to using the `@k8slens/utilities` package
+   */
+  stopPropagation,
+  /**
+   * @deprecated Switch to using the `@k8slens/utilities` package
+   */
+  cssNames,
+  /**
+   * @deprecated Switch to using the `@k8slens/utilities` package
+   */
+  disposer,
+} from "@k8slens/utilities";
+
+export type {
+  /**
+   * @deprecated Switch to using the `@k8slens/utilities` package
+   */
+  IClassName,
+  /**
+   * @deprecated Switch to using the `@k8slens/utilities` package
+   */
+  IgnoredClassNames,
+  /**
+   * @deprecated Switch to using the `@k8slens/utilities` package
+   */
+  Disposer,
+  /**
+   * @deprecated Switch to using the `@k8slens/utilities` package
+   */
+  Disposable,
+  /**
+   * @deprecated Switch to using the `@k8slens/utilities` package
+   */
+  ExtendableDisposer,
+} from "@k8slens/utilities";
 
 export type { OpenLinkInBrowser } from "../../common/utils/open-link-in-browser.injectable";
 
@@ -24,6 +62,3 @@ export const getAppVersion = () => {
 
   return di.inject(buildVersionInjectable).get();
 };
-
-export { disposer } from "../../common/utils";
-export type { Disposer, Disposable, ExtendableDisposer } from "../../common/utils";

@@ -8,7 +8,7 @@ import { KubeObject } from "../kube-object";
 import type { Pod } from "./pod.api";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import { object } from "../../utils";
+import { object } from "@k8slens/utilities";
 import type { ResourceRequirements } from "./types/resource-requirements";
 
 export class PersistentVolumeClaimApi extends KubeApi<PersistentVolumeClaim> {

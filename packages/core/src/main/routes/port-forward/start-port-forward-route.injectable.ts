@@ -8,6 +8,7 @@ import { PortForward } from "./functionality/port-forward";
 import createPortForwardInjectable from "./functionality/create-port-forward.injectable";
 import { clusterRoute } from "../../router/route";
 import loggerInjectable from "../../../common/logger.injectable";
+import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 
 const startPortForwardRouteInjectable = getRouteInjectable({
   id: "start-current-port-forward-route",
@@ -23,6 +24,8 @@ const startPortForwardRouteInjectable = getRouteInjectable({
       const { namespace, resourceType, resourceName } = params;
       const port = Number(query.get("port"));
       const forwardPort = Number(query.get("forwardPort"));
+
+      const proxyKubeconfigManager = di.inject(kubeconfigManagerInjectable, cluster);
 
       try {
         let portForward = PortForward.getPortforward({
@@ -42,8 +45,9 @@ const startPortForwardRouteInjectable = getRouteInjectable({
           const thePort = 0 < forwardPort && forwardPort < 65536
             ? forwardPort
             : 0;
+          const proxyKubeconfigPath = await proxyKubeconfigManager.ensurePath();
 
-          portForward = createPortForward(await cluster.getProxyKubeconfigPath(), {
+          portForward = createPortForward(proxyKubeconfigPath, {
             clusterId: cluster.id,
             kind: resourceType,
             namespace,

@@ -10,7 +10,7 @@ import type { KubeObjectMetadata, LocalObjectReference, Affinity, Toleration, Na
 import type { SecretReference } from "./secret.api";
 import type { PersistentVolumeClaimSpec } from "./persistent-volume-claim.api";
 import { KubeObject } from "../kube-object";
-import { isDefined } from "../../utils";
+import { isDefined } from "@k8slens/utilities";
 import type { PodSecurityContext } from "./types/pod-security-context";
 import type { Probe } from "./types/probe";
 import type { Container } from "./types/container";
@@ -79,6 +79,8 @@ export interface ContainerState {
   waiting?: ContainerStateWaiting;
   terminated?: ContainerStateTerminated;
 }
+
+export type ContainerStateValues = Partial<ContainerState[keyof ContainerState]>;
 
 export interface PodContainerStatus {
   name: string;
@@ -649,7 +651,7 @@ export class Pod extends KubeObject<
       .filter(({ name }) => runningContainerNames.has(name));
   }
 
-  getContainerStatuses(includeInitContainers = true) {
+  getContainerStatuses(includeInitContainers = true): PodContainerStatus[] {
     const { containerStatuses = [], initContainerStatuses = [] } = this.status ?? {};
 
     if (includeInitContainers) {

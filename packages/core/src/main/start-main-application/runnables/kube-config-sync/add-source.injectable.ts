@@ -9,17 +9,14 @@ import { afterApplicationIsLoadedInjectionToken } from "@k8slens/application";
 
 const addKubeconfigSyncAsEntitySourceInjectable = getInjectable({
   id: "add-kubeconfig-sync-as-entity-source",
-  instantiate: (di) => {
-    const kubeConfigSyncManager = di.inject(kubeconfigSyncManagerInjectable);
-    const entityRegistry = di.inject(catalogEntityRegistryInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const kubeConfigSyncManager = di.inject(kubeconfigSyncManagerInjectable);
+      const entityRegistry = di.inject(catalogEntityRegistryInjectable);
 
-    return {
-      id: "add-kubeconfig-sync-as-entity-source",
-      run: () => {
-        entityRegistry.addComputedSource("kubeconfig-sync", kubeConfigSyncManager.source);
-      },
-    };
-  },
+      entityRegistry.addComputedSource("kubeconfig-sync", kubeConfigSyncManager.source);
+    },
+  }),
   injectionToken: afterApplicationIsLoadedInjectionToken,
 });
 

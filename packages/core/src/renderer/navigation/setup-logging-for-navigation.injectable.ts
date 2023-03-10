@@ -10,7 +10,6 @@ import observableHistoryInjectable from "./observable-history.injectable";
 const setupLoggingForNavigationInjectable = getInjectable({
   id: "setup-logging-for-navigation",
   instantiate: (di) => ({
-    id: "setup-logging-for-navigation",
     run: () => {
       const logger = di.inject(loggerInjectable);
       const observableHistory = di.inject(observableHistoryInjectable);

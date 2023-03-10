@@ -8,7 +8,7 @@ import { when } from "mobx";
 import helmChartVersionsInjectable from "../+helm-charts/helm-charts/versions.injectable";
 import type { HelmRelease, HelmReleaseDto } from "../../../common/k8s-api/endpoints/helm-releases.api";
 import { getMillisecondsFromUnixEpoch } from "../../../common/utils/date/get-current-date-time";
-import { formatDuration } from "../../utils";
+import { formatDuration } from "@k8slens/utilities";
 
 export type ToHelmRelease = (release: HelmReleaseDto) => HelmRelease;
 

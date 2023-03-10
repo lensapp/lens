@@ -19,7 +19,7 @@ export class ClusterKubeconfig extends React.Component<ClusterKubeconfigProps> {
   openKubeconfig = () => {
     const { cluster } = this.props;
 
-    shell.showItemInFolder(cluster.kubeConfigPath);
+    shell.showItemInFolder(cluster.kubeConfigPath.get());
   };
 
   render() {
@@ -27,7 +27,9 @@ export class ClusterKubeconfig extends React.Component<ClusterKubeconfigProps> {
       <Notice className="mb-14 mt-3">
         <SubTitle title="Kubeconfig" />
         <span>
-          <a className="link value" onClick={this.openKubeconfig}>{this.props.cluster.kubeConfigPath}</a>
+          <a className="link value" onClick={this.openKubeconfig}>
+            {this.props.cluster.kubeConfigPath.get()}
+          </a>
         </span>
       </Notice>
     );

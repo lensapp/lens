@@ -9,7 +9,7 @@ import React from "react";
 import { computed, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Link } from "react-router-dom";

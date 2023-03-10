@@ -4,9 +4,9 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { getStartableStoppable } from "../get-startable-stoppable";
-import { disposer } from "../index";
 import { messageChannelListenerInjectionToken } from "./message-channel-listener-injection-token";
 import { enlistMessageChannelListenerInjectionToken } from "./enlist-message-channel-listener-injection-token";
+import { disposer } from "@k8slens/utilities";
 
 const listeningOnMessageChannelsInjectable = getInjectable({
   id: "listening-on-message-channels",

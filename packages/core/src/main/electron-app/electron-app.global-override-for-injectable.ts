@@ -4,7 +4,7 @@
  */
 
 import { kebabCase } from "lodash";
-import { getGlobalOverride } from "../../common/test-utils/get-global-override";
+import { getGlobalOverride } from "@k8slens/test-utils";
 import electronAppInjectable from "./electron-app.injectable";
 
 export default getGlobalOverride(electronAppInjectable, () => {

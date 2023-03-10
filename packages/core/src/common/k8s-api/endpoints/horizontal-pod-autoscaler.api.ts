@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { OptionVarient } from "../../utils";
+import type { OptionVariant } from "@k8slens/utilities";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { BaseKubeObjectCondition, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
@@ -46,7 +46,7 @@ export interface V2Beta1ContainerResourceMetricSource {
   targetAverageValue?: string;
 }
 
-export type ContainerResourceMetricSource = 
+export type ContainerResourceMetricSource =
   | V2ContainerResourceMetricSource
   | V2Beta1ContainerResourceMetricSource;
 
@@ -74,7 +74,7 @@ export interface V2Beta1ExternalMetricSource {
   };
 }
 
-export type ExternalMetricSource = 
+export type ExternalMetricSource =
   | V2Beta1ExternalMetricSource
   | V2ExternalMetricSource;
 
@@ -152,11 +152,11 @@ export interface BaseHorizontalPodAutoscalerMetricSpec {
 }
 
 export type HorizontalPodAutoscalerMetricSpec =
-  | OptionVarient<HpaMetricType.Resource, BaseHorizontalPodAutoscalerMetricSpec, "resource">
-  | OptionVarient<HpaMetricType.External, BaseHorizontalPodAutoscalerMetricSpec, "external">
-  | OptionVarient<HpaMetricType.Object, BaseHorizontalPodAutoscalerMetricSpec, "object">
-  | OptionVarient<HpaMetricType.Pods, BaseHorizontalPodAutoscalerMetricSpec, "pods">
-  | OptionVarient<HpaMetricType.ContainerResource, BaseHorizontalPodAutoscalerMetricSpec, "containerResource">;
+  | OptionVariant<HpaMetricType.Resource, BaseHorizontalPodAutoscalerMetricSpec, "resource">
+  | OptionVariant<HpaMetricType.External, BaseHorizontalPodAutoscalerMetricSpec, "external">
+  | OptionVariant<HpaMetricType.Object, BaseHorizontalPodAutoscalerMetricSpec, "object">
+  | OptionVariant<HpaMetricType.Pods, BaseHorizontalPodAutoscalerMetricSpec, "pods">
+  | OptionVariant<HpaMetricType.ContainerResource, BaseHorizontalPodAutoscalerMetricSpec, "containerResource">;
 
 interface HorizontalPodAutoscalerBehavior {
   scaleUp?: HPAScalingRules;
@@ -294,11 +294,11 @@ export interface BaseHorizontalPodAutoscalerMetricStatus {
 }
 
 export type HorizontalPodAutoscalerMetricStatus =
-  | OptionVarient<HpaMetricType.Resource, BaseHorizontalPodAutoscalerMetricStatus, "resource">
-  | OptionVarient<HpaMetricType.External, BaseHorizontalPodAutoscalerMetricStatus, "external">
-  | OptionVarient<HpaMetricType.Object, BaseHorizontalPodAutoscalerMetricStatus, "object">
-  | OptionVarient<HpaMetricType.Pods, BaseHorizontalPodAutoscalerMetricStatus, "pods">
-  | OptionVarient<HpaMetricType.ContainerResource, BaseHorizontalPodAutoscalerMetricStatus, "containerResource">;
+  | OptionVariant<HpaMetricType.Resource, BaseHorizontalPodAutoscalerMetricStatus, "resource">
+  | OptionVariant<HpaMetricType.External, BaseHorizontalPodAutoscalerMetricStatus, "external">
+  | OptionVariant<HpaMetricType.Object, BaseHorizontalPodAutoscalerMetricStatus, "object">
+  | OptionVariant<HpaMetricType.Pods, BaseHorizontalPodAutoscalerMetricStatus, "pods">
+  | OptionVariant<HpaMetricType.ContainerResource, BaseHorizontalPodAutoscalerMetricStatus, "containerResource">;
 
 export interface HorizontalPodAutoscalerSpec {
   scaleTargetRef: CrossVersionObjectReference;

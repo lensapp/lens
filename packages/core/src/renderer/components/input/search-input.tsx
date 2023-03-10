@@ -7,12 +7,13 @@ import "./search-input.scss";
 
 import React, { createRef } from "react";
 import { observer } from "mobx-react";
-import { cssNames, autoBind } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import type { InputProps } from "./input";
 import { Input } from "./input";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import isMacInjectable from "../../../common/vars/is-mac.injectable";
+import autoBindReact from "auto-bind/react";
 
 export interface SearchInputProps extends InputProps {
   compact?: boolean; // show only search-icon when not focused
@@ -40,7 +41,7 @@ class NonInjectedSearchInput extends React.Component<SearchInputProps & Dependen
 
   constructor(props: SearchInputProps & Dependencies) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   componentDidMount() {

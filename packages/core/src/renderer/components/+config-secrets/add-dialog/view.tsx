@@ -20,9 +20,8 @@ import { SubTitle } from "../../layout/sub-title";
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
 import { Select } from "../../select";
 import { Icon } from "../../icon";
-import { base64, iter } from "../../../utils";
+import { base64, iter, object } from "@k8slens/utilities";
 import upperFirst from "lodash/upperFirst";
-import { fromEntries } from "../../../../common/utils/objects";
 import type { ShowDetails } from "../../kube-detail-params/show-details.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import closeAddSecretDialogInjectable from "./close.injectable";
@@ -96,7 +95,7 @@ class NonInjectedAddSecretDialog extends React.Component<AddSecretDialogProps & 
           ? [key, processValue(value)] as const
           : undefined
       ))
-      .collect(fromEntries);
+      .collect(object.fromEntries);
   };
 
   createSecret = async () => {

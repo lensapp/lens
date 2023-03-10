@@ -6,7 +6,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { deserialize, serialize } from "v8";
 import type { MessageChannel, MessageChannelListener } from "../../common/utils/channel/message-channel-listener-injection-token";
 import enlistMessageChannelListenerInjectableInMain from "../../main/utils/channel/channel-listeners/enlist-message-channel-listener.injectable";
-import { getOrInsertSet } from "../../renderer/utils";
+import { getOrInsertSet } from "@k8slens/utilities";
 import sendToMainInjectable from "../../renderer/utils/channel/send-to-main.injectable";
 
 export const overrideMessagingFromWindowToMain = (mainDi: DiContainer) => {

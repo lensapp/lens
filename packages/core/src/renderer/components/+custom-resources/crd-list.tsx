@@ -9,7 +9,7 @@ import React from "react";
 import { computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { iter, stopPropagation } from "../../utils";
+import { iter, stopPropagation } from "@k8slens/utilities";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { Select } from "../select";
 import { Icon } from "../icon";

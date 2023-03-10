@@ -16,7 +16,7 @@ import { InfoPanel } from "../info-panel";
 import type { ShowNotification } from "../../notifications";
 import type { Logger } from "../../../../common/logger";
 import type { ApiManager } from "../../../../common/k8s-api/api-manager";
-import { isObject, prevDefault } from "../../../utils";
+import { isObject, prevDefault } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import createResourceTabStoreInjectable from "./store.injectable";
 import createResourceTemplatesInjectable from "./create-resource-templates.injectable";

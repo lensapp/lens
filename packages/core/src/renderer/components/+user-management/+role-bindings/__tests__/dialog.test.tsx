@@ -15,9 +15,9 @@ import clusterRoleStoreInjectable from "../../+cluster-roles/store.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../../../stores-apis-can-be-created.injectable";
 import directoryForKubeConfigsInjectable from "../../../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import hostedClusterInjectable from "../../../../cluster-frame-context/hosted-cluster.injectable";
-import createClusterInjectable from "../../../../cluster/create-cluster.injectable";
 import type { OpenRoleBindingDialog } from "../dialog/open.injectable";
 import openRoleBindingDialogInjectable from "../dialog/open.injectable";
+import { Cluster } from "../../../../../common/cluster/cluster";
 
 describe("RoleBindingDialog tests", () => {
   let render: DiRender;
@@ -32,9 +32,7 @@ describe("RoleBindingDialog tests", () => {
 
     openRoleBindingDialog = di.inject(openRoleBindingDialogInjectable);
 
-    const createCluster = di.inject(createClusterInjectable);
-
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",

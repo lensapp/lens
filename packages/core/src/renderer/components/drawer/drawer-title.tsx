@@ -5,7 +5,7 @@
 
 import styles from "./drawer-title.module.css";
 import React from "react";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 
 export interface DrawerTitleProps {
   className?: string;

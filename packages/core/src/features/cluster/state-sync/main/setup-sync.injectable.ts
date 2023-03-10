@@ -14,7 +14,6 @@ import emitClusterStateUpdateInjectable from "./emit-update.injectable";
 const setupClusterStateBroadcastingInjectable = getInjectable({
   id: "setup-cluster-state-broadcasting",
   instantiate: (di) => ({
-    id: "setup-cluster-state-broadcasting",
     run: () => {
       const emitClusterStateUpdate = di.inject(emitClusterStateUpdateInjectable);
       const clusterStore = di.inject(clusterStoreInjectable);
@@ -36,7 +35,7 @@ const setupClusterStateBroadcastingInjectable = getInjectable({
         }
       });
     },
-    runAfter: di.inject(initClusterStoreInjectable),
+    runAfter: initClusterStoreInjectable,
   }),
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });

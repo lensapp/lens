@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { extensionRegistratorInjectionToken } from "../../../../extensions/extension-loader/extension-registrator-injection-token";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import type { CatalogEntity } from "../../../api/catalog-entity";
-import { getRandId } from "../../../utils";
+import * as uuid from "uuid";
 import type { CatalogEntityDetailRegistration } from "./token";
 import { catalogEntityDetailItemInjectionToken } from "./token";
 
@@ -28,7 +28,7 @@ const getRegistratorFor = (extension: LensRendererExtension) => ({
   kind,
   priority,
 }: CatalogEntityDetailRegistration<CatalogEntity>) => getInjectable({
-  id: `catalog-entity-detail-item-for-${extension.sanitizedExtensionId}-${getRandId({ sep: "-" })}`,
+  id: `catalog-entity-detail-item-for-${extension.sanitizedExtensionId}-${uuid.v4()}`,
   instantiate: () => ({
     apiVersions: new Set(apiVersions),
     components,

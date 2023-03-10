@@ -7,11 +7,10 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import { KubernetesCluster, WebLink } from "../../common/catalog-entities";
 import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
-import type { Cluster } from "../../common/cluster/cluster";
+import { Cluster } from "../../common/cluster/cluster";
 import navigateToEntitySettingsInjectable from "../../common/front-end-routing/routes/entity-settings/navigate-to-entity-settings.injectable";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import createClusterInjectable from "../../renderer/cluster/create-cluster.injectable";
 
 describe("Showing correct entity settings", () => {
   let builder: ApplicationBuilder;
@@ -37,8 +36,6 @@ describe("Showing correct entity settings", () => {
     });
 
     builder.afterWindowStart((windowDi) => {
-      const createCluster = windowDi.inject(createClusterInjectable);
-
       clusterEntity = new KubernetesCluster({
         metadata: {
           labels: {},
@@ -81,7 +78,7 @@ describe("Showing correct entity settings", () => {
           phase: "available",
         },
       });
-      cluster = createCluster({
+      cluster = new Cluster({
         contextName: clusterEntity.spec.kubeconfigContext,
         id: clusterEntity.getId(),
         kubeConfigPath: clusterEntity.spec.kubeconfigPath,

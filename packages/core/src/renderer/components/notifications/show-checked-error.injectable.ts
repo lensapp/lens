@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 import loggerInjectable from "../../../common/logger.injectable";
-import type { Disposer } from "../../utils";
+import type { Disposer } from "@k8slens/utilities";
 import type { CreateNotificationOptions } from "./notifications.store";
 import showErrorNotificationInjectable from "./show-error-notification.injectable";
 

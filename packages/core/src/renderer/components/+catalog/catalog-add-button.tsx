@@ -9,7 +9,6 @@ import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
 import { Icon } from "../icon";
 import { observer } from "mobx-react";
 import { observable, makeObservable, action } from "mobx";
-import { autoBind } from "../../../common/utils";
 import type { CatalogCategory, CatalogEntityAddMenu } from "../../api/catalog-entity";
 import { EventEmitter } from "events";
 import type { CatalogCategoryRegistry } from "../../../common/catalog";
@@ -17,6 +16,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
+import autoBindReact from "auto-bind/react";
 
 export interface CatalogAddButtonProps {
   category: CatalogCategory;
@@ -37,7 +37,7 @@ class NonInjectedCatalogAddButton extends React.Component<CatalogAddButtonProps 
   constructor(props: CatalogAddButtonProps & Dependencies) {
     super(props);
     makeObservable(this);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   componentDidMount() {

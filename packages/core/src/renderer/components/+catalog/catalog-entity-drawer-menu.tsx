@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { cssNames, hasDefiniteField } from "../../utils";
+import { cssNames, hasDefiniteField } from "@k8slens/utilities";
 import type { MenuActionsProps } from "../menu/menu-actions";
 import { MenuActions } from "../menu/menu-actions";
 import type { CatalogEntity, CatalogEntityContextMenu } from "../../api/catalog-entity";

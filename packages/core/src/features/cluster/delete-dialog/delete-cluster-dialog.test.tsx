@@ -5,20 +5,16 @@
 import "@testing-library/jest-dom/extend-expect";
 import { KubeConfig } from "@kubernetes/client-node";
 import type { RenderResult } from "@testing-library/react";
-import type { CreateCluster } from "../../../common/cluster/create-cluster-injection-token";
-import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
-import createContextHandlerInjectable from "../../../main/context-handler/create-context-handler.injectable";
-import createKubeconfigManagerInjectable from "../../../main/kubeconfig-manager/create-kubeconfig-manager.injectable";
 import normalizedPlatformInjectable from "../../../common/vars/normalized-platform.injectable";
 import kubectlBinaryNameInjectable from "../../../main/kubectl/binary-name.injectable";
 import kubectlDownloadingNormalizedArchInjectable from "../../../main/kubectl/normalized-arch.injectable";
 import openDeleteClusterDialogInjectable, { type OpenDeleteClusterDialog } from "../../../renderer/components/delete-cluster-dialog/open.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import type { Cluster } from "../../../common/cluster/cluster";
+import { Cluster } from "../../../common/cluster/cluster";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
-import { advanceFakeTime } from "../../../common/test-utils/use-fake-time";
+import { advanceFakeTime } from "../../../test-utils/use-fake-time";
 
 const currentClusterServerUrl = "https://localhost";
 const nonCurrentClusterServerUrl = "http://localhost";
@@ -73,7 +69,6 @@ users:
 describe("Deleting a cluster", () => {
   let builder: ApplicationBuilder;
   let openDeleteClusterDialog: OpenDeleteClusterDialog;
-  let createCluster: CreateCluster;
   let rendered: RenderResult;
   let config: KubeConfig;
 
@@ -82,8 +77,6 @@ describe("Deleting a cluster", () => {
     builder = getApplicationBuilder();
 
     builder.beforeApplicationStart((mainDi) => {
-      mainDi.override(createContextHandlerInjectable, () => () => undefined as never);
-      mainDi.override(createKubeconfigManagerInjectable, () => () => undefined as never);
       mainDi.override(kubectlBinaryNameInjectable, () => "kubectl");
       mainDi.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
       mainDi.override(normalizedPlatformInjectable, () => "darwin");
@@ -94,8 +87,6 @@ describe("Deleting a cluster", () => {
     });
 
     builder.afterWindowStart(windowDi => {
-      createCluster = windowDi.inject(createClusterInjectionToken);
-
       const navigateToCatalog = windowDi.inject(navigateToCatalogInjectable);
 
       navigateToCatalog();
@@ -111,7 +102,7 @@ describe("Deleting a cluster", () => {
     beforeEach(() => {
       config.loadFromString(multiClusterConfig);
 
-      currentCluster = createCluster({
+      currentCluster = new Cluster({
         id: "some-current-context-cluster",
         contextName: "some-current-context",
         preferences: {
@@ -121,7 +112,7 @@ describe("Deleting a cluster", () => {
       }, {
         clusterServerUrl: currentClusterServerUrl,
       });
-      nonCurrentCluster = createCluster({
+      nonCurrentCluster = new Cluster({
         id: "some-non-current-context-cluster",
         contextName: "some-non-current-context",
         preferences: {
@@ -199,7 +190,7 @@ describe("Deleting a cluster", () => {
       const directoryForKubeConfigs = builder.applicationWindow.only.di.inject(directoryForKubeConfigsInjectable);
       const joinPaths = builder.applicationWindow.only.di.inject(joinPathsInjectable);
 
-      currentCluster = createCluster({
+      currentCluster = new Cluster({
         id: "some-cluster",
         contextName: "some-context",
         preferences: {
@@ -235,7 +226,7 @@ describe("Deleting a cluster", () => {
     beforeEach(() => {
       config.loadFromString(singleClusterConfig);
 
-      currentCluster = createCluster({
+      currentCluster = new Cluster({
         id: "some-cluster",
         contextName: "some-context",
         preferences: {

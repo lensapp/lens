@@ -17,11 +17,11 @@ import catalogPreviousActiveTabStorageInjectable from "../+catalog/catalog-previ
 import type { IComputedValue } from "mobx";
 import currentRouteComponentInjectable from "../../routes/current-route-component.injectable";
 import welcomeRouteInjectable from "../../../common/front-end-routing/routes/welcome/welcome-route.injectable";
-import { buildURL } from "../../../common/utils/buildUrl";
-import type { StorageLayer } from "../../utils";
+import { buildURL } from "@k8slens/utilities";
 import type { WatchForGeneralEntityNavigation } from "../../api/helpers/watch-for-general-entity-navigation.injectable";
 import watchForGeneralEntityNavigationInjectable from "../../api/helpers/watch-for-general-entity-navigation.injectable";
 import currentPathInjectable from "../../routes/current-path.injectable";
+import type { StorageLayer } from "../../utils/storage-helper";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: StorageLayer<string | null>;

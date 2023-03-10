@@ -6,32 +6,22 @@ import {
 } from "@ogre-tools/injectable";
 import { startApplicationInjectionToken } from "@k8slens/application";
 import whenAppIsReadyInjectable from "./when-app-is-ready.injectable";
-import { beforeAnythingInjectionToken } from "./timeslots/before-anything-injection-token";
-import { beforeElectronIsReadyInjectionToken } from "./timeslots/before-electron-is-ready-injection-token";
-import { runManySyncFor } from "@ogre-tools/injectable-utils";
+import { beforeAnythingInjectionToken, beforeElectronIsReadyInjectionToken } from "./time-slots";
+import { runManySyncFor } from "@k8slens/run-many";
+
+type ToBeDecorated = (di: DiContainer, ...args: unknown[]) => (...args: unknown[]) => unknown;
 
 const startElectronApplicationInjectable = getInjectable({
   id: "start-electron-application",
 
   instantiate: () => ({
-    decorate:
-      (toBeDecorated: unknown) =>
+    decorate: (toBeDecorated: unknown) => (
       (di: DiContainer, ...args: unknown[]) => {
         const whenAppIsReady = di.inject(whenAppIsReadyInjectable);
         const runManySync = runManySyncFor(di);
         const beforeAnything = runManySync(beforeAnythingInjectionToken);
-        const beforeElectronIsReady = runManySync(
-          beforeElectronIsReadyInjectionToken
-        );
-
-        const typedToBeDecorated = toBeDecorated as (
-          di: DiContainer,
-          ...args: unknown[]
-        ) => unknown;
-
-        const startApplication = typedToBeDecorated(di, ...args) as (
-          ...args: unknown[]
-        ) => unknown;
+        const beforeElectronIsReady = runManySync(beforeElectronIsReadyInjectionToken);
+        const startApplication = (toBeDecorated as ToBeDecorated)(di, ...args);
 
         return (...startApplicationArgs: unknown[]) => {
           beforeAnything();
@@ -43,8 +33,8 @@ const startElectronApplicationInjectable = getInjectable({
             return startApplication(...startApplicationArgs);
           })()
         };
-      },
-
+      }
+    ),
     target: startApplicationInjectionToken,
   }),
 

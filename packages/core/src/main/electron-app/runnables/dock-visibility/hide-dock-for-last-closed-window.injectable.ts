@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeQuitOfFrontEndInjectionToken } from "../../../start-main-application/runnable-tokens/before-quit-of-front-end-injection-token";
+import { beforeQuitOfFrontEndInjectionToken } from "../../../start-main-application/runnable-tokens/phases";
 import electronAppInjectable from "../../electron-app.injectable";
 import { isEmpty } from "lodash/fp";
 import getVisibleWindowsInjectable from "../../../start-main-application/lens-window/get-visible-windows.injectable";
@@ -11,23 +11,19 @@ import getVisibleWindowsInjectable from "../../../start-main-application/lens-wi
 const hideDockForLastClosedWindowInjectable = getInjectable({
   id: "hide-dock-when-there-are-no-windows",
 
-  instantiate: (di) => {
-    const app = di.inject(electronAppInjectable);
-    const getVisibleWindows = di.inject(getVisibleWindowsInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const app = di.inject(electronAppInjectable);
+      const getVisibleWindows = di.inject(getVisibleWindowsInjectable);
+      const visibleWindows = getVisibleWindows();
 
-    return {
-      id: "hide-dock-when-there-are-no-windows",
-      run: () => {
-        const visibleWindows = getVisibleWindows();
+      if (isEmpty(visibleWindows)) {
+        app.dock?.hide();
+      }
 
-        if (isEmpty(visibleWindows)) {
-          app.dock?.hide();
-        }
-
-        return undefined;
-      },
-    };
-  },
+      return undefined;
+    },
+  }),
 
   injectionToken: beforeQuitOfFrontEndInjectionToken,
 });

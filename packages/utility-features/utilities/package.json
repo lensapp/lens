@@ -1,0 +1,31 @@
+{
+  "name": "@k8slens/utilities",
+  "description": "A collection of useful types",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "private": false,
+  "files": [
+    "dist"
+  ],
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack --mode=development --watch",
+    "test": "jest --coverage --runInBand"
+  },
+  "peerDependencies": {
+    "mobx": "^6.8.0",
+    "type-fest": "^2.19.0"
+  }
+}

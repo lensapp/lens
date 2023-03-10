@@ -15,7 +15,7 @@ const shouldShowResourceInjectable = getInjectable({
     const cluster = di.inject(hostedClusterInjectable);
 
     return cluster
-      ? computed(() => cluster.shouldShowResource(resource))
+      ? computed(() => cluster.resourcesToShow.has(formatKubeApiResource(resource)))
       : computed(() => false);
   },
   injectionToken: shouldShowResourceInjectionToken,

@@ -11,17 +11,17 @@ import { fireEvent } from "@testing-library/react";
 import React from "react";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { Cluster } from "../../../common/cluster/cluster";
 import type { Fetch } from "../../../common/fetch/fetch.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import { createMockResponseFromString } from "../../../test-utils/mock-responses";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
-import createClusterInjectable from "../../cluster/create-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
-import type { Disposer } from "../../utils";
-import { disposer } from "../../utils";
+import type { Disposer } from "@k8slens/utilities";
+import { disposer } from "@k8slens/utilities";
 import { renderFor } from "../test-utils/renderFor";
 import { NamespaceSelectFilter } from "./namespace-select-filter";
 import type { NamespaceStore } from "./store";
@@ -58,9 +58,7 @@ describe("<NamespaceSelectFilter />", () => {
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
 
-    const createCluster = di.inject(createClusterInjectable);
-
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",

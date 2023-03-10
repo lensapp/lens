@@ -5,7 +5,7 @@
 
 import { Disposers, LensExtension, lensExtensionDependencies } from "./lens-extension";
 import type { CatalogEntity, CategoryFilter } from "../common/catalog";
-import type { Disposer } from "../common/utils";
+import type { Disposer } from "@k8slens/utilities";
 import type { EntityFilter } from "../renderer/api/catalog/entity/registry";
 import type { TopBarRegistration } from "../renderer/components/layout/top-bar/top-bar-registration";
 import type { KubernetesCluster } from "../common/catalog-entities";

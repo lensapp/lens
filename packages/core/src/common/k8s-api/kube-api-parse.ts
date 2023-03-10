@@ -5,7 +5,7 @@
 
 // Parse kube-api path and get api-version, group, etc.
 
-import { splitArray } from "../utils";
+import { array } from "@k8slens/utilities";
 
 export interface IKubeApiLinkRef {
   apiPrefix?: string;
@@ -26,7 +26,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
   const apiPath = new URL(path, "https://localhost").pathname;
   const [, prefix, ...parts] = apiPath.split("/");
   const apiPrefix = `/${prefix}`;
-  const [left, right, namespaced] = splitArray(parts, "namespaces");
+  const [left, right, namespaced] = array.split(parts, "namespaces");
   let apiGroup!: string;
   let apiVersion!: string;
   let namespace!: string;

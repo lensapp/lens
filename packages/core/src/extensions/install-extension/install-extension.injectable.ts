@@ -13,7 +13,7 @@ import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import type { PackageJson } from "../common-api";
 import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable";
 import { once } from "lodash";
-import { isErrnoException } from "../../common/utils";
+import { isErrnoException } from "@k8slens/utilities";
 
 const baseNpmInstallArgs = [
   "install",

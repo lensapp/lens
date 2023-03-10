@@ -10,19 +10,16 @@ import electronAppInjectable from "../electron-app.injectable";
 const setupApplicationNameInjectable = getInjectable({
   id: "setup-application-name",
 
-  instantiate: (di) => {
-    const app = di.inject(electronAppInjectable);
-    const appName = di.inject(appNameInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const app = di.inject(electronAppInjectable);
+      const appName = di.inject(appNameInjectable);
 
-    return {
-      id: "setup-application-name",
-      run: () => {
-        app.setName(appName);
+      app.setName(appName);
 
-        return undefined;
-      },
-    };
-  },
+      return undefined;
+    },
+  }),
 
   injectionToken: beforeElectronIsReadyInjectionToken,
 });

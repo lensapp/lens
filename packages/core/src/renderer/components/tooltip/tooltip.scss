@@ -63,27 +63,36 @@
     }
 
     &.tableView {
-      min-width: 200px;
+      display: grid;
+      gap: var(--padding);
+      grid-template-columns: max-content 1fr;
+      grid-template-rows: repeat(2, 1fr);
 
-      > :not(:last-child) {
-        margin-bottom: var(--flex-gap);
+      // backward compatibility: skips element in DOM to consider only children in grid-flow
+      > .flex {
+        display: contents;
+      }
+
+      > * {
+        white-space: pre-wrap;
+        word-break: break-word;
       }
 
       .title {
+        grid-column: 1 / 3; // merge
         color: var(--textColorAccent);
         text-align: center;
+        font-weight: bold;
       }
 
       .name {
-        color: var(--textColorAccent);
         text-align: right;
-        flex: 0 0 35%;
+        color: var(--textColorAccent);
       }
 
       .value {
         text-align: left;
-        max-width: 300px;
-        word-break: break-word;
+        color: var(--textColorSecondary);
       }
     }
   }

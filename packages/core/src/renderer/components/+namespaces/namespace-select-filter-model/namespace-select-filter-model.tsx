@@ -9,7 +9,7 @@ import type { NamespaceStore } from "../store";
 import type { ActionMeta, MultiValue } from "react-select";
 import { Icon } from "../../icon";
 import type { SelectOption } from "../../select";
-import { observableCrate } from "../../../utils";
+import { observableCrate } from "@k8slens/utilities";
 import type { IsMultiSelectionKey } from "./is-selection-key.injectable";
 import type { ClusterContext } from "../../../cluster-frame-context/cluster-frame-context";
 

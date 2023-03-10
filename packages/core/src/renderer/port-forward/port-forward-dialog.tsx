@@ -12,7 +12,7 @@ import type { DialogProps } from "../components/dialog";
 import { Dialog } from "../components/dialog";
 import { Wizard, WizardStep } from "../components/wizard";
 import { Input } from "../components/input";
-import { cssNames } from "../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { PortForwardStore } from "./port-forward-store/port-forward-store";
 import { Checkbox } from "../components/checkbox";
 import { withInjectables } from "@ogre-tools/injectable-react";

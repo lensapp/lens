@@ -18,7 +18,7 @@ import { Icon } from "../../../icon";
 import { SubTitle } from "../../../layout/sub-title";
 import { onMultiSelectFor, Select } from "../../../select";
 import { Wizard, WizardStep } from "../../../wizard";
-import { ObservableHashSet, nFircate } from "../../../../utils";
+import { ObservableHashSet, iter } from "@k8slens/utilities";
 import { Input } from "../../../input";
 import { TooltipPosition } from "../../../tooltip";
 import type { Subject } from "../../../../../common/k8s-api/endpoints/types/subject";
@@ -124,7 +124,7 @@ class NonInjectedClusterRoleBindingDialog extends React.Component<ClusterRoleBin
       .items
       .find(item => item.getName() === binding.roleRef.name);
 
-    const [saSubjects, uSubjects, gSubjects] = nFircate(binding.getSubjects(), "kind", ["ServiceAccount", "User", "Group"]);
+    const [saSubjects, uSubjects, gSubjects] = iter.nFircate(binding.getSubjects(), "kind", ["ServiceAccount", "User", "Group"]);
     const accountNames = new Set(saSubjects.map(acc => acc.name));
 
     this.selectedAccounts.replace(

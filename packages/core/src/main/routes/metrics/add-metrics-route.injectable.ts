@@ -10,10 +10,12 @@ import { ClusterMetadataKey } from "../../../common/cluster-types";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { clusterRoute } from "../../router/route";
 import { isObject } from "lodash";
-import { isRequestError, object } from "../../../common/utils";
+import { isRequestError, object } from "@k8slens/utilities";
 import type { GetMetrics } from "../../get-metrics.injectable";
 import getMetricsInjectable from "../../get-metrics.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import prometheusHandlerInjectable from "../../cluster/prometheus-handler/prometheus-handler.injectable";
+import { runInAction } from "mobx";
 
 // This is used for backoff retry tracking.
 const ATTEMPTS = [false, false, false, false, true];
@@ -66,9 +68,10 @@ const addMetricsRouteInjectable = getRouteInjectable({
     })(async ({ cluster, payload, query }) => {
       const queryParams: Partial<Record<string, string>> = Object.fromEntries(query.entries());
       const prometheusMetadata: ClusterPrometheusMetadata = {};
+      const prometheusHandler = di.inject(prometheusHandlerInjectable, cluster);
 
       try {
-        const { prometheusPath, provider } = await cluster.contextHandler.getPrometheusDetails();
+        const { prometheusPath, provider } = await prometheusHandler.getPrometheusDetails();
 
         prometheusMetadata.provider = provider?.kind;
         prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type;
@@ -115,7 +118,9 @@ const addMetricsRouteInjectable = getRouteInjectable({
 
         return { response: {}};
       } finally {
-        cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata;
+        runInAction(() => {
+          cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata;
+        });
       }
     });
   },

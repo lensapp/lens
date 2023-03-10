@@ -8,7 +8,7 @@ import "./menu-actions.scss";
 import React, { isValidElement } from "react";
 import { observable, makeObservable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { autoBind, cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import type { IconProps } from "../icon";
 import { Icon } from "../icon";
 import type { MenuProps } from "./menu";
@@ -19,6 +19,7 @@ import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
+import autoBindReact from "auto-bind/react";
 
 export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
@@ -61,7 +62,7 @@ class NonInjectedMenuActions extends React.Component<MenuActionsProps & Dependen
   constructor(props: MenuActionsProps & Dependencies) {
     super(props);
     makeObservable(this);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   componentDidMount(): void {

@@ -52,16 +52,16 @@ export class LocalShellSession extends ShellSession {
   protected async getShellArgs(shell: string): Promise<string[]> {
     const pathFromPreferences = this.dependencies.userStore.kubectlBinariesPath || this.kubectl.getBundledPath();
     const kubectlPathDir = this.dependencies.userStore.downloadKubectlBinaries
-      ? await this.kubectlBinDirP
+      ? this.dependencies.directoryContainingKubectl
       : this.dependencies.getDirnameOfPath(pathFromPreferences);
 
     switch(this.dependencies.getBasenameOfPath(shell)) {
       case "powershell.exe":
         return ["-NoExit", "-command", `& {$Env:PATH="${kubectlPathDir};${this.dependencies.directoryForBinaries};$Env:PATH"}`];
       case "bash":
-        return ["--init-file", this.dependencies.joinPaths(await this.kubectlBinDirP, ".bash_set_path")];
+        return ["--init-file", this.dependencies.joinPaths(this.dependencies.directoryContainingKubectl, ".bash_set_path")];
       case "fish":
-        return ["--login", "--init-command", `export PATH="${kubectlPathDir}:${this.dependencies.directoryForBinaries}:$PATH"; export KUBECONFIG="${await this.kubeconfigPathP}"`];
+        return ["--login", "--init-command", `export PATH="${kubectlPathDir}:${this.dependencies.directoryForBinaries}:$PATH"; export KUBECONFIG="${await this.dependencies.proxyKubeconfigPath}"`];
       case "zsh":
         return ["--login"];
       default:
