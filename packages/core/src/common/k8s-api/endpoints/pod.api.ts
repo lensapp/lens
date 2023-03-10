@@ -80,6 +80,8 @@ export interface ContainerState {
   terminated?: ContainerStateTerminated;
 }
 
+export type ContainerStateValues = Partial<ContainerState[keyof ContainerState]>;
+
 export interface PodContainerStatus {
   name: string;
   state?: ContainerState;
@@ -649,7 +651,7 @@ export class Pod extends KubeObject<
       .filter(({ name }) => runningContainerNames.has(name));
   }
 
-  getContainerStatuses(includeInitContainers = true) {
+  getContainerStatuses(includeInitContainers = true): PodContainerStatus[] {
     const { containerStatuses = [], initContainerStatuses = [] } = this.status ?? {};
 
     if (includeInitContainers) {
