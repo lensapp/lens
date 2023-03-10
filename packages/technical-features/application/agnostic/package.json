@@ -26,7 +26,9 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack --mode=development --watch",
-    "test": "jest --coverage --runInBand"
+    "test": "jest --coverage --runInBand",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix"
   },
   "peerDependencies": {
     "@k8slens/feature-core": "^6.5.0-alpha.0",
@@ -37,6 +39,7 @@
   },
 
   "devDependencies": {
-    "@async-fn/jest": "^1.6.4"
+    "@async-fn/jest": "^1.6.4",
+    "@k8slens/eslint-config": "*"
   }
 }

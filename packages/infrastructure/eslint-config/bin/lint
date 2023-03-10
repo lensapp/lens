@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+const execSync = require("child_process").execSync;
+
+const argv = process.argv
+
+const shouldDoTheFix = argv.includes('--fix');
+
+try {
+  execSync(`eslint ${shouldDoTheFix ? "--fix " : " "}--ext ts,tsx --max-warnings=0 .`);
+} catch (error) {
+  console.log(error.stdout.toString());
+}
+
+try {
+  const result = execSync(`prettier ${shouldDoTheFix ? "--write" : "--check"} "**/*.{js,ts,tsx}"`);
+
+  console.log(result.toString());
+} catch (error) {
+  console.log(error.stdout.toString());
+}

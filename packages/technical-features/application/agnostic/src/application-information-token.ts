@@ -10,15 +10,15 @@ export type ApplicationInformation = {
   productName: string;
   copyright: string;
   description: string;
-  k8sProxyVersion: string,
-  bundledKubectlVersion: string,
-  bundledHelmVersion: string,
-  sentryDsn: string,
-  contentSecurityPolicy: string,
-  welcomeRoute: string,
+  k8sProxyVersion: string;
+  bundledKubectlVersion: string;
+  bundledHelmVersion: string;
+  sentryDsn: string;
+  contentSecurityPolicy: string;
+  welcomeRoute: string;
   updatingIsEnabled: boolean;
   dependencies: Partial<Record<string, string>>;
-}
+};
 
 export const applicationInformationToken = getInjectionToken<ApplicationInformation>({
   id: "application-information-token",

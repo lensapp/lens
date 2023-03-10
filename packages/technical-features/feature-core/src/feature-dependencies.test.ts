@@ -1,14 +1,9 @@
-import {
-  createContainer,
-  DiContainer,
-  getInjectable,
-  Injectable,
-} from "@ogre-tools/injectable";
+import { createContainer, DiContainer, getInjectable, Injectable } from "@ogre-tools/injectable";
 
 import type { Feature } from "./feature";
 import { registerFeature } from "./register-feature";
 import { deregisterFeature } from "./deregister-feature";
-import { getFeature } from "./feature" ;
+import { getFeature } from "./feature";
 
 describe("feature-dependencies", () => {
   describe("given a parent Feature with another Features as dependency", () => {
@@ -55,7 +50,7 @@ describe("feature-dependencies", () => {
       expect(() => {
         deregisterFeature(di, someDependencyFeature);
       }).toThrow(
-        'Tried to deregister Feature "some-dependency-feature", but it is the dependency of Features "some-feature"'
+        'Tried to deregister Feature "some-dependency-feature", but it is the dependency of Features "some-feature"',
       );
     });
 
@@ -65,7 +60,7 @@ describe("feature-dependencies", () => {
       expect(() => {
         deregisterFeature(di, someDependencyFeature);
       }).toThrow(
-        'Tried to deregister feature "some-dependency-feature", but it was not registered.'
+        'Tried to deregister feature "some-dependency-feature", but it was not registered.',
       );
     });
 
@@ -74,9 +69,7 @@ describe("feature-dependencies", () => {
 
       expect(() => {
         di.inject(someInjectableInDependencyFeature);
-      }).toThrow(
-        'Tried to inject non-registered injectable "irrelevant" -> "some-injectable".'
-      );
+      }).toThrow('Tried to inject non-registered injectable "irrelevant" -> "some-injectable".');
     });
   });
 
@@ -112,7 +105,7 @@ describe("feature-dependencies", () => {
       expect(() => {
         deregisterFeature(di, someFeature1);
       }).toThrow(
-        'Tried to deregister Feature "some-feature-1", but it is the dependency of Features "some-feature-2"'
+        'Tried to deregister Feature "some-feature-1", but it is the dependency of Features "some-feature-2"',
       );
     });
 
@@ -170,7 +163,7 @@ describe("feature-dependencies", () => {
       expect(() => {
         deregisterFeature(di, someSharedDependencyFeature);
       }).toThrow(
-        'Tried to deregister Feature "some-dependency-feature", but it is the dependency of Features "some-feature-1, some-feature-2"'
+        'Tried to deregister Feature "some-dependency-feature", but it is the dependency of Features "some-feature-1, some-feature-2"',
       );
     });
 
@@ -188,7 +181,7 @@ describe("feature-dependencies", () => {
       expect(() => {
         di.inject(someInjectableInDependencyFeature);
       }).toThrow(
-        'Tried to inject non-registered injectable "irrelevant" -> "some-injectable-in-dependency-feature".'
+        'Tried to inject non-registered injectable "irrelevant" -> "some-injectable-in-dependency-feature".',
       );
     });
   });
@@ -231,19 +224,14 @@ describe("feature-dependencies", () => {
         dependencies: [someFeatureForAdditionalHierarchy],
       });
 
-      registerFeature(
-        di,
-        someFeature1,
-        someFeature2,
-        someSharedDependencyFeature
-      );
+      registerFeature(di, someFeature1, someFeature2, someSharedDependencyFeature);
     });
 
     it("when the shared Feature is deregistered, throws", () => {
       expect(() => {
         deregisterFeature(di, someSharedDependencyFeature);
       }).toThrow(
-        'Tried to deregister Feature "some-dependency-feature", but it is the dependency of Features "some-feature-1, some-feature-2"'
+        'Tried to deregister Feature "some-dependency-feature", but it is the dependency of Features "some-feature-1, some-feature-2"',
       );
     });
 
@@ -264,17 +252,12 @@ describe("feature-dependencies", () => {
     });
 
     it("given all of the Features get deregistered, when injecting an injectable from the shared Feature, throws", () => {
-      deregisterFeature(
-        di,
-        someFeature1,
-        someFeature2,
-        someSharedDependencyFeature
-      );
+      deregisterFeature(di, someFeature1, someFeature2, someSharedDependencyFeature);
 
       expect(() => {
         di.inject(someInjectableInDependencyFeature);
       }).toThrow(
-        'Tried to inject non-registered injectable "irrelevant" -> "some-injectable-in-dependency-feature".'
+        'Tried to inject non-registered injectable "irrelevant" -> "some-injectable-in-dependency-feature".',
       );
     });
   });

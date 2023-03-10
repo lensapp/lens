@@ -18,10 +18,7 @@ describe("when-app-is-ready", () => {
 
     whenReadyMock = asyncFn();
 
-    di.override(
-      electronAppInjectable,
-      () => ({ whenReady: whenReadyMock } as unknown)
-    );
+    di.override(electronAppInjectable, () => ({ whenReady: whenReadyMock } as unknown));
   });
 
   describe("when called", () => {
