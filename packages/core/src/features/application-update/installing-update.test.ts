@@ -18,10 +18,11 @@ import setUpdateOnQuitInjectable from "../../main/electron-app/features/set-upda
 import processCheckingForUpdatesInjectable from "./main/process-checking-for-updates.injectable";
 import { testUsingFakeTime } from "../../common/test-utils/use-fake-time";
 import staticFilesDirectoryInjectable from "../../common/vars/static-files-directory.injectable";
+import electronQuitAndInstallUpdateInjectable from "../../main/electron-app/features/electron-quit-and-install-update.injectable";
 
 describe("installing update", () => {
   let builder: ApplicationBuilder;
-  let quitAndInstallUpdateMock: jest.Mock;
+  let electronQuitAndInstallUpdateMock: jest.Mock;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
   let setUpdateOnQuitMock: jest.Mock;
@@ -32,7 +33,7 @@ describe("installing update", () => {
     builder = getApplicationBuilder();
 
     builder.beforeApplicationStart((mainDi) => {
-      quitAndInstallUpdateMock = jest.fn();
+      electronQuitAndInstallUpdateMock = jest.fn();
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
       setUpdateOnQuitMock = jest.fn();
@@ -52,8 +53,8 @@ describe("installing update", () => {
       );
 
       mainDi.override(
-        quitAndInstallUpdateInjectable,
-        () => quitAndInstallUpdateMock,
+        electronQuitAndInstallUpdateInjectable,
+        () => electronQuitAndInstallUpdateMock,
       );
 
       mainDi.override(electronUpdaterIsActiveInjectable, () => true);
@@ -64,12 +65,17 @@ describe("installing update", () => {
   describe("when started", () => {
     let rendered: RenderResult;
     let processCheckingForUpdates: (source: string) => Promise<{ updateIsReadyToBeInstalled: boolean }>;
+    let quitAndInstallUpdate: () => void;
 
     beforeEach(async () => {
       rendered = await builder.render();
 
       processCheckingForUpdates = builder.mainDi.inject(
         processCheckingForUpdatesInjectable,
+      );
+
+      quitAndInstallUpdate = builder.mainDi.inject(
+        quitAndInstallUpdateInjectable,
       );
     });
 
@@ -155,7 +161,7 @@ describe("installing update", () => {
           });
 
           it("does not quit and install update yet", () => {
-            expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
+            expect(electronQuitAndInstallUpdateMock).not.toHaveBeenCalled();
           });
 
           it("still shows normal tray icon", () => {
@@ -167,6 +173,12 @@ describe("installing update", () => {
           it("renders", () => {
             expect(rendered.baseElement).toMatchSnapshot();
           });
+
+          it("does not show the update button", () => {
+            const button = rendered.queryByTestId("update-button");
+
+            expect(button).not.toBeInTheDocument();
+          });
         });
 
         describe("when download succeeds", () => {
@@ -175,7 +187,7 @@ describe("installing update", () => {
           });
 
           it("does not quit and install update yet", () => {
-            expect(quitAndInstallUpdateMock).not.toHaveBeenCalled();
+            expect(electronQuitAndInstallUpdateMock).not.toHaveBeenCalled();
           });
 
           it("shows tray icon for update being available", () => {
@@ -218,6 +230,26 @@ describe("installing update", () => {
                   "/some-static-files-directory/build/tray/trayIconUpdateAvailableTemplate.png",
                 );
               });
+
+              it("does not quit and install update yet", () => {
+                expect(electronQuitAndInstallUpdateMock).not.toHaveBeenCalled();
+              });
+
+              it("renders", () => {
+                expect(rendered.baseElement).toMatchSnapshot();
+              });
+
+              it("shows the update button", () => {
+                const button = rendered.getByTestId("update-button");
+
+                expect(button).toBeInTheDocument();
+              });
+
+              it("when triggering the update, quits and installs the update", () => {
+                quitAndInstallUpdate();
+
+                expect(electronQuitAndInstallUpdateMock).toHaveBeenCalled();
+              });
             });
 
             describe("when check resolves with different update that was previously downloaded", () => {
@@ -236,6 +268,45 @@ describe("installing update", () => {
                 expect(builder.tray.getIconPath()).toBe(
                   "/some-static-files-directory/build/tray/trayIconCheckingForUpdatesTemplate.png",
                 );
+              });
+
+              it("still shows the update button", () => {
+                const button = rendered.getByTestId("update-button");
+
+                expect(button).toBeInTheDocument();
+              });
+
+              describe("when download resolves successfully", () => {
+                beforeEach(async () => {
+                  await downloadPlatformUpdateMock.resolve({ downloadWasSuccessful: true });
+                });
+
+                it("still shows the update button", () => {
+                  const button =
+                    rendered.getByTestId("update-button");
+
+                  expect(button).toBeInTheDocument();
+                });
+
+                it("does not quit and install update yet", () => {
+                  expect(electronQuitAndInstallUpdateMock).not.toHaveBeenCalled();
+                });
+
+                it("shows tray icon for update being available", () => {
+                  expect(builder.tray.getIconPath()).toBe(
+                    "/some-static-files-directory/build/tray/trayIconUpdateAvailableTemplate.png",
+                  );
+                });
+
+                it("renders", () => {
+                  expect(rendered.baseElement).toMatchSnapshot();
+                });
+
+                it("when triggering the update, quits and installs the update", () => {
+                  quitAndInstallUpdate();
+
+                  expect(electronQuitAndInstallUpdateMock).toHaveBeenCalled();
+                });
               });
             });
           });
