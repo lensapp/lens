@@ -836,7 +836,7 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
                       class="SubTitle"
                       id="http-proxy"
                     >
-                      HTTP Proxy
+                      HTTPS Proxy
                        
                     </div>
                     <div
@@ -848,7 +848,7 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
                       >
                         <input
                           class="input box grow"
-                          placeholder="http://<address>:<port>"
+                          placeholder="https://<address>:<port>"
                           spellcheck="false"
                           value=""
                         />
@@ -860,7 +860,37 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
                     <small
                       class="hint"
                     >
-                      HTTP Proxy server. Used for communicating with Kubernetes API.
+                      HTTPS Proxy server. Used for communicating with Kubernetes API.
+                    </small>
+                    <div
+                      class="SubTitle"
+                      id="no-proxy"
+                    >
+                      No Proxy
+                       
+                    </div>
+                    <div
+                      class="Input theme round black"
+                    >
+                      <label
+                        class="input-area flex gaps align-center"
+                        id=""
+                      >
+                        <input
+                          class="input box grow"
+                          placeholder=""
+                          spellcheck="false"
+                          value=""
+                        />
+                      </label>
+                      <div
+                        class="input-info flex gaps"
+                      />
+                    </div>
+                    <small
+                      class="hint"
+                    >
+                      NO_PROXY configuration. Useful for when specifying that cluster communication shouldn't go through the default proxy.
                     </small>
                   </section>
                 </section>
