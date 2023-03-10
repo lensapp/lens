@@ -28,7 +28,7 @@ const clusterIdDetectorFactoryInjectable = getInjectable({
         try {
           id = await getDefaultNamespaceId(cluster);
         } catch(_) {
-          id = cluster.apiUrl;
+          id = cluster.apiUrl.get();
         }
         const value = createHash("sha256").update(id).digest("hex");
 

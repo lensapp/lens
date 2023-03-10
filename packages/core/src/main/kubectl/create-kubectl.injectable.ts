@@ -19,10 +19,12 @@ import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 
+export type CreateKubectl = (version: string) => Kubectl;
+
 const createKubectlInjectable = getInjectable({
   id: "create-kubectl",
 
-  instantiate: (di) => {
+  instantiate: (di): CreateKubectl => {
     const dependencies: KubectlDependencies = {
       userStore: di.inject(userStoreInjectable),
       directoryForKubectlBinaries: di.inject(directoryForKubectlBinariesInjectable),
@@ -39,7 +41,7 @@ const createKubectlInjectable = getInjectable({
       getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
     };
 
-    return (clusterVersion: string) => new Kubectl(dependencies, clusterVersion);
+    return (version) => new Kubectl(dependencies, version);
   },
 });
 

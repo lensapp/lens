@@ -22,8 +22,8 @@ import type { PortForwardStore } from "../../port-forward";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
-import type { GetActiveClusterEntity } from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
+import type { IComputedValue } from "mobx";
+import enabledMetricsInjectable from "../../api/catalog/entity/metrics-enabled.injectable";
 
 export interface PodDetailsContainerProps {
   pod: Pod;
@@ -33,7 +33,7 @@ export interface PodDetailsContainerProps {
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
-  getActiveClusterEntity: GetActiveClusterEntity;
+  containerMetricsVisible: IComputedValue<boolean>;
 }
 
 @observer
@@ -84,7 +84,7 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
   }
 
   render() {
-    const { pod, container, metrics, getActiveClusterEntity } = this.props;
+    const { pod, container, metrics, containerMetricsVisible } = this.props;
 
     if (!pod || !container) return null;
     const { name, image, imagePullPolicy, ports, volumeMounts, command, args } = container;
@@ -97,7 +97,7 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
     const readiness = pod.getReadinessProbe(container);
     const startup = pod.getStartupProbe(container);
     const isInitContainer = !!pod.getInitContainers().find(c => c.name == name);
-    const isMetricHidden = getActiveClusterEntity()?.isMetricHidden(ClusterMetricsResourceType.Container);
+    const isMetricHidden = containerMetricsVisible.get();
 
     return (
       <div className="PodDetailsContainer">
@@ -217,6 +217,6 @@ export const PodDetailsContainer = withInjectables<Dependencies, PodDetailsConta
   getProps: (di, props) => ({
     ...props,
     portForwardStore: di.inject(portForwardStoreInjectable),
-    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
+    containerMetricsVisible: di.inject(enabledMetricsInjectable, ClusterMetricsResourceType.Container),
   }),
 });

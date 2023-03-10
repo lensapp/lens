@@ -9,7 +9,6 @@ import type http from "http";
 import type httpProxy from "http-proxy";
 import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import type { Router } from "../router/router";
-import type { ClusterContextHandler } from "../context-handler/context-handler";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
 import { getBoolean } from "../utils/parse-query";
@@ -18,6 +17,7 @@ import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
 import type { SelfSignedCert } from "selfsigned";
+import type { KubeAuthProxyServer } from "../cluster/kube-auth-proxy-server.injectable";
 
 export type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
@@ -28,6 +28,7 @@ interface Dependencies {
   shellApiRequest: LensProxyApiRequest;
   kubeApiUpgradeRequest: LensProxyApiRequest;
   emitAppEvent: EmitAppEvent;
+  getKubeAuthProxyServer: (cluster: Cluster) => KubeAuthProxyServer;
   readonly router: Router;
   readonly proxy: httpProxy;
   readonly lensProxyPort: { set: (portNumber: number) => void };
@@ -220,15 +221,6 @@ export class LensProxy {
     return proxy;
   }
 
-  protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ClusterContextHandler): Promise<httpProxy.ServerOptions | void> {
-    if (req.url?.startsWith(apiKubePrefix)) {
-      delete req.headers.authorization;
-      req.url = req.url.replace(apiKubePrefix, "");
-
-      return contextHandler.getApiTarget(isLongRunningRequest(req.url));
-    }
-  }
-
   protected getRequestId(req: http.IncomingMessage): string {
     assert(req.headers.host);
 
@@ -238,8 +230,12 @@ export class LensProxy {
   protected async handleRequest(req: ServerIncomingMessage, res: http.ServerResponse) {
     const cluster = this.dependencies.getClusterForRequest(req);
 
-    if (cluster) {
-      const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler);
+    if (cluster && req.url.startsWith(apiKubePrefix)) {
+      delete req.headers.authorization;
+      req.url = req.url.replace(apiKubePrefix, "");
+
+      const kubeAuthProxyServer = this.dependencies.getKubeAuthProxyServer(cluster);
+      const proxyTarget = await kubeAuthProxyServer.getApiTarget(isLongRunningRequest(req.url));
 
       if (proxyTarget) {
         return this.dependencies.proxy.web(req, res, proxyTarget);

@@ -30,6 +30,8 @@ import type { SaveKubeconfig } from "./save-kubeconfig.injectable";
 import saveKubeconfigInjectable from "./save-kubeconfig.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 import { isCurrentContext } from "./is-current-context";
+import type { IsInLocalKubeconfig } from "./is-in-local-kubeconfig.injectable";
+import isInLocalKubeconfigInjectable from "./is-in-local-kubeconfig.injectable";
 
 interface Dependencies {
   state: IObservableValue<DeleteClusterDialogState | undefined>;
@@ -39,6 +41,7 @@ interface Dependencies {
   requestClearClusterAsDeleting: RequestClearClusterAsDeleting;
   showErrorNotification: ShowNotification;
   saveKubeconfig: SaveKubeconfig;
+  isInLocalKubeconfig: IsInLocalKubeconfig;
 }
 
 @observer
@@ -52,7 +55,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
       this.props.state.set({
         ...state,
         config: Object.assign(config, {
-          contexts: config.contexts.filter(item => item.name !== state.cluster.contextName),
+          contexts: config.contexts.filter(item => item.name !== state.cluster.contextName.get()),
           currentContext: newCurrentContext && showContextSwitch
             ? newCurrentContext
             : config.currentContext,
@@ -61,7 +64,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
     });
 
     try {
-      await this.props.saveKubeconfig(config, cluster.kubeConfigPath);
+      await this.props.saveKubeconfig(config, cluster.kubeConfigPath.get());
       this.props.hotbarStore.removeAllHotbarItems(cluster.id);
       await this.props.requestDeleteCluster(cluster.id);
     } catch(error) {
@@ -73,7 +76,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
   }
 
   shouldDeleteBeDisabled({ cluster, config, newCurrentContext, showContextSwitch }: DeleteClusterDialogState): boolean {
-    const noContextsAvailable = config.contexts.filter(context => context.name !== cluster.contextName).length == 0;
+    const noContextsAvailable = config.contexts.filter(context => context.name !== cluster.contextName.get()).length == 0;
     const newContextNotSelected = newCurrentContext === "";
 
     if (noContextsAvailable) {
@@ -92,7 +95,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
 
     const selectOptions = config
       .contexts
-      .filter(context => context.name !== cluster.contextName)
+      .filter(context => context.name !== cluster.contextName.get())
       .map(context => ({
         value: context.name,
         label: context.name,
@@ -121,7 +124,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
   }
 
   renderDeleteMessage({ cluster }: DeleteClusterDialogState) {
-    if (cluster.isInLocalKubeconfig()) {
+    if (this.props.isInLocalKubeconfig(cluster)) {
       return (
         <div>
           {"Delete the "}
@@ -141,7 +144,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
         </b>
         {" context from "}
         <b>
-          {cluster.kubeConfigPath}
+          {cluster.kubeConfigPath.get()}
         </b>
         ?
       </div>
@@ -149,7 +152,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
   }
 
   getWarningMessage({ cluster, config }: DeleteClusterDialogState) {
-    if (cluster.isInLocalKubeconfig()) {
+    if (this.props.isInLocalKubeconfig(cluster)) {
       return (
         <p data-testid="internal-kubeconfig-warning">
           Are you sure you want to delete it? It can be re-added through the copy/paste mechanism.
@@ -157,7 +160,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
       );
     }
 
-    const contexts = config.contexts.filter(context => context.name !== cluster.contextName);
+    const contexts = config.contexts.filter(context => context.name !== cluster.contextName.get());
 
     if (!contexts.length) {
       return (
@@ -191,7 +194,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
 
   renderContents(state: DeleteClusterDialogState) {
     const { config, cluster, showContextSwitch } = state;
-    const contexts = state.config.contexts.filter(context => context.name !== state.cluster.contextName);
+    const contexts = state.config.contexts.filter(context => context.name !== state.cluster.contextName.get());
     const disableDelete = this.shouldDeleteBeDisabled(state);
     const currentContext = isCurrentContext(config, cluster);
 
@@ -271,5 +274,6 @@ export const DeleteClusterDialog = withInjectables<Dependencies>(NonInjectedDele
     requestDeleteCluster: di.inject(requestDeleteClusterInjectable),
     saveKubeconfig: di.inject(saveKubeconfigInjectable),
     showErrorNotification: di.inject(showErrorNotificationInjectable),
+    isInLocalKubeconfig: di.inject(isInLocalKubeconfigInjectable),
   }),
 });

@@ -5,8 +5,9 @@
 
 import type { DiContainer } from "@ogre-tools/injectable";
 import type WebSocket from "ws";
+import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import type { Cluster } from "../../../common/cluster/cluster";
+import { Cluster } from "../../../common/cluster/cluster";
 import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
 import pathExistsInjectable from "../../../common/fs/path-exists.injectable";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
@@ -14,8 +15,11 @@ import statInjectable from "../../../common/fs/stat.injectable";
 import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
 import platformInjectable from "../../../common/vars/platform.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import type { KubeconfigManager } from "../../kubeconfig-manager/kubeconfig-manager";
+import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 import createKubectlInjectable from "../../kubectl/create-kubectl.injectable";
 import type { Kubectl } from "../../kubectl/kubectl";
+import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import type { OpenShellSession } from "../create-shell-session.injectable";
 import type { SpawnPty } from "../spawn-pty.injectable";
@@ -29,6 +33,7 @@ describe("technical unit tests for local shell sessions", () => {
     di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
+    di.override(directoryForTempInjectable, () => "/some-directory-for-tmp");
     di.override(buildVersionInjectable, () => ({
       get: () => "1.1.1",
     }));
@@ -37,6 +42,7 @@ describe("technical unit tests for local shell sessions", () => {
     di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
     di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
     di.override(statInjectable, () => () => { throw new Error("tried call stat without override"); });
+    di.inject(lensProxyPortInjectable).set(1111);
   });
 
   describe("when on windows", () => {
@@ -53,6 +59,10 @@ describe("technical unit tests for local shell sessions", () => {
         binDir: async () => "/some-kubectl-binary-dir",
         getBundledPath: () => "/some-bundled-kubectl-path",
       }) as Partial<Kubectl> as Kubectl);
+
+      di.override(kubeconfigManagerInjectable, () => ({
+        ensurePath: async () => "/some-proxy-kubeconfig-file",
+      } as Partial<KubeconfigManager> as KubeconfigManager));
 
       openLocalShellSession = di.inject(openLocalShellSessionInjectable);
     });
@@ -89,11 +99,16 @@ describe("technical unit tests for local shell sessions", () => {
           once: jest.fn(() => websocket),
         } as Partial<WebSocket> as WebSocket;
 
+        const cluster = new Cluster({
+          contextName: "some-context-name",
+          id: "some-cluster-id",
+          kubeConfigPath: "/some-kube-config-path",
+        }, {
+          clusterServerUrl: "https://localhost:9999",
+        });
+
         await openLocalShellSession({
-          cluster: {
-            getProxyKubeconfigPath: async () => "/some-proxy-kubeconfig",
-            preferences: {},
-          } as Partial<Cluster> as Cluster,
+          cluster,
           tabId: "my-tab-id",
           websocket,
         });

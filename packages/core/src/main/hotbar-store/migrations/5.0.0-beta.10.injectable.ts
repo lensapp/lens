@@ -4,7 +4,6 @@
  */
 
 import * as uuid from "uuid";
-import type { ClusterStoreModel } from "../../../common/cluster-store/cluster-store";
 import type { Hotbar, HotbarItem } from "../../../common/hotbars/types";
 import { defaultHotbarCells, getEmptyHotbar } from "../../../common/hotbars/types";
 import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
@@ -17,6 +16,7 @@ import { hotbarStoreMigrationInjectionToken } from "../../../common/hotbars/migr
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import { generateNewIdFor } from "../../../common/utils/generate-new-id-for";
+import type { ClusterModel } from "../../../common/cluster-types";
 
 interface Pre500WorkspaceStoreModel {
   workspaces: {
@@ -29,6 +29,15 @@ interface PartialHotbar {
   id: string;
   name: string;
   items: (null | HotbarItem)[];
+}
+
+interface Pre500ClusterModel extends ClusterModel {
+  workspace?: string;
+  workspaces?: string[];
+}
+
+interface Pre500ClusterStoreModel {
+  clusters?: Pre500ClusterModel[];
 }
 
 const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
@@ -59,7 +68,7 @@ const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
 
         try {
           const workspaceStoreData: Pre500WorkspaceStoreModel = readJsonSync(joinPaths(userDataPath, "lens-workspace-store.json"));
-          const { clusters = [] }: ClusterStoreModel = readJsonSync(joinPaths(userDataPath, "lens-cluster-store.json"));
+          const { clusters = [] }: Pre500ClusterStoreModel = readJsonSync(joinPaths(userDataPath, "lens-cluster-store.json"));
           const workspaceHotbars = new Map<string, PartialHotbar>(); // mapping from WorkspaceId to HotBar
 
           for (const { id, name } of workspaceStoreData.workspaces) {

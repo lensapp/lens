@@ -18,12 +18,15 @@ import { getApplicationMenuTemplate } from "../../../../features/application-men
 import type { MenuItemRoot } from "../../../../features/application-menu/main/application-menu-item-composite.injectable";
 import type { EmitAppEvent } from "../../../../common/app-event-bus/emit-event.injectable";
 import type { GetClusterById } from "../../../../common/cluster-store/get-by-id.injectable";
+import type { Cluster } from "../../../../common/cluster/cluster";
+import type { ClusterConnection } from "../../../cluster/cluster-connection.injectable";
 interface Dependencies {
   applicationMenuItemComposite: IComputedValue<Composite<ApplicationMenuItemTypes | MenuItemRoot>>;
   clusterStore: ClusterStore;
   emitAppEvent: EmitAppEvent;
   getClusterById: GetClusterById;
   pushCatalogToRenderer: () => void;
+  getClusterConnection: (cluster: Cluster) => ClusterConnection;
 }
 
 export const setupIpcMainHandlers = ({
@@ -32,10 +35,18 @@ export const setupIpcMainHandlers = ({
   emitAppEvent,
   getClusterById,
   pushCatalogToRenderer,
+  getClusterConnection,
 }: Dependencies) => {
-  ipcMainHandle(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
-    return getClusterById(clusterId)
-      ?.activate(force);
+  ipcMainHandle(clusterActivateHandler, async (event, clusterId: ClusterId, force = false) => {
+    const cluster = getClusterById(clusterId);
+
+    if (!cluster) {
+      return;
+    }
+
+    const clusterConnection = getClusterConnection(cluster);
+
+    await clusterConnection.activate(force);
   });
 
   ipcMainHandle(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
@@ -51,10 +62,14 @@ export const setupIpcMainHandlers = ({
     emitAppEvent({ name: "cluster", action: "stop" });
     const cluster = getClusterById(clusterId);
 
-    if (cluster) {
-      cluster.disconnect();
-      clusterFrameMap.delete(cluster.id);
+    if (!cluster) {
+      return;
     }
+
+    const clusterConnection = getClusterConnection(cluster);
+
+    clusterConnection.disconnect();
+    clusterFrameMap.delete(cluster.id);
   });
 
   ipcMainHandle(windowActionHandleChannel, (event, action) => handleWindowAction(action));

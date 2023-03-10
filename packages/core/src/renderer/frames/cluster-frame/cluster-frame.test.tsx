@@ -14,8 +14,7 @@ import { DefaultProps } from "../../mui-base-theme";
 import { ClusterFrame } from "./cluster-frame";
 import historyInjectable from "../../navigation/history.injectable";
 import { computed } from "mobx";
-import type { Cluster } from "../../../common/cluster/cluster";
-import createClusterInjectable from "../../cluster/create-cluster.injectable";
+import { Cluster } from "../../../common/cluster/cluster";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
@@ -49,9 +48,7 @@ describe("<ClusterFrame />", () => {
 
     testUsingFakeTime("2000-01-01 12:00:00am");
 
-    const createCluster = di.inject(createClusterInjectable);
-
-    cluster = createCluster(
+    cluster = new Cluster(
       {
         contextName: "my-cluster",
         id: "123456",
@@ -68,8 +65,7 @@ describe("<ClusterFrame />", () => {
 
   describe("given cluster with list nodes and namespaces permissions", () => {
     beforeEach(() => {
-      // TODO: replace with not using private info
-      (cluster as unknown as { readonly allowedResources: Cluster["allowedResources"] }).allowedResources.replace(["nodes", "namespaces"]);
+      cluster.resourcesToShow.replace(["nodes", "namespaces"]);
     });
 
     it("renders", () => {
@@ -110,7 +106,7 @@ describe("<ClusterFrame />", () => {
 
   describe("given cluster without list nodes, but with namespaces permissions", () => {
     beforeEach(() => {
-      (cluster as unknown as { readonly allowedResources: Cluster["allowedResources"] }).allowedResources.replace(["namespaces"]);
+      cluster.resourcesToShow.replace(["namespaces"]);
     });
 
     it("renders", () => {

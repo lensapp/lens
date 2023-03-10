@@ -8,6 +8,15 @@ import { moveSync, removeSync } from "fs-extra";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { isDefined } from "../../../common/utils";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
+import { getInjectable } from "@ogre-tools/injectable";
+import loggerInjectable from "../../../common/logger.injectable";
+import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-store/migration-token";
+import { generateNewIdFor } from "../../../common/utils/generate-new-id-for";
+
+interface Pre500ClusterModel extends ClusterModel {
+  workspace?: string;
+  workspaces?: string[];
+}
 
 function mergePrometheusPreferences(left: ClusterPrometheusPreferences, right: ClusterPrometheusPreferences): ClusterPrometheusPreferences {
   if (left.prometheus && left.prometheusProvider) {
@@ -27,24 +36,15 @@ function mergePrometheusPreferences(left: ClusterPrometheusPreferences, right: C
   return {};
 }
 
-function mergePreferences(left: ClusterPreferences, right: ClusterPreferences): ClusterPreferences {
-  return {
-    terminalCWD: left.terminalCWD || right.terminalCWD || undefined,
-    clusterName: left.clusterName || right.clusterName || undefined,
-    iconOrder: left.iconOrder || right.iconOrder || undefined,
-    icon: left.icon || right.icon || undefined,
-    httpsProxy: left.httpsProxy || right.httpsProxy || undefined,
-    hiddenMetrics: mergeSet(left.hiddenMetrics ?? [], right.hiddenMetrics ?? []),
-    ...mergePrometheusPreferences(left, right),
-  };
-}
-
-function mergeLabels(left: Record<string, string>, right: Record<string, string>): Record<string, string> {
-  return {
-    ...right,
-    ...left,
-  };
-}
+const mergePreferences = (left: ClusterPreferences, right: ClusterPreferences): ClusterPreferences => ({
+  terminalCWD: left.terminalCWD || right.terminalCWD || undefined,
+  clusterName: left.clusterName || right.clusterName || undefined,
+  iconOrder: left.iconOrder || right.iconOrder || undefined,
+  icon: left.icon || right.icon || undefined,
+  httpsProxy: left.httpsProxy || right.httpsProxy || undefined,
+  hiddenMetrics: mergeSet(left.hiddenMetrics ?? [], right.hiddenMetrics ?? []),
+  ...mergePrometheusPreferences(left, right),
+});
 
 function mergeSet(...iterables: Iterable<string | undefined>[]): string[] {
   const res = new Set<string>();
@@ -60,24 +60,17 @@ function mergeSet(...iterables: Iterable<string | undefined>[]): string[] {
   return [...res];
 }
 
-function mergeClusterModel(prev: ClusterModel, right: Omit<ClusterModel, "id">): ClusterModel {
-  return {
-    id: prev.id,
-    kubeConfigPath: prev.kubeConfigPath,
-    contextName: prev.contextName,
-    preferences: mergePreferences(prev.preferences ?? {}, right.preferences ?? {}),
-    metadata: prev.metadata,
-    labels: mergeLabels(prev.labels ?? {}, right.labels ?? {}),
-    accessibleNamespaces: mergeSet(prev.accessibleNamespaces ?? [], right.accessibleNamespaces ?? []),
-    workspace: prev.workspace || right.workspace,
-    workspaces: mergeSet([prev.workspace, right.workspace], prev.workspaces ?? [], right.workspaces ?? []),
-  };
-}
-
-import { getInjectable } from "@ogre-tools/injectable";
-import loggerInjectable from "../../../common/logger.injectable";
-import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-store/migration-token";
-import { generateNewIdFor } from "../../../common/utils/generate-new-id-for";
+const mergeClusterModel = (prev: Pre500ClusterModel, right: Omit<Pre500ClusterModel, "id">): Pre500ClusterModel => ({
+  id: prev.id,
+  kubeConfigPath: prev.kubeConfigPath,
+  contextName: prev.contextName,
+  preferences: mergePreferences(prev.preferences ?? {}, right.preferences ?? {}),
+  metadata: prev.metadata,
+  labels: { ...(right.labels ?? {}), ...(prev.labels ?? {}) },
+  accessibleNamespaces: mergeSet(prev.accessibleNamespaces ?? [], right.accessibleNamespaces ?? []),
+  workspace: prev.workspace || right.workspace,
+  workspaces: mergeSet([prev.workspace, right.workspace], prev.workspaces ?? [], right.workspaces ?? []),
+});
 
 const v500Beta13ClusterStoreMigrationInjectable = getInjectable({
   id: "v5.0.0-beta.13-cluster-store-migration",
@@ -104,8 +97,8 @@ const v500Beta13ClusterStoreMigrationInjectable = getInjectable({
       version: "5.0.0-beta.13",
       run(store) {
         const folder = joinPaths(userDataPath, "lens-local-storage");
-        const oldClusters = (store.get("clusters") ?? []) as ClusterModel[];
-        const clusters = new Map<string, ClusterModel>();
+        const oldClusters = (store.get("clusters") ?? []) as Pre500ClusterModel[];
+        const clusters = new Map<string, Pre500ClusterModel>();
 
         for (const { id: oldId, ...cluster } of oldClusters) {
           const newId = generateNewIdFor(cluster);

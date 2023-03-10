@@ -20,7 +20,7 @@ import directoryForUserDataInjectable from "../../../common/app-paths/directory-
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import type { PodStore } from "../+workloads-pods/store";
-import { createClusterInjectionToken } from "../../../common/cluster/create-cluster-injection-token";
+import { Cluster } from "../../../common/cluster/cluster";
 
 describe("kube-object-list-layout", () => {
   let di: DiContainer;
@@ -34,9 +34,7 @@ describe("kube-object-list-layout", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    const createCluster = di.inject(createClusterInjectionToken);
-
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",

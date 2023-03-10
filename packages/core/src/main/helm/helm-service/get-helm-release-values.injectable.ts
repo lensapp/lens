@@ -7,6 +7,7 @@ import loggerInjectable from "../../../common/logger.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { GetHelmReleaseValuesData } from "../get-helm-release-values.injectable";
 import getHelmReleaseValuesInjectable from "../get-helm-release-values.injectable";
+import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 
 const getClusterHelmReleaseValuesInjectable = getInjectable({
   id: "get-cluster-helm-release-values",
@@ -16,11 +17,12 @@ const getClusterHelmReleaseValuesInjectable = getInjectable({
     const getHelmReleaseValues = di.inject(getHelmReleaseValuesInjectable);
 
     return async (cluster: Cluster, data: GetHelmReleaseValuesData) => {
-      const pathToKubeconfig = await cluster.getProxyKubeconfigPath();
+      const proxyKubeconfigManager = di.inject(kubeconfigManagerInjectable, cluster);
+      const proxyKubeconfigPath = await proxyKubeconfigManager.ensurePath();
 
       logger.debug(`[CLUSTER]: getting helm release values`, data);
 
-      return getHelmReleaseValues(pathToKubeconfig, data);
+      return getHelmReleaseValues(proxyKubeconfigPath, data);
     };
   },
 });

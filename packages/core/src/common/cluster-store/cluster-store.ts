@@ -10,7 +10,6 @@ import { BaseStore } from "../base-store/base-store";
 import { Cluster } from "../cluster/cluster";
 import { toJS } from "../utils";
 import type { ClusterModel, ClusterId } from "../cluster-types";
-import type { CreateCluster } from "../cluster/create-cluster-injection-token";
 import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
 
@@ -19,7 +18,6 @@ export interface ClusterStoreModel {
 }
 
 interface Dependencies extends BaseStoreDependencies {
-  createCluster: CreateCluster;
   readClusterConfigSync: ReadClusterConfigSync;
   emitAppEvent: EmitAppEvent;
 }
@@ -64,7 +62,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
     const cluster = clusterOrModel instanceof Cluster
       ? clusterOrModel
-      : this.dependencies.createCluster(
+      : new Cluster(
         clusterOrModel,
         this.dependencies.readClusterConfigSync(clusterOrModel),
       );
@@ -87,7 +85,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         if (cluster) {
           cluster.updateModel(clusterModel);
         } else {
-          cluster = this.dependencies.createCluster(
+          cluster = new Cluster(
             clusterModel,
             this.dependencies.readClusterConfigSync(clusterModel),
           );

@@ -22,7 +22,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import ingressApiInjectable from "../endpoints/ingress.api.injectable";
 import loggerInjectable from "../../logger.injectable";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
-import { createClusterInjectionToken } from "../../cluster/create-cluster-injection-token";
+import { Cluster } from "../../cluster/cluster";
 
 describe("KubeApi", () => {
   let fetchMock: AsyncFnMock<Fetch>;
@@ -39,9 +39,7 @@ describe("KubeApi", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    const createCluster = di.inject(createClusterInjectionToken);
-
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",

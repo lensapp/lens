@@ -17,10 +17,10 @@ import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import { KubeObjectStore } from "../kube-object.store";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
-import { createClusterInjectionToken } from "../../cluster/create-cluster-injection-token";
 
 // eslint-disable-next-line no-restricted-imports
 import { KubeApi as ExternalKubeApi } from "../../../extensions/common-api/k8s-api";
+import { Cluster } from "../../cluster/cluster";
 
 class TestApi extends KubeApi<KubeObject> {
   protected async checkPreferredVersion() {
@@ -43,9 +43,7 @@ describe("ApiManager", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    const createCluster = di.inject(createClusterInjectionToken);
-
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",

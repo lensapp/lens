@@ -56,7 +56,7 @@ export class ClusterFrameHandler {
     const iframe = document.createElement("iframe");
 
     iframe.id = `cluster-frame-${cluster.id}`;
-    iframe.name = cluster.contextName;
+    iframe.name = cluster.contextName.get();
     iframe.setAttribute("src", getClusterFrameUrl(clusterId));
     iframe.addEventListener("load", action(() => {
       this.dependencies.logger.info(`[LENS-VIEW]: frame for clusterId=${clusterId} has loaded`);
@@ -71,19 +71,19 @@ export class ClusterFrameHandler {
     this.dependencies.logger.info(`[LENS-VIEW]: waiting cluster to be ready, clusterId=${clusterId}`);
 
     const dispose = when(
-      () => cluster.ready,
+      () => cluster.ready.get(),
       () => this.dependencies.logger.info(`[LENS-VIEW]: cluster is ready, clusterId=${clusterId}`),
     );
 
     when(
       // cluster.disconnect is set to `false` when the cluster starts to connect
-      () => !cluster.disconnected,
+      () => !cluster.disconnected.get(),
       () => {
         when(
           () => {
             const cluster = this.dependencies.getClusterById(clusterId);
 
-            return Boolean(!cluster || (cluster.disconnected && this.views.get(clusterId)?.isLoaded));
+            return Boolean(!cluster || (cluster.disconnected.get() && this.views.get(clusterId)?.isLoaded));
           },
           () => {
             this.dependencies.logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`);
@@ -126,7 +126,7 @@ export class ClusterFrameHandler {
         () => {
           const view = this.views.get(clusterId);
 
-          if (cluster.available && cluster.ready && view?.isLoaded) {
+          if (cluster.available.get() && cluster.ready.get() && view?.isLoaded) {
             return view;
           }
 

@@ -17,6 +17,7 @@ import type { CatalogEntityRegistry } from "../catalog";
 import type { Logger } from "../../common/logger";
 import type { UpdateEntityMetadata } from "./update-entity-metadata.injectable";
 import type { UpdateEntitySpec } from "./update-entity-spec.injectable";
+import type { ClusterConnection } from "./cluster-connection.injectable";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
@@ -28,8 +29,9 @@ interface Dependencies {
   readonly clustersThatAreBeingDeleted: ObservableSet<ClusterId>;
   readonly visibleCluster: IObservableValue<ClusterId | null>;
   readonly logger: Logger;
-  readonly updateEntityMetadata: UpdateEntityMetadata;
-  readonly updateEntitySpec: UpdateEntitySpec;
+  updateEntityMetadata: UpdateEntityMetadata;
+  updateEntitySpec: UpdateEntitySpec;
+  getClusterConnection: (cluster: Cluster) => ClusterConnection;
 }
 
 export class ClusterManager {
@@ -119,13 +121,13 @@ export class ClusterManager {
           return LensKubernetesClusterStatus.DISCONNECTED;
         }
 
-        if (cluster.accessible) {
+        if (cluster.accessible.get()) {
           this.dependencies.logger.silly(`${logPrefix} setting entity ${entity.getName()} to CONNECTED, reason="cluster is accessible"`);
 
           return LensKubernetesClusterStatus.CONNECTED;
         }
 
-        if (!cluster.disconnected) {
+        if (!cluster.disconnected.get()) {
           this.dependencies.logger.silly(`${logPrefix} setting entity ${entity.getName()} to CONNECTING, reason="cluster is not disconnected"`);
 
           return LensKubernetesClusterStatus.CONNECTING;
@@ -174,8 +176,8 @@ export class ClusterManager {
           }
         }
       } else {
-        cluster.kubeConfigPath = entity.spec.kubeconfigPath;
-        cluster.contextName = entity.spec.kubeconfigContext;
+        cluster.kubeConfigPath.set(entity.spec.kubeconfigPath);
+        cluster.contextName.set(entity.spec.kubeconfigContext);
 
         if (entity.spec.accessibleNamespaces) {
           cluster.accessibleNamespaces.replace(entity.spec.accessibleNamespaces);
@@ -202,30 +204,43 @@ export class ClusterManager {
     }
   }
 
-  protected onNetworkOffline = () => {
+  protected onNetworkOffline = async () => {
     this.dependencies.logger.info(`${logPrefix} network is offline`);
-    this.dependencies.store.clustersList.forEach((cluster) => {
-      if (!cluster.disconnected) {
-        cluster.online = false;
-        cluster.accessible = false;
-        cluster.refreshConnectionStatus().catch((e) => e);
-      }
-    });
+
+    await Promise.allSettled(
+      this.dependencies.store.clustersList
+        .filter(cluster => !cluster.disconnected.get())
+        .map(async (cluster) => {
+          cluster.online.set(false);
+          cluster.accessible.set(false);
+
+          await this.dependencies
+            .getClusterConnection(cluster)
+            .refreshConnectionStatus();
+        }),
+    );
   };
 
-  protected onNetworkOnline = () => {
+  protected onNetworkOnline = async () => {
     this.dependencies.logger.info(`${logPrefix} network is online`);
-    this.dependencies.store.clustersList.forEach((cluster) => {
-      if (!cluster.disconnected) {
-        cluster.refreshConnectionStatus().catch((e) => e);
-      }
-    });
+
+    await Promise.allSettled(
+      this.dependencies.store.clustersList
+        .filter(cluster => !cluster.disconnected.get())
+        .map((cluster) => (
+          this.dependencies
+            .getClusterConnection(cluster)
+            .refreshConnectionStatus()
+        )),
+    );
   };
 
   stop() {
-    this.dependencies.store.clusters.forEach((cluster: Cluster) => {
-      cluster.disconnect();
-    });
+    for (const cluster of this.dependencies.store.clustersList) {
+      this.dependencies
+        .getClusterConnection(cluster)
+        .disconnect();
+    }
   }
 }
 
@@ -233,26 +248,26 @@ export function catalogEntityFromCluster(cluster: Cluster) {
   return new KubernetesCluster({
     metadata: {
       uid: cluster.id,
-      name: cluster.name,
+      name: cluster.name.get(),
       source: "local",
       labels: {
         ...cluster.labels,
       },
-      distro: cluster.distribution,
-      kubeVersion: cluster.version,
+      distro: cluster.distribution.get(),
+      kubeVersion: cluster.version.get(),
     },
     spec: {
-      kubeconfigPath: cluster.kubeConfigPath,
-      kubeconfigContext: cluster.contextName,
+      kubeconfigPath: cluster.kubeConfigPath.get(),
+      kubeconfigContext: cluster.contextName.get(),
       icon: {},
     },
     status: {
-      phase: cluster.disconnected
+      phase: cluster.disconnected.get()
         ? LensKubernetesClusterStatus.DISCONNECTED
         : LensKubernetesClusterStatus.CONNECTED,
       reason: "",
       message: "",
-      active: !cluster.disconnected,
+      active: !cluster.disconnected.get(),
     },
   });
 }

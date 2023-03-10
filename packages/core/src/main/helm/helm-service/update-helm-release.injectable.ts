@@ -10,6 +10,7 @@ import getHelmReleaseInjectable from "./get-helm-release.injectable";
 import writeFileInjectable from "../../../common/fs/write-file.injectable";
 import removePathInjectable from "../../../common/fs/remove.injectable";
 import execHelmInjectable from "../exec-helm/exec-helm.injectable";
+import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 
 export interface UpdateChartArgs {
   chart: string;
@@ -28,7 +29,8 @@ const updateHelmReleaseInjectable = getInjectable({
     const execHelm = di.inject(execHelmInjectable);
 
     return async (cluster: Cluster, releaseName: string, namespace: string, data: UpdateChartArgs) => {
-      const proxyKubeconfig = await cluster.getProxyKubeconfigPath();
+      const proxyKubeconfigManager = di.inject(kubeconfigManagerInjectable, cluster);
+      const proxyKubeconfigPath = await proxyKubeconfigManager.ensurePath();
       const valuesFilePath = tempy.file({ name: "values.yaml" });
 
       logger.debug(`[HELM]: upgrading "${releaseName}" in "${namespace}" to ${data.version}`);
@@ -43,7 +45,7 @@ const updateHelmReleaseInjectable = getInjectable({
           "--version", data.version,
           "--values", valuesFilePath,
           "--namespace", namespace,
-          "--kubeconfig", proxyKubeconfig,
+          "--kubeconfig", proxyKubeconfigPath,
         ]);
 
         if (result.callWasSuccessful === false) {

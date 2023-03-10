@@ -13,14 +13,15 @@ import waitUntilPortIsUsedInjectable from "./wait-until-port-is-used/wait-until-
 import lensK8sProxyPathInjectable from "./lens-k8s-proxy-path.injectable";
 import getPortFromStreamInjectable from "../utils/get-port-from-stream.injectable";
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
+import broadcastConnectionUpdateInjectable from "../cluster/broadcast-connection-update.injectable";
 
-export type CreateKubeAuthProxy = (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
+export type CreateKubeAuthProxy = (cluster: Cluster, env: NodeJS.ProcessEnv) => KubeAuthProxy;
 
 const createKubeAuthProxyInjectable = getInjectable({
   id: "create-kube-auth-proxy",
 
   instantiate: (di): CreateKubeAuthProxy => {
-    const dependencies: Omit<KubeAuthProxyDependencies, "proxyCert"> = {
+    const dependencies: Omit<KubeAuthProxyDependencies, "proxyCert" | "broadcastConnectionUpdate"> = {
       proxyBinPath: di.inject(lensK8sProxyPathInjectable),
       spawn: di.inject(spawnInjectable),
       logger: di.inject(loggerInjectable),
@@ -29,13 +30,14 @@ const createKubeAuthProxyInjectable = getInjectable({
       dirname: di.inject(getDirnameOfPathInjectable),
     };
 
-    return (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => {
-      const clusterUrl = new URL(cluster.apiUrl);
+    return (cluster, env) => {
+      const clusterUrl = new URL(cluster.apiUrl.get());
 
       return new KubeAuthProxy({
         ...dependencies,
         proxyCert: di.inject(kubeAuthProxyCertificateInjectable, clusterUrl.hostname),
-      }, cluster, environmentVariables);
+        broadcastConnectionUpdate: di.inject(broadcastConnectionUpdateInjectable, cluster),
+      }, cluster, env);
     };
   },
 });

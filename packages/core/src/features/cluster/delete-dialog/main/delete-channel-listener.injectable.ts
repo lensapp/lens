@@ -9,6 +9,7 @@ import directoryForLensLocalStorageInjectable from "../../../../common/directory
 import removePathInjectable from "../../../../common/fs/remove.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import { noop } from "../../../../common/utils";
+import clusterConnectionInjectable from "../../../../main/cluster/cluster-connection.injectable";
 import { getRequestChannelListenerInjectable } from "../../../../main/utils/channel/channel-listeners/listener-tokens";
 import { deleteClusterChannel } from "../common/delete-channel";
 
@@ -31,7 +32,9 @@ const deleteClusterChannelListenerInjectable = getRequestChannelListenerInjectab
         return;
       }
 
-      cluster.disconnect();
+      const clusterConnection = di.inject(clusterConnectionInjectable, cluster);
+
+      clusterConnection.disconnect();
       clusterFrames.delete(cluster.id);
 
       // Remove from the cluster store as well, this should clear any old settings
