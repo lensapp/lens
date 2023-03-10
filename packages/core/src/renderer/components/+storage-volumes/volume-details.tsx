@@ -15,7 +15,7 @@ import type { PersistentVolumeClaimApi, StorageClassApi } from "../../../common/
 import { PersistentVolume } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { Logger } from "../../../common/logger";
-import { stopPropagation } from "../../../renderer/utils";
+import { stopPropagation } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";

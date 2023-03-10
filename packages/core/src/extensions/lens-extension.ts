@@ -6,7 +6,7 @@
 import type { InstalledExtension } from "./extension-discovery/extension-discovery";
 import { action, computed, makeObservable, observable } from "mobx";
 import type { PackageJson } from "type-fest";
-import { disposer } from "../common/utils";
+import { disposer } from "@k8slens/utilities";
 import type { LensExtensionDependencies } from "./lens-extension-set-dependencies";
 import type { ProtocolHandlerRegistration } from "../common/protocol-handler/registration";
 

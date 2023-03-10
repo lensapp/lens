@@ -13,45 +13,42 @@ import { fromPairs, map } from "lodash/fp";
 import { pipeline } from "@ogre-tools/fp";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import appNameInjectable from "../../common/vars/app-name.injectable";
-import { appPathsRunnablePhaseInjectionToken } from "../start-main-application/runnable-tokens/phases";
+import { beforeAnythingInjectionToken } from "@k8slens/application-for-electron-main";
 
 const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",
 
-  instantiate: (di) => {
-    const setElectronAppPath = di.inject(setElectronAppPathInjectable);
-    const appName = di.inject(appNameInjectable);
-    const getElectronAppPath = di.inject(getElectronAppPathInjectable);
-    const appPathsState = di.inject(appPathsStateInjectable);
-    const directoryForIntegrationTesting = di.inject(directoryForIntegrationTestingInjectable);
-    const joinPaths = di.inject(joinPathsInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const setElectronAppPath = di.inject(setElectronAppPathInjectable);
+      const appName = di.inject(appNameInjectable);
+      const getElectronAppPath = di.inject(getElectronAppPathInjectable);
+      const appPathsState = di.inject(appPathsStateInjectable);
+      const directoryForIntegrationTesting = di.inject(directoryForIntegrationTestingInjectable);
+      const joinPaths = di.inject(joinPathsInjectable);
 
-    return {
-      id: "setup-app-paths",
-      run: () => {
-        if (directoryForIntegrationTesting) {
-          setElectronAppPath("appData", directoryForIntegrationTesting);
-        }
+      if (directoryForIntegrationTesting) {
+        setElectronAppPath("appData", directoryForIntegrationTesting);
+      }
 
-        const appDataPath = getElectronAppPath("appData");
+      const appDataPath = getElectronAppPath("appData");
 
-        setElectronAppPath("userData", joinPaths(appDataPath, appName));
+      setElectronAppPath("userData", joinPaths(appDataPath, appName));
 
-        const appPaths = pipeline(
-          pathNames,
-          map(name => [name, getElectronAppPath(name)]),
-          fromPairs,
-        ) as AppPaths;
+      const appPaths = pipeline(
+        pathNames,
+        map(name => [name, getElectronAppPath(name)]),
+        fromPairs,
+      ) as AppPaths;
 
-        appPathsState.set(appPaths);
+      appPathsState.set(appPaths);
 
-        // NOTE: this is the worse of two evils. This makes sure that `RunnableSync` always is sync
-        return undefined;
-      },
-    };
-  },
+      // NOTE: this is the worse of two evils. This makes sure that `RunnableSync` always is sync
+      return undefined;
+    },
+  }),
 
-  injectionToken: appPathsRunnablePhaseInjectionToken,
+  injectionToken: beforeAnythingInjectionToken,
 });
 
 export default setupAppPathsInjectable;

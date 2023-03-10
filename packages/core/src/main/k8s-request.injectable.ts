@@ -2,7 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { Cluster } from "../common/cluster/cluster";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { LensRequestInit } from "../common/fetch/lens-fetch.injectable";
 import lensFetchInjectable from "../common/fetch/lens-fetch.injectable";
@@ -12,7 +11,11 @@ export interface K8sRequestInit extends LensRequestInit {
   timeout?: number;
 }
 
-export type K8sRequest = (cluster: Cluster, pathnameAndQuery: string, init?: K8sRequestInit) => Promise<unknown>;
+export interface ClusterData {
+  readonly id: string;
+}
+
+export type K8sRequest = (cluster: ClusterData, pathnameAndQuery: string, init?: K8sRequestInit) => Promise<unknown>;
 
 const k8sRequestInjectable = getInjectable({
   id: "k8s-request",

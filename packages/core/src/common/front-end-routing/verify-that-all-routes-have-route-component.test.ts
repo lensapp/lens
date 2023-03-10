@@ -12,7 +12,7 @@ import { pipeline } from "@ogre-tools/fp";
 
 describe("verify-that-all-routes-have-component", () => {
   it("verify that routes have route component", () => {
-    const rendererDi = getDiForUnitTesting({ doGeneralOverrides: true });
+    const rendererDi = getDiForUnitTesting();
 
     rendererDi.override(clusterStoreInjectable, () => ({
       getById: () => null,

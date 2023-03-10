@@ -3,24 +3,21 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { afterRootFrameIsReadyInjectionToken } from "../start-main-application/runnable-tokens/after-root-frame-is-ready-injection-token";
+import { afterRootFrameIsReadyInjectionToken } from "../start-main-application/runnable-tokens/phases";
 import catalogSyncToRendererInjectable from "./catalog-sync-to-renderer.injectable";
 
 const startCatalogSyncInjectable = getInjectable({
   id: "start-catalog-sync",
 
-  instantiate: (di) => {
-    const catalogSyncToRenderer = di.inject(catalogSyncToRendererInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const catalogSyncToRenderer = di.inject(catalogSyncToRendererInjectable);
 
-    return {
-      id: "start-catalog-sync",
-      run: () => {
-        if (!catalogSyncToRenderer.started) {
-          catalogSyncToRenderer.start();
-        }
-      },
-    };
-  },
+      if (!catalogSyncToRenderer.started) {
+        catalogSyncToRenderer.start();
+      }
+    },
+  }),
 
   injectionToken: afterRootFrameIsReadyInjectionToken,
 });

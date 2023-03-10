@@ -15,7 +15,6 @@ import type { RequestHelmReleaseConfiguration } from "../../common/k8s-api/endpo
 import requestHelmReleaseConfigurationInjectable from "../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import type { RequestHelmReleaseUpdate } from "../../common/k8s-api/endpoints/helm-releases.api/request-update.injectable";
 import requestHelmReleaseUpdateInjectable from "../../common/k8s-api/endpoints/helm-releases.api/request-update.injectable";
-import { testUsingFakeTime } from "../../common/test-utils/use-fake-time";
 import type { RequestDetailedHelmRelease } from "../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 import requestDetailedHelmReleaseInjectable from "../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 import showSuccessNotificationInjectable from "../../renderer/components/notifications/show-success-notification.injectable";
@@ -30,6 +29,7 @@ import requestHelmChartVersionsInjectable from "../../common/k8s-api/endpoints/h
 import requestHelmChartReadmeInjectable from "../../common/k8s-api/endpoints/helm-charts.api/request-readme.injectable";
 import requestHelmChartValuesInjectable from "../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
 import { HelmChart } from "../../common/k8s-api/endpoints/helm-charts.api";
+import { testUsingFakeTime } from "../../test-utils/use-fake-time";
 
 describe("showing details for helm release", () => {
   let builder: ApplicationBuilder;
@@ -78,9 +78,12 @@ describe("showing details for helm release", () => {
     });
 
     builder.namespaces.add("some-namespace");
-    builder.namespaces.select("some-namespace");
     builder.namespaces.add("some-namespace");
-    builder.namespaces.select("some-other-namespace");
+
+    builder.afterWindowStart(() => {
+      builder.namespaces.select("some-namespace");
+      builder.namespaces.select("some-other-namespace");
+    });
   });
 
   describe("given application is started", () => {
@@ -106,10 +109,9 @@ describe("showing details for helm release", () => {
       });
 
       it("calls for releases for each selected namespace", () => {
-        expect(requestHelmReleasesMock.mock.calls).toEqual([
-          ["some-namespace"],
-          ["some-other-namespace"],
-        ]);
+        expect(requestHelmReleasesMock).toBeCalledTimes(2);
+        expect(requestHelmReleasesMock).toBeCalledWith("some-namespace");
+        expect(requestHelmReleasesMock).toBeCalledWith("some-other-namespace");
       });
 
       it("shows spinner", () => {

@@ -8,20 +8,22 @@ import { waitFor } from "@testing-library/react";
 import { ClusterLocalTerminalSetting } from "../local-terminal-settings";
 import userEvent from "@testing-library/user-event";
 import type { Stats } from "fs";
-import type { Cluster } from "../../../../common/cluster/cluster";
+import { Cluster } from "../../../../common/cluster/cluster";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
 import statInjectable from "../../../../common/fs/stat.injectable";
+import loadKubeconfigInjectable from "../../../../common/cluster/load-kubeconfig.injectable";
 
 describe("ClusterLocalTerminalSettings", () => {
   let render: DiRender;
   let showErrorNotificationMock: jest.Mock;
   let statMock: jest.Mock;
+  let loadKubeconfigMock: jest.Mock;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     showErrorNotificationMock = jest.fn();
 
@@ -34,27 +36,28 @@ describe("ClusterLocalTerminalSettings", () => {
       () => showErrorNotificationMock,
     );
 
+    loadKubeconfigMock = jest.fn();
+    di.override(loadKubeconfigInjectable, () => loadKubeconfigMock);
+
     render = renderFor(di);
-
-    jest.resetAllMocks();
-  });
-
-  it("should render without errors", () => {
-    const dom = render(<ClusterLocalTerminalSetting cluster={null as never}/>);
-
-    expect(dom.container).toBeInstanceOf(HTMLElement);
   });
 
   it("should render the current settings", async () => {
-    const cluster = {
+    loadKubeconfigMock.mockImplementation(() => ({
+      getContextObject: () => ({}),
+    }));
+
+    const cluster = new Cluster({
+      contextName: "some-context-name",
+      id: "some-cluster-id",
+      kubeConfigPath: "/some/path",
       preferences: {
         terminalCWD: "/foobar",
         defaultNamespace: "kube-system",
       },
-      getKubeconfig: jest.fn(() => ({
-        getContextObject: jest.fn(() => ({})),
-      })),
-    } as unknown as Cluster;
+    }, {
+      clusterServerUrl: "https://localhost:12345",
+    });
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
 
     expect(await dom.findByDisplayValue("/foobar")).toBeDefined();
@@ -62,16 +65,21 @@ describe("ClusterLocalTerminalSettings", () => {
   });
 
   it("should change placeholder for 'Default Namespace' to be the namespace from the kubeconfig", async () => {
-    const cluster = {
+    loadKubeconfigMock.mockImplementation(() => ({
+      getContextObject: () => ({ namespace: "blat" }),
+    }));
+
+    const cluster = new Cluster({
+      contextName: "some-context-name",
+      id: "some-cluster-id",
+      kubeConfigPath: "/some/path",
       preferences: {
         terminalCWD: "/foobar",
       },
-      getKubeconfig: jest.fn(() => ({
-        getContextObject: jest.fn(() => ({
-          namespace: "blat",
-        })),
-      })),
-    } as unknown as Cluster;
+    }, {
+      clusterServerUrl: "https://localhost:12345",
+    });
+
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
 
     expect(await dom.findByDisplayValue("/foobar")).toBeDefined();
@@ -79,14 +87,20 @@ describe("ClusterLocalTerminalSettings", () => {
   });
 
   it("should save the new default namespace after clicking away", async () => {
-    const cluster = {
+    loadKubeconfigMock.mockImplementation(() => ({
+      getContextObject: () => ({}),
+    }));
+
+    const cluster = new Cluster({
+      contextName: "some-context-name",
+      id: "some-cluster-id",
+      kubeConfigPath: "/some/path",
       preferences: {
         terminalCWD: "/foobar",
       },
-      getKubeconfig: jest.fn(() => ({
-        getContextObject: jest.fn(() => ({})),
-      })),
-    } as unknown as Cluster;
+    }, {
+      clusterServerUrl: "https://localhost:12345",
+    });
 
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
     const dn = await dom.findByTestId("default-namespace");
@@ -107,11 +121,17 @@ describe("ClusterLocalTerminalSettings", () => {
       } as Stats;
     });
 
-    const cluster = {
-      getKubeconfig: jest.fn(() => ({
-        getContextObject: jest.fn(() => ({})),
-      })),
-    } as unknown as Cluster;
+    loadKubeconfigMock.mockImplementation(() => ({
+      getContextObject: () => ({}),
+    }));
+
+    const cluster = new Cluster({
+      contextName: "some-context-name",
+      id: "some-cluster-id",
+      kubeConfigPath: "/some/path",
+    }, {
+      clusterServerUrl: "https://localhost:12345",
+    });
 
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
     const dn = await dom.findByTestId("working-directory");
@@ -133,11 +153,17 @@ describe("ClusterLocalTerminalSettings", () => {
       } as Stats;
     });
 
-    const cluster = {
-      getKubeconfig: jest.fn(() => ({
-        getContextObject: jest.fn(() => ({})),
-      })),
-    } as unknown as Cluster;
+    loadKubeconfigMock.mockImplementation(() => ({
+      getContextObject: () => ({}),
+    }));
+
+    const cluster = new Cluster({
+      contextName: "some-context-name",
+      id: "some-cluster-id",
+      kubeConfigPath: "/some/path",
+    }, {
+      clusterServerUrl: "https://localhost:12345",
+    });
 
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
     const dn = await dom.findByTestId("working-directory");

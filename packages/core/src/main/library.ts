@@ -4,11 +4,10 @@
  */
 
 // @experimental
-export { afterApplicationIsLoadedInjectionToken } from "./start-main-application/runnable-tokens/after-application-is-loaded-injection-token";
-export { beforeApplicationIsLoadingInjectionToken } from "./start-main-application/runnable-tokens/before-application-is-loading-injection-token";
-export { beforeElectronIsReadyInjectionToken } from "./start-main-application/runnable-tokens/before-electron-is-ready-injection-token";
-export { onLoadOfApplicationInjectionToken } from "./start-main-application/runnable-tokens/on-load-of-application-injection-token";
-export { createApp } from "./create-app";
+export type { Environments } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+export { registerLensCore } from "./register-lens-core";
+export { nodeEnvInjectionToken } from "../common/vars/node-env-injection-token";
+
 export * as Mobx from "mobx";
 export * as mainExtensionApi from "../extensions/main-api";
 export * as commonExtensionApi from "../extensions/common-api";

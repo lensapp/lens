@@ -7,9 +7,9 @@ import type { FSWatcher } from "chokidar";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import extensionDiscoveryInjectable from "../extension-discovery/extension-discovery.injectable";
 import type { ExtensionDiscovery } from "../extension-discovery/extension-discovery";
-import installExtensionInjectable from "../extension-installer/install-extension/install-extension.injectable";
+import installExtensionInjectable from "../install-extension/install-extension.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import { delay } from "../../renderer/utils";
+import { delay } from "@k8slens/utilities";
 import { observable, runInAction, when } from "mobx";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
@@ -32,7 +32,7 @@ describe("ExtensionDiscovery", () => {
   let homeDirectoryPath: string;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(installExtensionInjectable, () => () => Promise.resolve());

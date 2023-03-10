@@ -10,10 +10,10 @@ import { renderFor } from "../test-utils/renderFor";
 import { Countdown } from "./countdown";
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
-import { advanceFakeTime, testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
 import type { IComputedValue } from "mobx";
 import { observe } from "mobx";
-import { noop } from "../../../common/utils";
+import { noop } from "@k8slens/utilities";
+import { testUsingFakeTime, advanceFakeTime } from "../../../test-utils/use-fake-time";
 
 describe("countdown", () => {
   let di: DiContainer;

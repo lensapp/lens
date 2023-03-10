@@ -6,8 +6,9 @@
 import "./tabs.scss";
 import type { DOMAttributes } from "react";
 import React from "react";
-import { autoBind, cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
+import autoBindReact from "auto-bind/react";
 
 const TabsContext = React.createContext<TabsContextValue<unknown>>({});
 
@@ -66,7 +67,7 @@ export class Tab<D> extends React.PureComponent<TabProps<D>> {
 
   constructor(props: TabProps<D>) {
     super(props);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   get isActive() {

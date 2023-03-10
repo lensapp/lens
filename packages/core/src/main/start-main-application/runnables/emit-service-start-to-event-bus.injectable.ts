@@ -4,21 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
-import { afterApplicationIsLoadedInjectionToken } from "../runnable-tokens/after-application-is-loaded-injection-token";
+import { afterApplicationIsLoadedInjectionToken } from "@k8slens/application";
 
 const emitServiceStartToEventBusInjectable = getInjectable({
   id: "emit-service-start-to-event-bus",
 
-  instantiate: (di) => {
-    const emitAppEvent = di.inject(emitAppEventInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const emitAppEvent = di.inject(emitAppEventInjectable);
 
-    return {
-      id: "emit-service-start-to-event-bus",
-      run: () => {
-        emitAppEvent({ name: "service", action: "start" });
-      },
-    };
-  },
+      emitAppEvent({ name: "service", action: "start" });
+    },
+  }),
 
   injectionToken: afterApplicationIsLoadedInjectionToken,
 });

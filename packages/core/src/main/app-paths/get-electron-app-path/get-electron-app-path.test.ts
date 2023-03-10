@@ -11,7 +11,9 @@ describe("get-electron-app-path", () => {
   let getElectronAppPath: (name: string) => string;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: false });
+    const di = getDiForUnitTesting();
+
+    di.unoverride(getElectronAppPathInjectable);
 
     const appStub = {
       name: "some-app-name",

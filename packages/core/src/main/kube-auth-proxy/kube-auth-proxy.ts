@@ -7,7 +7,7 @@ import type { ChildProcess } from "child_process";
 import { randomBytes } from "crypto";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { GetPortFromStream } from "../utils/get-port-from-stream.injectable";
-import { makeObservable, observable, when } from "mobx";
+import { observable, when } from "mobx";
 import type { SelfSignedCert } from "selfsigned";
 import assert from "assert";
 import { TypedRegEx } from "typed-regex";
@@ -15,6 +15,7 @@ import type { Spawn } from "../child-process/spawn.injectable";
 import type { Logger } from "../../common/logger";
 import type { WaitUntilPortIsUsed } from "./wait-until-port-is-used/wait-until-port-is-used.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
+import type { BroadcastConnectionUpdate } from "../cluster/broadcast-connection-update.injectable";
 
 const startingServeMatcher = "starting to serve on (?<address>.+)";
 const startingServeRegex = Object.assign(TypedRegEx(startingServeMatcher, "i"), {
@@ -29,6 +30,7 @@ export interface KubeAuthProxyDependencies {
   waitUntilPortIsUsed: WaitUntilPortIsUsed;
   getPortFromStream: GetPortFromStream;
   dirname: GetDirnameOfPath;
+  broadcastConnectionUpdate: BroadcastConnectionUpdate;
 }
 
 export class KubeAuthProxy {
@@ -44,19 +46,17 @@ export class KubeAuthProxy {
 
   protected _port?: number;
   protected proxyProcess?: ChildProcess;
-  @observable protected ready = false;
+  protected readonly ready = observable.box(false);
 
-  constructor(private readonly dependencies: KubeAuthProxyDependencies, protected readonly cluster: Cluster, protected readonly env: NodeJS.ProcessEnv) {
-    makeObservable(this);
-  }
-
-  get whenReady() {
-    return when(() => this.ready);
-  }
+  constructor(
+    private readonly dependencies: KubeAuthProxyDependencies,
+    protected readonly cluster: Cluster,
+    protected readonly env: NodeJS.ProcessEnv,
+  ) {}
 
   public async run(): Promise<void> {
     if (this.proxyProcess) {
-      return this.whenReady;
+      return when(() => this.ready.get());
     }
 
     const proxyBin = this.dependencies.proxyBinPath;
@@ -65,26 +65,42 @@ export class KubeAuthProxy {
     this.proxyProcess = this.dependencies.spawn(proxyBin, [], {
       env: {
         ...this.env,
-        KUBECONFIG: this.cluster.kubeConfigPath,
-        KUBECONFIG_CONTEXT: this.cluster.contextName,
+        KUBECONFIG: this.cluster.kubeConfigPath.get(),
+        KUBECONFIG_CONTEXT: this.cluster.contextName.get(),
         API_PREFIX: this.apiPrefix,
         PROXY_KEY: cert.private,
         PROXY_CERT: cert.cert,
       },
-      cwd: this.dependencies.dirname(this.cluster.kubeConfigPath),
+      cwd: this.dependencies.dirname(this.cluster.kubeConfigPath.get()),
     });
     this.proxyProcess.on("error", (error) => {
-      this.cluster.broadcastConnectUpdate(error.message, "error");
+      this.dependencies.broadcastConnectionUpdate({
+        level: "error",
+        message: error.message,
+      });
       this.exit();
     });
 
     this.proxyProcess.on("exit", (code) => {
-      this.cluster.broadcastConnectUpdate(`proxy exited with code: ${code}`, code ? "error" : "info");
+      if (code) {
+        this.dependencies.broadcastConnectionUpdate({
+          level: "error",
+          message: `proxy exited with code: ${code}`,
+        });
+      } else {
+        this.dependencies.broadcastConnectionUpdate({
+          level: "info",
+          message: "proxy exited successfully",
+        });
+      }
       this.exit();
     });
 
     this.proxyProcess.on("disconnect", () => {
-      this.cluster.broadcastConnectUpdate("Proxy disconnected communications", "error");
+      this.dependencies.broadcastConnectionUpdate({
+        level: "error",
+        message: "Proxy disconnected communications",
+      });
       this.exit();
     });
 
@@ -96,28 +112,40 @@ export class KubeAuthProxy {
         return;
       }
 
-      this.cluster.broadcastConnectUpdate(data.toString(), "error");
+      this.dependencies.broadcastConnectionUpdate({
+        level: "error",
+        message: data.toString(),
+      });
     });
 
     this.proxyProcess.stdout.on("data", (data: Buffer) => {
       if (typeof this._port === "number") {
-        this.cluster.broadcastConnectUpdate(data.toString());
+        this.dependencies.broadcastConnectionUpdate({
+          level: "info",
+          message: data.toString(),
+        });
       }
     });
 
     this._port = await this.dependencies.getPortFromStream(this.proxyProcess.stdout, {
       lineRegex: startingServeRegex,
-      onFind: () => this.cluster.broadcastConnectUpdate("Authentication proxy started"),
+      onFind: () => this.dependencies.broadcastConnectionUpdate({
+        level: "info",
+        message: "Authentication proxy started",
+      }),
     });
 
     this.dependencies.logger.info(`[KUBE-AUTH-PROXY]: found port=${this._port}`);
 
     try {
       await this.dependencies.waitUntilPortIsUsed(this.port, 500, 10000);
-      this.ready = true;
+      this.ready.set(true);
     } catch (error) {
       this.dependencies.logger.warn("[KUBE-AUTH-PROXY]: waitUntilUsed failed", error);
-      this.cluster.broadcastConnectUpdate("Proxy port failed to be used within timelimit, restarting...", "error");
+      this.dependencies.broadcastConnectionUpdate({
+        level: "error",
+        message: "Proxy port failed to be used within time limit, restarting...",
+      });
       this.exit();
 
       return this.run();
@@ -125,7 +153,7 @@ export class KubeAuthProxy {
   }
 
   public exit() {
-    this.ready = false;
+    this.ready.set(false);
 
     if (this.proxyProcess) {
       this.dependencies.logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta());

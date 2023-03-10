@@ -4,21 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import syncThemeFromOperatingSystemInjectable from "../../electron-app/features/sync-theme-from-operating-system.injectable";
-import { onLoadOfApplicationInjectionToken } from "../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const startSyncingThemeFromOperatingSystemInjectable = getInjectable({
   id: "start-syncing-theme-from-operating-system",
 
-  instantiate: (di) => {
-    const syncTheme = di.inject(syncThemeFromOperatingSystemInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const syncTheme = di.inject(syncThemeFromOperatingSystemInjectable);
 
-    return {
-      id: "start-syncing-theme-from-operating-system",
-      run: () => {
-        syncTheme.start();
-      },
-    };
-  },
+      syncTheme.start();
+    },
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

@@ -9,7 +9,7 @@ import React, { createRef, useEffect } from "react";
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
 import type { DockStore, TabId } from "./dock/store";
-import { cssNames, disposer } from "../../utils";
+import { cssNames, disposer } from "@k8slens/utilities";
 import { MonacoEditor } from "../monaco-editor";
 import type { MonacoEditorProps, MonacoEditorRef  } from "../monaco-editor";
 import { withInjectables } from "@ogre-tools/injectable-react";

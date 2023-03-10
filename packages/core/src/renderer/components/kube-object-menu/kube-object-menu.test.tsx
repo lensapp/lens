@@ -15,7 +15,6 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { computed, runInAction } from "mobx";
-import clusterInjectable from "./dependencies/cluster.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import type { Cluster } from "../../../common/cluster/cluster";
@@ -25,6 +24,7 @@ import { KubeObjectMenu } from "./index";
 import createEditResourceTabInjectable from "../dock/edit-resource/edit-resource-tab.injectable";
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
 import { kubeObjectMenuItemInjectionToken } from "./kube-object-menu-item-injection-token";
+import activeEntityInternalClusterInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 
 // TODO: make `animated={false}` not required to make tests deterministic
 describe("kube-object-menu", () => {
@@ -32,7 +32,7 @@ describe("kube-object-menu", () => {
   let render: DiRender;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     runInAction(() => {
       di.register(
@@ -45,11 +45,10 @@ describe("kube-object-menu", () => {
     render = renderFor(di);
 
     di.override(
-      clusterInjectable,
-      () =>
-        ({
-          name: "Some name",
-        } as Cluster),
+      activeEntityInternalClusterInjectable,
+      () => computed(() => ({
+        name: computed(() => "Some name"),
+      } as Cluster)),
     );
 
     di.override(
@@ -66,7 +65,11 @@ describe("kube-object-menu", () => {
   });
 
   it("given no cluster, does not crash", () => {
-    di.override(clusterInjectable, () => null);
+
+    di.override(
+      activeEntityInternalClusterInjectable,
+      () => computed(() => undefined),
+    );
 
     expect(() => {
       render(<KubeObjectMenu object={null as never} toolbar={true} />);

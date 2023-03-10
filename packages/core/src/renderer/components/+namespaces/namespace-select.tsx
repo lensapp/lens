@@ -10,11 +10,11 @@ import { computed } from "mobx";
 import { observer } from "mobx-react";
 import type { SelectProps } from "../select";
 import { Select } from "../select";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
-import type { NamespaceStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import namespaceStoreInjectable from "./store.injectable";
+import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
+import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
 
 export type NamespaceSelectSort = (left: string, right: string) => number;
 
@@ -25,12 +25,12 @@ export interface NamespaceSelectProps<IsMulti extends boolean> extends Omit<Sele
 }
 
 interface Dependencies {
-  namespaceStore: NamespaceStore;
+  context: ClusterContext;
 }
 
-function getOptions(namespaceStore: NamespaceStore, sort: NamespaceSelectSort | undefined) {
+function getOptions(context: ClusterContext, sort: NamespaceSelectSort | undefined) {
   return computed(() => {
-    const baseOptions = namespaceStore.items.map(ns => ns.getName());
+    const baseOptions = context.allNamespaces;
 
     if (sort) {
       baseOptions.sort(sort);
@@ -44,16 +44,16 @@ function getOptions(namespaceStore: NamespaceStore, sort: NamespaceSelectSort | 
 }
 
 const NonInjectedNamespaceSelect = observer(({
-  namespaceStore,
+  context,
   showIcons,
   formatOptionLabel,
   sort,
   className,
   ...selectProps
 }: Dependencies & NamespaceSelectProps<boolean>) => {
-  const [baseOptions, setBaseOptions] = useState(getOptions(namespaceStore, sort));
+  const [baseOptions, setBaseOptions] = useState(getOptions(context, sort));
 
-  useEffect(() => setBaseOptions(getOptions(namespaceStore, sort)), [sort]);
+  useEffect(() => setBaseOptions(getOptions(context, sort)), [sort]);
 
   return (
     <Select
@@ -77,7 +77,7 @@ const NonInjectedNamespaceSelect = observer(({
 const InjectedNamespaceSelect = withInjectables<Dependencies, NamespaceSelectProps<boolean>>(NonInjectedNamespaceSelect, {
   getProps: (di, props) => ({
     ...props,
-    namespaceStore: di.inject(namespaceStoreInjectable),
+    context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
   }),
 });
 

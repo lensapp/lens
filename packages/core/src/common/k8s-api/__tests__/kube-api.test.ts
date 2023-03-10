@@ -15,7 +15,7 @@ import type { CreateKubeApiForRemoteCluster } from "../create-kube-api-for-remot
 import createKubeApiForRemoteClusterInjectable from "../create-kube-api-for-remote-cluster.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { flushPromises } from "../../test-utils/flush-promises";
+import { flushPromises } from "@k8slens/test-utils";
 import createKubeJsonApiInjectable from "../create-kube-json-api.injectable";
 import type { IKubeWatchEvent } from "../kube-watch-event";
 import type { KubeJsonApiDataFor } from "../kube-object";
@@ -24,7 +24,6 @@ import setupAutoRegistrationInjectable from "../../../renderer/before-frame-star
 import { createMockResponseFromStream, createMockResponseFromString } from "../../../test-utils/mock-responses";
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import createClusterInjectable from "../../../main/create-cluster/create-cluster.injectable";
 import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
 import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
@@ -36,21 +35,20 @@ import namespaceApiInjectable from "../endpoints/namespace.api.injectable";
 // NOTE: this is fine because we are testing something that only exported
 // eslint-disable-next-line no-restricted-imports
 import { PodsApi } from "../../../extensions/common-api/k8s-api";
+import { Cluster } from "../../cluster/cluster";
 
 describe("createKubeApiForRemoteCluster", () => {
   let createKubeApiForRemoteCluster: CreateKubeApiForRemoteCluster;
   let fetchMock: AsyncFnMock<Fetch>;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    const createCluster = di.inject(createClusterInjectable);
-
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
@@ -145,7 +143,7 @@ describe("KubeApi", () => {
   let di: DiContainer;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
@@ -154,10 +152,9 @@ describe("KubeApi", () => {
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
 
-    const createCluster = di.inject(createClusterInjectable);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
 
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",

@@ -7,14 +7,13 @@ import { isEqual } from "lodash";
 import { autorun } from "mobx";
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import type { ClusterId, ClusterState } from "../../../../common/cluster-types";
-import { beforeApplicationIsLoadingInjectionToken } from "../../../../main/start-main-application/runnable-tokens/before-application-is-loading-injection-token";
+import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import initClusterStoreInjectable from "../../store/main/init.injectable";
 import emitClusterStateUpdateInjectable from "./emit-update.injectable";
 
 const setupClusterStateBroadcastingInjectable = getInjectable({
   id: "setup-cluster-state-broadcasting",
   instantiate: (di) => ({
-    id: "setup-cluster-state-broadcasting",
     run: () => {
       const emitClusterStateUpdate = di.inject(emitClusterStateUpdateInjectable);
       const clusterStore = di.inject(clusterStoreInjectable);
@@ -36,7 +35,7 @@ const setupClusterStateBroadcastingInjectable = getInjectable({
         }
       });
     },
-    runAfter: di.inject(initClusterStoreInjectable),
+    runAfter: initClusterStoreInjectable,
   }),
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });

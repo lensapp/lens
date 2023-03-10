@@ -13,7 +13,7 @@ import { Pod } from "../../../common/k8s-api/endpoints";
 import type { NodeApi, PriorityClassApi, RuntimeClassApi, ServiceAccountApi } from "../../../common/k8s-api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
-import { cssNames, stopPropagation, toJS } from "../../utils";
+import { cssNames, stopPropagation } from "@k8slens/utilities";
 import { PodDetailsContainer } from "./pod-details-container";
 import { PodDetailsAffinities } from "./pod-details-affinities";
 import { PodDetailsTolerations } from "./pod-details-tolerations";
@@ -33,6 +33,7 @@ import priorityClassApiInjectable from "../../../common/k8s-api/endpoints/priori
 import loggerInjectable from "../../../common/logger.injectable";
 import type { PodMetricData } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics.injectable";
 import podContainerMetricsInjectable from "./container-metrics.injectable";
+import { toJS } from "../../../common/utils";
 
 export interface PodDetailsProps extends KubeObjectDetailsProps<Pod> {
 }

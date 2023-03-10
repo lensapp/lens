@@ -1,11 +1,11 @@
 # Lens Desktop Core ("OpenLens")
 
 [![Build Status](https://github.com/lensapp/lens/actions/workflows/test.yml/badge.svg)](https://github.com/lensapp/lens/actions/workflows/test.yml)
-[![Chat on Slack](https://img.shields.io/badge/chat-on%20slack-blue.svg?logo=slack&longCache=true&style=flat)](https://k8slens.dev/slack.html)
+<img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Discourse_icon.svg" width=25>[Explore our Forums](https://forums.k8slens.dev)
 
 ## The Repository
 
-This repository is where Team Lens develops the core of the [Lens Desktop](https://k8slens.dev) product together with the community. 
+This repository is where Team Lens develops the core of the [Lens Desktop](https://k8slens.dev) product together with the community.
 
 The core is a library, powered by [Electron](https://www.electronjs.org/) and [React](https://reactjs.org/). Unlike generic Electron + React frameworks / boilerplates, it is very opinionated for creating Lens Desktop-like applications and has support for Lens Extensions.
 
@@ -27,7 +27,7 @@ See [Development](https://docs.k8slens.dev/contributing/development/) page.
 
 ## Contributing
 
-See [Contributing](https://docs.k8slens.dev/contributing/) page.
+See [Contributing](https://docs.k8slens.dev/contributing/contribute-to-lens/) page.
 
 ## License
 

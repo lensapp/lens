@@ -53,7 +53,11 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
   @computed get isReady(): boolean {
     const { cluster } = this;
 
-    return (cluster?.ready && cluster?.available && this.isViewLoaded.get()) ?? false;
+    if (!cluster) {
+      return false;
+    }
+
+    return cluster.ready.get() && cluster.available.get() && this.isViewLoaded.get();
   }
 
   componentDidMount() {
@@ -69,7 +73,11 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
     disposeOnUnmount(this, [
       reaction(() => this.clusterId, async (clusterId) => {
         // TODO: replace with better handling
-        if (clusterId && !this.props.entityRegistry.getById(clusterId)) {
+        if (!this.clusterId) {
+          return;
+        }
+
+        if (!this.props.entityRegistry.getById(clusterId)) {
           return this.props.navigateToCatalog(); // redirect to catalog when the clusterId does not correspond to an entity
         }
 
@@ -79,12 +87,6 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
         this.props.entityRegistry.activeEntity = clusterId;
       }, {
         fireImmediately: true,
-      }),
-
-      reaction(() => [this.cluster?.ready, this.cluster?.disconnected], ([, disconnected]) => {
-        if (this.isViewLoaded.get() && disconnected) {
-          this.props.navigateToCatalog(); // redirect to catalog when active cluster get disconnected/not available
-        }
       }),
     ]);
   }

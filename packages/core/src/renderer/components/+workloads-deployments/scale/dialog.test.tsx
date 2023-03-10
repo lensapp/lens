@@ -88,7 +88,7 @@ describe("<DeploymentScaleDialog />", () => {
   let render: DiRender;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 

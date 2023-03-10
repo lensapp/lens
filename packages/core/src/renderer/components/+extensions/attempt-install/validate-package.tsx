@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { LensExtensionManifest } from "../../../../extensions/lens-extension";
-import { hasTypedProperty, isObject, isString, listTarEntries, readFileFromTar } from "../../../../common/utils";
+import { hasTypedProperty, isObject, isString, listTarEntries, readFileFromTar } from "@k8slens/utilities";
 import { manifestFilename } from "../../../../extensions/extension-discovery/extension-discovery";
 import path from "path";
 

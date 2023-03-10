@@ -1,19 +1,32 @@
-import { createContainer } from "@ogre-tools/injectable";
 import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registration";
 import { runInAction } from "mobx";
-import { createApp, mainExtensionApi as Main, commonExtensionApi as Common } from "@k8slens/core/main";
+import {
+  mainExtensionApi as Main,
+  commonExtensionApi as Common,
+  registerLensCore,
+} from "@k8slens/core/main";
+import { createContainer } from "@ogre-tools/injectable";
+import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
+import { registerFeature } from "@k8slens/feature-core";
+import { applicationFeature, startApplicationInjectionToken } from '@k8slens/application'
+import { applicationFeatureForElectronMain } from '@k8slens/application-for-electron-main'
 
-const di = createContainer("main");
-const app = createApp({
-  di,
-  mode: process.env.NODE_ENV || "development"
-});
+const environment = "main";
+
+const di = createContainer(environment);
+
+registerMobX(di);
 
 runInAction(() => {
+  registerLensCore(di, environment);
+
+  registerFeature(di, applicationFeature, applicationFeatureForElectronMain);
+
   try {
     autoRegister({
       di,
-      requireContexts: [
+      targetModule: module,
+      getRequireContexts: () => [
         require.context("./", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
         require.context("../common", true, CONTEXT_MATCHER_FOR_NON_FEATURES),
       ],
@@ -24,7 +37,9 @@ runInAction(() => {
   }
 });
 
-app.start().catch((error) => {
+const startApplication = di.inject(startApplicationInjectionToken);
+
+startApplication().catch((error) => {
   console.error(error);
   process.exit(1);
 })

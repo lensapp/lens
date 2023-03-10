@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { StorageLayer } from "../../../utils";
+import type { StorageLayer } from "../../../utils/storage-helper";
 import type { TableSortParams } from "../table";
 
 export interface TableStorageModel {

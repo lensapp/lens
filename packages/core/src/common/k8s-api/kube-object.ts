@@ -7,7 +7,7 @@
 
 import moment from "moment";
 import type { KubeJsonApiData, KubeJsonApiDataList, KubeJsonApiListMetadata } from "./kube-json-api";
-import { autoBind, formatDuration, hasOptionalTypedProperty, hasTypedProperty, isObject, isString, isNumber, bindPredicate, isTypedArray, isRecord, json } from "../utils";
+import { formatDuration, hasOptionalTypedProperty, hasTypedProperty, isObject, isString, isNumber, bindPredicate, isTypedArray, isRecord } from "@k8slens/utilities";
 import type { ItemObject } from "../item.store";
 import type { Patch } from "rfc6902";
 import assert from "assert";
@@ -17,6 +17,7 @@ import { apiKubeInjectionToken } from "./api-kube";
 import requestKubeObjectCreationInjectable from "./endpoints/resource-applier.api/request-update.injectable";
 import { dump } from "js-yaml";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import autoBind from "auto-bind";
 
 export type KubeJsonApiDataFor<K> = K extends KubeObject<infer Metadata, infer Status, infer Spec>
   ? KubeJsonApiData<Metadata, Status, Spec>
@@ -624,7 +625,7 @@ export class KubeObject<
   }
 
   toPlainObject() {
-    return json.parse(JSON.stringify(this)) as JsonObject;
+    return JSON.parse(JSON.stringify(this)) as JsonObject;
   }
 
   /**

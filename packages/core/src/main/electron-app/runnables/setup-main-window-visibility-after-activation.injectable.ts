@@ -5,30 +5,27 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import electronAppInjectable from "../electron-app.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import { onLoadOfApplicationInjectionToken } from "../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import showApplicationWindowInjectable from "../../start-main-application/lens-window/show-application-window.injectable";
 
 const setupMainWindowVisibilityAfterActivationInjectable = getInjectable({
   id: "setup-main-window-visibility-after-activation",
 
-  instantiate: (di) => {
-    const app = di.inject(electronAppInjectable);
-    const showApplicationWindow = di.inject(showApplicationWindowInjectable);
-    const logger = di.inject(loggerInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const app = di.inject(electronAppInjectable);
+      const showApplicationWindow = di.inject(showApplicationWindowInjectable);
+      const logger = di.inject(loggerInjectable);
 
-    return {
-      id: "setup-main-window-visibility-after-activation",
-      run: () => {
-        app.on("activate", async (_, windowIsVisible) => {
-          logger.info("APP:ACTIVATE", { hasVisibleWindows: windowIsVisible });
+      app.on("activate", (_, windowIsVisible) => {
+        logger.info("APP:ACTIVATE", { hasVisibleWindows: windowIsVisible });
 
-          if (!windowIsVisible) {
-            await showApplicationWindow();
-          }
-        });
-      },
-    };
-  },
+        if (!windowIsVisible) {
+          void showApplicationWindow();
+        }
+      });
+    },
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

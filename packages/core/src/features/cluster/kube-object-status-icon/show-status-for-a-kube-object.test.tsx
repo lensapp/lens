@@ -5,7 +5,6 @@
 import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
 import { KubeObject } from "../../../common/k8s-api/kube-object";
 import React from "react";
-import { testUsingFakeTime } from "../../../common/test-utils/use-fake-time";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IAtom } from "mobx";
@@ -20,6 +19,7 @@ import { act } from "@testing-library/react";
 import { observer } from "mobx-react";
 import { kubeObjectStatusTextInjectionToken } from "../../../renderer/components/kube-object-status-icon/kube-object-status-text-injection-token";
 import { KubeObjectStatusIcon } from "../../../renderer/components/kube-object-status-icon";
+import { testUsingFakeTime } from "../../../test-utils/use-fake-time";
 
 describe("show status for a kube object", () => {
   let builder: ApplicationBuilder;

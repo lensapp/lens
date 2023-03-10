@@ -7,13 +7,13 @@ import type { KubernetesCluster } from "../catalog-entities";
 import yaml from "js-yaml";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import productNameInjectable from "../vars/product-name.injectable";
-import type { AsyncResult } from "../utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import type { Logger } from "../logger";
 import type { KubectlApplyAll, KubectlDeleteAll } from "../kube-helpers/channels";
 import type { ReadDirectory } from "../fs/read-directory.injectable";
 import type { JoinPaths } from "../path/join-paths.injectable";
 import type { ReadFile } from "../fs/read-file.injectable";
-import { hasTypedProperty, isObject } from "../utils";
+import { hasTypedProperty, isObject } from "@k8slens/utilities";
 
 export interface ResourceApplyingStack {
   kubectlApplyFolder(folderPath: string, templateContext?: any, extraArgs?: string[]): Promise<string>;
@@ -51,7 +51,7 @@ export class ResourceStack {
 
     this.dependencies.logger.warn(`[RESOURCE-STACK]: failed to apply resources: ${result.error}`);
 
-    return "";
+    throw new Error(result.error);
   }
 
   /**
@@ -72,7 +72,7 @@ export class ResourceStack {
     return "";
   }
 
-  protected async applyResources(resources: string[], extraArgs: string[] = []): Promise<AsyncResult<string, string>> {
+  protected async applyResources(resources: string[], extraArgs: string[] = []): AsyncResult<string, string> {
     const kubectlArgs = [...extraArgs, ...this.getAdditionalArgs(extraArgs)];
 
     return this.dependencies.kubectlApplyAll({
@@ -82,7 +82,7 @@ export class ResourceStack {
     });
   }
 
-  protected async deleteResources(resources: string[], extraArgs: string[] = []): Promise<AsyncResult<string, string>> {
+  protected async deleteResources(resources: string[], extraArgs: string[] = []): AsyncResult<string, string> {
     const kubectlArgs = [...extraArgs, ...this.getAdditionalArgs(extraArgs)];
 
     return this.dependencies.kubectlDeleteAll({

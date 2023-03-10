@@ -8,7 +8,7 @@ import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
 import type { LensRendererExtension } from "../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../extensions/renderer-extensions.injectable";
-import { getOrInsert, getOrInsertMap } from "../../utils";
+import { getOrInsert, getOrInsertMap } from "@k8slens/utilities";
 import type { CustomCategoryViewComponents } from "./custom-views";
 
 interface Dependencies {

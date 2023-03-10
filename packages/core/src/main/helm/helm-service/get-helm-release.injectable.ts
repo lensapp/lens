@@ -5,7 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import loggerInjectable from "../../../common/logger.injectable";
-import { isObject, json } from "../../../common/utils";
+import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
+import { isObject, json } from "@k8slens/utilities";
 import execHelmInjectable from "../exec-helm/exec-helm.injectable";
 import getHelmReleaseResourcesInjectable from "./get-helm-release-resources/get-helm-release-resources.injectable";
 
@@ -18,7 +19,8 @@ const getHelmReleaseInjectable = getInjectable({
     const getHelmReleaseResources = di.inject(getHelmReleaseResourcesInjectable);
 
     return async (cluster: Cluster, releaseName: string, namespace: string) => {
-      const kubeconfigPath = await cluster.getProxyKubeconfigPath();
+      const proxyKubeconfigManager = di.inject(kubeconfigManagerInjectable, cluster);
+      const proxyKubeconfigPath = await proxyKubeconfigManager.ensurePath();
 
       logger.debug("Fetch release");
 
@@ -28,7 +30,7 @@ const getHelmReleaseInjectable = getInjectable({
         "--namespace",
         namespace,
         "--kubeconfig",
-        kubeconfigPath,
+        proxyKubeconfigPath,
         "--output",
         "json",
       ]);
@@ -48,7 +50,7 @@ const getHelmReleaseInjectable = getInjectable({
       const resourcesResult = await getHelmReleaseResources(
         releaseName,
         namespace,
-        kubeconfigPath,
+        proxyKubeconfigPath,
       );
 
       if (!resourcesResult.callWasSuccessful) {

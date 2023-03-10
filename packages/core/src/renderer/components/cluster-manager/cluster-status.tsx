@@ -10,8 +10,8 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { ipcRendererOn } from "../../../common/ipc";
 import type { Cluster } from "../../../common/cluster/cluster";
-import type { IClassName } from "../../utils";
-import { hasTypedProperty, isObject, isString, cssNames } from "../../utils";
+import type { IClassName } from "@k8slens/utilities";
+import { hasTypedProperty, isObject, isString, cssNames } from "@k8slens/utilities";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
@@ -158,7 +158,7 @@ class NonInjectedClusterStatus extends React.Component<ClusterStatusProps & Depe
     return (
       <div className={cssNames(styles.status, "flex column box center align-center justify-center", this.props.className)}>
         <div className="flex items-center column gaps">
-          <h2>{this.entity?.getName() ?? this.cluster.name}</h2>
+          <h2>{this.entity?.getName() ?? this.cluster.name.get()}</h2>
           {this.renderStatusIcon()}
           {this.renderAuthenticationOutput()}
           {this.renderReconnectionHelp()}

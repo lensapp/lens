@@ -4,12 +4,11 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import fileSystemProvisionerStoreInjectable from "../../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
-import { onLoadOfApplicationInjectionToken } from "../../../main/start-main-application/runnable-tokens/on-load-of-application-injection-token";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const initFileSystemProvisionerStoreInjectable = getInjectable({
   id: "init-file-system-provisioner-store",
   instantiate: (di) => ({
-    id: "init-file-system-provisioner-store",
     run: () => {
       const store = di.inject(fileSystemProvisionerStoreInjectable);
 

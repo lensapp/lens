@@ -7,7 +7,7 @@ import { observable, makeObservable } from "mobx";
 import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
 import type { Arguments } from "typed-emitter";
-import type { Defaulted } from "../utils";
+import type { Defaulted } from "@k8slens/utilities";
 import type { DefaultWebsocketApiParams } from "./default-websocket-api-params.injectable";
 
 interface WebsocketApiParams {

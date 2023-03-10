@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { urlBuilderFor } from "../../../utils/buildUrl";
-import type { AsyncResult } from "../../../utils/async-result";
+import { urlBuilderFor } from "@k8slens/utilities";
+import type { AsyncResult } from "@k8slens/utilities";
 import apiBaseInjectable from "../../api-base.injectable";
 
 interface HelmReleaseUpdatePayload {
@@ -18,7 +18,7 @@ export type RequestHelmReleaseUpdate = (
   name: string,
   namespace: string,
   payload: HelmReleaseUpdatePayload
-) => Promise<AsyncResult<void, unknown>>;
+) => AsyncResult<void, unknown>;
 
 const requestUpdateEndpoint = urlBuilderFor("/v2/releases/:namespace/:name");
 

@@ -12,7 +12,6 @@ import topBarStateInjectable from "./state.injectable";
 const startTopbarStateSyncInjectable = getInjectable({
   id: "start-topbar-state-sync",
   instantiate: (di) => ({
-    id: "start-topbar-state-sync",
     run: () => {
       const state = di.inject(topBarStateInjectable);
       const ipcRenderer = di.inject(ipcRendererInjectable);

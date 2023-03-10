@@ -12,7 +12,7 @@ export function withErrorSuppression(toBeDecorated: any) {
     try {
       const returnValue = toBeDecorated(...args);
 
-      if (isPromise(returnValue)) {
+      if ((returnValue as any) instanceof Promise) {
         return returnValue.catch(noop);
       }
 
@@ -21,8 +21,4 @@ export function withErrorSuppression(toBeDecorated: any) {
       return undefined;
     }
   };
-}
-
-function isPromise(reference: any): reference is Promise<any> {
-  return !!reference?.then;
 }

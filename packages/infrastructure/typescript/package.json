@@ -1,9 +1,13 @@
 {
   "name": "@k8slens/typescript",
   "private": false,
-  "version": "0.0.1",
+  "version": "6.5.0-alpha.0",
   "description": "Typescript configuration for Lens packages.",
   "type": "commonjs",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"

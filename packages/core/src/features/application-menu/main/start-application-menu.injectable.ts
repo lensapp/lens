@@ -4,23 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuReactivityInjectable from "./application-menu-reactivity.injectable";
-import { onLoadOfApplicationInjectionToken } from "../../../main/start-main-application/runnable-tokens/on-load-of-application-injection-token";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const startApplicationMenuInjectable = getInjectable({
   id: "start-application-menu",
 
-  instantiate: (di) => {
-    const applicationMenu = di.inject(
-      applicationMenuReactivityInjectable,
-    );
+  instantiate: (di) => ({
+    run: () => {
+      const applicationMenu = di.inject(applicationMenuReactivityInjectable);
 
-    return {
-      id: "start-application-menu",
-      run: () => {
-        applicationMenu.start();
-      },
-    };
-  },
+      applicationMenu.start();
+    },
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

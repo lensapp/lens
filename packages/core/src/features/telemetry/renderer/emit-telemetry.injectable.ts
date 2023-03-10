@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import emitEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
-import { toJS, observable } from "mobx";
+import { observable, toJS } from "mobx";
 
 const emitTelemetryInjectable = getInjectable({
   id: "emit-telemetry",
@@ -12,12 +12,12 @@ const emitTelemetryInjectable = getInjectable({
   instantiate: (di) => {
     const emitEvent = di.inject(emitEventInjectable);
 
-    return ({ action, args }: { action: string; args: any[] }) => {
+    return ({ action, params }: { action: string; params?: object }) => {
       emitEvent({
         destination: "auto-capture",
         action: "telemetry-from-business-action",
         name: action,
-        params: { args: toJS(observable(args)) },
+        ...(params ? { params: toJS(observable(params)) } : {}),
       });
     };
   },

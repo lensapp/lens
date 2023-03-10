@@ -3,10 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { urlBuilderFor } from "../../../utils/buildUrl";
+import { urlBuilderFor, isDefined } from "@k8slens/utilities";
 import { HelmChart } from "../helm-charts.api";
 import type { RawHelmChart } from "../helm-charts.api";
-import { isDefined } from "../../../utils";
 import apiBaseInjectable from "../../api-base.injectable";
 
 const requestVersionsEndpoint = urlBuilderFor("/v2/charts/:repo/:name/versions");

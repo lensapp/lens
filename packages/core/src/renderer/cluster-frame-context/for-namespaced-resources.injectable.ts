@@ -8,6 +8,7 @@ import namespaceStoreInjectable from "../components/+namespaces/store.injectable
 import hostedClusterInjectable from "./hosted-cluster.injectable";
 import assert from "assert";
 import { computed } from "mobx";
+import selectedNamespacesStorageInjectable from "../../features/namespace-filtering/renderer/storage.injectable";
 
 const clusterFrameContextForNamespacedResourcesInjectable = getInjectable({
   id: "cluster-frame-context-for-namespaced-resources",
@@ -15,6 +16,7 @@ const clusterFrameContextForNamespacedResourcesInjectable = getInjectable({
   instantiate: (di): ClusterContext => {
     const cluster = di.inject(hostedClusterInjectable);
     const namespaceStore = di.inject(namespaceStoreInjectable);
+    const selectedNamespacesStorage = di.inject(selectedNamespacesStorageInjectable);
 
     assert(cluster, "This can only be injected within a cluster frame");
 
@@ -32,13 +34,19 @@ const clusterFrameContextForNamespacedResourcesInjectable = getInjectable({
       // fallback to cluster resolved namespaces because we could not load list
       return cluster.allowedNamespaces.slice();
     });
-    const contextNamespaces = computed(() => namespaceStore.contextNamespaces);
+    const contextNamespaces = computed(() => {
+      const selectedNamespaces = selectedNamespacesStorage.get();
+
+      return selectedNamespaces.length > 0
+        ? selectedNamespaces
+        : allNamespaces.get();
+    });
     const hasSelectedAll = computed(() => {
       const namespaces = new Set(contextNamespaces.get());
 
       return allNamespaces.get().length > 1
-      && cluster.accessibleNamespaces.length === 0
-      && allNamespaces.get().every(ns => namespaces.has(ns));
+        && cluster.accessibleNamespaces.length === 0
+        && allNamespaces.get().every(ns => namespaces.has(ns));
     });
 
     return {
@@ -47,7 +55,7 @@ const clusterFrameContextForNamespacedResourcesInjectable = getInjectable({
         && cluster.accessibleNamespaces.length === 0
         && allNamespaces.get().every(ns => namespaces.includes(ns))
       ),
-      isGlobalWatchEnabled: () => cluster.isGlobalWatchEnabled,
+      isGlobalWatchEnabled: () => cluster.isGlobalWatchEnabled.get(),
       get allNamespaces() {
         return allNamespaces.get();
       },

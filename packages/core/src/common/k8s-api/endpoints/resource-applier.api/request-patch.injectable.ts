@@ -5,10 +5,10 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Patch } from "rfc6902";
 import apiBaseInjectable from "../../api-base.injectable";
-import type { AsyncResult } from "../../../utils/async-result";
+import type { AsyncResult, Result } from "@k8slens/utilities";
 import type { KubeJsonApiData } from "../../kube-json-api";
 
-export type RequestKubeObjectPatch = (name: string, kind: string, ns: string | undefined, patch: Patch) => Promise<AsyncResult<KubeJsonApiData, string>>;
+export type RequestKubeObjectPatch = (name: string, kind: string, ns: string | undefined, patch: Patch) => AsyncResult<KubeJsonApiData, string>;
 
 const requestKubeObjectPatchInjectable = getInjectable({
   id: "request-kube-object-patch",
@@ -23,7 +23,7 @@ const requestKubeObjectPatchInjectable = getInjectable({
           ns,
           patch,
         },
-      }) as AsyncResult<string, string>;
+      }) as Result<string, string>;
 
       if (!result.callWasSuccessful) {
         return result;

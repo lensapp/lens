@@ -10,12 +10,11 @@ import type { Fetch } from "../../fetch/fetch.injectable";
 import fetchInjectable from "../../fetch/fetch.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { flushPromises } from "../../test-utils/flush-promises";
+import { flushPromises } from "@k8slens/test-utils";
 import setupAutoRegistrationInjectable from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
 import { createMockResponseFromString } from "../../../test-utils/mock-responses";
 import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
 import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import createClusterInjectable from "../../../main/create-cluster/create-cluster.injectable";
 import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
 import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import apiManagerInjectable from "../api-manager/manager.injectable";
@@ -23,6 +22,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import ingressApiInjectable from "../endpoints/ingress.api.injectable";
 import loggerInjectable from "../../logger.injectable";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
+import { Cluster } from "../../cluster/cluster";
 
 describe("KubeApi", () => {
   let fetchMock: AsyncFnMock<Fetch>;
@@ -30,7 +30,7 @@ describe("KubeApi", () => {
   let di: DiContainer;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     fetchMock = asyncFn();
     di.override(fetchInjectable, () => fetchMock);
@@ -39,9 +39,7 @@ describe("KubeApi", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    const createCluster = di.inject(createClusterInjectable);
-
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
@@ -121,7 +119,7 @@ describe("KubeApi", () => {
         ]);
       });
 
-      describe("when resource request fufills with a resource", () => {
+      describe("when resource request fulfills with a resource", () => {
         beforeEach(async () => {
           await fetchMock.resolveSpecific(
             ["https://127.0.0.1:12345/api-kube/apis/networking.k8s.io/v1"],
@@ -283,7 +281,7 @@ describe("KubeApi", () => {
         });
       });
 
-      describe("when resource request fufills with no resource", () => {
+      describe("when resource request fulfills with no resource", () => {
         beforeEach(async () => {
           await fetchMock.resolveSpecific(
             ["https://127.0.0.1:12345/api-kube/apis/networking.k8s.io/v1"],
@@ -307,7 +305,7 @@ describe("KubeApi", () => {
 
 
 
-        describe("when resource request fufills with a resource", () => {
+        describe("when resource request fulfills with a resource", () => {
           beforeEach(async () => {
             await fetchMock.resolveSpecific(
               ["https://127.0.0.1:12345/api-kube/apis/networking.k8s.io/v1beta1"],
@@ -509,7 +507,7 @@ describe("KubeApi", () => {
         ]);
       });
 
-      describe("when resource request fufills with a resource", () => {
+      describe("when resource request fulfills with a resource", () => {
         beforeEach(async () => {
           await fetchMock.resolveSpecific(
             ["https://127.0.0.1:12345/api-kube/apis/extensions"],

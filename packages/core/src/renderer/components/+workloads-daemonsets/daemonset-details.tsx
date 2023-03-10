@@ -23,8 +23,6 @@ import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import daemonSetStoreInjectable from "./store.injectable";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
-import getActiveClusterEntityInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
-import requestPodMetricsForDaemonSetsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-daemon-sets.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 
 export interface DaemonSetDetailsProps extends KubeObjectDetailsProps<DaemonSet> {
@@ -109,8 +107,6 @@ export const DaemonSetDetails = withInjectables<Dependencies, DaemonSetDetailsPr
     subscribeStores: di.inject(subscribeStoresInjectable),
     daemonSetStore: di.inject(daemonSetStoreInjectable),
     podStore: di.inject(podStoreInjectable),
-    getActiveClusterEntity: di.inject(getActiveClusterEntityInjectable),
-    requestPodMetricsForDaemonSets: di.inject(requestPodMetricsForDaemonSetsInjectable),
     logger: di.inject(loggerInjectable),
   }),
 });

@@ -9,7 +9,7 @@ import electronUpdaterIsActiveInjectable from "../../../../main/electron-app/fea
 import publishIsConfiguredInjectable from "../../main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
 import processCheckingForUpdatesInjectable from "../../main/process-checking-for-updates.injectable";
 import periodicalCheckForUpdatesInjectable from "./main/periodical-check-for-updates.injectable";
-import { advanceFakeTime, testUsingFakeTime } from "../../../../common/test-utils/use-fake-time";
+import { testUsingFakeTime, advanceFakeTime } from "../../../../test-utils/use-fake-time";
 
 const ENOUGH_TIME = 1000 * 60 * 60 * 2;
 

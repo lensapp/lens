@@ -4,27 +4,24 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronAppInjectable from "../../electron-app/electron-app.injectable";
-import { beforeElectronIsReadyInjectionToken } from "../runnable-tokens/before-electron-is-ready-injection-token";
+import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
 
 const setupHostnamesInjectable = getInjectable({
   id: "setup-hostnames",
 
-  instantiate: (di) => {
-    const app = di.inject(electronAppInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const app = di.inject(electronAppInjectable);
 
-    return {
-      id: "setup-hostnames",
-      run: () => {
-        app.commandLine.appendSwitch("host-rules", [
-          "MAP localhost 127.0.0.1",
-          "MAP lens.app 127.0.0.1",
-          "MAP *.lens.app 127.0.0.1",
-        ].join());
+      app.commandLine.appendSwitch("host-rules", [
+        "MAP localhost 127.0.0.1",
+        "MAP lens.app 127.0.0.1",
+        "MAP *.lens.app 127.0.0.1",
+      ].join());
 
-        return undefined;
-      },
-    };
-  },
+      return undefined;
+    },
+  }),
 
   injectionToken: beforeElectronIsReadyInjectionToken,
 });

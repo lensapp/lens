@@ -10,7 +10,7 @@ import type { IComputedValue } from "mobx";
 import type { CarouselProps } from "react-material-ui-carousel";
 import LegacyCarousel from "react-material-ui-carousel";
 import { Icon } from "../icon";
-import { slackUrl } from "../../../common/vars";
+import { forumsUrl } from "../../../common/vars";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import welcomeMenuItemsInjectable from "./welcome-menu-items/welcome-menu-items.injectable";
 import type { WelcomeMenuRegistration } from "./welcome-menu-items/welcome-menu-registration";
@@ -93,12 +93,12 @@ const NonInjectedWelcome = observer(({
               <br />
               {"If you have any questions or feedback, please join our "}
               <a
-                href={slackUrl}
+                href={forumsUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="link"
               >
-                Lens Community slack channel
+                Lens Forums
               </a>
               .
             </p>

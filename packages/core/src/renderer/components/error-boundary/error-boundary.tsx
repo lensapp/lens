@@ -9,8 +9,8 @@ import type { ErrorInfo } from "react";
 import React from "react";
 import { observer } from "mobx-react";
 import { Button } from "../button";
-import { issuesTrackerUrl, slackUrl } from "../../../common/vars";
-import type { SingleOrMany } from "../../utils";
+import { issuesTrackerUrl, forumsUrl } from "../../../common/vars";
+import type { SingleOrMany } from "@k8slens/utilities";
 import type { ObservableHistory } from "mobx-observable-history";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import observableHistoryInjectable from "../../navigation/observable-history.injectable";
@@ -53,15 +53,15 @@ class NonInjectedErrorBoundary extends React.Component<ErrorBoundaryProps & Depe
           </h5>
           <p>
 
-            {"To help us improve the product please report bugs to "}
+            {"To help us improve the product please report bugs on"}
             <a
-              href={slackUrl}
+              href={forumsUrl}
               rel="noreferrer"
               target="_blank"
             >
-              Slack
+              Lens Forums
             </a>
-            {" community or "}
+            {" or on our"}
             <a
               href={issuesTrackerUrl}
               rel="noreferrer"

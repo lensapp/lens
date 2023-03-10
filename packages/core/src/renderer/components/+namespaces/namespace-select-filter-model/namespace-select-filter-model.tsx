@@ -9,10 +9,12 @@ import type { NamespaceStore } from "../store";
 import type { ActionMeta, MultiValue } from "react-select";
 import { Icon } from "../../icon";
 import type { SelectOption } from "../../select";
-import { observableCrate } from "../../../utils";
+import { observableCrate } from "@k8slens/utilities";
 import type { IsMultiSelectionKey } from "./is-selection-key.injectable";
+import type { ClusterContext } from "../../../cluster-frame-context/cluster-frame-context";
 
 interface Dependencies {
+  context: ClusterContext;
   namespaceStore: NamespaceStore;
   isMultiSelectionKey: IsMultiSelectionKey;
 }
@@ -44,7 +46,7 @@ enum SelectMenuState {
 }
 
 export function namespaceSelectFilterModelFor(dependencies: Dependencies): NamespaceSelectFilterModel {
-  const { isMultiSelectionKey, namespaceStore } = dependencies;
+  const { isMultiSelectionKey, namespaceStore, context } = dependencies;
 
   let didToggle = false;
   let isMultiSelection = false;
@@ -56,7 +58,7 @@ export function namespaceSelectFilterModelFor(dependencies: Dependencies): Names
       didToggle = false;
     },
   }]);
-  const selectedNames = computed(() => new Set(namespaceStore.contextNamespaces), {
+  const selectedNames = computed(() => new Set(context.contextNamespaces), {
     equals: comparer.structural,
   });
   const optionsSortingSelected = observable.set(selectedNames.get());
@@ -78,9 +80,8 @@ export function namespaceSelectFilterModelFor(dependencies: Dependencies): Names
       label: "All Namespaces",
       id: "all-namespaces",
     },
-    ...namespaceStore
-      .items
-      .map(ns => ns.getName())
+    ...context
+      .allNamespaces
       .sort(sortNamespacesByIfTheyHaveBeenSelected)
       .map(namespace => ({
         value: namespace,

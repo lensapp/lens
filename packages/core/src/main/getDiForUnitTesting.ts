@@ -4,9 +4,8 @@
  */
 
 import { chunk } from "lodash/fp";
-import type { DiContainer, Injectable } from "@ogre-tools/injectable";
-import { createContainer, isInjectable, getInjectable } from "@ogre-tools/injectable";
-import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import type { DiContainer } from "@ogre-tools/injectable";
+import { createContainer, isInjectable } from "@ogre-tools/injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
 import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
@@ -25,75 +24,59 @@ import electronQuitAndInstallUpdateInjectable from "./electron-app/features/elec
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
-import type { GlobalOverride } from "../common/test-utils/get-global-override";
-import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
+import type { GlobalOverride } from "@k8slens/test-utils";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
-import { applicationInformationFakeInjectable } from "../common/vars/application-information-fake-injectable";
+import {
+  setLegacyGlobalDiForExtensionApi,
+} from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 
-export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {}) {
-  const {
-    doGeneralOverrides = false,
-  } = opts;
-
+export function getDiForUnitTesting() {
   const di = createContainer("main");
 
-  di.register(getInjectable({
-    id: "node-env",
-    instantiate: () => "production",
-    injectionToken: nodeEnvInjectionToken,
-  }));
-
-  setLegacyGlobalDiForExtensionApi(di, Environments.main);
+  registerMobX(di);
+  setLegacyGlobalDiForExtensionApi(di, "main");
 
   di.preventSideEffects();
 
-  const injectables = (
-    global.injectablePaths.main.paths
+  runInAction(() => {
+    const injectables = global.injectablePaths.main.paths
       .map(path => require(path))
       .flatMap(Object.values)
-      .filter(isInjectable)
-  ) as Injectable<any, any, any>[];
+      .filter(isInjectable);
 
-  registerMobX(di);
-
-  runInAction(() => {
-    di.register(applicationInformationFakeInjectable);
-
-    chunk(100)(injectables).forEach(chunkInjectables => {
-      di.register(...chunkInjectables);
-    });
+    for (const block of chunk(100)(injectables)) {
+      di.register(...block);
+    }
   });
 
-  if (doGeneralOverrides) {
-    for (const globalOverridePath of global.injectablePaths.main.globalOverridePaths) {
-      const globalOverride = require(globalOverridePath).default as GlobalOverride;
+  for (const globalOverridePath of global.injectablePaths.main.globalOverridePaths) {
+    const globalOverride = require(globalOverridePath).default as GlobalOverride<unknown, unknown>;
 
-      di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
-    }
-
-    di.override(electronInjectable, () => ({}));
-    di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
-
-    overrideRunnablesHavingSideEffects(di);
-    overrideElectronFeatures(di);
-    getOverrideFsWithFakes()(di);
-
-    di.override(clusterFramesInjectable, () => observable.map<string, ClusterFrameInfo>());
-
-    di.override(broadcastMessageInjectable, () => (channel) => {
-      throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
-    });
-    di.override(spawnInjectable, () => () => {
-      return {
-        stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
-        stdout: { on: jest.fn(), removeAllListeners: jest.fn() },
-        on: jest.fn(),
-      } as never;
-    });
+    di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
   }
+
+  di.override(electronInjectable, () => ({}));
+  di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
+
+  overrideRunnablesHavingSideEffects(di);
+  overrideElectronFeatures(di);
+  getOverrideFsWithFakes()(di);
+
+  di.override(clusterFramesInjectable, () => observable.map<string, ClusterFrameInfo>());
+
+  di.override(broadcastMessageInjectable, () => (channel) => {
+    throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);
+  });
+  di.override(spawnInjectable, () => () => {
+    return {
+      stderr: { on: jest.fn(), removeAllListeners: jest.fn() },
+      stdout: { on: jest.fn(), removeAllListeners: jest.fn() },
+      on: jest.fn(),
+    } as never;
+  });
 
   return di;
 }

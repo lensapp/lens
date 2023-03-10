@@ -2,13 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import autoBind from "auto-bind";
 import { sum } from "lodash";
 import { computed, makeObservable } from "mobx";
 
 import type { Node, NodeApi } from "../../../common/k8s-api/endpoints";
 import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import { autoBind } from "../../utils";
 
 export class NodeStore extends KubeObjectStore<Node, NodeApi> {
   constructor(dependencies: KubeObjectStoreDependencies, api: NodeApi, opts?: KubeObjectStoreOptions) {

@@ -4,25 +4,24 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { Runnable } from "../../../common/runnable/run-many-for";
-import type { RunnableSync } from "../../../common/runnable/run-many-sync-for";
+import type { Runnable, RunnableSync } from "@k8slens/run-many";
 
-/**
- * These tokens are here so that the importing of their respective dependencies
- * can be delayed until all of them are ready
- */
-
-/**
- * This runnable token should only have the app paths init so that it can be run by itself
- */
-export const appPathsRunnablePhaseInjectionToken = getInjectionToken<RunnableSync>({
-  id: "app-paths-runnable-phase",
+export const beforeQuitOfFrontEndInjectionToken = getInjectionToken<RunnableSync>({
+  id: "before-quit-of-front-end",
 });
 
-export const showLoadingRunnablePhaseInjectionToken = getInjectionToken<Runnable>({
-  id: "show-loading-runnable-phase",
+export const beforeQuitOfBackEndInjectionToken = getInjectionToken<RunnableSync>({
+  id: "before-quit-of-back-end",
 });
 
-export const showInitialWindowRunnablePhaseInjectionToken = getInjectionToken<Runnable>({
-  id: "show-initial-window-runnable-phase",
+export const afterWindowIsOpenedInjectionToken = getInjectionToken<Runnable>({
+  id: "after-window-is-opened",
+});
+
+export const afterRootFrameIsReadyInjectionToken = getInjectionToken<Runnable>({
+  id: "after-root-frame-is-ready",
+});
+
+export const afterApplicationIsLoadedInjectionToken = getInjectionToken<Runnable>({
+  id: "after-application-is-loaded",
 });

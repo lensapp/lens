@@ -7,7 +7,10 @@ import clusterStoreInjectable from "../../common/cluster-store/cluster-store.inj
 import loggerInjectable from "../../common/logger.injectable";
 import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
 import clustersThatAreBeingDeletedInjectable from "./are-being-deleted.injectable";
+import clusterConnectionInjectable from "./cluster-connection.injectable";
 import { ClusterManager } from "./manager";
+import updateEntityMetadataInjectable from "./update-entity-metadata.injectable";
+import updateEntitySpecInjectable from "./update-entity-spec.injectable";
 import visibleClusterInjectable from "./visible-cluster.injectable";
 
 const clusterManagerInjectable = getInjectable({
@@ -19,6 +22,9 @@ const clusterManagerInjectable = getInjectable({
     clustersThatAreBeingDeleted: di.inject(clustersThatAreBeingDeletedInjectable),
     visibleCluster: di.inject(visibleClusterInjectable),
     logger: di.inject(loggerInjectable),
+    updateEntityMetadata: di.inject(updateEntityMetadataInjectable),
+    updateEntitySpec: di.inject(updateEntitySpecInjectable),
+    getClusterConnection: (cluster) => di.inject(clusterConnectionInjectable, cluster),
   }),
 });
 

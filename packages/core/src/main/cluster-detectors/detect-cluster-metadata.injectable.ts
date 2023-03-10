@@ -8,7 +8,7 @@ import { groupBy, reduce } from "lodash";
 import { filter, map } from "lodash/fp";
 import type { ClusterMetadata } from "../../common/cluster-types";
 import type { Cluster } from "../../common/cluster/cluster";
-import { hasDefinedTupleValue, isDefined, object } from "../../common/utils";
+import { hasDefinedTupleValue, isDefined, object } from "@k8slens/utilities";
 import type { ClusterDetectionResult, ClusterMetadataDetector } from "./token";
 import { clusterMetadataDetectorInjectionToken } from "./token";
 
@@ -22,7 +22,10 @@ const pickHighestAccuracy = (prev: ClusterDetectionResult, curr: ClusterDetectio
 
 const detectMetadataWithFor = (cluster: Cluster) => async (clusterMetadataDetector: ClusterMetadataDetector) => {
   try {
-    return await clusterMetadataDetector.detect(cluster);
+    return {
+      key: clusterMetadataDetector.key,
+      result: await clusterMetadataDetector.detect(cluster),
+    };
   } catch {
     return null;
   }
@@ -39,7 +42,12 @@ const detectClusterMetadataInjectable = getInjectable({
         filter(isDefined),
         (arg) => groupBy(arg, "key"),
         (arg) => object.entries(arg),
-        map(([ key, results ]) => [key, reduce(results, pickHighestAccuracy)] as const),
+        map(([ key, detectionResults ]) => {
+          const results = detectionResults.map(({ result }) => result as ClusterDetectionResult);
+          const highestAccuracyResult = reduce(results, pickHighestAccuracy)?.value;
+
+          return [key, highestAccuracyResult] as const;
+        }),
         filter(hasDefinedTupleValue),
       );
 

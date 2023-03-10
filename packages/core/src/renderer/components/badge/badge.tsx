@@ -8,7 +8,7 @@ import styles from "./badge.module.scss";
 import React, { useEffect, useRef, useState } from "react";
 import { action, observable } from "mobx";
 import { observer } from "mobx-react";
-import { cssNames } from "../../utils/cssNames";
+import { cssNames } from "@k8slens/utilities";
 import { withTooltip } from "../tooltip";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {

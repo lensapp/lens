@@ -16,10 +16,13 @@ import { requestFromChannelInjectionToken } from "./request-from-channel-injecti
 import type { RequestChannel } from "./request-channel-listener-injection-token";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { getPromiseStatus } from "../../test-utils/get-promise-status";
+import { getPromiseStatus } from "@k8slens/test-utils";
 import { runInAction } from "mobx";
 import type { RequestChannelHandler } from "../../../main/utils/channel/channel-listeners/listener-tokens";
-import { getRequestChannelListenerInjectable } from "../../../main/utils/channel/channel-listeners/listener-tokens";
+import {
+  getRequestChannelListenerInjectable,
+  requestChannelListenerInjectionToken,
+} from "../../../main/utils/channel/channel-listeners/listener-tokens";
 
 type TestMessageChannel = MessageChannel<string>;
 type TestRequestChannel = RequestChannel<string, string>;
@@ -199,21 +202,32 @@ describe("channel", () => {
   it("when registering multiple handlers for the same channel, throws", async () => {
     const applicationBuilder = getApplicationBuilder();
 
-    const testChannelListenerInMainInjectable = getRequestChannelListenerInjectable({
-      channel: testRequestChannel,
-      handler: () => () => "some-value",
-    });
-    const testChannelListenerInMain2Injectable = getRequestChannelListenerInjectable({
-      channel: testRequestChannel,
-      handler: () => () => "some-other-value",
+    const someChannelListenerInjectable = getInjectable({
+      id: "some-channel-listener",
+
+      instantiate: () => ({
+        channel: testRequestChannel,
+        handler: () => () => "irrelevant",
+      }),
+
+      injectionToken: requestChannelListenerInjectionToken,
     });
 
-    testChannelListenerInMain2Injectable.id += "2";
+    const someOtherChannelListenerInjectable = getInjectable({
+      id: "some-other-channel-listener",
+
+      instantiate: () => ({
+        channel: testRequestChannel,
+        handler: () => () => "irrelevant",
+      }),
+
+      injectionToken: requestChannelListenerInjectionToken,
+    });
 
     applicationBuilder.beforeApplicationStart((mainDi) => {
       runInAction(() => {
-        mainDi.register(testChannelListenerInMainInjectable);
-        mainDi.register(testChannelListenerInMain2Injectable);
+        mainDi.register(someChannelListenerInjectable);
+        mainDi.register(someOtherChannelListenerInjectable);
       });
     });
 

@@ -5,7 +5,7 @@
 
 import type { ClusterStoreModel } from "../../../common/cluster-store/cluster-store";
 import type { KubeconfigSyncEntry, UserPreferencesModel } from "../../../common/user-store";
-import { isErrnoException } from "../../../common/utils";
+import { isErrnoException } from "@k8slens/utilities";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";

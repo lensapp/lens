@@ -15,7 +15,7 @@ describe("DeploymentApi", () => {
   let kubeJsonApi: jest.Mocked<KubeJsonApi>;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
     kubeJsonApi = {

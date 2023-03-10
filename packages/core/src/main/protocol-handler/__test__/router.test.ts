@@ -6,7 +6,7 @@
 import * as uuid from "uuid";
 
 import { ProtocolHandlerExtension, ProtocolHandlerInternal, ProtocolHandlerInvalid } from "../../../common/protocol-handler";
-import { delay, noop } from "../../../common/utils";
+import { delay, noop } from "@k8slens/utilities";
 import type { ExtensionsStore, IsEnabledExtensionDescriptor } from "../../../extensions/extensions-store/extensions-store";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
@@ -37,7 +37,7 @@ describe("protocol router tests", () => {
   let broadcastMessageMock: jest.Mock;
 
   beforeEach(async () => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(pathExistsInjectable, () => () => { throw new Error("tried call pathExists without override"); });
     di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });

@@ -5,13 +5,13 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import callForHelmManifestInjectable from "./call-for-helm-manifest/call-for-helm-manifest.injectable";
 import type { KubeJsonApiData, KubeJsonApiDataList } from "../../../../common/k8s-api/kube-json-api";
-import type { AsyncResult } from "../../../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 
 export type GetHelmReleaseResources = (
   name: string,
   namespace: string,
   kubeconfigPath: string,
-) => Promise<AsyncResult<KubeJsonApiData[], string>>;
+) => AsyncResult<KubeJsonApiData[], string>;
 
 const getHelmReleaseResourcesInjectable = getInjectable({
   id: "get-helm-release-resources",

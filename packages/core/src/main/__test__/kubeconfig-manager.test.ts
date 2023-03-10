@@ -3,14 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
-import type { Cluster } from "../../common/cluster/cluster";
-import createKubeconfigManagerInjectable from "../kubeconfig-manager/create-kubeconfig-manager.injectable";
-import { createClusterInjectionToken } from "../../common/cluster/create-cluster-injection-token";
+import type { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
+import { Cluster } from "../../common/cluster/cluster";
+import kubeconfigManagerInjectable from "../kubeconfig-manager/kubeconfig-manager.injectable";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
-import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import { parse } from "url";
 import loggerInjectable from "../../common/logger.injectable";
 import type { Logger } from "../../common/logger";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -30,12 +27,13 @@ import removePathInjectable from "../../common/fs/remove.injectable";
 import pathExistsSyncInjectable from "../../common/fs/path-exists-sync.injectable";
 import readJsonSyncInjectable from "../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
+import kubeAuthProxyServerInjectable from "../cluster/kube-auth-proxy-server.injectable";
+import lensProxyPortInjectable from "../lens-proxy/lens-proxy-port.injectable";
 
 const clusterServerUrl = "https://192.168.64.3:8443";
 
 describe("kubeconfig manager tests", () => {
   let clusterFake: Cluster;
-  let createKubeconfigManager: (cluster: Cluster) => KubeconfigManager;
   let di: DiContainer;
   let loggerMock: jest.Mocked<Logger>;
   let readFileMock: AsyncFnMock<ReadFile>;
@@ -46,7 +44,7 @@ describe("kubeconfig manager tests", () => {
   let ensureServerMock: AsyncFnMock<() => Promise<void>>;
 
   beforeEach(async () => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
@@ -56,6 +54,7 @@ describe("kubeconfig manager tests", () => {
     di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
     di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
     di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
+    di.inject(lensProxyPortInjectable).set(9191);
 
     readFileMock = asyncFn();
     di.override(readFileInjectable, () => readFileMock);
@@ -78,23 +77,15 @@ describe("kubeconfig manager tests", () => {
 
     ensureServerMock = asyncFn();
 
-    di.override(createContextHandlerInjectable, () => (cluster) => ({
-      restartServer: jest.fn(),
-      stopServer: jest.fn(),
-      clusterUrl: parse(cluster.apiUrl),
+    di.override(kubeAuthProxyServerInjectable, () => ({
+      restart: jest.fn(),
+      stop: jest.fn(),
       getApiTarget: jest.fn(),
-      getPrometheusDetails: jest.fn(),
-      resolveAuthProxyCa: jest.fn(),
-      resolveAuthProxyUrl: jest.fn(),
-      setupPrometheus: jest.fn(),
-      ensureServer: ensureServerMock,
+      ensureRunning: ensureServerMock,
+      ensureAuthProxyUrl: jest.fn(),
     }));
 
-    const createCluster = di.inject(createClusterInjectionToken);
-
-    createKubeconfigManager = di.inject(createKubeconfigManagerInjectable);
-
-    clusterFake = createCluster({
+    clusterFake = new Cluster({
       id: "foo",
       contextName: "minikube",
       kubeConfigPath: "/minikube-config.yml",
@@ -102,9 +93,7 @@ describe("kubeconfig manager tests", () => {
       clusterServerUrl,
     });
 
-    jest.spyOn(KubeconfigManager.prototype, "resolveProxyUrl", "get").mockReturnValue("https://127.0.0.1:9191/foo");
-
-    kubeConfManager = createKubeconfigManager(clusterFake);
+    kubeConfManager = di.inject(kubeconfigManagerInjectable, clusterFake);
   });
 
   describe("when calling clear", () => {
@@ -123,7 +112,7 @@ describe("kubeconfig manager tests", () => {
     let getPathPromise: Promise<string>;
 
     beforeEach(async () => {
-      getPathPromise = kubeConfManager.getPath();
+      getPathPromise = kubeConfManager.ensurePath();
     });
 
     it("should not call pathExists()", () => {
@@ -174,7 +163,7 @@ describe("kubeconfig manager tests", () => {
           beforeEach(async () => {
             await writeFileMock.resolveSpecific(
               [
-                "/some-directory-for-temp/kubeconfig-foo", 
+                "/some-directory-for-temp/kubeconfig-foo",
                 "apiVersion: v1\nkind: Config\npreferences: {}\ncurrent-context: minikube\nclusters:\n  - name: minikube\n    cluster:\n      certificate-authority-data: PGNhLWRhdGE+\n      server: https://127.0.0.1:9191/foo\n      insecure-skip-tls-verify: false\ncontexts:\n  - name: minikube\n    context:\n      cluster: minikube\n      user: proxy\nusers:\n  - name: proxy\n    user:\n      username: lens\n      password: fake\n",
               ],
             );
@@ -234,7 +223,7 @@ describe("kubeconfig manager tests", () => {
             let getPathPromise: Promise<string>;
 
             beforeEach(async () => {
-              getPathPromise = kubeConfManager.getPath();
+              getPathPromise = kubeConfManager.ensurePath();
             });
 
             it("should call pathExists", () => {
@@ -303,7 +292,7 @@ describe("kubeconfig manager tests", () => {
                     beforeEach(async () => {
                       await writeFileMock.resolveSpecific(
                         [
-                          "/some-directory-for-temp/kubeconfig-foo", 
+                          "/some-directory-for-temp/kubeconfig-foo",
                           "apiVersion: v1\nkind: Config\npreferences: {}\ncurrent-context: minikube\nclusters:\n  - name: minikube\n    cluster:\n      certificate-authority-data: PGNhLWRhdGE+\n      server: https://127.0.0.1:9191/foo\n      insecure-skip-tls-verify: false\ncontexts:\n  - name: minikube\n    context:\n      cluster: minikube\n      user: proxy\nusers:\n  - name: proxy\n    user:\n      username: lens\n      password: fake\n",
                         ],
                       );

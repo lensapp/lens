@@ -4,13 +4,12 @@
  */
 
 import loggerInjectable from "./logger.injectable";
-import { getGlobalOverride } from "./test-utils/get-global-override";
-import { noop } from "./utils";
+import { getGlobalOverride } from "@k8slens/test-utils";
 
 export default getGlobalOverride(loggerInjectable, () => ({
-  warn: noop,
-  debug: noop,
-  error: noop,
-  info: noop,
-  silly: noop,
+  warn: () => {},
+  debug: () => {},
+  error: () => {},
+  info: () => {},
+  silly: () => {},
 }));

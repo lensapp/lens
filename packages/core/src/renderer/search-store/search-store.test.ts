@@ -18,7 +18,7 @@ describe("search store tests", () => {
   let searchStore: SearchStore;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 

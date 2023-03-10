@@ -10,7 +10,7 @@ import { autorun,  action, observable } from "mobx";
 import type { KubeApi } from "../kube-api";
 import type { KubeObject, ObjectReference } from "../kube-object";
 import { parseKubeApi, createKubeApiURL } from "../kube-api-parse";
-import { chain, find } from "../../utils/iter";
+import { iter } from "@k8slens/utilities";
 
 export type RegisterableStore<Store> = Store extends KubeObjectStore<any, any, any>
   ? Store
@@ -38,28 +38,31 @@ export class ApiManager {
   constructor(private readonly dependencies: Dependencies) {
     // NOTE: this is done to preserve the old behaviour of an API being discoverable using all previous apiBases
     autorun(() => {
-      const apis = chain(this.dependencies.apis.get().values())
+      const apis = iter.chain(this.dependencies.apis.get().values())
         .concat(this.externalApis.values());
       const removedApis = new Set(this.apis.values());
+      const newState = new Map(this.apis);
 
       for (const api of apis) {
         removedApis.delete(api);
-        this.apis.set(api.apiBase, api);
+        newState.set(api.apiBase, api);
       }
 
       for (const api of removedApis) {
-        for (const [apiBase, storedApi] of this.apis) {
+        for (const [apiBase, storedApi] of newState) {
           if (storedApi === api) {
-            this.apis.delete(apiBase);
+            newState.delete(apiBase);
           }
         }
       }
+
+      this.apis.replace(newState);
     });
   }
 
   getApi(pathOrCallback: string | FindApiCallback) {
     if (typeof pathOrCallback === "function") {
-      return find(this.apis.values(), pathOrCallback);
+      return iter.find(this.apis.values(), pathOrCallback);
     }
 
     const { apiBase } = parseKubeApi(pathOrCallback);
@@ -127,7 +130,7 @@ export class ApiManager {
       return undefined;
     }
 
-    return chain(this.dependencies.stores.get().values())
+    return iter.chain(this.dependencies.stores.get().values())
       .concat(this.externalStores.values())
       .find(store => store.api.apiBase === api.apiBase);
   }

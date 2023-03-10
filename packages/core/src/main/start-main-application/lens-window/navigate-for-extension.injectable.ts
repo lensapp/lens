@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { iter } from "../../../common/utils";
+import { iter } from "@k8slens/utilities";
 import clusterFramesInjectable from "../../../common/cluster-frames.injectable";
 import showApplicationWindowInjectable from "./show-application-window.injectable";
 import getCurrentApplicationWindowInjectable from "./application-window/get-current-application-window.injectable";

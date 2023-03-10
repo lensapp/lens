@@ -34,7 +34,7 @@ describe("<TopBar/>", () => {
   let toggleMaximizeWindow: jest.MockedFunction<() => void>;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     di.override(rendererExtensionsInjectable, () => computed(() => []));
     di.override(openAppContextMenuInjectable, () => openAppContextMenu = jest.fn());

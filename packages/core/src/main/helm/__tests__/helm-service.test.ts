@@ -6,17 +6,17 @@
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import listHelmChartsInjectable from "../helm-service/list-helm-charts.injectable";
 import getActiveHelmRepositoriesInjectable from "../repositories/get-active-helm-repositories/get-active-helm-repositories.injectable";
-import type { AsyncResult } from "../../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import type { HelmRepo } from "../../../common/helm/helm-repo";
-import { sortBySemverVersion } from "../../../common/utils";
+import { sortBySemverVersion } from "@k8slens/utilities";
 import helmChartManagerInjectable from "../helm-chart-manager.injectable";
 
 describe("Helm Service tests", () => {
   let listHelmCharts: () => Promise<any>;
-  let getActiveHelmRepositoriesMock: jest.Mock<Promise<AsyncResult<HelmRepo[]>>>;
+  let getActiveHelmRepositoriesMock: jest.Mock<AsyncResult<HelmRepo[]>>;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     getActiveHelmRepositoriesMock = jest.fn();
 

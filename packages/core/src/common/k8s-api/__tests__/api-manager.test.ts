@@ -4,7 +4,6 @@
  */
 
 import type { DiContainer } from "@ogre-tools/injectable";
-import createClusterInjectable from "../../../main/create-cluster/create-cluster.injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
 import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
@@ -18,6 +17,10 @@ import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import { KubeObjectStore } from "../kube-object.store";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
+
+// eslint-disable-next-line no-restricted-imports
+import { KubeApi as ExternalKubeApi } from "../../../extensions/common-api/k8s-api";
+import { Cluster } from "../../cluster/cluster";
 
 class TestApi extends KubeApi<KubeObject> {
   protected async checkPreferredVersion() {
@@ -34,15 +37,13 @@ describe("ApiManager", () => {
   let di: DiContainer;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    const createCluster = di.inject(createClusterInjectable);
-
-    di.override(hostedClusterInjectable, () => createCluster({
+    di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
@@ -54,7 +55,7 @@ describe("ApiManager", () => {
   });
 
   describe("registerApi", () => {
-    it("re-register store if apiBase changed", async () => {
+    it("re-register store if apiBase changed", () => {
       const apiBase = "apis/v1/foo";
       const fallbackApiBase = "/apis/extensions/v1beta1/foo";
       const kubeApi = new TestApi({
@@ -72,21 +73,48 @@ describe("ApiManager", () => {
         logger: di.inject(loggerInjectable),
       }, kubeApi);
 
-      apiManager.registerApi(apiBase, kubeApi);
+      apiManager.registerApi(kubeApi);
 
       // Define to use test api for ingress store
       Object.defineProperty(kubeStore, "api", { value: kubeApi });
-      apiManager.registerStore(kubeStore, [kubeApi]);
+      apiManager.registerStore(kubeStore);
 
       // Test that store is returned with original apiBase
       expect(apiManager.getStore(kubeApi)).toBe(kubeStore);
 
       // Change apiBase similar as checkPreferredVersion does
       Object.defineProperty(kubeApi, "apiBase", { value: fallbackApiBase });
-      apiManager.registerApi(fallbackApiBase, kubeApi);
+      apiManager.registerApi(kubeApi);
 
       // Test that store is returned with new apiBase
       expect(apiManager.getStore(kubeApi)).toBe(kubeStore);
+    });
+  });
+
+  describe("technical tests for autorun", () => {
+    it("given two extensions register apis with the same apibase, settle into using the second", () => {
+      const apiBase = "/apis/aquasecurity.github.io/v1alpha1/vulnerabilityreports";
+      const firstApi = Object.assign(new ExternalKubeApi({
+        objectConstructor: KubeObject,
+        apiBase,
+        kind: "VulnerabilityReport",
+      }), {
+        myField: 1,
+      });
+      const secondApi = Object.assign(new ExternalKubeApi({
+        objectConstructor: KubeObject,
+        apiBase,
+        kind: "VulnerabilityReport",
+      }), {
+        myField: 2,
+      });
+
+      void firstApi;
+      void secondApi;
+
+      expect(apiManager.getApi(apiBase)).toMatchObject({
+        myField: 2,
+      });
     });
   });
 });

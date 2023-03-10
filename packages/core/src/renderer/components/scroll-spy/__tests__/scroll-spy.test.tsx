@@ -25,7 +25,7 @@ describe("<ScrollSpy/>", () => {
   let render: DiRender;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     render = renderFor(di);
   });
@@ -107,7 +107,7 @@ describe("<TreeView/> dataTree inside <ScrollSpy/>", () => {
   let render: DiRender;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     render = renderFor(di);
   });

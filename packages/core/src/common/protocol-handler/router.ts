@@ -6,7 +6,7 @@
 import type { match } from "react-router";
 import { matchPath } from "react-router";
 import { countBy } from "lodash";
-import { isDefined, iter } from "../utils";
+import { isDefined, iter } from "@k8slens/utilities";
 import { pathToRegexp } from "path-to-regexp";
 import type Url from "url-parse";
 import { RoutingError, RoutingErrorType } from "./error";

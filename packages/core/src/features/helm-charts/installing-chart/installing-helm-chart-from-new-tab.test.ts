@@ -28,6 +28,9 @@ import requestHelmChartReadmeInjectable from "../../../common/k8s-api/endpoints/
 import requestHelmChartValuesInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
 import type { RequestDetailedHelmRelease } from "../../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 import requestDetailedHelmReleaseInjectable from "../../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
+import type { RequestHelmReleases } from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
+import requestHelmReleasesInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
+import { flushPromises } from "@k8slens/test-utils";
 
 describe("installing helm chart from new tab", () => {
   let builder: ApplicationBuilder;
@@ -37,6 +40,7 @@ describe("installing helm chart from new tab", () => {
   let requestHelmChartReadmeMock: AsyncFnMock<RequestHelmChartReadme>;
   let requestHelmChartValuesMock: AsyncFnMock<RequestHelmChartValues>;
   let requestCreateHelmReleaseMock: AsyncFnMock<RequestCreateHelmRelease>;
+  let requestHelmReleasesMock: AsyncFnMock<RequestHelmReleases>;
 
   beforeEach(() => {
     builder = getApplicationBuilder();
@@ -49,6 +53,7 @@ describe("installing helm chart from new tab", () => {
     requestHelmChartReadmeMock = asyncFn();
     requestHelmChartValuesMock = asyncFn();
     requestCreateHelmReleaseMock = asyncFn();
+    requestHelmReleasesMock = asyncFn();
 
     builder.beforeWindowStart((windowDi) => {
       windowDi.override(directoryForLensLocalStorageInjectable, () => "/some-directory-for-lens-local-storage");
@@ -58,6 +63,7 @@ describe("installing helm chart from new tab", () => {
       windowDi.override(requestHelmChartReadmeInjectable, () => requestHelmChartReadmeMock);
       windowDi.override(requestHelmChartValuesInjectable, () => requestHelmChartValuesMock);
       windowDi.override(requestCreateHelmReleaseInjectable, () => requestCreateHelmReleaseMock);
+      windowDi.override(requestHelmReleasesInjectable, () => requestHelmReleasesMock);
 
       windowDi.override(getRandomInstallChartTabIdInjectable, () =>
         jest
@@ -386,12 +392,15 @@ describe("installing helm chart from new tab", () => {
               });
 
               describe("when selected to see the installed release", () => {
-                beforeEach(() => {
+                beforeEach(async () => {
                   const releaseButton = rendered.getByTestId(
                     "show-release-some-release-for-some-first-tab-id",
                   );
 
                   fireEvent.click(releaseButton);
+
+                  await flushPromises();
+                  await requestHelmReleasesMock.resolve([]);
                 });
 
                 it("renders", () => {

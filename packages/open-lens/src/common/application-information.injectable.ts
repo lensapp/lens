@@ -8,12 +8,9 @@ import { applicationInformationToken } from "@k8slens/application";
 
 const applicationInformationInjectable = getInjectable({
   id: "application-information",
-  injectionToken: applicationInformationToken,
-
   instantiate: () => {
     const {
       version,
-
       config: {
         bundledHelmVersion,
         bundledKubectlVersion,
@@ -22,12 +19,12 @@ const applicationInformationInjectable = getInjectable({
         sentryDsn,
         welcomeRoute,
       },
-
       productName,
       build,
       copyright,
       description,
       name,
+      dependencies,
     } = packageJson;
 
     return {
@@ -43,9 +40,11 @@ const applicationInformationInjectable = getInjectable({
       contentSecurityPolicy,
       welcomeRoute,
       updatingIsEnabled: (build as any)?.publish?.length > 0,
+      dependencies,
     };
   },
   causesSideEffects: true,
+  injectionToken: applicationInformationToken,
 });
 
 export default applicationInformationInjectable;

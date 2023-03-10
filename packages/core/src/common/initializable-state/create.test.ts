@@ -15,7 +15,7 @@ describe("InitializableState tests", () => {
   let di: DiContainer;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
+    di = getDiForUnitTesting();
   });
 
   describe("when created", () => {

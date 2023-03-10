@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/ensure-binaries",
-  "version": "6.4.0-beta.13",
+  "version": "6.5.0-alpha.0",
   "description": "CLI for downloading configured versions of the bundled versions of CLIs",
   "main": "dist/index.js",
   "license": "MIT",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@swc/cli": "^0.1.61",
-    "@swc/core": "^1.3.35",
+    "@swc/core": "^1.3.37",
     "@types/cli-progress": "^3.11.0",
     "@types/gunzip-maybe": "^1.4.0",
     "@types/node": "^16.18.11",

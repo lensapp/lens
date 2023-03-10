@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { docsUrl, slackUrl } from "../../../common/vars";
+import { docsUrl, forumsUrl } from "../../../common/vars";
 import type { WeblinkData } from "../../../common/weblinks-store/weblink-store";
 import { getInjectable } from "@ogre-tools/injectable";
 import { weblinkStoreMigrationInjectionToken } from "../../../common/weblinks-store/migration-token";
-import { lensDocumentationWeblinkId, lensSlackWeblinkId } from "../links";
+import { lensDocumentationWeblinkId, lensForumsWeblinkId } from "../links";
 import { applicationInformationToken } from "@k8slens/application";
 
 const currentVersionWeblinkStoreMigrationInjectable = getInjectable({
@@ -20,10 +20,10 @@ const currentVersionWeblinkStoreMigrationInjectable = getInjectable({
       run(store) {
         const weblinksRaw = store.get("weblinks");
         const weblinks = (Array.isArray(weblinksRaw) ? weblinksRaw : []) as WeblinkData[];
-        const slackWeblink = weblinks.find(weblink => weblink.id === lensSlackWeblinkId);
+        const forumsWeblink = weblinks.find(weblink => weblink.id === lensForumsWeblinkId);
 
-        if (slackWeblink) {
-          slackWeblink.url = slackUrl;
+        if (forumsWeblink) {
+          forumsWeblink.url = forumsUrl;
         }
 
         const docsWeblink = weblinks.find(weblink => weblink.id === lensDocumentationWeblinkId);
@@ -32,7 +32,9 @@ const currentVersionWeblinkStoreMigrationInjectable = getInjectable({
           docsWeblink.url = docsUrl;
         }
 
-        store.set("weblinks", weblinks);
+        const removedSlackLink = weblinks.filter(weblink => weblink.id !== "lens-slack-link");
+
+        store.set("weblinks", removedSlackLink);
       },
     };
   },

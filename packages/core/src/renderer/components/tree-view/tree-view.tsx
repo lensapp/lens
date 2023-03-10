@@ -9,7 +9,7 @@ import React, { useEffect, useRef } from "react";
 import { Icon } from "../icon";
 import TreeView from "@material-ui/lab/TreeView";
 import TreeItem from "@material-ui/lab/TreeItem";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 
 import _ from "lodash";
 import getDeepDash from "deepdash";

@@ -11,7 +11,7 @@ import type { ChartOptions, ChartPoint } from "chart.js";
 import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
 import { MetricType } from "./cluster-overview-store/cluster-overview-store";
 import { BarChart } from "../chart";
-import { bytesToUnits, cssNames } from "../../utils";
+import { bytesToUnits, cssNames } from "@k8slens/utilities";
 import { Spinner } from "../spinner";
 import { ZebraStripesPlugin } from "../chart/zebra-stripes.plugin";
 import { ClusterNoMetrics } from "./cluster-no-metrics";

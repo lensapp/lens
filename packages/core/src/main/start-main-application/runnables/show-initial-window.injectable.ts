@@ -8,7 +8,7 @@ import openDeepLinkInjectable from "../../protocol-handler/lens-protocol-router-
 import commandLineArgumentsInjectable from "../../utils/command-line-arguments.injectable";
 import createFirstApplicationWindowInjectable from "../lens-window/application-window/create-first-application-window.injectable";
 import splashWindowInjectable from "../lens-window/splash-window/splash-window.injectable";
-import { showInitialWindowRunnablePhaseInjectionToken } from "../runnable-tokens/phases";
+import { afterApplicationIsLoadedInjectionToken } from "@k8slens/application";
 
 const getDeepLinkUrl = (commandLineArguments: string[]) => (
   commandLineArguments
@@ -18,34 +18,31 @@ const getDeepLinkUrl = (commandLineArguments: string[]) => (
 
 const showInitialWindowInjectable = getInjectable({
   id: "show-initial-window",
-  instantiate: (di) => {
-    const shouldStartHidden = di.inject(shouldStartHiddenInjectable);
-    const shouldStartWindow = !shouldStartHidden;
-    const createFirstApplicationWindow = di.inject(createFirstApplicationWindowInjectable);
-    const splashWindow = di.inject(splashWindowInjectable);
-    const openDeepLink = di.inject(openDeepLinkInjectable);
-    const commandLineArguments = di.inject(commandLineArgumentsInjectable);
+  instantiate: (di) => ({
+    run: async () => {
+      const shouldStartHidden = di.inject(shouldStartHiddenInjectable);
+      const shouldStartWindow = !shouldStartHidden;
+      const createFirstApplicationWindow = di.inject(createFirstApplicationWindowInjectable);
+      const splashWindow = di.inject(splashWindowInjectable);
+      const openDeepLink = di.inject(openDeepLinkInjectable);
+      const commandLineArguments = di.inject(commandLineArgumentsInjectable);
 
-    return {
-      id: "show-initial-window",
-      run: async () => {
-        if (shouldStartWindow) {
-          const deepLinkUrl = getDeepLinkUrl(commandLineArguments);
+      if (shouldStartWindow) {
+        const deepLinkUrl = getDeepLinkUrl(commandLineArguments);
 
-          if (deepLinkUrl) {
-            await openDeepLink(deepLinkUrl);
-          } else {
-            const applicationWindow = createFirstApplicationWindow();
+        if (deepLinkUrl) {
+          await openDeepLink(deepLinkUrl);
+        } else {
+          const applicationWindow = createFirstApplicationWindow();
 
-            await applicationWindow.start();
-          }
-
-          splashWindow.close();
+          await applicationWindow.start();
         }
-      },
-    };
-  },
-  injectionToken: showInitialWindowRunnablePhaseInjectionToken,
+
+        splashWindow.close();
+      }
+    },
+  }),
+  injectionToken: afterApplicationIsLoadedInjectionToken,
 });
 
 export default showInitialWindowInjectable;

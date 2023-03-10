@@ -12,7 +12,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { ExecFileWithInput } from "./call-for-kube-resources-by-manifest/exec-file-with-input/exec-file-with-input.injectable";
 import execFileWithInputInjectable from "./call-for-kube-resources-by-manifest/exec-file-with-input/exec-file-with-input.injectable";
-import type { AsyncResult } from "../../../../common/utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import type { KubeJsonApiData } from "../../../../common/k8s-api/kube-json-api";
 
 describe("get helm release resources", () => {
@@ -21,7 +21,7 @@ describe("get helm release resources", () => {
   let execFileWithStreamInputMock: AsyncFnMock<ExecFileWithInput>;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     execHelmMock = asyncFn();
     execFileWithStreamInputMock = asyncFn();
@@ -37,7 +37,7 @@ describe("get helm release resources", () => {
   });
 
   describe("when called", () => {
-    let actualPromise: Promise<AsyncResult<KubeJsonApiData[], string>>;
+    let actualPromise: AsyncResult<KubeJsonApiData[], string>;
 
     beforeEach(() => {
       actualPromise = getHelmReleaseResources(

@@ -4,14 +4,14 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { RequestInit, Response } from "@k8slens/node-fetch";
-import type { AsyncResult } from "../utils/async-result";
+import type { AsyncResult } from "@k8slens/utilities";
 import fetchInjectable from "./fetch.injectable";
 
 export interface DownloadBinaryOptions {
   signal?: AbortSignal | null | undefined;
 }
 
-export type DownloadBinary = (url: string, opts?: DownloadBinaryOptions) => Promise<AsyncResult<Buffer, string>>;
+export type DownloadBinary = (url: string, opts?: DownloadBinaryOptions) => AsyncResult<Buffer, string>;
 
 const downloadBinaryInjectable = getInjectable({
   id: "download-binary",

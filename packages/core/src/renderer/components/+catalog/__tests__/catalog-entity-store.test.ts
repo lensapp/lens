@@ -3,12 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { DiContainer } from "@ogre-tools/injectable";
 import type { CatalogCategoryMetadata, CatalogCategorySpec } from "../../../../common/catalog";
 import { CatalogEntity, categoryVersion } from "../../../../common/catalog";
+import catalogCategoryRegistryInjectable from "../../../../common/catalog/category-registry.injectable";
 import { CatalogCategory } from "../../../api/catalog-entity";
-import { noop } from "../../../utils";
-import type { CatalogEntityStore } from "../catalog-entity-store/catalog-entity.store";
-import { catalogEntityStore } from "../catalog-entity-store/catalog-entity.store";
+import catalogEntityRegistryInjectable from "../../../api/catalog/entity/registry.injectable";
+import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
+import type { CatalogEntityStore } from "../catalog-entity-store.injectable";
+import catalogEntityStoreInjectable from "../catalog-entity-store.injectable";
+import { noop } from "@k8slens/utilities";
 
 class TestEntityOne extends CatalogEntity {
   public static readonly apiVersion: string = "entity.k8slens.dev/v1alpha1";
@@ -63,6 +67,12 @@ class TestCategoryTwo extends CatalogCategory {
 }
 
 describe("CatalogEntityStore", () => {
+  let di: DiContainer;
+
+  beforeEach(() => {
+    di = getDiForUnitTesting();
+  });
+
   describe("getTotalCount", () => {
     let store: CatalogEntityStore;
     let testCategoryOne: TestCategoryOne;
@@ -129,21 +139,22 @@ describe("CatalogEntityStore", () => {
 
       testCategoryOne = new TestCategoryOne();
       testCategoryTwo = new TestCategoryTwo();
-      store = catalogEntityStore({
-        catalogRegistry: {
-          items: [
-            testCategoryOne,
-            testCategoryTwo,
-          ],
+
+      di.override(catalogCategoryRegistryInjectable, () => ({
+        items: [
+          testCategoryOne,
+          testCategoryTwo,
+        ],
+      }));
+      di.override(catalogEntityRegistryInjectable, () => ({
+        onRun: noop,
+        filteredItems: entityItems,
+        getItemsForCategory: <T extends CatalogEntity>(category: CatalogCategory): T[] => {
+          return entityItems.filter(item => category.spec.versions.some(version => item instanceof version.entityClass)) as T[];
         },
-        entityRegistry: {
-          onRun: noop,
-          filteredItems: entityItems,
-          getItemsForCategory: <T extends CatalogEntity>(category: CatalogCategory): T[] => {
-            return entityItems.filter(item => category.spec.versions.some(version => item instanceof version.entityClass)) as T[];
-          },
-        },
-      });
+      } as any));
+
+      store = di.inject(catalogEntityStoreInjectable);
     });
 
     it("given no active category, returns count of all kinds", () => {

@@ -2,33 +2,36 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
+import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
-import type { Cluster } from "../../common/cluster/cluster";
 import removePathInjectable from "../../common/fs/remove.injectable";
 import execFileInjectable from "../../common/fs/exec-file.injectable";
 import writeFileInjectable from "../../common/fs/write-file.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
-import type { ResourceApplierDependencies } from "./resource-applier";
 import { ResourceApplier } from "./resource-applier";
+import createKubectlInjectable from "../kubectl/create-kubectl.injectable";
+import kubeconfigManagerInjectable from "../kubeconfig-manager/kubeconfig-manager.injectable";
+import type { Cluster } from "../../common/cluster/cluster";
 
-export type CreateResourceApplier = (cluster: Cluster) => ResourceApplier;
-
-const createResourceApplierInjectable = getInjectable({
-  id: "create-resource-applier",
-  instantiate: (di): CreateResourceApplier => {
-    const deps: ResourceApplierDependencies = {
+const resourceApplierInjectable = getInjectable({
+  id: "resource-applier",
+  instantiate: (di, cluster) => new ResourceApplier(
+    {
       deleteFile: di.inject(removePathInjectable),
       emitAppEvent: di.inject(emitAppEventInjectable),
       execFile: di.inject(execFileInjectable),
       joinPaths: di.inject(joinPathsInjectable),
       logger: di.inject(loggerInjectable),
       writeFile: di.inject(writeFileInjectable),
-    };
-
-    return (cluster) => new ResourceApplier(deps, cluster);
-  },
+      createKubectl: di.inject(createKubectlInjectable),
+      proxyKubeconfigManager: di.inject(kubeconfigManagerInjectable, cluster),
+    },
+    cluster,
+  ),
+  lifecycle: lifecycleEnum.keyedSingleton({
+    getInstanceKey: (di, cluster: Cluster) => cluster.id,
+  }),
 });
 
-export default createResourceApplierInjectable;
+export default resourceApplierInjectable;

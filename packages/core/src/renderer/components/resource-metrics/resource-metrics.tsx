@@ -8,7 +8,7 @@ import "./resource-metrics.scss";
 import React, { createContext, useState } from "react";
 import { Radio, RadioGroup } from "../radio";
 import type { KubeObject } from "../../../common/k8s-api/kube-object";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Spinner } from "../spinner";
 import type { MetricsTab } from "../chart/options";
 import type { MetricData } from "../../../common/k8s-api/endpoints/metrics.api";

@@ -4,8 +4,8 @@
  */
 
 
+import autoBind from "auto-bind";
 import type { ItemObject } from "../../common/item.store";
-import { autoBind } from "../../common/utils";
 
 export type ForwardedPortStatus = "Active" | "Disabled";
 export interface ForwardedPort {

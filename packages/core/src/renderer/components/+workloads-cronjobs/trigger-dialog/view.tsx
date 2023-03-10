@@ -14,7 +14,7 @@ import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
 import type { CronJob, JobApi } from "../../../../common/k8s-api/endpoints";
 import type { ShowNotification } from "../../notifications";
-import { cssNames } from "../../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { Input } from "../../input";
 import { systemName, maxLength } from "../../input/input_validators";
 import { withInjectables } from "@ogre-tools/injectable-react";

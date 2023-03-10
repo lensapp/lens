@@ -10,9 +10,9 @@ import type { AppUpdater, UpdateCheckResult } from "electron-updater";
 import type { CheckForPlatformUpdates } from "./check-for-platform-updates.injectable";
 import checkForPlatformUpdatesInjectable from "./check-for-platform-updates.injectable";
 import type { UpdateChannel, ReleaseChannel } from "../../../common/update-channels";
-import { getPromiseStatus } from "../../../../../common/test-utils/get-promise-status";
+import { getPromiseStatus } from "@k8slens/test-utils";
 import loggerInjectable from "../../../../../common/logger.injectable";
-import { noop } from "../../../../../common/utils";
+import { noop } from "@k8slens/utilities";
 
 describe("check-for-platform-updates", () => {
   let checkForPlatformUpdates: CheckForPlatformUpdates;
@@ -22,6 +22,8 @@ describe("check-for-platform-updates", () => {
 
   beforeEach(() => {
     const di = getDiForUnitTesting();
+
+    di.unoverride(checkForPlatformUpdatesInjectable);
 
     checkForUpdatesMock = asyncFn();
 

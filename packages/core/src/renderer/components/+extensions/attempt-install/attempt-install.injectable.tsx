@@ -12,8 +12,8 @@ import getExtensionDestFolderInjectable from "./get-extension-dest-folder.inject
 import type { CreateTempFilesAndValidate } from "./create-temp-files-and-validate.injectable";
 import createTempFilesAndValidateInjectable from "./create-temp-files-and-validate.injectable";
 import extensionInstallationStateStoreInjectable from "../../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
-import type { Disposer } from "../../../../common/utils";
-import { disposer } from "../../../../common/utils";
+import type { Disposer } from "@k8slens/utilities";
+import { disposer } from "@k8slens/utilities";
 import type { ShowNotification } from "../../notifications";
 import { Button } from "../../button";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";

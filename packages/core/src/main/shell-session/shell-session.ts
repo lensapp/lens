@@ -10,7 +10,7 @@ import { clearKubeconfigEnvVars } from "../utils/clear-kube-env-vars";
 import path from "path";
 import os from "os";
 import type * as pty from "node-pty";
-import { getOrInsertWith } from "../../common/utils";
+import { getOrInsertWith } from "@k8slens/utilities";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 import type { Logger } from "../../common/logger";
 import type { ComputeShellEnvironment } from "../../features/shell-sync/main/compute-shell-environment.injectable";
@@ -111,6 +111,8 @@ export interface ShellSessionDependencies {
   readonly userShellSetting: IComputedValue<string>;
   readonly appName: string;
   readonly buildVersion: InitializableState<string>;
+  readonly proxyKubeconfigPath: string;
+  readonly directoryContainingKubectl: string;
   computeShellEnvironment: ComputeShellEnvironment;
   spawnPty: SpawnPty;
   emitAppEvent: EmitAppEvent;
@@ -147,8 +149,6 @@ export abstract class ShellSession {
   }
 
   protected running = false;
-  protected readonly kubectlBinDirP: Promise<string>;
-  protected readonly kubeconfigPathP: Promise<string>;
   protected readonly terminalId: string;
   protected readonly kubectl: Kubectl;
   protected readonly websocket: WebSocket;
@@ -179,8 +179,6 @@ export abstract class ShellSession {
     this.kubectl = kubectl;
     this.websocket = websocket;
     this.cluster = cluster;
-    this.kubeconfigPathP = this.cluster.getProxyKubeconfigPath();
-    this.kubectlBinDirP = this.kubectl.binDir();
     this.terminalId = `${cluster.id}:${terminalId}`;
   }
 
@@ -297,7 +295,7 @@ export abstract class ShellSession {
               code !== WebSocketCloseEvent.AbnormalClosure
               && code !== WebSocketCloseEvent.GoingAway
             )
-            || this.cluster.disconnected
+            || this.cluster.disconnected.get()
           );
 
         if (stopShellSession) {
@@ -350,7 +348,7 @@ export abstract class ShellSession {
     })();
 
     const env = clearKubeconfigEnvVars(JSON.parse(JSON.stringify(rawEnv)));
-    const pathStr = [await this.kubectlBinDirP, ...this.getPathEntries(), env.PATH].join(path.delimiter);
+    const pathStr = [this.dependencies.directoryContainingKubectl, ...this.getPathEntries(), env.PATH].join(path.delimiter);
 
     delete env.DEBUG; // don't pass DEBUG into shells
 
@@ -373,12 +371,12 @@ export abstract class ShellSession {
 
     if (path.basename(env.PTYSHELL) === "zsh") {
       env.OLD_ZDOTDIR = env.ZDOTDIR || env.HOME;
-      env.ZDOTDIR = await this.kubectlBinDirP;
+      env.ZDOTDIR = this.dependencies.directoryContainingKubectl;
       env.DISABLE_AUTO_UPDATE = "true";
     }
 
     env.PTYPID = process.pid.toString();
-    env.KUBECONFIG = await this.kubeconfigPathP;
+    env.KUBECONFIG = this.dependencies.proxyKubeconfigPath;
     env.TERM_PROGRAM = this.dependencies.appName;
     env.TERM_PROGRAM_VERSION = this.dependencies.buildVersion.get();
 

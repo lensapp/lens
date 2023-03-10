@@ -14,9 +14,10 @@ import { observer } from "mobx-react";
 import ReactSelect, { components, createFilter } from "react-select";
 import type { Props as ReactSelectProps, GroupBase, MultiValue, OptionsOrGroups, PropsValue, SingleValue } from "react-select";
 import type { LensTheme } from "../../themes/lens-theme";
-import { autoBind, cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import activeThemeInjectable from "../../themes/active.injectable";
+import autoBindReact from "auto-bind/react";
 
 const { Menu } = components;
 
@@ -120,7 +121,7 @@ class NonInjectedSelect<
   constructor(props: SelectProps<Value, Option, IsMulti, Group> & Dependencies) {
     super(props);
     makeObservable(this);
-    autoBind(this);
+    autoBindReact(this);
   }
 
   @computed get themeClass() {

@@ -4,7 +4,7 @@
  */
 
 import path from "path";
-import { getGlobalOverride } from "../test-utils/get-global-override";
+import { getGlobalOverride } from "@k8slens/test-utils";
 import getDirnameOfPathInjectable from "./get-dirname.injectable";
 
 export default getGlobalOverride(getDirnameOfPathInjectable, () => path.posix.dirname);

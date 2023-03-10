@@ -6,7 +6,7 @@
 import "./drawer-param-toggler.scss";
 import React from "react";
 import { Icon } from "../icon";
-import { cssNames } from "../../utils";
+import { cssNames } from "@k8slens/utilities";
 
 export interface DrawerParamTogglerProps {
   label: string | number;

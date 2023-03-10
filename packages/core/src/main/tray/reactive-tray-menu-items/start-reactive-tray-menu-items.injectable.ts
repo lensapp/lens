@@ -4,24 +4,20 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import reactiveTrayMenuItemsInjectable from "./reactive-tray-menu-items.injectable";
-import { onLoadOfApplicationInjectionToken } from "../../start-main-application/runnable-tokens/on-load-of-application-injection-token";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import startTrayInjectable from "../electron-tray/start-tray.injectable";
 
 const startReactiveTrayMenuItemsInjectable = getInjectable({
   id: "start-reactive-tray-menu-items",
 
-  instantiate: (di) => {
-    const reactiveTrayMenuItems = di.inject(reactiveTrayMenuItemsInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const reactiveTrayMenuItems = di.inject(reactiveTrayMenuItemsInjectable);
 
-    return {
-      id: "start-reactive-tray-menu-items",
-      run: () => {
-        reactiveTrayMenuItems.start();
-      },
-
-      runAfter: di.inject(startTrayInjectable),
-    };
-  },
+      reactiveTrayMenuItems.start();
+    },
+    runAfter: startTrayInjectable,
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

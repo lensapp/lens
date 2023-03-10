@@ -5,7 +5,7 @@
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import ipcMainInjectable from "../ipc-main/ipc-main.injectable";
 import type { IpcMain, IpcMainInvokeEvent } from "electron";
-import { getPromiseStatus } from "../../../../common/test-utils/get-promise-status";
+import { getPromiseStatus } from "@k8slens/test-utils";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
@@ -26,7 +26,7 @@ describe("enlist request channel listener in main", () => {
   let offMock: jest.Mock;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     handleMock = jest.fn();
     offMock = jest.fn();

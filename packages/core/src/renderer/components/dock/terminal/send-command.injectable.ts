@@ -6,8 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { when } from "mobx";
 import loggerInjectable from "../../../../common/logger.injectable";
 import { TerminalChannels } from "../../../../common/terminal/channels";
-import { waitUntilDefined } from "../../../../common/utils/wait";
-import { noop } from "../../../utils";
+import { waitUntilDefined, noop } from "@k8slens/utilities";
 import showSuccessNotificationInjectable from "../../notifications/show-success-notification.injectable";
 import selectDockTabInjectable from "../dock/select-dock-tab.injectable";
 import type { TabId } from "../dock/store";
@@ -21,7 +20,7 @@ export interface SendCommandOptions {
   enter?: boolean;
 
   /**
-   * @deprecated This option is ignored and infered to be `true` if `tabId` is not provided
+   * @deprecated This option is ignored and inferred to be `true` if `tabId` is not provided
    */
   newTab?: any;
 

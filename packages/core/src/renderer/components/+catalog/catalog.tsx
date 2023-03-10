@@ -10,16 +10,14 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { ItemListLayout } from "../item-object-list";
 import type { IComputedValue } from "mobx";
 import { action, computed, makeObservable, observable, reaction, runInAction, when } from "mobx";
-import type { CatalogEntityStore } from "./catalog-entity-store/catalog-entity.store";
+import type { CatalogEntityStore } from "./catalog-entity-store.injectable";
 import { MenuItem, MenuActions } from "../menu";
 import type { CatalogEntityContextMenu } from "../../api/catalog-entity";
 import type { CatalogCategory, CatalogCategoryRegistry, CatalogEntity } from "../../../common/catalog";
 import { CatalogAddButton } from "./catalog-add-button";
 import type { ShowNotification } from "../notifications";
 import { MainLayout } from "../layout/main-layout";
-import type { StorageLayer } from "../../utils";
-import { prevDefault } from "../../utils";
-import { CatalogEntityDetails } from "./entity-details/view";
+import { prevDefault } from "@k8slens/utilities";
 import { CatalogMenu } from "./catalog-menu";
 import { RenderDelay } from "../render-delay/render-delay";
 import { Icon } from "../icon";
@@ -27,7 +25,7 @@ import { HotbarToggleMenuItem } from "./hotbar-toggle-menu-item";
 import { Avatar } from "../avatar";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import catalogPreviousActiveTabStorageInjectable from "./catalog-previous-active-tab-storage/catalog-previous-active-tab-storage.injectable";
-import catalogEntityStoreInjectable from "./catalog-entity-store/catalog-entity-store.injectable";
+import catalogEntityStoreInjectable from "./catalog-entity-store.injectable";
 import type { GetCategoryColumnsParams, CategoryColumns } from "./columns/get.injectable";
 import getCategoryColumnsInjectable from "./columns/get.injectable";
 import type { RegisteredCustomCategoryViewDecl } from "./custom-views.injectable";
@@ -51,6 +49,11 @@ import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.inj
 import type { Logger } from "../../../common/logger";
 import loggerInjectable from "../../../common/logger.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import type { ShowEntityDetails } from "./entity-details/show.injectable";
+import showEntityDetailsInjectable from "./entity-details/show.injectable";
+import type { OnCatalogEntityListClick } from "./entity-details/on-catalog-click.injectable";
+import onCatalogEntityListClickInjectable from "./entity-details/on-catalog-click.injectable";
+import type { StorageLayer } from "../../utils/storage-helper";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: StorageLayer<string | null>;
@@ -58,6 +61,8 @@ interface Dependencies {
   getCategoryColumns: (params: GetCategoryColumnsParams) => CategoryColumns;
   customCategoryViews: IComputedValue<Map<string, Map<string, RegisteredCustomCategoryViewDecl>>>;
   emitEvent: EmitAppEvent;
+  showEntityDetails: ShowEntityDetails;
+  onCatalogEntityListClick: OnCatalogEntityListClick;
   routeParameters: {
     group: IComputedValue<string>;
     kind: IComputedValue<string>;
@@ -161,26 +166,16 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
     this.props.hotbarStore.removeFromHotbar(entity.getId());
   }
 
-  onDetails = (entity: CatalogEntity) => {
-    if (this.props.catalogEntityStore.selectedItemId.get()) {
-      this.props.catalogEntityStore.selectedItemId.set(undefined);
-    } else {
-      this.props.catalogEntityStore.onRun(entity);
-    }
-  };
-
-  get categories() {
-    return this.props.catalogCategoryRegistry.items;
-  }
-
   onTabChange = action((tabId: string | null) => {
-    const activeCategory = this.categories.find(category => category.getId() === tabId);
+    const activeCategory = tabId
+      ? this.props.catalogCategoryRegistry.getById(tabId)
+      : undefined;
 
     this.props.emitEvent({
       name: "catalog",
       action: "change-category",
       params: {
-        category: activeCategory ? activeCategory.getName() : "Browse",
+        category: activeCategory?.getName() ?? "Browse",
       },
     });
 
@@ -211,7 +206,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
         <MenuItem
           key="open-details"
           data-testid={`open-details-menu-item-for-${entity.getId()}`}
-          onClick={() => this.props.catalogEntityStore.selectedItemId.set(entity.getId())}
+          onClick={() => this.props.showEntityDetails(entity.getId())}
         >
           View Details
         </MenuItem>
@@ -309,7 +304,7 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
           disabled: !entity.isEnabled(),
         })}
         {...getCategoryColumns({ activeCategory })}
-        onDetails={this.onDetails}
+        onDetails={this.props.onCatalogEntityListClick}
         renderItemMenu={this.renderItemMenu}
         data-testid={`catalog-list-for-${activeCategory?.metadata.name ?? "browse-all"}`}
       />
@@ -318,7 +313,6 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
 
   render() {
     const activeCategory = this.props.catalogEntityStore.activeCategory.get();
-    const selectedItem = this.props.catalogEntityStore.selectedItem.get();
 
     return (
       <MainLayout
@@ -333,21 +327,13 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
           {this.renderViews(activeCategory)}
         </div>
         {
-          selectedItem
+          activeCategory
             ? (
-              <CatalogEntityDetails
-                entity={selectedItem}
-                hideDetails={() => this.props.catalogEntityStore.selectedItemId.set(undefined)}
-                onRun={() => this.props.catalogEntityStore.onRun(selectedItem)}
-              />
+              <RenderDelay>
+                <CatalogAddButton category={activeCategory} />
+              </RenderDelay>
             )
-            : activeCategory
-              ? (
-                <RenderDelay>
-                  <CatalogAddButton category={activeCategory} />
-                </RenderDelay>
-              )
-              : null
+            : null
         }
       </MainLayout>
     );
@@ -371,5 +357,7 @@ export const Catalog = withInjectables<Dependencies>(NonInjectedCatalog, {
     normalizeMenuItem: di.inject(normalizeCatalogEntityContextMenuInjectable),
     logger: di.inject(loggerInjectable),
     showErrorNotification: di.inject(showErrorNotificationInjectable),
+    showEntityDetails: di.inject(showEntityDetailsInjectable),
+    onCatalogEntityListClick: di.inject(onCatalogEntityListClickInjectable),
   }),
 });

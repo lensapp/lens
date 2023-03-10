@@ -5,7 +5,7 @@
 
 import styles from "./install.module.scss";
 import React from "react";
-import { prevDefault } from "../../utils";
+import { prevDefault } from "@k8slens/utilities";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { observer } from "mobx-react";

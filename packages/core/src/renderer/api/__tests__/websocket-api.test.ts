@@ -18,7 +18,7 @@ describe("WebsocketApi tests", () => {
   let api: TestWebSocketApi;
 
   beforeEach(() => {
-    const di = getDiForUnitTesting({ doGeneralOverrides: true });
+    const di = getDiForUnitTesting();
 
     api = new TestWebSocketApi({
       defaultParams: di.inject(defaultWebsocketApiParamsInjectable),

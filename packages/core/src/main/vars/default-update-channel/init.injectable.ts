@@ -3,21 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeApplicationIsLoadingInjectionToken } from "../../start-main-application/runnable-tokens/before-application-is-loading-injection-token";
+import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import initReleaseChannelInjectable from "../release-channel/init.injectable";
 import defaultUpdateChannelInjectable from "../../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 
 const initDefaultUpdateChannelInjectable = getInjectable({
   id: "init-default-update-channel",
-  instantiate: (di) => {
-    const defaultUpdateChannel = di.inject(defaultUpdateChannelInjectable);
+  instantiate: (di) => ({
+    run: async () => {
+      const defaultUpdateChannel = di.inject(defaultUpdateChannelInjectable);
 
-    return {
-      id: "init-default-update-channel",
-      run: () => defaultUpdateChannel.init(),
-      runAfter: di.inject(initReleaseChannelInjectable),
-    };
-  },
+      await defaultUpdateChannel.init();
+    },
+    runAfter: initReleaseChannelInjectable,
+  }),
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });
 

@@ -8,11 +8,11 @@ import type { ConfigResult } from "../kube-helpers";
 import { loadConfigFromString } from "../kube-helpers";
 import resolveTildeInjectable from "../path/resolve-tilde.injectable";
 
-export type LoadConfigfromFile = (filePath: string) => Promise<ConfigResult>;
+export type LoadConfigFromFile = (filePath: string) => Promise<ConfigResult>;
 
-const loadConfigfromFileInjectable = getInjectable({
-  id: "load-configfrom-file",
-  instantiate: (di): LoadConfigfromFile => {
+const loadConfigFromFileInjectable = getInjectable({
+  id: "load-config-from-file",
+  instantiate: (di): LoadConfigFromFile => {
     const readFile = di.inject(readFileInjectable);
     const resolveTilde = di.inject(resolveTildeInjectable);
 
@@ -20,4 +20,4 @@ const loadConfigfromFileInjectable = getInjectable({
   },
 });
 
-export default loadConfigfromFileInjectable;
+export default loadConfigFromFileInjectable;

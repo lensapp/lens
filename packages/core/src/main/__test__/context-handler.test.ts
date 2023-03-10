@@ -3,16 +3,20 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ClusterContextHandler } from "../context-handler/context-handler";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import createContextHandlerInjectable from "../context-handler/create-context-handler.injectable";
-import type { Cluster } from "../../common/cluster/cluster";
+import { Cluster } from "../../common/cluster/cluster";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { PrometheusProvider } from "../prometheus/provider";
 import { prometheusProviderInjectionToken } from "../prometheus/provider";
 import { runInAction } from "mobx";
+import prometheusHandlerInjectable from "../cluster/prometheus-handler/prometheus-handler.injectable";
+import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import lensProxyPortInjectable from "../lens-proxy/lens-proxy-port.injectable";
+import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
+import loadProxyKubeconfigInjectable from "../cluster/load-proxy-kubeconfig.injectable";
+import type { KubeConfig } from "@kubernetes/client-node";
 
 enum ServiceResult {
   Success,
@@ -41,22 +45,30 @@ const createTestPrometheusProvider = (kind: string, alwaysFail: ServiceResult): 
   },
 });
 
-const clusterStub = {
-  getProxyKubeconfig: () => ({
-    makeApiClient: (): void => undefined,
-  }),
-  apiUrl: "http://localhost:81",
-} as unknown as Cluster;
-
 describe("ContextHandler", () => {
-  let createContextHandler: (cluster: Cluster) => ClusterContextHandler;
   let di: DiContainer;
+  let cluster: Cluster;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: true });
-    di.override(createKubeAuthProxyInjectable, () => ({} as any));
+    di = getDiForUnitTesting();
 
-    createContextHandler = di.inject(createContextHandlerInjectable);
+    di.override(loadProxyKubeconfigInjectable, () => async () => ({
+      makeApiClient: () => ({} as any),
+    } as Partial<KubeConfig>));
+
+    di.override(createKubeAuthProxyInjectable, () => () => ({
+      run: async () => {},
+    } as KubeAuthProxy));
+    di.override(directoryForTempInjectable, () => "/some-directory-for-tmp");
+    di.inject(lensProxyPortInjectable).set(9968);
+
+    cluster = new Cluster({
+      contextName: "some-context-name",
+      id: "some-cluster-id",
+      kubeConfigPath: "/some-kubeconfig-path",
+    }, {
+      clusterServerUrl: "https://some-website.com",
+    });
   });
 
   describe("getPrometheusService", () => {
@@ -76,7 +88,7 @@ describe("ContextHandler", () => {
         }
       });
 
-      expect(() => createContextHandler(clusterStub).getPrometheusDetails()).rejects.toThrowError();
+      expect(() => di.inject(prometheusHandlerInjectable, cluster).getPrometheusDetails()).rejects.toThrowError();
     });
 
     it.each([
@@ -107,7 +119,7 @@ describe("ContextHandler", () => {
         }
       });
 
-      const details = await createContextHandler(clusterStub).getPrometheusDetails();
+      const details = await di.inject(prometheusHandlerInjectable, cluster).getPrometheusDetails();
 
       expect(details.provider.kind === `id_failure_${failures}`);
     });
@@ -140,7 +152,7 @@ describe("ContextHandler", () => {
         }
       });
 
-      const details = await createContextHandler(clusterStub).getPrometheusDetails();
+      const details = await di.inject(prometheusHandlerInjectable, cluster).getPrometheusDetails();
 
       expect(details.provider.kind === "id_failure_0");
     });
@@ -183,7 +195,7 @@ describe("ContextHandler", () => {
         }
       });
 
-      const details = await createContextHandler(clusterStub).getPrometheusDetails();
+      const details = await di.inject(prometheusHandlerInjectable, cluster).getPrometheusDetails();
 
       expect(details.provider.kind === "id_success_0");
     });

@@ -3,19 +3,18 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import * as Immer from "immer";
-import { beforeElectronIsReadyInjectionToken } from "../runnable-tokens/before-electron-is-ready-injection-token";
+import { setAutoFreeze, enableMapSet } from "immer";
+import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
 
 const setupImmerInjectable = getInjectable({
   id: "setup-immer",
 
   instantiate: () => ({
-    id: "setup-immer",
     run: () => {
       // Docs: https://immerjs.github.io/immer/
       // Required in `utils/storage-helper.ts`
-      Immer.setAutoFreeze(false); // allow to merge mobx observables
-      Immer.enableMapSet(); // allow to merge maps and sets
+      setAutoFreeze(false); // allow to merge mobx observables
+      enableMapSet(); // allow to merge maps and sets
 
       return undefined;
     },
