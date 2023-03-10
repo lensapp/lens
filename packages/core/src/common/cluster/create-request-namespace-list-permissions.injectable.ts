@@ -39,18 +39,12 @@ const createRequestNamespaceListPermissionsInjectable = getInjectable({
 
         const { resourceRules } = status;
 
-        return (resource) => {
-          const rules = resourceRules.filter(({
-            apiGroups = ["*"], resources = ["*"],
-          }) => {
-            const isAboutRelevantApiGroup = apiGroups.includes("*") || apiGroups.includes(resource.group);
-            const isAboutResource = resources.includes("*") || resources.includes(resource.apiName);
-
-            return isAboutRelevantApiGroup && isAboutResource;
-          });
-
-          return rules.some(({ verbs }) => verbs.includes("*") || verbs.includes("list"));
-        };
+        return (resource) => (
+          resourceRules
+            .filter(({ apiGroups = ["*"] }) => apiGroups.includes("*") || apiGroups.includes(resource.group))
+            .filter(({ resources = ["*"] }) => resources.includes("*") || resources.includes(resource.apiName))
+            .some(({ verbs }) => verbs.includes("*") || verbs.includes("list"))
+        );
       } catch (error) {
         logger.error(`[AUTHORIZATION-NAMESPACE-REVIEW]: failed to create subject rules review`, { namespace, error });
 
