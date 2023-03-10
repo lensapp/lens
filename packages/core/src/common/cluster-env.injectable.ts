@@ -5,7 +5,7 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import type { Cluster } from "./cluster/cluster";
-import { object } from "./utils";
+import { object } from "@k8slens/utilities";
 
 function isDefinedEntry<T>(entry: readonly [T, string | undefined]): entry is [T, string] {
   return Boolean(entry[1]);

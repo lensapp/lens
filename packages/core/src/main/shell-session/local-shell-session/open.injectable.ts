@@ -25,6 +25,7 @@ import buildVersionInjectable from "../../vars/build-version/build-version.injec
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import statInjectable from "../../../common/fs/stat.injectable";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
+import clusterEnvironmentInjectable from "../../../common/cluster-env.injectable";
 
 export interface OpenLocalShellSessionArgs {
   websocket: WebSocket;
@@ -39,7 +40,7 @@ const openLocalShellSessionInjectable = getInjectable({
 
   instantiate: (di): OpenLocalShellSession => {
     const createKubectl = di.inject(createKubectlInjectable);
-    const dependencies: Omit<LocalShellSessionDependencies, "proxyKubeconfigPath" | "directoryContainingKubectl"> = {
+    const dependencies: Omit<LocalShellSessionDependencies, "proxyKubeconfigPath" | "directoryContainingKubectl" | "clusterEnvironment"> = {
       directoryForBinaries: di.inject(directoryForBinariesInjectable),
       isMac: di.inject(isMacInjectable),
       isWindows: di.inject(isWindowsInjectable),
@@ -61,13 +62,12 @@ const openLocalShellSessionInjectable = getInjectable({
     return async (args) => {
       const kubectl = createKubectl(args.cluster.version.get());
       const kubeconfigManager = di.inject(kubeconfigManagerInjectable, args.cluster);
-      const proxyKubeconfigPath = await kubeconfigManager.ensurePath();
-      const directoryContainingKubectl = await kubectl.binDir();
 
       const session = new LocalShellSession({
         ...dependencies,
-        proxyKubeconfigPath,
-        directoryContainingKubectl,
+        proxyKubeconfigPath: await kubeconfigManager.ensurePath(),
+        directoryContainingKubectl: await kubectl.binDir(),
+        clusterEnvironment: di.inject(clusterEnvironmentInjectable, args.cluster),
       }, { kubectl, ...args });
 
       return session.open();

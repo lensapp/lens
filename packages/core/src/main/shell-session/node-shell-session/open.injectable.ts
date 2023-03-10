@@ -22,6 +22,7 @@ import statInjectable from "../../../common/fs/stat.injectable";
 import createKubeApiInjectable from "../../../common/k8s-api/create-kube-api.injectable";
 import loadProxyKubeconfigInjectable from "../../cluster/load-proxy-kubeconfig.injectable";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
+import clusterEnvironmentInjectable from "../../../common/cluster-env.injectable";
 
 export interface NodeShellSessionArgs {
   websocket: WebSocket;
@@ -36,7 +37,7 @@ const openNodeShellSessionInjectable = getInjectable({
   id: "open-node-shell-session",
   instantiate: (di): OpenNodeShellSession => {
     const createKubectl = di.inject(createKubectlInjectable);
-    const dependencies: Omit<NodeShellSessionDependencies, "proxyKubeconfigPath" | "loadProxyKubeconfig" | "directoryContainingKubectl"> = {
+    const dependencies: Omit<NodeShellSessionDependencies, "proxyKubeconfigPath" | "loadProxyKubeconfig" | "directoryContainingKubectl" | "clusterEnvironment"> = {
       isMac: di.inject(isMacInjectable),
       isWindows: di.inject(isWindowsInjectable),
       logger: di.inject(loggerInjectable),
@@ -54,15 +55,13 @@ const openNodeShellSessionInjectable = getInjectable({
     return async (args) => {
       const kubectl = createKubectl(args.cluster.version.get());
       const kubeconfigManager = di.inject(kubeconfigManagerInjectable, args.cluster);
-      const loadProxyKubeconfig = di.inject(loadProxyKubeconfigInjectable, args.cluster);
-      const proxyKubeconfigPath = await kubeconfigManager.ensurePath();
-      const directoryContainingKubectl = await kubectl.binDir();
 
       const session = new NodeShellSession({
         ...dependencies,
-        loadProxyKubeconfig,
-        proxyKubeconfigPath,
-        directoryContainingKubectl,
+        loadProxyKubeconfig: di.inject(loadProxyKubeconfigInjectable, args.cluster),
+        proxyKubeconfigPath: await kubeconfigManager.ensurePath(),
+        directoryContainingKubectl: await kubectl.binDir(),
+        clusterEnvironment: di.inject(clusterEnvironmentInjectable, args.cluster),
       }, { kubectl, ...args });
 
       return session.open();

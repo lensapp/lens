@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Cluster } from "../../common/cluster/cluster";
 import * as yaml from "js-yaml";
 import tempy from "tempy";
 import type { Patch } from "rfc6902";
@@ -14,11 +13,11 @@ import type { WriteFile } from "../../common/fs/write-file.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
-import type { CreateKubectl } from "../kubectl/create-kubectl.injectable";
 import type { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
 import type { AsyncResult } from "@k8slens/utilities";
 import type { IComputedValue } from "mobx";
 import type { ClusterEnvironment } from "../../common/cluster-env.injectable";
+import type { Kubectl } from "../kubectl/kubectl";
 
 export interface ResourceApplierDependencies {
   emitAppEvent: EmitAppEvent;
@@ -26,24 +25,19 @@ export interface ResourceApplierDependencies {
   deleteFile: RemovePath;
   execFile: ExecFile;
   joinPaths: JoinPaths;
-  createKubectl: CreateKubectl;
+  readonly kubectl: Kubectl;
   readonly proxyKubeconfigManager: KubeconfigManager;
   readonly logger: Logger;
   readonly clusterEnvironment: IComputedValue<ClusterEnvironment>;
 }
 
 export class ResourceApplier {
-  constructor(
-    protected readonly dependencies: ResourceApplierDependencies,
-    protected readonly cluster: Cluster,
-  ) {}
+  constructor(protected readonly dependencies: ResourceApplierDependencies) {}
 
   private async getKubectlPath() {
-    const kubectl = this.dependencies.createKubectl(this.cluster.version.get());
+    await this.dependencies.kubectl.ensureKubectl();
 
-    await kubectl.ensureKubectl();
-
-    return kubectl.getPath();
+    return this.dependencies.kubectl.getPath();
   }
 
   /**

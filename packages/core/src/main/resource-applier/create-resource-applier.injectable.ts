@@ -13,22 +13,21 @@ import { ResourceApplier } from "./resource-applier";
 import createKubectlInjectable from "../kubectl/create-kubectl.injectable";
 import kubeconfigManagerInjectable from "../kubeconfig-manager/kubeconfig-manager.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
+import clusterEnvironmentInjectable from "../../common/cluster-env.injectable";
 
 const resourceApplierInjectable = getInjectable({
   id: "resource-applier",
-  instantiate: (di, cluster) => new ResourceApplier(
-    {
-      deleteFile: di.inject(removePathInjectable),
-      emitAppEvent: di.inject(emitAppEventInjectable),
-      execFile: di.inject(execFileInjectable),
-      joinPaths: di.inject(joinPathsInjectable),
-      logger: di.inject(loggerInjectable),
-      writeFile: di.inject(writeFileInjectable),
-      createKubectl: di.inject(createKubectlInjectable),
-      proxyKubeconfigManager: di.inject(kubeconfigManagerInjectable, cluster),
-    },
-    cluster,
-  ),
+  instantiate: (di, cluster) => new ResourceApplier({
+    deleteFile: di.inject(removePathInjectable),
+    emitAppEvent: di.inject(emitAppEventInjectable),
+    execFile: di.inject(execFileInjectable),
+    joinPaths: di.inject(joinPathsInjectable),
+    logger: di.inject(loggerInjectable),
+    writeFile: di.inject(writeFileInjectable),
+    kubectl: di.inject(createKubectlInjectable)(cluster.version.get()),
+    proxyKubeconfigManager: di.inject(kubeconfigManagerInjectable, cluster),
+    clusterEnvironment: di.inject(clusterEnvironmentInjectable, cluster),
+  }),
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di, cluster: Cluster) => cluster.id,
   }),
