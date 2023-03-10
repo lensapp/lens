@@ -5,7 +5,7 @@
 import type { V1APIVersions } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
 import k8sRequestInjectable from "../k8s-request.injectable";
-import { apiVersionsRequesterInjectionToken } from "./request-api-versions";
+import { apiVersionsRequesterInjectionToken } from "./api-versions-requester";
 
 const requestCoreApiVersionsInjectable = getInjectable({
   id: "request-core-api-versions",

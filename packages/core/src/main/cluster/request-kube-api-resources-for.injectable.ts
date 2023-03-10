@@ -8,7 +8,7 @@ import type { Cluster } from "../../common/cluster/cluster";
 import type { KubeApiResource } from "../../common/rbac";
 import type { AsyncResult } from "@k8slens/utilities";
 import k8sRequestInjectable from "../k8s-request.injectable";
-import type { KubeResourceListGroup } from "./request-api-versions";
+import type { KubeResourceListGroup } from "./api-versions-requester";
 
 export type RequestKubeApiResources = (grouping: KubeResourceListGroup) => AsyncResult<KubeApiResource[], Error>;
 

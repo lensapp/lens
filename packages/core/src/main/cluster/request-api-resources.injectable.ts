@@ -7,7 +7,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import type { KubeApiResource } from "../../common/rbac";
 import type { Cluster } from "../../common/cluster/cluster";
-import { apiVersionsRequesterInjectionToken } from "./request-api-versions";
+import { apiVersionsRequesterInjectionToken } from "./api-versions-requester";
 import { backoffCaller, withConcurrencyLimit } from "@k8slens/utilities";
 import requestKubeApiResourcesForInjectable from "./request-kube-api-resources-for.injectable";
 import type { AsyncResult } from "@k8slens/utilities";
