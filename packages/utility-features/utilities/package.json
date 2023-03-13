@@ -25,7 +25,9 @@
     "test": "jest --coverage --runInBand"
   },
   "peerDependencies": {
-    "mobx": "^6.8.0",
-    "type-fest": "^2.19.0"
+    "mobx": "^6.8.0"
+  },
+  "devDependencies": {
+    "type-fest": "^2.14.0"
   }
 }
