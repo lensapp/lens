@@ -3,8 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
+import type {
+  ApplicationBuilder,
+} from "../../../../renderer/components/test-utils/get-application-builder";
+import {
+  getApplicationBuilder,
+} from "../../../../renderer/components/test-utils/get-application-builder";
 import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import React from "react";
@@ -12,7 +16,8 @@ import { KubeObject } from "../../../../common/k8s-api/kube-object";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import type { KubeApi } from "../../../../common/k8s-api/kube-api";
-import showDetailsInjectable from "../../../../renderer/components/kube-detail-params/show-details.injectable";
+import showDetailsInjectable
+  from "../../../../renderer/components/kube-detail-params/show-details.injectable";
 import assert from "assert";
 import type {
   FakeExtensionOptions,
@@ -36,6 +41,8 @@ describe("reactively hide kube object detail item", () => {
       const store = {
         api,
         loadFromPath: async () => getKubeObjectStub("some-kind", "some-api-version"),
+        getByPath() {
+        },
       } as Partial<KubeObjectStore<KubeObject>> as KubeObjectStore<KubeObject>;
 
       apiManager.registerApi(api);
@@ -103,8 +110,7 @@ describe("reactively hide kube object detail item", () => {
       expect(rendered.baseElement).toMatchSnapshot();
     });
 
-    // FIXME: details not rendered in the Drawer (in snapshot?)
-    it.skip("shows the kube object detail item", () => {
+    it("shows the kube object detail item", () => {
       const actual = rendered.queryByTestId("some-kube-object-detail-item");
 
       expect(actual).toBeInTheDocument();

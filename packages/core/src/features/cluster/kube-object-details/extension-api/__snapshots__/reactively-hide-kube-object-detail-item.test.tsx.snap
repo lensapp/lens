@@ -16,8 +16,26 @@ exports[`reactively hide kube object detail item renders 1`] = `
           <div
             class="drawer-title-text flex gaps align-center"
           >
-            
+            some-kind: some-name
+            <i
+              class="Icon material interactive focusable"
+              tabindex="0"
+            >
+              <span
+                class="icon"
+                data-icon-name="content_copy"
+              >
+                content_copy
+              </span>
+            </i>
+            <div>
+              Copy
+            </div>
           </div>
+          <ul
+            class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+            id="menu-actions-for-kube-object-menu-for-some-uid"
+          />
           <i
             class="Icon material interactive focusable"
             tabindex="0"
@@ -37,12 +55,50 @@ exports[`reactively hide kube object detail item renders 1`] = `
           class="drawer-content flex column box grow"
         >
           <div
-            class="box center"
+            class="DrawerItem"
           >
-            Resource loading has failed:
-            <b>
-              TypeError: store.getByPath is not a function
-            </b>
+            <span
+              class="name"
+            >
+              Name
+            </span>
+            <span
+              class="value"
+            >
+              some-name
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Namespace
+            </span>
+            <span
+              class="value"
+            >
+              <a
+                href="/workloads?kube-details=%2Fapi%2Fv1%2Fnamespaces%2Fsome-namespace&kube-selected=%2Fapis%2Fsome-api-version%2Fnamespaces%2Fsome-namespace%2Fsome-kind%2Fsome-name"
+              >
+                some-namespace
+              </a>
+            </span>
+          </div>
+          <div>
+            <div
+              class="DrawerTitle title"
+            >
+              <span>
+                Events
+              </span>
+            </div>
+            <div
+              class="empty"
+            >
+              No events found
+            </div>
           </div>
         </div>
       </div>
@@ -575,8 +631,26 @@ exports[`reactively hide kube object detail item when the item is shown renders 
           <div
             class="drawer-title-text flex gaps align-center"
           >
-            
+            some-kind: some-name
+            <i
+              class="Icon material interactive focusable"
+              tabindex="0"
+            >
+              <span
+                class="icon"
+                data-icon-name="content_copy"
+              >
+                content_copy
+              </span>
+            </i>
+            <div>
+              Copy
+            </div>
           </div>
+          <ul
+            class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+            id="menu-actions-for-kube-object-menu-for-some-uid"
+          />
           <i
             class="Icon material interactive focusable"
             tabindex="0"
@@ -596,12 +670,55 @@ exports[`reactively hide kube object detail item when the item is shown renders 
           class="drawer-content flex column box grow"
         >
           <div
-            class="box center"
+            class="DrawerItem"
           >
-            Resource loading has failed:
-            <b>
-              TypeError: store.getByPath is not a function
-            </b>
+            <span
+              class="name"
+            >
+              Name
+            </span>
+            <span
+              class="value"
+            >
+              some-name
+            </span>
+          </div>
+          <div
+            class="DrawerItem"
+          >
+            <span
+              class="name"
+            >
+              Namespace
+            </span>
+            <span
+              class="value"
+            >
+              <a
+                href="/workloads?kube-details=%2Fapi%2Fv1%2Fnamespaces%2Fsome-namespace&kube-selected=%2Fapis%2Fsome-api-version%2Fnamespaces%2Fsome-namespace%2Fsome-kind%2Fsome-name"
+              >
+                some-namespace
+              </a>
+            </span>
+          </div>
+          <div
+            data-testid="some-kube-object-detail-item"
+          >
+            Some detail
+          </div>
+          <div>
+            <div
+              class="DrawerTitle title"
+            >
+              <span>
+                Events
+              </span>
+            </div>
+            <div
+              class="empty"
+            >
+              No events found
+            </div>
           </div>
         </div>
       </div>
