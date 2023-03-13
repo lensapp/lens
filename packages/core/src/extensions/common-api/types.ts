@@ -21,3 +21,4 @@ export type { ShellEnvModifier, ShellEnvContext } from "../../main/shell-session
 export type { KubeObjectContextMenuItem, KubeObjectOnContextMenuOpenContext, KubeObjectOnContextMenuOpen, KubeObjectHandlers, KubeObjectHandlerRegistration } from "../../renderer/kube-object/handler";
 export type { TrayMenuRegistration } from "../../main/tray/tray-menu-registration";
 export type { MenuRegistration } from "../../features/application-menu/main/menu-registration";
+export type { ClusterPreferences } from "../../common/cluster-types";
