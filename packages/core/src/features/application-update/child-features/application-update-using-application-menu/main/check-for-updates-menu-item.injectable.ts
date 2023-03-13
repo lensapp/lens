@@ -9,19 +9,17 @@ import processCheckingForUpdatesInjectable from "../../../main/process-checking-
 import showApplicationWindowInjectable from "../../../../../main/start-main-application/lens-window/show-application-window.injectable";
 import updatingIsEnabledInjectable from "../../../main/updating-is-enabled/updating-is-enabled.injectable";
 import isMacInjectable from "../../../../../common/vars/is-mac.injectable";
+// import showSuccessNotificationInjectable from "../../../../../renderer/components/notifications/show-success-notification.injectable";
 
 const checkForUpdatesMenuItemInjectable = getInjectable({
   id: "check-for-updates-menu-item",
 
   instantiate: (di) => {
-    const processCheckingForUpdates = di.inject(
-      processCheckingForUpdatesInjectable,
-    );
-
+    const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable,);
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
-
     const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
     const isMac = di.inject(isMacInjectable);
+    // const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
 
     return {
       kind: "clickable-menu-item" as const,
@@ -31,11 +29,16 @@ const checkForUpdatesMenuItemInjectable = getInjectable({
       label: "Check for updates",
       isShown: updatingIsEnabled,
 
-      onClick: () => {
-        // Todo: implement using async/await
-        processCheckingForUpdates("application-menu").then(() =>
-          showApplicationWindow(),
-        );
+      onClick: async () => {
+        const { updateIsReadyToBeInstalled } = await processCheckingForUpdates("application-menu");
+
+        if (updateIsReadyToBeInstalled) {
+          await showApplicationWindow();
+        } else {
+          // showSuccessNotification(
+          //     `You're all good\n\nYou've got the latest version of Lens\nthanks for staying on the ball.`,
+          // );
+        }
       },
     };
   },
