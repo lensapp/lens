@@ -40,11 +40,11 @@ const downloadUpdateInjectable = getInjectable({
         if (!downloadWasSuccessful) {
           progressOfUpdateDownload.set({ percentage: 0, failed: "Download of update failed" });
           discoveredVersionState.set(null);
+        } else {
+          const currentDateTime = getCurrentDateTime();
+
+          updateDownloadedDate.set(currentDateTime);
         }
-
-        const currentDateTime = getCurrentDateTime();
-
-        updateDownloadedDate.set(currentDateTime);
 
         downloadingUpdateState.set(false);
       });
