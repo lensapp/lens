@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { disposer } from "@k8slens/utilities";
 import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
-import { getStartableStoppable } from "../../../../common/utils/get-startable-stoppable";
+import { getStartableStoppable } from "@k8slens/startable-stoppable";
 import enlistRequestChannelListenerInjectable from "./enlist-request-channel-listener.injectable";
 import { requestChannelListenerInjectionToken } from "./listener-tokens";
 
