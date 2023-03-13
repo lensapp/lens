@@ -9,14 +9,13 @@ import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import type { KubernetesCluster } from "../../../common/catalog-entities";
-import type { ClusterPreferences } from "../../../common/cluster-types";
 import type { Cluster } from "../../../common/cluster/cluster";
 import { Avatar } from "../avatar";
 import { FilePicker, OverSizeLimitStyle } from "../file-picker";
 import { MenuActions, MenuItem } from "../menu";
 import type { ShowNotification } from "../notifications";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
-import { ClusterIconMenuItem, clusterIconSettingsMenuInjectionToken } from "./cluster-settings-menu-injection-token";
+import { ChangedClusterPreference, ClusterIconMenuItem, clusterIconSettingsMenuInjectionToken } from "./cluster-settings-menu-injection-token";
 
 export interface ClusterIconSettingProps {
   cluster: Cluster;
@@ -54,7 +53,7 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
       ?.click();
   }
 
-  const save = ([kind, value]: [kind: keyof ClusterPreferences, value: any]) => {
+  const save = ([kind, value]: ChangedClusterPreference) => {
     cluster.preferences[kind] = value
   }
 
