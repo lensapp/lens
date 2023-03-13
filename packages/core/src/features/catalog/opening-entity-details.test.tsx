@@ -26,7 +26,7 @@ describe("opening catalog entity details panel", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       // TODO: remove once ClusterStore can be used without overriding it
       windowDi.override(getClusterByIdInjectable, () => (clusterId) => {
         if (clusterId === cluster?.id) {
@@ -39,7 +39,7 @@ describe("opening catalog entity details panel", () => {
 
     testUsingFakeTime();
 
-    builder.afterWindowStart((windowDi) => {
+    builder.afterWindowStart(({ windowDi }) => {
       clusterEntity = new KubernetesCluster({
         metadata: {
           labels: {},

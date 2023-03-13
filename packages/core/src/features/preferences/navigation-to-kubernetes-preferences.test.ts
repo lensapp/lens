@@ -22,14 +22,14 @@ describe("preferences - navigation to kubernetes preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      builder.beforeApplicationStart((mainDi) => {
+      builder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(
           getActiveHelmRepositoriesInjectable,
           () => async () => ({ callWasSuccessful: true, response: [] }),
         );
       });
 
-      builder.beforeWindowStart((windowDi) => {
+      builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(requestPublicHelmRepositoriesInjectable, () => async () => []);
       });
 

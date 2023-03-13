@@ -31,7 +31,7 @@ describe("navigating between routes", () => {
     let windowDi: DiContainer;
 
     beforeEach(async () => {
-      builder.beforeWindowStart((windowDi) => {
+      builder.beforeWindowStart(({ windowDi }) => {
         runInAction(() => {
           windowDi.register(testRouteWithoutPathParametersInjectable);
           windowDi.register(testRouteWithoutPathParametersComponentInjectable);
@@ -107,7 +107,7 @@ describe("navigating between routes", () => {
     let windowDi: DiContainer;
 
     beforeEach(async () => {
-      builder.beforeWindowStart((windowDi) => {
+      builder.beforeWindowStart(({ windowDi }) => {
         runInAction(() => {
           windowDi.register(routeWithOptionalPathParametersInjectable);
           windowDi.register(routeWithOptionalPathParametersComponentInjectable);

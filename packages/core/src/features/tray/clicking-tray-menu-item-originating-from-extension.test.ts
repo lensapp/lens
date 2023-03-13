@@ -15,7 +15,7 @@ describe("clicking tray menu item originating from extension", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       logErrorMock = jest.fn();
 
       mainDi.override(logErrorInjectable, () => logErrorMock);

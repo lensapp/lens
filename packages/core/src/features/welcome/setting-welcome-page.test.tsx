@@ -24,11 +24,11 @@ describe("setting-welcome-page", () => {
 
   describe("given configuration of welcome page route is the default", () => {
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart((mainDi) => {
+      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(welcomeRouteConfigInjectable, () => "/welcome");
       });
 
-      applicationBuilder.beforeWindowStart((windowDi) => {
+      applicationBuilder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(welcomeRouteConfigInjectable, () => "/welcome");
       });
 
@@ -54,11 +54,11 @@ describe("setting-welcome-page", () => {
 
   describe("given configuration of welcome page route is set to a custom page", () => {
     beforeEach(async () => {
-      applicationBuilder.beforeApplicationStart((mainDi) => {
+      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(welcomeRouteConfigInjectable, () => "/extension/some-extension-name/some-welcome-page");
       });
 
-      applicationBuilder.beforeWindowStart((windowDi) => {
+      applicationBuilder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(welcomeRouteConfigInjectable, () => "/extension/some-extension-name/some-welcome-page");
       });
 

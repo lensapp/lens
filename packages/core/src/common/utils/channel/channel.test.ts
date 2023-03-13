@@ -50,7 +50,7 @@ describe("channel", () => {
         injectionToken: messageChannelListenerInjectionToken,
       });
 
-      builder.beforeWindowStart((windowDi) => {
+      builder.beforeWindowStart(({ windowDi }) => {
         runInAction(() => {
           windowDi.register(testChannelListenerInTestWindowInjectable);
         });
@@ -123,7 +123,7 @@ describe("channel", () => {
         injectionToken: messageChannelListenerInjectionToken,
       });
 
-      applicationBuilder.beforeApplicationStart((mainDi) => {
+      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
         runInAction(() => {
           mainDi.register(testChannelListenerInMainInjectable);
         });
@@ -157,7 +157,7 @@ describe("channel", () => {
         handler: () => requestListenerInMainMock,
       });
 
-      applicationBuilder.beforeApplicationStart((mainDi) => {
+      applicationBuilder.beforeApplicationStart(({ mainDi }) => {
         runInAction(() => {
           mainDi.register(testChannelListenerInMainInjectable);
         });
@@ -224,7 +224,7 @@ describe("channel", () => {
       injectionToken: requestChannelListenerInjectionToken,
     });
 
-    applicationBuilder.beforeApplicationStart((mainDi) => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
       runInAction(() => {
         mainDi.register(someChannelListenerInjectable);
         mainDi.register(someOtherChannelListenerInjectable);

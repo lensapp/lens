@@ -40,13 +40,13 @@ describe("add custom helm repository in preferences", () => {
     showSuccessNotificationMock = jest.fn();
     showErrorNotificationMock = jest.fn();
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(getActiveHelmRepositoriesInjectable, () => getActiveHelmRepositoriesMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
     });
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(requestPublicHelmRepositoriesInjectable, () => async () => []);
       windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
       windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);

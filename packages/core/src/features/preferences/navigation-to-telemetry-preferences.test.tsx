@@ -142,7 +142,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      builder.beforeWindowStart((windowDi) => {
+      builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(sentryDataSourceNameInjectable, () => "some-sentry-dns-url");
       });
 
@@ -177,7 +177,7 @@ describe("preferences - navigation to telemetry preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      builder.beforeWindowStart((windowDi) => {
+      builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(sentryDataSourceNameInjectable, () => null);
       });
 

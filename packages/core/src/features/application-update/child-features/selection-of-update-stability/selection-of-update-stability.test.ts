@@ -37,7 +37,7 @@ describe("selection of update stability", () => {
   beforeEach(() => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       quitAndInstallUpdateMock = jest.fn();
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
@@ -64,7 +64,7 @@ describe("selection of update stability", () => {
       mainDi.override(publishIsConfiguredInjectable, () => true);
     });
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       showInfoNotificationMock = jest.fn(() => () => {});
 
       windowDi.override(showInfoNotificationInjectable, () => showInfoNotificationMock);
@@ -260,7 +260,7 @@ describe("selection of update stability", () => {
   });
 
   it('given no update channel selection is stored and currently using stable release, when user checks for updates, checks for updates from "latest" update channel by default', async () => {
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(getBuildVersionInjectable, () => () => "1.0.0");
     });
 
@@ -277,7 +277,7 @@ describe("selection of update stability", () => {
   });
 
   it('given no update channel selection is stored and currently using alpha release, when checking for updates, checks for updates from "alpha" channel', async () => {
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(getBuildVersionInjectable, () => () => "1.0.0-alpha");
     });
 
@@ -291,7 +291,7 @@ describe("selection of update stability", () => {
   });
 
   it('given no update channel selection is stored and currently using beta release, when checking for updates, checks for updates from "beta" channel', async () => {
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(getBuildVersionInjectable, () => () => "1.0.0-beta");
     });
 

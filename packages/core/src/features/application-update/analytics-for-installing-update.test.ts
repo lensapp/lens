@@ -35,7 +35,7 @@ describe("analytics for installing update", () => {
 
     analyticsListenerMock = jest.fn();
 
-    builder.beforeApplicationStart(mainDi => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(getBuildVersionInjectable, () => () => "42.0.0");
 
       checkForPlatformUpdatesMock = asyncFn();
