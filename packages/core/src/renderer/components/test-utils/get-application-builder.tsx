@@ -72,7 +72,8 @@ import { applicationFeatureForElectronMain, testUtils as applicationForElectronT
 import { applicationFeature, startApplicationInjectionToken } from "@k8slens/application";
 import { testUsingFakeTime } from "../../../test-utils/use-fake-time";
 
-type Callback = (di: DiContainer) => void | Promise<void>;
+type MainDiCallback = (container: { mainDi: DiContainer }) => void | Promise<void>;
+type WindowDiCallback = (container: { windowDi: DiContainer }) => void | Promise<void>;
 
 type LensWindowWithHelpers = LensWindow & { rendered: RenderResult; di: DiContainer };
 
@@ -115,10 +116,10 @@ export interface ApplicationBuilder {
   };
 
   allowKubeResource: (resource: KubeApiResourceDescriptor) => ApplicationBuilder;
-  beforeApplicationStart: (callback: Callback) => ApplicationBuilder;
-  afterApplicationStart: (callback: Callback) => ApplicationBuilder;
-  beforeWindowStart: (callback: Callback) => ApplicationBuilder;
-  afterWindowStart: (callback: Callback) => ApplicationBuilder;
+  beforeApplicationStart: (callback: MainDiCallback) => ApplicationBuilder;
+  afterApplicationStart: (callback: MainDiCallback) => ApplicationBuilder;
+  beforeWindowStart: (callback: WindowDiCallback) => ApplicationBuilder;
+  afterWindowStart: (callback: WindowDiCallback) => ApplicationBuilder;
 
   startHidden: () => Promise<void>;
   render: () => Promise<RenderResult>;
@@ -180,10 +181,10 @@ export const getApplicationBuilder = () => {
 
   const { overrideForWindow, sendToWindow } = overrideChannels(mainDi);
 
-  const beforeApplicationStartCallbacks: Callback[] = [];
-  const afterApplicationStartCallbacks: Callback[] = [];
-  const beforeWindowStartCallbacks: Callback[] = [];
-  const afterWindowStartCallbacks: Callback[] = [];
+  const beforeApplicationStartCallbacks: MainDiCallback[] = [];
+  const afterApplicationStartCallbacks: MainDiCallback[] = [];
+  const beforeWindowStartCallbacks: WindowDiCallback[] = [];
+  const afterWindowStartCallbacks: WindowDiCallback[] = [];
 
   const overrideFsWithFakes = getOverrideFsWithFakes();
 
@@ -261,7 +262,7 @@ export const getApplicationBuilder = () => {
       loadFile: async () => {},
       loadUrl: async () => {
         for (const callback of beforeWindowStartCallbacks) {
-          await callback(windowDi);
+          await callback({ windowDi });
         }
 
         const startApplication = windowDi.inject(startApplicationInjectionToken);
@@ -269,7 +270,7 @@ export const getApplicationBuilder = () => {
         await startApplication();
 
         for (const callback of afterWindowStartCallbacks) {
-          await callback(windowDi);
+          await callback({ windowDi });
         }
 
         const history = windowDi.inject(historyInjectable);
@@ -306,14 +307,14 @@ export const getApplicationBuilder = () => {
     mainDi.inject(lensProxyPortInjectable).set(42);
 
     for (const callback of beforeApplicationStartCallbacks) {
-      await callback(mainDi);
+      await callback({ mainDi });
     }
 
     mainDi.override(shouldStartHiddenInjectable, () => shouldStartHidden);
     await startApplication();
 
     for (const callback of afterApplicationStartCallbacks) {
-      await callback(mainDi);
+      await callback({ mainDi });
     }
 
     applicationHasStarted = true;
@@ -516,7 +517,7 @@ export const getApplicationBuilder = () => {
     setEnvironmentToClusterFrame: () => {
       environment = environments.clusterFrame;
 
-      builder.beforeWindowStart((windowDi) => {
+      builder.beforeWindowStart(({ windowDi }) => {
         const cluster = new Cluster({
           id: "some-cluster-id",
           contextName: "some-context-name",
@@ -587,7 +588,7 @@ export const getApplicationBuilder = () => {
       },
 
       enable: (...extensions) => {
-        builder.afterWindowStart((windowDi) => {
+        builder.afterWindowStart(({ windowDi }) => {
           const rendererExtensionInstances = extensions.map((options) =>
             getExtensionFakeForRenderer(
               windowDi,
@@ -602,7 +603,7 @@ export const getApplicationBuilder = () => {
           );
         });
 
-        builder.afterApplicationStart((mainDi) => {
+        builder.afterApplicationStart(({ mainDi }) => {
           const mainExtensionInstances = extensions.map((extension) =>
             getExtensionFakeForMain(mainDi, extension.id, extension.name, extension.mainOptions || {}),
           );
@@ -616,7 +617,7 @@ export const getApplicationBuilder = () => {
       },
 
       disable: (...extensions) => {
-        builder.afterWindowStart(windowDi => {
+        builder.afterWindowStart(({ windowDi }) => {
           extensions
             .map((ext) => ext.id)
             .forEach(
@@ -624,7 +625,7 @@ export const getApplicationBuilder = () => {
             );
         });
 
-        builder.afterApplicationStart(mainDi => {
+        builder.afterApplicationStart(({ mainDi }) => {
           extensions
             .map((ext) => ext.id)
             .forEach(
@@ -649,7 +650,7 @@ export const getApplicationBuilder = () => {
 
     beforeApplicationStart(callback) {
       if (applicationHasStarted) {
-        callback(mainDi);
+        callback({ mainDi });
       }
 
       beforeApplicationStartCallbacks.push(callback);
@@ -659,7 +660,7 @@ export const getApplicationBuilder = () => {
 
     afterApplicationStart(callback) {
       if (applicationHasStarted) {
-        callback(mainDi);
+        callback({ mainDi });
       }
 
       afterApplicationStartCallbacks.push(callback);
@@ -671,7 +672,7 @@ export const getApplicationBuilder = () => {
       const alreadyRenderedWindows = builder.applicationWindow.getAll();
 
       alreadyRenderedWindows.forEach((window) => {
-        callback(window.di);
+        callback({ windowDi: window.di });
       });
 
       beforeWindowStartCallbacks.push(callback);
@@ -683,7 +684,7 @@ export const getApplicationBuilder = () => {
       const alreadyRenderedWindows = builder.applicationWindow.getAll();
 
       alreadyRenderedWindows.forEach((window) => {
-        callback(window.di);
+        callback({ windowDi: window.di });
       });
 
       afterWindowStartCallbacks.push(callback);

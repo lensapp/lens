@@ -18,20 +18,18 @@ describe("application-menu-in-legacy-extension-api", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(
-      (mainDi) => {
-        runInAction(() => {
-          mainDi.register(
-            someTopMenuItemInjectable,
-            someNonExtensionBasedMenuItemInjectable,
-          );
-        });
+    builder.beforeApplicationStart(({ mainDi }) => {
+      runInAction(() => {
+        mainDi.register(
+          someTopMenuItemInjectable,
+          someNonExtensionBasedMenuItemInjectable,
+        );
+      });
 
-        logErrorMock = jest.fn();
+      logErrorMock = jest.fn();
 
-        mainDi.override(logErrorInjectable, () => logErrorMock);
-      },
-    );
+      mainDi.override(logErrorInjectable, () => logErrorMock);
+    });
 
     await builder.startHidden();
   });

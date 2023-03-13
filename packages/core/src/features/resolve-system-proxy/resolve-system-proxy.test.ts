@@ -21,7 +21,7 @@ describe("resolve-system-proxy", () => {
 
     resolveSystemProxyFromElectronMock = asyncFn();
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(
         resolveSystemProxyFromElectronInjectable,
         () => resolveSystemProxyFromElectronMock,

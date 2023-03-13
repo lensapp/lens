@@ -26,7 +26,7 @@ describe("disable kube object detail items when cluster is not relevant", () => 
     builder = getApplicationBuilder();
     builder.setEnvironmentToClusterFrame();
 
-    builder.afterWindowStart((windowDi) => {
+    builder.afterWindowStart(({ windowDi }) => {
       const apiManager = windowDi.inject(apiManagerInjectable);
       const api = {
         apiBase: "/apis/some-api-version/some-kind",

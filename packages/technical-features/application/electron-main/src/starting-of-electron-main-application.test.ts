@@ -7,7 +7,7 @@ import {
 } from "@k8slens/application";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 import whenAppIsReadyInjectable from "./start-application/when-app-is-ready.injectable";
-import { beforeAnythingInjectionToken, beforeElectronIsReadyInjectionToken } from "./start-application/time-slots";
+import * as timeSlots from "./start-application/time-slots";
 
 describe("starting-of-electron-main-application", () => {
   let di: DiContainer;
@@ -30,13 +30,13 @@ describe("starting-of-electron-main-application", () => {
     const beforeAnythingIsLoadingInjectable = getInjectable({
       id: "before-anything",
       instantiate: () => ({ run: beforeAnythingMock }),
-      injectionToken: beforeAnythingInjectionToken,
+      injectionToken: timeSlots.beforeAnythingInjectionToken,
     });
 
     const beforeElectronIsReadyIsLoadingInjectable = getInjectable({
       id: "before-electron-is-ready",
       instantiate: () => ({ run: beforeElectronIsReadyMock }),
-      injectionToken: beforeElectronIsReadyInjectionToken,
+      injectionToken: timeSlots.beforeElectronIsReadyInjectionToken,
     });
 
     const beforeApplicationIsLoadingInjectable = getInjectable({

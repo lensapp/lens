@@ -8,33 +8,34 @@ import { startApplicationInjectionToken } from "@k8slens/application";
 import whenAppIsReadyInjectable from "./when-app-is-ready.injectable";
 import { beforeAnythingInjectionToken, beforeElectronIsReadyInjectionToken } from "./time-slots";
 import { runManySyncFor } from "@k8slens/run-many";
+import { curry } from "lodash";
 
 type ToBeDecorated = (di: DiContainer, ...args: unknown[]) => (...args: unknown[]) => unknown;
+
+const decorator = (toBeDecorated: unknown, di: DiContainer, ...args: unknown[]) => {
+  const whenAppIsReady = di.inject(whenAppIsReadyInjectable);
+  const runManySync = runManySyncFor(di);
+  const beforeAnything = runManySync(beforeAnythingInjectionToken);
+  const beforeElectronIsReady = runManySync(beforeElectronIsReadyInjectionToken);
+  const startApplication = (toBeDecorated as ToBeDecorated)(di, ...args);
+
+  return (...startApplicationArgs: unknown[]) => {
+    beforeAnything();
+    beforeElectronIsReady();
+
+    return (async () => {
+      await whenAppIsReady();
+
+      return startApplication(...startApplicationArgs);
+    })();
+  };
+};
 
 const startElectronApplicationInjectable = getInjectable({
   id: "start-electron-application",
 
   instantiate: () => ({
-    decorate: (toBeDecorated: unknown) => (
-      (di: DiContainer, ...args: unknown[]) => {
-        const whenAppIsReady = di.inject(whenAppIsReadyInjectable);
-        const runManySync = runManySyncFor(di);
-        const beforeAnything = runManySync(beforeAnythingInjectionToken);
-        const beforeElectronIsReady = runManySync(beforeElectronIsReadyInjectionToken);
-        const startApplication = (toBeDecorated as ToBeDecorated)(di, ...args);
-
-        return (...startApplicationArgs: unknown[]) => {
-          beforeAnything();
-          beforeElectronIsReady();
-
-          return (async () => {
-            await whenAppIsReady();
-
-            return startApplication(...startApplicationArgs);
-          })()
-        };
-      }
-    ),
+    decorate: curry(decorator),
     target: startApplicationInjectionToken,
   }),
 

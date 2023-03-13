@@ -33,7 +33,7 @@ describe("encourage user to update when sufficient time passed since update was 
 
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart((mainDi) => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
 

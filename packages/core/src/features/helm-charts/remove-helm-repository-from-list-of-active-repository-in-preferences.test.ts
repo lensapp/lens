@@ -28,13 +28,13 @@ describe("remove helm repository from list of active repositories in preferences
     execFileMock = asyncFn();
     getActiveHelmRepositoriesMock = asyncFn();
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(getActiveHelmRepositoriesInjectable, () => getActiveHelmRepositoriesMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
     });
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(requestPublicHelmRepositoriesInjectable, () => async () => []);
     });
 

@@ -34,7 +34,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
     applicationBuilder.setEnvironmentToClusterFrame();
 
-    applicationBuilder.beforeWindowStart((windowDi) => {
+    applicationBuilder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(storageSaveDelayInjectable, () => 250);
 
       windowDi.override(
@@ -171,7 +171,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
     describe("given state for expanded sidebar items already exists, when rendered", () => {
       beforeEach(async () => {
-        applicationBuilder.beforeWindowStart(async (windowDi) => {
+        applicationBuilder.beforeWindowStart(async ({ windowDi }) => {
           const writeJsonFileFake = windowDi.inject(writeJsonFileInjectable);
 
           await writeJsonFileFake(
@@ -207,7 +207,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
     describe("given state for expanded unknown sidebar items already exists, when rendered", () => {
       beforeEach(async () => {
-        applicationBuilder.beforeWindowStart(async (windowDi) => {
+        applicationBuilder.beforeWindowStart(async ({ windowDi }) => {
           const writeJsonFileFake = windowDi.inject(writeJsonFileInjectable);
 
           await writeJsonFileFake(
@@ -237,7 +237,7 @@ describe("cluster - sidebar and tab navigation for extensions", () => {
 
     describe("given empty state for expanded sidebar items already exists, when rendered", () => {
       beforeEach(async () => {
-        applicationBuilder.beforeWindowStart(async (windowDi) => {
+        applicationBuilder.beforeWindowStart(async ({ windowDi }) => {
           const writeJsonFileFake = windowDi.inject(writeJsonFileInjectable);
 
           await writeJsonFileFake(

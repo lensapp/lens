@@ -35,7 +35,7 @@ describe("New Upgrade Helm Chart Dock Tab", () => {
     builder = getApplicationBuilder();
     builder.setEnvironmentToClusterFrame();
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       requestHelmReleaseConfigurationMock = asyncFn();
       windowDi.override(requestHelmReleaseConfigurationInjectable, () => requestHelmReleaseConfigurationMock);
 

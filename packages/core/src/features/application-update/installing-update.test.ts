@@ -32,7 +32,7 @@ describe("installing update", () => {
 
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       electronQuitAndInstallUpdateMock = jest.fn();
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();

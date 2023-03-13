@@ -26,7 +26,7 @@ describe("reactively hide kube object status", () => {
 
     builder.setEnvironmentToClusterFrame();
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       runInAction(() => {
         windowDi.register(testRouteInjectable, testRouteComponentInjectable);
       });

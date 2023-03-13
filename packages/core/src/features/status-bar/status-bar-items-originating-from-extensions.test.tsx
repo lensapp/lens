@@ -16,7 +16,7 @@ describe("status-bar-items-originating-from-extensions", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeWindowStart((windowDi) => {
+    applicationBuilder.beforeWindowStart(({ windowDi }) => {
       windowDi.unoverride(getRandomIdInjectable);
       windowDi.permitSideEffects(getRandomIdInjectable);
     });
