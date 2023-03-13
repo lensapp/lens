@@ -204,6 +204,7 @@
     "@k8slens/legacy-extension-example": "^1.0.0-alpha.1",
     "@k8slens/legacy-extensions": "^1.0.0-alpha.1",
     "@k8slens/run-many": "^1.0.0-alpha.1",
+    "@k8slens/startable-stoppable": "^1.0.0-alpha.1",
     "@k8slens/test-utils": "^1.0.0-alpha.1",
     "@k8slens/utilities": "^1.0.0-alpha.1",
     "@ogre-tools/fp": "^15.1.2",

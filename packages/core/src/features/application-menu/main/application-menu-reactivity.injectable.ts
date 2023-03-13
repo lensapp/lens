@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { autorun } from "mobx";
-import { getStartableStoppable } from "../../../common/utils/get-startable-stoppable";
+import { getStartableStoppable } from "@k8slens/startable-stoppable";
 import populateApplicationMenuInjectable from "./populate-application-menu.injectable";
 import applicationMenuItemCompositeInjectable from "./application-menu-item-composite.injectable";
 
