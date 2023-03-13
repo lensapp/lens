@@ -5,11 +5,11 @@
 
 import "./pods.scss";
 
-import React, { Fragment } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { NodeApi, Pod } from "../../../common/k8s-api/endpoints";
+import type { ContainerStateValues, NodeApi, Pod } from "../../../common/k8s-api/endpoints";
 import { StatusBrick } from "../status-brick";
 import { cssNames, getConvertedParts, object, stopPropagation } from "@k8slens/utilities";
 import startCase from "lodash/startCase";
@@ -21,8 +21,8 @@ import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
-import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
+import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import type { EventStore } from "../+events/store";
 import type { PodStore } from "./store";
 import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.injectable";
@@ -52,8 +52,12 @@ interface Dependencies {
 
 @observer
 class NonInjectedPods extends React.Component<Dependencies> {
-  renderState<T extends string>(name: string, ready: boolean, key: string, data: Partial<Record<T, string | number>> | undefined) {
-    return data && (
+  renderState(name: string, ready: boolean, key: string, data?: ContainerStateValues) {
+    if (!data) {
+      return;
+    }
+
+    return (
       <>
         <div className="title">
           {name}
@@ -64,40 +68,37 @@ class NonInjectedPods extends React.Component<Dependencies> {
           </span>
         </div>
         {object.entries(data).map(([name, value]) => (
-          <div key={name} className="flex gaps align-center">
-            <div className="name">
-              {startCase(name)}
-            </div>
-            <div className="value">
-              {value}
-            </div>
-          </div>
+          <React.Fragment key={name}>
+            <div className="name">{startCase(name)}</div>
+            <div className="value">{value}</div>
+          </React.Fragment>
         ))}
       </>
     );
   }
 
   renderContainersStatus(pod: Pod) {
-    return pod.getContainerStatuses()
-      .map(({ name, state = {}, ready }) => (
-        <Fragment key={name}>
-          <StatusBrick
-            className={cssNames(state, { ready })}
-            tooltip={{
-              formatters: {
-                tableView: true,
-              },
-              children: (
-                <>
-                  {this.renderState(name, ready, "running", state.running)}
-                  {this.renderState(name, ready, "waiting", state.waiting)}
-                  {this.renderState(name, ready, "terminated", state.terminated)}
-                </>
-              ),
-            }}
-          />
-        </Fragment>
-      ));
+    return pod.getContainerStatuses().map(({ name, state, ready }) => {
+      return (
+        <StatusBrick
+          key={name}
+          className={cssNames(state, { ready })}
+          tooltip={{
+            formatters: {
+              tableView: true,
+              nowrap: true,
+            },
+            children: (
+              <>
+                {this.renderState(name, ready, "running", state?.running)}
+                {this.renderState(name, ready, "waiting", state?.waiting)}
+                {this.renderState(name, ready, "terminated", state?.terminated)}
+              </>
+            ),
+          }}
+        />
+      );
+    });
   }
 
   render() {
