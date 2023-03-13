@@ -15,7 +15,8 @@ import { FilePicker, OverSizeLimitStyle } from "../file-picker";
 import { MenuActions, MenuItem } from "../menu";
 import type { ShowNotification } from "../notifications";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
-import { ChangedClusterPreference, ClusterIconMenuItem, clusterIconSettingsMenuInjectionToken } from "./cluster-settings-menu-injection-token";
+import type { ChangedClusterPreference, ClusterIconMenuItem } from "./cluster-settings-menu-injection-token";
+import { clusterIconSettingsMenuInjectionToken } from "./cluster-settings-menu-injection-token";
 
 export interface ClusterIconSettingProps {
   cluster: Cluster;
@@ -23,7 +24,7 @@ export interface ClusterIconSettingProps {
 }
 
 interface Dependencies {
-  menuItems: IComputedValue<ClusterIconMenuItem[]>
+  menuItems: IComputedValue<ClusterIconMenuItem[]>;
   showErrorNotification: ShowNotification;
 }
 
@@ -31,6 +32,7 @@ interface Dependencies {
 const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps & Dependencies) => {
   const element = React.createRef<HTMLDivElement>();
   const { cluster, entity } = props;
+  const menuId = `menu-actions-for-cluster-icon-settings-for-${entity.getId()}`;
 
   const onIconPick = async ([file]: File[]) => {
     if (!file) {
@@ -42,20 +44,20 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
 
       cluster.preferences.icon = `data:${file.type};base64,${buf.toString("base64")}`;
     } catch (e) {
-      props.showErrorNotification(String(e))
+      props.showErrorNotification(String(e));
     }
-  }
+  };
 
   const onUploadClick = () => {
     element
       .current
       ?.querySelector<HTMLInputElement>("input[type=file]")
       ?.click();
-  }
+  };
 
   const save = ([kind, value]: ChangedClusterPreference) => {
-    cluster.preferences[kind] = value
-  }
+    cluster.preferences[kind] = value;
+  };
 
   return (
     <div ref={element}>
@@ -76,7 +78,8 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
           />
         </div>
         <MenuActions
-          id={`menu-actions-for-cluster-icon-settings-for-${entity.getId()}`}
+          id={menuId}
+          data-testid={menuId}
           toolbar={false}
           autoCloseOnSelect={true}
           triggerIcon={{ material: "more_horiz" }}
@@ -84,8 +87,14 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
           <MenuItem onClick={onUploadClick}>
             Upload Icon
           </MenuItem>
-          {props.menuItems.get().map(item =>
-            <MenuItem onClick={() => save(item.onClick(cluster.preferences))} key={item.id} disabled={item.disabled(cluster.preferences)}>{item.title}</MenuItem>
+          {props.menuItems.get().map(item => (
+            <MenuItem
+              onClick={() => save(item.onClick(cluster.preferences))}
+              key={item.id}
+              disabled={item.disabled?.(cluster.preferences)}>
+              {item.title}
+            </MenuItem>
+          ),
           )}
         </MenuActions>
       </div>
@@ -95,12 +104,12 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
 
 export const ClusterIconSetting = withInjectables<Dependencies, ClusterIconSettingProps>(NonInjectedClusterIconSetting, {
   getProps: (di, props) => {
-   const computedInjectMany = di.inject(computedInjectManyInjectable);
+    const computedInjectMany = di.inject(computedInjectManyInjectable);
    
-   return {
-    ...props,
-    menuItems: computedInjectMany(clusterIconSettingsMenuInjectionToken),
-    showErrorNotification: di.inject(showErrorNotificationInjectable),
-   }
-  }
+    return {
+      ...props,
+      menuItems: computedInjectMany(clusterIconSettingsMenuInjectionToken),
+      showErrorNotification: di.inject(showErrorNotificationInjectable),
+    };
+  },
 });
