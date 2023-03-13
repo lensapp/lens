@@ -35,7 +35,7 @@ describe("force user to update when too long since update was downloaded", () =>
 
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(mainDi => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
       checkForPlatformUpdatesMock = asyncFn();
 
       mainDi.override(checkForPlatformUpdatesInjectable, () => checkForPlatformUpdatesMock);
@@ -49,7 +49,7 @@ describe("force user to update when too long since update was downloaded", () =>
       mainDi.override(quitAndInstallUpdateInjectable, () => quitAndInstallUpdateMock);
     });
 
-    applicationBuilder.beforeWindowStart(windowDi => {
+    applicationBuilder.beforeWindowStart(({ windowDi }) => {
       windowDi.unoverride(forceUpdateModalRootFrameComponentInjectable);
       windowDi.permitSideEffects(forceUpdateModalRootFrameComponentInjectable);
 

@@ -30,7 +30,7 @@ describe("disable kube object statuses when cluster is not relevant", () => {
 
     builder.setEnvironmentToClusterFrame();
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       runInAction(() => {
         windowDi.register(testRouteInjectable, testRouteComponentInjectable);
       });

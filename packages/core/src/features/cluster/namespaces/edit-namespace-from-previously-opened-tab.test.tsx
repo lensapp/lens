@@ -26,7 +26,7 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
 
     callForNamespaceMock = asyncFn();
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(
         directoryForLensLocalStorageInjectable,
         () => "/some-directory-for-lens-local-storage",
@@ -47,7 +47,7 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(async (windowDi) => {
+      builder.beforeWindowStart(async ({ windowDi }) => {
         const writeJsonFile = windowDi.inject(writeJsonFileInjectable);
 
         await writeJsonFile(

@@ -25,7 +25,7 @@ describe("reactively hide kube object detail item", () => {
 
     builder.setEnvironmentToClusterFrame();
 
-    builder.afterWindowStart((windowDi) => {
+    builder.afterWindowStart(({ windowDi }) => {
       const apiManager = windowDi.inject(apiManagerInjectable);
       const api = {
         apiBase: "/apis/some-api-version/some-kind",

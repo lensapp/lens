@@ -63,7 +63,7 @@ describe("showing details for helm release", () => {
     showSuccessNotificationMock = jest.fn();
     showCheckedErrorNotificationMock = jest.fn();
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(getRandomUpgradeChartTabIdInjectable, () => () => "some-tab-id");
       windowDi.override(showSuccessNotificationInjectable, () => showSuccessNotificationMock);
       windowDi.override(showCheckedErrorInjectable, () => showCheckedErrorNotificationMock);

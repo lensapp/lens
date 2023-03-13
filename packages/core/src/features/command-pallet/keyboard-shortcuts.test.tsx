@@ -18,7 +18,7 @@ describe("Command Pallet: keyboard shortcut tests", () => {
 
   describe("when on macOS", () => {
     beforeEach(async () => {
-      builder.beforeWindowStart((windowDi) => {
+      builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(platformInjectable, () => "darwin");
       });
 
@@ -86,7 +86,7 @@ describe("Command Pallet: keyboard shortcut tests", () => {
 
   describe("when on linux", () => {
     beforeEach(async () => {
-      builder.beforeWindowStart((windowDi) => {
+      builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(platformInjectable, () => "linux");
       });
 

@@ -24,7 +24,7 @@ describe("downgrading version update", () => {
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
 
-    applicationBuilder.beforeApplicationStart(mainDi => {
+    applicationBuilder.beforeApplicationStart(({ mainDi }) => {
       checkForPlatformUpdatesMock = asyncFn();
 
       mainDi.override(

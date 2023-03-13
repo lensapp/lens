@@ -23,7 +23,7 @@ describe("<StatusBar />", () => {
 
     builder = getApplicationBuilder();
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       windowDi.unoverride(getRandomIdInjectable);
       windowDi.permitSideEffects(getRandomIdInjectable);
       windowDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
@@ -63,7 +63,7 @@ describe("<StatusBar />", () => {
     const testId = "testId";
     const text = "heee";
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(statusBarItemsInjectable, () => computed(() => ({
         right: [ { origin: testId, component: () => <span data-testid={testId} >{text}</span> }],
         left: [],

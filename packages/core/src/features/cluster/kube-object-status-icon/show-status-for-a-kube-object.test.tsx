@@ -93,7 +93,7 @@ describe("show status for a kube object", () => {
       }),
     });
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       runInAction(() => {
         windowDi.register(
           testRouteInjectable,

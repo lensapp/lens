@@ -76,17 +76,17 @@ describe("Deleting a cluster", () => {
     config = new KubeConfig();
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(kubectlBinaryNameInjectable, () => "kubectl");
       mainDi.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
       mainDi.override(normalizedPlatformInjectable, () => "darwin");
     });
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       openDeleteClusterDialog = windowDi.inject(openDeleteClusterDialogInjectable);
     });
 
-    builder.afterWindowStart(windowDi => {
+    builder.afterWindowStart(({ windowDi }) => {
       const navigateToCatalog = windowDi.inject(navigateToCatalogInjectable);
 
       navigateToCatalog();

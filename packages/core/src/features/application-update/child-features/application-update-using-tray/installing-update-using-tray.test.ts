@@ -24,7 +24,7 @@ describe("installing update using tray", () => {
   beforeEach(() => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
 
