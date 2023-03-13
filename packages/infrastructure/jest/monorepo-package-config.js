@@ -1,5 +1,9 @@
+const path = require('path');
+
 module.exports = (rootDir) => {
   const shared = {
+    "resolver": path.join(__dirname, "jest-28-resolver.js"),
+
     transform: {
       "^.+\\.(t|j)sx?$": ["@swc/jest", { cwd: rootDir }],
     },
