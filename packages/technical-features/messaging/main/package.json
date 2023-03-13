@@ -1,0 +1,41 @@
+{
+  "name": "@k8slens/messaging-for-main",
+  "private": false,
+  "version": "1.0.0-alpha.1",
+  "description": "Implementations for 'messaging' in Electron main",
+  "type": "commonjs",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack --mode=development --watch",
+    "test:unit": "jest --coverage --runInBand",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix"
+  },
+  "peerDependencies": {
+    "@k8slens/application": "^6.5.0-alpha.0",
+    "@k8slens/feature-core": "^6.5.0-alpha.0",
+    "@k8slens/messaging": "^1.0.0-alpha.1",
+    "@ogre-tools/injectable": "^15.1.2",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^15.1.2",
+    "electron": "^19.1.8",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0-alpha.1"
+  }
+}
