@@ -21,7 +21,9 @@ const currentKubeObjectInDetailsInjectable = getInjectable({
     const apiManager = di.inject(apiManagerInjectable);
 
     return asyncComputed({
-      getValueFromObservedPromise: async (): Promise<CurrentKubeObject> => {
+      betweenUpdates: "show-latest-value",
+
+      async getValueFromObservedPromise(): Promise<CurrentKubeObject> {
         const path = urlParam.get();
         const store = apiManager.getStore(path);
 
@@ -30,7 +32,7 @@ const currentKubeObjectInDetailsInjectable = getInjectable({
         }
 
         try {
-          const object = await store.loadFromPath(path);
+          const object = store.getByPath(path) ?? await store.loadFromPath(path);
 
           return { object };
         } catch (error) {
