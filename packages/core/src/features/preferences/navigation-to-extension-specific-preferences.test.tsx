@@ -27,7 +27,7 @@ describe("preferences - navigation to extension specific preferences", () => {
     beforeEach(async () => {
       logErrorMock = jest.fn();
 
-      builder.beforeWindowStart((windowDi) => {
+      builder.beforeWindowStart(({ windowDi }) => {
         windowDi.override(logErrorInjectable, () => logErrorMock);
 
         builder.preferences.navigate();

@@ -34,7 +34,7 @@ describe("installing helm chart from previously opened tab", () => {
     builder.namespaces.add("default");
     builder.namespaces.add("some-other-namespace");
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(directoryForLensLocalStorageInjectable, () => "/some-directory-for-lens-local-storage");
       windowDi.override(requestHelmChartVersionsInjectable, () => requestHelmChartVersionsMock);
       windowDi.override(requestHelmChartValuesInjectable, () => requestHelmChartValuesMock);
@@ -52,7 +52,7 @@ describe("installing helm chart from previously opened tab", () => {
     let rendered: RenderResult;
 
     beforeEach(async () => {
-      builder.beforeWindowStart(async (windowDi) => {
+      builder.beforeWindowStart(async ({ windowDi }) => {
         const writeJsonFile = windowDi.inject(writeJsonFileInjectable);
 
         await writeJsonFile(

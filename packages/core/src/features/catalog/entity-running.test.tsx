@@ -84,7 +84,7 @@ describe("entity running technical tests", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.afterWindowStart((windowDi) => {
+    builder.afterWindowStart(({ windowDi }) => {
       onRun = jest.fn();
 
       const catalogCategoryRegistery = windowDi.inject(catalogCategoryRegistryInjectable);

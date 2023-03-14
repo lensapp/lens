@@ -12,7 +12,7 @@ describe("multiple separators originating from extension", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.unoverride(getRandomIdInjectable);
       mainDi.permitSideEffects(getRandomIdInjectable);
     });

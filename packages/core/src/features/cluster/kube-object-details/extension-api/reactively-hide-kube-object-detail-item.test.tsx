@@ -3,8 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
+import type {
+  ApplicationBuilder,
+} from "../../../../renderer/components/test-utils/get-application-builder";
+import {
+  getApplicationBuilder,
+} from "../../../../renderer/components/test-utils/get-application-builder";
 import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import React from "react";
@@ -12,8 +16,12 @@ import { KubeObject } from "../../../../common/k8s-api/kube-object";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import type { KubeApi } from "../../../../common/k8s-api/kube-api";
-import showDetailsInjectable from "../../../../renderer/components/kube-detail-params/show-details.injectable";
+import showDetailsInjectable
+  from "../../../../renderer/components/kube-detail-params/show-details.injectable";
 import assert from "assert";
+import type {
+  FakeExtensionOptions,
+} from "../../../../renderer/components/test-utils/get-extension-fake";
 
 describe("reactively hide kube object detail item", () => {
   let builder: ApplicationBuilder;
@@ -25,7 +33,7 @@ describe("reactively hide kube object detail item", () => {
 
     builder.setEnvironmentToClusterFrame();
 
-    builder.afterWindowStart((windowDi) => {
+    builder.afterWindowStart(({ windowDi }) => {
       const apiManager = windowDi.inject(apiManagerInjectable);
       const api = {
         apiBase: "/apis/some-api-version/some-kind",
@@ -33,6 +41,8 @@ describe("reactively hide kube object detail item", () => {
       const store = {
         api,
         loadFromPath: async () => getKubeObjectStub("some-kind", "some-api-version"),
+        getByPath() {
+        },
       } as Partial<KubeObjectStore<KubeObject>> as KubeObjectStore<KubeObject>;
 
       apiManager.registerApi(api);
@@ -41,7 +51,7 @@ describe("reactively hide kube object detail item", () => {
 
     someObservable = observable.box(false);
 
-    const testExtension = {
+    const testExtension: FakeExtensionOptions = {
       id: "test-extension-id",
       name: "test-extension",
 

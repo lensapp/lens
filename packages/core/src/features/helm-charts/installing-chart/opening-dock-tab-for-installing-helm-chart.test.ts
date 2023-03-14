@@ -38,7 +38,7 @@ describe("opening dock tab for installing helm chart", () => {
     requestHelmChartReadmeMock = asyncFn();
     requestHelmChartValuesMock = jest.fn();
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(directoryForLensLocalStorageInjectable, () => "/some-directory-for-lens-local-storage");
       windowDi.override(hostedClusterIdInjectable, () => "some-cluster-id");
       windowDi.override(requestHelmChartsInjectable, () => requestHelmChartsMock);

@@ -57,7 +57,7 @@ describe("download logs options in logs dock tab", () => {
     getLogsMock = jest.fn();
     getSplittedLogsMock = jest.fn();
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(callForLogsInjectable, () => callForLogsMock);
 
       // Overriding internals of logsViewModelInjectable
@@ -99,7 +99,7 @@ describe("download logs options in logs dock tab", () => {
     beforeEach(async () => {
       rendered = await builder.render();
       windowDi = builder.applicationWindow.only.di;
-  
+
       const dockStore = windowDi.inject(dockStoreInjectable);
 
       dockStore.closeTab("terminal");
@@ -108,10 +108,10 @@ describe("download logs options in logs dock tab", () => {
     describe("when logs not available", () => {
       beforeEach(async () => {
         const createLogsTab = windowDi.inject(createPodLogsTabInjectable);
-    
+
         getLogsMock.mockReturnValue([]);
         getSplittedLogsMock.mockReturnValue([]);
-  
+
         createLogsTab({
           selectedPod: pod,
           selectedContainer: container,
@@ -132,10 +132,10 @@ describe("download logs options in logs dock tab", () => {
     describe("when logs available", () => {
       beforeEach(async () => {
         const createLogsTab = windowDi.inject(createPodLogsTabInjectable);
-    
+
         getLogsMock.mockReturnValue(["some-logs"]);
         getSplittedLogsMock.mockReturnValue([...logs]);
-  
+
         createLogsTab({
           selectedPod: pod,
           selectedContainer: container,
@@ -157,7 +157,7 @@ describe("download logs options in logs dock tab", () => {
       describe("when clicking on dropdown", () => {
         beforeEach(() => {
           const button = rendered.getByTestId("download-logs-dropdown");
-  
+
           act(() => button.click());
         });
 
@@ -182,7 +182,7 @@ describe("download logs options in logs dock tab", () => {
             beforeEach(async () => {
               await act(async () => {
                 const button = rendered.getByTestId("download-all-logs");
-  
+
                 button.click();
               });
             });
@@ -193,11 +193,11 @@ describe("download logs options in logs dock tab", () => {
                 { "previous": true, "timestamps": false },
               );
             });
-  
+
             it("shows save dialog with proper attributes", async () => {
               expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "all-logs", "text/plain");
             });
-  
+
             it("doesn't block download dropdown for interaction after click", async () => {
               expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled");
             });
@@ -206,19 +206,19 @@ describe("download logs options in logs dock tab", () => {
           describe("blocking user interaction after menu item click", () => {
             it("block download dropdown for interaction when selected 'download all logs'", async () => {
               const downloadMenuItem = rendered.getByTestId("download-all-logs");
-  
+
               act(() => downloadMenuItem.click());
-  
+
               await waitFor(() => {
                 expect(rendered.getByTestId("download-logs-dropdown")).toHaveAttribute("disabled");
               });
             });
-  
+
             it("doesn't block dropdown for interaction when selected 'download visible logs'", () => {
               const downloadMenuItem = rendered.getByTestId("download-visible-logs");
-  
+
               act(() => downloadMenuItem.click());
-  
+
               expect(rendered.getByTestId("download-logs-dropdown")).not.toHaveAttribute("disabled");
             });
           });
@@ -233,7 +233,7 @@ describe("download logs options in logs dock tab", () => {
             beforeEach(async () => {
               await act(async () => {
                 const button = rendered.getByTestId("download-all-logs");
-  
+
                 button.click();
               });
             });
@@ -241,7 +241,7 @@ describe("download logs options in logs dock tab", () => {
             it("doesn't show save dialog", () => {
               expect(openSaveFileDialogMock).not.toHaveBeenCalled();
             });
-  
+
             it("shows error notification", () => {
               expect(showErrorNotificationMock).toHaveBeenCalled();
             });
@@ -252,23 +252,23 @@ describe("download logs options in logs dock tab", () => {
           beforeEach(() => {
             callForLogsMock.mockRejectedValue("error");
           });
-  
+
           describe("when selected 'download all logs'", () => {
             beforeEach(async () => {
               await act(async () => {
                 const button = rendered.getByTestId("download-all-logs");
-  
+
                 button.click();
               });
             });
-  
+
             it("logs have been called", () => {
               expect(callForLogsMock).toHaveBeenCalledWith(
                 { name: "dockerExporter", namespace: "default" },
                 { "previous": true, "timestamps": false },
               );
             });
-  
+
             it("doesn't show save dialog", async () => {
               expect(openSaveFileDialogMock).not.toHaveBeenCalled();
             });

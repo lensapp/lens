@@ -32,7 +32,7 @@ describe("opening application window using tray", () => {
 
       builder = getApplicationBuilder();
 
-      builder.beforeApplicationStart((mainDi) => {
+      builder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(focusApplicationInjectable, () => focusApplicationMock);
 
         mainDi.override(

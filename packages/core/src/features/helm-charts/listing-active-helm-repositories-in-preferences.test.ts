@@ -41,14 +41,14 @@ describe("listing active helm repositories in preferences", () => {
       warn: noop,
     };
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(readYamlFileInjectable, () => readYamlFileMock);
       mainDi.override(execFileInjectable, () => execFileMock);
       mainDi.override(helmBinaryPathInjectable, () => "some-helm-binary-path");
       mainDi.override(loggerInjectable, () => loggerStub);
     });
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(showErrorNotificationInjectable, () => showErrorNotificationMock);
       windowDi.override(requestPublicHelmRepositoriesInjectable, () => async () => []);
     });

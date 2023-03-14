@@ -2,31 +2,35 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { AsyncFnMock } from "@async-fn/jest";
-import asyncFn from "@async-fn/jest";
 import type { RenderResult } from "@testing-library/react";
-import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
-import type { KubernetesCluster } from "../../../../common/catalog-entities";
-import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
+import type {
+  ApplicationBuilder,
+} from "../../../../renderer/components/test-utils/get-application-builder";
+import {
+  getApplicationBuilder,
+} from "../../../../renderer/components/test-utils/get-application-builder";
 import React from "react";
 import { KubeObject } from "../../../../common/k8s-api/kube-object";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import type { KubeApi } from "../../../../common/k8s-api/kube-api";
-import showDetailsInjectable from "../../../../renderer/components/kube-detail-params/show-details.injectable";
+import showDetailsInjectable
+  from "../../../../renderer/components/kube-detail-params/show-details.injectable";
+import type {
+  FakeExtensionOptions,
+} from "../../../../renderer/components/test-utils/get-extension-fake";
+import { observable } from "mobx";
 
 describe("disable kube object detail items when cluster is not relevant", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
-  let isEnabledForClusterMock: AsyncFnMock<
-    (cluster: KubernetesCluster) => Promise<boolean>
-  >;
+  const isVisible = observable.box(false);
 
   beforeEach(async () => {
     builder = getApplicationBuilder();
     builder.setEnvironmentToClusterFrame();
 
-    builder.afterWindowStart((windowDi) => {
+    builder.afterWindowStart(({ windowDi }) => {
       const apiManager = windowDi.inject(apiManagerInjectable);
       const api = {
         apiBase: "/apis/some-api-version/some-kind",
@@ -34,23 +38,22 @@ describe("disable kube object detail items when cluster is not relevant", () => 
       const store = {
         api,
         loadFromPath: async () => getKubeObjectStub("some-kind", "some-api-version"),
+        getByPath() {
+        },
       } as Partial<KubeObjectStore<KubeObject>> as KubeObjectStore<KubeObject>;
 
       apiManager.registerApi(api);
       apiManager.registerStore(store);
     });
 
-    isEnabledForClusterMock = asyncFn();
-
-    const testExtension = {
+    const testExtension: FakeExtensionOptions = {
       id: "test-extension-id",
       name: "test-extension",
 
       rendererOptions: {
-        isEnabledForCluster: isEnabledForClusterMock,
-
         kubeObjectDetailItems: [
           {
+            visible: isVisible,
             kind: "some-kind",
             apiVersions: ["some-api-version"],
             components: {
@@ -88,8 +91,8 @@ describe("disable kube object detail items when cluster is not relevant", () => 
   });
 
   describe("given extension shouldn't be enabled for the cluster", () => {
-    beforeEach(async () => {
-      await isEnabledForClusterMock.resolve(false);
+    beforeEach(() => {
+      isVisible.set(false);
     });
 
     it("renders", () => {
@@ -104,8 +107,8 @@ describe("disable kube object detail items when cluster is not relevant", () => 
   });
 
   describe("given extension should be enabled for the cluster", () => {
-    beforeEach(async () => {
-      await isEnabledForClusterMock.resolve(true);
+    beforeEach(() => {
+      isVisible.set(true);
     });
 
     it("renders", () => {

@@ -20,7 +20,7 @@ describe.each(allPlatforms)("application-menu, given platform is '%s'", (platfor
 
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(platformInjectable, () => platform);
 
       mainDi.override(

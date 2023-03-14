@@ -22,17 +22,15 @@ describe("quitting the app using application menu", () => {
 
       builder = getApplicationBuilder();
 
-      builder.beforeApplicationStart(
-        (mainDi) => {
-          mainDi.unoverride(stopServicesAndExitAppInjectable);
+      builder.beforeApplicationStart(({ mainDi }) => {
+        mainDi.unoverride(stopServicesAndExitAppInjectable);
 
-          clusterManagerStub = { stop: jest.fn() } as unknown as ClusterManager;
-          mainDi.override(clusterManagerInjectable, () => clusterManagerStub);
+        clusterManagerStub = { stop: jest.fn() } as unknown as ClusterManager;
+        mainDi.override(clusterManagerInjectable, () => clusterManagerStub);
 
-          exitAppMock = jest.fn();
-          mainDi.override(exitAppInjectable, () => exitAppMock);
-        },
-      );
+        exitAppMock = jest.fn();
+        mainDi.override(exitAppInjectable, () => exitAppMock);
+      });
 
       await builder.render();
     });

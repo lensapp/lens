@@ -16,7 +16,7 @@ describe("order of workload overview details", () => {
   beforeEach(async () => {
     const builder = getApplicationBuilder();
 
-    builder.beforeWindowStart((windowDi) => {
+    builder.beforeWindowStart(({ windowDi }) => {
       windowDi.unoverride(getRandomIdInjectable);
       windowDi.permitSideEffects(getRandomIdInjectable);
 

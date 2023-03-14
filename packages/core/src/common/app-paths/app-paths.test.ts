@@ -38,7 +38,7 @@ describe("app-paths", () => {
       userData: "/some-irrelevant-user-data",
     };
 
-    builder.beforeApplicationStart((mainDi) => {
+    builder.beforeApplicationStart(({ mainDi }) => {
       mainDi.override(
         getElectronAppPathInjectable,
         () =>
@@ -120,7 +120,7 @@ describe("app-paths", () => {
     let windowDi: DiContainer;
 
     beforeEach(async () => {
-      builder.beforeApplicationStart((mainDi) => {
+      builder.beforeApplicationStart(({ mainDi }) => {
         mainDi.override(
           directoryForIntegrationTestingInjectable,
           () => "/some-integration-testing-app-data",

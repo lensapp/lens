@@ -70,7 +70,7 @@ describe("preferences - navigation to application preferences", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      builder.beforeWindowStart((windowDi) => {
+      builder.beforeWindowStart(({ windowDi }) => {
         const navigateToProxyPreferences = windowDi.inject(navigateToProxyPreferencesInjectable);
 
         navigateToProxyPreferences();

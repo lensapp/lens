@@ -15,13 +15,11 @@ describe("configurable directories for extension files", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeApplicationStart(
-      (mainDi) => {
-        runInAction(() => {
-          mainDi.override(getHashInjectable, () => x => x);
-        });
-      },
-    );
+    builder.beforeApplicationStart(({ mainDi }) => {
+      runInAction(() => {
+        mainDi.override(getHashInjectable, () => x => x);
+      });
+    });
 
     await builder.startHidden();
 
