@@ -11,7 +11,6 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { ClusterStatus } from "./cluster-status";
 import type { ClusterFrameHandler } from "./cluster-frame-handler";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { requestClusterActivation } from "../../ipc";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
@@ -21,6 +20,8 @@ import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import type { GetClusterById } from "../../../common/cluster-store/get-by-id.injectable";
 import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
+import type { RequestClusterActivation } from "../../../features/cluster/activation/common/request-token";
+import requestClusterActivationInjectable from "../../../features/cluster/activation/renderer/request-activation.injectable";
 
 interface Dependencies {
   clusterId: IComputedValue<string>;
@@ -28,6 +29,7 @@ interface Dependencies {
   navigateToCatalog: NavigateToCatalog;
   entityRegistry: CatalogEntityRegistry;
   getClusterById: GetClusterById;
+  requestClusterActivation: RequestClusterActivation;
 }
 
 @observer
@@ -83,7 +85,7 @@ class NonInjectedClusterView extends React.Component<Dependencies> {
 
         this.props.clusterFrames.setVisibleCluster(clusterId);
         this.props.clusterFrames.initView(clusterId);
-        requestClusterActivation(clusterId, false); // activate and fetch cluster's state from main
+        this.props.requestClusterActivation({ clusterId });
         this.props.entityRegistry.activeEntity = clusterId;
       }, {
         fireImmediately: true,
@@ -117,6 +119,7 @@ export const ClusterView = withInjectables<Dependencies>(NonInjectedClusterView,
     clusterFrames: di.inject(clusterFrameHandlerInjectable),
     entityRegistry: di.inject(catalogEntityRegistryInjectable),
     getClusterById: di.inject(getClusterByIdInjectable),
+    requestClusterActivation: di.inject(requestClusterActivationInjectable),
   }),
 });
 
