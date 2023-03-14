@@ -118,7 +118,7 @@ class ClusterConnection {
       this.bindEvents();
     }
 
-    if (this.cluster.disconnected || !this.cluster.accessible.get()) {
+    if (this.cluster.disconnected.get() || !this.cluster.accessible.get()) {
       try {
         this.dependencies.broadcastConnectionUpdate({
           level: "info",
@@ -184,7 +184,7 @@ class ClusterConnection {
   }
 
   disconnect() {
-    if (this.cluster.disconnected) {
+    if (this.cluster.disconnected.get()) {
       return this.dependencies.logger.debug("[CLUSTER]: already disconnected", { id: this.cluster.id });
     }
 
