@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/run-many",
-  "version": "1.0.0",
+  "version": "6.5.0-cron.79a4eb3",
   "type": "commonjs",
   "description": "A package containing runMany and runManySync",
   "publishConfig": {

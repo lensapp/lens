@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/application-for-electron-main",
   "private": false,
-  "version": "6.5.0-alpha.0",
+  "version": "6.5.0-cron.79a4eb3",
   "description": "Electron's main specifics for creating Lens applications",
   "type": "commonjs",
   "files": [
@@ -31,16 +31,15 @@
     "lint:fix": "lens-lint --fix"
   },
   "peerDependencies": {
-    "@k8slens/feature-core": "^6.5.0-alpha.0",
     "@k8slens/application": "^6.5.0-alpha.0",
+    "@k8slens/feature-core": "^6.5.0-alpha.0",
     "@ogre-tools/injectable": "^15.1.2",
     "@ogre-tools/injectable-extension-for-auto-registration": "^15.1.2",
     "electron": "^19.1.9"
   },
-
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
-    "@ogre-tools/test-utils": "^15.1.2",
-    "@k8slens/eslint-config": "*"
+    "@k8slens/eslint-config": "*",
+    "@ogre-tools/test-utils": "^15.1.2"
   }
 }

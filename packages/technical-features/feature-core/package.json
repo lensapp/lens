@@ -1,15 +1,13 @@
 {
   "name": "@k8slens/feature-core",
   "private": false,
-  "version": "6.5.0-alpha.0",
+  "version": "6.5.0-cron.79a4eb3",
   "description": "Code that is common to all Features and those registering them.",
   "type": "commonjs",
-
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-
   "files": [
     "dist"
   ],
@@ -35,7 +33,6 @@
   "peerDependencies": {
     "@ogre-tools/injectable": "^15.1.2"
   },
-
   "devDependencies": {
     "@k8slens/eslint-config": "*"
   }

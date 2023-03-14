@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/application",
   "private": false,
-  "version": "6.5.0-alpha.0",
+  "version": "6.5.0-cron.79a4eb3",
   "description": "Package for creating Lens applications",
   "type": "commonjs",
   "files": [
@@ -37,7 +37,6 @@
     "@ogre-tools/injectable-extension-for-auto-registration": "^15.1.2",
     "lodash": "^4.17.15"
   },
-
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
     "@k8slens/eslint-config": "*"
