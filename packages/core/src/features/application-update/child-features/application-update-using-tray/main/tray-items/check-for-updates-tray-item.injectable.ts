@@ -16,7 +16,7 @@ import processCheckingForUpdatesInjectable from "../../../../main/process-checki
 import { withErrorSuppression } from "../../../../../../common/utils/with-error-suppression/with-error-suppression";
 import { pipeline } from "@ogre-tools/fp";
 import withErrorLoggingInjectable from "../../../../../../common/utils/with-error-logging/with-error-logging.injectable";
-// import showSuccessNotificationInjectable from "../../../../../../renderer/components/notifications/show-success-notification.injectable";
+import showMessagePopupInjectable from "../../../../../../main/electron-app/features/show-message-popup.injectable";
 
 const checkForUpdatesTrayItemInjectable = getInjectable({
   id: "check-for-updates-tray-item",
@@ -30,7 +30,7 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
     const checkingForUpdatesState = di.inject(updatesAreBeingDiscoveredInjectable);
     const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable);
     const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
-    // const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
+    const showMessagePopup = di.inject(showMessagePopupInjectable);
 
     return {
       id: "check-for-updates",
@@ -66,9 +66,15 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
           if (updateIsReadyToBeInstalled) {
             await showApplicationWindow();
           } else {
-            // showSuccessNotification(
-            //     `You're all good\n\nYou've got the latest version of Lens\nthanks for staying on the ball.`,
-            // );
+            // `You're all good\n\nYou've got the latest version of Lens\nthanks for staying on the ball.`,
+            showMessagePopup(
+                `title`,
+                'productName',
+                'message',
+                {
+                  textWidth: 300
+                },
+            );
           }
         },
 

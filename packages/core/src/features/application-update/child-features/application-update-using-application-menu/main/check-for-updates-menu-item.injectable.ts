@@ -9,7 +9,7 @@ import processCheckingForUpdatesInjectable from "../../../main/process-checking-
 import showApplicationWindowInjectable from "../../../../../main/start-main-application/lens-window/show-application-window.injectable";
 import updatingIsEnabledInjectable from "../../../main/updating-is-enabled/updating-is-enabled.injectable";
 import isMacInjectable from "../../../../../common/vars/is-mac.injectable";
-// import showSuccessNotificationInjectable from "../../../../../renderer/components/notifications/show-success-notification.injectable";
+import showMessagePopupInjectable from "../../../../../main/electron-app/features/show-message-popup.injectable";
 
 const checkForUpdatesMenuItemInjectable = getInjectable({
   id: "check-for-updates-menu-item",
@@ -19,7 +19,7 @@ const checkForUpdatesMenuItemInjectable = getInjectable({
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
     const isMac = di.inject(isMacInjectable);
-    // const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
+    const showMessagePopup = di.inject(showMessagePopupInjectable);
 
     return {
       kind: "clickable-menu-item" as const,
@@ -35,9 +35,15 @@ const checkForUpdatesMenuItemInjectable = getInjectable({
         if (updateIsReadyToBeInstalled) {
           await showApplicationWindow();
         } else {
-          // showSuccessNotification(
-          //     `You're all good\n\nYou've got the latest version of Lens\nthanks for staying on the ball.`,
-          // );
+          // `You're all good\n\nYou've got the latest version of Lens\nthanks for staying on the ball.`,
+          showMessagePopup(
+              `title`,
+              'productName',
+              'message',
+              {
+                textWidth: 300
+              },
+          );
         }
       },
     };
