@@ -39,6 +39,6 @@
   },
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
-    "@k8slens/eslint-config": "*"
+    "@k8slens/eslint-config": "6.5.0-alpha.1"
   }
 }
