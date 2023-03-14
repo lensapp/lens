@@ -16,3 +16,5 @@ export interface ActivateCluster {
 }
 
 export const activateClusterChannel = getRequestChannel<ActivateCluster, void>("activate-cluster");
+
+export const deactivateClusterChannel = getRequestChannel<ClusterId, void>("deactivate-cluster");

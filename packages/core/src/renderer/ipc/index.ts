@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { clusterDisconnectHandler, clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
+import { clusterSetFrameIdHandler, clusterStates } from "../../common/ipc/cluster";
 import type { ClusterId, ClusterState } from "../../common/cluster-types";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel, type WindowAction } from "../../common/ipc/window";
 import { extensionDiscoveryStateChannel, extensionLoaderFromMainChannel } from "../../common/ipc/extension-handling";
@@ -44,10 +44,6 @@ export function requestWindowAction(type: WindowAction): Promise<void> {
 
 export function requestSetClusterFrameId(clusterId: ClusterId): Promise<void> {
   return requestMain(clusterSetFrameIdHandler, clusterId);
-}
-
-export function requestClusterDisconnection(clusterId: ClusterId, force?: boolean): Promise<void> {
-  return requestMain(clusterDisconnectHandler, clusterId, force);
 }
 
 export function requestInitialClusterStates(): Promise<{ id: string; state: ClusterState }[]> {
