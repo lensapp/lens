@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import winstonLoggerInjectable from "./winston-logger.injectable";
-import { getGlobalOverride } from "./test-utils/get-global-override";
-import { noop } from "./utils";
 import type winston from "winston";
+import { getGlobalOverride } from "@k8slens/test-utils";
+import { noop } from "@k8slens/utilities";
+import winstonLoggerInjectable from "./winston-logger.injectable";
 
 export default getGlobalOverride(winstonLoggerInjectable, () => ({
   log: noop,
