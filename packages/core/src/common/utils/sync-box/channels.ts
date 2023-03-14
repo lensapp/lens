@@ -2,20 +2,12 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { MessageChannel } from "../channel/message-channel-listener-injection-token";
-import type { RequestChannel } from "../channel/request-channel-listener-injection-token";
+import { getMessageChannel, getRequestChannel } from "@k8slens/messaging";
 
-export type SyncBoxChannel = MessageChannel<{ id: string; value: any }>;
+export const syncBoxChannel =
+  getMessageChannel<{ id: string; value: any }>("sync-box-channel");
 
-export const syncBoxChannel: SyncBoxChannel = {
-  id: "sync-box-channel",
-};
-
-export type SyncBoxInitialValueChannel = RequestChannel<
+export const syncBoxInitialValueChannel = getRequestChannel<
   void,
   { id: string; value: any }[]
->;
-
-export const syncBoxInitialValueChannel: SyncBoxInitialValueChannel = {
-  id: "sync-box-initial-value-channel",
-};
+>("sync-box-initial-value-channel");

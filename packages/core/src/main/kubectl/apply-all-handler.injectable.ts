@@ -6,11 +6,12 @@ import emitAppEventInjectable from "../../common/app-event-bus/emit-event.inject
 import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
 import { kubectlApplyAllChannel } from "../../common/kube-helpers/channels";
 import resourceApplierInjectable from "../resource-applier/create-resource-applier.injectable";
-import { getRequestChannelListenerInjectable } from "../utils/channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 
 const kubectlApplyAllChannelHandlerInjectable = getRequestChannelListenerInjectable({
+  id: 'kubectl-apply-all-channel-handler-listener',
   channel: kubectlApplyAllChannel,
-  handler: (di) => {
+  getHandler: (di) => {
     const getClusterById = di.inject(getClusterByIdInjectable);
     const emitAppEvent = di.inject(emitAppEventInjectable);
 

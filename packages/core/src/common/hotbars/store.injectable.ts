@@ -14,7 +14,7 @@ import { hotbarStoreMigrationInjectionToken } from "./migrations-token";
 import getBasenameOfPathInjectable from "../path/get-basename.injectable";
 import { baseStoreIpcChannelPrefixesInjectionToken } from "../base-store/channel-prefix";
 import { persistStateToConfigInjectionToken } from "../base-store/save-to-file";
-import { enlistMessageChannelListenerInjectionToken } from "../utils/channel/enlist-message-channel-listener-injection-token";
+import { enlistMessageChannelListenerInjectionToken } from "@k8slens/messaging";
 import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../base-store/disable-sync";
 
 const hotbarStoreInjectable = getInjectable({

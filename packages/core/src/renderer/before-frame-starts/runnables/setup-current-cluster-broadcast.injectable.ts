@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { reaction } from "mobx";
 import { currentClusterMessageChannel } from "../../../common/cluster/current-cluster-channel";
-import { sendMessageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
+import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import matchedClusterIdInjectable from "../../navigation/matched-cluster-id.injectable";
 import { beforeMainFrameStartsFirstInjectionToken } from "../tokens";
 

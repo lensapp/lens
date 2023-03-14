@@ -15,7 +15,7 @@ import type { GetConfigurationFileModel } from "../get-configuration-file-model/
 import type { Logger } from "../logger";
 import type { PersistStateToConfig } from "./save-to-file";
 import type { GetBasenameOfPath } from "../path/get-basename.injectable";
-import type { EnlistMessageChannelListener } from "../utils/channel/enlist-message-channel-listener-injection-token";
+import type { EnlistMessageChannelListener } from "@k8slens/messaging";
 import { toJS } from "../utils";
 
 export interface BaseStoreParams<T> extends Omit<ConfOptions<T>, "migrations"> {
@@ -108,6 +108,7 @@ export abstract class BaseStore<T extends object> {
           this.params.syncOptions,
         ),
         this.dependencies.enlistMessageChannelListener({
+          id: this.displayName,
           channel: {
             id: `${this.dependencies.ipcChannelPrefixes.local}:${config.path}`,
           },

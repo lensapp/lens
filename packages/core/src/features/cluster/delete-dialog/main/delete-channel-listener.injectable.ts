@@ -10,12 +10,13 @@ import removePathInjectable from "../../../../common/fs/remove.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import clusterConnectionInjectable from "../../../../main/cluster/cluster-connection.injectable";
 import { noop } from "@k8slens/utilities";
-import { getRequestChannelListenerInjectable } from "../../../../main/utils/channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { deleteClusterChannel } from "../common/delete-channel";
 
 const deleteClusterChannelListenerInjectable = getRequestChannelListenerInjectable({
+  id: 'delete-cluster-channel-listener',
   channel: deleteClusterChannel,
-  handler: (di) => {
+  getHandler: (di) => {
     const emitAppEvent = di.inject(emitAppEventInjectable);
     const clusterStore = di.inject(clusterStoreInjectable);
     const clusterFrames = di.inject(clusterFramesInjectable);

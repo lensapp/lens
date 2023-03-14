@@ -10,7 +10,7 @@ import { persistStateToConfigInjectionToken } from "../../common/base-store/save
 import getConfigurationFileModelInjectable from "../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
-import { enlistMessageChannelListenerInjectionToken } from "../../common/utils/channel/enlist-message-channel-listener-injection-token";
+import { enlistMessageChannelListenerInjectionToken } from "@k8slens/messaging";
 import storeMigrationVersionInjectable from "../../common/vars/store-migration-version.injectable";
 import { ExtensionsStore } from "./extensions-store";
 

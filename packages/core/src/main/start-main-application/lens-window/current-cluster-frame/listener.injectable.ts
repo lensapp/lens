@@ -3,17 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { currentClusterMessageChannel } from "../../../../common/cluster/current-cluster-channel";
-import { getMessageChannelListenerInjectable } from "../../../../common/utils/channel/message-channel-listener-injection-token";
+import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
 import currentClusterFrameClusterIdStateInjectable from "./current-cluster-frame-cluster-id-state.injectable";
 
-const currentVisibileClusterListenerInjectable = getMessageChannelListenerInjectable({
-  id: "current-visibile-cluster",
+const currentVisibleClusterListenerInjectable = getMessageChannelListenerInjectable({
+  id: "current-visible-cluster",
   channel: currentClusterMessageChannel,
-  handler: (di) => {
+  getHandler: (di) => {
     const currentClusterFrameState = di.inject(currentClusterFrameClusterIdStateInjectable);
 
     return clusterId => currentClusterFrameState.set(clusterId);
   },
 });
 
-export default currentVisibileClusterListenerInjectable;
+export default currentVisibleClusterListenerInjectable;

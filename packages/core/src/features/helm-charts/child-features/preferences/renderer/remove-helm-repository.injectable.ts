@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { HelmRepo } from "../../../../../common/helm/helm-repo";
-import { requestFromChannelInjectionToken } from "../../../../../common/utils/channel/request-from-channel-injection-token";
+import { requestFromChannelInjectionToken } from "@k8slens/messaging";
 import activeHelmRepositoriesInjectable from "./active-helm-repositories.injectable";
 import { removeHelmRepositoryChannel } from "../../../../../common/helm/remove-helm-repository-channel";
 
