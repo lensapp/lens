@@ -1,17 +1,17 @@
-import type { Monster } from "./handle-landed-hit-on-monster-for";
-import type { Dependencies } from "./monster-beatdown";
+import { getInjectable } from "@ogre-tools/injectable";
+import messageToPlayerInjectable from "./message-to-player";
+import questionToPlayerInjectable from "./question-to-player";
+import monsterInjectable from "./monster";
 
-export const handleInitialMonsterEncounterFor =
-  ({
-     monster,
-     messageToPlayer,
-     questionToPlayer,
-   }: {
-    monster: Monster;
-    messageToPlayer: Dependencies["messageToPlayer"];
-    questionToPlayer: Dependencies["questionToPlayer"];
-  }) =>
-    async () => {
+const handleInitialMonsterEncounterInjectable = getInjectable({
+  id: "handle-initial-monster-encounter",
+
+  instantiate: (di) => {
+    const messageToPlayer = di.inject(messageToPlayerInjectable);
+    const questionToPlayer = di.inject(questionToPlayerInjectable);
+    const monster = di.inject(monsterInjectable);
+
+    return async () => {
       messageToPlayer(`You encounter a monster with ${monster.hitPoints} hit-points`);
 
       const playerWantsToAttack = await questionToPlayer("Attack the monster?");
@@ -27,3 +27,7 @@ export const handleInitialMonsterEncounterFor =
 
       return { gameIsOver: true };
     };
+  },
+});
+
+export default handleInitialMonsterEncounterInjectable;

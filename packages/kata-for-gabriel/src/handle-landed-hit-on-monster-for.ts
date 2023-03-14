@@ -1,18 +1,15 @@
-import type { Dependencies } from "./monster-beatdown";
+import { getInjectable } from "@ogre-tools/injectable";
+import monsterInjectable from "./monster";
+import messageToPlayerInjectable from "./message-to-player";
 
-export type Monster = {
-  hitPoints: number;
-};
+const handleLandedHitOnMonsterInjectable = getInjectable({
+  id: "handle-landed-hit-on-monster",
 
-export const handleLandedHitOnMonsterFor =
-  ({
-     monster,
-     messageToPlayer,
-   }: {
-    monster: Monster;
-    messageToPlayer: Dependencies["messageToPlayer"];
-  }) =>
-    () => {
+  instantiate: (di) => {
+    const monster = di.inject(monsterInjectable);
+    const messageToPlayer = di.inject(messageToPlayerInjectable);
+
+    return () => {
       monster.hitPoints--;
 
       if (monster.hitPoints) {
@@ -31,3 +28,7 @@ export const handleLandedHitOnMonsterFor =
 
       return { monsterIsDead: true };
     };
+  },
+});
+
+export default handleLandedHitOnMonsterInjectable;

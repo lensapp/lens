@@ -1,6 +1,15 @@
-import { createGame, Dependencies } from "./monster-beatdown";
+import { Dependencies, gameInjectable } from "./monster-beatdown";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 import { getPromiseStatus } from "@k8slens/test-utils";
+import { createContainer } from "@ogre-tools/injectable";
+import messageToPlayerInjectable from "./message-to-player";
+import castDieInjectable from "./cast-die";
+import questionToPlayerInjectable from "./question-to-player";
+import handleInitialMonsterEncounterInjectable from "./handle-initial-monster-encounter-for";
+import monsterInjectable from "./monster";
+import handleAttackOnMonsterInjectable from "./handle-attack-on-monster-for";
+import handleLandedHitOnMonsterInjectable from "./handle-landed-hit-on-monster-for";
+import handleAttackingTheMonsterAgainInjectable from "./handle-attacking-the-monster-again-for";
 
 describe("monster-beatdown", () => {
   let game: { start: () => Promise<void> };
@@ -10,15 +19,29 @@ describe("monster-beatdown", () => {
   let gamePromise: Promise<void>;
 
   beforeEach(() => {
+    const di = createContainer("monster-beatdown");
+
+    di.register(
+      castDieInjectable,
+      gameInjectable,
+      handleAttackOnMonsterInjectable,
+      handleAttackingTheMonsterAgainInjectable,
+      handleInitialMonsterEncounterInjectable,
+      handleLandedHitOnMonsterInjectable,
+      messageToPlayerInjectable,
+      monsterInjectable,
+      questionToPlayerInjectable,
+    );
+
     messageToPlayerMock = jest.fn();
+    di.override(messageToPlayerInjectable, () => messageToPlayerMock);
+    di.override(questionToPlayerInjectable, () => questionToPlayerMock);
+    di.override(castDieInjectable, () => castDieMock);
+
     questionToPlayerMock = asyncFn();
     castDieMock = asyncFn();
 
-    game = createGame({
-      messageToPlayer: messageToPlayerMock,
-      questionToPlayer: questionToPlayerMock,
-      castDie: castDieMock,
-    });
+    game = di.inject(gameInjectable);
   });
 
   describe("when game is not started", () => {

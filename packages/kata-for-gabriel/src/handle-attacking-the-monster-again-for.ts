@@ -1,25 +1,30 @@
-import type { Dependencies } from "./monster-beatdown";
+import { getInjectable } from "@ogre-tools/injectable";
+import questionToPlayerInjectable from "./question-to-player";
+import messageToPlayerInjectable from "./message-to-player";
 
-export const handleAttackingTheMonsterAgainFor =
-  ({
-    messageToPlayer,
-    questionToPlayer,
-  }: {
-    messageToPlayer: Dependencies["messageToPlayer"];
-    questionToPlayer: Dependencies["questionToPlayer"];
-  }) =>
-  async () => {
-    const playerWantsToAttackAgain = await questionToPlayer("Do you want to attack again?");
+const handleAttackingTheMonsterAgainInjectable = getInjectable({
+  id: "handle-attacking-the-monster-again",
 
-    if (playerWantsToAttackAgain) {
-      return { gameIsOver: false };
-    }
+  instantiate: (di) => {
+    const questionToPlayer = di.inject(questionToPlayerInjectable);
+    const messageToPlayer = di.inject(messageToPlayerInjectable);
 
-    messageToPlayer(
-      "You lose your nerve mid-beat-down, and try to run away. You get eaten by a sad, disappointed monster.",
-    );
+    return async () => {
+      const playerWantsToAttackAgain = await questionToPlayer("Do you want to attack again?");
 
-    messageToPlayer("You lose. Game over!");
+      if (playerWantsToAttackAgain) {
+        return { gameIsOver: false };
+      }
 
-    return { gameIsOver: true };
-  };
+      messageToPlayer(
+        "You lose your nerve mid-beat-down, and try to run away. You get eaten by a sad, disappointed monster.",
+      );
+
+      messageToPlayer("You lose. Game over!");
+
+      return { gameIsOver: true };
+    };
+  },
+});
+
+export default handleAttackingTheMonsterAgainInjectable;

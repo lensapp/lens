@@ -1,19 +1,19 @@
-import type { Monster } from "./handle-landed-hit-on-monster-for";
-import type { Dependencies } from "./monster-beatdown";
+import { getInjectable } from "@ogre-tools/injectable";
+import messageToPlayerInjectable from "./message-to-player";
+import castDieInjectable from "./cast-die";
+import monsterInjectable from "./monster";
+import handleLandedHitOnMonsterInjectable from "./handle-landed-hit-on-monster-for";
 
-export const handleAttackOnMonsterFor =
-  ({
-     monster,
-     messageToPlayer,
-     handleLandedHitOnMonster,
-     castDie,
-   }: {
-    monster: Monster;
-    messageToPlayer: Dependencies["messageToPlayer"];
-    handleLandedHitOnMonster: () => { monsterIsDead: boolean };
-    castDie: () => Promise<number>;
-  }) =>
-    async () => {
+const handleAttackOnMonsterInjectable = getInjectable({
+  id: "handle-attack-on-monster",
+
+  instantiate: (di) => {
+    const messageToPlayer = di.inject(messageToPlayerInjectable);
+    const castDie = di.inject(castDieInjectable);
+    const handleLandedHitOnMonster = di.inject(handleLandedHitOnMonsterInjectable);
+    const monster = di.inject(monsterInjectable);
+
+    return async () => {
       messageToPlayer("You attack the monster.");
 
       const dieResult = await castDie();
@@ -32,3 +32,7 @@ export const handleAttackOnMonsterFor =
 
       return { gameIsOver: false };
     };
+  },
+});
+
+export default handleAttackOnMonsterInjectable;
