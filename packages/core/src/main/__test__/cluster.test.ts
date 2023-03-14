@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { Cluster } from "../../common/cluster/cluster";
+import type { Cluster } from "../../common/cluster/cluster";
 import { Kubectl } from "../kubectl/kubectl";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -19,6 +19,8 @@ import createCanIInjectable from "../../common/cluster/create-can-i.injectable";
 import createRequestNamespaceListPermissionsInjectable from "../../common/cluster/create-request-namespace-list-permissions.injectable";
 import createListNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import prometheusHandlerInjectable from "../cluster/prometheus-handler/prometheus-handler.injectable";
+import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable";
+import addClusterInjectable from "../../features/cluster/storage/common/add.injectable";
 
 describe("create clusters", () => {
   let cluster: Cluster;
@@ -26,7 +28,7 @@ describe("create clusters", () => {
 
   beforeEach(() => {
     const di = getDiForUnitTesting();
-    const clusterServerUrl = "https://192.168.64.3:8443";
+    const writeJsonSync = di.inject(writeJsonSyncInjectable);
 
     di.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "some-directory-for-temp");
@@ -42,25 +44,43 @@ describe("create clusters", () => {
       setupPrometheus: jest.fn(),
     }));
 
+    writeJsonSync("/minikube-config.yml", {
+      apiVersion: "v1",
+      clusters: [{
+        name: "minikube",
+        cluster: {
+          server: "https://192.168.64.3:8443",
+        },
+      }],
+      "current-context": "minikube",
+      contexts: [{
+        context: {
+          cluster: "minikube",
+          user: "minikube",
+        },
+        name: "minikube",
+      }],
+      users: [{
+        name: "minikube",
+      }],
+      kind: "Config",
+      preferences: {},
+    });
+
     di.override(kubeconfigManagerInjectable, () => ({
       ensurePath: async () => "/some-proxy-kubeconfig-file",
     } as Partial<KubeconfigManager> as KubeconfigManager));
 
     jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValue(Promise.resolve(true));
 
-    cluster = new Cluster({
+    const addCluster = di.inject(addClusterInjectable);
+
+    cluster = addCluster({
       id: "foo",
       contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-    }, {
-      clusterServerUrl,
+      kubeConfigPath: "/minikube-config.yml",
     });
-
     clusterConnection = di.inject(clusterConnectionInjectable, cluster);
-  });
-
-  it("should be able to create a cluster from a cluster model and apiURL should be decoded", () => {
-    expect(cluster.apiUrl.get()).toBe("https://192.168.64.3:8443");
   });
 
   it("reconnect should not throw if contextHandler is missing", () => {

@@ -5,33 +5,23 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { action } from "mobx";
 import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
-import readClusterConfigSyncInjectable from "./read-cluster-config.injectable";
 import type { ClusterModel } from "../../../../common/cluster-types";
 import { Cluster } from "../../../../common/cluster/cluster";
 import clustersStateInjectable from "./state.injectable";
+import { setAndInsert } from "@k8slens/utilities";
 
-export type AddCluster = (clusterOrModel: ClusterModel | Cluster) => Cluster;
+export type AddCluster = (clusterModel: ClusterModel) => Cluster;
 
 const addClusterInjectable = getInjectable({
   id: "add-cluster",
   instantiate: (di): AddCluster => {
     const clustersState = di.inject(clustersStateInjectable);
     const emitAppEvent = di.inject(emitAppEventInjectable);
-    const readClusterConfigSync = di.inject(readClusterConfigSyncInjectable);
 
-    return action((clusterOrModel) => {
+    return action((clusterModel) => {
       emitAppEvent({ name: "cluster", action: "add" });
 
-      const cluster = clusterOrModel instanceof Cluster
-        ? clusterOrModel
-        : new Cluster(
-          clusterOrModel,
-          readClusterConfigSync(clusterOrModel),
-        );
-
-      clustersState.set(cluster.id, cluster);
-
-      return cluster;
+      return setAndInsert(clustersState, clusterModel.id, new Cluster(clusterModel));
     });
   },
 });

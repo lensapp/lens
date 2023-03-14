@@ -9,6 +9,7 @@ import { ClusterMetadataKey } from "../../common/cluster-types";
 import { getInjectable } from "@ogre-tools/injectable";
 import k8SRequestInjectable from "../k8s-request.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
+import clusterApiUrlInjectable from "../../features/cluster/connections/main/api-url.injectable";
 
 const clusterIdDetectorFactoryInjectable = getInjectable({
   id: "cluster-id-detector-factory",
@@ -28,7 +29,7 @@ const clusterIdDetectorFactoryInjectable = getInjectable({
         try {
           id = await getDefaultNamespaceId(cluster);
         } catch(_) {
-          id = cluster.apiUrl.get();
+          id = (await di.inject(clusterApiUrlInjectable, cluster)()).toString();
         }
         const value = createHash("sha256").update(id).digest("hex");
 

@@ -49,12 +49,12 @@ describe("PrometheusHandler", () => {
 
   beforeEach(() => {
     di = getDiForUnitTesting();
-    di.override(loadProxyKubeconfigInjectable, (di, cluster) => async () => {
+    di.override(loadProxyKubeconfigInjectable, () => async () => {
       const res = new KubeConfig();
 
       res.addCluster({
         name: "some-cluster-name",
-        server: cluster.apiUrl.get(),
+        server: "http://localhost:81",
         skipTLSVerify: false,
       });
       res.addContext({
@@ -76,8 +76,6 @@ describe("PrometheusHandler", () => {
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some/path",
-    }, {
-      clusterServerUrl: "http://localhost:81",
     });
   });
 

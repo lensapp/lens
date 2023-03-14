@@ -183,7 +183,6 @@ export const initialNodeShellImage = "docker.io/alpine:3.13";
  * The data representing a cluster's state, for passing between main and renderer
  */
 export interface ClusterState {
-  apiUrl: string;
   online: boolean;
   disconnected: boolean;
   accessible: boolean;

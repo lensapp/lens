@@ -17,32 +17,6 @@ import { clusterIconSettingsComponentInjectionToken, clusterIconSettingsMenuInje
 import { runInAction } from "mobx";
 import { getInjectable, type DiContainer } from "@ogre-tools/injectable";
 
-const cluster = new Cluster({
-  contextName: "some-context",
-  id: "some-id",
-  kubeConfigPath: "/some/path/to/kubeconfig",
-  preferences: {
-    clusterName: "some-cluster-name",
-  },
-}, {
-  clusterServerUrl: "https://localhost:9999",
-});
-
-const clusterEntity = new KubernetesCluster({
-  metadata: {
-    labels: {},
-    name: "some-kubernetes-cluster",
-    uid: "some-entity-id",
-  },
-  spec: {
-    kubeconfigContext: "some-context",
-    kubeconfigPath: "/some/path/to/kubeconfig",
-  },
-  status: {
-    phase: "connecting",
-  },
-});
-
 const newMenuItem = getInjectable({
   id: "cluster-icon-settings-menu-test-item",
 
@@ -67,7 +41,7 @@ function CustomSettingsComponent(props: ClusterIconSettingComponentProps) {
       </span>
     </div>
   );
-} 
+}
 
 const newSettingsReactComponent = getInjectable({
   id: "cluster-icon-settings-react-component",
@@ -86,8 +60,31 @@ describe("Icon settings", () => {
 
   beforeEach(() => {
     di = getDiForUnitTesting();
-    
+
     const render = renderFor(di);
+    const cluster = new Cluster({
+      contextName: "some-context",
+      id: "some-id",
+      kubeConfigPath: "/some/path/to/kubeconfig",
+      preferences: {
+        clusterName: "some-cluster-name",
+      },
+    });
+
+    const clusterEntity = new KubernetesCluster({
+      metadata: {
+        labels: {},
+        name: "some-kubernetes-cluster",
+        uid: "some-entity-id",
+      },
+      spec: {
+        kubeconfigContext: "some-context",
+        kubeconfigPath: "/some/path/to/kubeconfig",
+      },
+      status: {
+        phase: "connecting",
+      },
+    });
 
     rendered = render(
       <ClusterIconSetting cluster={cluster} entity={clusterEntity} />,

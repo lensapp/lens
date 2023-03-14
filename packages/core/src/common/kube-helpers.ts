@@ -130,6 +130,16 @@ export function loadConfigFromString(content: string): ConfigResult {
   };
 }
 
+export function loadValidatedConfig(content: string, contextName: string): ValidateKubeConfigResult {
+  const { options, error } = loadToOptions(content);
+
+  if (error) {
+    return { error };
+  }
+
+  return validateKubeConfig(loadFromOptions(options), contextName);
+}
+
 export interface SplitConfigEntry {
   config: KubeConfig;
   validationResult: ValidateKubeConfigResult;

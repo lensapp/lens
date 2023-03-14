@@ -7,7 +7,6 @@ import "../../common/ipc/cluster";
 import type { IComputedValue, IObservableValue, ObservableSet } from "mobx";
 import { action, makeObservable, observe, reaction, toJS } from "mobx";
 import type { Cluster } from "../../common/cluster/cluster";
-import { isErrnoException } from "@k8slens/utilities";
 import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../../common/ipc";
 import { once } from "lodash";
@@ -158,26 +157,12 @@ export class ClusterManager {
       const cluster = this.dependencies.getClusterById(entity.getId());
 
       if (!cluster) {
-        const model = {
+        this.dependencies.addCluster({
           id: entity.getId(),
           kubeConfigPath: entity.spec.kubeconfigPath,
           contextName: entity.spec.kubeconfigContext,
           accessibleNamespaces: entity.spec.accessibleNamespaces ?? [],
-        };
-
-        try {
-          /**
-           * Add the bare minimum of data to ClusterStore. And especially no
-           * preferences, as those might be configured by the entity's source
-           */
-          this.dependencies.addCluster(model);
-        } catch (error) {
-          if (isErrnoException(error) && error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
-            this.dependencies.logger.warn(`${logPrefix} kubeconfig file disappeared`, model);
-          } else {
-            this.dependencies.logger.error(`${logPrefix} failed to add cluster: ${error}`, model);
-          }
-        }
+        });
       } else {
         cluster.kubeConfigPath.set(entity.spec.kubeconfigPath);
         cluster.contextName.set(entity.spec.kubeconfigContext);

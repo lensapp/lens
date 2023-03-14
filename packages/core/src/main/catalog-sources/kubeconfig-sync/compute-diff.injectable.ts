@@ -38,15 +38,15 @@ const computeKubeconfigDiffInjectable = getInjectable({
         }
 
         const rawModels = configToModels(config, filePath);
-        const models = new Map(rawModels.map(([model, configData]) => [model.contextName, [model, configData] as const]));
+        const models = new Map(rawModels.map((model) => [model.contextName, model]));
 
         logger.debug(`File now has ${models.size} entries`, { filePath });
 
         for (const [contextName, value] of source) {
-          const data = models.get(contextName);
+          const model = models.get(contextName);
 
           // remove and disconnect clusters that were removed from the config
-          if (!data) {
+          if (!model) {
             // remove from the deleting set, so that if a new context of the same name is added, it isn't marked as deleting
             clustersThatAreBeingDeleted.delete(value[0].id);
 
@@ -63,21 +63,16 @@ const computeKubeconfigDiffInjectable = getInjectable({
           // diff against that
 
           // or update the model and mark it as not needed to be added
-          value[0].updateModel(data[0]);
+          value[0].updateModel(model);
           models.delete(contextName);
           logger.debug(`Updated old cluster from sync`, { filePath, contextName });
         }
 
-        for (const [contextName, [model, configData]] of models) {
+        for (const [contextName, model] of models) {
           // add new clusters to the source
           try {
             const clusterId = createHash("md5").update(`${filePath}:${contextName}`).digest("hex");
-            const cluster = getClusterById(clusterId) ?? new Cluster({ ...model, id: clusterId }, configData);
-
-            if (!cluster.apiUrl.get()) {
-              throw new Error("Cluster constructor failed, see above error");
-            }
-
+            const cluster = getClusterById(clusterId) ?? new Cluster({ ...model, id: clusterId });
             const entity = catalogEntityFromCluster(cluster);
 
             if (!filePath.startsWith(directoryForKubeConfigs)) {

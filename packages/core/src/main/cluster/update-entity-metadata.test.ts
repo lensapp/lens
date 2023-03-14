@@ -34,8 +34,6 @@ describe("update-entity-metadata", () => {
       id: "some-id",
       contextName: "some-context",
       kubeConfigPath: "minikube-config.yml",
-    }, {
-      clusterServerUrl: "foo",
     });
 
     detectedMetadata = {
