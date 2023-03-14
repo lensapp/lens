@@ -38,7 +38,7 @@ jobs:
       - name: Publish NPM packages
         run: |
           npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-          VERSION=$(cat lerna.json | jq '.version' --raw-output)
+          VERSION=$(cat packages/core/package.json | jq '.version' --raw-output)
           echo ${VERSION}
           DIST_TAG=$(node packages/semver/dist/index.js --prerelease 0 ${VERSION})
           npx lerna \
