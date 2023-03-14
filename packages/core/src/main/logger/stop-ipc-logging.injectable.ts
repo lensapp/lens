@@ -13,7 +13,6 @@ const stopIpcLoggingInjectable = getInjectable({
     const ipcFileLogger = di.inject(ipcFileLoggerInjectable);
 
     return {
-      id: "stop-ipc-logging",
       run: () => {
         ipcFileLogger.closeAll();
 
