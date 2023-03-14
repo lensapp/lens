@@ -124,10 +124,6 @@ class ClusterConnection {
         this.dependencies.logger.info("[CLUSTER]: starting connection ...", this.cluster.getMeta());
 
         await this.dependencies.kubeAuthProxyServer.ensureRunning();
-
-        runInAction(() => {
-          this.cluster.disconnected.set(false);
-        });
       } catch (error) {
         this.dependencies.broadcastConnectionUpdate({
           level: "error",
@@ -185,10 +181,8 @@ class ClusterConnection {
     runInAction(() => {
       this.dependencies.logger.info(`[CLUSTER]: disconnecting`, { id: this.cluster.id });
       this.eventsDisposer();
-      this.dependencies.kubeAuthProxyServer?.stop();
-      this.cluster.disconnected.set(true);
-      this.cluster.online.set(false);
-      this.cluster.accessible.set(false);
+      this.dependencies.kubeAuthProxyServer.stop();
+      this.cluster.connectionStatus.set(undefined);
       this.cluster.ready.set(false);
       this.activated = false;
       this.cluster.allowedNamespaces.clear();
@@ -267,11 +261,10 @@ class ClusterConnection {
   }
 
   async refreshConnectionStatus() {
-    const connectionStatus = await this.getConnectionStatus();
+    const status = await this.getConnectionStatus();
 
     runInAction(() => {
-      this.cluster.online.set(connectionStatus > ClusterStatus.Offline);
-      this.cluster.accessible.set(connectionStatus == ClusterStatus.AccessGranted);
+      this.cluster.connectionStatus.set(status);
     });
   }
 

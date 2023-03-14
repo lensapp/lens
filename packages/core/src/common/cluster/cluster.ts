@@ -6,7 +6,7 @@
 import { computed, observable, toJS, runInAction } from "mobx";
 import type { KubeApiResource } from "../rbac";
 import type { ClusterState, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, ClusterConfigData } from "../cluster-types";
-import { ClusterMetadataKey, clusterModelIdChecker, updateClusterModelChecker } from "../cluster-types";
+import { ClusterStatus, ClusterMetadataKey, clusterModelIdChecker, updateClusterModelChecker } from "../cluster-types";
 import type { IObservableValue } from "mobx";
 import { replaceObservableObject } from "../utils/replace-observable-object";
 import { pick } from "lodash";
@@ -32,15 +32,23 @@ export class Cluster {
    */
   readonly apiUrl: IObservableValue<string>;
 
+  readonly connectionStatus = observable.box<ClusterStatus>();
+
   /**
    * Describes if we can detect that cluster is online
    */
-  readonly online = observable.box(false);
+  readonly online = computed(() => {
+    const status = this.connectionStatus.get() ?? ClusterStatus.Offline;
+
+    return status > ClusterStatus.Offline;
+  });
 
   /**
    * Describes if user is able to access cluster resources
    */
-  readonly accessible = observable.box(false);
+  readonly accessible = computed(() => (
+    this.connectionStatus.get() === ClusterStatus.AccessGranted
+  ));
 
   /**
    * Is cluster instance in usable state
@@ -50,7 +58,9 @@ export class Cluster {
   /**
    * Is cluster disconnected. False if user has selected to connect.
    */
-  readonly disconnected = observable.box(true);
+  readonly disconnected = computed(() => (
+    this.connectionStatus.get() === undefined
+  ));
 
   /**
    * Does user have admin like access
@@ -188,14 +198,12 @@ export class Cluster {
   getState(): ClusterState {
     return {
       apiUrl: this.apiUrl.get(),
-      online: this.online.get(),
       ready: this.ready.get(),
-      disconnected: this.disconnected.get(),
-      accessible: this.accessible.get(),
       isAdmin: this.isAdmin.get(),
       allowedNamespaces: this.allowedNamespaces.toJSON(),
       resourcesToShow: this.resourcesToShow.toJSON(),
       isGlobalWatchEnabled: this.isGlobalWatchEnabled.get(),
+      connectionStatus: this.connectionStatus.get(),
     };
   }
 
@@ -204,15 +212,13 @@ export class Cluster {
    */
   setState(state: ClusterState) {
     runInAction(() => {
-      this.accessible.set(state.accessible);
       this.allowedNamespaces.replace(state.allowedNamespaces);
       this.resourcesToShow.replace(state.resourcesToShow);
       this.apiUrl.set(state.apiUrl);
-      this.disconnected.set(state.disconnected);
       this.isAdmin.set(state.isAdmin);
       this.isGlobalWatchEnabled.set(state.isGlobalWatchEnabled);
-      this.online.set(state.online);
       this.ready.set(state.ready);
+      this.connectionStatus.set(state.connectionStatus);
     });
   }
 

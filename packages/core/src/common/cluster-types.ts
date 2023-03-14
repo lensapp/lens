@@ -184,9 +184,7 @@ export const initialNodeShellImage = "docker.io/alpine:3.13";
  */
 export interface ClusterState {
   apiUrl: string;
-  online: boolean;
-  disconnected: boolean;
-  accessible: boolean;
+  connectionStatus: ClusterStatus | undefined;
   ready: boolean;
   isAdmin: boolean;
   allowedNamespaces: string[];
