@@ -2,13 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getMessageChannelListenerInjectable } from "../../../../common/utils/channel/message-channel-listener-injection-token";
+import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
 import { reloadPageChannel } from "../common/channel";
 
 const reloadPageChannelListenerInjectable = getMessageChannelListenerInjectable({
   id: "handler",
   channel: reloadPageChannel,
-  handler: () => () => location.reload(),
+  getHandler: () => () => location.reload(),
   causesSideEffects: true,
 });
 

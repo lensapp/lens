@@ -4,12 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { kubectlApplyAllChannel, kubectlApplyAllInjectionToken } from "../../common/kube-helpers/channels";
-import requestFromChannelInjectable from "../utils/channel/request-from-channel.injectable";
+import { requestFromChannelInjectionToken } from "@k8slens/messaging";
 
 const kubectlApplyAllInjectable = getInjectable({
   id: "kubectl-apply-all",
   instantiate: (di) => {
-    const requestFromChannel = di.inject(requestFromChannelInjectable);
+    const requestFromChannel = di.inject(requestFromChannelInjectionToken);
 
     return (req) => requestFromChannel(kubectlApplyAllChannel, req);
   },

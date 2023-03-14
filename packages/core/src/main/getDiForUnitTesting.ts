@@ -29,12 +29,19 @@ import {
   setLegacyGlobalDiForExtensionApi,
 } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
+import { registerFeature } from "@k8slens/feature-core";
+import { messagingFeature, testUtils as messagingTestUtils } from "@k8slens/messaging";
 
 export function getDiForUnitTesting() {
   const di = createContainer("main");
 
   registerMobX(di);
   setLegacyGlobalDiForExtensionApi(di, "main");
+
+  runInAction(() => {
+    registerFeature(di, messagingFeature, messagingTestUtils.messagingFeatureForUnitTesting);
+
+  });
 
   di.preventSideEffects();
 

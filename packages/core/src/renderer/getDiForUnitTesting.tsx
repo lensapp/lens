@@ -5,7 +5,6 @@
 
 import { noop, chunk } from "lodash/fp";
 import { createContainer, isInjectable } from "@ogre-tools/injectable";
-import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import terminalSpawningPoolInjectable from "./components/dock/terminal/terminal-spawning-pool.injectable";
 import hostedClusterIdInjectable from "./cluster-frame-context/hosted-cluster-id.injectable";
@@ -18,6 +17,8 @@ import type { GlobalOverride } from "@k8slens/test-utils";
 import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerInjectableReact } from "@ogre-tools/injectable-react";
+import { registerFeature } from "@k8slens/feature-core";
+import { messagingFeature, testUtils as messagingTestUtils } from "@k8slens/messaging";
 
 export const getDiForUnitTesting = () => {
   const environment = "renderer";
@@ -26,6 +27,10 @@ export const getDiForUnitTesting = () => {
   registerMobX(di);
   registerInjectableReact(di);
   setLegacyGlobalDiForExtensionApi(di, environment);
+
+  runInAction(() => {
+    registerFeature(di, messagingFeature, messagingTestUtils.messagingFeatureForUnitTesting);
+  });
 
   di.preventSideEffects();
 
@@ -62,8 +67,6 @@ export const getDiForUnitTesting = () => {
 
   di.override(requestAnimationFrameInjectable, () => (callback) => callback());
   di.override(watchHistoryStateInjectable, () => () => () => {});
-
-  di.override(requestFromChannelInjectable, () => () => Promise.resolve(undefined as never));
 
   getOverrideFsWithFakes()(di);
 

@@ -3,18 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { MessageChannelHandler } from "../../../common/utils/channel/message-channel-listener-injection-token";
-import { sendMessageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
+import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import { clusterVisibilityChannel } from "../../../common/cluster/visibility-channel";
-
-export type EmitClusterVisibility = MessageChannelHandler<typeof clusterVisibilityChannel>;
+import type { ClusterId } from "../../../common/cluster-types";
 
 const emitClusterVisibilityInjectable = getInjectable({
   id: "emit-cluster-visibility",
-  instantiate: (di): EmitClusterVisibility => {
+  instantiate: (di) => {
     const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
 
-    return (id) => sendMessageToChannel(clusterVisibilityChannel, id);
+    return (id: ClusterId | null) => sendMessageToChannel(clusterVisibilityChannel, id);
   },
 });
 

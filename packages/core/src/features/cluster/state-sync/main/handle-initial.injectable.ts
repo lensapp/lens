@@ -3,12 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
-import { getRequestChannelListenerInjectable } from "../../../../main/utils/channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { initialClusterStatesChannel } from "../common/channels";
 
 const handleInitialClusterStateSyncInjectable = getRequestChannelListenerInjectable({
+  id: 'handle-initial-cluster-state-sync',
   channel: initialClusterStatesChannel,
-  handler: (di) => {
+  getHandler: (di) => {
     const clusterStore = di.inject(clusterStoreInjectable);
 
     return () => clusterStore.clustersList.map(cluster => ({

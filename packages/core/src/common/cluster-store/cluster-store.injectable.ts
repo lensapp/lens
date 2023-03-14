@@ -16,7 +16,7 @@ import { baseStoreIpcChannelPrefixesInjectionToken } from "../base-store/channel
 import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../base-store/disable-sync";
 import { persistStateToConfigInjectionToken } from "../base-store/save-to-file";
 import getBasenameOfPathInjectable from "../path/get-basename.injectable";
-import { enlistMessageChannelListenerInjectionToken } from "../utils/channel/enlist-message-channel-listener-injection-token";
+import { enlistMessageChannelListenerInjectionToken } from "@k8slens/messaging";
 
 const clusterStoreInjectable = getInjectable({
   id: "cluster-store",

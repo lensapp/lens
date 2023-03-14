@@ -5,17 +5,16 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import execHelmInjectable from "../../exec-helm/exec-helm.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
-import type { AddHelmRepositoryChannel } from "../../../../common/helm/add-helm-repository-channel";
-import type { RequestChannelHandler } from "../../../utils/channel/channel-listeners/listener-tokens";
+import type { HelmRepo } from "../../../../common/helm/helm-repo";
 
 const addHelmRepositoryInjectable = getInjectable({
   id: "add-helm-repository",
 
-  instantiate: (di): RequestChannelHandler<AddHelmRepositoryChannel> => {
+  instantiate: (di) => {
     const execHelm = di.inject(execHelmInjectable);
     const logger = di.inject(loggerInjectable);
 
-    return async (repo) => {
+    return async (repo: HelmRepo) => {
       const {
         name,
         url,
@@ -59,12 +58,12 @@ const addHelmRepositoryInjectable = getInjectable({
 
       if (result.callWasSuccessful) {
         return {
-          callWasSuccessful: true,
+          callWasSuccessful: true as const,
         };
       }
 
       return {
-        callWasSuccessful: false,
+        callWasSuccessful: false as const,
         error: result.error.stderr || result.error.message,
       };
     };
