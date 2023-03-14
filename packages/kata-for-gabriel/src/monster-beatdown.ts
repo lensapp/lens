@@ -1,4 +1,7 @@
 import { handleLandedHitOnMonsterFor, Monster } from "./handle-landed-hit-on-monster-for";
+import { handleInitialMonsterEncounterFor } from "./handle-initial-monster-encounter-for";
+import { handleAttackOnMonsterFor } from "./handle-attack-on-monster-for";
+import { handleAttackingTheMonsterAgainFor } from "./handle-attacking-the-monster-again-for";
 
 export type Dependencies = {
   messageToPlayer: (message: string) => void;
@@ -11,47 +14,39 @@ const createGame = ({ messageToPlayer, questionToPlayer, castDie }: Dependencies
 
   const handleLandedHitOnMonster = handleLandedHitOnMonsterFor({ messageToPlayer, monster });
 
+  const handleAttackOnMonster = handleAttackOnMonsterFor({
+    monster,
+    messageToPlayer,
+    handleLandedHitOnMonster,
+    castDie,
+  });
+
+  const handleAttackingTheMonsterAgain = handleAttackingTheMonsterAgainFor({
+    messageToPlayer,
+    questionToPlayer,
+  });
+
+  const handleInitialMonsterEncounter = handleInitialMonsterEncounterFor({
+    messageToPlayer,
+    questionToPlayer,
+    monster,
+  });
+
   return {
     start: async () => {
-      messageToPlayer(`You encounter a monster with ${monster.hitPoints} hit-points`);
-
-      const playerWantsToAttack = await questionToPlayer("Attack the monster?");
-      if (!playerWantsToAttack) {
-        messageToPlayer(
-          "You chose not to attack the monster, and the monster eats you dead, in disappointment.",
-        );
-
-        messageToPlayer("You lose. Game over!");
-
+      const initialEncounterResult = await handleInitialMonsterEncounter();
+      if (initialEncounterResult.gameIsOver) {
         return;
       }
 
       while (true) {
-        messageToPlayer("You attack the monster.");
-
-        const dieResult = await castDie();
-
-        const playerLandsHitOnMonster = dieResult > 3;
-        if (playerLandsHitOnMonster) {
-          const { monsterIsDead } = handleLandedHitOnMonster();
-          if (monsterIsDead) {
-            return;
-          }
-        } else {
-          messageToPlayer(
-            `You fail to land a hit on the monster, and it still has ${monster.hitPoints} hit-points remaining.`,
-          );
+        const attackResult = await handleAttackOnMonster();
+        if (attackResult.gameIsOver) {
+          return;
         }
 
-        const playerWantsToAttackAgain = await questionToPlayer("Do you want to attack again?");
-
-        if (!playerWantsToAttackAgain) {
-          messageToPlayer(
-            "You lose your nerve mid-beat-down, and try to run away. You get eaten by a sad, disappointed monster.",
-          );
-
-          messageToPlayer("You lose. Game over!");
-
+        const attackAgainResult = await handleAttackingTheMonsterAgain();
+        if (attackAgainResult.gameIsOver) {
           return;
         }
       }
@@ -60,4 +55,3 @@ const createGame = ({ messageToPlayer, questionToPlayer, castDie }: Dependencies
 };
 
 export { createGame };
-
