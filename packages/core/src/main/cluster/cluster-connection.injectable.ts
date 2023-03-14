@@ -104,11 +104,8 @@ class ClusterConnection {
     }
   }
 
-  /**
-   * @param force force activation
-   */
-  async activate(force = false) {
-    if (this.activated && !force) {
+  async activate() {
+    if (this.activated) {
       return;
     }
 
@@ -124,7 +121,13 @@ class ClusterConnection {
           level: "info",
           message: "Starting connection ...",
         });
-        await this.reconnect();
+        this.dependencies.logger.info("[CLUSTER]: starting connection ...", this.cluster.getMeta());
+
+        await this.dependencies.kubeAuthProxyServer.ensureRunning();
+
+        runInAction(() => {
+          this.cluster.disconnected.set(false);
+        });
       } catch (error) {
         this.dependencies.broadcastConnectionUpdate({
           level: "error",
@@ -172,15 +175,6 @@ class ClusterConnection {
     }
 
     this.activated = true;
-  }
-
-  async reconnect() {
-    this.dependencies.logger.info(`[CLUSTER]: reconnect`, this.cluster.getMeta());
-    await this.dependencies.kubeAuthProxyServer?.restart();
-
-    runInAction(() => {
-      this.cluster.disconnected.set(false);
-    });
   }
 
   disconnect() {

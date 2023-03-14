@@ -90,7 +90,7 @@ export class KubernetesCluster<
 
       await connectionCluster.activate();
     } else {
-      await requestClusterActivation(this.getId(), false);
+      await requestClusterActivation(this.getId());
     }
   }
 
@@ -108,7 +108,7 @@ export class KubernetesCluster<
 
       connectionCluster.disconnect();
     } else {
-      await requestClusterDisconnection(this.getId(), false);
+      await requestClusterDisconnection(this.getId());
     }
   }
 

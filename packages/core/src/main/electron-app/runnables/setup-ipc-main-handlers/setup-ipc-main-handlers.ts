@@ -37,7 +37,7 @@ export const setupIpcMainHandlers = ({
   pushCatalogToRenderer,
   getClusterConnection,
 }: Dependencies) => {
-  ipcMainHandle(clusterActivateHandler, async (event, clusterId: ClusterId, force = false) => {
+  ipcMainHandle(clusterActivateHandler, async (event, clusterId: ClusterId) => {
     const cluster = getClusterById(clusterId);
 
     if (!cluster) {
@@ -46,7 +46,7 @@ export const setupIpcMainHandlers = ({
 
     const clusterConnection = getClusterConnection(cluster);
 
-    await clusterConnection.activate(force);
+    await clusterConnection.activate();
   });
 
   ipcMainHandle(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {

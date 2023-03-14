@@ -13,7 +13,6 @@ import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
 export interface KubeAuthProxyServer {
   getApiTarget(isLongRunningRequest?: boolean): Promise<ServerOptions>;
   ensureAuthProxyUrl(): Promise<string>;
-  restart(): Promise<void>;
   ensureRunning(): Promise<void>;
   stop(): void;
 }
@@ -97,10 +96,6 @@ const kubeAuthProxyServerInjectable = getInjectable({
         return `https://127.0.0.1:${kubeAuthProxy.port}${kubeAuthProxy.apiPrefix}`;
       },
       ensureRunning: async () => {
-        await ensureServerHelper();
-      },
-      restart: async () => {
-        stopServer();
         await ensureServerHelper();
       },
       stop: stopServer,

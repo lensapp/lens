@@ -46,12 +46,12 @@ export function requestSetClusterFrameId(clusterId: ClusterId): Promise<void> {
   return requestMain(clusterSetFrameIdHandler, clusterId);
 }
 
-export function requestClusterActivation(clusterId: ClusterId, force?: boolean): Promise<void> {
-  return requestMain(clusterActivateHandler, clusterId, force);
+export function requestClusterActivation(clusterId: ClusterId): Promise<void> {
+  return requestMain(clusterActivateHandler, clusterId);
 }
 
-export function requestClusterDisconnection(clusterId: ClusterId, force?: boolean): Promise<void> {
-  return requestMain(clusterDisconnectHandler, clusterId, force);
+export function requestClusterDisconnection(clusterId: ClusterId): Promise<void> {
+  return requestMain(clusterDisconnectHandler, clusterId);
 }
 
 export function requestInitialClusterStates(): Promise<{ id: string; state: ClusterState }[]> {
