@@ -16,9 +16,7 @@ import setupMainWindowVisibilityAfterActivationInjectable from "./electron-app/r
 import setupDeviceShutdownInjectable from "./electron-app/runnables/setup-device-shutdown.injectable";
 import setupApplicationNameInjectable from "./electron-app/runnables/setup-application-name.injectable";
 import setupRunnablesBeforeClosingOfApplicationInjectable from "./electron-app/runnables/setup-runnables-before-closing-of-application.injectable";
-import clusterFramesInjectable from "../common/cluster-frames.injectable";
-import type { ClusterFrameInfo } from "../common/cluster-frames";
-import { observable, runInAction } from "mobx";
+import { runInAction } from "mobx";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import electronQuitAndInstallUpdateInjectable from "./electron-app/features/electron-quit-and-install-update.injectable";
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
@@ -64,8 +62,6 @@ export function getDiForUnitTesting() {
   overrideRunnablesHavingSideEffects(di);
   overrideElectronFeatures(di);
   getOverrideFsWithFakes()(di);
-
-  di.override(clusterFramesInjectable, () => observable.map<string, ClusterFrameInfo>());
 
   di.override(broadcastMessageInjectable, () => (channel) => {
     throw new Error(`Tried to broadcast message to channel "${channel}" over IPC without explicit override.`);

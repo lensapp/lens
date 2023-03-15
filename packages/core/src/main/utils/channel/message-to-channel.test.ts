@@ -8,7 +8,7 @@ import clusterFramesInjectable from "../../../common/cluster-frames.injectable";
 import type { MessageChannel } from "../../../common/utils/channel/message-channel-listener-injection-token";
 import { sendMessageToChannelInjectionToken } from "../../../common/utils/channel/message-to-channel-injection-token";
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { ClusterFrameInfo } from "../../../common/cluster-frames";
+import type { ClusterFrameInfo } from "../../../common/cluster-frames.injectable";
 
 describe("message-to-channel", () => {
   let di: DiContainer;
