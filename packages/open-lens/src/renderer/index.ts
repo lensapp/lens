@@ -9,11 +9,12 @@ import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registra
 import { registerFeature } from "@k8slens/feature-core";
 import {
   applicationFeature,
-  startApplicationInjectionToken
+  startApplicationInjectionToken,
 } from "@k8slens/application";
 import { createContainer } from "@ogre-tools/injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerInjectableReact } from "@ogre-tools/injectable-react";
+import { gabrielFeature } from "@k8slens/kata-for-gabriel";
 
 const environment = "renderer";
 
@@ -23,7 +24,7 @@ runInAction(() => {
   registerMobX(di);
   registerInjectableReact(di);
   registerLensCore(di, environment);
-  registerFeature(di, applicationFeature);
+  registerFeature(di, applicationFeature, gabrielFeature);
 
   autoRegister({
     di,
