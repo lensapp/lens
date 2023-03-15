@@ -1,6 +1,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
-import questionToPlayerInjectable from "./question-to-player";
-import messageToPlayerInjectable from "./message-to-player";
+import questionToPlayerInjectable from "./question-to-player.injectable";
+import messageToPlayerInjectable from "./message-to-player.injectable";
 
 const handleAttackingTheMonsterAgainInjectable = getInjectable({
   id: "handle-attacking-the-monster-again",

@@ -1,6 +1,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
-import monsterInjectable from "./monster";
-import messageToPlayerInjectable from "./message-to-player";
+import monsterInjectable from "./monster.injectable";
+import messageToPlayerInjectable from "./message-to-player.injectable";
 
 const handleLandedHitOnMonsterInjectable = getInjectable({
   id: "handle-landed-hit-on-monster",

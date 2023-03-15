@@ -1,15 +1,12 @@
-import { Dependencies, gameInjectable } from "./monster-beatdown";
+import { Dependencies, gameInjectable } from "./monster-beatdown.injectable";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 import { getPromiseStatus } from "@k8slens/test-utils";
 import { createContainer } from "@ogre-tools/injectable";
-import messageToPlayerInjectable from "./message-to-player";
-import castDieInjectable from "./cast-die";
-import questionToPlayerInjectable from "./question-to-player";
-import handleInitialMonsterEncounterInjectable from "./handle-initial-monster-encounter-for";
-import monsterInjectable from "./monster";
-import handleAttackOnMonsterInjectable from "./handle-attack-on-monster-for";
-import handleLandedHitOnMonsterInjectable from "./handle-landed-hit-on-monster-for";
-import handleAttackingTheMonsterAgainInjectable from "./handle-attacking-the-monster-again-for";
+import messageToPlayerInjectable from "./message-to-player.injectable";
+import castDieInjectable from "./cast-die.injectable";
+import questionToPlayerInjectable from "./question-to-player.injectable";
+import { registerFeature } from "@k8slens/feature-core";
+import { gabrielFeature } from "./feature";
 
 describe("monster-beatdown", () => {
   let game: { start: () => Promise<void> };
@@ -21,17 +18,7 @@ describe("monster-beatdown", () => {
   beforeEach(() => {
     const di = createContainer("monster-beatdown");
 
-    di.register(
-      castDieInjectable,
-      gameInjectable,
-      handleAttackOnMonsterInjectable,
-      handleAttackingTheMonsterAgainInjectable,
-      handleInitialMonsterEncounterInjectable,
-      handleLandedHitOnMonsterInjectable,
-      messageToPlayerInjectable,
-      monsterInjectable,
-      questionToPlayerInjectable,
-    );
+    registerFeature(di, gabrielFeature);
 
     messageToPlayerMock = jest.fn();
     di.override(messageToPlayerInjectable, () => messageToPlayerMock);

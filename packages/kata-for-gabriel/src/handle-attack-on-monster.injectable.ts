@@ -1,8 +1,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
-import messageToPlayerInjectable from "./message-to-player";
-import castDieInjectable from "./cast-die";
-import monsterInjectable from "./monster";
-import handleLandedHitOnMonsterInjectable from "./handle-landed-hit-on-monster-for";
+import messageToPlayerInjectable from "./message-to-player.injectable";
+import castDieInjectable from "./cast-die.injectable";
+import monsterInjectable from "./monster.injectable";
+import handleLandedHitOnMonsterInjectable from "./handle-landed-hit-on-monster.injectable";
 
 const handleAttackOnMonsterInjectable = getInjectable({
   id: "handle-attack-on-monster",

@@ -1,7 +1,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
-import handleInitialMonsterEncounterInjectable from "./handle-initial-monster-encounter-for";
-import handleAttackOnMonsterInjectable from "./handle-attack-on-monster-for";
-import handleAttackingTheMonsterAgainInjectable from "./handle-attacking-the-monster-again-for";
+import handleInitialMonsterEncounterInjectable from "./handle-initial-monster-encounter.injectable";
+import handleAttackOnMonsterInjectable from "./handle-attack-on-monster.injectable";
+import handleAttackingTheMonsterAgainInjectable from "./handle-attacking-the-monster-again.injectable";
 
 export type Dependencies = {
   messageToPlayer: (message: string) => void;
