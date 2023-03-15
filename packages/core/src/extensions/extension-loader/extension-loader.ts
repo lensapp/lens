@@ -9,8 +9,7 @@ import type { ObservableMap } from "mobx";
 import { action, computed, makeObservable, toJS, observable, observe, reaction, when } from "mobx";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
 import { isDefined } from "@k8slens/utilities";
-import type { InstalledExtension } from "../extension-discovery/extension-discovery";
-import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "../lens-extension";
+import type { LensExtension } from "../lens-extension";
 import type { LensExtensionState } from "../extensions-store/extensions-store";
 import { extensionLoaderFromMainChannel, extensionLoaderFromRendererChannel } from "../../common/ipc/extension-handling";
 import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
@@ -21,7 +20,7 @@ import type { Extension } from "./extension/extension.injectable";
 import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
-import type { BundledExtension } from "../extension-discovery/bundled-extension-token";
+import type { LensExtensionId, BundledExtension, InstalledExtension, LensExtensionConstructor } from "@k8slens/legacy-extensions";
 
 const logModule = "[EXTENSIONS-LOADER]";
 

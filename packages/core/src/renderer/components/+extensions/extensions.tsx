@@ -4,8 +4,7 @@
  */
 
 import styles from "./extensions.module.scss";
-import type {
-  IComputedValue } from "mobx";
+import type { IComputedValue } from "mobx";
 import {
   makeObservable,
   observable,
@@ -14,7 +13,6 @@ import {
 } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
-import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
 import { DropFileInput } from "../input";
 import { Install } from "./install";
 import { InstalledExtensions } from "./installed-extensions";
@@ -31,13 +29,13 @@ import confirmUninstallExtensionInjectable from "./confirm-uninstall-extension.i
 import type { InstallExtensionFromInput } from "./install-extension-from-input.injectable";
 import installExtensionFromInputInjectable from "./install-extension-from-input.injectable";
 import installFromSelectFileDialogInjectable from "./install-from-select-file-dialog.injectable";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
 import type { InstallOnDrop } from "./install-on-drop.injectable";
 import installOnDropInjectable from "./install-on-drop.injectable";
 import { supportedExtensionFormats } from "./supported-extension-formats";
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
 import Gutter from "../gutter/gutter";
+import type { InstalledExtension, LensExtensionId } from "@k8slens/legacy-extensions";
 
 interface Dependencies {
   userExtensions: IComputedValue<InstalledExtension[]>;

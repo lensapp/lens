@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { LensExtensionId } from "../lens-extension";
+import type { LensExtensionId } from "@k8slens/legacy-extensions";
 import { action, computed, makeObservable, observable } from "mobx";
 import type { BaseStoreDependencies } from "../../common/base-store/base-store";
 import { BaseStore } from "../../common/base-store/base-store";

@@ -3,8 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
 import loggerInjectable from "../../../common/logger.injectable";
 import extensionDiscoveryInjectable from "../../../extensions/extension-discovery/extension-discovery.injectable";
 import extensionLoaderInjectable from "../../../extensions/extension-loader/extension-loader.injectable";
@@ -35,10 +33,10 @@ const initializeExtensionsInjectable = getInjectable({
 
         // Subscribe to extensions that are copied or deleted to/from the extensions folder
         extensionDiscovery.events
-          .on("add", (extension: InstalledExtension) => {
+          .on("add", (extension) => {
             extensionLoader.addExtension(extension);
           })
-          .on("remove", (lensExtensionId: LensExtensionId) => {
+          .on("remove", (lensExtensionId) => {
             extensionLoader.removeExtension(lensExtensionId);
           });
 

@@ -14,7 +14,6 @@ import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-
 import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import { LensExtension } from "../../../extensions/lens-extension";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
 import type { ObservableMap } from "mobx";
 import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -23,6 +22,7 @@ import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.inject
 import pathExistsInjectable from "../../../common/fs/path-exists.injectable";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
+import type { LensExtensionId } from "@k8slens/legacy-extensions";
 
 function throwIfDefined(val: any): void {
   if (val != null) {
