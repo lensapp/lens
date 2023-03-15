@@ -28,6 +28,8 @@ import podStoreInjectable from "../+workloads-pods/store.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
 import nodeStoreInjectable from "../+nodes/store.injectable";
 import enabledMetricsInjectable from "../../api/catalog/entity/metrics-enabled.injectable";
+import type { ClusterOverviewUIBlock } from "@k8slens/metrics";
+import { clusterOverviewUIBlockInjectionToken } from "@k8slens/metrics";
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
@@ -36,6 +38,7 @@ interface Dependencies {
   eventStore: EventStore;
   nodeStore: NodeStore;
   clusterMetricsAreVisible: IComputedValue<boolean>;
+  uiBlocks: ClusterOverviewUIBlock[];
 }
 
 @observer
@@ -77,6 +80,10 @@ class NonInjectedClusterOverview extends React.Component<Dependencies> {
     return (
       <>
         <ClusterMetrics/>
+        {this.props.uiBlocks.map((block) => (
+          <block.component key={block.id} />
+        ))}
+        lol
         <ClusterPieCharts/>
       </>
     );
@@ -117,5 +124,6 @@ export const ClusterOverview = withInjectables<Dependencies>(NonInjectedClusterO
     podStore: di.inject(podStoreInjectable),
     eventStore: di.inject(eventStoreInjectable),
     nodeStore: di.inject(nodeStoreInjectable),
+    uiBlocks: di.injectMany(clusterOverviewUIBlockInjectionToken),
   }),
 });
