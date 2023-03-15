@@ -97,6 +97,7 @@ const lensDarkThemeInjectable = getInjectable({
       clusterMenuBackground: "#252729",
       clusterMenuBorderColor: "#252729",
       clusterMenuCellBackground: "#2e3136",
+      clusterMenuCellOutline: "#ffffff66",
       clusterSettingsBackground: "#1e2124",
       addClusterIconColor: "#252729",
       boxShadow: "#0000003a",

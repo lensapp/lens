@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/run-many",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.1",
   "type": "commonjs",
   "description": "A package containing runMany and runManySync",
   "publishConfig": {
@@ -25,8 +25,8 @@
     "test": "jest --coverage --runInBand"
   },
   "peerDependencies": {
-    "@k8slens/test-utils": "^1.0.0",
-    "@k8slens/utilities": "^1.0.0",
+    "@k8slens/test-utils": "^1.0.0-alpha.1",
+    "@k8slens/utilities": "^1.0.0-alpha.1",
     "@ogre-tools/fp": "^15.1.1",
     "@ogre-tools/injectable": "^15.1.1"
   }
