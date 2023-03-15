@@ -13,7 +13,6 @@ import { renderFor } from "../../test-utils/renderFor";
 import { ClusterIconSetting } from "../icon-settings";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ChangedClusterPreference } from "../cluster-settings-menu-injection-token";
 import { clusterIconSettingsMenuInjectionToken } from "../cluster-settings-menu-injection-token";
 import { runInAction } from "mobx";
 
@@ -46,10 +45,8 @@ const newMenuItem = getInjectable({
   instantiate: () => ({
     id: "test-menu-item",
     title: "Hello World",
-    onClick: () => {
-      const data: ChangedClusterPreference = ["clusterName", "New cluster name"];
-
-      return data;
+    onClick: (preferences) => {
+      preferences.clusterName = "Hello World";
     },
   }),
 
@@ -63,8 +60,6 @@ describe("Icon settings", () => {
   beforeEach(() => {
     di = getDiForUnitTesting();
     
-    // registerMobX(di);
-
     const render = renderFor(di);
 
     rendered = render(

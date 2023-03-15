@@ -15,7 +15,7 @@ import { FilePicker, OverSizeLimitStyle } from "../file-picker";
 import { MenuActions, MenuItem } from "../menu";
 import type { ShowNotification } from "../notifications";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
-import type { ChangedClusterPreference, ClusterIconMenuItem } from "./cluster-settings-menu-injection-token";
+import type { ClusterIconMenuItem } from "./cluster-settings-menu-injection-token";
 import { clusterIconSettingsMenuInjectionToken } from "./cluster-settings-menu-injection-token";
 
 export interface ClusterIconSettingProps {
@@ -55,10 +55,6 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
       ?.click();
   };
 
-  const save = ([kind, value]: ChangedClusterPreference) => {
-    cluster.preferences[kind] = value;
-  };
-
   return (
     <div ref={element}>
       <div className="file-loader flex flex-row items-center">
@@ -89,7 +85,7 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
           </MenuItem>
           {props.menuItems.get().map(item => (
             <MenuItem
-              onClick={() => save(item.onClick(cluster.preferences))}
+              onClick={() => item.onClick(cluster.preferences)}
               key={item.id}
               disabled={item.disabled?.(cluster.preferences)}>
               {item.title}
