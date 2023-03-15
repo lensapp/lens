@@ -4,7 +4,7 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.5.0-alpha.2",
+  "version": "6.5.0-alpha.3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -195,14 +195,14 @@
     }
   },
   "dependencies": {
-    "@k8slens/application": "^6.5.0-alpha.1",
+    "@k8slens/application": "^6.5.0-alpha.2",
     "@k8slens/application-for-electron-main": "^6.5.0-alpha.1",
-    "@k8slens/core": "^6.5.0-alpha.2",
+    "@k8slens/core": "^6.5.0-alpha.3",
     "@k8slens/ensure-binaries": "^6.5.0-alpha.1",
     "@k8slens/feature-core": "^6.5.0-alpha.1",
     "@k8slens/generate-tray-icons": "^6.5.0-alpha.1",
-    "@k8slens/legacy-extension-example": "^1.0.0-alpha.0",
-    "@k8slens/legacy-extensions": "^1.0.0-alpha.0",
+    "@k8slens/legacy-extension-example": "^1.0.0-alpha.1",
+    "@k8slens/legacy-extensions": "^1.0.0-alpha.1",
     "@k8slens/run-many": "^1.0.0-alpha.1",
     "@k8slens/test-utils": "^1.0.0-alpha.1",
     "@k8slens/utilities": "^1.0.0-alpha.1",
