@@ -9,11 +9,12 @@ import { broadcastMessage } from "../ipc";
 import { app } from "electron";
 import type { CatalogEntityConstructor, CatalogEntitySpec } from "../catalog/catalog-entity";
 import { IpcRendererNavigationEvents } from "../ipc/navigation-events";
-import { requestClusterActivation, requestClusterDisconnection } from "../../renderer/ipc";
+import { requestClusterDisconnection } from "../../renderer/ipc";
 import KubeClusterCategoryIcon from "./icons/kubernetes.svg";
 import getClusterByIdInjectable from "../cluster-store/get-by-id.injectable";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import clusterConnectionInjectable from "../../main/cluster/cluster-connection.injectable";
+import { requestClusterActivationInjectionToken } from "../../features/cluster/activation/common/request-token";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -77,21 +78,12 @@ export class KubernetesCluster<
   public readonly kind = KubernetesCluster.kind;
 
   async connect(): Promise<void> {
-    if (app) {
-      const di = getLegacyGlobalDiForExtensionApi();
-      const getClusterById = di.inject(getClusterByIdInjectable);
-      const cluster = getClusterById(this.getId());
+    const di = getLegacyGlobalDiForExtensionApi();
+    const requestClusterActivation = di.inject(requestClusterActivationInjectionToken);
 
-      if (!cluster) {
-        return;
-      }
-
-      const connectionCluster = di.inject(clusterConnectionInjectable, cluster);
-
-      await connectionCluster.activate();
-    } else {
-      await requestClusterActivation(this.getId(), false);
-    }
+    await requestClusterActivation({
+      clusterId: this.getId(),
+    });
   }
 
   async disconnect(): Promise<void> {

@@ -5,7 +5,7 @@
 import type { IpcMainInvokeEvent } from "electron";
 import { BrowserWindow, Menu } from "electron";
 import { clusterFrameMap } from "../../../../common/cluster-frames";
-import { clusterActivateHandler, clusterSetFrameIdHandler, clusterDisconnectHandler, clusterStates } from "../../../../common/ipc/cluster";
+import { clusterSetFrameIdHandler, clusterDisconnectHandler, clusterStates } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
 import type { ClusterStore } from "../../../../common/cluster-store/cluster-store";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
@@ -37,18 +37,6 @@ export const setupIpcMainHandlers = ({
   pushCatalogToRenderer,
   getClusterConnection,
 }: Dependencies) => {
-  ipcMainHandle(clusterActivateHandler, async (event, clusterId: ClusterId, force = false) => {
-    const cluster = getClusterById(clusterId);
-
-    if (!cluster) {
-      return;
-    }
-
-    const clusterConnection = getClusterConnection(cluster);
-
-    await clusterConnection.activate(force);
-  });
-
   ipcMainHandle(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
     const cluster = getClusterById(clusterId);
 

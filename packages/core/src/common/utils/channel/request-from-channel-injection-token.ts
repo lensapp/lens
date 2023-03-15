@@ -10,6 +10,10 @@ export interface RequestFromChannel {
   <Response>(channel: RequestChannel<void, Response>): Promise<Awaited<Response>>;
 }
 
+export type ChannelRequester<Channel> = Channel extends RequestChannel<infer Request, infer Response>
+  ? (req: Request) => Promise<Awaited<Response>>
+  : never;
+
 export const requestFromChannelInjectionToken = getInjectionToken<RequestFromChannel>({
   id: "request-from-request-channel",
 });
