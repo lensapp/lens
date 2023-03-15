@@ -158,7 +158,7 @@ async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prB
   const prBranch = `release/v${version.format()}`;
 
   await pipeExecFile("git", ["checkout", "-b", prBranch]);
-  await pipeExecFile("git", ["add", "lerna.json", "packages/*/package.json"]);
+  await pipeExecFile("git", ["add", "packages/*/package.json"]);
   await pipeExecFile("git", ["commit", "-sm", `Release ${version.format()}`]);
   await pipeExecFile("git", ["push", "--set-upstream", "origin", prBranch]);
 
