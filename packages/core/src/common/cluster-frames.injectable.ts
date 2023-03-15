@@ -3,12 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { clusterFrameMap } from "./cluster-frames";
+import { observable } from "mobx";
+
+export interface ClusterFrameInfo {
+  frameId: number;
+  processId: number;
+}
 
 const clusterFramesInjectable = getInjectable({
   id: "cluster-frames",
-  instantiate: () => clusterFrameMap,
-  causesSideEffects: true,
+  instantiate: () => observable.map<string, ClusterFrameInfo>(),
 });
 
 export default clusterFramesInjectable;

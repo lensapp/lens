@@ -6,15 +6,11 @@
 import type { CatalogEntityActionContext, CatalogEntityContextMenuContext, CatalogEntityMetadata, CatalogEntityStatus, CatalogCategorySpec } from "../catalog";
 import { CatalogEntity, CatalogCategory, categoryVersion } from "../catalog/catalog-entity";
 import { broadcastMessage } from "../ipc";
-import { app } from "electron";
 import type { CatalogEntityConstructor, CatalogEntitySpec } from "../catalog/catalog-entity";
 import { IpcRendererNavigationEvents } from "../ipc/navigation-events";
-import { requestClusterDisconnection } from "../../renderer/ipc";
 import KubeClusterCategoryIcon from "./icons/kubernetes.svg";
-import getClusterByIdInjectable from "../cluster-store/get-by-id.injectable";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import clusterConnectionInjectable from "../../main/cluster/cluster-connection.injectable";
-import { requestClusterActivationInjectionToken } from "../../features/cluster/activation/common/request-token";
+import { requestClusterActivationInjectionToken, requestClusterDeactivationInjectionToken } from "../../features/cluster/activation/common/request-token";
 
 export interface KubernetesClusterPrometheusMetrics {
   address?: {
@@ -87,21 +83,10 @@ export class KubernetesCluster<
   }
 
   async disconnect(): Promise<void> {
-    if (app) {
-      const di = getLegacyGlobalDiForExtensionApi();
-      const getClusterById = di.inject(getClusterByIdInjectable);
-      const cluster = getClusterById(this.getId());
+    const di = getLegacyGlobalDiForExtensionApi();
+    const requestClusterDeactivation = di.inject(requestClusterDeactivationInjectionToken);
 
-      if (!cluster) {
-        return;
-      }
-
-      const connectionCluster = di.inject(clusterConnectionInjectable, cluster);
-
-      connectionCluster.disconnect();
-    } else {
-      await requestClusterDisconnection(this.getId(), false);
-    }
+    await requestClusterDeactivation(this.getId());
   }
 
   async onRun(context: CatalogEntityActionContext) {
@@ -135,7 +120,7 @@ export class KubernetesCluster<
           title: "Disconnect",
           icon: "link_off",
           onClick: () => {
-            requestClusterDisconnection(this.getId());
+            this.disconnect();
             broadcastMessage(
               IpcRendererNavigationEvents.NAVIGATE_IN_APP,
               "/catalog",
