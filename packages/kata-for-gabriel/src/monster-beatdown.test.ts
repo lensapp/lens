@@ -1,22 +1,28 @@
 import { Dependencies, gameInjectable } from "./monster-beatdown.injectable";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 import { getPromiseStatus } from "@k8slens/test-utils";
-import { createContainer } from "@ogre-tools/injectable";
+import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injectable";
 import messageToPlayerInjectable from "./message-to-player.injectable";
 import castDieInjectable from "./cast-die.injectable";
 import questionToPlayerInjectable from "./question-to-player.injectable";
 import { registerFeature } from "@k8slens/feature-core";
 import { gabrielFeature } from "./feature";
+import { monsterInjectionToken } from "./monster.injectable";
+import { find } from "lodash/fp";
+import getRandomSampleFromCollectionInjectable from "./get-random-sample-from-collection.injectable";
 
-describe("monster-beatdown", () => {
+describe("monster-beatdown, given there are monsters in the monster pool", () => {
   let game: { start: () => Promise<void> };
   let messageToPlayerMock: jest.Mock<Dependencies["messageToPlayer"]>;
   let questionToPlayerMock: AsyncFnMock<Dependencies["questionToPlayer"]>;
   let castDieMock: AsyncFnMock<Dependencies["castDie"]>;
   let gamePromise: Promise<void>;
+  let di: DiContainer;
 
   beforeEach(() => {
-    const di = createContainer("monster-beatdown");
+    di = createContainer("monster-beatdown");
+
+    di.preventSideEffects();
 
     registerFeature(di, gabrielFeature);
 
@@ -27,6 +33,15 @@ describe("monster-beatdown", () => {
 
     questionToPlayerMock = asyncFn();
     castDieMock = asyncFn();
+
+    const someMonsterInjectable = getInjectable({
+      id: "some-janne-monster",
+      instantiate: () => ({ name: "Janne", hitPoints: 3 }),
+      injectionToken: monsterInjectionToken,
+    });
+
+    di.register(someMonsterInjectable);
+    di.override(getRandomSampleFromCollectionInjectable, () => find({ name: "Janne" }));
 
     game = di.inject(gameInjectable);
   });
@@ -50,9 +65,9 @@ describe("monster-beatdown", () => {
       gamePromise = game.start();
     });
 
-    it("player encounters a monster", () => {
+    it("player encounters one of the monsters", () => {
       expect(messageToPlayerMock.mock.calls).toEqual([
-        ["You encounter a monster with 3 hit-points"],
+        ['You encounter a monster "Janne" with 3 hit-points'],
       ]);
     });
 

@@ -12,7 +12,7 @@ const handleInitialMonsterEncounterInjectable = getInjectable({
     const monster = di.inject(monsterInjectable);
 
     return async () => {
-      messageToPlayer(`You encounter a monster with ${monster.hitPoints} hit-points`);
+      messageToPlayer(`You encounter a monster "${monster.name}" with ${monster.hitPoints} hit-points`);
 
       const playerWantsToAttack = await questionToPlayer("Attack the monster?");
       if (playerWantsToAttack) {
