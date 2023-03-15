@@ -1,3 +1,5 @@
+/* ignore coverage somehow */
+
 import { getInjectable } from "@ogre-tools/injectable";
 
 const castDieInjectable = getInjectable({
