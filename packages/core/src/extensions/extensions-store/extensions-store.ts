@@ -5,8 +5,8 @@
 
 import type { LensExtensionId } from "@k8slens/legacy-extensions";
 import { action, computed, observable } from "mobx";
-import type { BaseStore } from "../../common/base-store/base-store";
-import type { CreateBaseStore } from "../../common/base-store/create-base-store.injectable";
+import type { BaseStore } from "../../common/persistent-storage/base-store";
+import type { CreatePersistentStorage } from "../../common/persistent-storage/create.injectable";
 
 export interface LensExtensionsStoreModel {
   extensions?: Record<LensExtensionId, LensExtensionState>;
@@ -23,7 +23,7 @@ export interface IsEnabledExtensionDescriptor {
 }
 
 export interface ExtensionsStoreDependencies {
-  createBaseStore: CreateBaseStore;
+  createPersistentStorage: CreatePersistentStorage;
   readonly storeMigrationVersion: string;
 }
 
@@ -31,7 +31,7 @@ export class ExtensionsStore {
   private readonly store: BaseStore<LensExtensionsStoreModel>;
 
   constructor(private readonly dependencies: ExtensionsStoreDependencies) {
-    this.store = this.dependencies.createBaseStore({
+    this.store = this.dependencies.createPersistentStorage({
       configName: "lens-extensions",
       fromStore: action(({ extensions = {}}) => {
         this.state.merge(extensions);

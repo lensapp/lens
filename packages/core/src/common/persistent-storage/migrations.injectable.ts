@@ -14,8 +14,8 @@ export interface MigrationDeclaration {
   run(store: Conf<Partial<Record<string, unknown>>>): void;
 }
 
-const storeMigrationsInjectable = getInjectable({
-  id: "store-migrations",
+const persistentStorageMigrationsInjectable = getInjectable({
+  id: "persistent-storage-migrations",
   instantiate: (di, token): Migrations<Record<string, unknown>> => {
     const logger = di.inject(loggerInjectable);
     const declarations = di.injectMany(token);
@@ -43,4 +43,4 @@ const storeMigrationsInjectable = getInjectable({
   }),
 });
 
-export default storeMigrationsInjectable;
+export default persistentStorageMigrationsInjectable;

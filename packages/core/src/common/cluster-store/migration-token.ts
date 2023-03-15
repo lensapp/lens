@@ -4,7 +4,7 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { MigrationDeclaration } from "../base-store/migrations.injectable";
+import type { MigrationDeclaration } from "../persistent-storage/migrations.injectable";
 
 export const clusterStoreMigrationInjectionToken = getInjectionToken<MigrationDeclaration>({
   id: "cluster-store-migration",

@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { Writable } from "type-fest";
-import fileSystemProvisionerStoreInjectable from "../../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
 import { lensExtensionDependencies } from "../../../extensions/lens-extension";
 import { LensMainExtension } from "../../../extensions/lens-main-extension";
 import navigateForExtensionInjectable from "../../../main/start-main-application/lens-window/navigate-for-extension.injectable";
@@ -16,6 +15,7 @@ import catalogEntityRegistryForMainInjectable from "../../../main/catalog/entity
 import catalogEntityRegistryForRendererInjectable from "../../api/catalog/entity/registry.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import ensureHashedDirectoryForExtensionInjectable from "../../../extensions/extension-loader/file-system-provisioner-store/ensure-hashed-directory-for-extension.injectable";
 
 export class TestExtensionMain extends LensMainExtension {}
 export class TestExtensionRenderer extends LensRendererExtension {}
@@ -47,7 +47,7 @@ export const getMainExtensionFakeWith = (di: DiContainer) => ({ id, name, mainOp
   Object.assign(instance, mainOptions);
 
   (instance as Writable<LensMainExtension>)[lensExtensionDependencies] = {
-    fileSystemProvisionerStore: di.inject(fileSystemProvisionerStoreInjectable),
+    ensureHashedDirectoryForExtension: di.inject(ensureHashedDirectoryForExtensionInjectable),
     entityRegistry: di.inject(catalogEntityRegistryForMainInjectable),
     navigate: di.inject(navigateForExtensionInjectable),
     logger: di.inject(loggerInjectable),
@@ -78,7 +78,7 @@ export const getRendererExtensionFakeWith = (di: DiContainer) => ({ id, name, re
   (instance as Writable<LensRendererExtension>)[lensExtensionDependencies] = {
     categoryRegistry: di.inject(catalogCategoryRegistryInjectable),
     entityRegistry: di.inject(catalogEntityRegistryForRendererInjectable),
-    fileSystemProvisionerStore: di.inject(fileSystemProvisionerStoreInjectable),
+    ensureHashedDirectoryForExtension: di.inject(ensureHashedDirectoryForExtensionInjectable),
     getExtensionPageParameters: di.inject(getExtensionPageParametersInjectable),
     navigateToRoute: di.inject(navigateToRouteInjectable),
     routes: di.inject(routesInjectable),

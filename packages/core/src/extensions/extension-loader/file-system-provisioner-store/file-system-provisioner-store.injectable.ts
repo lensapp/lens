@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { registeredExtensionsInjectable } from "./registered-extensions.injectable";
-import createBaseStoreInjectable from "../../../common/base-store/create-base-store.injectable";
+import createPersistentStorageInjectable from "../../../common/persistent-storage/create.injectable";
 import { action } from "mobx";
 import { object } from "@k8slens/utilities";
 import storeMigrationVersionInjectable from "../../../common/vars/store-migration-version.injectable";
@@ -14,10 +14,10 @@ const fileSystemProvisionerStoreInjectable = getInjectable({
 
   instantiate: (di) => {
     const registeredExtensions = di.inject(registeredExtensionsInjectable);
-    const createBaseStore = di.inject(createBaseStoreInjectable);
+    const createPersistentStorage = di.inject(createPersistentStorageInjectable);
     const storeMigrationVersion = di.inject(storeMigrationVersionInjectable);
 
-    const store = createBaseStore({
+    const store = createPersistentStorage({
       configName: "lens-filesystem-provisioner-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       projectVersion: storeMigrationVersion,

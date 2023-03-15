@@ -8,9 +8,9 @@ import readClusterConfigSyncInjectable from "./read-cluster-config.injectable";
 import emitAppEventInjectable from "../app-event-bus/emit-event.injectable";
 import loggerInjectable from "../logger.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
-import storeMigrationsInjectable from "../base-store/migrations.injectable";
+import persistentStorageMigrationsInjectable from "../persistent-storage/migrations.injectable";
 import { clusterStoreMigrationInjectionToken } from "./migration-token";
-import createBaseStoreInjectable from "../base-store/create-base-store.injectable";
+import createPersistentStorageInjectable from "../persistent-storage/create.injectable";
 
 const clusterStoreInjectable = getInjectable({
   id: "cluster-store",
@@ -20,8 +20,8 @@ const clusterStoreInjectable = getInjectable({
     emitAppEvent: di.inject(emitAppEventInjectable),
     logger: di.inject(loggerInjectable),
     storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
-    migrations: di.inject(storeMigrationsInjectable, clusterStoreMigrationInjectionToken),
-    createBaseStore: di.inject(createBaseStoreInjectable),
+    migrations: di.inject(persistentStorageMigrationsInjectable, clusterStoreMigrationInjectionToken),
+    createPersistentStorage: di.inject(createPersistentStorageInjectable),
   }),
 });
 

@@ -5,13 +5,13 @@
 
 
 import { action, comparer, computed, observable } from "mobx";
-import type { BaseStore } from "../base-store/base-store";
+import type { BaseStore } from "../persistent-storage/base-store";
 import { Cluster } from "../cluster/cluster";
 import { toJS } from "../utils";
 import type { ClusterModel, ClusterId } from "../cluster-types";
 import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
-import type { CreateBaseStore } from "../base-store/create-base-store.injectable";
+import type { CreatePersistentStorage } from "../persistent-storage/create.injectable";
 import type { Migrations } from "conf/dist/source/types";
 import type { Logger } from "../logger";
 
@@ -22,7 +22,7 @@ export interface ClusterStoreModel {
 interface Dependencies {
   readClusterConfigSync: ReadClusterConfigSync;
   emitAppEvent: EmitAppEvent;
-  createBaseStore: CreateBaseStore;
+  createPersistentStorage: CreatePersistentStorage;
   readonly storeMigrationVersion: string;
   readonly migrations: Migrations<Record<string, unknown>>;
   readonly logger: Logger;
@@ -33,7 +33,7 @@ export class ClusterStore {
   private readonly store: BaseStore<ClusterStoreModel>;
 
   constructor(protected readonly dependencies: Dependencies) {
-    this.store = this.dependencies.createBaseStore({
+    this.store = this.dependencies.createPersistentStorage({
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {

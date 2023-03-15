@@ -3,30 +3,23 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { BaseStoreParams } from "../common/base-store/base-store";
-import { BaseStore } from "../common/base-store/base-store";
 import * as path from "path";
 import type { LensExtension } from "./lens-extension";
-import assert from "assert";
 import type { StaticThis } from "../common/utils/singleton";
 import { getOrInsertWith } from "@k8slens/utilities";
 import { getLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import directoryForUserDataInjectable from "../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import getConfigurationFileModelInjectable from "../common/get-configuration-file-model/get-configuration-file-model.injectable";
-import loggerInjectable from "../common/logger.injectable";
-import storeMigrationVersionInjectable from "../common/vars/store-migration-version.injectable";
 import type { Migrations } from "conf/dist/source/types";
-import { baseStoreIpcChannelPrefixesInjectionToken } from "../common/base-store/channel-prefix";
-import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../common/base-store/disable-sync";
-import { persistStateToConfigInjectionToken } from "../common/base-store/save-to-file";
-import getBasenameOfPathInjectable from "../common/path/get-basename.injectable";
-import { enlistMessageChannelListenerInjectionToken } from "@k8slens/messaging";
+import type { PersistentStorage, PersistentStorageParams } from "../common/persistent-storage/create.injectable";
+import createPersistentStorageInjectable from "../common/persistent-storage/create.injectable";
+import directoryForUserDataInjectable from "../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import assert from "assert";
 
-export interface ExtensionStoreParams<T extends object> extends Omit<BaseStoreParams<T>, "migrations"> {
+export interface ExtensionStoreParams<T extends object> extends Omit<PersistentStorageParams<T>, "migrations" | "cwd" | "fromStore" | "toJSON"> {
   migrations?: Migrations<T>;
+  cwd?: string;
 }
 
-export abstract class BaseExtensionStore<T extends object> extends BaseStore<T> {
+export abstract class BaseExtensionStore<T extends object> {
   private static readonly instances = new WeakMap<object, any>();
 
   /**
@@ -49,22 +42,17 @@ export abstract class BaseExtensionStore<T extends object> extends BaseStore<T> 
     return BaseExtensionStore.instances.get(this) as (T | undefined);
   }
 
-  constructor({ migrations, ...params }: ExtensionStoreParams<T>) {
+  protected persistentStorage?: PersistentStorage;
+  private readonly dependencies = (() => {
     const di = getLegacyGlobalDiForExtensionApi();
 
-    super({
+    return {
+      createPersistentStorage: di.inject(createPersistentStorageInjectable),
       directoryForUserData: di.inject(directoryForUserDataInjectable),
-      getConfigurationFileModel: di.inject(getConfigurationFileModelInjectable),
-      logger: di.inject(loggerInjectable),
-      storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
-      migrations: migrations as Migrations<Record<string, unknown>>,
-      getBasenameOfPath: di.inject(getBasenameOfPathInjectable),
-      ipcChannelPrefixes: di.inject(baseStoreIpcChannelPrefixesInjectionToken),
-      persistStateToConfig: di.inject(persistStateToConfigInjectionToken),
-      enlistMessageChannelListener: di.inject(enlistMessageChannelListenerInjectionToken),
-      shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
-    }, params);
-  }
+    } as const;
+  })();
+
+  constructor(protected readonly rawParams: ExtensionStoreParams<T>) { }
 
   /**
    * @deprecated This is a form of global shared state. Just call `new Store(...)`
@@ -77,21 +65,38 @@ export abstract class BaseExtensionStore<T extends object> extends BaseStore<T> 
 
   loadExtension(extension: LensExtension) {
     this.extension = extension;
+    const {
+      projectVersion = this.extension.version,
+      cwd: _cwd, // This is ignored to maintain backwards compatibility
+      migrations = {},
+      ...params
+    } = this.rawParams;
 
-    this.params.projectVersion ??= this.extension.version;
+    this.persistentStorage = this.dependencies.createPersistentStorage({
+      ...params,
+      cwd: this.cwd(),
+      projectVersion,
+      migrations: migrations as Migrations<Record<string, unknown>>,
+      fromStore: (data) => this.fromStore(data),
+      toJSON: () => this.toJSON(),
+    });
 
-    return super.load();
+    this.persistentStorage.loadAndStartSyncing();
   }
 
+  /**
+   * @deprecated Never use this method. Instead call {@link BaseExtensionStore.loadExtension}
+   */
   load() {
-    if (!this.extension) { return; }
-
-    return super.load();
+    this.persistentStorage?.loadAndStartSyncing();
   }
 
   protected cwd() {
-    assert(this.extension, "must call this.load() first");
+    assert(this.extension, "cwd can only be called in loadExtension");
 
-    return path.join(super.cwd(), "extension-store", this.extension.storeName);
+    return this.rawParams.cwd ?? path.join(this.dependencies.directoryForUserData, "extension-store", this.extension.storeName);
   }
+
+  abstract fromStore(data: Partial<T>): void;
+  abstract toJSON(): T;
 }

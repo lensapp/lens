@@ -5,7 +5,7 @@
 
 import type { IObservableValue } from "mobx";
 import { runInAction, action, comparer, observable } from "mobx";
-import type { BaseStore } from "../base-store/base-store";
+import type { BaseStore } from "../persistent-storage/base-store";
 import type { CatalogEntity } from "../catalog";
 import { broadcastMessage } from "../ipc";
 import type { Hotbar, CreateHotbarData, CreateHotbarOptions } from "./types";
@@ -16,7 +16,7 @@ import type { Logger } from "../logger";
 import assert from "assert";
 import { getShortName } from "../catalog/helpers";
 import type { Migrations } from "conf/dist/source/types";
-import type { CreateBaseStore } from "../base-store/create-base-store.injectable";
+import type { CreatePersistentStorage } from "../persistent-storage/create.injectable";
 
 export interface HotbarStoreModel {
   hotbars: Hotbar[];
@@ -28,7 +28,7 @@ interface Dependencies {
   readonly logger: Logger;
   readonly storeMigrationVersion: string;
   readonly migrations: Migrations<Record<string, unknown>>;
-  createBaseStore: CreateBaseStore;
+  createPersistentStorage: CreatePersistentStorage;
 }
 
 export class HotbarStore {
@@ -39,7 +39,7 @@ export class HotbarStore {
   readonly activeHotbarId = observable.box() as IObservableValue<string>;
 
   constructor(protected readonly dependencies: Dependencies) {
-    this.store = this.dependencies.createBaseStore({
+    this.store = this.dependencies.createPersistentStorage({
       configName: "lens-hotbar-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {

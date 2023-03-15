@@ -8,10 +8,10 @@ import selectedUpdateChannelInjectable from "../../features/application-update/c
 import emitAppEventInjectable from "../app-event-bus/emit-event.injectable";
 import loggerInjectable from "../logger.injectable";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
-import storeMigrationsInjectable from "../base-store/migrations.injectable";
+import persistentStorageMigrationsInjectable from "../persistent-storage/migrations.injectable";
 import { userStoreMigrationInjectionToken } from "./migrations-token";
 import userStorePreferenceDescriptorsInjectable from "./preference-descriptors.injectable";
-import createBaseStoreInjectable from "../base-store/create-base-store.injectable";
+import createPersistentStorageInjectable from "../persistent-storage/create.injectable";
 
 const userStoreInjectable = getInjectable({
   id: "user-store",
@@ -21,9 +21,9 @@ const userStoreInjectable = getInjectable({
     emitAppEvent: di.inject(emitAppEventInjectable),
     logger: di.inject(loggerInjectable),
     storeMigrationVersion: di.inject(storeMigrationVersionInjectable),
-    migrations: di.inject(storeMigrationsInjectable, userStoreMigrationInjectionToken),
+    migrations: di.inject(persistentStorageMigrationsInjectable, userStoreMigrationInjectionToken),
     preferenceDescriptors: di.inject(userStorePreferenceDescriptorsInjectable),
-    createBaseStore: di.inject(createBaseStoreInjectable),
+    createPersistentStorage: di.inject(createPersistentStorageInjectable),
   }),
 });
 
