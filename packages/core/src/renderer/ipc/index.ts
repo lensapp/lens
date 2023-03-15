@@ -7,8 +7,7 @@ import { clusterActivateHandler, clusterDisconnectHandler, clusterSetFrameIdHand
 import type { ClusterId, ClusterState } from "../../common/cluster-types";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel, type WindowAction } from "../../common/ipc/window";
 import { extensionDiscoveryStateChannel, extensionLoaderFromMainChannel } from "../../common/ipc/extension-handling";
-import type { InstalledExtension } from "../../extensions/extension-discovery/extension-discovery";
-import type { LensExtensionId } from "../../extensions/lens-extension";
+import type { InstalledExtension, LensExtensionId } from "@k8slens/legacy-extensions";
 import type { Location } from "history";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import ipcRendererInjectable from "../utils/channel/ipc-renderer.injectable";
