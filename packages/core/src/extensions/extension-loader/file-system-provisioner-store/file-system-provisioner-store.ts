@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { LensExtensionId } from "@k8slens/legacy-extensions";
 import type { ObservableMap } from "mobx";
 import { action, makeObservable } from "mobx";
 import type { BaseStoreDependencies } from "../../../common/base-store/base-store";
 import { BaseStore } from "../../../common/base-store/base-store";
-import type { LensExtensionId } from "../../lens-extension";
 import type { EnsureHashedDirectoryForExtension } from "./ensure-hashed-directory-for-extension.injectable";
 
 interface FSProvisionModel {

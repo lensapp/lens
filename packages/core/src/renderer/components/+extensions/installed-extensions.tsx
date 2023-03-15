@@ -5,10 +5,7 @@
 
 import styles from "./installed-extensions.module.scss";
 import React, { useMemo } from "react";
-import type {
-  ExtensionDiscovery,
-  InstalledExtension,
-} from "../../../extensions/extension-discovery/extension-discovery";
+import type { ExtensionDiscovery } from "../../../extensions/extension-discovery/extension-discovery";
 import { Icon } from "../icon";
 import { List } from "../list/list";
 import { MenuActions, MenuItem } from "../menu";
@@ -16,14 +13,11 @@ import { Spinner } from "../spinner";
 import { cssNames } from "@k8slens/utilities";
 import { observer } from "mobx-react";
 import type { Row } from "react-table";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
-import extensionDiscoveryInjectable
-  from "../../../extensions/extension-discovery/extension-discovery.injectable";
-
+import extensionDiscoveryInjectable from "../../../extensions/extension-discovery/extension-discovery.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import extensionInstallationStateStoreInjectable
-  from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
+import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import type { ExtensionInstallationStateStore } from "../../../extensions/extension-installation-state-store/extension-installation-state-store";
+import type { InstalledExtension, LensExtensionId } from "@k8slens/legacy-extensions";
 
 export interface InstalledExtensionsProps {
   extensions: InstalledExtension[];

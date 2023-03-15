@@ -20,7 +20,6 @@
   "exports": {
     "./main": "./static/build/library/main.js",
     "./renderer": "./static/build/library/renderer.js",
-    "./common": "./static/build/library/common.js",
     "./styles": "./static/build/library/renderer.css"
   },
   "typesVersions": {
@@ -30,9 +29,6 @@
       ],
       "renderer": [
         "./static/build/library/src/renderer/library.d.ts"
-      ],
-      "common": [
-        "./static/build/library/src/common/library.d.ts"
       ]
     }
   },
@@ -331,6 +327,7 @@
   "peerDependencies": {
     "@k8slens/application": "^6.5.0-alpha.0",
     "@k8slens/application-for-electron-main": "^6.5.0-alpha.0",
+    "@k8slens/legacy-extensions": "^1.0.0-alpha.0",
     "@k8slens/run-many": "^1.0.0-alpha.1",
     "@k8slens/test-utils": "^1.0.0-alpha.1",
     "@k8slens/utilities": "^1.0.0-alpha.1",

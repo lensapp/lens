@@ -2,10 +2,9 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import type { LensExtensionId, InstalledExtension } from "@k8slens/legacy-extensions";
 import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
-import type { InstalledExtension } from "../../../extensions/extension-discovery/extension-discovery";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
 import { extensionDisplayName } from "../../../extensions/lens-extension";
 import type { Confirm } from "../confirm-dialog/confirm.injectable";
 import confirmInjectable from "../confirm-dialog/confirm.injectable";

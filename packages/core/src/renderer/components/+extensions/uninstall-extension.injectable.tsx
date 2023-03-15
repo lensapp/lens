@@ -7,7 +7,7 @@ import extensionLoaderInjectable from "../../../extensions/extension-loader/exte
 import extensionInstallationStateStoreInjectable from "../../../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import extensionDiscoveryInjectable from "../../../extensions/extension-discovery/extension-discovery.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import type { LensExtensionId } from "../../../extensions/lens-extension";
+import type { LensExtensionId } from "@k8slens/legacy-extensions";
 import { extensionDisplayName } from "../../../extensions/lens-extension";
 import React from "react";
 import { when } from "mobx";

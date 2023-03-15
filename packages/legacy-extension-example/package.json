@@ -1,0 +1,47 @@
+{
+  "name": "@k8slens/legacy-extension-example",
+  "private": false,
+  "description": "An example bundled Lens extensions using the v1 API",
+  "version": "1.0.0-alpha.0",
+  "type": "commonjs",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    "./main": "./dist/main.js",
+    "./renderer": "./dist/renderer.js"
+  },
+  "engines": {
+    "lens": "6.5"
+  },
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "clean": "rimraf dist/",
+    "build": "webpack --config webpack.ts",
+    "dev": "webpack --mode=development --watch --config webpack.ts",
+    "test": "jest --coverage --runInBand",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix"
+  },
+  "devDependencies": {
+    "@k8slens/extensions": "^6.5.0-alpha.2",
+    "@types/node": "^16.18.16",
+    "typescript": "^4.9.5",
+    "webpack": "^5.76.1",
+    "webpack-cli": "^5.0.1"
+  }
+}

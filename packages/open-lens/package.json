@@ -201,6 +201,8 @@
     "@k8slens/ensure-binaries": "^6.5.0-alpha.1",
     "@k8slens/feature-core": "^6.5.0-alpha.1",
     "@k8slens/generate-tray-icons": "^6.5.0-alpha.1",
+    "@k8slens/legacy-extension-example": "^1.0.0-alpha.0",
+    "@k8slens/legacy-extensions": "^1.0.0-alpha.0",
     "@k8slens/run-many": "^1.0.0-alpha.1",
     "@k8slens/test-utils": "^1.0.0-alpha.1",
     "@k8slens/utilities": "^1.0.0-alpha.1",

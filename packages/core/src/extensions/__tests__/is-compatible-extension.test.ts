@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { LensExtensionManifest } from "@k8slens/legacy-extensions";
 import { isCompatibleExtension } from "../extension-discovery/is-compatible-extension/is-compatible-extension";
-import type { LensExtensionManifest } from "../lens-extension";
 
 describe("Extension/App versions compatibility checks", () => {
   it("is compatible with exact version matching", () => {
