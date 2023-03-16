@@ -9,7 +9,7 @@ import { navigateForExtensionChannel } from "../common/channel";
 
 const navigateForExtensionListenerInjectable = getMessageChannelListenerInjectable({
   channel: navigateForExtensionChannel,
-  id: "main",
+  id: "renderer",
   getHandler: (di) => {
     const extensionLoader = di.inject(extensionLoaderInjectable);
 
