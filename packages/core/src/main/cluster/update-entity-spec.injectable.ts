@@ -26,6 +26,7 @@ const updateEntitySpecInjectable = getInjectable({
       if (cluster.preferences.icon) {
         entity.spec.icon ??= {};
         entity.spec.icon.src = cluster.preferences.icon;
+        entity.spec.icon.background = cluster.preferences.iconBackgroundColor;
       } else if (cluster.preferences.icon === null) {
         /**
          * NOTE: only clear the icon if set to `null` by ClusterIconSettings.
