@@ -11,7 +11,6 @@ const uiBlock = getInjectable({
 
   instantiate: () => ({
     id: "lol-id",
-    text: "lol-1",
     Component: () => <div>Trollollol</div>,
   }),
 
