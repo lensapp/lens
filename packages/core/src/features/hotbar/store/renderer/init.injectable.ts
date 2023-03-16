@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../../../../renderer/before-frame-starts/tokens";
-import initClusterStoreInjectable from "../../../cluster/store/renderer/init.injectable";
+import initClusterStoreInjectable from "../../../cluster/storage/renderer/init.injectable";
 
 const initHotbarStoreInjectable = getInjectable({
   id: "init-hotbar-store",

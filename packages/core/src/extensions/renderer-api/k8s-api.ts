@@ -37,7 +37,7 @@ import namespaceApiInjectable from "../../common/k8s-api/endpoints/namespace.api
 import kubeEventApiInjectable from "../../common/k8s-api/endpoints/events.api.injectable";
 import roleBindingApiInjectable from "../../common/k8s-api/endpoints/role-binding.api.injectable";
 import customResourceDefinitionApiInjectable from "../../common/k8s-api/endpoints/custom-resource-definition.api.injectable";
-import { shouldShowResourceInjectionToken } from "../../common/cluster-store/allowed-resources-injection-token";
+import { shouldShowResourceInjectionToken } from "../../features/cluster/showing-kube-resources/common/allowed-resources-injection-token";
 import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import requestMetricsInjectable from "../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 

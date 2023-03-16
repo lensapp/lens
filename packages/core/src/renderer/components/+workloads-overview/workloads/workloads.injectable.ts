@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { shouldShowResourceInjectionToken } from "../../../../common/cluster-store/allowed-resources-injection-token";
+import { shouldShowResourceInjectionToken } from "../../../../features/cluster/showing-kube-resources/common/allowed-resources-injection-token";
 import { byOrderNumber } from "../../../../common/utils/composable-responsibilities/orderable/orderable";
 import { workloadInjectionToken } from "./workload-injection-token";
 

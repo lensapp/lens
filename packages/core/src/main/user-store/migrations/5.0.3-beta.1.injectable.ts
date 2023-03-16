@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ClusterStoreModel } from "../../../common/cluster-store/cluster-store";
 import type { KubeconfigSyncEntry, UserPreferencesModel } from "../../../common/user-store";
 import { isErrnoException } from "@k8slens/utilities";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -17,6 +16,7 @@ import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
+import type { ClusterStoreModel } from "../../../features/cluster/storage/common/storage.injectable";
 
 const v503Beta1UserStoreMigrationInjectable = getInjectable({
   id: "v5.0.3-beta.1-user-store-migration",

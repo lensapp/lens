@@ -7,7 +7,6 @@ import { BrowserWindow, Menu } from "electron";
 import type { ClusterFrameInfo } from "../../../../common/cluster-frames.injectable";
 import { clusterSetFrameIdHandler, clusterStates } from "../../../../common/ipc/cluster";
 import type { ClusterId } from "../../../../common/cluster-types";
-import type { ClusterStore } from "../../../../common/cluster-store/cluster-store";
 import { broadcastMainChannel, broadcastMessage, ipcMainHandle, ipcMainOn } from "../../../../common/ipc";
 import type { IComputedValue, ObservableMap } from "mobx";
 import { windowActionHandleChannel, windowLocationChangedChannel, windowOpenAppMenuAsContextMenuChannel } from "../../../../common/ipc/window";
@@ -16,21 +15,23 @@ import type { ApplicationMenuItemTypes } from "../../../../features/application-
 import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
 import { getApplicationMenuTemplate } from "../../../../features/application-menu/main/populate-application-menu.injectable";
 import type { MenuItemRoot } from "../../../../features/application-menu/main/application-menu-item-composite.injectable";
-import type { GetClusterById } from "../../../../common/cluster-store/get-by-id.injectable";
+import type { GetClusterById } from "../../../../features/cluster/storage/common/get-by-id.injectable";
+import type { Cluster } from "../../../../common/cluster/cluster";
+
 interface Dependencies {
   applicationMenuItemComposite: IComputedValue<Composite<ApplicationMenuItemTypes | MenuItemRoot>>;
-  clusterStore: ClusterStore;
   getClusterById: GetClusterById;
   pushCatalogToRenderer: () => void;
   clusterFrames: ObservableMap<string, ClusterFrameInfo>;
+  clusters: IComputedValue<Cluster[]>;
 }
 
 export const setupIpcMainHandlers = ({
   applicationMenuItemComposite,
-  clusterStore,
   getClusterById,
   pushCatalogToRenderer,
   clusterFrames,
+  clusters,
 }: Dependencies) => {
   ipcMainHandle(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
     const cluster = getClusterById(clusterId);
@@ -60,7 +61,7 @@ export const setupIpcMainHandlers = ({
   });
 
   ipcMainHandle(clusterStates, () => (
-    clusterStore.clustersList.get().map(cluster => ({
+    clusters.get().map(cluster => ({
       id: cluster.id,
       state: cluster.getState(),
     }))

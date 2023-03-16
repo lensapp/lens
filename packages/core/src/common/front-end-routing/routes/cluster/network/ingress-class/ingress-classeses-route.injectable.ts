@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { frontEndRouteInjectionToken } from "../../../../front-end-route-injection-token";
 import {
   shouldShowResourceInjectionToken,
-} from "../../../../../cluster-store/allowed-resources-injection-token";
+} from "../../../../../../features/cluster/showing-kube-resources/common/allowed-resources-injection-token";
 
 const ingressClassesesRouteInjectable = getInjectable({
   id: "ingress-classes-route",

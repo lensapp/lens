@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-store/migration-token";
+import { clusterStoreMigrationInjectionToken } from "../../../features/cluster/storage/common/migration-token";
 import type { ClusterModel } from "../../../common/cluster-types";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";

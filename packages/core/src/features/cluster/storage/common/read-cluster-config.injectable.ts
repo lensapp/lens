@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ClusterConfigData, ClusterModel } from "../cluster-types";
-import readFileSyncInjectable from "../fs/read-file-sync.injectable";
-import { loadConfigFromString, validateKubeConfig } from "../kube-helpers";
+import type { ClusterConfigData, ClusterModel } from "../../../../common/cluster-types";
+import readFileSyncInjectable from "../../../../common/fs/read-file-sync.injectable";
+import { loadConfigFromString, validateKubeConfig } from "../../../../common/kube-helpers";
 
 export type ReadClusterConfigSync = (model: ClusterModel) => ClusterConfigData;
 

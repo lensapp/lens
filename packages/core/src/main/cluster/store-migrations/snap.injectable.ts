@@ -6,7 +6,7 @@
 // Fix embedded kubeconfig paths under snap config
 
 import { getInjectable } from "@ogre-tools/injectable";
-import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-store/migration-token";
+import { clusterStoreMigrationInjectionToken } from "../../../features/cluster/storage/common/migration-token";
 import loggerInjectable from "../../../common/logger.injectable";
 import isSnapPackageInjectable from "../../../common/vars/is-snap-package.injectable";
 import type { ClusterModel } from "../../../common/cluster-types";

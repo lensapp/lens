@@ -3,29 +3,35 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ClusterStore } from "../cluster-store/cluster-store";
-import type { GetCustomKubeConfigFilePath } from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
-import getCustomKubeConfigFilePathInjectable from "../app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
-import clusterStoreInjectable from "../cluster-store/cluster-store.injectable";
+import type { GetCustomKubeConfigFilePath } from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
+import getCustomKubeConfigFilePathInjectable from "../../../common/app-paths/get-custom-kube-config-directory/get-custom-kube-config-directory.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
-import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
 import assert from "assert";
-import directoryForTempInjectable from "../app-paths/directory-for-temp/directory-for-temp.injectable";
-import kubectlBinaryNameInjectable from "../../main/kubectl/binary-name.injectable";
-import kubectlDownloadingNormalizedArchInjectable from "../../main/kubectl/normalized-arch.injectable";
-import normalizedPlatformInjectable from "../vars/normalized-platform.injectable";
-import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
-import type { WriteJsonSync } from "../fs/write-json-sync.injectable";
-import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
-import type { ReadFileSync } from "../fs/read-file-sync.injectable";
-import readFileSyncInjectable from "../fs/read-file-sync.injectable";
+import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
+import kubectlBinaryNameInjectable from "../../../main/kubectl/binary-name.injectable";
+import kubectlDownloadingNormalizedArchInjectable from "../../../main/kubectl/normalized-arch.injectable";
+import normalizedPlatformInjectable from "../../../common/vars/normalized-platform.injectable";
+import storeMigrationVersionInjectable from "../../../common/vars/store-migration-version.injectable";
+import type { WriteJsonSync } from "../../../common/fs/write-json-sync.injectable";
+import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
+import type { ReadFileSync } from "../../../common/fs/read-file-sync.injectable";
+import readFileSyncInjectable from "../../../common/fs/read-file-sync.injectable";
 import { readFileSync } from "fs";
-import type { WriteFileSync } from "../fs/write-file-sync.injectable";
-import writeFileSyncInjectable from "../fs/write-file-sync.injectable";
-import type { WriteBufferSync } from "../fs/write-buffer-sync.injectable";
-import writeBufferSyncInjectable from "../fs/write-buffer-sync.injectable";
-import { Cluster } from "../cluster/cluster";
+import type { WriteFileSync } from "../../../common/fs/write-file-sync.injectable";
+import writeFileSyncInjectable from "../../../common/fs/write-file-sync.injectable";
+import type { WriteBufferSync } from "../../../common/fs/write-buffer-sync.injectable";
+import writeBufferSyncInjectable from "../../../common/fs/write-buffer-sync.injectable";
+import { Cluster } from "../../../common/cluster/cluster";
+import clustersPersistentStorageInjectable from "./common/storage.injectable";
+import type { PersistentStorage } from "../../../common/persistent-storage/create.injectable";
+import type { AddCluster } from "./common/add.injectable";
+import addClusterInjectable from "./common/add.injectable";
+import type { GetClusterById } from "./common/get-by-id.injectable";
+import getClusterByIdInjectable from "./common/get-by-id.injectable";
+import type { IComputedValue } from "mobx";
+import clustersInjectable from "./common/clusters.injectable";
 
 // NOTE: this is intended to read the actual file system
 const testDataIcon = readFileSync("test-data/cluster-store-migration-icon.png");
@@ -54,15 +60,18 @@ users:
     token: kubeconfig-user-q4lm4:xxxyyyy
 `;
 
-describe("cluster-store", () => {
+describe("cluster storage technical tests", () => {
   let di: DiContainer;
-  let clusterStore: ClusterStore;
+  let clustersPersistentStorage: PersistentStorage;
   let writeJsonSync: WriteJsonSync;
   let writeFileSync: WriteFileSync;
   let writeBufferSync: WriteBufferSync;
   let readFileSync: ReadFileSync;
   let getCustomKubeConfigFilePath: GetCustomKubeConfigFilePath;
   let writeFileSyncAndReturnPath: (filePath: string, contents: string) => string;
+  let addCluster: AddCluster;
+  let getClusterById: GetClusterById;
+  let clusters: IComputedValue<Cluster[]>;
 
   beforeEach(async () => {
     di = getDiForUnitTesting();
@@ -76,6 +85,9 @@ describe("cluster-store", () => {
     writeFileSync = di.inject(writeFileSyncInjectable);
     writeBufferSync = di.inject(writeBufferSyncInjectable);
     readFileSync = di.inject(readFileSyncInjectable);
+    addCluster = di.inject(addClusterInjectable);
+    getClusterById = di.inject(getClusterByIdInjectable);
+    clusters = di.inject(clustersInjectable);
     writeFileSyncAndReturnPath = (filePath, contents) => (writeFileSync(filePath, contents), filePath);
   });
 
@@ -84,8 +96,8 @@ describe("cluster-store", () => {
       getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
 
       writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {});
-      clusterStore = di.inject(clusterStoreInjectable);
-      clusterStore.load();
+      clustersPersistentStorage = di.inject(clustersPersistentStorageInjectable);
+      clustersPersistentStorage.loadAndStartSyncing();
     });
 
     describe("with foo cluster added", () => {
@@ -106,11 +118,11 @@ describe("cluster-store", () => {
           clusterServerUrl,
         });
 
-        clusterStore.addCluster(cluster);
+        addCluster(cluster);
       });
 
       it("adds new cluster to store", async () => {
-        const storedCluster = clusterStore.getById("foo");
+        const storedCluster = getClusterById("foo");
 
         assert(storedCluster);
 
@@ -124,9 +136,7 @@ describe("cluster-store", () => {
 
     describe("with prod and dev clusters added", () => {
       beforeEach(() => {
-        const store = clusterStore;
-
-        store.addCluster({
+        addCluster({
           id: "prod",
           contextName: "foo",
           preferences: {
@@ -137,7 +147,7 @@ describe("cluster-store", () => {
             kubeconfig,
           ),
         });
-        store.addCluster({
+        addCluster({
           id: "dev",
           contextName: "foo2",
           preferences: {
@@ -151,8 +161,7 @@ describe("cluster-store", () => {
       });
 
       it("check if store can contain multiple clusters", () => {
-        expect(clusterStore.hasClusters()).toBeTruthy();
-        expect(clusterStore.clusters.size).toBe(2);
+        expect(clusters.get().length).toBe(2);
       });
 
       it("check if cluster's kubeconfig file saved", () => {
@@ -199,11 +208,11 @@ describe("cluster-store", () => {
 
       getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
 
-      clusterStore = di.inject(clusterStoreInjectable);
-      clusterStore.load();
+      clustersPersistentStorage = di.inject(clustersPersistentStorageInjectable);
+      clustersPersistentStorage.loadAndStartSyncing();
     });
     it("allows to retrieve a cluster", () => {
-      const storedCluster = clusterStore.getById("cluster1");
+      const storedCluster = getClusterById("cluster1");
 
       assert(storedCluster);
 
@@ -212,7 +221,7 @@ describe("cluster-store", () => {
     });
 
     it("allows getting all of the clusters", async () => {
-      const storedClusters = clusterStore.clustersList.get();
+      const storedClusters = clusters.get();
 
       expect(storedClusters.length).toBe(3);
       expect(storedClusters[0].id).toBe("cluster1");
@@ -253,12 +262,12 @@ describe("cluster-store", () => {
 
       getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
 
-      clusterStore = di.inject(clusterStoreInjectable);
-      clusterStore.load();
+      clustersPersistentStorage = di.inject(clustersPersistentStorageInjectable);
+      clustersPersistentStorage.loadAndStartSyncing();
     });
 
     it("does not enable clusters with invalid kubeconfig", () => {
-      const storedClusters = clusterStore.clustersList.get();
+      const storedClusters = clusters.get();
 
       expect(storedClusters.length).toBe(1);
     });
@@ -290,18 +299,18 @@ describe("cluster-store", () => {
       writeBufferSync("/some-directory-for-user-data/icon_path", testDataIcon);
 
 
-      clusterStore = di.inject(clusterStoreInjectable);
-      clusterStore.load();
+      clustersPersistentStorage = di.inject(clustersPersistentStorageInjectable);
+      clustersPersistentStorage.loadAndStartSyncing();
     });
 
     it("migrates to modern format with kubeconfig in a file", async () => {
-      const configPath = clusterStore.clustersList.get()[0].kubeConfigPath.get();
+      const configPath = clusters.get()[0].kubeConfigPath.get();
 
       expect(readFileSync(configPath)).toBe(minimalValidKubeConfig);
     });
 
     it("migrates to modern format with icon not in file", async () => {
-      expect(clusterStore.clustersList.get()[0].preferences.icon).toMatch(/data:;base64,/);
+      expect(clusters.get()[0].preferences.icon).toMatch(/data:;base64,/);
     });
   });
 });

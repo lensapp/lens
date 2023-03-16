@@ -3,17 +3,17 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import initUserStoreInjectable from "../../../../main/stores/init-user-store.injectable";
+import clustersPersistentStorageInjectable from "../common/storage.injectable";
 
 const initClusterStoreInjectable = getInjectable({
   id: "init-cluster-store",
   instantiate: (di) => ({
     run: () => {
-      const clusterStore = di.inject(clusterStoreInjectable);
+      const storage = di.inject(clustersPersistentStorageInjectable);
 
-      clusterStore.load();
+      storage.loadAndStartSyncing();
     },
     runAfter: initUserStoreInjectable,
   }),

@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
-import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
 import { kubectlDeleteAllChannel } from "../../common/kube-helpers/channels";
+import getClusterByIdInjectable from "../../features/cluster/storage/common/get-by-id.injectable";
 import resourceApplierInjectable from "../resource-applier/create-resource-applier.injectable";
 import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 
@@ -15,14 +15,15 @@ const kubectlDeleteAllChannelHandlerInjectable = getRequestChannelListenerInject
     const emitAppEvent = di.inject(emitAppEventInjectable);
     const getClusterById = di.inject(getClusterByIdInjectable);
 
-    return async ({
-      clusterId,
-      extraArgs,
-      resources,
-    }) => {
-      emitAppEvent({ name: "cluster", action: "kubectl-delete-all" });
-
+    return async (event) => {
+      const {
+        clusterId,
+        extraArgs,
+        resources,
+      } = event;
       const cluster = getClusterById(clusterId);
+
+      emitAppEvent({ name: "cluster", action: "kubectl-delete-all" });
 
       if (!cluster) {
         return {

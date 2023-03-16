@@ -19,7 +19,6 @@ import kubeconfigSyncManagerInjectable from "../kubeconfig-sync/manager.injectab
 import type { KubeconfigSyncManager } from "../kubeconfig-sync/manager";
 import type { KubeconfigSyncValue } from "../../../common/user-store";
 import kubeconfigSyncsInjectable from "../../../common/user-store/kubeconfig-syncs.injectable";
-import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import type { Stat } from "../../../common/fs/stat.injectable";
@@ -41,7 +40,6 @@ describe("kubeconfig-sync.source tests", () => {
   let computeKubeconfigDiff: ComputeKubeconfigDiff;
   let configToModels: ConfigToModels;
   let kubeconfigSyncs: ObservableMap<string, KubeconfigSyncValue>;
-  let clusters: Map<string, Cluster>;
   let di: DiContainer;
 
   beforeEach(async () => {
@@ -57,9 +55,6 @@ describe("kubeconfig-sync.source tests", () => {
     di.override(kubeconfigManagerInjectable, () => ({
       ensurePath: async () => "/some-proxy-kubeconfig-file",
     } as Partial<KubeconfigManager> as KubeconfigManager));
-
-    clusters = new Map();
-    di.override(getClusterByIdInjectable, () => id => clusters.get(id));
 
     kubeconfigSyncs = observable.map();
 

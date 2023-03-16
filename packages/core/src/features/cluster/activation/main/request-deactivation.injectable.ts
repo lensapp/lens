@@ -5,8 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
 import clusterFramesInjectable from "../../../../common/cluster-frames.injectable";
-import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
 import clusterConnectionInjectable from "../../../../main/cluster/cluster-connection.injectable";
+import getClusterByIdInjectable from "../../storage/common/get-by-id.injectable";
 import { requestClusterDeactivationInjectionToken } from "../common/request-token";
 
 const requestClusterDeactivationInjectable = getInjectable({

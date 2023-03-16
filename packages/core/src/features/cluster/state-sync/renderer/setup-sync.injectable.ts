@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../../../../renderer/before-frame-starts/tokens";
-import initClusterStoreInjectable from "../../store/renderer/init.injectable";
+import getClusterByIdInjectable from "../../storage/common/get-by-id.injectable";
+import initClusterStoreInjectable from "../../storage/renderer/init.injectable";
 import requestInitialClusterStatesInjectable from "./request-initial.injectable";
 
 const setupClusterStateSyncInjectable = getInjectable({

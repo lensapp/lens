@@ -5,8 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
-import type { GetClusterById } from "../../../../common/cluster-store/get-by-id.injectable";
-import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
+import type { GetClusterById } from "../../../../features/cluster/storage/common/get-by-id.injectable";
+import getClusterByIdInjectable from "../../../../features/cluster/storage/common/get-by-id.injectable";
 import { ClusterAccessibleNamespaces } from "../../cluster-settings/accessible-namespaces";
 import type { EntitySettingViewProps } from "../extension-registrator.injectable";
 import { entitySettingInjectionToken } from "../token";

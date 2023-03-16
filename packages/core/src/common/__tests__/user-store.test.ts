@@ -6,7 +6,6 @@ import type { UserStore } from "../user-store";
 import userStoreInjectable from "../user-store/user-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import type { ClusterStoreModel } from "../cluster-store/cluster-store";
 import { defaultThemeId } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
@@ -15,6 +14,7 @@ import releaseChannelInjectable from "../vars/release-channel.injectable";
 import defaultUpdateChannelInjectable from "../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
 import writeFileSyncInjectable from "../fs/write-file-sync.injectable";
+import type { ClusterStoreModel } from "../../features/cluster/storage/common/storage.injectable";
 
 describe("user store tests", () => {
   let userStore: UserStore;
