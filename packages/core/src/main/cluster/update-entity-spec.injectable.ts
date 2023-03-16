@@ -23,15 +23,11 @@ const updateEntitySpecInjectable = getInjectable({
         entity.spec.metrics.prometheus = prometheus;
       }
 
-      entity.spec.icon ??= {};
-
-      if (cluster.preferences.iconBackgroundColor) {
-        entity.spec.icon.background = cluster.preferences.iconBackgroundColor;
-      }
-
       if (cluster.preferences.icon) {
-        entity.spec.icon.src = cluster.preferences.icon;
-        entity.spec.icon.background = cluster.preferences.iconBackgroundColor;
+        const source = cluster.preferences.icon.startsWith("data:") ? "src" : "background";
+
+        entity.spec.icon ??= {};
+        entity.spec.icon[source] = cluster.preferences.icon;
       } else if (cluster.preferences.icon === null) {
         /**
          * NOTE: only clear the icon if set to `null` by ClusterIconSettings.
