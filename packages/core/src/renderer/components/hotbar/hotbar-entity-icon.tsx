@@ -23,6 +23,8 @@ import visitEntityContextMenuInjectable from "../../../common/catalog/visit-enti
 import activeEntityInjectable from "../../api/catalog/entity/active.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
+import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
+import type { Cluster } from "../../../common/cluster/cluster";
 
 export interface HotbarEntityIconProps {
   entity: CatalogEntity;
@@ -40,6 +42,7 @@ interface Dependencies {
   catalogCategoryRegistry: CatalogCategoryRegistry;
   activeEntity: IComputedValue<CatalogEntity | undefined>;
   navigate: Navigate;
+  getClusterById: (id: string) => Cluster | undefined;
 }
 
 @observer
@@ -92,6 +95,17 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
     });
   }
 
+  get entityBackground() {
+    const { entity, getClusterById } = this.props;
+    const cluster = getClusterById(entity.metadata.uid);
+
+    if (cluster) {
+      return cluster.preferences?.iconBackgroundColor;
+    }
+
+    return entity.spec.icon?.background;
+  }
+
   render() {
     const { entity, className, onClick } = this.props;
 
@@ -102,7 +116,7 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
         source={entity.metadata.source}
         src={entity.spec.icon?.src}
         material={entity.spec.icon?.material}
-        background={entity.spec.icon?.background}
+        background={this.entityBackground}
         className={className}
         active={this.isActive(entity)}
         onMenuOpen={() => this.onMenuOpen()}
@@ -129,5 +143,6 @@ export const HotbarEntityIcon = withInjectables<Dependencies, HotbarEntityIconPr
     visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     activeEntity: di.inject(activeEntityInjectable),
     navigate: di.inject(navigateInjectable),
+    getClusterById: di.inject(getClusterByIdInjectable),
   }),
 });
