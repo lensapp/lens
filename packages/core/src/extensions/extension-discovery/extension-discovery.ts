@@ -30,11 +30,10 @@ import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable"
 import type { GetRelativePath } from "../../common/path/get-relative-path.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type TypedEventEmitter from "typed-emitter";
-import type { EnabledExtensionsState } from "../enabled-extensions-state.injectable";
+import type { IsExtensionEnabled } from "../../features/extensions/enabled/common/is-enabled.injectable";
 
 interface Dependencies {
   readonly extensionLoader: ExtensionLoader;
-  readonly enabledExtensionsState: EnabledExtensionsState;
   readonly extensionInstallationStateStore: ExtensionInstallationStateStore;
   readonly extensionPackageRootDirectory: string;
   readonly resourcesDirectory: string;
@@ -42,6 +41,7 @@ interface Dependencies {
   readonly isProduction: boolean;
   readonly fileSystemSeparator: string;
   readonly homeDirectoryPath: string;
+  isExtensionEnabled: IsExtensionEnabled;
   isCompatibleExtension: (manifest: LensExtensionManifest) => boolean;
   installExtension: (name: string) => Promise<void>;
   readJsonFile: ReadJson;
@@ -334,7 +334,7 @@ export class ExtensionDiscovery {
     try {
       const manifest = await this.dependencies.readJsonFile(manifestPath) as unknown as LensExtensionManifest;
       const id = isBundled ? manifestPath : this.getInstalledManifestPath(manifest.name);
-      const isEnabled = this.dependencies.enabledExtensionsState.isEnabled({ id, isBundled });
+      const isEnabled = this.dependencies.isExtensionEnabled({ id, isBundled });
       const extensionDir = this.dependencies.getDirnameOfPath(manifestPath);
       const npmPackage = this.dependencies.joinPaths(extensionDir, `${manifest.name}-${manifest.version}.tgz`);
       const absolutePath = this.dependencies.isProduction && await this.dependencies.pathExists(npmPackage)

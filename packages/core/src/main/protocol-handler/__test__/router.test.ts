@@ -10,11 +10,9 @@ import { delay, noop } from "@k8slens/utilities";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
-import enabledExtensionsStateInjectable from "../../../extensions/enabled-extensions-state.injectable";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import { LensExtension } from "../../../extensions/lens-extension";
 import type { ObservableMap } from "mobx";
-import { computed } from "mobx";
 import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
@@ -23,6 +21,8 @@ import pathExistsInjectable from "../../../common/fs/path-exists.injectable";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
 import type { LensExtensionId } from "@k8slens/legacy-extensions";
+import type { LensExtensionState } from "../../../features/extensions/enabled/common/state.injectable";
+import enabledExtensionsStateInjectable from "../../../features/extensions/enabled/common/state.injectable";
 
 function throwIfDefined(val: any): void {
   if (val != null) {
@@ -33,7 +33,7 @@ function throwIfDefined(val: any): void {
 describe("protocol router tests", () => {
   let extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
   let lpr: LensProtocolRouterMain;
-  let enabledExtensions: Set<string>;
+  let enabledExtensions: ObservableMap<LensExtensionId, LensExtensionState>;
   let broadcastMessageMock: jest.Mock;
 
   beforeEach(async () => {
@@ -44,13 +44,7 @@ describe("protocol router tests", () => {
     di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
     di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
 
-    enabledExtensions = new Set();
-
-    di.override(enabledExtensionsStateInjectable, () => ({
-      isEnabled: ({ id, isBundled }) => isBundled || enabledExtensions.has(id),
-      enabledExtensions: computed(() => []),
-      mergeState: noop,
-    }));
+    enabledExtensions = di.inject(enabledExtensionsStateInjectable);
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
 
@@ -97,7 +91,7 @@ describe("protocol router tests", () => {
     });
 
     extensionInstances.set(extId, ext);
-    enabledExtensions.add(extId);
+    enabledExtensions.set(extId, { name: "@mirantis/minikube" });
 
     lpr.addInternalHandler("/", noop);
 
@@ -177,7 +171,7 @@ describe("protocol router tests", () => {
       });
 
     extensionInstances.set(extId, ext);
-    enabledExtensions.add(extId);
+    enabledExtensions.set(extId, { name: "@foobar/icecream" });
 
     try {
       expect(await lpr.route("lens://extension/@foobar/icecream/page/foob")).toBeUndefined();
@@ -216,7 +210,7 @@ describe("protocol router tests", () => {
         });
 
       extensionInstances.set(extId, ext);
-      enabledExtensions.add(extId);
+      enabledExtensions.set(extId, { name: "@foobar/icecream" });
     }
 
     {
@@ -242,11 +236,8 @@ describe("protocol router tests", () => {
         });
 
       extensionInstances.set(extId, ext);
-      enabledExtensions.add(extId);
+      enabledExtensions.set(extId, { name: "icecream" });
     }
-
-    enabledExtensions.add("@foobar/icecream");
-    enabledExtensions.add("icecream");
 
     try {
       expect(await lpr.route("lens://extension/icecream/page")).toBeUndefined();

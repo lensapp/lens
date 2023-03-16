@@ -16,7 +16,7 @@ import type { RouteHandler, RouteParams } from "./registration";
 import { when } from "mobx";
 import { ipcRenderer } from "electron";
 import type { Logger } from "../logger";
-import type { EnabledExtensionsState } from "../../extensions/enabled-extensions-state.injectable";
+import type { IsExtensionEnabled } from "../../features/extensions/enabled/common/is-enabled.injectable";
 
 // IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
 export const ProtocolHandlerIpcPrefix = "protocol-handler";
@@ -65,8 +65,8 @@ export function foldAttemptResults(mainAttempt: RouteAttempt, rendererAttempt: R
 
 export interface LensProtocolRouterDependencies {
   readonly extensionLoader: ExtensionLoader;
-  readonly enabledExtensionsState: EnabledExtensionsState;
   readonly logger: Logger;
+  isExtensionEnabled: IsExtensionEnabled;
 }
 
 export abstract class LensProtocolRouter {
@@ -209,7 +209,7 @@ export abstract class LensProtocolRouter {
       return name;
     }
 
-    if (!this.dependencies.enabledExtensionsState.isEnabled(extension)) {
+    if (!this.dependencies.isExtensionEnabled(extension)) {
       this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
 
       return name;

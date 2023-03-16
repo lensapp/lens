@@ -6,13 +6,13 @@
 import type { ExtensionLoader } from "../extension-loader";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 import { runInAction } from "mobx";
-import updateExtensionsStateInjectable from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
 import { delay } from "@k8slens/utilities";
 import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import currentlyInClusterFrameInjectable from "../../renderer/routes/currently-in-cluster-frame.injectable";
+import updateExtensionsStateInjectable from "../../features/extensions/enabled/common/update-state.injectable";
 
 const manifestPath = "manifest/path";
 const manifestPath2 = "manifest/path2";

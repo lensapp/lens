@@ -13,10 +13,9 @@ import { issuesTrackerUrl } from "../../common/vars";
 import { buildVersionInjectionToken } from "../../common/vars/build-semantic-version.injectable";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import enabledExtensionsInjectable from "./get-enabled-extensions/get-enabled-extensions.injectable";
+import enabledExtensionsInjectable from "../../features/extensions/enabled/common/enabled-extensions.injectable";
 
 const userStore = asLegacyGlobalForExtensionApi(userStoreInjectable);
-
 const enabledExtensions = asLegacyGlobalForExtensionApi(enabledExtensionsInjectable);
 
 export const App = {

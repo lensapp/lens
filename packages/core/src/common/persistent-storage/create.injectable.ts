@@ -22,6 +22,10 @@ import { shouldPersistentStorageDisableSyncInIpcListenerInjectionToken } from ".
 import { persistStateToConfigInjectionToken } from "./save-to-file";
 
 export interface PersistentStorage {
+  /**
+   * This method does the initial synchronous load from disk and then starts writing the state
+   * back to disk whenever it changes.
+   */
   loadAndStartSyncing: () => void;
 }
 
