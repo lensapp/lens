@@ -95,17 +95,6 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
     });
   }
 
-  get entityBackground() {
-    const { entity, getClusterById } = this.props;
-    const cluster = getClusterById(entity.metadata.uid);
-
-    if (cluster) {
-      return cluster.preferences?.iconBackgroundColor;
-    }
-
-    return entity.spec.icon?.background;
-  }
-
   render() {
     const { entity, className, onClick } = this.props;
 
@@ -116,7 +105,7 @@ class NonInjectedHotbarEntityIcon extends React.Component<HotbarEntityIconProps 
         source={entity.metadata.source}
         src={entity.spec.icon?.src}
         material={entity.spec.icon?.material}
-        background={this.entityBackground}
+        background={entity.spec.icon?.background}
         className={className}
         active={this.isActive(entity)}
         onMenuOpen={() => this.onMenuOpen()}
