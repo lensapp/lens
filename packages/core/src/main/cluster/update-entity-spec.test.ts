@@ -52,9 +52,9 @@ describe("update-entity-spec", () => {
   });
 
   it("given cluster has icon, updates entity spec with icon", () => {
-    cluster.preferences.icon = "some-icon";
+    cluster.preferences.icon = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/";
     updateEntitySpec(entity, cluster);
-    expect(entity.spec.icon?.src).toEqual("some-icon");
+    expect(entity.spec.icon?.src).toEqual("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/");
   });
 
   it("given cluster icon is null, deletes icon from both", () => {
