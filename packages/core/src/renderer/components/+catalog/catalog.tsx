@@ -32,7 +32,6 @@ import type { HotbarStore } from "../../../common/hotbars/store";
 import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { Logger } from "../../../common/logger";
 import loggerInjectable from "../../../common/logger.injectable";
-import entityIconBackgroundColorInjectable from "../../api/catalog/entity/entity-icon-background-color.injectable";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
@@ -73,7 +72,6 @@ interface Dependencies {
   normalizeMenuItem: NormalizeCatalogEntityContextMenu;
   showErrorNotification: ShowNotification;
   logger: Logger;
-  entityIconBackgroundColor: (entity: CatalogEntity) => string | undefined;
 }
 
 @observer
@@ -331,6 +329,5 @@ export const Catalog = withInjectables<Dependencies>(NonInjectedCatalog, {
     showErrorNotification: di.inject(showErrorNotificationInjectable),
     showEntityDetails: di.inject(showEntityDetailsInjectable),
     onCatalogEntityListClick: di.inject(onCatalogEntityListClickInjectable),
-    entityIconBackgroundColor: di.inject(entityIconBackgroundColorInjectable),
   }),
 });
