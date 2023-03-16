@@ -3,10 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { BaseStoreParams } from "../../common/persistent-storage/base-store";
+import type { PersistentStorageParams } from "../../common/persistent-storage/create.injectable";
+import type { ExtensionStoreParams } from "../base-extension-store";
 import { BaseExtensionStore as ExtensionStore } from "../base-extension-store";
 
-export {
-  BaseStoreParams,
-  ExtensionStore,
+export type {
+  ExtensionStoreParams,
+  PersistentStorageParams,
 };
+
+export { ExtensionStore };

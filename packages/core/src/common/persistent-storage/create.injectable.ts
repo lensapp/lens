@@ -31,7 +31,6 @@ export interface PersistentStorageParams<T extends object> extends Omit<Options<
     equals?: IEqualsComparer<T>;
   };
   readonly configName: string;
-  readonly cwd: string;
 
   migrations?: Migrations<Record<string, unknown>>;
 

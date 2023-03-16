@@ -10,7 +10,6 @@ import { action, computed, makeObservable, toJS, observable, observe, reaction, 
 import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
 import { isDefined } from "@k8slens/utilities";
 import type { LensExtension } from "../lens-extension";
-import type { LensExtensionState } from "../extensions-store/extensions-store";
 import { extensionLoaderFromMainChannel, extensionLoaderFromRendererChannel } from "../../common/ipc/extension-handling";
 import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
 import assert from "assert";
@@ -21,6 +20,7 @@ import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 import type { LensExtensionId, BundledExtension, InstalledExtension, LensExtensionConstructor } from "@k8slens/legacy-extensions";
+import type { LensExtensionState } from "../enabled-extensions-state.injectable";
 
 const logModule = "[EXTENSIONS-LOADER]";
 

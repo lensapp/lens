@@ -5,13 +5,12 @@
 
 
 import { action, comparer, computed, observable } from "mobx";
-import type { BaseStore } from "../persistent-storage/base-store";
 import { Cluster } from "../cluster/cluster";
 import { toJS } from "../utils";
 import type { ClusterModel, ClusterId } from "../cluster-types";
 import type { ReadClusterConfigSync } from "./read-cluster-config.injectable";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
-import type { CreatePersistentStorage } from "../persistent-storage/create.injectable";
+import type { CreatePersistentStorage, PersistentStorage } from "../persistent-storage/create.injectable";
 import type { Migrations } from "conf/dist/source/types";
 import type { Logger } from "../logger";
 
@@ -30,10 +29,10 @@ interface Dependencies {
 
 export class ClusterStore {
   readonly clusters = observable.map<ClusterId, Cluster>();
-  private readonly store: BaseStore<ClusterStoreModel>;
+  private readonly store: PersistentStorage;
 
   constructor(protected readonly dependencies: Dependencies) {
-    this.store = this.dependencies.createPersistentStorage({
+    this.store = this.dependencies.createPersistentStorage<ClusterStoreModel>({
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {
@@ -102,6 +101,6 @@ export class ClusterStore {
   }
 
   load() {
-    this.store.load();
+    this.store.loadAndStartSyncing();
   }
 }

@@ -10,13 +10,13 @@ import { isDefined, iter } from "@k8slens/utilities";
 import { pathToRegexp } from "path-to-regexp";
 import type Url from "url-parse";
 import { RoutingError, RoutingErrorType } from "./error";
-import type { ExtensionsStore } from "../../extensions/extensions-store/extensions-store";
 import type { ExtensionLoader } from "../../extensions/extension-loader";
 import type { LensExtension } from "../../extensions/lens-extension";
 import type { RouteHandler, RouteParams } from "./registration";
 import { when } from "mobx";
 import { ipcRenderer } from "electron";
 import type { Logger } from "../logger";
+import type { EnabledExtensionsState } from "../../extensions/enabled-extensions-state.injectable";
 
 // IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
 export const ProtocolHandlerIpcPrefix = "protocol-handler";
@@ -65,7 +65,7 @@ export function foldAttemptResults(mainAttempt: RouteAttempt, rendererAttempt: R
 
 export interface LensProtocolRouterDependencies {
   readonly extensionLoader: ExtensionLoader;
-  readonly extensionsStore: ExtensionsStore;
+  readonly enabledExtensionsState: EnabledExtensionsState;
   readonly logger: Logger;
 }
 
@@ -209,7 +209,7 @@ export abstract class LensProtocolRouter {
       return name;
     }
 
-    if (!this.dependencies.extensionsStore.isEnabled(extension)) {
+    if (!this.dependencies.enabledExtensionsState.isEnabled(extension)) {
       this.dependencies.logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
 
       return name;

@@ -30,7 +30,7 @@ const fileSystemProvisionerStoreInjectable = getInjectable({
     });
 
     return {
-      load: () => store.load(),
+      load: () => store.loadAndStartSyncing(),
     };
   },
 });

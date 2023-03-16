@@ -7,14 +7,14 @@ import * as uuid from "uuid";
 
 import { ProtocolHandlerExtension, ProtocolHandlerInternal, ProtocolHandlerInvalid } from "../../../common/protocol-handler";
 import { delay, noop } from "@k8slens/utilities";
-import type { ExtensionsStore, IsEnabledExtensionDescriptor } from "../../../extensions/extensions-store/extensions-store";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
-import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
+import enabledExtensionsStateInjectable from "../../../extensions/enabled-extensions-state.injectable";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import { LensExtension } from "../../../extensions/lens-extension";
 import type { ObservableMap } from "mobx";
+import { computed } from "mobx";
 import extensionInstancesInjectable from "../../../extensions/extension-loader/extension-instances.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import broadcastMessageInjectable from "../../../common/ipc/broadcast-message.injectable";
@@ -46,9 +46,11 @@ describe("protocol router tests", () => {
 
     enabledExtensions = new Set();
 
-    di.override(extensionsStoreInjectable, () => ({
-      isEnabled: ({ id, isBundled }: IsEnabledExtensionDescriptor) => isBundled || enabledExtensions.has(id),
-    } as unknown as ExtensionsStore));
+    di.override(enabledExtensionsStateInjectable, () => ({
+      isEnabled: ({ id, isBundled }) => isBundled || enabledExtensions.has(id),
+      enabledExtensions: computed(() => []),
+      mergeState: noop,
+    }));
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
 

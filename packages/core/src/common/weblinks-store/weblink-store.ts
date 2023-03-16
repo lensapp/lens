@@ -4,9 +4,8 @@
  */
 
 import { action, comparer, observable, runInAction } from "mobx";
-import type { BaseStore } from "../persistent-storage/base-store";
 import * as uuid from "uuid";
-import type { CreatePersistentStorage } from "../persistent-storage/create.injectable";
+import type { CreatePersistentStorage, PersistentStorage } from "../persistent-storage/create.injectable";
 import type { Migrations } from "conf/dist/source/types";
 
 export interface WeblinkData {
@@ -33,12 +32,12 @@ interface Dependencies {
 }
 
 export class WeblinkStore {
-  private readonly store: BaseStore<WeblinkStoreModel>;
+  private readonly store: PersistentStorage;
 
   readonly weblinks = observable.array<WeblinkData>();
 
   constructor(private readonly dependencies: Dependencies) {
-    this.store = this.dependencies.createPersistentStorage({
+    this.store = this.dependencies.createPersistentStorage<WeblinkStoreModel>({
       configName: "lens-weblink-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       syncOptions: {
@@ -54,7 +53,7 @@ export class WeblinkStore {
       }),
     });
 
-    this.store.load();
+    this.store.loadAndStartSyncing();
   }
 
   add(data: WeblinkCreateOptions) {

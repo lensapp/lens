@@ -4,7 +4,6 @@
  */
 
 import { action, observable, makeObservable, isObservableArray, isObservableSet, isObservableMap, runInAction } from "mobx";
-import type { BaseStore } from "../persistent-storage/base-store";
 import { getOrInsertSet, toggle, object } from "@k8slens/utilities";
 import type { UserPreferencesModel, StoreType } from "./preferences-helpers";
 import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
@@ -13,7 +12,7 @@ import type { EmitAppEvent } from "../app-event-bus/emit-event.injectable";
 import type { SelectedUpdateChannel } from "../../features/application-update/common/selected-update-channel/selected-update-channel.injectable";
 import type { ReleaseChannel } from "../../features/application-update/common/update-channels";
 import type { PreferenceDescriptors } from "./preference-descriptors.injectable";
-import type { CreatePersistentStorage } from "../persistent-storage/create.injectable";
+import type { CreatePersistentStorage, PersistentStorage } from "../persistent-storage/create.injectable";
 import type { Logger } from "../logger";
 import type { Migrations } from "conf/dist/source/types";
 import { toJS } from "../utils";
@@ -33,10 +32,10 @@ interface Dependencies {
 }
 
 export class UserStore {
-  private readonly store: BaseStore<UserStoreModel>;
+  private readonly store: PersistentStorage;
 
   constructor(protected readonly dependencies: Dependencies) {
-    this.store = this.dependencies.createPersistentStorage({
+    this.store = this.dependencies.createPersistentStorage<UserStoreModel>({
       configName: "lens-user-store",
       projectVersion: this.dependencies.storeMigrationVersion,
       migrations: this.dependencies.migrations,
@@ -153,6 +152,6 @@ export class UserStore {
   }
 
   load() {
-    this.store.load();
+    this.store.loadAndStartSyncing();
   }
 }

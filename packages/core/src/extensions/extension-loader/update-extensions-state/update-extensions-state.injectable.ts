@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import extensionsStoreInjectable from "../../extensions-store/extensions-store.injectable";
+import enabledExtensionsStateInjectable from "../../enabled-extensions-state.injectable";
 
 const updateExtensionsStateInjectable = getInjectable({
   id: "update-extensions-state",
-  instantiate: (di) => di.inject(extensionsStoreInjectable).mergeState,
+  instantiate: (di) => di.inject(enabledExtensionsStateInjectable).mergeState,
 });
 
 export default updateExtensionsStateInjectable;

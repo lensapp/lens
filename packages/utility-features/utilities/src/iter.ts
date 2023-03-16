@@ -10,6 +10,7 @@ interface Iterator<T> extends Iterable<T> {
   filterMap<U>(fn: (val: T) => Falsy | U): Iterator<U>;
   find(fn: (val: T) => unknown): T | undefined;
   collect<U>(fn: (values: Iterable<T>) => U): U;
+  toArray(): T[];
   map<U>(fn: (val: T) => U): Iterator<U>;
   flatMap<U>(fn: (val: T) => U[]): Iterator<U>;
   concat(src2: IterableIterator<T>): Iterator<T>;
@@ -26,6 +27,7 @@ function chain<T>(src: IterableIterator<T>): Iterator<T> {
     find: (fn) => find(src, fn),
     join: (sep) => join(src, sep),
     collect: (fn) => fn(src),
+    toArray: () => [...src],
     concat: (src2) => chain(concat(src, src2)),
     take: (count) => chain(take(src, count)),
     [Symbol.iterator]: () => src,

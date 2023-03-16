@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { ExtensionDiscovery } from "./extension-discovery";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
 import isCompatibleExtensionInjectable from "./is-compatible-extension/is-compatible-extension.injectable";
-import extensionsStoreInjectable from "../extensions-store/extensions-store.injectable";
+import enabledExtensionsStateInjectable from "../enabled-extensions-state.injectable";
 import extensionInstallationStateStoreInjectable from "../extension-installation-state-store/extension-installation-state-store.injectable";
 import installExtensionInjectable from "../install-extension/install-extension.injectable";
 import extensionPackageRootDirectoryInjectable from "../install-extension/extension-package-root-directory.injectable";
@@ -34,7 +34,7 @@ const extensionDiscoveryInjectable = getInjectable({
 
   instantiate: (di) => new ExtensionDiscovery({
     extensionLoader: di.inject(extensionLoaderInjectable),
-    extensionsStore: di.inject(extensionsStoreInjectable),
+    enabledExtensionsState: di.inject(enabledExtensionsStateInjectable),
     extensionInstallationStateStore: di.inject(extensionInstallationStateStoreInjectable),
     isCompatibleExtension: di.inject(isCompatibleExtensionInjectable),
     installExtension: di.inject(installExtensionInjectable),
