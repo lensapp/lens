@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/eslint-config",
-  "version": "6.5.0-alpha.1",
+  "version": "6.5.0-cron.1a6b115",
   "description": "Lens eslint and prettier configurations",
   "author": {
     "name": "OpenLens Authors",
