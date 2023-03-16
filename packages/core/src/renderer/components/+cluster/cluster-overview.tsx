@@ -15,9 +15,7 @@ import { interval } from "@k8slens/utilities";
 import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
 import { ClusterIssues } from "./cluster-issues";
-import { ClusterMetrics } from "./cluster-metrics";
 import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
-import { ClusterPieCharts } from "./cluster-pie-charts";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import type { EventStore } from "../+events/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -79,12 +77,9 @@ class NonInjectedClusterOverview extends React.Component<Dependencies> {
 
     return (
       <>
-        <ClusterMetrics/>
         {this.props.uiBlocks.map((block) => (
           <div key={block.id}>{<block.Component />}</div>
         ))}
-        lol
-        <ClusterPieCharts/>
       </>
     );
   }
