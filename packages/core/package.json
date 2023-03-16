@@ -329,9 +329,9 @@
     "xterm-addon-fit": "^0.5.0"
   },
   "peerDependencies": {
+    "@k8slens/metrics": "^6.5.0-alpha.1",
     "@k8slens/application": "^6.5.0-alpha.0",
     "@k8slens/application-for-electron-main": "^6.5.0-alpha.0",
-    "@k8slens/metrics": "^6.5.0-alpha.0",
     "@k8slens/run-many": "^1.0.0-alpha.1",
     "@k8slens/test-utils": "^1.0.0-alpha.1",
     "@k8slens/utilities": "^1.0.0-alpha.1",

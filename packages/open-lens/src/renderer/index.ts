@@ -14,6 +14,7 @@ import {
 import { createContainer } from "@ogre-tools/injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerInjectableReact } from "@ogre-tools/injectable-react";
+import { metricsFeature } from "@k8slens/metrics";
 
 const environment = "renderer";
 
@@ -24,6 +25,7 @@ runInAction(() => {
   registerInjectableReact(di);
   registerLensCore(di, environment);
   registerFeature(di, applicationFeature);
+  registerFeature(di, metricsFeature);
 
   autoRegister({
     di,

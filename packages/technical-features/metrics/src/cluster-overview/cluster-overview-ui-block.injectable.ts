@@ -6,7 +6,7 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 
 export type ClusterOverviewUIBlock = {
   id: string;
-  component: React.ElementType;
+  text: string;
 };
 
 export const clusterOverviewUIBlockInjectionToken = getInjectionToken<ClusterOverviewUIBlock>({
