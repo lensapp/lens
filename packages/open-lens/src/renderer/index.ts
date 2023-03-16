@@ -24,8 +24,7 @@ runInAction(() => {
   registerMobX(di);
   registerInjectableReact(di);
   registerLensCore(di, environment);
-  registerFeature(di, applicationFeature);
-  registerFeature(di, metricsFeature);
+  registerFeature(di, applicationFeature, metricsFeature);
 
   autoRegister({
     di,
