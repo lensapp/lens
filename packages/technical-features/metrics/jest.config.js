@@ -1,1 +1,1 @@
-module.exports = require("@k8slens/jest").monorepoPackageConfig(__dirname).configForNode;
+module.exports = require("@k8slens/jest").monorepoPackageConfig(__dirname).configForReact;

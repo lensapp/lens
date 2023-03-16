@@ -4,5 +4,5 @@
  */
 export { metricsFeature } from "./src/feature";
 
-export type { ClusterOverviewUIBlock } from "./src/cluster-overview/cluster-overview-ui-block.injectable";
-export { clusterOverviewUIBlockInjectionToken } from "./src/cluster-overview/cluster-overview-ui-block.injectable";
+export type { ClusterOverviewUIBlock } from "./src/cluster-overview/cluster-overview-ui-block";
+export { clusterOverviewUIBlockInjectionToken } from "./src/cluster-overview/cluster-overview-ui-block";
