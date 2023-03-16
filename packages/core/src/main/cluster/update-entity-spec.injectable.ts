@@ -23,8 +23,13 @@ const updateEntitySpecInjectable = getInjectable({
         entity.spec.metrics.prometheus = prometheus;
       }
 
+      entity.spec.icon ??= {};
+
+      if (cluster.preferences.iconBackgroundColor) {
+        entity.spec.icon.background = cluster.preferences.iconBackgroundColor;
+      }
+
       if (cluster.preferences.icon) {
-        entity.spec.icon ??= {};
         entity.spec.icon.src = cluster.preferences.icon;
         entity.spec.icon.background = cluster.preferences.iconBackgroundColor;
       } else if (cluster.preferences.icon === null) {
