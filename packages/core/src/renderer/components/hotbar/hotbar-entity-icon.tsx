@@ -23,8 +23,6 @@ import visitEntityContextMenuInjectable from "../../../common/catalog/visit-enti
 import activeEntityInjectable from "../../api/catalog/entity/active.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
-import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
-import type { Cluster } from "../../../common/cluster/cluster";
 
 export interface HotbarEntityIconProps {
   entity: CatalogEntity;
@@ -42,7 +40,6 @@ interface Dependencies {
   catalogCategoryRegistry: CatalogCategoryRegistry;
   activeEntity: IComputedValue<CatalogEntity | undefined>;
   navigate: Navigate;
-  getClusterById: (id: string) => Cluster | undefined;
 }
 
 @observer
@@ -132,6 +129,5 @@ export const HotbarEntityIcon = withInjectables<Dependencies, HotbarEntityIconPr
     visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     activeEntity: di.inject(activeEntityInjectable),
     navigate: di.inject(navigateInjectable),
-    getClusterById: di.inject(getClusterByIdInjectable),
   }),
 });
