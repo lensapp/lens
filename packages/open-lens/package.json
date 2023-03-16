@@ -241,7 +241,6 @@
     "@types/webpack-dev-server": "^4.7.2",
     "@types/webpack-env": "^1.18.0",
     "@types/webpack-node-externals": "2.5.3",
-    "abort-controller": "^3.0.0",
     "autoprefixer": "^10.4.13",
     "circular-dependency-plugin": "^5.2.2",
     "concurrently": "^7.6.0",
