@@ -81,7 +81,7 @@ class NonInjectedClusterOverview extends React.Component<Dependencies> {
       <>
         <ClusterMetrics/>
         {this.props.uiBlocks.map((block) => (
-          <div key={block.id}>{block.text}</div>
+          <div key={block.id}>{<block.Component />}</div>
         ))}
         lol
         <ClusterPieCharts/>
