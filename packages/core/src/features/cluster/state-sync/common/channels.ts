@@ -4,8 +4,7 @@
  */
 
 import type { ClusterId, ClusterState } from "../../../../common/cluster-types";
-import type { MessageChannel } from "@k8slens/messaging";
-import type { RequestChannel } from "@k8slens/messaging";
+import type { MessageChannel, RequestChannel } from "@k8slens/messaging";
 
 export interface ClusterStateSync {
   clusterId: ClusterId;

@@ -7,7 +7,7 @@ import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { initialClusterStatesChannel } from "../common/channels";
 
 const handleInitialClusterStateSyncInjectable = getRequestChannelListenerInjectable({
-  id: 'handle-initial-cluster-state-sync',
+  id: "handle-initial-cluster-state-sync",
   channel: initialClusterStatesChannel,
   getHandler: (di) => {
     const clusterStore = di.inject(clusterStoreInjectable);

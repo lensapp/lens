@@ -7,7 +7,7 @@ import { activateClusterChannel } from "../common/channels";
 import requestClusterActivationInjectable from "./request-activation.injectable";
 
 const activateClusterRequestChannelListenerInjectable = getRequestChannelListenerInjectable({
-  id: 'activate-cluster-request-channel-listener',
+  id: "activate-cluster-request-channel-listener",
   channel: activateClusterChannel,
   getHandler: (di) => di.inject(requestClusterActivationInjectable),
 });

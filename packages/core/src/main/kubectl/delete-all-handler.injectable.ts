@@ -9,7 +9,7 @@ import resourceApplierInjectable from "../resource-applier/create-resource-appli
 import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 
 const kubectlDeleteAllChannelHandlerInjectable = getRequestChannelListenerInjectable({
-  id: 'kubectl-delete-all-channel-handler-listener',
+  id: "kubectl-delete-all-channel-handler-listener",
   channel: kubectlDeleteAllChannel,
   getHandler: (di) => {
     const emitAppEvent = di.inject(emitAppEventInjectable);

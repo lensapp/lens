@@ -4,7 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
-import { SystemThemeType, systemThemeTypeUpdateChannel } from "../common/channels";
+import type { SystemThemeType } from "../common/channels";
+import { systemThemeTypeUpdateChannel } from "../common/channels";
 
 const emitSystemThemeTypeUpdateInjectable = getInjectable({
   id: "emit-system-theme-type-update",

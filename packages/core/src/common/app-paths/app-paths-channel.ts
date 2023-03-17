@@ -5,5 +5,5 @@
 import type { AppPaths } from "./app-path-injection-token";
 import { getRequestChannel } from "@k8slens/messaging";
 
-export const appPathsChannel = getRequestChannel<void, AppPaths>('app-paths')
+export const appPathsChannel = getRequestChannel<void, AppPaths>("app-paths");
 

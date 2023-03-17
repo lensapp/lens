@@ -6,5 +6,5 @@ import type { ClusterId } from "../../../../common/cluster-types";
 import { getRequestChannel } from "@k8slens/messaging";
 
 export const clearClusterAsDeletingChannel = getRequestChannel<ClusterId, void>(
-  "clear-cluster-as-deleting"
+  "clear-cluster-as-deleting",
 );

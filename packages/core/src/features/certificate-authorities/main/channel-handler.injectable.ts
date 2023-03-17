@@ -8,7 +8,7 @@ import { globalAgent } from "https";
 import { isString } from "@k8slens/utilities";
 
 const certificateAuthoritiesChannelListenerInjectable = getRequestChannelListenerInjectable({
-  id: 'certificate-authorities-channel-listener',
+  id: "certificate-authorities-channel-listener",
   channel: casChannel,
   getHandler: () => () => {
     if (Array.isArray(globalAgent.options.ca)) {

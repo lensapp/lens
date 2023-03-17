@@ -8,7 +8,7 @@ import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { openPathPickingDialogChannel } from "../common/channel";
 
 const openPathPickingDialogListener = getRequestChannelListenerInjectable({
-  id: 'open-path-picking-dialog',
+  id: "open-path-picking-dialog",
   channel: openPathPickingDialogChannel,
   getHandler: (di) => di.inject(askUserForFilePathsInjectable),
 });

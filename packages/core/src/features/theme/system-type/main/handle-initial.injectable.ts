@@ -8,7 +8,7 @@ import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { initialSystemThemeTypeChannel } from "../common/channels";
 
 const initialSystemThemeTypeHandler = getRequestChannelListenerInjectable({
-  id: 'initial-system-theme-type-listener',
+  id: "initial-system-theme-type-listener",
   channel: initialSystemThemeTypeChannel,
   getHandler: (di) => {
     const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);

@@ -19,7 +19,7 @@ export const kubectlApplyAllChannel = getRequestChannel<
   Result<string, string>
 >("kubectl-apply-all");
 
-export type KubectlApplyAll = (req: KubectlApplyAllArgs) => AsyncResult<string, string>
+export type KubectlApplyAll = (req: KubectlApplyAllArgs) => AsyncResult<string, string>;
 
 export const kubectlApplyAllInjectionToken = getInjectionToken<KubectlApplyAll>({
   id: "kubectl-apply-all",

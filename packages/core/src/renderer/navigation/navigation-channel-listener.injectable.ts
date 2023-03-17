@@ -20,7 +20,7 @@ const navigationChannelListenerInjectable = getInjectable({
     const navigateToUrl = di.inject(navigateToUrlInjectionToken);
 
     return {
-      id: 'navigation-channel-listener',
+      id: "navigation-channel-listener",
       channel: currentlyInClusterFrame
         ? clusterFrameNavigationChannel
         : appNavigationChannel,
@@ -35,7 +35,7 @@ const navigationChannelListenerInjectable = getInjectable({
     };
   },
 
-  injectionToken: messageChannelListenerInjectionToken
+  injectionToken: messageChannelListenerInjectionToken,
 });
 
 export default navigationChannelListenerInjectable;
