@@ -21,8 +21,7 @@
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack --mode=development --watch",
-    "test:unit": "jest --coverage --runInBand"
+    "dev": "webpack --mode=development --watch"
   },
   "peerDependencies": {
     "@ogre-tools/injectable": "^15.1.2",

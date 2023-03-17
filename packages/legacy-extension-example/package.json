@@ -33,7 +33,6 @@
     "clean": "rimraf dist/",
     "build": "webpack --config webpack.ts",
     "dev": "webpack --mode=development --watch --config webpack.ts",
-    "test:unit": "jest --coverage --runInBand",
     "lint": "lens-lint",
     "lint:fix": "lens-lint --fix"
   },
