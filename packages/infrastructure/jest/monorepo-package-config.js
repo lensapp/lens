@@ -20,6 +20,7 @@ module.exports = (rootDir) => {
       "<rootDir>/src/**/*.{ts,tsx}",
       "!<rootDir>/src/**/*.no-coverage.ts",
       "!<rootDir>/src/**/test-utils/**/*.{ts,tsx}",
+      "!<rootDir>/src/**/index.{ts,tsx}",
     ],
 
     moduleNameMapper: {
