@@ -17,6 +17,7 @@
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noImplicitReturns": true,
+    "experimentalDecorators": true,
     "isolatedModules": true,
     "skipLibCheck": true,
     "allowJs": false,
