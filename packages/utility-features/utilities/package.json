@@ -22,7 +22,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack --mode=development --watch",
-    "test": "jest --coverage --runInBand"
+    "test:unit": "jest --coverage --runInBand"
   },
   "peerDependencies": {
     "@astronautlabs/jsonpath": "^1.1.0",
