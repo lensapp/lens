@@ -9,7 +9,7 @@ import resourceApplierInjectable from "../resource-applier/create-resource-appli
 import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 
 const kubectlApplyAllChannelHandlerInjectable = getRequestChannelListenerInjectable({
-  id: 'kubectl-apply-all-channel-handler-listener',
+  id: "kubectl-apply-all-channel-handler-listener",
   channel: kubectlApplyAllChannel,
   getHandler: (di) => {
     const getClusterById = di.inject(getClusterByIdInjectable);

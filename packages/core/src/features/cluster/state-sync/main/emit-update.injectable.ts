@@ -4,7 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
-import { ClusterStateSync, clusterStateSyncChannel } from "../common/channels";
+import type { ClusterStateSync } from "../common/channels";
+import { clusterStateSyncChannel } from "../common/channels";
 
 const emitClusterStateUpdateInjectable = getInjectable({
   id: "emit-cluster-state-update",

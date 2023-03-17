@@ -7,7 +7,7 @@ import { removeHelmRepositoryChannel } from "../../../../common/helm/remove-helm
 import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 
 const removeHelmRepositoryChannelListenerInjectable = getRequestChannelListenerInjectable({
-  id: 'remove-helm-repository-channel-listener',
+  id: "remove-helm-repository-channel-listener",
   channel: removeHelmRepositoryChannel,
   getHandler: (di) => di.inject(removeHelmRepositoryInjectable),
 });

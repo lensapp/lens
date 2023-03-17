@@ -14,7 +14,7 @@ import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { deleteClusterChannel } from "../common/delete-channel";
 
 const deleteClusterChannelListenerInjectable = getRequestChannelListenerInjectable({
-  id: 'delete-cluster-channel-listener',
+  id: "delete-cluster-channel-listener",
   channel: deleteClusterChannel,
   getHandler: (di) => {
     const emitAppEvent = di.inject(emitAppEventInjectable);

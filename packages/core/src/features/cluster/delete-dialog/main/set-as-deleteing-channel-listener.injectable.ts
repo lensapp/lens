@@ -7,7 +7,7 @@ import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { setClusterAsDeletingChannel } from "../common/set-as-deleting-channel";
 
 const setClusterAsDeletingChannelHandlerInjectable = getRequestChannelListenerInjectable({
-  id: 'set-cluster-as-deleting-channel-handler',
+  id: "set-cluster-as-deleting-channel-handler",
   channel: setClusterAsDeletingChannel,
   getHandler: (di) => {
     const clustersThatAreBeingDeleted = di.inject(clustersThatAreBeingDeletedInjectable);

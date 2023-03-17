@@ -5,5 +5,5 @@
 import { getRequestChannel } from "@k8slens/messaging";
 
 export const resolveSystemProxyChannel = getRequestChannel<string, string>(
-  "resolve-system-proxy-channel"
+  "resolve-system-proxy-channel",
 );

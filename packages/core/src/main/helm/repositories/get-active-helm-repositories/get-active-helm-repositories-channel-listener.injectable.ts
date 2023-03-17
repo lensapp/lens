@@ -7,7 +7,7 @@ import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import getActiveHelmRepositoriesInjectable from "./get-active-helm-repositories.injectable";
 
 const getActiveHelmRepositoriesChannelListenerInjectable = getRequestChannelListenerInjectable({
-  id: 'get-active-helm-repositories-channel-listener',
+  id: "get-active-helm-repositories-channel-listener",
   channel: getActiveHelmRepositoriesChannel,
   getHandler: (di) => di.inject(getActiveHelmRepositoriesInjectable),
 });

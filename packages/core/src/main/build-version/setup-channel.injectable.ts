@@ -7,7 +7,7 @@ import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import buildVersionInjectable from "../vars/build-version/build-version.injectable";
 
 const buildVersionChannelListenerInjectable = getRequestChannelListenerInjectable({
-  id: 'build-version-channel-listener',
+  id: "build-version-channel-listener",
   channel: buildVersionChannel,
   getHandler: (di) => {
     const buildVersion = di.inject(buildVersionInjectable);

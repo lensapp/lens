@@ -7,7 +7,7 @@ import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import resolveSystemProxyInjectable from "./resolve-system-proxy.injectable";
 
 const resolveSystemProxyChannelResponderInjectable = getRequestChannelListenerInjectable({
-  id: 'resolve-system-proxy-channel-responder-listener',
+  id: "resolve-system-proxy-channel-responder-listener",
   channel: resolveSystemProxyChannel,
   getHandler: (di) => di.inject(resolveSystemProxyInjectable),
 });

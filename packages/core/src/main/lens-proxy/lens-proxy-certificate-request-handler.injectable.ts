@@ -7,7 +7,7 @@ import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
 
 const lensProxyCertificateRequestHandlerInjectable = getRequestChannelListenerInjectable({
-  id: 'lens-proxy-certificate-request-handler-listener',
+  id: "lens-proxy-certificate-request-handler-listener",
   channel: lensProxyCertificateChannel,
   getHandler: (di) => {
     const lensProxyCertificate = di.inject(lensProxyCertificateInjectable).get();
