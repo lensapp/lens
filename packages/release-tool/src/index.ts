@@ -120,7 +120,7 @@ function findClosestVersionTagLessThanVersion(tags: string[], version: SemVer): 
     .filter(isDefined)
     .filter(version => !version.prerelease.includes("cron"))
     .sort(semver.rcompare)
-    .filter(version => semver.lte(version, version));
+    .filter(v => semver.lte(v, version));
 
   assert(lessThanTags.length > 0, `Cannot find version tag less than ${version.format()}`);
 
