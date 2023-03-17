@@ -4,7 +4,7 @@
   "packages": [
     "packages/*"
   ],
-  "version": "6.4.6",
+  "version": "6.4.7",
   "npmClient": "yarn",
   "npmClientArgs": [
     "--network-timeout=100000"
