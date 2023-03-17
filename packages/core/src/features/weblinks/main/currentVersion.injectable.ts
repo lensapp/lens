@@ -4,11 +4,11 @@
  */
 
 import { docsUrl, forumsUrl } from "../../../common/vars";
-import type { WeblinkData } from "../../../common/weblinks-store/weblink-store";
 import { getInjectable } from "@ogre-tools/injectable";
-import { weblinkStoreMigrationInjectionToken } from "../../../common/weblinks-store/migration-token";
-import { lensDocumentationWeblinkId, lensForumsWeblinkId } from "../links";
+import { weblinkStoreMigrationInjectionToken } from "../../../features/weblinks/common/migration-token";
+import { lensDocumentationWeblinkId, lensForumsWeblinkId } from "../../../features/weblinks/main/links";
 import { applicationInformationToken } from "@k8slens/application";
+import type { WeblinkData } from "../common/storage.injectable";
 
 const currentVersionWeblinkStoreMigrationInjectable = getInjectable({
   id: "current-version-weblink-store-migration",

@@ -4,10 +4,10 @@
  */
 
 import { docsUrl, forumsUrl } from "../../../common/vars";
-import type { WeblinkData } from "../../../common/weblinks-store/weblink-store";
 import { getInjectable } from "@ogre-tools/injectable";
-import { weblinkStoreMigrationInjectionToken } from "../../../common/weblinks-store/migration-token";
-import * as links from "../links";
+import { weblinkStoreMigrationInjectionToken } from "../common/migration-token";
+import * as links from "./links";
+import type { WeblinkData } from "../common/storage.injectable";
 
 const v514WeblinkStoreMigrationInjectable = getInjectable({
   id: "v5.1.4-weblink-store-migration",

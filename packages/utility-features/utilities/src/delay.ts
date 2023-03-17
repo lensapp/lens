@@ -10,11 +10,11 @@
  * @param timeout The number of milliseconds before resolving
  * @param failFast An abort controller instance to cause the delay to short-circuit
  */
-export function delay(timeout = 1000, failFast?: AbortController): Promise<void> {
+export function delay(timeout = 1000, failFast?: AbortSignal): Promise<void> {
   return new Promise(resolve => {
     const timeoutId = setTimeout(resolve, timeout);
 
-    failFast?.signal.addEventListener("abort", () => {
+    failFast?.addEventListener("abort", () => {
       clearTimeout(timeoutId);
       resolve();
     });

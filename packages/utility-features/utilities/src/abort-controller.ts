@@ -22,3 +22,11 @@ export function setTimeoutFor(controller: AbortController, timeout: number): voi
 
   controller.signal.addEventListener("abort", () => clearTimeout(handle));
 }
+
+export function chainSignal(target: AbortController, signal: AbortSignal) {
+  if (signal.aborted) {
+    target.abort();
+  } else {
+    signal.addEventListener("abort", (event) => target.abort(event));
+  }
+}

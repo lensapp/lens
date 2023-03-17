@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { WeblinkData } from "../../../common/weblinks-store/weblink-store";
-import * as links from "../links";
+import * as links from "../../../features/weblinks/main/links";
 import { getInjectable } from "@ogre-tools/injectable";
-import { weblinkStoreMigrationInjectionToken } from "../../../common/weblinks-store/migration-token";
+import { weblinkStoreMigrationInjectionToken } from "../../../features/weblinks/common/migration-token";
+import type { WeblinkData } from "../common/storage.injectable";
 
 const v545Beta1WeblinkStoreMigrationInjectable = getInjectable({
   id: "v5.4.5-beta.1-weblink-store-migration",
