@@ -19,6 +19,7 @@ module.exports = (rootDir) => {
     collectCoverageFrom: [
       "<rootDir>/src/**/*.{ts,tsx}",
       "!<rootDir>/src/**/*.no-coverage.ts",
+      "!<rootDir>/src/**/test-utils/**/*.{ts,tsx}",
     ],
 
     moduleNameMapper: {
