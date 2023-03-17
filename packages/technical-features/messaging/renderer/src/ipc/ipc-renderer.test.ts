@@ -1,7 +1,7 @@
 import { createContainer, DiContainer } from "@ogre-tools/injectable";
 import { registerFeature } from "@k8slens/feature-core";
 import ipcRendererInjectable from "./ipc-renderer.injectable";
-import { feature } from "../feature";
+import { messagingFeatureForRenderer } from "../feature";
 import { ipcRenderer } from "electron";
 
 describe("ipc-renderer", () => {
@@ -10,7 +10,7 @@ describe("ipc-renderer", () => {
   beforeEach(() => {
     di = createContainer("irrelevant");
 
-    registerFeature(di, feature);
+    registerFeature(di, messagingFeatureForRenderer);
   });
 
   it("is not undefined", () => {

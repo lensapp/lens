@@ -6,7 +6,7 @@ import {
 } from "@k8slens/messaging";
 import { createContainer } from "@ogre-tools/injectable";
 import { registerFeature } from "@k8slens/feature-core";
-import { feature } from "../feature";
+import { messagingFeatureForRenderer } from "../feature";
 
 describe("enlist message channel listener in renderer", () => {
   let enlistMessageChannelListener: EnlistMessageChannelListener;
@@ -17,7 +17,7 @@ describe("enlist message channel listener in renderer", () => {
   beforeEach(() => {
     const di = createContainer("irrelevant");
 
-    registerFeature(di, feature);
+    registerFeature(di, messagingFeatureForRenderer);
 
     onMock = jest.fn();
     offMock = jest.fn();
