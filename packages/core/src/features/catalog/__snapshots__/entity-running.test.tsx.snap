@@ -490,10 +490,10 @@ exports[`entity running technical tests when navigated to catalog renders 1`] = 
                           style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
                         >
                           <div
-                            style="height: 33px; width: 100%;"
+                            style="height: 36px; width: 100%;"
                           >
                             <div
-                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 0px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -1206,10 +1206,10 @@ exports[`entity running technical tests when navigated to catalog when details p
                           style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
                         >
                           <div
-                            style="height: 33px; width: 100%;"
+                            style="height: 36px; width: 100%;"
                           >
                             <div
-                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 0px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
