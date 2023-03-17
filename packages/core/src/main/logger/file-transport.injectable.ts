@@ -8,7 +8,7 @@ import directoryForLogsInjectable from "../../common/app-paths/directory-for-log
 import { loggerTransportInjectionToken } from "../../common/logger/transports";
 
 const fileLoggerTranportInjectable = getInjectable({
-  id: "file-logger-tranport",
+  id: "file-logger-transport",
   instantiate: (di) => new transports.File({
     handleExceptions: false,
     level: "debug",

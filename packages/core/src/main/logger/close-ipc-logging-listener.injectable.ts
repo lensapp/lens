@@ -11,10 +11,11 @@ import {
 const closeIpcFileLoggingListenerInjectable = getMessageChannelListenerInjectable({
   id: "close-ipc-file-logging",
   channel: closeIpcFileLoggerChannel,
-  handler: (di) => (fileId) =>
-    di
-      .inject(ipcFileLoggerInjectable)
-      .close(fileId),
+  handler: (di) => {
+    const ipcFileLogger = di.inject(ipcFileLoggerInjectable);
+
+    return (fileId) => ipcFileLogger.close(fileId);
+  },
 });
 
 export default closeIpcFileLoggingListenerInjectable;
