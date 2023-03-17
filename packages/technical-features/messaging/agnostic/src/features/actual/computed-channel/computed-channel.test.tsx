@@ -20,13 +20,15 @@ import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerFeature } from "@k8slens/feature-core";
 import { messagingFeatureForUnitTesting } from "../../unit-testing";
 import {
-  computedChannelAdministrationChannel,
-  ComputedChannelAdminMessage,
   computedChannelInjectionToken,
   computedChannelObserverInjectionToken,
 } from "./computed-channel.injectable";
 import { runWithThrownMobxReactions, renderFor } from "@k8slens/test-utils";
 import { observer } from "mobx-react";
+import {
+  computedChannelAdministrationChannel,
+  ComputedChannelAdminMessage,
+} from "./computed-channel-administration-channel.injectable";
 
 const testChannel: MessageChannel<string> = { id: "some-channel-id" };
 const testChannel2: MessageChannel<string> = { id: "some-other-channel-id" };
