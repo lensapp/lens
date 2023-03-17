@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<HotbarRemoveCommand /> renders w/o errors 1`] = `
+<div>
+  <div
+    class="Select theme-dark css-b62m3t-container"
+  >
+    <span
+      class="css-1f43avz-a11yText-A11yText"
+      id="react-select-2-live-region"
+    >
+      <span
+        id="aria-selection"
+      >
+        option , selected.
+      </span>
+      <span
+        id="aria-context"
+      >
+         2 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+      </span>
+    </span>
+    <span
+      aria-atomic="false"
+      aria-live="polite"
+      aria-relevant="additions text"
+      class="css-1f43avz-a11yText-A11yText"
+    />
+    <div
+      class="Select__control Select__control--is-focused Select__control--menu-is-open css-t3ipsp-control"
+    >
+      <div
+        class="Select__value-container css-1fdsijx-ValueContainer"
+      >
+        <div
+          class="Select__placeholder css-1jqq78o-placeholder"
+          id="react-select-2-placeholder"
+        >
+          Remove hotbar
+        </div>
+        <div
+          class="Select__input-container css-qbdosj-Input"
+          data-value=""
+        >
+          <input
+            aria-autocomplete="list"
+            aria-controls="react-select-2-listbox"
+            aria-describedby="react-select-2-placeholder"
+            aria-expanded="true"
+            aria-haspopup="true"
+            aria-owns="react-select-2-listbox"
+            autocapitalize="none"
+            autocomplete="off"
+            autocorrect="off"
+            class="Select__input"
+            id="react-select-2-input"
+            role="combobox"
+            spellcheck="false"
+            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+            tabindex="0"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="Select__indicators css-1hb7zxy-IndicatorsContainer"
+      />
+    </div>
+    <div
+      class="theme-dark Select__menu css-1nmdiq5-menu"
+      id="react-select-2-listbox"
+    >
+      <div
+        class="Select__menu-list css-1n6sfyn-MenuList"
+      >
+        <div
+          aria-disabled="false"
+          class="Select__option css-10wo9uf-option"
+          id="react-select-2-option-0"
+          tabindex="-1"
+        >
+          1: default
+        </div>
+        <div
+          aria-disabled="false"
+          class="Select__option css-10wo9uf-option"
+          id="react-select-2-option-1"
+          tabindex="-1"
+        >
+          2: non-default
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

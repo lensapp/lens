@@ -3,21 +3,21 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../../../../renderer/before-frame-starts/tokens";
 import initClusterStoreInjectable from "../../../cluster/storage/renderer/init.injectable";
+import hotbarsPersistentStorageInjectable from "../common/storage.injectable";
 
-const initHotbarStoreInjectable = getInjectable({
-  id: "init-hotbar-store",
+const loadHotbarStorageInjectable = getInjectable({
+  id: "load-hotbar-storage",
   instantiate: (di) => ({
     run: () => {
-      const hotbarStore = di.inject(hotbarStoreInjectable);
+      const storage = di.inject(hotbarsPersistentStorageInjectable);
 
-      hotbarStore.load();
+      storage.loadAndStartSyncing();
     },
     runAfter: initClusterStoreInjectable,
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });
 
-export default initHotbarStoreInjectable;
+export default loadHotbarStorageInjectable;

@@ -15,9 +15,7 @@ import { Dialog } from "../dialog";
 import { Icon } from "../icon";
 import { Select } from "../select";
 import { Checkbox } from "../checkbox";
-import type { HotbarStore } from "../../../common/hotbars/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { DeleteClusterDialogState } from "./state.injectable";
 import deleteClusterDialogStateInjectable from "./state.injectable";
 import type { RequestSetClusterAsDeleting } from "../../../features/cluster/delete-dialog/renderer/request-set-as-deleting.injectable";
@@ -32,16 +30,18 @@ import showErrorNotificationInjectable from "../notifications/show-error-notific
 import { isCurrentContext } from "./is-current-context";
 import type { IsInLocalKubeconfig } from "./is-in-local-kubeconfig.injectable";
 import isInLocalKubeconfigInjectable from "./is-in-local-kubeconfig.injectable";
+import type { RemoveEntityFromAllHotbars } from "../../../features/hotbar/storage/common/remove-entity-from-all.injectable";
+import removeEntityFromAllHotbarsInjectable from "../../../features/hotbar/storage/common/remove-entity-from-all.injectable";
 
 interface Dependencies {
   state: IObservableValue<DeleteClusterDialogState | undefined>;
-  hotbarStore: HotbarStore;
   requestSetClusterAsDeleting: RequestSetClusterAsDeleting;
   requestDeleteCluster: RequestDeleteCluster;
   requestClearClusterAsDeleting: RequestClearClusterAsDeleting;
   showErrorNotification: ShowNotification;
   saveKubeconfig: SaveKubeconfig;
   isInLocalKubeconfig: IsInLocalKubeconfig;
+  removeEntityFromAllHotbars: RemoveEntityFromAllHotbars;
 }
 
 @observer
@@ -65,7 +65,7 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
 
     try {
       await this.props.saveKubeconfig(config, cluster.kubeConfigPath.get());
-      this.props.hotbarStore.removeAllHotbarItems(cluster.id);
+      this.props.removeEntityFromAllHotbars(cluster.id);
       await this.props.requestDeleteCluster(cluster.id);
     } catch(error) {
       this.props.showErrorNotification(`Cannot remove cluster, failed to process config file. ${error}`);
@@ -267,7 +267,6 @@ class NonInjectedDeleteClusterDialog extends React.Component<Dependencies> {
 
 export const DeleteClusterDialog = withInjectables<Dependencies>(NonInjectedDeleteClusterDialog, {
   getProps: (di) => ({
-    hotbarStore: di.inject(hotbarStoreInjectable),
     state: di.inject(deleteClusterDialogStateInjectable),
     requestSetClusterAsDeleting: di.inject(requestSetClusterAsDeletingInjectable),
     requestClearClusterAsDeleting: di.inject(requestClearClusterAsDeletingInjectable),
@@ -275,5 +274,6 @@ export const DeleteClusterDialog = withInjectables<Dependencies>(NonInjectedDele
     saveKubeconfig: di.inject(saveKubeconfigInjectable),
     showErrorNotification: di.inject(showErrorNotificationInjectable),
     isInLocalKubeconfig: di.inject(isInLocalKubeconfigInjectable),
+    removeEntityFromAllHotbars: di.inject(removeEntityFromAllHotbarsInjectable),
   }),
 });

@@ -9,11 +9,12 @@ import { MenuItem } from "../menu";
 
 import type { CatalogEntity } from "../../api/catalog-entity";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
-import type { HotbarStore } from "../../../common/hotbars/store";
+import type { IComputedValue } from "mobx";
+import type { Hotbar } from "../../../features/hotbar/storage/common/hotbar";
+import activeHotbarInjectable from "../../../features/hotbar/storage/common/active.injectable";
 
 interface Dependencies {
-  hotbarStore: HotbarStore;
+  activeHotbar: IComputedValue<Hotbar | undefined>;
 }
 
 interface HotbarToggleMenuItemProps {
@@ -25,19 +26,19 @@ interface HotbarToggleMenuItemProps {
 function NonInjectedHotbarToggleMenuItem({
   addContent,
   entity,
-  hotbarStore,
+  activeHotbar,
   removeContent,
 }: Dependencies & HotbarToggleMenuItemProps) {
-  const [itemInHotbar, setItemInHotbar] = useState(hotbarStore.isAddedToActive(entity));
+  const [itemInHotbar, setItemInHotbar] = useState(activeHotbar.get()?.hasEntity(entity.getId()) ?? false);
 
   return (
     <MenuItem
       onClick={() => {
         if (itemInHotbar) {
-          hotbarStore.removeFromHotbar(entity.getId());
+          activeHotbar.get()?.removeEntity(entity.getId());
           setItemInHotbar(false);
         } else {
-          hotbarStore.addToHotbar(entity);
+          activeHotbar.get()?.addEntity(entity);
           setItemInHotbar(true);
         }
       }}
@@ -47,14 +48,10 @@ function NonInjectedHotbarToggleMenuItem({
   );
 }
 
-export const HotbarToggleMenuItem = withInjectables<Dependencies, HotbarToggleMenuItemProps>(
-  NonInjectedHotbarToggleMenuItem,
-
-  {
-    getProps: (di, props) => ({
-      hotbarStore: di.inject(hotbarStoreInjectable),
-      ...props,
-    }),
-  },
-);
+export const HotbarToggleMenuItem = withInjectables<Dependencies, HotbarToggleMenuItemProps>(NonInjectedHotbarToggleMenuItem, {
+  getProps: (di, props) => ({
+    ...props,
+    activeHotbar: di.inject(activeHotbarInjectable),
+  }),
+});
 

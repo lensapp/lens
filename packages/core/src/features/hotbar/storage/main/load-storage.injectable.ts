@@ -3,21 +3,21 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
 import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import setupSyncingOfGeneralCatalogEntitiesInjectable from "../../../../main/start-main-application/runnables/setup-syncing-of-general-catalog-entities.injectable";
+import hotbarsPersistentStorageInjectable from "../common/storage.injectable";
 
-const initHotbarStoreInjectable = getInjectable({
-  id: "init-hotbar-store",
+const loadHotbarStorageInjectable = getInjectable({
+  id: "load-hotbar-storage",
   instantiate: (di) => ({
     run: () => {
-      const hotbarStore = di.inject(hotbarStoreInjectable);
+      const storage = di.inject(hotbarsPersistentStorageInjectable);
 
-      hotbarStore.load();
+      storage.loadAndStartSyncing();
     },
     runAfter: setupSyncingOfGeneralCatalogEntitiesInjectable,
   }),
   injectionToken: onLoadOfApplicationInjectionToken,
 });
 
-export default initHotbarStoreInjectable;
+export default loadHotbarStorageInjectable;
