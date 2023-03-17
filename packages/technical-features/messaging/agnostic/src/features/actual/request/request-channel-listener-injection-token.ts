@@ -29,7 +29,7 @@ export const requestChannelListenerInjectionToken = getInjectionToken<
 export interface GetRequestChannelListenerInjectableInfo<
   Channel extends RequestChannel<Request, Response>,
   Request,
-  Response
+  Response,
 > {
   id: string;
   channel: Channel;
@@ -39,9 +39,9 @@ export interface GetRequestChannelListenerInjectableInfo<
 export const getRequestChannelListenerInjectable = <
   Channel extends RequestChannel<Request, Response>,
   Request,
-  Response
+  Response,
 >(
-  info: GetRequestChannelListenerInjectableInfo<Channel, Request, Response>
+  info: GetRequestChannelListenerInjectableInfo<Channel, Request, Response>,
 ) =>
   getInjectable({
     id: `${info.channel.id}-request-listener-${info.id}`,

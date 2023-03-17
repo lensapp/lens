@@ -6,9 +6,7 @@ export interface MessageChannel<Message> {
   _messageSignature?: Message;
 }
 
-export type MessageChannelHandler<Channel> = Channel extends MessageChannel<
-  infer Message
->
+export type MessageChannelHandler<Channel> = Channel extends MessageChannel<infer Message>
   ? (message: Message) => void
   : never;
 
@@ -24,10 +22,7 @@ export const messageChannelListenerInjectionToken = getInjectionToken<
   id: "message-channel-listener",
 });
 
-export interface GetMessageChannelListenerInfo<
-  Channel extends MessageChannel<Message>,
-  Message
-> {
+export interface GetMessageChannelListenerInfo<Channel extends MessageChannel<Message>, Message> {
   id: string;
   channel: Channel;
   getHandler: (di: DiContainerForInjection) => MessageChannelHandler<Channel>;
@@ -36,9 +31,9 @@ export interface GetMessageChannelListenerInfo<
 
 export const getMessageChannelListenerInjectable = <
   Channel extends MessageChannel<Message>,
-  Message
+  Message,
 >(
-  info: GetMessageChannelListenerInfo<Channel, Message>
+  info: GetMessageChannelListenerInfo<Channel, Message>,
 ) =>
   getInjectable({
     id: `${info.channel.id}-message-listener-${info.id}`,

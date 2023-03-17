@@ -90,7 +90,7 @@ describe("listening-of-requests", () => {
           await startApplication();
         });
 
-        it("it enlists a listener for the channel", () => {
+        it("enlists a listener for the channel", () => {
           expect(enlistRequestChannelListenerMock).toHaveBeenCalledWith({
             id: "some-channel-id-request-listener-some-listener",
             channel: someChannel,

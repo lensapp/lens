@@ -1,9 +1,6 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import sendToIpcInjectable from "./send-to-ipc.injectable";
-import {
-  SendMessageToChannel,
-  sendMessageToChannelInjectionToken,
-} from "@k8slens/messaging";
+import { SendMessageToChannel, sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 
 const messageToChannelInjectable = getInjectable({
   id: "message-to-channel",

@@ -9,8 +9,7 @@ const requestFromChannelInjectable = getInjectable({
   instantiate: (di) => {
     const invokeIpc = di.inject(invokeIpcInjectable);
 
-    return ((channel, request) =>
-      invokeIpc(channel.id, request)) as RequestFromChannel;
+    return ((channel, request) => invokeIpc(channel.id, request)) as RequestFromChannel;
   },
 
   injectionToken: requestFromChannelInjectionToken,

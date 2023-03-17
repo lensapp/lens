@@ -6,7 +6,6 @@ export interface SendMessageToChannel {
   <Message>(channel: MessageChannel<Message>, message: Message): void;
 }
 
-export const sendMessageToChannelInjectionToken =
-  getInjectionToken<SendMessageToChannel>({
-    id: "send-message-to-message-channel",
-  });
+export const sendMessageToChannelInjectionToken = getInjectionToken<SendMessageToChannel>({
+  id: "send-message-to-message-channel",
+});

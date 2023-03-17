@@ -1,10 +1,7 @@
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import { enlistMessageChannelListenerInjectionToken } from "../message/enlist-message-channel-listener-injection-token";
 
-import {
-  getStartableStoppable,
-  StartableStoppable,
-} from "@k8slens/startable-stoppable";
+import { getStartableStoppable, StartableStoppable } from "@k8slens/startable-stoppable";
 
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { IComputedValue, reaction } from "mobx";
@@ -15,62 +12,14 @@ import { enlistRequestChannelListenerInjectionToken } from "../request/enlist-re
 import type { Channel } from "../channel.no-coverage";
 
 export type ListeningOfChannels = StartableStoppable;
-export const listeningOfChannelsInjectionToken =
-  getInjectionToken<ListeningOfChannels>({
-    id: "listening-of-channels-injection-token",
-  });
-
-const listeningOfChannelsInjectable = getInjectable({
-  id: "listening-of-channels",
-
-  instantiate: (di) => {
-    const enlistMessageChannelListener = di.inject(
-      enlistMessageChannelListenerInjectionToken
-    );
-
-    const enlistRequestChannelListener = di.inject(
-      enlistRequestChannelListenerInjectionToken
-    );
-
-    const computedInjectMany = di.inject(computedInjectManyInjectable);
-
-    const messageChannelListeners = computedInjectMany(
-      messageChannelListenerInjectionToken
-    );
-
-    const requestChannelListeners = computedInjectMany(
-      requestChannelListenerInjectionToken
-    );
-
-    return getStartableStoppable("listening-of-channels", () => {
-      const stopListeningOfMessageChannels = listening(
-        messageChannelListeners,
-        enlistMessageChannelListener,
-        (x) => x.id
-      );
-
-      const stopListeningOfRequestChannels = listening(
-        requestChannelListeners,
-        enlistRequestChannelListener,
-        (x) => x.channel.id
-      );
-
-      return () => {
-        stopListeningOfMessageChannels();
-        stopListeningOfRequestChannels();
-      };
-    });
-  },
-
-  injectionToken: listeningOfChannelsInjectionToken,
+export const listeningOfChannelsInjectionToken = getInjectionToken<ListeningOfChannels>({
+  id: "listening-of-channels-injection-token",
 });
-
-export default listeningOfChannelsInjectable;
 
 const listening = <T extends { id: string; channel: Channel<unknown> }>(
   channelListeners: IComputedValue<T[]>,
   enlistChannelListener: (listener: T) => () => void,
-  getId: (listener: T) => string
+  getId: (listener: T) => string,
 ) => {
   const listenerDisposers = new Map<string, () => void>();
 
@@ -78,11 +27,11 @@ const listening = <T extends { id: string; channel: Channel<unknown> }>(
     () => channelListeners.get(),
     (newValues, oldValues = []) => {
       const addedListeners = newValues.filter(
-        (newValue) => !oldValues.some((oldValue) => oldValue.id === newValue.id)
+        (newValue) => !oldValues.some((oldValue) => oldValue.id === newValue.id),
       );
 
       const removedListeners = oldValues.filter(
-        (oldValue) => !newValues.some((newValue) => newValue.id === oldValue.id)
+        (oldValue) => !newValues.some((newValue) => newValue.id === oldValue.id),
       );
 
       addedListeners.forEach((listener) => {
@@ -90,7 +39,7 @@ const listening = <T extends { id: string; channel: Channel<unknown> }>(
 
         if (listenerDisposers.has(id)) {
           throw new Error(
-            `Tried to add listener for channel "${listener.channel.id}" but listener already exists.`
+            `Tried to add listener for channel "${listener.channel.id}" but listener already exists.`,
           );
         }
 
@@ -108,7 +57,7 @@ const listening = <T extends { id: string; channel: Channel<unknown> }>(
       });
     },
 
-    { fireImmediately: true }
+    { fireImmediately: true },
   );
 
   return () => {
@@ -116,3 +65,42 @@ const listening = <T extends { id: string; channel: Channel<unknown> }>(
     listenerDisposers.forEach((dispose) => dispose());
   };
 };
+
+const listeningOfChannelsInjectable = getInjectable({
+  id: "listening-of-channels",
+
+  instantiate: (di) => {
+    const enlistMessageChannelListener = di.inject(enlistMessageChannelListenerInjectionToken);
+
+    const enlistRequestChannelListener = di.inject(enlistRequestChannelListenerInjectionToken);
+
+    const computedInjectMany = di.inject(computedInjectManyInjectable);
+
+    const messageChannelListeners = computedInjectMany(messageChannelListenerInjectionToken);
+
+    const requestChannelListeners = computedInjectMany(requestChannelListenerInjectionToken);
+
+    return getStartableStoppable("listening-of-channels", () => {
+      const stopListeningOfMessageChannels = listening(
+        messageChannelListeners,
+        enlistMessageChannelListener,
+        (x) => x.id,
+      );
+
+      const stopListeningOfRequestChannels = listening(
+        requestChannelListeners,
+        enlistRequestChannelListener,
+        (x) => x.channel.id,
+      );
+
+      return () => {
+        stopListeningOfMessageChannels();
+        stopListeningOfRequestChannels();
+      };
+    });
+  },
+
+  injectionToken: listeningOfChannelsInjectionToken,
+});
+
+export default listeningOfChannelsInjectable;

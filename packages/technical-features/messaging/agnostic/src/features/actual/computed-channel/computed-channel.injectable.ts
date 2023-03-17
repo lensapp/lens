@@ -20,21 +20,18 @@ import { filter, groupBy, map, nth, toPairs } from "lodash/fp";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import type { JsonPrimitive } from "type-fest";
 
-export type JsonifiableObject =
-  | { [Key in string]?: Jsonifiable }
-  | { toJSON: () => Jsonifiable };
+export type JsonifiableObject = { [Key in string]?: Jsonifiable } | { toJSON: () => Jsonifiable };
 export type JsonifiableArray = readonly Jsonifiable[];
 export type Jsonifiable = JsonPrimitive | JsonifiableObject | JsonifiableArray;
 
 export type ComputedChannelFactory = <T>(
   channel: MessageChannel<T>,
-  pendingValue: T
+  pendingValue: T,
 ) => IComputedValue<T>;
 
-export const computedChannelInjectionToken =
-  getInjectionToken<ComputedChannelFactory>({
-    id: "computed-channel-injection-token",
-  });
+export const computedChannelInjectionToken = getInjectionToken<ComputedChannelFactory>({
+  id: "computed-channel-injection-token",
+});
 
 export type ChannelObserver<T extends Jsonifiable> = {
   channel: MessageChannel<T>;
@@ -50,6 +47,10 @@ export const computedChannelObserverInjectionToken = getInjectionToken<
 >({
   id: "computed-channel-observer",
 });
+
+export const computedChannelAdministrationChannel: MessageChannel<ComputedChannelAdminMessage> = {
+  id: "computed-channel-administration-channel",
+};
 
 const computedChannelInjectable = getInjectable({
   id: "computed-channel",
@@ -67,7 +68,7 @@ const computedChannelInjectable = getInjectable({
 
         if (!contextIsReactive) {
           throw new Error(
-            `Tried to access value of computed channel "${channel.id}" outside of reactive context. This is not possible, as the value is acquired asynchronously sometime *after* being observed. Not respecting that, the value could be stale.`
+            `Tried to access value of computed channel "${channel.id}" outside of reactive context. This is not possible, as the value is acquired asynchronously sometime *after* being observed. Not respecting that, the value could be stale.`,
           );
         }
 
@@ -134,17 +135,17 @@ export const duplicateChannelObserverGuardInjectable = getInjectable({
               groupBy((observer) => observer.channel.id),
               toPairs,
               filter(([, channelObservers]) => channelObservers.length > 1),
-              map(nth(0))
+              map(nth(0)),
             );
 
             if (duplicateObserverChannelIds.length) {
               throw new Error(
                 `Tried to register duplicate channel observer for channels "${duplicateObserverChannelIds.join(
-                  '", "'
-                )}"`
+                  '", "',
+                )}"`,
               );
             }
-          }
+          },
         );
       },
     };
@@ -153,59 +154,48 @@ export const duplicateChannelObserverGuardInjectable = getInjectable({
   injectionToken: onLoadOfApplicationInjectionToken,
 });
 
-export const computedChannelAdministrationChannel: MessageChannel<ComputedChannelAdminMessage> =
-  {
-    id: "computed-channel-administration-channel",
-  };
+export const computedChannelAdministrationListenerInjectable = getMessageChannelListenerInjectable({
+  id: "computed-channel-administration",
+  getHandler: (di) => {
+    const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
 
-export const computedChannelAdministrationListenerInjectable =
-  getMessageChannelListenerInjectable({
-    id: "computed-channel-administration",
-    getHandler: (di) => {
-      const sendMessageToChannel = di.inject(
-        sendMessageToChannelInjectionToken
-      );
+    const disposersByChannelId = new Map<string, () => void>();
 
-      const disposersByChannelId = new Map<string, () => void>();
+    return (message) => {
+      if (message.status === "became-observed") {
+        const result = di
+          .injectMany(computedChannelObserverInjectionToken)
+          .find((channelObserver) => channelObserver.channel.id === message.channelId);
 
-      return (message) => {
-        if (message.status === "became-observed") {
-          const result = di
-            .injectMany(computedChannelObserverInjectionToken)
-            .find(
-              (channelObserver) =>
-                channelObserver.channel.id === message.channelId
-            );
-
-          if (result === undefined) {
-            return;
-          }
-
-          const disposer = reaction(
-            () => result.observer.get(),
-            (observed) =>
-              sendMessageToChannel(
-                {
-                  id: message.channelId,
-                },
-
-                observed
-              ),
-            {
-              fireImmediately: true,
-            }
-          );
-
-          disposersByChannelId.set(message.channelId, disposer);
-        } else {
-          const disposer = disposersByChannelId.get(message.channelId);
-
-          disposer!();
+        if (result === undefined) {
+          return;
         }
-      };
-    },
 
-    channel: computedChannelAdministrationChannel,
-  });
+        const disposer = reaction(
+          () => result.observer.get(),
+          (observed) =>
+            sendMessageToChannel(
+              {
+                id: message.channelId,
+              },
+
+              observed,
+            ),
+          {
+            fireImmediately: true,
+          },
+        );
+
+        disposersByChannelId.set(message.channelId, disposer);
+      } else {
+        const disposer = disposersByChannelId.get(message.channelId);
+
+        disposer?.();
+      }
+    };
+  },
+
+  channel: computedChannelAdministrationChannel,
+});
 
 export default computedChannelInjectable;

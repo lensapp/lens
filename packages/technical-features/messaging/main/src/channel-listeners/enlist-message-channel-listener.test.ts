@@ -29,9 +29,7 @@ describe("enlist message channel listener in main", () => {
 
     di.override(ipcMainInjectable, () => ipcMainStub);
 
-    enlistMessageChannelListener = di.inject(
-      enlistMessageChannelListenerInjectionToken
-    );
+    enlistMessageChannelListener = di.inject(enlistMessageChannelListenerInjectionToken);
   });
 
   describe("when called", () => {
@@ -53,10 +51,7 @@ describe("enlist message channel listener in main", () => {
     });
 
     it("registers the listener", () => {
-      expect(onMock).toHaveBeenCalledWith(
-        "some-channel-id",
-        expect.any(Function)
-      );
+      expect(onMock).toHaveBeenCalledWith("some-channel-id", expect.any(Function));
     });
 
     it("does not de-register the listener yet", () => {
@@ -75,10 +70,7 @@ describe("enlist message channel listener in main", () => {
       it("when disposing the listener, de-registers the listener", () => {
         disposer();
 
-        expect(offMock).toHaveBeenCalledWith(
-          "some-channel-id",
-          expect.any(Function)
-        );
+        expect(offMock).toHaveBeenCalledWith("some-channel-id", expect.any(Function));
       });
     });
 

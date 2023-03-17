@@ -22,9 +22,7 @@ describe("message-from-channel", () => {
 
   describe("when called", () => {
     beforeEach(() => {
-      const sendMessageToChannel = di.inject(
-        sendMessageToChannelInjectionToken
-      );
+      const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
 
       const someChannel: MessageChannel<number> = {
         id: "some-channel-id",

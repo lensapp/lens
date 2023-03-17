@@ -34,10 +34,7 @@ describe("request-from-channel", () => {
     });
 
     it("invokes ipcRenderer of Electron", () => {
-      expect(invokeIpcMock).toHaveBeenCalledWith(
-        "some-channel-id",
-        "some-request-payload"
-      );
+      expect(invokeIpcMock).toHaveBeenCalledWith("some-channel-id", "some-request-payload");
     });
 
     it("when invoke resolves with response, resolves with said response", async () => {

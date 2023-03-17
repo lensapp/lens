@@ -37,9 +37,7 @@ describe("enlist request channel listener in main", () => {
 
     di.override(ipcMainInjectable, () => ipcMainStub);
 
-    enlistRequestChannelListener = di.inject(
-      enlistRequestChannelListenerInjectable
-    );
+    enlistRequestChannelListener = di.inject(enlistRequestChannelListenerInjectable);
   });
 
   describe("when called", () => {
@@ -61,10 +59,7 @@ describe("enlist request channel listener in main", () => {
     });
 
     it("registers the listener", () => {
-      expect(handleMock).toHaveBeenCalledWith(
-        "some-channel-id",
-        expect.any(Function)
-      );
+      expect(handleMock).toHaveBeenCalledWith("some-channel-id", expect.any(Function));
     });
 
     it("does not de-register the listener yet", () => {
@@ -75,10 +70,7 @@ describe("enlist request channel listener in main", () => {
       let actualPromise: Promise<any>;
 
       beforeEach(() => {
-        actualPromise = handleMock.mock.calls[0][1](
-          {} as IpcMainInvokeEvent,
-          "some-request"
-        );
+        actualPromise = handleMock.mock.calls[0][1]({} as IpcMainInvokeEvent, "some-request");
       });
 
       it("calls the handler with the request", () => {
@@ -105,10 +97,7 @@ describe("enlist request channel listener in main", () => {
         it("when disposing the listener, de-registers the listener", () => {
           disposer();
 
-          expect(offMock).toHaveBeenCalledWith(
-            "some-channel-id",
-            expect.any(Function)
-          );
+          expect(offMock).toHaveBeenCalledWith("some-channel-id", expect.any(Function));
         });
       });
 

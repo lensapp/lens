@@ -1,8 +1,4 @@
-import {
-  createContainer,
-  DiContainer,
-  Injectable,
-} from "@ogre-tools/injectable";
+import { createContainer, DiContainer, Injectable } from "@ogre-tools/injectable";
 
 import { registerFeature } from "@k8slens/feature-core";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
@@ -86,7 +82,7 @@ describe("listening-of-messages", () => {
           await startApplication();
         });
 
-        it("it enlists a listener for the channel", () => {
+        it("enlists a listener for the channel", () => {
           expect(enlistMessageChannelListenerMock).toHaveBeenCalledWith({
             id: "some-channel-id-message-listener-some-listener",
             channel: someChannel,

@@ -6,7 +6,7 @@ import type {
 } from "./message-channel-listener-injection-token";
 
 export type EnlistMessageChannelListener = (
-  listener: MessageChannelListener<MessageChannel<unknown>>
+  listener: MessageChannelListener<MessageChannel<unknown>>,
 ) => () => void;
 
 export const enlistMessageChannelListenerInjectionToken =
