@@ -8,13 +8,12 @@ import { Terminal } from "./terminal";
 import type { TabId } from "../dock/store";
 import type { TerminalApi } from "../../../api/terminal-api";
 import terminalSpawningPoolInjectable from "./terminal-spawning-pool.injectable";
-import terminalConfigInjectable from "../../../../common/user-store/terminal-config.injectable";
-import terminalCopyOnSelectInjectable
-  from "../../../../common/user-store/terminal-copy-on-select.injectable";
 import isMacInjectable from "../../../../common/vars/is-mac.injectable";
 import openLinkInBrowserInjectable from "../../../../common/utils/open-link-in-browser.injectable";
 import xtermColorThemeInjectable from "../../../themes/terminal-colors.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
+import terminalConfigInjectable from "../../../../features/user-preferences/common/terminal-config.injectable";
+import terminalCopyOnSelectInjectable from "../../../../features/user-preferences/common/terminal-copy-on-select.injectable";
 
 export type CreateTerminal = (tabId: TabId, api: TerminalApi) => Terminal;
 

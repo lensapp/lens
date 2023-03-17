@@ -4,18 +4,18 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { reaction } from "mobx";
-import userStoreInjectable from "../../common/user-store/user-store.injectable";
-import setLoginItemSettingsInjectable from "../electron-app/features/set-login-item-settings.injectable";
+import setLoginItemSettingsInjectable from "../../../main/electron-app/features/set-login-item-settings.injectable";
 import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
+import userPreferencesStateInjectable from "../common/state.injectable";
 
 const setupSyncOpenAtLoginWithOsInjectable = getInjectable({
   id: "setup-sync-open-at-login-with-os",
   instantiate: (di) => ({
     run: () => {
       const setLoginItemSettings = di.inject(setLoginItemSettingsInjectable);
-      const userStore = di.inject(userStoreInjectable);
+      const state = di.inject(userPreferencesStateInjectable);
 
-      reaction(() => userStore.openAtLogin, openAtLogin => {
+      reaction(() => state.openAtLogin, openAtLogin => {
         setLoginItemSettings({
           openAtLogin,
           openAsHidden: true,

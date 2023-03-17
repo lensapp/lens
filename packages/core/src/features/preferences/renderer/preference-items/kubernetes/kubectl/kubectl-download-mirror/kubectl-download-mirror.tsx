@@ -5,14 +5,14 @@
 import React from "react";
 import { SubTitle } from "../../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { UserStore } from "../../../../../../../common/user-store";
-import userStoreInjectable from "../../../../../../../common/user-store/user-store.injectable";
 import { observer } from "mobx-react";
 import { Select } from "../../../../../../../renderer/components/select";
-import { defaultPackageMirror, packageMirrors } from "../../../../../../../common/user-store/preferences-helpers";
+import { defaultPackageMirror, packageMirrors } from "../../../../../../user-preferences/common/preferences-helpers";
+import type { UserPreferencesState } from "../../../../../../user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../../../user-preferences/common/state.injectable";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
 }
 
 const downloadMirrorOptions = Array.from(packageMirrors, ([name, mirror]) => ({
@@ -24,27 +24,23 @@ const downloadMirrorOptions = Array.from(packageMirrors, ([name, mirror]) => ({
 }));
 
 
-const NonInjectedKubectlDownloadMirror = observer(({ userStore }: Dependencies) => (
+const NonInjectedKubectlDownloadMirror = observer(({ state }: Dependencies) => (
   <section>
     <SubTitle title="Download mirror" />
     <Select
       id="download-mirror-input"
       placeholder="Download mirror for kubectl"
       options={downloadMirrorOptions}
-      value={userStore.downloadMirror}
-      onChange={option => userStore.downloadMirror = option?.value ?? defaultPackageMirror}
-      isDisabled={!userStore.downloadKubectlBinaries}
+      value={state.downloadMirror}
+      onChange={option => state.downloadMirror = option?.value ?? defaultPackageMirror}
+      isDisabled={!state.downloadKubectlBinaries}
       themeName="lens"
     />
   </section>
 ));
 
-export const KubectlDownloadMirror = withInjectables<Dependencies>(
-  NonInjectedKubectlDownloadMirror,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-    }),
-  },
-);
+export const KubectlDownloadMirror = withInjectables<Dependencies>(NonInjectedKubectlDownloadMirror, {
+  getProps: (di) => ({
+    state: di.inject(userPreferencesStateInjectable),
+  }),
+});

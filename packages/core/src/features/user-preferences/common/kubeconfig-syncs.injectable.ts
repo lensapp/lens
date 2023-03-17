@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import userStoreInjectable from "./user-store.injectable";
+import userPreferencesStateInjectable from "./state.injectable";
 
 const kubeconfigSyncsInjectable = getInjectable({
   id: "kubeconfig-syncs",
-  instantiate: (di) => di.inject(userStoreInjectable).syncKubeconfigEntries,
+  instantiate: (di) => di.inject(userPreferencesStateInjectable).syncKubeconfigEntries,
 });
 
 export default kubeconfigSyncsInjectable;

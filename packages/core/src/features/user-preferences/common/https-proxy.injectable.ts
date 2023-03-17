@@ -4,12 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import userStoreInjectable from "./user-store.injectable";
+import userPreferencesStateInjectable from "./state.injectable";
 
 const httpsProxyConfigurationInjectable = getInjectable({
   id: "https-proxy-configuration",
   instantiate: (di) => {
-    const userStore = di.inject(userStoreInjectable);
+    const userStore = di.inject(userPreferencesStateInjectable);
 
     return computed(() => userStore.httpsProxy);
   },

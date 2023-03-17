@@ -5,15 +5,15 @@
 import React from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { UserStore } from "../../../../../../common/user-store";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { Select } from "../../../../../../renderer/components/select";
 import moment from "moment-timezone";
 import { observer } from "mobx-react";
-import currentTimezoneInjectable from "../../../../../../common/user-store/current-timezone.injectable";
+import type { UserPreferencesState } from "../../../../../user-preferences/common/state.injectable";
+import currentTimezoneInjectable from "../../../../../../common/vars/current-timezone.injectable";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
   currentTimezone: string;
 }
 
@@ -23,9 +23,8 @@ const timezoneOptions = moment.tz.names()
     label: timezone.replace("_", " "),
   }));
 
-
 const NonInjectedTimezone = observer(({
-  userStore,
+  state,
   currentTimezone,
 }: Dependencies) => (
   <section id="locale">
@@ -33,17 +32,16 @@ const NonInjectedTimezone = observer(({
     <Select
       id="timezone-input"
       options={timezoneOptions}
-      value={userStore.localeTimezone}
-      onChange={value => userStore.localeTimezone = value?.value ?? currentTimezone}
+      value={state.localeTimezone}
+      onChange={value => state.localeTimezone = value?.value ?? currentTimezone}
       themeName="lens"
     />
   </section>
-
 ));
 
 export const Timezone = withInjectables<Dependencies>(NonInjectedTimezone, {
   getProps: (di) => ({
-    userStore: di.inject(userStoreInjectable),
+    state: di.inject(userPreferencesStateInjectable),
     currentTimezone: di.inject(currentTimezoneInjectable),
   }),
 });

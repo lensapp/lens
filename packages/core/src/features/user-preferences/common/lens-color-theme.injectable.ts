@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import userStoreInjectable from "./user-store.injectable";
+import userPreferencesStateInjectable from "./state.injectable";
 
 export type LensColorThemePreference = {
   useSystemTheme: true;
@@ -16,11 +16,11 @@ export type LensColorThemePreference = {
 const lensColorThemePreferenceInjectable = getInjectable({
   id: "lens-color-theme-preference",
   instantiate: (di) => {
-    const userStore = di.inject(userStoreInjectable);
+    const state = di.inject(userPreferencesStateInjectable);
 
     return computed((): LensColorThemePreference => {
       // TODO: remove magic strings
-      if (userStore.colorTheme === "system") {
+      if (state.colorTheme === "system") {
         return {
           useSystemTheme: true,
         };
@@ -28,7 +28,7 @@ const lensColorThemePreferenceInjectable = getInjectable({
 
       return {
         useSystemTheme: false,
-        lensThemeId: userStore.colorTheme,
+        lensThemeId: state.colorTheme,
       };
     });
   },

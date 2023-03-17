@@ -4,14 +4,14 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import userStoreInjectable from "./user-store.injectable";
+import userPreferencesStateInjectable from "./state.injectable";
 
 const terminalCopyOnSelectInjectable = getInjectable({
   id: "terminal-copy-on-select",
   instantiate: (di) => {
-    const store = di.inject(userStoreInjectable);
+    const state = di.inject(userPreferencesStateInjectable);
 
-    return computed(() => store.terminalCopyOnSelect);
+    return computed(() => state.terminalCopyOnSelect);
   },
 });
 

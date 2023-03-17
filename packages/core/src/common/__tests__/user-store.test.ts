@@ -2,8 +2,6 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { UserStore } from "../user-store";
-import userStoreInjectable from "../user-store/user-store.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { defaultThemeId } from "../vars";
@@ -14,10 +12,16 @@ import releaseChannelInjectable from "../vars/release-channel.injectable";
 import defaultUpdateChannelInjectable from "../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
 import writeFileSyncInjectable from "../fs/write-file-sync.injectable";
+import type { UserPreferencesState } from "../../features/user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../features/user-preferences/common/state.injectable";
+import userPreferencesPersistentStorageInjectable from "../../features/user-preferences/common/storage.injectable";
+import type { ResetTheme } from "../../features/user-preferences/common/reset-theme.injectable";
+import resetThemeInjectable from "../../features/user-preferences/common/reset-theme.injectable";
 import type { ClusterStoreModel } from "../../features/cluster/storage/common/storage.injectable";
 
 describe("user store tests", () => {
-  let userStore: UserStore;
+  let state: UserPreferencesState;
+  let resetTheme: ResetTheme;
   let di: DiContainer;
 
   beforeEach(async () => {
@@ -33,6 +37,8 @@ describe("user store tests", () => {
 
     await di.inject(defaultUpdateChannelInjectable).init();
 
+    state = di.inject(userPreferencesStateInjectable);
+    resetTheme = di.inject(resetThemeInjectable);
   });
 
   describe("for an empty config", () => {
@@ -42,25 +48,23 @@ describe("user store tests", () => {
       writeJsonSync("/some-directory-for-user-data/lens-user-store.json", {});
       writeJsonSync("/some-directory-for-user-data/kube_config", {});
 
-      userStore = di.inject(userStoreInjectable);
-
-      userStore.load();
+      di.inject(userPreferencesPersistentStorageInjectable).loadAndStartSyncing();
     });
 
     it("allows setting and getting preferences", () => {
-      userStore.httpsProxy = "abcd://defg";
+      state.httpsProxy = "abcd://defg";
 
-      expect(userStore.httpsProxy).toBe("abcd://defg");
-      expect(userStore.colorTheme).toBe(defaultThemeId);
+      expect(state.httpsProxy).toBe("abcd://defg");
+      expect(state.colorTheme).toBe(defaultThemeId);
 
-      userStore.colorTheme = "light";
-      expect(userStore.colorTheme).toBe("light");
+      state.colorTheme = "light";
+      expect(state.colorTheme).toBe("light");
     });
 
     it("correctly resets theme to default value", async () => {
-      userStore.colorTheme = "some other theme";
-      userStore.resetTheme();
-      expect(userStore.colorTheme).toBe(defaultThemeId);
+      state.colorTheme = "some other theme";
+      resetTheme();
+      expect(state.colorTheme).toBe(defaultThemeId);
     });
   });
 
@@ -92,18 +96,16 @@ describe("user store tests", () => {
 
       di.override(storeMigrationVersionInjectable, () => "10.0.0");
 
-      userStore = di.inject(userStoreInjectable);
-
-      userStore.load();
+      di.inject(userPreferencesPersistentStorageInjectable).loadAndStartSyncing();
     });
 
     it("skips clusters for adding to kube-sync with files under extension_data/", () => {
-      expect(userStore.syncKubeconfigEntries.has("/some-directory-for-user-data/extension_data/foo/bar")).toBe(false);
-      expect(userStore.syncKubeconfigEntries.has("/some/other/path")).toBe(true);
+      expect(state.syncKubeconfigEntries.has("/some-directory-for-user-data/extension_data/foo/bar")).toBe(false);
+      expect(state.syncKubeconfigEntries.has("/some/other/path")).toBe(true);
     });
 
     it("allows access to the colorTheme preference", () => {
-      expect(userStore.colorTheme).toBe("light");
+      expect(state.colorTheme).toBe("light");
     });
   });
 });

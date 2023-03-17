@@ -4,7 +4,7 @@
  */
 
 import type { editor } from "monaco-editor";
-import { defaultEditorFontFamily, defaultFontSize, defaultTerminalFontFamily } from "../vars";
+import { defaultFontSize, defaultTerminalFontFamily, defaultEditorFontFamily } from "../../../common/vars";
 import type { PreferenceDescriptors } from "./preference-descriptors.injectable";
 
 export interface KubeconfigSyncEntry extends KubeconfigSyncValue {
@@ -95,5 +95,5 @@ export type UserStoreFlatModel = {
 };
 
 export type UserPreferencesModel = {
-  [field in keyof PreferenceDescriptors]: PreferencesModelType<field>;
+  [field in keyof PreferenceDescriptors]?: PreferencesModelType<field>;
 } & { updateChannel: string };

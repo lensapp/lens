@@ -17,8 +17,6 @@ import type { ConfigToModels } from "../kubeconfig-sync/config-to-models.injecta
 import configToModelsInjectable from "../kubeconfig-sync/config-to-models.injectable";
 import kubeconfigSyncManagerInjectable from "../kubeconfig-sync/manager.injectable";
 import type { KubeconfigSyncManager } from "../kubeconfig-sync/manager";
-import type { KubeconfigSyncValue } from "../../../common/user-store";
-import kubeconfigSyncsInjectable from "../../../common/user-store/kubeconfig-syncs.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import type { Stat } from "../../../common/fs/stat.injectable";
@@ -35,6 +33,8 @@ import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable
 import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
 import type { KubeconfigManager } from "../../kubeconfig-manager/kubeconfig-manager";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
+import type { KubeconfigSyncValue } from "../../../features/user-preferences/common/preferences-helpers";
+import kubeconfigSyncsInjectable from "../../../features/user-preferences/common/kubeconfig-syncs.injectable";
 
 describe("kubeconfig-sync.source tests", () => {
   let computeKubeconfigDiff: ComputeKubeconfigDiff;

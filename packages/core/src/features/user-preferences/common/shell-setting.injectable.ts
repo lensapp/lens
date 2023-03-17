@@ -4,16 +4,16 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import userInfoInjectable from "./user-info.injectable";
-import userStoreInjectable from "./user-store.injectable";
+import userInfoInjectable from "../../../common/vars/user-info.injectable";
+import userPreferencesStateInjectable from "./state.injectable";
 
 const userShellSettingInjectable = getInjectable({
   id: "user-shell-setting",
   instantiate: (di) => {
-    const userStore = di.inject(userStoreInjectable);
+    const state = di.inject(userPreferencesStateInjectable);
     const userInfo = di.inject(userInfoInjectable);
 
-    return computed(() => userStore.shell || userInfo.shell);
+    return computed(() => state.shell || userInfo.shell);
   },
 });
 

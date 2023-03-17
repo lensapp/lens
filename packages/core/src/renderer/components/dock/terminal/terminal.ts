@@ -14,11 +14,11 @@ import { disposer } from "@k8slens/utilities";
 import { once } from "lodash";
 import { clipboard } from "electron";
 import type { Logger } from "../../../../common/logger";
-import type { TerminalConfig } from "../../../../common/user-store/preferences-helpers";
 import assert from "assert";
 import { TerminalChannels } from "../../../../common/terminal/channels";
 import { LinkProvider } from "xterm-link-provider";
 import type { OpenLinkInBrowser } from "../../../../common/utils/open-link-in-browser.injectable";
+import type { TerminalConfig } from "../../../../features/user-preferences/common/preferences-helpers";
 
 export interface TerminalDependencies {
   readonly spawningPool: HTMLElement;

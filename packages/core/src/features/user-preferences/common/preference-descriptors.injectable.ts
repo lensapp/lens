@@ -6,17 +6,17 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { merge } from "lodash";
 import type { ObservableMap } from "mobx";
 import { observable } from "mobx";
-import homeDirectoryPathInjectable from "../os/home-directory-path.injectable";
-import joinPathsInjectable from "../path/join-paths.injectable";
-import { defaultThemeId } from "../vars";
-import currentTimezoneInjectable from "./current-timezone.injectable";
+import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
+import joinPathsInjectable from "../../../common/path/join-paths.injectable";
+import { defaultThemeId } from "../../../common/vars";
+import currentTimezoneInjectable from "../../../common/vars/current-timezone.injectable";
 import type { EditorConfiguration, ExtensionRegistry, KubeconfigSyncEntry, KubeconfigSyncValue, TerminalConfig } from "./preferences-helpers";
 import { defaultExtensionRegistryUrlLocation, defaultEditorConfig, defaultTerminalConfig, defaultPackageMirror, getPreferenceDescriptor, packageMirrors } from "./preferences-helpers";
 
-export type PreferenceDescriptors = ReturnType<typeof userStorePreferenceDescriptorsInjectable["instantiate"]>;
+export type PreferenceDescriptors = ReturnType<typeof userPreferenceDescriptorsInjectable["instantiate"]>;
 
-const userStorePreferenceDescriptorsInjectable = getInjectable({
-  id: "user-store-preference-descriptors",
+const userPreferenceDescriptorsInjectable = getInjectable({
+  id: "user-preference-descriptors",
   instantiate: (di) => {
     const currentTimezone = di.inject(currentTimezoneInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
@@ -140,4 +140,4 @@ const userStorePreferenceDescriptorsInjectable = getInjectable({
   },
 });
 
-export default userStorePreferenceDescriptorsInjectable;
+export default userPreferenceDescriptorsInjectable;

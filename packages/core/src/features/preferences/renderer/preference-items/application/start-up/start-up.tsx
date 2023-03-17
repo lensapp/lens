@@ -5,33 +5,29 @@
 import React from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { UserStore } from "../../../../../../common/user-store";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { Switch } from "../../../../../../renderer/components/switch";
 import { observer } from "mobx-react";
+import type { UserPreferencesState } from "../../../../../user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
 }
 
-const NonInjectedStartUp = observer(({ userStore }: Dependencies) => (
+const NonInjectedStartUp = observer(({ state }: Dependencies) => (
   <section id="other">
     <SubTitle title="Start-up" />
     <Switch
-      checked={userStore.openAtLogin}
-      onChange={() => (userStore.openAtLogin = !userStore.openAtLogin)}
+      checked={state.openAtLogin}
+      onChange={() => (state.openAtLogin = !state.openAtLogin)}
     >
       Automatically start Lens on login
     </Switch>
   </section>
 ));
 
-export const StartUp = withInjectables<Dependencies>(
-  NonInjectedStartUp,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-    }),
-  },
-);
+export const StartUp = withInjectables<Dependencies>(NonInjectedStartUp, {
+  getProps: (di) => ({
+    state: di.inject(userPreferencesStateInjectable),
+  }),
+});

@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeconfigSyncEntry, UserPreferencesModel } from "../../../common/user-store";
 import { isErrnoException } from "@k8slens/utilities";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
@@ -11,15 +10,16 @@ import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import isLogicalChildPathInjectable from "../../../common/path/is-logical-child-path.injectable";
 import getDirnameOfPathInjectable from "../../../common/path/get-dirname.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
-import { userStoreMigrationInjectionToken } from "../../../common/user-store/migrations-token";
+import { userPreferencesMigrationInjectionToken } from "../../../features/user-preferences/common/migrations-token";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
 import type { ClusterStoreModel } from "../../../features/cluster/storage/common/storage.injectable";
+import type { UserPreferencesModel, KubeconfigSyncEntry } from "../common/preferences-helpers";
 
-const v503Beta1UserStoreMigrationInjectable = getInjectable({
-  id: "v5.0.3-beta.1-user-store-migration",
+const v503Beta1UserPreferencesStorageMigrationInjectable = getInjectable({
+  id: "v5.0.3-beta.1-preferences-storage-migration",
   instantiate: (di) => {
     const userDataPath = di.inject(directoryForUserDataInjectable);
     const kubeConfigsPath = di.inject(directoryForKubeConfigsInjectable);
@@ -85,7 +85,7 @@ const v503Beta1UserStoreMigrationInjectable = getInjectable({
       },
     };
   },
-  injectionToken: userStoreMigrationInjectionToken,
+  injectionToken: userPreferencesMigrationInjectionToken,
 });
 
-export default v503Beta1UserStoreMigrationInjectable;
+export default v503Beta1UserPreferencesStorageMigrationInjectable;

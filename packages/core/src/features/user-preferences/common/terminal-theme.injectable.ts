@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import userStoreInjectable from "./user-store.injectable";
+import userPreferencesStateInjectable from "./state.injectable";
 
 export type TerminalThemePreference = {
   matchLensTheme: true;
@@ -16,11 +16,11 @@ export type TerminalThemePreference = {
 const terminalThemePreferenceInjectable = getInjectable({
   id: "terminal-theme-preference",
   instantiate: (di) => {
-    const userStore = di.inject(userStoreInjectable);
+    const state = di.inject(userPreferencesStateInjectable);
 
     return computed((): TerminalThemePreference => {
       // NOTE: remove use of magic strings
-      if (!userStore.terminalTheme) {
+      if (!state.terminalTheme) {
         return {
           matchLensTheme: true,
         };
@@ -28,7 +28,7 @@ const terminalThemePreferenceInjectable = getInjectable({
 
       return {
         matchLensTheme: false,
-        themeId: userStore.terminalTheme,
+        themeId: state.terminalTheme,
       };
     });
   },

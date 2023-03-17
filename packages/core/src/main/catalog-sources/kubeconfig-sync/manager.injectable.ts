@@ -7,7 +7,7 @@ import directoryForKubeConfigsInjectable from "../../../common/app-paths/directo
 import { KubeconfigSyncManager } from "./manager";
 import kubeconfigSyncLoggerInjectable from "./logger.injectable";
 import watchKubeconfigFileChangesInjectable from "./watch-file-changes.injectable";
-import kubeconfigSyncsInjectable from "../../../common/user-store/kubeconfig-syncs.injectable";
+import kubeconfigSyncsInjectable from "../../../features/user-preferences/common/kubeconfig-syncs.injectable";
 
 const kubeconfigSyncManagerInjectable = getInjectable({
   id: "kubeconfig-sync-manager",

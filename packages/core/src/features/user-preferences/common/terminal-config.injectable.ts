@@ -3,16 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { computed } from "mobx";
-import { toJS } from "../utils";
-import userStoreInjectable from "./user-store.injectable";
+import { computed, toJS } from "mobx";
+import userPreferencesStateInjectable from "./state.injectable";
 
 const terminalConfigInjectable = getInjectable({
   id: "terminal-config",
   instantiate: (di) => {
-    const store = di.inject(userStoreInjectable);
+    const state = di.inject(userPreferencesStateInjectable);
 
-    return computed(() => toJS(store.terminalConfig));
+    return computed(() => toJS(state.terminalConfig));
   },
 });
 

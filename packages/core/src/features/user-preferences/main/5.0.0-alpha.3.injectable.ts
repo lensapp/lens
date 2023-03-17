@@ -5,14 +5,14 @@
 
 // Switch representation of hiddenTableColumns in store
 import { getInjectable } from "@ogre-tools/injectable";
-import { userStoreMigrationInjectionToken } from "../../../common/user-store/migrations-token";
+import { userPreferencesMigrationInjectionToken } from "../common/migrations-token";
 
 interface PreV500Alpha3UserPreferencesModel {
   hiddenTableColumns?: Record<string, string[]>;
 }
 
-const v500Alpha3UserStoreMigrationInjectable = getInjectable({
-  id: "v5.0.0-alpha.3-user-store-migration",
+const v500Alpha3UserPreferencesStorageMigrationInjectable = getInjectable({
+  id: "v5.0.0-alpha.3-preferences-storage-migration",
   instantiate: () => ({
     version: "5.0.0-alpha.3",
     run(store) {
@@ -29,8 +29,8 @@ const v500Alpha3UserStoreMigrationInjectable = getInjectable({
       });
     },
   }),
-  injectionToken: userStoreMigrationInjectionToken,
+  injectionToken: userPreferencesMigrationInjectionToken,
 });
 
-export default v500Alpha3UserStoreMigrationInjectable;
+export default v500Alpha3UserPreferencesStorageMigrationInjectable;
 

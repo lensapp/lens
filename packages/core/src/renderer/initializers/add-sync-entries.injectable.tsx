@@ -3,24 +3,24 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import React from "react";
 import navigateToKubernetesPreferencesInjectable from "../../features/preferences/common/navigate-to-kubernetes-preferences.injectable";
 import { runInAction } from "mobx";
 import showSuccessNotificationInjectable from "../components/notifications/show-success-notification.injectable";
+import userPreferencesStateInjectable from "../../features/user-preferences/common/state.injectable";
 
 const addSyncEntriesInjectable = getInjectable({
   id: "add-sync-entries",
 
   instantiate: (di) => {
-    const userStore = di.inject(userStoreInjectable);
+    const state = di.inject(userPreferencesStateInjectable);
     const navigateToKubernetesPreferences = di.inject(navigateToKubernetesPreferencesInjectable);
     const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
 
     return async (paths: string[]) => {
       runInAction(() => {
         for (const path of paths) {
-          userStore.syncKubeconfigEntries.set(path, {});
+          state.syncKubeconfigEntries.set(path, {});
         }
       });
 
