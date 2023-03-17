@@ -306,6 +306,9 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
         {...getCategoryColumns({ activeCategory })}
         onDetails={this.props.onCatalogEntityListClick}
         renderItemMenu={this.renderItemMenu}
+        tableProps={{
+          customRowHeights: () => 36, // Entity avatar size + padding
+        }}
         data-testid={`catalog-list-for-${activeCategory?.metadata.name ?? "browse-all"}`}
       />
     );

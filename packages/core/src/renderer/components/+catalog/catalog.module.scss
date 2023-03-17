@@ -8,6 +8,10 @@
     opacity: 1;
   }
 
+  :global(.TableCell) {
+    padding: 6px 8px;
+  }
+
   flex-grow: 1;
 }
 
