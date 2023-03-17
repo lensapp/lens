@@ -120,7 +120,7 @@ function findClosestVersionTagLessThanVersion(tags: string[], version: SemVer): 
     .filter(isDefined)
     .filter(version => !version.prerelease.includes("cron"))
     .sort(semver.rcompare)
-    .filter(version => semver.lte(version, version));
+    .filter(v => semver.lte(v, version));
 
   assert(lessThanTags.length > 0, `Cannot find version tag less than ${version.format()}`);
 
@@ -192,7 +192,7 @@ function sortExtendedGithubPrData(left: ExtendedGithubPrData, right: ExtendedGit
 }
 
 async function getRelevantPRs(previousReleasedVersion: string, baseBranch: string): Promise<ExtendedGithubPrData[]> {
-  console.log("retrieving previous 200 PRs...");
+  console.log(`retrieving previous 200 PRs from ${baseBranch} for ${previousReleasedVersion}...`);
 
   const milestone = formatVersionForPickingPrs(await getCurrentVersionOfSubPackage("core"));
   const getMergedPrsArgs = [

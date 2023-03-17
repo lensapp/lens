@@ -106,6 +106,8 @@ export {
   type MonacoEditorProps, type MonacoEditorId,
   type MonacoTheme, type MonacoCustomTheme,
 } from "../../renderer/components/monaco-editor";
+export * from "../../renderer/components/resource-metrics/resource-metrics";
+export * from "../../renderer/components/+workloads-pods/pod-charts";
 
 /**
  * @deprecated Use `Renderer.Navigation.getDetailsUrl`
