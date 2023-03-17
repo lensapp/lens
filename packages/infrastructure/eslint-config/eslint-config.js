@@ -15,6 +15,7 @@ module.exports = {
     "xss",
     "no-unsanitized"
   ],
+  ignorePatterns: ["dist/*"],
   rules: {
     "react/react-in-jsx-scope": 0,
     "security/detect-object-injection": "off",
