@@ -4,11 +4,13 @@
  */
 
 .TableCell {
+  position: relative;
   padding: $padding;
   word-break: break-all;
   overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1;
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
 
   &.menu {
     @include table-cell-action;
@@ -39,43 +41,29 @@
     }
   }
 
-  // fix: don't hide "sortIcon" when used with <TableHead nowrap> and there is not enough space to show all the content
   &.sorting.nowrap {
     display: flex;
     align-items: center;
+  }
 
-    > * {
-      flex-shrink: 0;
-    }
+  .sortIcon {
+    transition: 150ms opacity;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    background: var(--tableHeaderBackground);
 
-    > .content {
-      flex-shrink: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    > .sortIcon {
-      margin: 0;
+    &.enabled {
+      opacity: 1;
     }
   }
 
-  .Table.sortable > .TableHead & {
-    user-select: none;
-    white-space: nowrap;
+  &:hover .sortIcon {
+    opacity: 1;
+  }
 
-    &.sorting {
-      cursor: pointer;
-    }
-
-    .sortIcon {
-      transition: 350ms opacity;
-      opacity: .3;
-
-      &.enabled {
-        opacity: 1;
-      }
-    }
+  &.sorting {
+    cursor: pointer;
   }
 
   a {

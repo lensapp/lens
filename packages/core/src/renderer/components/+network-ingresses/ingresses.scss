@@ -12,7 +12,7 @@
     &.rules {
       flex-grow: 3.0;
       overflow-x: scroll;
-      text-overflow: unset;
+      flex-wrap: wrap;
 
       &::-webkit-scrollbar {
         display: none;
@@ -20,7 +20,6 @@
 
       .ingressRule {
         overflow: hidden;
-        text-overflow: ellipsis;
       }
 
       .ingressRule + .ingressRule {

@@ -9,6 +9,8 @@
   color: var(--tableHeaderColor);
   display: flex;
   flex-shrink: 0;
+  user-select: none;
+  white-space: nowrap;
 
   &.topLine {
     border-top: 1px solid var(--borderFaintColor);
