@@ -22,7 +22,7 @@ import type { MessageChannel } from "../message/message-channel-listener-injecti
 import { getMessageChannelListenerInjectable } from "../message/message-channel-listener-injection-token";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerFeature } from "@k8slens/feature-core";
-import { messagingFeature } from "../feature";
+import { messagingFeatureForUnitTesting } from "../../unit-testing";
 import {
   computedChannelAdministrationChannel,
   ComputedChannelAdminMessage,
@@ -77,8 +77,8 @@ const testChannel2: MessageChannel<string> = { id: "some-other-channel-id" };
             });
 
           runInAction(() => {
-            registerFeature(di1, messagingFeature);
-            registerFeature(di2, messagingFeature);
+            registerFeature(di1, messagingFeatureForUnitTesting);
+            registerFeature(di2, messagingFeatureForUnitTesting);
 
             di1.register(channelValueTestListenerInjectable);
             di2.register(administrationChannelTestListenerInjectable);

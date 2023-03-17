@@ -1,9 +1,4 @@
-import {
-  createContainer,
-  DiContainer,
-  getInjectable,
-  Injectable,
-} from "@ogre-tools/injectable";
+import { createContainer, DiContainer, Injectable } from "@ogre-tools/injectable";
 
 import { registerFeature } from "@k8slens/feature-core";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
@@ -14,7 +9,7 @@ import {
   enlistRequestChannelListenerInjectionToken,
 } from "./features/actual/request/enlist-request-channel-listener-injection-token";
 
-import { messagingFeature } from "./features/actual/feature";
+import { messagingFeatureForUnitTesting } from "./features/unit-testing";
 
 import {
   getRequestChannelListenerInjectable,
@@ -23,10 +18,9 @@ import {
 } from "./features/actual/request/request-channel-listener-injection-token";
 
 import { listeningOfChannelsInjectionToken } from "./features/actual/listening-of-channels/listening-of-channels.injectable";
-import { enlistMessageChannelListenerInjectionToken } from "./features/actual/message/enlist-message-channel-listener-injection-token";
 import { noop } from "lodash/fp";
-import { sendMessageToChannelInjectionToken } from "./features/actual/message/message-to-channel-injection-token.no-coverage";
 import { getRequestChannel } from "./features/actual/request/get-request-channel";
+import { applicationFeature, startApplicationInjectionToken } from "@k8slens/application";
 
 describe("listening-of-requests", () => {
   let di: DiContainer;
@@ -49,38 +43,16 @@ describe("listening-of-requests", () => {
     disposeSomeUnrelatedListenerMock = jest.fn();
 
     enlistRequestChannelListenerMock = jest.fn((listener) =>
-      listener.id === "some-listener"
+      listener.id === "some-channel-id-request-listener-some-listener"
         ? disposeSomeListenerMock
-        : disposeSomeUnrelatedListenerMock
+        : disposeSomeUnrelatedListenerMock,
     );
 
-    const someEnlistMessageChannelListenerInjectable = getInjectable({
-      id: "some-enlist-message-channel-listener",
-      instantiate: () => () => () => {},
-      injectionToken: enlistMessageChannelListenerInjectionToken,
-    });
-
-    const someEnlistRequestChannelListenerInjectable = getInjectable({
-      id: "some-enlist-request-channel-listener",
-      instantiate: () => enlistRequestChannelListenerMock,
-      injectionToken: enlistRequestChannelListenerInjectionToken,
-    });
-
-    const sendMessageToChannelDummyInjectable = getInjectable({
-      id: "send-message-to-channel-dummy",
-      instantiate: () => () => {},
-      injectionToken: sendMessageToChannelInjectionToken,
-    });
-
     runInAction(() => {
-      di.register(
-        someEnlistMessageChannelListenerInjectable,
-        someEnlistRequestChannelListenerInjectable,
-        sendMessageToChannelDummyInjectable
-      );
-
-      registerFeature(di, messagingFeature);
+      registerFeature(di, applicationFeature, messagingFeatureForUnitTesting);
     });
+
+    di.override(enlistRequestChannelListenerInjectionToken, () => enlistRequestChannelListenerMock);
   });
 
   describe("given listening of channels has not started yet", () => {
@@ -111,19 +83,16 @@ describe("listening-of-requests", () => {
         });
       });
 
-      // Todo: make starting automatic by using a runnable with a timeslot.
-      describe("when listening of channels is started", () => {
-        beforeEach(() => {
-          const listeningOnRequestChannels = di.inject(
-            listeningOfChannelsInjectionToken
-          );
+      describe("when application is started", () => {
+        beforeEach(async () => {
+          const startApplication = di.inject(startApplicationInjectionToken);
 
-          listeningOnRequestChannels.start();
+          await startApplication();
         });
 
         it("it enlists a listener for the channel", () => {
           expect(enlistRequestChannelListenerMock).toHaveBeenCalledWith({
-            id: "some-listener",
+            id: "some-channel-id-request-listener-some-listener",
             channel: someChannel,
             handler: someRequestHandler,
           });
@@ -142,19 +111,18 @@ describe("listening-of-requests", () => {
 
           const handler = () => someRequestHandler;
 
-          const someConflictingListenerInjectable =
-            getRequestChannelListenerInjectable({
-              id: "some-other-listener",
-              channel: someChannel,
-              getHandler: handler,
-            });
+          const someConflictingListenerInjectable = getRequestChannelListenerInjectable({
+            id: "some-other-listener",
+            channel: someChannel,
+            getHandler: handler,
+          });
 
           expect(() => {
             runInAction(() => {
               di.register(someConflictingListenerInjectable);
             });
           }).toThrow(
-            'Tried to add listener for channel "some-channel-id" but listener already exists.'
+            'Tried to add listener for channel "some-channel-id" but listener already exists.',
           );
         });
 
@@ -184,7 +152,7 @@ describe("listening-of-requests", () => {
             expect(enlistRequestChannelListenerMock.mock.calls).toEqual([
               [
                 {
-                  id: "some-other-listener",
+                  id: "some-other-channel-id-request-listener-some-other-listener",
                   channel: someOtherChannel,
                   handler: someRequestHandler,
                 },

@@ -1,7 +1,6 @@
 import {
   createContainer,
   DiContainer,
-  getInjectable,
   Injectable,
 } from "@ogre-tools/injectable";
 
@@ -14,7 +13,7 @@ import {
   enlistMessageChannelListenerInjectionToken,
 } from "./features/actual/message/enlist-message-channel-listener-injection-token";
 
-import { messagingFeature } from "./features/actual/feature";
+import { messagingFeatureForUnitTesting } from "./features/unit-testing";
 
 import {
   getMessageChannelListenerInjectable,
@@ -23,9 +22,9 @@ import {
 } from "./features/actual/message/message-channel-listener-injection-token";
 
 import { listeningOfChannelsInjectionToken } from "./features/actual/listening-of-channels/listening-of-channels.injectable";
-import { enlistRequestChannelListenerInjectionToken } from "./features/actual/request/enlist-request-channel-listener-injection-token";
-import { sendMessageToChannelInjectionToken } from "./features/actual/message/message-to-channel-injection-token.no-coverage";
+
 import { getMessageChannel } from "./features/actual/message/get-message-channel";
+import { applicationFeature, startApplicationInjectionToken } from "@k8slens/application";
 
 describe("listening-of-messages", () => {
   let di: DiContainer;
@@ -42,38 +41,16 @@ describe("listening-of-messages", () => {
     disposeSomeUnrelatedListenerMock = jest.fn();
 
     enlistMessageChannelListenerMock = jest.fn((listener) =>
-      listener.id === "some-listener"
+      listener.id === "some-channel-id-message-listener-some-listener"
         ? disposeSomeListenerMock
-        : disposeSomeUnrelatedListenerMock
+        : disposeSomeUnrelatedListenerMock,
     );
 
-    const someEnlistMessageChannelListenerInjectable = getInjectable({
-      id: "some-enlist-message-channel-listener",
-      instantiate: () => enlistMessageChannelListenerMock,
-      injectionToken: enlistMessageChannelListenerInjectionToken,
-    });
-
-    const someEnlistRequestChannelListenerInjectable = getInjectable({
-      id: "some-enlist-request-channel-listener",
-      instantiate: () => () => () => {},
-      injectionToken: enlistRequestChannelListenerInjectionToken,
-    });
-
-    const sendMessageToChannelDummyInjectable = getInjectable({
-      id: "send-message-to-channel-dummy",
-      instantiate: () => () => {},
-      injectionToken: sendMessageToChannelInjectionToken,
-    });
-
     runInAction(() => {
-      di.register(
-        someEnlistMessageChannelListenerInjectable,
-        someEnlistRequestChannelListenerInjectable,
-        sendMessageToChannelDummyInjectable
-      );
-
-      registerFeature(di, messagingFeature);
+      registerFeature(di, applicationFeature, messagingFeatureForUnitTesting);
     });
+
+    di.override(enlistMessageChannelListenerInjectionToken, () => enlistMessageChannelListenerMock);
   });
 
   describe("given listening of channels has not started yet", () => {
@@ -102,19 +79,16 @@ describe("listening-of-messages", () => {
         });
       });
 
-      // Todo: make starting automatic by using a runnable with a timeslot.
-      describe("when listening of channels is started", () => {
-        beforeEach(() => {
-          const listeningOnMessageChannels = di.inject(
-            listeningOfChannelsInjectionToken
-          );
+      describe("when application is started", () => {
+        beforeEach(async () => {
+          const startApplication = di.inject(startApplicationInjectionToken);
 
-          listeningOnMessageChannels.start();
+          await startApplication();
         });
 
         it("it enlists a listener for the channel", () => {
           expect(enlistMessageChannelListenerMock).toHaveBeenCalledWith({
-            id: "some-listener",
+            id: "some-channel-id-message-listener-some-listener",
             channel: someChannel,
             handler: someMessageHandler,
           });
@@ -147,7 +121,7 @@ describe("listening-of-messages", () => {
             expect(enlistMessageChannelListenerMock.mock.calls).toEqual([
               [
                 {
-                  id: "some-other-listener",
+                  id: "some-channel-id-message-listener-some-other-listener",
                   channel: someChannel,
                   handler: someMessageHandler,
                 },
