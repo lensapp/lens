@@ -22,7 +22,6 @@ import electronQuitAndInstallUpdateInjectable from "./electron-app/features/elec
 import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-updater-is-active.injectable";
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
-import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
 import type { GlobalOverride } from "@k8slens/test-utils";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
@@ -56,7 +55,6 @@ export function getDiForUnitTesting() {
     di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
   }
 
-  di.override(electronInjectable, () => ({}));
   di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
 
   overrideRunnablesHavingSideEffects(di);

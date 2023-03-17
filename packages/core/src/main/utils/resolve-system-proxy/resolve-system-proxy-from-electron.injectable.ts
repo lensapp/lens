@@ -3,28 +3,22 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import electronInjectable from "./electron.injectable";
+import electronBrowserWindowInjectable from "./electron-browser-window.injectable";
 import withErrorLoggingInjectable from "../../../common/utils/with-error-logging/with-error-logging.injectable";
 
 const resolveSystemProxyFromElectronInjectable = getInjectable({
   id: "resolve-system-proxy-from-electron",
 
   instantiate: (di) => {
-    const electron = di.inject(electronInjectable);
+    const browserWindow = di.inject(electronBrowserWindowInjectable);
     const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
-
     const withErrorLogging = withErrorLoggingFor(() => "Error resolving proxy");
+    const hiddenWindow = browserWindow({
+      show: false,
+    });
 
     return withErrorLogging(async (url: string) => {
-      const webContent = electron.webContents
-        .getAllWebContents()
-        .find((x) => !x.isDestroyed());
-
-      if (!webContent) {
-        throw new Error(`Tried to resolve proxy for "${url}", but no browser window was available`);
-      }
-
-      return await webContent.session.resolveProxy(url);
+      return await hiddenWindow.webContents.session.resolveProxy(url);
     });
   },
 });
