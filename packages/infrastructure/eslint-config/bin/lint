@@ -12,11 +12,3 @@ try {
 
   process.exit(1);
 }
-
-try {
-  const result = execSync(`prettier ${shouldDoTheFix ? "--write" : "--check"} "**/*.{js,ts,tsx}"`);
-
-  console.log(result.toString());
-} catch (error) {
-  console.log(error.stdout.toString());
-}
