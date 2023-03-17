@@ -8,7 +8,6 @@ import { disposer, getOrInsert, noop, WrappedAbortController } from "@k8slens/ut
 import { once } from "lodash";
 import type { Logger } from "../../common/logger";
 import type { KubeObjectStoreLoadAllParams, KubeObjectStoreSubscribeParams } from "../../common/k8s-api/kube-object.store";
-import AbortController from "abort-controller";
 import type { ClusterContext } from "../cluster-frame-context/cluster-frame-context";
 
 // Kubernetes watch-api client

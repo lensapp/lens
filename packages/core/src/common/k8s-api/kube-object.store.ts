@@ -17,7 +17,6 @@ import type { Patch } from "rfc6902";
 import type { Logger } from "../logger";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
-import AbortController from "abort-controller";
 import type { ClusterContext } from "../../renderer/cluster-frame-context/cluster-frame-context";
 import autoBind from "auto-bind";
 
