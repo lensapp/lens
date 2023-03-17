@@ -6,17 +6,35 @@
 // Base class for all kubernetes objects
 
 import moment from "moment";
-import type { KubeJsonApiData, KubeJsonApiDataList, KubeJsonApiListMetadata } from "./kube-json-api";
-import { formatDuration, hasOptionalTypedProperty, hasTypedProperty, isObject, isString, isNumber, bindPredicate, isTypedArray, isRecord } from "@k8slens/utilities";
+import type {
+  KubeJsonApiData,
+  KubeJsonApiDataList,
+  KubeJsonApiListMetadata,
+} from "./kube-json-api";
+import {
+  formatDuration,
+  hasOptionalTypedProperty,
+  hasTypedProperty,
+  isObject,
+  isString,
+  isNumber,
+  bindPredicate,
+  isTypedArray,
+  isRecord,
+} from "@k8slens/utilities";
 import type { ItemObject } from "../item.store";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { JsonObject } from "type-fest";
-import requestKubeObjectPatchInjectable from "./endpoints/resource-applier.api/request-patch.injectable";
+import requestKubeObjectPatchInjectable
+  from "./endpoints/resource-applier.api/request-patch.injectable";
 import { apiKubeInjectionToken } from "./api-kube";
-import requestKubeObjectCreationInjectable from "./endpoints/resource-applier.api/request-update.injectable";
+import requestKubeObjectCreationInjectable
+  from "./endpoints/resource-applier.api/request-update.injectable";
 import { dump } from "js-yaml";
-import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import {
+  getLegacyGlobalDiForExtensionApi,
+} from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import autoBind from "auto-bind";
 
 export type KubeJsonApiDataFor<K> = K extends KubeObject<infer Metadata, infer Status, infer Spec>
@@ -203,13 +221,17 @@ export interface BaseKubeJsonApiObjectMetadata<Namespaced extends KubeObjectScop
   [key: string]: unknown;
 }
 
-export type KubeJsonApiObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectScope> = BaseKubeJsonApiObjectMetadata<Namespaced> & (
+export type KubeJsonApiObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectScope> =
+  BaseKubeJsonApiObjectMetadata<Namespaced>
+  & (
   Namespaced extends KubeObjectScope.Namespace
     ? { readonly namespace: string }
     : {}
-);
+  );
 
-export type KubeObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectScope> = KubeJsonApiObjectMetadata<Namespaced> & {
+export type KubeObjectMetadata<Namespaced extends KubeObjectScope = KubeObjectScope> =
+  KubeJsonApiObjectMetadata<Namespaced>
+  & {
   readonly selfLink: string;
   readonly uid: string;
   readonly name: string;
@@ -225,6 +247,25 @@ export interface KubeStatusData {
   code: number;
   message?: string;
   reason?: string;
+  status?: string;
+}
+
+export interface EvictionObject {
+  kind: "Eviction";
+  apiVersion: string | "policy/v1";
+  metadata: Partial<KubeObjectMetadata>;
+  deleteOptions?: {
+    kind?: string;
+    apiVersion?: string;
+    dryRun?: string[];
+    gracePeriodSeconds?: number;
+    orphanDependents?: boolean;
+    propagationPolicy?: string;
+    preconditions?: {
+      resourceVersion: string;
+      uid: string;
+    }[];
+  };
 }
 
 export function isKubeStatusData(object: unknown): object is KubeStatusData {
@@ -232,8 +273,11 @@ export function isKubeStatusData(object: unknown): object is KubeStatusData {
     && hasTypedProperty(object, "kind", isString)
     && hasTypedProperty(object, "apiVersion", isString)
     && hasTypedProperty(object, "code", isNumber)
-    && hasOptionalTypedProperty(object, "message", isString)
-    && hasOptionalTypedProperty(object, "reason", isString)
+    && (
+      hasOptionalTypedProperty(object, "message", isString)
+      || hasOptionalTypedProperty(object, "reason", isString)
+      || hasOptionalTypedProperty(object, "status", isString)
+    )
     && object.kind === "Status";
 }
 
@@ -241,14 +285,22 @@ export class KubeStatus {
   public readonly kind = "Status";
   public readonly apiVersion: string;
   public readonly code: number;
-  public readonly message: string;
-  public readonly reason: string;
+  public readonly message?: string;
+  public readonly reason?: string;
+  public readonly status?: string;
 
   constructor(data: KubeStatusData) {
     this.apiVersion = data.apiVersion;
     this.code = data.code;
     this.message = data.message || "";
     this.reason = data.reason || "";
+    this.status = data.status || "";
+  }
+
+  getMessage() {
+    const { code, message, reason, status } = this;
+
+    return `${code}: ${message ?? reason ?? status}`;
   }
 }
 
