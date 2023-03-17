@@ -34,8 +34,8 @@ const k8sRequestInjectable = getInjectable({
     ) => {
       const controller = timeout ? withTimeout(timeout) : undefined;
 
-      if (controller) {
-        signal?.addEventListener("abort", () => controller.abort());
+      if (controller && signal) {
+        signal.addEventListener("abort", () => controller.abort());
       }
 
       const response = await lensFetch(`/${cluster.id}${pathnameAndQuery}`, {
