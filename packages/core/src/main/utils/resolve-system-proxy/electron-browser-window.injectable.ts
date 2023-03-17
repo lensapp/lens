@@ -7,7 +7,7 @@ import type { BrowserWindowConstructorOptions } from "electron";
 import { BrowserWindow } from "electron";
 
 const electronBrowserWindowInjectable = getInjectable({
-  id: "electron",
+  id: "electron-browser-window",
   instantiate: () => {
     return (opts: BrowserWindowConstructorOptions) => {
       return new BrowserWindow(opts);
