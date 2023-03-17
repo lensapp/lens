@@ -3,23 +3,53 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { transports } from "winston";
-import directoryForLogsInjectable from "../../common/app-paths/directory-for-logs.injectable";
-import IpcFileLogger from "./ipc-file-logger";
+import { getOrInsertWith } from "@k8slens/utilities";
+import type { LogEntry, transports } from "winston";
+import createIpcFileLoggerTranportInjectable from "./create-ipc-file-transport.injectable";
+
+export interface IpcFileLogger {
+  log: (fileLog: { fileId: string; entry: LogEntry }) => void;
+  close: (fileId: string) => void;
+  closeAll: () => void;
+}
 
 const ipcFileLoggerInjectable = getInjectable({
   id: "ipc-file-logger",
-  instantiate: (di) =>
-    new IpcFileLogger(
-      {
-        dirname: di.inject(directoryForLogsInjectable),
-        maxsize: 1024 * 1024,
-        maxFiles: 2,
-        tailable: true,
-      },
-      (options: transports.FileTransportOptions) => new transports.File(options),
-    ),
-  causesSideEffects: true,
+  instantiate: (di): IpcFileLogger => {
+    const createIpcFileTransport = di.inject(createIpcFileLoggerTranportInjectable);
+    const fileTransports = new Map<string, transports.FileTransportInstance>();
+
+    function log({ fileId, entry }: { fileId: string; entry: LogEntry }) {
+      const transport = getOrInsertWith(
+        fileTransports,
+        fileId,
+        () => createIpcFileTransport(fileId),
+      );
+
+      transport?.log?.(entry, () => {});
+    }
+
+    function close(fileId: string) {
+      const transport = fileTransports.get(fileId);
+
+      if (transport) {
+        transport.close?.();
+        fileTransports.delete(fileId);
+      }
+    }
+
+    function closeAll() {
+      for (const fileId of fileTransports.keys()) {
+        close(fileId);
+      }
+    }
+
+    return {
+      log,
+      close,
+      closeAll,
+    };
+  },
 });
 
 export default ipcFileLoggerInjectable;

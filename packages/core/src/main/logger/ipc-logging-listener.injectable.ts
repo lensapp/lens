@@ -4,11 +4,8 @@
  */
 import ipcFileLoggerInjectable from "./ipc-file-logger.injectable";
 import { getMessageChannelListenerInjectable } from "../../common/utils/channel/message-channel-listener-injection-token";
-import type {
-  IpcFileLogObject } from "../../common/logger/ipc-file-logger-channel";
-import {
-  ipcFileLoggerChannel,
-} from "../../common/logger/ipc-file-logger-channel";
+import type { IpcFileLogObject } from "../../common/logger/ipc-file-logger-channel";
+import { ipcFileLoggerChannel } from "../../common/logger/ipc-file-logger-channel";
 import { MESSAGE } from "triple-beam";
 
 /**
@@ -31,10 +28,12 @@ export function deserializeLogFromIpc(ipcFileLogObject: IpcFileLogObject) {
 const ipcFileLoggingListenerInjectable = getMessageChannelListenerInjectable({
   id: "ipc-file-logging",
   channel: ipcFileLoggerChannel,
-  handler: (di) => (ipcFileLogObject) =>
-    di
-      .inject(ipcFileLoggerInjectable)
-      .log(deserializeLogFromIpc(ipcFileLogObject)),
+  handler: (di) => {
+    const logger = di.inject(ipcFileLoggerInjectable);
+
+    return (ipcFileLogObject) =>
+      logger.log(deserializeLogFromIpc(ipcFileLogObject));
+  },
 });
 
 export default ipcFileLoggingListenerInjectable;

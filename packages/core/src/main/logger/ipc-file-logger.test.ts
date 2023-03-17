@@ -2,7 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import IpcFileLogger from "./ipc-file-logger";
+import { getDiForUnitTesting } from "../getDiForUnitTesting";
+import createIpcFileLoggerTranportInjectable from "./create-ipc-file-transport.injectable";
+import type { IpcFileLogger } from "./ipc-file-logger.injectable";
+import ipcFileLoggerInjectable from "./ipc-file-logger.injectable";
 
 describe("ipc file logger in main", () => {
   let logMock: jest.Mock;
@@ -17,14 +20,11 @@ describe("ipc file logger in main", () => {
       log: logMock,
       close: closeMock,
     }));
-    logger = new IpcFileLogger(
-      {
-        dirname: "some-logs-dir",
-        maxFiles: 1,
-        tailable: true,
-      },
-      createFileTransportMock,
-    );
+
+    const di = getDiForUnitTesting();
+
+    di.override(createIpcFileLoggerTranportInjectable, () => createFileTransportMock);
+    logger = di.inject(ipcFileLoggerInjectable);
   });
 
   it("creates a transport for new log file", () => {
@@ -33,12 +33,7 @@ describe("ipc file logger in main", () => {
       entry: { level: "irrelevant", message: "irrelevant" },
     });
 
-    expect(createFileTransportMock).toHaveBeenCalledWith({
-      dirname: "some-logs-dir",
-      filename: "lens-some-log-file.log",
-      maxFiles: 1,
-      tailable: true,
-    });
+    expect(createFileTransportMock).toHaveBeenCalledWith("some-log-file");
   });
 
   it("uses existing transport for log file", () => {
@@ -59,12 +54,7 @@ describe("ipc file logger in main", () => {
 
     expect(createFileTransportMock).toHaveBeenCalledTimes(1);
 
-    expect(createFileTransportMock).toHaveBeenCalledWith({
-      dirname: "some-logs-dir",
-      filename: "lens-some-log-file.log",
-      maxFiles: 1,
-      tailable: true,
-    });
+    expect(createFileTransportMock).toHaveBeenCalledWith("some-log-file");
   });
 
   it("creates separate transport for each log file", () => {
@@ -85,26 +75,11 @@ describe("ipc file logger in main", () => {
 
     expect(createFileTransportMock).toHaveBeenCalledTimes(3);
 
-    expect(createFileTransportMock).toHaveBeenCalledWith({
-      dirname: "some-logs-dir",
-      filename: "lens-some-log-file.log",
-      maxFiles: 1,
-      tailable: true,
-    });
+    expect(createFileTransportMock).toHaveBeenCalledWith("some-log-file");
 
-    expect(createFileTransportMock).toHaveBeenCalledWith({
-      dirname: "some-logs-dir",
-      filename: "lens-some-other-log-file.log",
-      maxFiles: 1,
-      tailable: true,
-    });
+    expect(createFileTransportMock).toHaveBeenCalledWith("some-other-log-file");
 
-    expect(createFileTransportMock).toHaveBeenCalledWith({
-      dirname: "some-logs-dir",
-      filename: "lens-some-yet-another-log-file.log",
-      maxFiles: 1,
-      tailable: true,
-    });
+    expect(createFileTransportMock).toHaveBeenCalledWith("some-yet-another-log-file");
   });
 
   it("logs using file transport", () => {
@@ -122,12 +97,12 @@ describe("ipc file logger in main", () => {
     const someLogMock = jest.fn();
     const someOthertLogMock = jest.fn();
 
-    createFileTransportMock.mockImplementation((options) => {
-      if (options.filename === "lens-some-log-file.log") {
+    createFileTransportMock.mockImplementation((fileId: string) => {
+      if (fileId === "some-log-file") {
         return { log: someLogMock };
       }
 
-      if (options.filename === "lens-some-other-log-file.log") {
+      if (fileId === "some-other-log-file") {
         return { log: someOthertLogMock };
       }
 
