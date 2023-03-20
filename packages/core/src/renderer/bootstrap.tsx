@@ -5,7 +5,6 @@
 
 import "./components/app.scss";
 
-import { unmountComponentAtNode } from "react-dom";
 import type {
   DiContainerForInjection,
 } from "@ogre-tools/injectable";
@@ -35,7 +34,7 @@ export async function bootstrap(di: DiContainerForInjection) {
   }
 
   try {
-    await initializeApp(() => unmountComponentAtNode(rootElem));
+    await initializeApp();
   } catch (error) {
     console.error(`[BOOTSTRAP]: view initialization error: ${error}`, {
       origin: location.href,

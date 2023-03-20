@@ -18,7 +18,6 @@ interface Dependencies {
   emitAppEvent: EmitAppEvent;
   logger: Logger;
   showErrorNotification: ShowNotification;
-  closeFileLogging: () => void;
 }
 
 const logPrefix = "[CLUSTER-FRAME]:";
@@ -32,9 +31,8 @@ export const initClusterFrame =
     emitAppEvent,
     logger,
     showErrorNotification,
-    closeFileLogging,
   }: Dependencies) =>
-    async (unmountRoot: () => void) => {
+    async () => {
     // TODO: Make catalogEntityRegistry already initialized when passed as dependency
       catalogEntityRegistry.init();
 
@@ -71,13 +69,4 @@ export const initClusterFrame =
           },
         });
       });
-
-      window.onbeforeunload = () => {
-        logger.info(
-          `${logPrefix} Unload dashboard, clusterId=${hostedCluster.id}, frameId=${frameRoutingId}`,
-        );
-
-        unmountRoot();
-        closeFileLogging();
-      };
     };
