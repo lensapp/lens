@@ -13,8 +13,14 @@ const resolveSystemProxyFromElectronInjectable = getInjectable({
     const helperWindow = di.inject(resolveSystemProxyWindowInjectable);
     const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
     const withErrorLogging = withErrorLoggingFor(() => "Error resolving proxy");
+    let loaded = false;
 
     return withErrorLogging(async (url: string) => {
+      if (!loaded) {
+        await helperWindow.loadURL("about:blank");
+        loaded = true;
+      }
+
       return await helperWindow.webContents.session.resolveProxy(url);
     });
   },
