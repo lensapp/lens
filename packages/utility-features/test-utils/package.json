@@ -23,5 +23,12 @@
     "build": "webpack",
     "dev": "webpack --mode=development --watch",
     "test": "jest --coverage --runInBand"
+  },
+  "peerDependencies": {
+    "@ogre-tools/injectable": "^15.1.2",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.191"
   }
 }
