@@ -24,6 +24,7 @@ import { KubeApi as ExternalKubeApi } from "../../../extensions/common-api/k8s-a
 import { Cluster } from "../../cluster/cluster";
 import { runInAction } from "mobx";
 import { customResourceDefinitionApiInjectionToken } from "../api-manager/crd-api-token";
+import assert from "assert";
 
 class TestApi extends KubeApi<KubeObject> {
   protected async checkPreferredVersion() {
@@ -156,6 +157,10 @@ describe("ApiManager", () => {
       });
     });
 
+    it("can have a default KubeObjectStore instance retrieved for it", () => {
+      expect(apiManager.getStore(apiBase)).toBeInstanceOf(KubeObjectStore);
+    });
+
     describe("given that an extension registers an api with the same apibase", () => {
       beforeEach(() => {
         void Object.assign(new ExternalKubeApi({
@@ -170,6 +175,34 @@ describe("ApiManager", () => {
       it("the extension's instance is retrievable instead from apiManager", () => {
         expect(apiManager.getApi(apiBase)).toMatchObject({
           myField: 2,
+        });
+      });
+
+      it("can have a default KubeObjectStore instance retrieved for it", () => {
+        expect(apiManager.getStore(apiBase)).toBeInstanceOf(KubeObjectStore);
+      });
+
+      describe("given that an extension registers a store for the same apibase", () => {
+        beforeEach(() => {
+          const api = apiManager.getApi(apiBase);
+
+          assert(api);
+
+          apiManager.registerStore(Object.assign(
+            new KubeObjectStore({
+              context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
+              logger: di.inject(loggerInjectable),
+            }, api),
+            {
+              someField: 2,
+            },
+          ));
+        });
+
+        it("can gets the custom KubeObjectStore instance instead", () => {
+          expect(apiManager.getStore(apiBase)).toMatchObject({
+            someField: 2,
+          });
         });
       });
     });
