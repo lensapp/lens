@@ -5,11 +5,11 @@
 
 import { getGlobalOverride } from "@k8slens/test-utils";
 import type { BrowserWindow, Session, WebContents } from "electron";
-import electronBrowserWindowInjectable from "./electron-browser-window.injectable";
+import resolveSystemProxyWindowInjectable from "./resolve-system-proxy-window.injectable";
 
 export default getGlobalOverride(
-  electronBrowserWindowInjectable, 
-  () => () => ({
+  resolveSystemProxyWindowInjectable, 
+  () => ({
     webContents: {
       session: {
         resolveProxy: () => "DIRECT",
