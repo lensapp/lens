@@ -54,12 +54,12 @@ const overrideMessaging = ({
         const resolvableHandlePromise = asyncFn();
 
         resolvableHandlePromise().then(() => {
-          handlersForChannel.forEach((handler) => handler(message));
+          handlersForChannel.forEach((handler) => handler(message, { frameId: 42, processId: 42 }));
         });
 
         messagePropagationBuffer.add(resolvableHandlePromise);
       } else {
-        handlersForChannel.forEach((handler) => handler(message));
+        handlersForChannel.forEach((handler) => handler(message, { frameId: 42, processId: 42 }));
       }
     });
   });
@@ -85,7 +85,7 @@ const overrideRequesting = ({
 }: {
   di: DiContainer;
 
-  requestListenersByDi: Map<DiContainer, Map<string, Set<MessageChannelHandler<Channel>>>>;
+  requestListenersByDi: Map<DiContainer, Map<string, Set<RequestChannelHandler<Channel>>>>;
 }) => {
   const requestHandlersByChannel = new Map<string, Set<RequestChannelHandler<Channel>>>();
 

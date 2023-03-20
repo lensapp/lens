@@ -60,11 +60,11 @@ describe("enlist message channel listener in main", () => {
 
     describe("when message arrives", () => {
       beforeEach(() => {
-        onMock.mock.calls[0][1]({} as IpcMainEvent, "some-message");
+        onMock.mock.calls[0][1]({ frameId: 42, processId: 84 } as IpcMainEvent, "some-message");
       });
 
       it("calls the handler with the message", () => {
-        expect(handlerMock).toHaveBeenCalledWith("some-message");
+        expect(handlerMock).toHaveBeenCalledWith("some-message", { frameId: 42, processId: 84 });
       });
 
       it("when disposing the listener, de-registers the listener", () => {
@@ -75,21 +75,21 @@ describe("enlist message channel listener in main", () => {
     });
 
     it("given number as message, when message arrives, calls the handler with the message", () => {
-      onMock.mock.calls[0][1]({} as IpcMainEvent, 42);
+      onMock.mock.calls[0][1]({ frameId: 42, processId: 84 } as IpcMainEvent, 42);
 
-      expect(handlerMock).toHaveBeenCalledWith(42);
+      expect(handlerMock).toHaveBeenCalledWith(42, { frameId: 42, processId: 84 });
     });
 
     it("given boolean as message, when message arrives, calls the handler with the message", () => {
-      onMock.mock.calls[0][1]({} as IpcMainEvent, true);
+      onMock.mock.calls[0][1]({ frameId: 42, processId: 84 } as IpcMainEvent, true);
 
-      expect(handlerMock).toHaveBeenCalledWith(true);
+      expect(handlerMock).toHaveBeenCalledWith(true, { frameId: 42, processId: 84 });
     });
 
     it("given object as message, when message arrives, calls the handler with the message", () => {
-      onMock.mock.calls[0][1]({} as IpcMainEvent, { some: "object" });
+      onMock.mock.calls[0][1]({ frameId: 42, processId: 84 } as IpcMainEvent, { some: "object" });
 
-      expect(handlerMock).toHaveBeenCalledWith({ some: "object" });
+      expect(handlerMock).toHaveBeenCalledWith({ some: "object" }, { frameId: 42, processId: 84 });
     });
   });
 });

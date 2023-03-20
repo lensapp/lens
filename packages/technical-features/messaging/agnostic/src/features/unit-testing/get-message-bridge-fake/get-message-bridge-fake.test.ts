@@ -162,6 +162,10 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
               it("the response gets handled in di-1", () => {
                 expect(someHandler1MockInDi1).toHaveBeenCalledWith(
                   "some-response-to: some-message",
+                  {
+                    frameId: 42,
+                    processId: 42,
+                  },
                 );
               });
 
@@ -188,6 +192,10 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
               it("the response gets handled in di-1", () => {
                 expect(someHandler1MockInDi1).toHaveBeenCalledWith(
                   "some-response-to: some-message",
+                  {
+                    frameId: 42,
+                    processId: 42,
+                  },
                 );
               });
             });
@@ -224,9 +232,15 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
             });
 
             it("listeners in other than sending DIs handle the message", () => {
-              expect(someHandler1MockInDi2).toHaveBeenCalledWith("some-message");
+              expect(someHandler1MockInDi2).toHaveBeenCalledWith("some-message", {
+                frameId: 42,
+                processId: 42,
+              });
 
-              expect(someHandler2MockInDi2).toHaveBeenCalledWith("some-message");
+              expect(someHandler2MockInDi2).toHaveBeenCalledWith("some-message", {
+                frameId: 42,
+                processId: 42,
+              });
             });
           });
 
@@ -245,9 +259,15 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
               });
 
               it("listeners still handle the message", () => {
-                expect(someHandler1MockInDi2).toHaveBeenCalledWith("some-message");
+                expect(someHandler1MockInDi2).toHaveBeenCalledWith("some-message", {
+                  frameId: 42,
+                  processId: 42,
+                });
 
-                expect(someHandler2MockInDi2).toHaveBeenCalledWith("some-message");
+                expect(someHandler2MockInDi2).toHaveBeenCalledWith("some-message", {
+                  frameId: 42,
+                  processId: 42,
+                });
               });
             });
         });

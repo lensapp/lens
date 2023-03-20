@@ -4,6 +4,7 @@ import { messagingFeatureForMain } from "../feature";
 import { getMessageChannel, sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import getWebContentsInjectable from "./get-web-contents.injectable";
 import type { WebContents } from "electron";
+import allowCommunicationListenerInjectable from "./allow-communication-listener.injectable";
 
 const someChannel = getMessageChannel<string>("some-channel");
 
@@ -24,51 +25,88 @@ describe("send-message-to-channel", () => {
     expect(() => sendMessageToChannel(someChannel, "some-message")).not.toThrow();
   });
 
-  it("given multiple web contents, when sending a message, sends message to all web contents", () => {
-    const sendToWebContentsMock = jest.fn();
+  describe("given web content that is alive", () => {
+    let sendToFrameMock: jest.Mock;
+    let sendMessageMock: jest.Mock;
 
-    di.override(getWebContentsInjectable, () => () => [
-      {
-        send: (...args: any[]) => sendToWebContentsMock("some-web-content", ...args),
-        isDestroyed: () => false,
-        isCrashed: () => false,
-      } as unknown as WebContents,
+    beforeEach(() => {
+      sendToFrameMock = jest.fn();
+      sendMessageMock = jest.fn();
 
-      {
-        send: (...args: any[]) => sendToWebContentsMock("some-other-web-content", ...args),
-        isDestroyed: () => false,
-        isCrashed: () => false,
-      } as unknown as WebContents,
-    ]);
+      di.override(getWebContentsInjectable, () => () => [
+        {
+          send: (...args: any[]) => sendMessageMock("first", ...args),
+          sendToFrame: (...args: any[]) => sendToFrameMock("first", ...args),
+          isDestroyed: () => false,
+          isCrashed: () => false,
+        } as unknown as WebContents,
+        {
+          send: (...args: any[]) => sendMessageMock("second", ...args),
+          sendToFrame: (...args: any[]) => sendToFrameMock("second", ...args),
+          isDestroyed: () => false,
+          isCrashed: () => false,
+        } as unknown as WebContents,
+      ]);
+    });
 
-    const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
+    it("when sending message, sends the message to webcontents", () => {
+      const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
 
-    sendMessageToChannel(someChannel, "some-message");
+      sendMessageToChannel(someChannel, "some-message");
 
-    expect(sendToWebContentsMock.mock.calls).toEqual([
-      ["some-web-content", "some-channel", "some-message"],
-      ["some-other-web-content", "some-channel", "some-message"],
-    ]);
+      expect(sendMessageMock.mock.calls).toEqual([
+        ["first", "some-channel", "some-message"],
+        ["second", "some-channel", "some-message"],
+      ]);
+    });
+
+    describe("when multiple renderers inform that they are ready to listen messages", () => {
+      beforeEach(() => {
+        const allowCommunicationListener = di.inject(allowCommunicationListenerInjectable);
+
+        allowCommunicationListener.handler(undefined, { frameId: 42, processId: 126 });
+        allowCommunicationListener.handler(undefined, { frameId: 84, processId: 168 });
+      });
+
+      describe("when sending a message", () => {
+        beforeEach(() => {
+          const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
+
+          sendMessageToChannel(someChannel, "some-message");
+        });
+
+        it("sends the message to webcontents", () => {
+          expect(sendMessageMock.mock.calls).toEqual([
+            ["first", "some-channel", "some-message"],
+            ["second", "some-channel", "some-message"],
+          ]);
+        });
+
+        it("sends the message to individual frames in webcontents", () => {
+          expect(sendToFrameMock.mock.calls).toEqual([
+            ["first", [42, 126], "some-channel", "some-message"],
+            ["first", [84, 168], "some-channel", "some-message"],
+
+            ["second", [42, 126], "some-channel", "some-message"],
+            ["second", [84, 168], "some-channel", "some-message"],
+          ]);
+        });
+      });
+    });
   });
 
-  it("given non alive web content, when sending a message, sends message to all web contents being alive", () => {
+  it("given non alive web contents, when sending a message, does not send messages", () => {
     const sendToWebContentsMock = jest.fn();
 
     di.override(getWebContentsInjectable, () => () => [
       {
-        send: (...args: any[]) => sendToWebContentsMock("some-alive-content", ...args),
-        isDestroyed: () => false,
-        isCrashed: () => false,
-      } as unknown as WebContents,
-
-      {
-        send: (...args: any[]) => sendToWebContentsMock("destroyed-web-content", ...args),
+        send: sendToWebContentsMock,
         isDestroyed: () => true,
         isCrashed: () => false,
       } as unknown as WebContents,
 
       {
-        send: (...args: any[]) => sendToWebContentsMock("crashed-web-content", ...args),
+        send: sendToWebContentsMock,
         isDestroyed: () => false,
         isCrashed: () => true,
       } as unknown as WebContents,
@@ -76,10 +114,8 @@ describe("send-message-to-channel", () => {
 
     const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
 
-    sendMessageToChannel(someChannel, "some-message");
+    sendMessageToChannel(someChannel, "irrelevant");
 
-    expect(sendToWebContentsMock.mock.calls).toEqual([
-      ["some-alive-content", "some-channel", "some-message"],
-    ]);
+    expect(sendToWebContentsMock).not.toHaveBeenCalled();
   });
 });

@@ -2,8 +2,9 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { SendMessageToChannel, sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import getWebContentsInjectable from "./get-web-contents.injectable";
-import { reject } from "lodash/fp";
+import { flatMap, reject } from "lodash/fp";
 import type { WebContents } from "electron";
+import frameIdsInjectable from "./frameIds.injectable";
 
 const isDestroyed = (webContent: WebContents) => webContent.isDestroyed();
 const isCrashed = (webContent: WebContents) => webContent.isCrashed();
@@ -18,6 +19,7 @@ const sendMessageToChannelInjectable = getInjectable({
 
   instantiate: (di) => {
     const getWebContents = di.inject(getWebContentsInjectable);
+    const frameIds = di.inject(frameIdsInjectable);
 
     return ((channel, message) => {
       pipeline(
@@ -25,8 +27,16 @@ const sendMessageToChannelInjectable = getInjectable({
         reject(isDestroyed),
         reject(isCrashed),
 
-        forEach((webContent) => {
-          webContent.send(channel.id, message);
+        flatMap((webContent) => [
+          (channelId: string, ...args: any[]) => webContent.send(channelId, ...args),
+
+          ...[...frameIds].map(({ frameId, processId }) => (channelId: string, ...args: any[]) => {
+            webContent.sendToFrame([frameId, processId], channelId, ...args);
+          }),
+        ]),
+
+        forEach((send) => {
+          send(channel.id, message);
         }),
       );
     }) as SendMessageToChannel;
