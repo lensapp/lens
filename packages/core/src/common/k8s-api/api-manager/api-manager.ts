@@ -26,6 +26,7 @@ export type FindApiCallback = (api: KubeApi<KubeObject>) => boolean;
 
 interface Dependencies {
   readonly apis: IComputedValue<KubeApi[]>;
+  readonly crdApis: IComputedValue<KubeApi[]>;
   readonly stores: IComputedValue<KubeObjectStore[]>;
 }
 
@@ -53,6 +54,12 @@ export class ApiManager {
           if (storedApi === api) {
             newState.delete(apiBase);
           }
+        }
+      }
+
+      for (const crdApi of this.dependencies.crdApis.get()) {
+        if (!newState.has(crdApi.apiBase)) {
+          newState.set(crdApi.apiBase, crdApi);
         }
       }
 

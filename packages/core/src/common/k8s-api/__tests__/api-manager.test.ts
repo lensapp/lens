@@ -4,6 +4,7 @@
  */
 
 import type { DiContainer } from "@ogre-tools/injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
 import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
@@ -21,6 +22,8 @@ import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 // eslint-disable-next-line no-restricted-imports
 import { KubeApi as ExternalKubeApi } from "../../../extensions/common-api/k8s-api";
 import { Cluster } from "../../cluster/cluster";
+import { runInAction } from "mobx";
+import { customResourceDefinitionApiInjectionToken } from "../api-manager/crd-api-token";
 
 class TestApi extends KubeApi<KubeObject> {
   protected async checkPreferredVersion() {
@@ -114,6 +117,60 @@ describe("ApiManager", () => {
 
       expect(apiManager.getApi(apiBase)).toMatchObject({
         myField: 2,
+      });
+    });
+  });
+
+  describe("given than a CRD has a default KubeApi registered for it", () => {
+    const apiBase = "/apis/aquasecurity.github.io/v1alpha1/vulnerabilityreports";
+
+    beforeEach(() => {
+      runInAction(() => {
+        di.register(getInjectable({
+          id: `default-kube-api-for-custom-resource-definition-${apiBase}`,
+          instantiate: (di) => {
+            const objectConstructor = class extends KubeObject {
+              static readonly kind = "VulnerabilityReport";
+              static readonly namespaced = true;
+              static readonly apiBase = apiBase;
+            };
+
+            return Object.assign(
+              new KubeApi({
+                logger: di.inject(loggerInjectable),
+                maybeKubeApi: di.inject(maybeKubeApiInjectable),
+              }, { objectConstructor }),
+              {
+                myField: 1,
+              },
+            );
+          },
+          injectionToken: customResourceDefinitionApiInjectionToken,
+        }));
+      });
+    });
+
+    it("can be retrieved from apiManager", () => {
+      expect(apiManager.getApi(apiBase)).toMatchObject({
+        myField: 1,
+      });
+    });
+
+    describe("given that an extension registers an api with the same apibase", () => {
+      beforeEach(() => {
+        void Object.assign(new ExternalKubeApi({
+          objectConstructor: KubeObject,
+          apiBase,
+          kind: "VulnerabilityReport",
+        }), {
+          myField: 2,
+        });
+      });
+
+      it("the extension's instance is retrievable instead from apiManager", () => {
+        expect(apiManager.getApi(apiBase)).toMatchObject({
+          myField: 2,
+        });
       });
     });
   });

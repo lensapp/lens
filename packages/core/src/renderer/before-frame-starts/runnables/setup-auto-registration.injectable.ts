@@ -63,13 +63,6 @@ const setupAutoRegistrationInjectable = getInjectable({
       };
 
       autoRegistrationEmitter
-        .on("customResourceDefinition", (crd) => {
-          if (initialized) {
-            autoInitCustomResourceStore(crd);
-          } else {
-            beforeApiManagerInitializationCrds.push(crd);
-          }
-        })
         .on("kubeApi", (api) => {
           if (initialized) {
             autoInitKubeApi(api);
