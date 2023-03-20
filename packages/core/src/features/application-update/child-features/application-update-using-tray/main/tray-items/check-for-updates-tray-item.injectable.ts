@@ -66,11 +66,10 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
           if (updateIsReadyToBeInstalled) {
             await showApplicationWindow();
           } else {
-            // `You're all good\n\nYou've got the latest version of Lens\nthanks for staying on the ball.`,
             showMessagePopup(
-                `title`,
-                'productName',
-                'message',
+                `No Updates Available`,
+                'You\'re all good',
+                `You've got the latest version of Lens,\nthanks for staying on the ball.`,
                 {
                   textWidth: 300
                 },
