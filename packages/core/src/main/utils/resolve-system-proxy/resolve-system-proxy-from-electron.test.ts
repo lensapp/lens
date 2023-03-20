@@ -5,7 +5,7 @@
 
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import resolveSystemProxyFromElectronInjectable from "./resolve-system-proxy-from-electron.injectable";
-import electronBrowserWindowInjectable from "./electron-browser-window.injectable";
+import resolveSystemProxyWindowInjectable from "./resolve-system-proxy-window.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "@k8slens/test-utils";
@@ -31,8 +31,8 @@ describe("technical: resolve-system-proxy-from-electron", () => {
       resolveSystemProxyMock = asyncFn();
 
       di.override(
-        electronBrowserWindowInjectable,
-        () => () => ({
+        resolveSystemProxyWindowInjectable,
+        () => ({
           webContents: {
             session: {
               resolveProxy: resolveSystemProxyMock,
@@ -72,8 +72,8 @@ describe("technical: resolve-system-proxy-from-electron", () => {
       resolveSystemProxyMock = asyncFn();
 
       di.override(
-        electronBrowserWindowInjectable,
-        () => () => ({
+        resolveSystemProxyWindowInjectable,
+        () => ({
           webContents: {
             session: {
               resolveProxy: () => {

@@ -3,17 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { BrowserWindowConstructorOptions } from "electron";
 import { BrowserWindow } from "electron";
 
-const electronBrowserWindowInjectable = getInjectable({
-  id: "electron-browser-window",
+const resolveSystemProxyWindowInjectable = getInjectable({
+  id: "resolve-system-proxy-window",
   instantiate: () => {
-    return (opts: BrowserWindowConstructorOptions) => {
-      return new BrowserWindow(opts);
-    };
+    return new BrowserWindow({ show: false });
   },
   causesSideEffects: true,
 });
 
-export default electronBrowserWindowInjectable;
+export default resolveSystemProxyWindowInjectable;
