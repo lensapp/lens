@@ -6,7 +6,7 @@
 import "./components/app.scss";
 
 import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
+import { render } from "react-dom";
 import { DefaultProps } from "./mui-base-theme";
 import { DiContextProvider } from "@ogre-tools/injectable-react";
 import type {
@@ -43,7 +43,7 @@ export async function bootstrap(di: DiContainerForInjection) {
   }
 
   try {
-    await initializeApp(() => unmountComponentAtNode(rootElem));
+    await initializeApp();
   } catch (error) {
     console.error(`[BOOTSTRAP]: view initialization error: ${error}`, {
       origin: location.href,
