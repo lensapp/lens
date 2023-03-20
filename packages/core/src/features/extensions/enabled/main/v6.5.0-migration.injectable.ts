@@ -14,7 +14,7 @@ const enabledExtensionsMigrationV650Injectable = getInjectable({
       const extensions = store.get("extensions");
 
       if (!isObject(extensions)) {
-        store.set("extensions", undefined);
+        store.delete("extensions");
       } else {
         store.set("extensions", Object.entries(extensions));
       }
