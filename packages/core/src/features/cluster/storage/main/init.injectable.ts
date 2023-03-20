@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import clustersPersistentStorageInjectable from "../common/storage.injectable";
-import loadUserPreferencesStorageInjectable from "../../../user-preferences/renderer/load-storage.injectable";
+import loadUserPreferencesStorageInjectable from "../../../user-preferences/main/load-storage.injectable";
 
 const initClusterStoreInjectable = getInjectable({
   id: "init-cluster-store",
