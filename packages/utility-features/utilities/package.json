@@ -43,13 +43,10 @@
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
     "@types/lodash": "^4.14.191",
-    "@types/moment": "^2.13.0",
-    "@types/p-limit": "^2.2.0",
-    "@types/path-to-regexp": "^1.7.0",
-    "@types/react": "^18.0.28",
+    "@types/react": "^17.0.53",
     "@types/react-router": "^5.1.20",
+    "@types/readable-stream": "^2.3.15",
     "@types/semver": "^7.3.13",
-    "@types/tar": "^6.1.4",
-    "@types/readable-stream": "^2.3.15"
+    "@types/tar": "^6.1.4"
   }
 }
