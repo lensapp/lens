@@ -1,5 +1,9 @@
 const getNodeConfig = require("./get-node-config");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require("path");
+
+// hack: hard-coded
+const sassCommonVars = "/Users/maspiala/work/lens/packages/core/src/renderer";
 
 module.exports =
   ({ miniCssExtractPluginLoader = MiniCssExtractPlugin.loader } = {}) =>
@@ -47,12 +51,42 @@ module.exports =
               },
 
               {
+                loader: "postcss-loader",
+                options: {
+                  sourceMap: false,
+                  postcssOptions: {
+                    plugins: ["tailwindcss"],
+                  },
+                },
+              },
+
+              {
                 loader: "sass-loader",
                 options: {
                   sourceMap: false,
+                  additionalData: `@import "${path.basename(sassCommonVars)}";`,
+
+                  sassOptions: {
+                    includePaths: [path.dirname(sassCommonVars)],
+                  },
                 },
               },
             ],
+          },
+
+          {
+            test: /\.(ttf|eot|woff2?)$/,
+            type: "asset/resource",
+          },
+
+          {
+            test: /\.svg$/,
+            type: "asset/source", // exports the source code of the asset, so we get XML
+          },
+
+          {
+            test: /\.(jpg|png|ico)$/,
+            type: "asset/resource", // path to file, e.g. "/static/build/assets/*"
           },
         ],
       },
