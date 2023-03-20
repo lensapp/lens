@@ -67,12 +67,12 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
             await showApplicationWindow();
           } else {
             showMessagePopup(
-              `No Updates Available`,
-              'You\'re all good',
-              `You've got the latest version of Lens,\nthanks for staying on the ball.`,
+              "No Updates Available",
+              "You're all good",
+              "You've got the latest version of Lens,\nthanks for staying on the ball.",
               {
-                textWidth: 300
-              }
+                textWidth: 300,
+              },
             );
           }
         },

@@ -15,7 +15,7 @@ const checkForUpdatesMenuItemInjectable = getInjectable({
   id: "check-for-updates-menu-item",
 
   instantiate: (di) => {
-    const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable,);
+    const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable);
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
     const isMac = di.inject(isMacInjectable);
@@ -36,12 +36,12 @@ const checkForUpdatesMenuItemInjectable = getInjectable({
           await showApplicationWindow();
         } else {
           showMessagePopup(
-            `No Updates Available`,
-            'You\'re all good',
-            `You've got the latest version of Lens,\nthanks for staying on the ball.`,
+            "No Updates Available",
+            "You're all good",
+            "You've got the latest version of Lens,\nthanks for staying on the ball.",
             {
-              textWidth: 300
-            }
+              textWidth: 300,
+            },
           );
         }
       },
