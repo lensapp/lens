@@ -1,9 +1,9 @@
 {
   "name": "@k8slens/core",
   "productName": "",
-  "description": "Lens Desktop Core",
+  "description": "Lens Desktop Core1",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.5.0-alpha.3",
+  "version": "7.0.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
