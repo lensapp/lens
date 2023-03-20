@@ -10,6 +10,7 @@ import { lensThemeDeclarationInjectionToken } from "./declaration";
 import defaultLensThemeInjectable from "./default-theme.injectable";
 import systemThemeConfigurationInjectable from "./system-theme.injectable";
 import lensThemesInjectable from "./themes.injectable";
+import { activeThemeInjectionToken } from "@k8slens/metrics";
 
 const activeThemeInjectable = getInjectable({
   id: "active-theme",
@@ -35,6 +36,8 @@ const activeThemeInjectable = getInjectable({
       return lensThemes.get(pref.lensThemeId) ?? defaultLensTheme;
     });
   },
+
+  injectionToken: activeThemeInjectionToken
 });
 
 export default activeThemeInjectable;

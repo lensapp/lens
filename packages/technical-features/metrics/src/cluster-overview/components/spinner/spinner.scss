@@ -1,0 +1,68 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+
+.Spinner {
+  --spinner-size: 24px;
+  --spinner-border: calc(var(--spinner-size) / 6);
+
+  $duration: 1s;
+  $rotateAnimation: rotate $duration linear infinite;
+  $colorAnimation: colors $duration*4 ease-in-out infinite;
+
+  @mixin spinner-color($color) {
+    border-color: transparent $color;
+  }
+
+  width: var(--spinner-size);
+  height: var(--spinner-size);
+  border: var(--spinner-border) solid transparent;
+  border-radius: 50%;
+  display: inline-block;
+
+  &:not(.singleColor) {
+    animation: $rotateAnimation, $colorAnimation;
+  }
+
+  &.singleColor {
+    @include spinner-color(var(--textColorPrimary));
+    animation: $rotateAnimation;
+  }
+
+  &.center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: calc(var(--spinner-size) / -2);
+    margin-top: calc(var(--spinner-size) / -2);
+  }
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes colors {
+    0% {
+      @include spinner-color(#4285F4);
+    }
+    25% {
+      @include spinner-color(#DE3E35);
+    }
+    50% {
+      @include spinner-color(#F7C223);
+    }
+    75% {
+      @include spinner-color(#1B9A59);
+    }
+    100% {
+      @include spinner-color(#4285F4);
+    }
+  }
+}

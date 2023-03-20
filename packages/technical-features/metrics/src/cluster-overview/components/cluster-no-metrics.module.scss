@@ -1,0 +1,18 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.ClusterNoMetrics {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.7;
+  flex-grow: 1;
+
+  .link {
+    color: var(--blue);
+    cursor: pointer;
+  }
+}

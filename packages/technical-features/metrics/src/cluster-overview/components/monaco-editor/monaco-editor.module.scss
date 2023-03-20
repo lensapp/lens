@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { Logger } from "@k8slens/metrics";
-
-export { Logger };
+.MonacoEditor {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}

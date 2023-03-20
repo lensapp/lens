@@ -4,5 +4,17 @@
  */
 export { metricsFeature } from "./src/feature";
 
-export type { ClusterOverviewUIBlock } from "./src/cluster-overview/cluster-overview-ui-block";
-export { clusterOverviewUIBlockInjectionToken } from "./src/cluster-overview/cluster-overview-ui-block";
+export type { ClusterOverviewUIBlock, MetricType } from "./src/cluster-overview/injection-tokens";
+
+export {
+  activeThemeInjectionToken,
+  clusterOverviewStoreInjectionToken,
+  clusterOverviewUIBlockInjectionToken,
+  loggerInjectionToken,
+  navigateToPreferencesOfMetricsInjectionToken,
+  nodeStoreInjectionToken,
+  userStoreInjectionToken,
+} from "./src/cluster-overview/injection-tokens";
+
+export type { Logger } from "./src/cluster-overview/injection-tokens";
+

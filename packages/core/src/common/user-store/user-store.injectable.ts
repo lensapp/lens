@@ -18,6 +18,7 @@ import { persistStateToConfigInjectionToken } from "../base-store/save-to-file";
 import getBasenameOfPathInjectable from "../path/get-basename.injectable";
 import { enlistMessageChannelListenerInjectionToken } from "../utils/channel/enlist-message-channel-listener-injection-token";
 import userStorePreferenceDescriptorsInjectable from "./preference-descriptors.injectable";
+import { userStoreInjectionToken } from "@k8slens/metrics";
 
 const userStoreInjectable = getInjectable({
   id: "user-store",
@@ -37,6 +38,8 @@ const userStoreInjectable = getInjectable({
     shouldDisableSyncInListener: di.inject(shouldBaseStoreDisableSyncInIpcListenerInjectionToken),
     preferenceDescriptors: di.inject(userStorePreferenceDescriptorsInjectable),
   }),
+
+  injectionToken: userStoreInjectionToken
 });
 
 export default userStoreInjectable;

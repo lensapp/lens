@@ -1,9 +1,11 @@
 const getNodeConfig = require("./get-node-config");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const path = require("path");
 
 // hack: hard-coded
-const sassCommonVars = "/Users/maspiala/work/lens/packages/core/src/renderer";
+const sassCommonVars =
+  "/Users/maspiala/work/lens/packages/core/src/renderer/components/vars.scss";
 
 module.exports =
   ({ miniCssExtractPluginLoader = MiniCssExtractPlugin.loader } = {}) =>
@@ -21,6 +23,13 @@ module.exports =
 
         new MiniCssExtractPlugin({
           filename: "[name].css",
+        }),
+
+        // see also: https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+        new MonacoWebpackPlugin({
+          languages: ["json", "yaml"],
+          // Hack: should be true only for development.
+          globalAPI: true
         }),
       ],
 
@@ -55,7 +64,8 @@ module.exports =
                 options: {
                   sourceMap: false,
                   postcssOptions: {
-                    plugins: ["tailwindcss"],
+                    // hack: commented
+                    // plugins: ["tailwindcss"],
                   },
                 },
               },

@@ -25,7 +25,7 @@ import React from "react";
 // import activeThemeInjectable from "../../../themes/active.injectable";
 // import type { ClusterMetricData } from "../../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
-import { clusterOverviewUIBlockInjectionToken } from "../cluster-overview-ui-block";
+import { clusterOverviewUIBlockInjectionToken } from "../injection-tokens";
 
 // function createLabels(rawLabelData: [string, number | undefined][]): string[] {
 //   return rawLabelData.map(

@@ -33,11 +33,22 @@
     },
     "peerDependencies": {
       "@k8slens/feature-core": "^6.5.0-alpha.0",
+      "@k8slens/utilities": "^1.0.0-alpha.1",
       "@ogre-tools/injectable": "^15.1.2",
       "@ogre-tools/injectable-react": "^15.1.2",
-      "chart.js": "^2.9.4"
+      "auto-bind": "^4.0.0",
+      "chart.js": "^2.9.4",
+      "js-yaml": "^4.1.0",
+      "mobx": "^6.8.0",
+      "mobx-react": "^7.6.0",
+      "moment": "^2.29.4",
+      "monaco-editor": "^0.29.1",
+      "monaco-editor-webpack-plugin": "^5.0.0",
+      "react": "^17.0.2"
     },
     "devDependencies": {
+      "@testing-library/react": "^12.1.5",
+      "@testing-library/user-event": "^13.5.0",
       "@k8slens/eslint-config": "6.5.0-alpha.1"
     }
   }

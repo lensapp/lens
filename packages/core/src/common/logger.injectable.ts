@@ -6,15 +6,13 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { createLogger, format } from "winston";
 import type { Logger } from "./logger";
 import { loggerTransportInjectionToken } from "./logger/transports";
+import { loggerInjectionToken } from "@k8slens/metrics";
 
 const loggerInjectable = getInjectable({
   id: "logger",
   instantiate: (di): Logger => {
     const baseLogger = createLogger({
-      format: format.combine(
-        format.splat(),
-        format.simple(),
-      ),
+      format: format.combine(format.splat(), format.simple()),
       transports: di.injectMany(loggerTransportInjectionToken),
     });
 
@@ -28,6 +26,8 @@ const loggerInjectable = getInjectable({
   },
 
   decorable: false,
+
+  injectionToken: loggerInjectionToken,
 });
 
 export default loggerInjectable;

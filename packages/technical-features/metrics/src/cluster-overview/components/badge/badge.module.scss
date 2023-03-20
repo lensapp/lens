@@ -1,0 +1,50 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.badge {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+// might be used in a scrollable area with {overflow: auto}
+.badge.scrollable {
+  max-width: unset;
+
+  &:not(.isExpanded) {
+    white-space: unset;
+    text-overflow: unset;
+  }
+}
+
+
+.badge.interactive:hover {
+  background-color: var(--mainBackground);
+  cursor: pointer;
+}
+
+.badge:not(.scrollable):not(.isExpanded) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge:not(.flat) {
+  background: var(--colorVague);
+  border-radius: 3px;
+  padding: .2em .4em;
+}
+
+.small {
+  font-size: var(--font-size-small);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.disabled {
+  opacity: 0.5;
+}
