@@ -662,7 +662,7 @@ exports[`entity running technical tests when navigated to catalog renders 1`] = 
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1378,7 +1378,7 @@ exports[`entity running technical tests when navigated to catalog when details p
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span

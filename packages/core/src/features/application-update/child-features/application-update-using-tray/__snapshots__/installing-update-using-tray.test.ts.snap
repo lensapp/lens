@@ -231,7 +231,7 @@ exports[`installing update using tray when started renders 1`] = `
           class="HotbarSelector"
         >
           <i
-            class="Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -516,7 +516,7 @@ exports[`installing update using tray when started when user checks for updates 
           class="HotbarSelector"
         >
           <i
-            class="Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -801,7 +801,7 @@ exports[`installing update using tray when started when user checks for updates 
           class="HotbarSelector"
         >
           <i
-            class="Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1086,7 +1086,7 @@ exports[`installing update using tray when started when user checks for updates 
           class="HotbarSelector"
         >
           <i
-            class="Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1396,7 +1396,7 @@ exports[`installing update using tray when started when user checks for updates 
           class="HotbarSelector"
         >
           <i
-            class="Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1681,7 +1681,7 @@ exports[`installing update using tray when started when user checks for updates 
           class="HotbarSelector"
         >
           <i
-            class="Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span

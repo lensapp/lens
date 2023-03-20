@@ -231,7 +231,7 @@ exports[`status-bar-items-originating-from-extensions when application starts wh
           class="HotbarSelector"
         >
           <i
-            class="Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span

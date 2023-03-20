@@ -230,7 +230,7 @@ exports[`navigate to extension page renders 1`] = `
         class="HotbarSelector"
       >
         <i
-          class="Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -434,7 +434,7 @@ exports[`navigate to extension page when extension navigates to child route rend
         class="HotbarSelector"
       >
         <i
-          class="Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -654,7 +654,7 @@ exports[`navigate to extension page when extension navigates to route with param
         class="HotbarSelector"
       >
         <i
-          class="Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -874,7 +874,7 @@ exports[`navigate to extension page when extension navigates to route without pa
         class="HotbarSelector"
       >
         <i
-          class="Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -1094,7 +1094,7 @@ exports[`navigate to extension page when extension navigates to route without pa
         class="HotbarSelector"
       >
         <i
-          class="Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span

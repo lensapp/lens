@@ -230,7 +230,7 @@ exports[`extension special characters in page registrations renders 1`] = `
         class="HotbarSelector"
       >
         <i
-          class="Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -434,7 +434,7 @@ exports[`extension special characters in page registrations when navigating to r
         class="HotbarSelector"
       >
         <i
-          class="Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span

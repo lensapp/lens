@@ -6,7 +6,7 @@
 import * as uuid from "uuid";
 
 import { ProtocolHandlerExtension, ProtocolHandlerInternal, ProtocolHandlerInvalid } from "../../../common/protocol-handler";
-import { delay, noop } from "@k8slens/utilities";
+import { noop } from "@k8slens/utilities";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
@@ -91,7 +91,7 @@ describe("protocol router tests", () => {
     });
 
     extensionInstances.set(extId, ext);
-    enabledExtensions.set(extId, { name: "@mirantis/minikube" });
+    enabledExtensions.set(extId, { name: "@mirantis/minikube", enabled: true });
 
     lpr.addInternalHandler("/", noop);
 
@@ -101,14 +101,14 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
+    expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app", "matched");
+
     try {
       expect(await lpr.route("lens://extension/@mirantis/minikube")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    await delay(50);
-    expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app", "matched");
     expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerExtension, "lens://extension/@mirantis/minikube", "matched");
   });
 
@@ -171,7 +171,7 @@ describe("protocol router tests", () => {
       });
 
     extensionInstances.set(extId, ext);
-    enabledExtensions.set(extId, { name: "@foobar/icecream" });
+    enabledExtensions.set(extId, { name: "@foobar/icecream", enabled: true });
 
     try {
       expect(await lpr.route("lens://extension/@foobar/icecream/page/foob")).toBeUndefined();
@@ -179,7 +179,6 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    await delay(50);
     expect(called).toBe("foob");
     expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/@foobar/icecream/page/foob", "matched");
   });
@@ -210,7 +209,7 @@ describe("protocol router tests", () => {
         });
 
       extensionInstances.set(extId, ext);
-      enabledExtensions.set(extId, { name: "@foobar/icecream" });
+      enabledExtensions.set(extId, { name: "@foobar/icecream", enabled: true });
     }
 
     {
@@ -236,7 +235,7 @@ describe("protocol router tests", () => {
         });
 
       extensionInstances.set(extId, ext);
-      enabledExtensions.set(extId, { name: "icecream" });
+      enabledExtensions.set(extId, { name: "icecream", enabled: true });
     }
 
     try {
@@ -245,7 +244,6 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    await delay(50);
 
     expect(called).toBe(1);
     expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/icecream/page", "matched");
