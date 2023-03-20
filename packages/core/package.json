@@ -3,7 +3,7 @@
   "productName": "",
   "description": "Lens Desktop Core",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.5.0-alpha.3",
+  "version": "6.5.0-cron.52ede67",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -123,7 +123,7 @@
     "@astronautlabs/jsonpath": "^1.1.0",
     "@hapi/call": "^9.0.1",
     "@hapi/subtext": "^7.1.0",
-    "@k8slens/node-fetch": "^6.5.0-alpha.1",
+    "@k8slens/node-fetch": "^6.5.0-cron.52ede67",
     "@kubernetes/client-node": "^0.18.1",
     "@material-ui/styles": "^4.11.5",
     "@ogre-tools/fp": "^15.1.2",

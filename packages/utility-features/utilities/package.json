@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/utilities",
   "description": "A collection of useful types",
-  "version": "1.0.0-alpha.1",
+  "version": "6.5.0-cron.52ede67",
   "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

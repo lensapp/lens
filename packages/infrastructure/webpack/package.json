@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/webpack",
   "private": false,
-  "version": "6.5.0-alpha.1",
+  "version": "6.5.0-cron.52ede67",
   "description": "Webpack configurations and scripts for Lens packages.",
   "type": "commonjs",
   "publishConfig": {

@@ -2,7 +2,7 @@
   "name": "@k8slens/legacy-extension-example",
   "private": false,
   "description": "An example bundled Lens extensions using the v1 API",
-  "version": "1.0.0-alpha.1",
+  "version": "6.5.0-cron.52ede67",
   "type": "commonjs",
   "files": [
     "dist"
@@ -38,7 +38,7 @@
     "lint:fix": "lens-lint --fix"
   },
   "devDependencies": {
-    "@k8slens/extensions": "^6.5.0-alpha.3",
+    "@k8slens/extensions": "^6.5.0-cron.52ede67",
     "@types/node": "^16.18.16",
     "typescript": "^4.9.5",
     "webpack": "^5.76.1",
