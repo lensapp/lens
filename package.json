@@ -28,6 +28,11 @@
     "precreate-release-pr": "cd packages/release-tool && npm run build",
     "create-release-pr": "node packages/release-tool/dist/index.js"
   },
+  "overrides": {
+    "underscore": "^1.12.1",
+    "react": "^17",
+    "@types/react": "^17"
+  },
   "devDependencies": {
     "adr": "^1.4.3",
     "cross-env": "^7.0.3",
