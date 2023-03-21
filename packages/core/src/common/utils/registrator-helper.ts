@@ -13,7 +13,7 @@ export const injectableDifferencingRegistratorWith = (di: DiContainerForInjectio
     const current = new Map(rawCurrent.map(inj => [inj.id, inj]));
     const previous = new Map(rawPrevious.map(inj => [inj.id, inj]));
     const toAdd = iter.chain(current.entries())
-      .filter(([id]) => previous.has(id))
+      .filter(([id]) => !previous.has(id))
       .collect(entries => new Map(entries));
     const toRemove = iter.chain(previous.entries())
       .filter(([id]) => !current.has(id))
