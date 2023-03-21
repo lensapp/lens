@@ -10,7 +10,7 @@ import getConfigurationFileModelInjectable from "./get-configuration-file-model.
 import type Config from "conf";
 import readJsonSyncInjectable from "../fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
-import { get, set } from "lodash";
+import { get, has, set } from "lodash";
 import semver from "semver";
 
 const MIGRATION_KEY = `__internal__.migrations.version`;
@@ -64,7 +64,7 @@ export default getGlobalOverride(getConfigurationFileModelInjectable, (di) => {
       path: configFilePath,
       get: (key: string) => get(store, key),
       set: (key: string, value: unknown) => {
-        let currentState: object;
+        let currentState: Partial<Record<string, unknown>>;
 
         try {
           currentState = readJsonSync(configFilePath);
@@ -76,6 +76,25 @@ export default getGlobalOverride(getConfigurationFileModelInjectable, (di) => {
           ...currentState,
           [key]: value,
         });
+        store = readJsonSync(configFilePath);
+      },
+      delete: (key: string) => {
+        let currentState: Partial<Record<string, unknown>>;
+
+        try {
+          currentState = readJsonSync(configFilePath);
+        } catch {
+          currentState = {};
+        }
+
+        delete currentState[key];
+
+        writeJsonSync(configFilePath, currentState);
+        store = readJsonSync(configFilePath);
+      },
+      has: (key: string) => has(store, key),
+      clear: () => {
+        writeJsonSync(configFilePath, {});
         store = readJsonSync(configFilePath);
       },
     } as Partial<Config> as Config<any>;
