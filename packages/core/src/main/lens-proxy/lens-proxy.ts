@@ -11,13 +11,14 @@ import { apiPrefix, apiKubePrefix } from "../../common/vars";
 import type { RouteRequest } from "../router/route-request.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
-import { getBoolean } from "../utils/parse-query";
 import assert from "assert";
 import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
 import type { SelfSignedCert } from "selfsigned";
 import type { KubeAuthProxyServer } from "../cluster/kube-auth-proxy-server.injectable";
+import { isLongRunningRequest } from "./is-long-running-request";
+import { disallowedPorts } from "./disallowed-ports";
 
 export type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
@@ -36,33 +37,6 @@ interface Dependencies {
   readonly logger: Logger;
   readonly certificate: SelfSignedCert;
 }
-
-const watchParam = "watch";
-const followParam = "follow";
-
-export function isLongRunningRequest(reqUrl: string) {
-  const url = new URL(reqUrl, "http://localhost");
-
-  return getBoolean(url.searchParams, watchParam) || getBoolean(url.searchParams, followParam);
-}
-
-/**
- * This is the list of ports that chrome considers unsafe to allow HTTP
- * conntections to. Because they are the standard ports for processes that are
- * too forgiving in the connection types they accept.
- *
- * If we get one of these ports, the easiest thing to do is to just try again.
- *
- * Source: https://chromium.googlesource.com/chromium/src.git/+/refs/heads/main/net/base/port_util.cc
- */
-const disallowedPorts = new Set([
-  1, 7, 9, 11, 13, 15, 17, 19, 20, 21, 22, 23, 25, 37, 42, 43, 53, 69, 77, 79,
-  87, 95, 101, 102, 103, 104, 109, 110, 111, 113, 115, 117, 119, 123, 135, 137,
-  139, 143, 161, 179, 389, 427, 465, 512, 513, 514, 515, 526, 530, 531, 532,
-  540, 548, 554, 556, 563, 587, 601, 636, 989, 990, 993, 995, 1719, 1720, 1723,
-  2049, 3659, 4045, 5060, 5061, 6000, 6566, 6665, 6666, 6667, 6668, 6669, 6697,
-  10080,
-]);
 
 export class LensProxy {
   protected proxyServer: https.Server;
