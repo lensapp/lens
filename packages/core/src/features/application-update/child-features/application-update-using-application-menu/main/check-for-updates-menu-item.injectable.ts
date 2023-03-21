@@ -20,6 +20,7 @@ const checkForUpdatesMenuItemInjectable = getInjectable({
     const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
     const isMac = di.inject(isMacInjectable);
     const showMessagePopup = di.inject(showMessagePopupInjectable);
+
     return {
       kind: "clickable-menu-item" as const,
       id: "check-for-updates",
