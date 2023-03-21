@@ -8,7 +8,11 @@ import { BrowserWindow } from "electron";
 const resolveSystemProxyWindowInjectable = getInjectable({
   id: "resolve-system-proxy-window",
   instantiate: () => {
-    return new BrowserWindow({ show: false, paintWhenInitiallyHidden: false });
+    const window = new BrowserWindow({ show: false });
+
+    window.hide();
+
+    return window;
   },
   causesSideEffects: true,
 });
