@@ -6,17 +6,24 @@ import { getStartableStoppable, StartableStoppable } from "@k8slens/startable-st
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import { IComputedValue, reaction } from "mobx";
 
-import { messageChannelListenerInjectionToken } from "../message/message-channel-listener-injection-token";
-import { requestChannelListenerInjectionToken } from "../request/request-channel-listener-injection-token";
+import {
+  MessageChannel,
+  messageChannelListenerInjectionToken,
+} from "../message/message-channel-listener-injection-token";
+import {
+  RequestChannel,
+  requestChannelListenerInjectionToken,
+} from "../request/request-channel-listener-injection-token";
 import { enlistRequestChannelListenerInjectionToken } from "../request/enlist-request-channel-listener-injection-token";
-import type { Channel } from "../channel.no-coverage";
 
 export type ListeningOfChannels = StartableStoppable;
 export const listeningOfChannelsInjectionToken = getInjectionToken<ListeningOfChannels>({
   id: "listening-of-channels-injection-token",
 });
 
-const listening = <T extends { id: string; channel: Channel<unknown> }>(
+const listening = <
+  T extends { id: string; channel: MessageChannel<any> | RequestChannel<any, any> },
+>(
   channelListeners: IComputedValue<T[]>,
   enlistChannelListener: (listener: T) => () => void,
   getId: (listener: T) => string,
