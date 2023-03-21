@@ -11,6 +11,7 @@ export const pathNames: PathName[] = [
   "home",
   "appData",
   "userData",
+  "sessionData",
   "temp",
   "exe",
   "module",
