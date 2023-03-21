@@ -11,7 +11,7 @@ const enlistMessageChannelListenerInjectable = getInjectable({
 
     return ({ channel, handler }) => {
       const nativeCallback = (event: IpcRendererEvent, message: unknown) => {
-        handler(message, null);
+        handler(message);
       };
 
       ipcRenderer.on(channel.id, nativeCallback);
