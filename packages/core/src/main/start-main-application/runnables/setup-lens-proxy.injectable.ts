@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import exitAppInjectable from "../../electron-app/features/exit-app.injectable";
-import lensProxyInjectable from "../../lens-proxy/lens-proxy.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
@@ -15,13 +14,14 @@ import initializeBuildVersionInjectable from "../../vars/build-version/init.inje
 import lensProxyCertificateInjectable from "../../../common/certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Agent } from "https";
+import startLensProxyListeningInjectable from "../../lens-proxy/start-listening.injectable";
 
 const setupLensProxyInjectable = getInjectable({
   id: "setup-lens-proxy",
 
   instantiate: (di) => ({
     run: async () => {
-      const lensProxy = di.inject(lensProxyInjectable);
+      const startLensProxyListening = di.inject(startLensProxyListeningInjectable);
       const exitApp = di.inject(exitAppInjectable);
       const logger = di.inject(loggerInjectable);
       const lensProxyPort = di.inject(lensProxyPortInjectable);
@@ -33,7 +33,7 @@ const setupLensProxyInjectable = getInjectable({
 
       try {
         logger.info("🔌 Starting LensProxy");
-        await lensProxy.listen(); // lensProxy.port available
+        await startLensProxyListening();
       } catch (error: any) {
         showErrorPopup("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
 
