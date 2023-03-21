@@ -123,3 +123,5 @@ jobs:
 
       - run: npm run test:unit
         name: Run tests
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
