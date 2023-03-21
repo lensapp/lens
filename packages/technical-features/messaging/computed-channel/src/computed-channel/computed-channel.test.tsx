@@ -1,10 +1,7 @@
 import React from "react";
 import { act } from "@testing-library/react";
 import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injectable";
-import {
-  getMessageBridgeFake,
-  MessageBridgeFake,
-} from "@k8slens/messaging-fake-bridge";
+import { getMessageBridgeFake, MessageBridgeFake } from "@k8slens/messaging-fake-bridge";
 import { startApplicationInjectionToken } from "@k8slens/application";
 import {
   computed,
@@ -14,11 +11,11 @@ import {
   reaction,
   runInAction,
 } from "mobx";
-import type { MessageChannel } from "../message/message-channel-listener-injection-token";
-import { getMessageChannelListenerInjectable } from "../message/message-channel-listener-injection-token";
+import type { MessageChannel } from "@k8slens/messaging";
+import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerFeature } from "@k8slens/feature-core";
-import { messagingFeatureForUnitTesting } from "../../unit-testing";
+import { testUtils } from "@k8slens/messaging";
 import {
   computedChannelInjectionToken,
   computedChannelObserverInjectionToken,
@@ -29,6 +26,7 @@ import {
   computedChannelAdministrationChannel,
   ComputedChannelAdminMessage,
 } from "./computed-channel-administration-channel.injectable";
+import { computedChannelFeature } from "../feature";
 
 const testChannel: MessageChannel<string> = { id: "some-channel-id" };
 const testChannel2: MessageChannel<string> = { id: "some-other-channel-id" };
@@ -76,8 +74,10 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
         });
 
         runInAction(() => {
-          registerFeature(di1, messagingFeatureForUnitTesting);
-          registerFeature(di2, messagingFeatureForUnitTesting);
+          const messagingFeature = testUtils.messagingFeatureForUnitTesting;
+
+          registerFeature(di1, messagingFeature, computedChannelFeature);
+          registerFeature(di2, messagingFeature, computedChannelFeature);
 
           di1.register(channelValueTestListenerInjectable);
           di2.register(administrationChannelTestListenerInjectable);

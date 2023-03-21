@@ -1,10 +1,10 @@
 import { reaction } from "mobx";
 
-import { getMessageChannelListenerInjectable } from "../message/message-channel-listener-injection-token";
-import { sendMessageToChannelInjectionToken } from "../message/message-to-channel-injection-token";
+import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
+import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import type { JsonPrimitive } from "type-fest";
 import { computedChannelObserverInjectionToken } from "./computed-channel.injectable";
-import { getMessageChannel } from "../message/get-message-channel";
+import { getMessageChannel } from "@k8slens/messaging";
 
 export type JsonifiableObject = { [Key in string]?: Jsonifiable } | { toJSON: () => Jsonifiable };
 export type JsonifiableArray = readonly Jsonifiable[];

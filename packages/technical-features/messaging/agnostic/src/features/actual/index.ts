@@ -4,19 +4,6 @@ export { messagingFeature } from "./feature";
 export { getRequestChannel } from "./request/get-request-channel";
 export { getMessageChannel } from "./message/get-message-channel";
 
-export {
-  computedChannelInjectionToken,
-  computedChannelObserverInjectionToken,
-} from "./computed-channel/computed-channel.injectable";
-
-export type {
-  ChannelObserver,
-  ComputedChannelFactory,
-  JsonifiableObject,
-  JsonifiableArray,
-  Jsonifiable,
-} from "./computed-channel/computed-channel.injectable";
-
 export { requestFromChannelInjectionToken } from "./request/request-from-channel-injection-token";
 
 export type { Channel } from "./channel.no-coverage";

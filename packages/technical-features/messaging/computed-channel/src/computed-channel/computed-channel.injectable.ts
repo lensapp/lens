@@ -10,9 +10,9 @@ import {
   runInAction,
 } from "mobx";
 
-import type { MessageChannel } from "../message/message-channel-listener-injection-token";
-import { getMessageChannelListenerInjectable } from "../message/message-channel-listener-injection-token";
-import { sendMessageToChannelInjectionToken } from "../message/message-to-channel-injection-token";
+import type { MessageChannel } from "@k8slens/messaging";
+import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
+import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import type { JsonPrimitive } from "type-fest";
 import { computedChannelAdministrationChannel } from "./computed-channel-administration-channel.injectable";
 
