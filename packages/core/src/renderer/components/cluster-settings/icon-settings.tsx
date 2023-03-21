@@ -15,6 +15,7 @@ import { FilePicker, OverSizeLimitStyle } from "../file-picker";
 import { MenuActions, MenuItem } from "../menu";
 import type { ShowNotification } from "../notifications";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
+import { ClusterIconSettingsComponent, clusterIconSettingsComponentInjectionToken } from "./cluster-settings-component-injection-token";
 import type { ClusterIconMenuItem } from "./cluster-settings-menu-injection-token";
 import { clusterIconSettingsMenuInjectionToken } from "./cluster-settings-menu-injection-token";
 
@@ -25,6 +26,7 @@ export interface ClusterIconSettingProps {
 
 interface Dependencies {
   menuItems: IComputedValue<ClusterIconMenuItem[]>;
+  settingComponents: IComputedValue<ClusterIconSettingsComponent[]>;
   showErrorNotification: ShowNotification;
 }
 
@@ -95,6 +97,14 @@ const NonInjectedClusterIconSetting = observer((props: ClusterIconSettingProps &
           )}
         </MenuActions>
       </div>
+      {props.settingComponents.get().map(item => {
+        return (
+          <item.Component
+            key={item.id}
+            preferences={cluster.preferences}
+          />
+        );
+      })}
     </div>
   );
 });
@@ -106,6 +116,7 @@ export const ClusterIconSetting = withInjectables<Dependencies, ClusterIconSetti
     return {
       ...props,
       menuItems: computedInjectMany(clusterIconSettingsMenuInjectionToken),
+      settingComponents: computedInjectMany(clusterIconSettingsComponentInjectionToken),
       showErrorNotification: di.inject(showErrorNotificationInjectable),
     };
   },
