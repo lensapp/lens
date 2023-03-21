@@ -4,14 +4,14 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { resolveSystemProxyInjectionToken } from "../../../common/utils/resolve-system-proxy/resolve-system-proxy-injection-token";
-import requestFromChannelInjectable from "../channel/request-from-channel.injectable";
+import { requestFromChannelInjectionToken } from "@k8slens/messaging";
 import { resolveSystemProxyChannel } from "../../../common/utils/resolve-system-proxy/resolve-system-proxy-channel";
 
 const resolveSystemProxyInjectable = getInjectable({
   id: "resolve-system-proxy-for-renderer",
 
   instantiate: (di) => {
-    const requestFromChannel = di.inject(requestFromChannelInjectable);
+    const requestFromChannel = di.inject(requestFromChannelInjectionToken);
 
     return async (url) => requestFromChannel(resolveSystemProxyChannel, url);
   },

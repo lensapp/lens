@@ -4,17 +4,18 @@ import * as timeSlots from "./time-slots";
 
 export type StartApplication = () => Promise<void>;
 
-export const startApplicationInjectionToken =
-  getInjectionToken<StartApplication>({
-    id: "start-application-injection-token",
-  });
+export const startApplicationInjectionToken = getInjectionToken<StartApplication>({
+  id: "start-application-injection-token",
+});
 
 const startApplicationInjectable = getInjectable({
   id: "start-application",
 
   instantiate: (di): StartApplication => {
-    const runManyAsync = runManyFor(di)
-    const beforeApplicationIsLoading = runManyAsync(timeSlots.beforeApplicationIsLoadingInjectionToken);
+    const runManyAsync = runManyFor(di);
+    const beforeApplicationIsLoading = runManyAsync(
+      timeSlots.beforeApplicationIsLoadingInjectionToken,
+    );
     const onLoadOfApplication = runManyAsync(timeSlots.onLoadOfApplicationInjectionToken);
     const afterApplicationIsLoaded = runManyAsync(timeSlots.afterApplicationIsLoadedInjectionToken);
 

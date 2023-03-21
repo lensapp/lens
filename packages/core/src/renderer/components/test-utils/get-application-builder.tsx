@@ -29,7 +29,6 @@ import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/elect
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
 import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTesting";
-import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
 import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
@@ -40,7 +39,7 @@ import { navigateToRouteInjectionToken } from "../../../common/front-end-routing
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import type { LensExtension } from "../../../extensions/lens-extension";
 import extensionInjectable from "../../../extensions/extension-loader/extension/extension.injectable";
-import { renderFor } from "./renderFor";
+import { renderFor } from "@k8slens/test-utils";
 import { RootFrame } from "../../frames/root-frame/root-frame";
 import { ClusterFrame } from "../../frames/cluster-frame/cluster-frame";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
@@ -71,6 +70,8 @@ import { registerFeature } from "@k8slens/feature-core";
 import { applicationFeatureForElectronMain, testUtils as applicationForElectronTestUtils } from "@k8slens/application-for-electron-main";
 import { applicationFeature, startApplicationInjectionToken } from "@k8slens/application";
 import { testUsingFakeTime } from "../../../test-utils/use-fake-time";
+import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
+import { getMessageBridgeFake } from "@k8slens/messaging-fake-bridge";
 
 type MainDiCallback = (container: { mainDi: DiContainer }) => void | Promise<void>;
 type WindowDiCallback = (container: { windowDi: DiContainer }) => void | Promise<void>;
@@ -179,7 +180,9 @@ export const getApplicationBuilder = () => {
 
   testUsingFakeTime();
 
-  const { overrideForWindow, sendToWindow } = overrideChannels(mainDi);
+  const messageBridgeFake = getMessageBridgeFake();
+
+  messageBridgeFake.involve(mainDi);
 
   const beforeApplicationStartCallbacks: MainDiCallback[] = [];
   const afterApplicationStartCallbacks: MainDiCallback[] = [];
@@ -229,7 +232,8 @@ export const getApplicationBuilder = () => {
 
     const windowDi = getRendererDi();
 
-    overrideForWindow(windowDi, windowId);
+    messageBridgeFake.involve(windowDi);
+
     overrideFsWithFakes(windowDi);
 
     runInAction(() => {
@@ -284,8 +288,10 @@ export const getApplicationBuilder = () => {
         );
       },
 
-      send: (arg) => {
-        sendToWindow(windowId, arg);
+      send: ({ channel: channelId, data }) => {
+        const sendMessageToChannel = mainDi.inject(sendMessageToChannelInjectionToken);
+
+        sendMessageToChannel({ id: channelId }, data);
       },
 
       reload: () => {

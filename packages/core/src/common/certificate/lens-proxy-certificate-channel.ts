@@ -4,6 +4,6 @@
  */
 
 import type { SelfSignedCert } from "selfsigned";
-import { getRequestChannel } from "../utils/channel/get-request-channel";
+import { getRequestChannel } from "@k8slens/messaging";
 
 export const lensProxyCertificateChannel = getRequestChannel<void, SelfSignedCert>("request-lens-proxy-certificate");

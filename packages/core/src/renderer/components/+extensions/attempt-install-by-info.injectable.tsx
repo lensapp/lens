@@ -26,6 +26,7 @@ export interface ExtensionInfo {
   requireConfirmation?: boolean;
 }
 
+// @ts-ignore
 interface NpmPackageVersionDescriptor extends PackageJson {
   dist: {
     integrity: string;

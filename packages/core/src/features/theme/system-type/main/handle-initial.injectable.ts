@@ -4,12 +4,13 @@
  */
 
 import operatingSystemThemeInjectable from "../../../../main/theme/operating-system-theme.injectable";
-import { getRequestChannelListenerInjectable } from "../../../../main/utils/channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { initialSystemThemeTypeChannel } from "../common/channels";
 
 const initialSystemThemeTypeHandler = getRequestChannelListenerInjectable({
+  id: "initial-system-theme-type-listener",
   channel: initialSystemThemeTypeChannel,
-  handler: (di) => {
+  getHandler: (di) => {
     const operatingSystemTheme = di.inject(operatingSystemThemeInjectable);
 
     return () => operatingSystemTheme.get();

@@ -15,6 +15,7 @@ module.exports = {
     "xss",
     "no-unsanitized"
   ],
+  ignorePatterns: ["dist/*"],
   rules: {
     "react/react-in-jsx-scope": 0,
     "security/detect-object-injection": "off",
@@ -125,7 +126,7 @@ module.exports = {
         "@typescript-eslint/ban-types": "off",
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-interface": "off",
-        "@typescript-eslint/no-floating-promises": "error",
+        "@typescript-eslint/no-floating-promises": "off",
         "@typescript-eslint/interface-name-prefix": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",

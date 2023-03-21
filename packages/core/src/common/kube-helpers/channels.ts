@@ -4,11 +4,9 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { Asyncify } from "type-fest";
-import type { RequestChannelHandler } from "../../main/utils/channel/channel-listeners/listener-tokens";
 import type { ClusterId } from "../cluster-types";
-import type { AsyncResult } from "@k8slens/utilities";
-import type { RequestChannel } from "../utils/channel/request-channel-listener-injection-token";
+import type { AsyncResult, Result } from "@k8slens/utilities";
+import { getRequestChannel } from "@k8slens/messaging";
 
 export interface KubectlApplyAllArgs {
   clusterId: ClusterId;
@@ -16,11 +14,12 @@ export interface KubectlApplyAllArgs {
   extraArgs: string[];
 }
 
-export const kubectlApplyAllChannel: RequestChannel<KubectlApplyAllArgs, AsyncResult<string, string>> = {
-  id: "kubectl-apply-all",
-};
+export const kubectlApplyAllChannel = getRequestChannel<
+  KubectlApplyAllArgs,
+  Result<string, string>
+>("kubectl-apply-all");
 
-export type KubectlApplyAll = Asyncify<RequestChannelHandler<typeof kubectlApplyAllChannel>>;
+export type KubectlApplyAll = (req: KubectlApplyAllArgs) => AsyncResult<string, string>;
 
 export const kubectlApplyAllInjectionToken = getInjectionToken<KubectlApplyAll>({
   id: "kubectl-apply-all",
@@ -32,11 +31,12 @@ export interface KubectlDeleteAllArgs {
   extraArgs: string[];
 }
 
-export const kubectlDeleteAllChannel: RequestChannel<KubectlDeleteAllArgs, AsyncResult<string, string>> = {
-  id: "kubectl-delete-all",
-};
+export const kubectlDeleteAllChannel = getRequestChannel<
+  KubectlDeleteAllArgs,
+  Result<string, string>
+>("kubectl-delete-all");
 
-export type KubectlDeleteAll = Asyncify<RequestChannelHandler<typeof kubectlDeleteAllChannel>>;
+export type KubectlDeleteAll = (req: KubectlDeleteAllArgs) => AsyncResult<string, string>;
 
 export const kubectlDeleteAllInjectionToken = getInjectionToken<KubectlDeleteAll>({
   id: "kubectl-delete-all",

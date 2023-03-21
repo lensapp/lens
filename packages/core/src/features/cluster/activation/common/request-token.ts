@@ -4,7 +4,7 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { ChannelRequester } from "../../../../common/utils/channel/request-from-channel-injection-token";
+import type { ChannelRequester } from "@k8slens/messaging";
 import type { activateClusterChannel, deactivateClusterChannel } from "./channels";
 
 export type RequestClusterActivation = ChannelRequester<typeof activateClusterChannel>;

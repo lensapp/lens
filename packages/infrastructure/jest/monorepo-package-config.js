@@ -1,5 +1,9 @@
+const path = require('path');
+
 module.exports = (rootDir) => {
   const shared = {
+    "resolver": path.join(__dirname, "jest-28-resolver.js"),
+
     transform: {
       "^.+\\.(t|j)sx?$": ["@swc/jest", { cwd: rootDir }],
     },
@@ -15,6 +19,8 @@ module.exports = (rootDir) => {
     collectCoverageFrom: [
       "<rootDir>/src/**/*.{ts,tsx}",
       "!<rootDir>/src/**/*.no-coverage.ts",
+      "!<rootDir>/src/**/test-utils/**/*.{ts,tsx}",
+      "!<rootDir>/src/**/index.{ts,tsx}",
     ],
 
     moduleNameMapper: {

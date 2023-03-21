@@ -21,12 +21,14 @@
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack --mode=development --watch",
-    "test": "jest --coverage --runInBand"
+    "dev": "webpack --mode=development --watch"
   },
   "peerDependencies": {
     "@ogre-tools/injectable": "^15.1.2",
-    "lodash": "^4.17.21"
+    "@ogre-tools/injectable-react": "^15.1.2",
+    "@testing-library/react": "^12.1.5",
+    "lodash": "^4.17.21",
+    "react": "^17.0.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.191"

@@ -4,11 +4,12 @@
  */
 import { appPathsChannel } from "../../common/app-paths/app-paths-channel";
 import appPathsInjectable from "../../common/app-paths/app-paths.injectable";
-import { getRequestChannelListenerInjectable } from "../utils/channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 
 const appPathsRequestChannelListenerInjectable = getRequestChannelListenerInjectable({
+  id: "app-paths-request-channel-listener",
   channel: appPathsChannel,
-  handler: (di) => {
+  getHandler: (di) => {
     const appPaths = di.inject(appPathsInjectable);
 
     return () => appPaths;
