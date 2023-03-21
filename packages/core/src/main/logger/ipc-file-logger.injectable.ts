@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { getOrInsertWith } from "@k8slens/utilities";
 import type { LogEntry, transports } from "winston";
-import createIpcFileLoggerTranportInjectable from "./create-ipc-file-transport.injectable";
+import createIpcFileLoggerTransportInjectable from "./create-ipc-file-transport.injectable";
 
 export interface IpcFileLogger {
   log: (fileLog: { fileId: string; entry: LogEntry }) => void;
@@ -16,7 +16,7 @@ export interface IpcFileLogger {
 const ipcFileLoggerInjectable = getInjectable({
   id: "ipc-file-logger",
   instantiate: (di): IpcFileLogger => {
-    const createIpcFileTransport = di.inject(createIpcFileLoggerTranportInjectable);
+    const createIpcFileTransport = di.inject(createIpcFileLoggerTransportInjectable);
     const fileTransports = new Map<string, transports.FileTransportInstance>();
 
     function log({ fileId, entry }: { fileId: string; entry: LogEntry }) {

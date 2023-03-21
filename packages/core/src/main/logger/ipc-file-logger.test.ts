@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import createIpcFileLoggerTranportInjectable from "./create-ipc-file-transport.injectable";
+import createIpcFileLoggerTransportInjectable from "./create-ipc-file-transport.injectable";
 import type { IpcFileLogger } from "./ipc-file-logger.injectable";
 import ipcFileLoggerInjectable from "./ipc-file-logger.injectable";
 
@@ -23,7 +23,7 @@ describe("ipc file logger in main", () => {
 
     const di = getDiForUnitTesting();
 
-    di.override(createIpcFileLoggerTranportInjectable, () => createFileTransportMock);
+    di.override(createIpcFileLoggerTransportInjectable, () => createFileTransportMock);
     logger = di.inject(ipcFileLoggerInjectable);
   });
 
