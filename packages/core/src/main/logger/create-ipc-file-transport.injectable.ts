@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { transports } from "winston";
 import directoryForLogsInjectable from "../../common/app-paths/directory-for-logs.injectable";
 
-const createIpcFileLoggerTranportInjectable = getInjectable({
+const createIpcFileLoggerTransportInjectable = getInjectable({
   id: "create-ipc-file-logger-transport",
   instantiate: (di) => {
     const options = {
@@ -25,4 +25,4 @@ const createIpcFileLoggerTranportInjectable = getInjectable({
   causesSideEffects: true,
 });
 
-export default createIpcFileLoggerTranportInjectable;
+export default createIpcFileLoggerTransportInjectable;

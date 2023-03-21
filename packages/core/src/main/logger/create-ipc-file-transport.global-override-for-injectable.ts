@@ -6,10 +6,10 @@
 import type { transports } from "winston";
 import { getGlobalOverride } from "@k8slens/test-utils";
 import { noop } from "@k8slens/utilities";
-import createIpcFileLoggerTranportInjectable from "./create-ipc-file-transport.injectable";
+import createIpcFileLoggerTransportInjectable from "./create-ipc-file-transport.injectable";
 
 export default getGlobalOverride(
-  createIpcFileLoggerTranportInjectable,
+  createIpcFileLoggerTransportInjectable,
   () => () =>
     ({
       log: noop,
