@@ -15,7 +15,7 @@ const checkForUpdatesMenuItemInjectable = getInjectable({
   id: "check-for-updates-menu-item",
 
   instantiate: (di) => {
-    const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable,);
+    const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable);
     const showApplicationWindow = di.inject(showApplicationWindowInjectable);
     const updatingIsEnabled = di.inject(updatingIsEnabledInjectable);
     const isMac = di.inject(isMacInjectable);
