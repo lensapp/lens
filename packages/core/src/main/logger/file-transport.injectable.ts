@@ -7,8 +7,8 @@ import { transports } from "winston";
 import directoryForLogsInjectable from "../../common/app-paths/directory-for-logs.injectable";
 import { loggerTransportInjectionToken } from "../../common/logger/transports";
 
-const fileLoggerTranportInjectable = getInjectable({
-  id: "file-logger-tranport",
+const fileLoggerTransportInjectable = getInjectable({
+  id: "file-logger-transport",
   instantiate: (di) => new transports.File({
     handleExceptions: false,
     level: "debug",
@@ -26,4 +26,4 @@ const fileLoggerTranportInjectable = getInjectable({
   decorable: false,
 });
 
-export default fileLoggerTranportInjectable;
+export default fileLoggerTransportInjectable;

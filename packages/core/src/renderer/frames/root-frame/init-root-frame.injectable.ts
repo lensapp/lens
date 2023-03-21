@@ -9,7 +9,6 @@ import lensProtocolRouterRendererInjectable from "../../protocol-handler/lens-pr
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
 import registerIpcListenersInjectable from "../../ipc/register-ipc-listeners.injectable";
 import loadExtensionsInjectable from "../load-extensions.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
 import { delay } from "@k8slens/utilities";
 import { broadcastMessage } from "../../../common/ipc";
 import { bundledExtensionsLoaded } from "../../../common/ipc/extension-handling";
@@ -23,9 +22,8 @@ const initRootFrameInjectable = getInjectable({
     const bindProtocolAddRouteHandlers = di.inject(bindProtocolAddRouteHandlersInjectable);
     const lensProtocolRouterRenderer = di.inject(lensProtocolRouterRendererInjectable);
     const catalogEntityRegistry = di.inject(catalogEntityRegistryInjectable);
-    const logger = di.inject(loggerInjectable);
 
-    return async (unmountRoot: () => void) => {
+    return async () => {
       catalogEntityRegistry.init();
 
       try {
@@ -56,12 +54,6 @@ const initRootFrameInjectable = getInjectable({
       window.addEventListener("online", () => broadcastMessage("network:online"));
 
       registerIpcListeners();
-
-      window.addEventListener("beforeunload", () => {
-        logger.info("[ROOT-FRAME]: Unload app");
-
-        unmountRoot();
-      });
     };
   },
 });
