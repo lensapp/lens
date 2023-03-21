@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { isLongRunningRequest } from "../lens-proxy/is-long-running-request";
+import { isLongRunningRequest } from "../lens-proxy/helpers";
 
 describe("isLongRunningRequest", () => {
   it("returns true on watches", () => {

@@ -9,9 +9,9 @@ import contentSecurityPolicyInjectable from "../../common/vars/content-security-
 import kubeAuthProxyServerInjectable from "../cluster/kube-auth-proxy-server.injectable";
 import routeRequestInjectable from "../router/route-request.injectable";
 import getClusterForRequestInjectable from "./get-cluster-for-request.injectable";
-import { isLongRunningRequest } from "./is-long-running-request";
+import { isLongRunningRequest } from "./helpers";
 import type { ProxyIncomingMessage } from "./messages";
-import proxyInjectable from "./proxy.injectable";
+import rawHttpProxyInjectable from "./proxy/raw-proxy.injectable";
 
 export type HandleRouteRequest = (req: ProxyIncomingMessage, res: ServerResponse) => Promise<void>;
 
@@ -20,7 +20,7 @@ const handleRouteRequestInjectable = getInjectable({
   instantiate: (di): HandleRouteRequest => {
     const getClusterForRequest = di.inject(getClusterForRequestInjectable);
     const routeRequest = di.inject(routeRequestInjectable);
-    const proxy = di.inject(proxyInjectable);
+    const proxy = di.inject(rawHttpProxyInjectable);
     const contentSecurityPolicy = di.inject(contentSecurityPolicyInjectable);
 
     return async (req, res) => {

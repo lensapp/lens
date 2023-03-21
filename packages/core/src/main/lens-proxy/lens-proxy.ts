@@ -3,18 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import net from "net";
+import type net from "net";
 import type https from "https";
 import type http from "http";
-import type httpProxy from "http-proxy";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
-import assert from "assert";
 import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
 import { disallowedPorts } from "./disallowed-ports";
-import type { HandleRouteRequest } from "./handle-route-request.injectable";
+import type { ProxyRetry } from "./proxy/retry.injectable";
 
 export type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
@@ -22,20 +20,14 @@ export type LensProxyApiRequest = (args: ProxyApiRequestArgs) => void | Promise<
 
 interface Dependencies {
   emitAppEvent: EmitAppEvent;
-  handleRouteRequest: HandleRouteRequest;
-  readonly proxy: httpProxy;
   readonly lensProxyPort: { set: (portNumber: number) => void };
   readonly logger: Logger;
   readonly proxyServer: https.Server;
+  readonly proxyRetry: ProxyRetry;
 }
 
 export class LensProxy {
-  protected closed = false;
-  protected retryCounters = new Map<string, number>();
-
-  constructor(private readonly dependencies: Dependencies) {
-    this.configureProxy(dependencies.proxy);
-  }
+  constructor(private readonly dependencies: Dependencies) {}
 
   /**
    * Starts to listen on an OS provided port. Will reject if the server throws
@@ -107,61 +99,6 @@ export class LensProxy {
     this.dependencies.logger.info("[LENS-PROXY]: Closing server");
 
     this.dependencies.proxyServer.close();
-    this.closed = true;
-  }
-
-  protected configureProxy(proxy: httpProxy): httpProxy {
-    proxy.on("proxyRes", (proxyRes, req, res) => {
-      const retryCounterId = this.getRequestId(req);
-
-      if (this.retryCounters.has(retryCounterId)) {
-        this.retryCounters.delete(retryCounterId);
-      }
-
-      proxyRes.on("aborted", () => { // happens when proxy target aborts connection
-        res.end();
-      });
-    });
-
-    proxy.on("error", (error, req, res, target) => {
-      if (this.closed || res instanceof net.Socket) {
-        return;
-      }
-
-      this.dependencies.logger.error(`[LENS-PROXY]: http proxy errored for cluster: ${error}`, { url: req.url });
-
-      if (target) {
-        this.dependencies.logger.debug(`Failed proxy to target: ${JSON.stringify(target, null, 2)}`);
-
-        if (req.method === "GET" && (!res.statusCode || res.statusCode >= 500)) {
-          const reqId = this.getRequestId(req);
-          const retryCount = this.retryCounters.get(reqId) || 0;
-          const timeoutMs = retryCount * 250;
-
-          if (retryCount < 20) {
-            this.dependencies.logger.debug(`Retrying proxy request to url: ${reqId}`);
-            setTimeout(() => {
-              this.retryCounters.set(reqId, retryCount + 1);
-              this.dependencies.handleRouteRequest(req as any, res)
-                .catch(error => this.dependencies.logger.error(`[LENS-PROXY]: failed to handle request on proxy error: ${error}`));
-            }, timeoutMs);
-          }
-        }
-      }
-
-      try {
-        res.writeHead(500).end(`Oops, something went wrong.\n${error}`);
-      } catch (e) {
-        this.dependencies.logger.error(`[LENS-PROXY]: Failed to write headers: `, e);
-      }
-    });
-
-    return proxy;
-  }
-
-  protected getRequestId(req: http.IncomingMessage): string {
-    assert(req.headers.host);
-
-    return req.headers.host + req.url;
+    this.dependencies.proxyRetry.close();
   }
 }
