@@ -5,16 +5,13 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import exitAppInjectable from "../../electron-app/features/exit-app.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import initializeBuildVersionInjectable from "../../vars/build-version/init.injectable";
-import lensProxyCertificateInjectable from "../../../common/certificate/lens-proxy-certificate.injectable";
-import fetchInjectable from "../../../common/fetch/fetch.injectable";
-import { Agent } from "https";
 import startLensProxyListeningInjectable from "../../lens-proxy/start-listening.injectable";
+import lensFetchInjectable from "../../../common/fetch/lens-fetch.injectable";
 
 const setupLensProxyInjectable = getInjectable({
   id: "setup-lens-proxy",
@@ -24,12 +21,10 @@ const setupLensProxyInjectable = getInjectable({
       const startLensProxyListening = di.inject(startLensProxyListeningInjectable);
       const exitApp = di.inject(exitAppInjectable);
       const logger = di.inject(loggerInjectable);
-      const lensProxyPort = di.inject(lensProxyPortInjectable);
       const isWindows = di.inject(isWindowsInjectable);
       const showErrorPopup = di.inject(showErrorPopupInjectable);
       const buildVersion = di.inject(buildVersionInjectable);
-      const lensProxyCertificate = di.inject(lensProxyCertificateInjectable);
-      const fetch = di.inject(fetchInjectable);
+      const lensFetch = di.inject(lensFetchInjectable);
 
       try {
         logger.info("🔌 Starting LensProxy");
@@ -43,12 +38,7 @@ const setupLensProxyInjectable = getInjectable({
       // test proxy connection
       try {
         logger.info("🔎 Testing LensProxy connection ...");
-        const versionResponse = await fetch(`https://127.0.0.1:${lensProxyPort.get()}/version`, {
-          agent: new Agent({
-            ca: lensProxyCertificate.get()?.cert,
-          }),
-        });
-
+        const versionResponse = await lensFetch("/version");
         const { version: versionFromProxy } = await versionResponse.json() as { version: string };
 
         if (buildVersion.get() !== versionFromProxy) {
