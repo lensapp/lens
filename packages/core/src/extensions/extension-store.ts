@@ -20,7 +20,7 @@ import { baseStoreIpcChannelPrefixesInjectionToken } from "../common/base-store/
 import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../common/base-store/disable-sync";
 import { persistStateToConfigInjectionToken } from "../common/base-store/save-to-file";
 import getBasenameOfPathInjectable from "../common/path/get-basename.injectable";
-import { enlistMessageChannelListenerInjectionToken } from "../common/utils/channel/enlist-message-channel-listener-injection-token";
+import { enlistMessageChannelListenerInjectionToken } from "@k8slens/messaging";
 
 export interface ExtensionStoreParams<T extends object> extends BaseStoreParams<T> {
   migrations?: Migrations<T>;

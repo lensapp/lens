@@ -3,11 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { HelmRepo } from "./helm-repo";
-import type { AsyncResult } from "@k8slens/utilities";
-import type { RequestChannel } from "../utils/channel/request-channel-listener-injection-token";
+import type { Result } from "@k8slens/utilities";
+import { getRequestChannel } from "@k8slens/messaging";
 
-export type AddHelmRepositoryChannel = RequestChannel<HelmRepo, AsyncResult<void, string>>;
-
-export const addHelmRepositoryChannel: AddHelmRepositoryChannel = {
-  id: "add-helm-repository-channel",
-};
+export const addHelmRepositoryChannel = getRequestChannel<
+  HelmRepo,
+  Result<void, string>
+>("add-helm-repository-channel");

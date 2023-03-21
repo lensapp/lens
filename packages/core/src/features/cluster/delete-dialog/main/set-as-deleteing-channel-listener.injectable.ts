@@ -3,12 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import clustersThatAreBeingDeletedInjectable from "../../../../main/cluster/are-being-deleted.injectable";
-import { getRequestChannelListenerInjectable } from "../../../../main/utils/channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { setClusterAsDeletingChannel } from "../common/set-as-deleting-channel";
 
 const setClusterAsDeletingChannelHandlerInjectable = getRequestChannelListenerInjectable({
+  id: "set-cluster-as-deleting-channel-handler",
   channel: setClusterAsDeletingChannel,
-  handler: (di) => {
+  getHandler: (di) => {
     const clustersThatAreBeingDeleted = di.inject(clustersThatAreBeingDeletedInjectable);
 
     return (clusterId) => {

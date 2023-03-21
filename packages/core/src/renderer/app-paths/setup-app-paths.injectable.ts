@@ -4,9 +4,9 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import appPathsStateInjectable from "../../common/app-paths/app-paths-state.injectable";
-import { beforeFrameStartsFirstInjectionToken } from "../before-frame-starts/tokens";
 import { appPathsChannel } from "../../common/app-paths/app-paths-channel";
-import { requestFromChannelInjectionToken } from "../../common/utils/channel/request-from-channel-injection-token";
+import { requestFromChannelInjectionToken } from "@k8slens/messaging";
+import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 
 const setupAppPathsInjectable = getInjectable({
   id: "setup-app-paths",
@@ -21,7 +21,7 @@ const setupAppPathsInjectable = getInjectable({
     },
   }),
 
-  injectionToken: beforeFrameStartsFirstInjectionToken,
+  injectionToken: beforeApplicationIsLoadingInjectionToken,
 });
 
 export default setupAppPathsInjectable;

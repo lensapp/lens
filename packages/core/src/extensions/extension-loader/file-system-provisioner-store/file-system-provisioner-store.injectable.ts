@@ -12,7 +12,7 @@ import { baseStoreIpcChannelPrefixesInjectionToken } from "../../../common/base-
 import { shouldBaseStoreDisableSyncInIpcListenerInjectionToken } from "../../../common/base-store/disable-sync";
 import { persistStateToConfigInjectionToken } from "../../../common/base-store/save-to-file";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
-import { enlistMessageChannelListenerInjectionToken } from "../../../common/utils/channel/enlist-message-channel-listener-injection-token";
+import { enlistMessageChannelListenerInjectionToken } from "@k8slens/messaging";
 import ensureHashedDirectoryForExtensionInjectable from "./ensure-hashed-directory-for-extension.injectable";
 import { registeredExtensionsInjectable } from "./registered-extensions.injectable";
 

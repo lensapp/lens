@@ -3,10 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { ClusterId } from "../../../../common/cluster-types";
-import type { RequestChannel } from "../../../../common/utils/channel/request-channel-listener-injection-token";
+import { getRequestChannel } from "@k8slens/messaging";
 
-export type SetClusterAsDeletingChannel = RequestChannel<ClusterId, void>;
-
-export const setClusterAsDeletingChannel: SetClusterAsDeletingChannel = {
-  id: "set-cluster-as-deleting",
-};
+export const setClusterAsDeletingChannel = getRequestChannel<ClusterId, void>(
+  "set-cluster-as-deleting",
+);

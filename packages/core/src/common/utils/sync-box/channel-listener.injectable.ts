@@ -3,13 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { syncBoxChannel } from "./channels";
-import { getMessageChannelListenerInjectable } from "../channel/message-channel-listener-injection-token";
+import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
 import syncBoxStateInjectable from "./sync-box-state.injectable";
 
 const syncBoxChannelListenerInjectable = getMessageChannelListenerInjectable({
   id: "init",
   channel: syncBoxChannel,
-  handler: (di) => ({ id, value }) => di.inject(syncBoxStateInjectable, id).set(value),
+  getHandler: (di) => ({ id, value }) => di.inject(syncBoxStateInjectable, id).set(value),
 });
 
 export default syncBoxChannelListenerInjectable;

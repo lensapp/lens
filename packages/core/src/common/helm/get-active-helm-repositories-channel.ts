@@ -4,10 +4,9 @@
  */
 import type { HelmRepo } from "./helm-repo";
 import type { AsyncResult } from "@k8slens/utilities";
-import type { RequestChannel } from "../utils/channel/request-channel-listener-injection-token";
+import { getRequestChannel } from "@k8slens/messaging";
 
-export type GetActiveHelmRepositoriesChannel = RequestChannel<void, AsyncResult<HelmRepo[]>>;
-
-export const getActiveHelmRepositoriesChannel: GetActiveHelmRepositoriesChannel = {
-  id: "get-helm-active-list-repositories",
-};
+export const getActiveHelmRepositoriesChannel = getRequestChannel<
+  void,
+  AsyncResult<HelmRepo[]>
+>("get-helm-active-list-repositories");

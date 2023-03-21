@@ -4,7 +4,7 @@
  */
 
 import path from "path";
-import { unionPATHs } from "../union-env-path";
+import { unionPATHs } from "./union-env-path";
 
 describe("unionPATHs", () => {
   it("return the same path if given only one with no double delimiters", () => {

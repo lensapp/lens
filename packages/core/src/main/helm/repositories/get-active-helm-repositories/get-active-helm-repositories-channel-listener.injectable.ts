@@ -3,12 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getActiveHelmRepositoriesChannel } from "../../../../common/helm/get-active-helm-repositories-channel";
-import { getRequestChannelListenerInjectable } from "../../../utils/channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import getActiveHelmRepositoriesInjectable from "./get-active-helm-repositories.injectable";
 
 const getActiveHelmRepositoriesChannelListenerInjectable = getRequestChannelListenerInjectable({
+  id: "get-active-helm-repositories-channel-listener",
   channel: getActiveHelmRepositoriesChannel,
-  handler: (di) => di.inject(getActiveHelmRepositoriesInjectable),
+  getHandler: (di) => di.inject(getActiveHelmRepositoriesInjectable),
 });
 
 export default getActiveHelmRepositoriesChannelListenerInjectable;

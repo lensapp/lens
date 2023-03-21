@@ -7,7 +7,7 @@ import { reaction } from "mobx";
 import ipcMainInjectionToken from "../../common/ipc/ipc-main-injection-token";
 import { catalogInitChannel } from "../../common/ipc/catalog";
 import { disposer } from "@k8slens/utilities";
-import { getStartableStoppable } from "../../common/utils/get-startable-stoppable";
+import { getStartableStoppable } from "@k8slens/startable-stoppable";
 import catalogEntityRegistryInjectable from "../catalog/entity-registry.injectable";
 import catalogSyncBroadcasterInjectable from "./broadcaster.injectable";
 import { toJS } from "../../common/utils";
