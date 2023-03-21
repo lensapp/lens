@@ -8,14 +8,15 @@ import type { LensExtension } from "./lens-extension";
 import type { StaticThis } from "../common/utils/singleton";
 import { getOrInsertWith } from "@k8slens/utilities";
 import { getLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import type { Migrations } from "conf/dist/source/types";
 import type { PersistentStorage, PersistentStorageParams } from "../common/persistent-storage/create.injectable";
 import createPersistentStorageInjectable from "../common/persistent-storage/create.injectable";
 import directoryForUserDataInjectable from "../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import assert from "assert";
+import type { Options } from "conf";
+import type { Migrations } from "../common/persistent-storage/migrations.injectable";
 
 export interface ExtensionStoreParams<T extends object> extends Omit<PersistentStorageParams<T>, "migrations" | "cwd" | "fromStore" | "toJSON"> {
-  migrations?: Migrations<T>;
+  migrations?: Options<T>["migrations"];
   cwd?: string;
 }
 
@@ -76,7 +77,7 @@ export abstract class BaseExtensionStore<T extends object> {
       ...params,
       cwd: this.cwd(),
       projectVersion,
-      migrations: migrations as Migrations<Record<string, unknown>>,
+      migrations: migrations as Migrations,
       fromStore: (data) => this.fromStore(data),
       toJSON: () => this.toJSON(),
     });

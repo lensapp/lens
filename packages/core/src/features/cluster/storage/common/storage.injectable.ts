@@ -26,8 +26,6 @@ const clustersPersistentStorageInjectable = getInjectable({
     const readClusterConfigSync = di.inject(readClusterConfigSyncInjectable);
     const clustersState = di.inject(clustersStateInjectable);
     const logger = di.inject(loggerInjectable);
-    const storeMigrationVersion = di.inject(storeMigrationVersionInjectable);
-    const migrations = di.inject(persistentStorageMigrationsInjectable, clusterStoreMigrationInjectionToken);
 
     return createPersistentStorage<ClusterStoreModel>({
       configName: "lens-cluster-store",
@@ -35,8 +33,8 @@ const clustersPersistentStorageInjectable = getInjectable({
       syncOptions: {
         equals: comparer.structural,
       },
-      projectVersion: storeMigrationVersion,
-      migrations,
+      projectVersion: di.inject(storeMigrationVersionInjectable),
+      migrations: di.inject(persistentStorageMigrationsInjectable, clusterStoreMigrationInjectionToken),
       fromStore: action(({ clusters = [] }) => {
         const currentClusters = new Map(clustersState);
         const newClusters = new Map<ClusterId, Cluster>();

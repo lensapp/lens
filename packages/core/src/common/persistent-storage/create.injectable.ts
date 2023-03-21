@@ -6,7 +6,6 @@ import { disposer, isPromiseLike } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import type Conf from "conf/dist/source";
 import type { Options } from "conf/dist/source";
-import type { Migrations } from "conf/dist/source/types";
 import { isEqual, kebabCase } from "lodash";
 import type { IEqualsComparer } from "mobx";
 import { reaction } from "mobx";
@@ -20,6 +19,7 @@ import type { MessageChannel } from "@k8slens/messaging";
 import { persistentStorageIpcChannelPrefixesInjectionToken } from "./channel-prefix";
 import { shouldPersistentStorageDisableSyncInIpcListenerInjectionToken } from "./disable-sync";
 import { persistStateToConfigInjectionToken } from "./save-to-file";
+import type { Migrations } from "./migrations.injectable";
 
 export interface PersistentStorage {
   /**
@@ -30,13 +30,12 @@ export interface PersistentStorage {
 }
 
 export interface PersistentStorageParams<T extends object> extends Omit<Options<T>, "migrations"> {
-  syncOptions?: {
-    fireImmediately?: boolean;
+  readonly syncOptions?: {
+    readonly fireImmediately?: boolean;
     equals?: IEqualsComparer<T>;
   };
   readonly configName: string;
-
-  migrations?: Migrations<Record<string, unknown>>;
+  readonly migrations?: Migrations;
 
   /**
    * fromStore is called internally when a child class syncs with the file
@@ -91,7 +90,7 @@ const createPersistentStorageInjectable = getInjectable({
         const config = getConfigurationFileModel({
           projectName: "lens",
           cwd,
-          migrations: migrations as Migrations<T>,
+          migrations: migrations as Options<T>["migrations"],
           ...params,
         });
 
