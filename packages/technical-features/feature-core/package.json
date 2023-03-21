@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/feature-core",
   "private": false,
-  "version": "6.5.0-alpha.1",
+  "version": "6.5.0-cron.df49ff9",
   "description": "Code that is common to all Features and those registering them.",
   "type": "commonjs",
   "publishConfig": {
@@ -34,6 +34,6 @@
     "@ogre-tools/injectable": "^15.1.2"
   },
   "devDependencies": {
-    "@k8slens/eslint-config": "6.5.0-alpha.1"
+    "@k8slens/eslint-config": "^6.5.0-cron.df49ff9"
   }
 }

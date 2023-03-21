@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/legacy-extensions",
   "private": false,
-  "version": "1.0.0-alpha.1",
+  "version": "6.5.0-cron.df49ff9",
   "description": "Package for Lens extensions using the v1 API",
   "type": "commonjs",
   "files": [
@@ -34,6 +34,6 @@
     "@ogre-tools/injectable": "^15.1.2"
   },
   "devDependencies": {
-    "@k8slens/eslint-config": "6.5.0-alpha.1"
+    "@k8slens/eslint-config": "^6.5.0-cron.df49ff9"
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/application-for-electron-main",
   "private": false,
-  "version": "6.5.0-alpha.1",
+  "version": "6.5.0-cron.df49ff9",
   "description": "Electron's main specifics for creating Lens applications",
   "type": "commonjs",
   "files": [
@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
-    "@k8slens/eslint-config": "6.5.0-alpha.1",
+    "@k8slens/eslint-config": "^6.5.0-cron.df49ff9",
     "@ogre-tools/test-utils": "^15.1.2"
   }
 }
