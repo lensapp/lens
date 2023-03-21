@@ -4,6 +4,12 @@
   "version": "1.0.0-alpha.1",
   "description": "TBD",
   "type": "commonjs",
+
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+
   "files": [
     "build"
   ],

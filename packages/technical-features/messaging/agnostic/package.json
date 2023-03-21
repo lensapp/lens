@@ -4,6 +4,12 @@
   "version": "1.0.0-alpha.1",
   "description": "An abstraction for messaging between Lens environments",
   "type": "commonjs",
+
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+
   "files": [
     "dist"
   ],

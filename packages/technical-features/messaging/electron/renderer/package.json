@@ -4,6 +4,12 @@
   "version": "1.0.0-alpha.1",
   "description": "Implementations for 'messaging' in Electron renderer",
   "type": "commonjs",
+
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+
   "files": [
     "dist"
   ],
