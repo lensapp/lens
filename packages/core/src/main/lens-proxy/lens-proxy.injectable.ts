@@ -4,33 +4,23 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { LensProxy } from "./lens-proxy";
-import routeRequestInjectable from "../router/route-request.injectable";
-import httpProxy from "http-proxy";
-import shellApiRequestInjectable from "./proxy-functions/shell-api-request.injectable";
 import lensProxyPortInjectable from "./lens-proxy-port.injectable";
-import contentSecurityPolicyInjectable from "../../common/vars/content-security-policy.injectable";
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import loggerInjectable from "../../common/logger.injectable";
-import lensProxyCertificateInjectable from "../../common/certificate/lens-proxy-certificate.injectable";
-import getClusterForRequestInjectable from "./get-cluster-for-request.injectable";
-import kubeAuthProxyServerInjectable from "../cluster/kube-auth-proxy-server.injectable";
-import kubeApiUpgradeRequestInjectable from "./proxy-functions/kube-api-upgrade-request.injectable";
+import proxyInjectable from "./proxy.injectable";
+import handleRouteRequestInjectable from "./handle-route-request.injectable";
+import lensProxyHttpsServerInjectable from "./https-proxy/server.injectable";
 
 const lensProxyInjectable = getInjectable({
   id: "lens-proxy",
 
   instantiate: (di) => new LensProxy({
-    routeRequest: di.inject(routeRequestInjectable),
-    proxy: httpProxy.createProxy(),
-    kubeApiUpgradeRequest: di.inject(kubeApiUpgradeRequestInjectable),
-    shellApiRequest: di.inject(shellApiRequestInjectable),
-    getClusterForRequest: di.inject(getClusterForRequestInjectable),
+    proxy: di.inject(proxyInjectable),
+    proxyServer: di.inject(lensProxyHttpsServerInjectable),
+    handleRouteRequest: di.inject(handleRouteRequestInjectable),
     lensProxyPort: di.inject(lensProxyPortInjectable),
-    contentSecurityPolicy: di.inject(contentSecurityPolicyInjectable),
     emitAppEvent: di.inject(emitAppEventInjectable),
     logger: di.inject(loggerInjectable),
-    certificate: di.inject(lensProxyCertificateInjectable).get(),
-    getKubeAuthProxyServer: (cluster) => di.inject(kubeAuthProxyServerInjectable, cluster),
   }),
 });
 

@@ -4,73 +4,37 @@
  */
 
 import net from "net";
-import https from "https";
+import type https from "https";
 import type http from "http";
 import type httpProxy from "http-proxy";
-import { apiPrefix, apiKubePrefix } from "../../common/vars";
-import type { RouteRequest } from "../router/route-request.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import type { ProxyApiRequestArgs } from "./proxy-functions";
 import assert from "assert";
 import type { SetRequired } from "type-fest";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Logger } from "../../common/logger";
-import type { SelfSignedCert } from "selfsigned";
-import type { KubeAuthProxyServer } from "../cluster/kube-auth-proxy-server.injectable";
-import { isLongRunningRequest } from "./is-long-running-request";
 import { disallowedPorts } from "./disallowed-ports";
+import type { HandleRouteRequest } from "./handle-route-request.injectable";
 
 export type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
 export type LensProxyApiRequest = (args: ProxyApiRequestArgs) => void | Promise<void>;
 
 interface Dependencies {
-  getClusterForRequest: GetClusterForRequest;
-  shellApiRequest: LensProxyApiRequest;
-  kubeApiUpgradeRequest: LensProxyApiRequest;
   emitAppEvent: EmitAppEvent;
-  getKubeAuthProxyServer: (cluster: Cluster) => KubeAuthProxyServer;
-  routeRequest: RouteRequest;
+  handleRouteRequest: HandleRouteRequest;
   readonly proxy: httpProxy;
   readonly lensProxyPort: { set: (portNumber: number) => void };
-  readonly contentSecurityPolicy: string;
   readonly logger: Logger;
-  readonly certificate: SelfSignedCert;
+  readonly proxyServer: https.Server;
 }
 
 export class LensProxy {
-  protected proxyServer: https.Server;
   protected closed = false;
   protected retryCounters = new Map<string, number>();
 
   constructor(private readonly dependencies: Dependencies) {
     this.configureProxy(dependencies.proxy);
-
-    this.proxyServer = https.createServer(
-      {
-        key: dependencies.certificate.private,
-        cert: dependencies.certificate.cert,
-      },
-      (req, res) => {
-        this.handleRequest(req as ServerIncomingMessage, res);
-      },
-    );
-
-    this.proxyServer
-      .on("upgrade", (req: ServerIncomingMessage, socket: net.Socket, head: Buffer) => {
-        const cluster = this.dependencies.getClusterForRequest(req);
-
-        if (!cluster) {
-          this.dependencies.logger.error(`[LENS-PROXY]: Could not find cluster for upgrade request from url=${req.url}`);
-          socket.destroy();
-        } else {
-          const isInternal = req.url.startsWith(`${apiPrefix}?`);
-          const reqHandler = isInternal ? this.dependencies.shellApiRequest : this.dependencies.kubeApiUpgradeRequest;
-
-          (async () => reqHandler({ req, socket, head, cluster }))()
-            .catch(error => this.dependencies.logger.error("[LENS-PROXY]: failed to handle proxy upgrade", error));
-        }
-      });
   }
 
   /**
@@ -81,19 +45,19 @@ export class LensProxy {
    */
   private attemptToListen(): Promise<number> {
     return new Promise<number>((resolve, reject) => {
-      this.proxyServer.listen(0, "127.0.0.1");
+      this.dependencies.proxyServer.listen(0, "127.0.0.1");
 
-      this.proxyServer
+      this.dependencies.proxyServer
         .once("listening", () => {
-          this.proxyServer.removeAllListeners("error"); // don't reject the promise
+          this.dependencies.proxyServer.removeAllListeners("error"); // don't reject the promise
 
-          const { address, port } = this.proxyServer.address() as net.AddressInfo;
+          const { address, port } = this.dependencies.proxyServer.address() as net.AddressInfo;
 
           this.dependencies.lensProxyPort.set(port);
 
           this.dependencies.logger.info(`[LENS-PROXY]: Proxy server has started at ${address}:${port}`);
 
-          this.proxyServer.on("error", (error) => {
+          this.dependencies.proxyServer.on("error", (error) => {
             this.dependencies.logger.info(`[LENS-PROXY]: Subsequent error: ${error}`);
           });
 
@@ -116,7 +80,7 @@ export class LensProxy {
     const seenPorts = new Set<number>();
 
     while(true) {
-      this.proxyServer?.close();
+      this.dependencies.proxyServer?.close();
       const port = await this.attemptToListen();
 
       if (!disallowedPorts.has(port)) {
@@ -142,7 +106,7 @@ export class LensProxy {
   close() {
     this.dependencies.logger.info("[LENS-PROXY]: Closing server");
 
-    this.proxyServer.close();
+    this.dependencies.proxyServer.close();
     this.closed = true;
   }
 
@@ -178,7 +142,7 @@ export class LensProxy {
             this.dependencies.logger.debug(`Retrying proxy request to url: ${reqId}`);
             setTimeout(() => {
               this.retryCounters.set(reqId, retryCount + 1);
-              this.handleRequest(req as ServerIncomingMessage, res)
+              this.dependencies.handleRouteRequest(req as any, res)
                 .catch(error => this.dependencies.logger.error(`[LENS-PROXY]: failed to handle request on proxy error: ${error}`));
             }, timeoutMs);
           }
@@ -199,24 +163,5 @@ export class LensProxy {
     assert(req.headers.host);
 
     return req.headers.host + req.url;
-  }
-
-  protected async handleRequest(req: ServerIncomingMessage, res: http.ServerResponse) {
-    const cluster = this.dependencies.getClusterForRequest(req);
-
-    if (cluster && req.url.startsWith(apiKubePrefix)) {
-      delete req.headers.authorization;
-      req.url = req.url.replace(apiKubePrefix, "");
-
-      const kubeAuthProxyServer = this.dependencies.getKubeAuthProxyServer(cluster);
-      const proxyTarget = await kubeAuthProxyServer.getApiTarget(isLongRunningRequest(req.url));
-
-      if (proxyTarget) {
-        return this.dependencies.proxy.web(req, res, proxyTarget);
-      }
-    }
-
-    res.setHeader("Content-Security-Policy", this.dependencies.contentSecurityPolicy);
-    await this.dependencies.routeRequest(cluster, req, res);
   }
 }
