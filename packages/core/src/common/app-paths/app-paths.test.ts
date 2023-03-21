@@ -35,7 +35,7 @@ describe("app-paths", () => {
       temp: "/some-temp",
       videos: "/some-videos",
       userData: "/some-irrelevant-user-data",
-      sessionData: "/some-irrelevat-session-data",
+      sessionData: "/some-irrelevant-session-data",
     };
 
     builder.beforeApplicationStart(({ mainDi }) => {
