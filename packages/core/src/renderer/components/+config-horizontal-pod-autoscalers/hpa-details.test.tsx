@@ -4,8 +4,13 @@
  */
 import type { RenderResult } from "@testing-library/react";
 import React from "react";
+import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import { Cluster } from "../../../common/cluster/cluster";
 import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints";
+import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
+import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import { HpaDetails } from "./hpa-details";
@@ -40,6 +45,17 @@ describe("<HpaDetails/>", () => {
 
   beforeEach(() => {
     const di = getDiForUnitTesting();
+
+    di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
+    di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
+    di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(hostedClusterInjectable, () => new Cluster({
+      contextName: "some-context-name",
+      id: "some-cluster-id",
+      kubeConfigPath: "/some-path-to-a-kubeconfig",
+    }, {
+      clusterServerUrl: "https://localhost:8080",
+    }));
 
     render = renderFor(di);
   });
