@@ -1,3 +1,4 @@
+/* c8 ignore start */
 import { getInjectable } from "@ogre-tools/injectable";
 import {
   RequestChannel,
@@ -19,3 +20,4 @@ const requestFromChannelInjectable = getInjectable({
 });
 
 export default requestFromChannelInjectable;
+/* c8 ignore stop */

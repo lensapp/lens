@@ -1,3 +1,4 @@
+/* c8 ignore start */
 import { getInjectable } from "@ogre-tools/injectable";
 import { webContents } from "electron";
 
@@ -8,3 +9,4 @@ const getWebContentsInjectable = getInjectable({
 });
 
 export default getWebContentsInjectable;
+/* c8 ignore stop */
