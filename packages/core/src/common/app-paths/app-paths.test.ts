@@ -21,7 +21,6 @@ describe("app-paths", () => {
     const defaultAppPathsStub: AppPaths = {
       currentApp: "/some-current-app",
       appData: "/some-app-data",
-      cache: "/some-cache",
       crashDumps: "/some-crash-dumps",
       desktop: "/some-desktop",
       documents: "/some-documents",
@@ -36,6 +35,7 @@ describe("app-paths", () => {
       temp: "/some-temp",
       videos: "/some-videos",
       userData: "/some-irrelevant-user-data",
+      sessionData: "/some-irrelevat-session-data",
     };
 
     builder.beforeApplicationStart(({ mainDi }) => {
