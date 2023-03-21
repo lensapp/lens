@@ -4,7 +4,7 @@
  */
 
 import type { OpenDialogOptions } from "electron";
-import type { RequestChannel } from "../../../common/utils/channel/request-channel-listener-injection-token";
+import type { RequestChannel } from "@k8slens/messaging";
 
 export type PathPickingResponse = {
   canceled: true;

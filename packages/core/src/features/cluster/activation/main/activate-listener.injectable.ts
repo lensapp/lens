@@ -2,13 +2,14 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getRequestChannelListenerInjectable } from "../../../../main/utils/channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { activateClusterChannel } from "../common/channels";
 import requestClusterActivationInjectable from "./request-activation.injectable";
 
 const activateClusterRequestChannelListenerInjectable = getRequestChannelListenerInjectable({
+  id: "activate-cluster-request-channel-listener",
   channel: activateClusterChannel,
-  handler: (di) => di.inject(requestClusterActivationInjectable),
+  getHandler: (di) => di.inject(requestClusterActivationInjectable),
 });
 
 export default activateClusterRequestChannelListenerInjectable;

@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { RequestChannelHandler } from "../../../../main/utils/channel/channel-listeners/listener-tokens";
-import requestFromChannelInjectable from "../../../../renderer/utils/channel/request-from-channel.injectable";
+import type { RequestChannelHandler } from "@k8slens/messaging";
+import { requestFromChannelInjectionToken } from "@k8slens/messaging";
 import { initialSystemThemeTypeChannel } from "../common/channels";
 
 export type RequestInitialSystemThemeType = RequestChannelHandler<typeof initialSystemThemeTypeChannel>;
@@ -12,7 +12,7 @@ export type RequestInitialSystemThemeType = RequestChannelHandler<typeof initial
 const requestInitialSystemThemeTypeInjectable = getInjectable({
   id: "request-initial-system-theme-type",
   instantiate: (di): RequestInitialSystemThemeType => {
-    const requestFromChannel = di.inject(requestFromChannelInjectable);
+    const requestFromChannel = di.inject(requestFromChannelInjectionToken);
 
     return () => requestFromChannel(initialSystemThemeTypeChannel);
   },

@@ -1,4 +1,4 @@
-import { overrideSideEffectsWithFakes } from "./src/override-side-effects-with-fakes";
+import { overrideSideEffectsWithFakes } from "./src/test-utils/override-side-effects-with-fakes";
 
 export * from "./src/start-application/time-slots";
 

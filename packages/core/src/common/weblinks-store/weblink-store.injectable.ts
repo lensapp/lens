@@ -11,7 +11,7 @@ import { persistStateToConfigInjectionToken } from "../base-store/save-to-file";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import loggerInjectable from "../logger.injectable";
 import getBasenameOfPathInjectable from "../path/get-basename.injectable";
-import { enlistMessageChannelListenerInjectionToken } from "../utils/channel/enlist-message-channel-listener-injection-token";
+import { enlistMessageChannelListenerInjectionToken } from "@k8slens/messaging";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
 import { weblinkStoreMigrationInjectionToken } from "./migration-token";
 import { WeblinkStore } from "./weblink-store";

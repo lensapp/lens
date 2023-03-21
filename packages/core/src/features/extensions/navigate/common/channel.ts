@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { MessageChannel } from "../../../../common/utils/channel/message-channel-listener-injection-token";
+import type { MessageChannel } from "@k8slens/messaging";
 
 export interface NavigateForExtensionArgs {
   extId: string;

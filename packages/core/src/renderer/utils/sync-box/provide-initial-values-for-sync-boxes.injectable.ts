@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../../before-frame-starts/tokens";
 import { syncBoxInitialValueChannel } from "../../../common/utils/sync-box/channels";
 import createSyncBoxStateInjectable from "../../../common/utils/sync-box/sync-box-state.injectable";
-import { requestFromChannelInjectionToken } from "../../../common/utils/channel/request-from-channel-injection-token";
+import { requestFromChannelInjectionToken } from "@k8slens/messaging";
 import { runInAction } from "mobx";
 import { syncBoxInjectionToken } from "../../../common/utils/sync-box/sync-box-injection-token";
 import assert from "assert";

@@ -26,7 +26,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack --mode=development --watch",
-    "test": "jest --coverage --runInBand",
+    "test:unit": "jest --coverage --runInBand",
     "lint": "lens-lint",
     "lint:fix": "lens-lint --fix"
   },

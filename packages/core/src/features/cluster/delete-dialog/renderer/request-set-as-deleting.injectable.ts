@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ClusterId } from "../../../../common/cluster-types";
-import requestFromChannelInjectable from "../../../../renderer/utils/channel/request-from-channel.injectable";
+import { requestFromChannelInjectionToken } from "@k8slens/messaging";
 import { setClusterAsDeletingChannel } from "../common/set-as-deleting-channel";
 
 export type RequestSetClusterAsDeleting = (clusterId: ClusterId) => Promise<void>;
@@ -12,7 +12,7 @@ export type RequestSetClusterAsDeleting = (clusterId: ClusterId) => Promise<void
 const requestSetClusterAsDeletingInjectable = getInjectable({
   id: "request-set-cluster-as-deleting",
   instantiate: (di): RequestSetClusterAsDeleting => {
-    const requestChannel = di.inject(requestFromChannelInjectable);
+    const requestChannel = di.inject(requestFromChannelInjectionToken);
 
     return (clusterId) => requestChannel(setClusterAsDeletingChannel, clusterId);
   },

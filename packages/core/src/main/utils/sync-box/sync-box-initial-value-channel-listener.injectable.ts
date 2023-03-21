@@ -4,11 +4,12 @@
  */
 import { syncBoxInitialValueChannel } from "../../../common/utils/sync-box/channels";
 import { syncBoxInjectionToken } from "../../../common/utils/sync-box/sync-box-injection-token";
-import { getRequestChannelListenerInjectable } from "../channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 
 const syncBoxInitialValueChannelListenerInjectable = getRequestChannelListenerInjectable({
+  id: "sync-box-initial-value-channel-listener",
   channel: syncBoxInitialValueChannel,
-  handler: (di) => {
+  getHandler: (di) => {
     const syncBoxes = di.injectMany(syncBoxInjectionToken);
 
     return () => syncBoxes.map((box) => ({

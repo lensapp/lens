@@ -10,7 +10,6 @@ import { onceDefined } from "@k8slens/utilities";
 import assert from "assert";
 import type { Logger } from "../../../common/logger";
 import type { GetClusterById } from "../../../common/cluster-store/get-by-id.injectable";
-import type { EmitClusterVisibility } from "./emit-cluster-visibility.injectable";
 import { getClusterFrameUrl } from "../../../common/utils";
 
 export interface LensView {
@@ -21,7 +20,7 @@ export interface LensView {
 interface Dependencies {
   readonly logger: Logger;
   getClusterById: GetClusterById;
-  emitClusterVisibility: EmitClusterVisibility;
+  emitClusterVisibility: (clusterId: ClusterId | null) => void;
 }
 
 export class ClusterFrameHandler {

@@ -11,7 +11,7 @@ import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectab
 import loggerInjectable from "../../../common/logger.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import setupAppPathsInjectable from "../../app-paths/setup-app-paths.injectable";
-import { beforeFrameStartsFirstInjectionToken } from "../../before-frame-starts/tokens";
+import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import { storageHelperLogPrefix } from "../storage-helper";
 import lensLocalStorageStateInjectable from "./state.injectable";
@@ -68,7 +68,7 @@ const initializeStateInjectable = getInjectable({
     },
     runAfter: setupAppPathsInjectable,
   }),
-  injectionToken: beforeFrameStartsFirstInjectionToken,
+  injectionToken: beforeApplicationIsLoadingInjectionToken,
 });
 
 export default initializeStateInjectable;
