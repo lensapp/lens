@@ -6,6 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 
 export const sendMessageToChannelStubInjectable = getInjectable({
   id: "send-message-to-channel-stub",
+  /* c8 ignore next */
   instantiate: () => () => {},
   injectionToken: sendMessageToChannelInjectionToken,
 });
