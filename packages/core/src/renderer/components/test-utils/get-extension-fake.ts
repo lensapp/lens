@@ -27,7 +27,7 @@ export interface FakeExtensionOptions {
   mainOptions?: Partial<LensMainExtension>;
 }
 
-export const getExtensionFakeForMain = (di: DiContainer, id: string, name: string, options: Partial<LensMainExtension>) => {
+export const getMainExtensionFakeWith = (di: DiContainer) => ({ id, name, mainOptions = {}}: FakeExtensionOptions) => {
   const instance = new TestExtensionMain({
     id,
     absolutePath: "irrelevant",
@@ -44,7 +44,7 @@ export const getExtensionFakeForMain = (di: DiContainer, id: string, name: strin
     manifestPath: "irrelevant",
   });
 
-  Object.assign(instance, options);
+  Object.assign(instance, mainOptions);
 
   (instance as Writable<LensMainExtension>)[lensExtensionDependencies] = {
     fileSystemProvisionerStore: di.inject(fileSystemProvisionerStoreInjectable),
@@ -56,7 +56,7 @@ export const getExtensionFakeForMain = (di: DiContainer, id: string, name: strin
   return instance;
 };
 
-export const getExtensionFakeForRenderer = (di: DiContainer, id: string, name: string, options: Partial<LensRendererExtension>) => {
+export const getRendererExtensionFakeWith = (di: DiContainer) => ({ id, name, rendererOptions = {}}: FakeExtensionOptions) => {
   const instance = new TestExtensionRenderer({
     id,
     absolutePath: "irrelevant",
@@ -73,7 +73,7 @@ export const getExtensionFakeForRenderer = (di: DiContainer, id: string, name: s
     manifestPath: "irrelevant",
   });
 
-  Object.assign(instance, options);
+  Object.assign(instance, rendererOptions);
 
   (instance as Writable<LensRendererExtension>)[lensExtensionDependencies] = {
     categoryRegistry: di.inject(catalogCategoryRegistryInjectable),
