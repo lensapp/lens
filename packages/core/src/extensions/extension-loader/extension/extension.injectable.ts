@@ -32,7 +32,9 @@ const extensionInjectable = getInjectable({
               const injectables = extensionRegistrator(instance);
 
               if (Array.isArray(injectables)) {
-                injectableDifferencingRegistrator(injectables);
+                runInAction(() => {
+                  injectableDifferencingRegistrator(injectables);
+                });
               } else {
                 reactionDisposer.push(reaction(
                   () => injectables.get(),
