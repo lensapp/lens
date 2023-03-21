@@ -35,7 +35,7 @@
     "@k8slens/feature-core": "^6.5.0-alpha.0",
     "@ogre-tools/injectable": "^15.1.2",
     "@ogre-tools/injectable-extension-for-auto-registration": "^15.1.2",
-    "electron": "^19.1.9"
+    "electron": "^22.3.3"
   },
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
