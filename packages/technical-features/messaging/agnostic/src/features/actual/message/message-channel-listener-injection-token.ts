@@ -9,7 +9,7 @@ export interface MessageChannel<Message> {
 export type ExtraData = { processId: number; frameId: number };
 
 export type MessageChannelHandler<Channel> = Channel extends MessageChannel<infer Message>
-  ? (message: Message, data: ExtraData) => void
+  ? (message: Message, data?: ExtraData) => void
   : never;
 
 export interface MessageChannelListener<Channel> {
