@@ -3,9 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const path = require("path");
 
-// hack: hard-coded
-const sassCommonVars =
-  "/Users/maspiala/work/lens/packages/core/src/renderer/components/vars.scss";
+const sassCommonVars = path.resolve(__dirname, "..", "..", "..", "core", "src", "renderer", "components/vars.scss");
 
 module.exports =
   ({ miniCssExtractPluginLoader = MiniCssExtractPlugin.loader } = {}) =>
