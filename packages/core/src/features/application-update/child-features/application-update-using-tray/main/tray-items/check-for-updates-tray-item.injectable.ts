@@ -16,6 +16,7 @@ import processCheckingForUpdatesInjectable from "../../../../main/process-checki
 import { withErrorSuppression } from "../../../../../../common/utils/with-error-suppression/with-error-suppression";
 import { pipeline } from "@ogre-tools/fp";
 import withErrorLoggingInjectable from "../../../../../../common/utils/with-error-logging/with-error-logging.injectable";
+import showMessagePopupInjectable from "../../../../../../main/electron-app/features/show-message-popup.injectable";
 
 const checkForUpdatesTrayItemInjectable = getInjectable({
   id: "check-for-updates-tray-item",
@@ -29,6 +30,7 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
     const checkingForUpdatesState = di.inject(updatesAreBeingDiscoveredInjectable);
     const processCheckingForUpdates = di.inject(processCheckingForUpdatesInjectable);
     const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
+    const showMessagePopup = di.inject(showMessagePopupInjectable);
 
     return {
       id: "check-for-updates",
@@ -63,6 +65,15 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
 
           if (updateIsReadyToBeInstalled) {
             await showApplicationWindow();
+          } else {
+            showMessagePopup(
+              "No Updates Available",
+              "You're all good",
+              "You've got the latest version of Lens,\nthanks for staying on the ball.",
+              {
+                textWidth: 300,
+              },
+            );
           }
         },
 
