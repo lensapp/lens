@@ -1,16 +1,16 @@
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { Channel } from "../../actual/channel.no-coverage";
-import type { MessageChannelHandler } from "../../actual/message/message-channel-listener-injection-token";
-import type { RequestChannelHandler } from "../../actual/request/request-channel-listener-injection-token";
-import { sendMessageToChannelInjectionToken } from "../../actual/message/message-to-channel-injection-token";
-import { enlistMessageChannelListenerInjectionToken } from "../../actual/message/enlist-message-channel-listener-injection-token";
-import { pipeline } from "@ogre-tools/fp";
-import { filter, map } from "lodash/fp";
+import type { Channel, MessageChannelHandler, RequestChannelHandler } from "@k8slens/messaging";
+
 import {
+  enlistMessageChannelListenerInjectionToken,
+  enlistRequestChannelListenerInjectionToken,
   RequestFromChannel,
   requestFromChannelInjectionToken,
-} from "../../actual/request/request-from-channel-injection-token";
-import { enlistRequestChannelListenerInjectionToken } from "../../actual/request/enlist-request-channel-listener-injection-token";
+  sendMessageToChannelInjectionToken,
+} from "@k8slens/messaging";
+
+import { pipeline } from "@ogre-tools/fp";
+import { filter, map } from "lodash/fp";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 
 export type MessageBridgeFake = {

@@ -70,7 +70,8 @@ import { registerFeature } from "@k8slens/feature-core";
 import { applicationFeatureForElectronMain, testUtils as applicationForElectronTestUtils } from "@k8slens/application-for-electron-main";
 import { applicationFeature, startApplicationInjectionToken } from "@k8slens/application";
 import { testUsingFakeTime } from "../../../test-utils/use-fake-time";
-import { sendMessageToChannelInjectionToken, testUtils as messagingTestUtils } from "@k8slens/messaging";
+import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
+import { getMessageBridgeFake } from "@k8slens/messaging-fake-bridge";
 
 type MainDiCallback = (container: { mainDi: DiContainer }) => void | Promise<void>;
 type WindowDiCallback = (container: { windowDi: DiContainer }) => void | Promise<void>;
@@ -179,7 +180,7 @@ export const getApplicationBuilder = () => {
 
   testUsingFakeTime();
 
-  const messageBridgeFake = messagingTestUtils.getMessageBridgeFake();
+  const messageBridgeFake = getMessageBridgeFake();
 
   messageBridgeFake.involve(mainDi);
 

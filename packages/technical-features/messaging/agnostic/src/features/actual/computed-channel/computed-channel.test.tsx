@@ -4,7 +4,7 @@ import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injecta
 import {
   getMessageBridgeFake,
   MessageBridgeFake,
-} from "../../unit-testing/get-message-bridge-fake/get-message-bridge-fake";
+} from "@k8slens/messaging-fake-bridge";
 import { startApplicationInjectionToken } from "@k8slens/application";
 import {
   computed,

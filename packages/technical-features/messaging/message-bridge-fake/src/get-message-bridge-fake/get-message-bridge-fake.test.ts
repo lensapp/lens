@@ -1,24 +1,23 @@
 import { createContainer, DiContainer, Injectable } from "@ogre-tools/injectable";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
-import { registerFeature } from "@k8slens/feature-core/src/register-feature";
+import { registerFeature } from "@k8slens/feature-core";
 import {
+  getMessageChannel,
   getMessageChannelListenerInjectable,
+  getRequestChannel,
+  getRequestChannelListenerInjectable,
   MessageChannel,
-} from "../../actual/message/message-channel-listener-injection-token";
-import { sendMessageToChannelInjectionToken } from "../../actual/message/message-to-channel-injection-token";
+  testUtils,
+  RequestChannel,
+  requestFromChannelInjectionToken,
+  sendMessageToChannelInjectionToken,
+} from "@k8slens/messaging";
+
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { runInAction } from "mobx";
-import {
-  getRequestChannelListenerInjectable,
-  RequestChannel,
-} from "../../actual/request/request-channel-listener-injection-token";
-import { requestFromChannelInjectionToken } from "../../actual/request/request-from-channel-injection-token";
 import { getPromiseStatus } from "@k8slens/test-utils";
 import { getMessageBridgeFake } from "./get-message-bridge-fake";
-import { getMessageChannel } from "../../actual/message/get-message-channel";
-import { getRequestChannel } from "../../actual/request/get-request-channel";
 import { startApplicationInjectionToken } from "@k8slens/application";
-import { messagingFeatureForUnitTesting } from "../feature";
 
 type SomeMessageChannel = MessageChannel<string>;
 type SomeRequestChannel = RequestChannel<string, number>;
@@ -58,9 +57,11 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
         registerMobX(someDiWithoutListeners);
 
         runInAction(() => {
-          registerFeature(someDi1, messagingFeatureForUnitTesting);
-          registerFeature(someDi2, messagingFeatureForUnitTesting);
-          registerFeature(someDiWithoutListeners, messagingFeatureForUnitTesting);
+          const feature = testUtils.messagingFeatureForUnitTesting;
+
+          registerFeature(someDi1, feature);
+          registerFeature(someDi2, feature);
+          registerFeature(someDiWithoutListeners, feature);
         });
 
         messageBridgeFake.involve(someDi1, someDi2, someDiWithoutListeners);

@@ -27,6 +27,7 @@ export type { SendMessageToChannel } from "./message/message-to-channel-injectio
 export type {
   GetMessageChannelListenerInfo,
   MessageChannel,
+  MessageChannelHandler,
   MessageChannelListener,
 } from "./message/message-channel-listener-injection-token";
 
