@@ -28,20 +28,21 @@ const extensionInjectable = getInjectable({
 
         return {
           register: () => {
-            extensionRegistrators.forEach((getInjectablesOfExtension) => {
-              const injectables = getInjectablesOfExtension(instance);
+            for (const extensionRegistrator of extensionRegistrators) {
+              const injectables = extensionRegistrator(instance);
 
-              reactionDisposer.push(
-                // injectables is either an array or a computed array, in which case
-                // we need to update the registered injectables with a reaction every time they change
-                reaction(
-                  () => Array.isArray(injectables) ? injectables : injectables.get(),
+              if (Array.isArray(injectables)) {
+                injectableDifferencingRegistrator(injectables);
+              } else {
+                reactionDisposer.push(reaction(
+                  () => injectables.get(),
                   injectableDifferencingRegistrator,
                   {
                     fireImmediately: true,
                   },
                 ));
-            });
+              }
+            }
           },
 
           deregister: () => {
