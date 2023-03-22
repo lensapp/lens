@@ -8,14 +8,13 @@ import type winston from "winston";
 import { MESSAGE } from "triple-beam";
 
 import IpcLogTransport from "./ipc-transport";
-import { sendMessageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
-import type {
-  IpcFileLogObject } from "../../common/logger/ipc-file-logger-channel";
+import type { IpcFileLogObject } from "../../common/logger/ipc-file-logger-channel";
 import {
   closeIpcFileLoggerChannel,
   ipcFileLoggerChannel,
 } from "../../common/logger/ipc-file-logger-channel";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
+import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 
 /**
  * Winston uses symbol property for the actual message.

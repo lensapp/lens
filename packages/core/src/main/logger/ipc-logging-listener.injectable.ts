@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getMessageChannelListenerInjectable } from "../../common/utils/channel/message-channel-listener-injection-token";
+import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
 import type { IpcFileLogObject } from "../../common/logger/ipc-file-logger-channel";
 import { ipcFileLoggerChannel } from "../../common/logger/ipc-file-logger-channel";
 import { MESSAGE } from "triple-beam";
@@ -28,7 +28,7 @@ export function deserializeLogFromIpc(ipcFileLogObject: IpcFileLogObject) {
 const ipcFileLoggingListenerInjectable = getMessageChannelListenerInjectable({
   id: "ipc-file-logging",
   channel: ipcFileLoggerChannel,
-  handler: (di) => {
+  getHandler: (di) => {
     const ipcFileLogger = di.inject(ipcFileLoggerInjectable);
 
     return (ipcFileLogObject) =>

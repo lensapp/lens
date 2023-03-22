@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { SendMessageToChannel } from "../../common/utils/channel/message-to-channel-injection-token";
-import { sendMessageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
+import { MESSAGE } from "triple-beam";
+import type { SendMessageToChannel } from "@k8slens/messaging";
+import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 import ipcLogTransportInjectable from "./ipc-transport.injectable";
-import { MESSAGE } from "triple-beam";
 
 describe("renderer log transport through ipc", () => {
   let di: DiContainer;

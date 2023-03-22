@@ -2,10 +2,10 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import { getInjectable } from "@ogre-tools/injectable";
 import winstonLoggerInjectable from "../../common/winston-logger.injectable";
 import { closeIpcFileLoggerChannel } from "../../common/logger/ipc-file-logger-channel";
-import { sendMessageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 import ipcLogTransportInjectable from "./ipc-transport.injectable";
 

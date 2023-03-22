@@ -2,13 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import type winston from "winston";
+import type { SendMessageToChannel } from "@k8slens/messaging";
+import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
+import type { DiContainer } from "@ogre-tools/injectable";
 import winstonLoggerInjectable from "../../common/winston-logger.injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import closeRendererLogFileInjectable from "./close-renderer-log-file.injectable";
-import type { DiContainer } from "@ogre-tools/injectable";
-import type winston from "winston";
-import type { SendMessageToChannel } from "../../common/utils/channel/message-to-channel-injection-token";
-import { sendMessageToChannelInjectionToken } from "../../common/utils/channel/message-to-channel-injection-token";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 import ipcLogTransportInjectable from "./ipc-transport.injectable";
 import type IpcLogTransport from "./ipc-transport";
