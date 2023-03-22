@@ -12,10 +12,6 @@ export interface ClusterIconMenuItem {
   onClick: (preferences: ClusterPreferences) => void;
 }
 
-export const clusterIconSettingsMenuInjectionToken = getInjectionToken<ClusterIconMenuItem>({
-  id: "cluster-icon-settings-menu-injection-token",
-});
-
 export interface ClusterIconSettingComponentProps {
   preferences: ClusterPreferences;
 }
@@ -24,6 +20,10 @@ export interface ClusterIconSettingsComponent {
   id: string;
   Component: React.ComponentType<ClusterIconSettingComponentProps>;
 }
+
+export const clusterIconSettingsMenuInjectionToken = getInjectionToken<ClusterIconMenuItem>({
+  id: "cluster-icon-settings-menu-injection-token",
+});
 
 export const clusterIconSettingsComponentInjectionToken = getInjectionToken<ClusterIconSettingsComponent>({
   id: "cluster-icon-settings-component-injection-token",

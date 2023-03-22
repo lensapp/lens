@@ -12,7 +12,8 @@ import { renderFor } from "../../test-utils/renderFor";
 import { ClusterIconSetting } from "../icon-settings";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ClusterIconSettingComponentProps, clusterIconSettingsComponentInjectionToken, clusterIconSettingsMenuInjectionToken } from "@k8slens/cluster-settings";
+import type { ClusterIconSettingComponentProps } from "@k8slens/cluster-settings";
+import { clusterIconSettingsComponentInjectionToken, clusterIconSettingsMenuInjectionToken } from "@k8slens/cluster-settings";
 import { runInAction } from "mobx";
 import { getInjectable, type DiContainer } from "@ogre-tools/injectable";
 
@@ -59,7 +60,10 @@ function customSettingsComponent(props: ClusterIconSettingComponentProps) {
   return (
     <div data-testid="my-react-component">
       <span>Test React Component</span>
-      <span>Cluster {props.preferences.clusterName}</span>
+      <span>
+        Cluster
+        {props.preferences.clusterName}
+      </span>
     </div>
   );
 } 
