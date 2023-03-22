@@ -22,7 +22,7 @@ const cluster = new Cluster({
   id: "some-id",
   kubeConfigPath: "/some/path/to/kubeconfig",
   preferences: {
-    clusterName: "some-cluster-name"
+    clusterName: "some-cluster-name",
   },
 }, {
   clusterServerUrl: "https://localhost:9999",
