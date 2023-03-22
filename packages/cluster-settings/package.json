@@ -1,10 +1,10 @@
 {
   "name": "@k8slens/cluster-settings",
-  "version": "6.5.0-alpha.",
-  "description": "Injection tokens exporter for cluster settings configuration",
+  "version": "6.5.0-alpha.1",
+  "description": "Injection token exporter for cluster settings configuration",
   "license": "MIT",
   "private": false,
-  "mode": "production",  
+  "mode": "production",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -16,13 +16,16 @@
   ],
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "swc ./src/index.ts -d ./dist"
+    "generate-types": "tsc --d --declarationDir ./dist --declarationMap --emitDeclarationOnly",
+    "build": "npm run generate-types && swc ./src/index.ts -d ./dist"
   },
   "devDependencies": {
+    "@ogre-tools/injectable": "^15.1.2",
     "@swc/cli": "^0.1.61",
     "@swc/core": "^1.3.37",
     "@types/node": "^16.18.11",
     "@types/semver": "^7.3.13",
-    "rimraf": "^4.1.2"
+    "rimraf": "^4.1.2",
+    "typescript": "^5.0.2"
   }
 }
