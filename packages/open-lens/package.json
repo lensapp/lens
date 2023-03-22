@@ -4,7 +4,7 @@
   "productName": "OpenLens",
   "description": "OpenLens - Open Source IDE for Kubernetes",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.4.8",
+  "version": "6.4.9",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -192,7 +192,7 @@
     }
   },
   "dependencies": {
-    "@k8slens/core": "^6.4.8",
+    "@k8slens/core": "^6.4.9",
     "@k8slens/ensure-binaries": "^6.4.0-beta.16",
     "@k8slens/generate-tray-icons": "^6.4.0-beta.16",
     "@ogre-tools/fp": "^12.0.1",
