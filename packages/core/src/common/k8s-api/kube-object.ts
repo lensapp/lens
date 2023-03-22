@@ -297,10 +297,10 @@ export class KubeStatus {
     this.status = data.status || "";
   }
 
-  getMessage() {
+  getExplanation(): string {
     const { code, message, reason, status } = this;
 
-    return `${code}: ${message ?? reason ?? status}`;
+    return `${code}: ${message || reason || status}`;
   }
 }
 

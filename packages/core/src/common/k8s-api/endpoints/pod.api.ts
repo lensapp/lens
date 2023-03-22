@@ -58,9 +58,9 @@ export class PodApi extends KubeApi<Pod> {
       const status = new KubeStatus(response);
 
       if (status.code >= 200 && status.code < 300) {
-        return status.getMessage();
+        return status.getExplanation();
       } else {
-        throw status.getMessage();
+        throw status.getExplanation();
       }
     }
 
