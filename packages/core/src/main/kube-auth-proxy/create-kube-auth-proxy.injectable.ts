@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { KubeAuthProxyDependencies } from "./kube-auth-proxy";
-import { KubeAuthProxy } from "./kube-auth-proxy";
+import { KubeAuthProxyImpl } from "./kube-auth-proxy";
 import type { Cluster } from "../../common/cluster/cluster";
 import spawnInjectable from "../child-process/spawn.injectable";
 import kubeAuthProxyCertificateInjectable from "./kube-auth-proxy-certificate.injectable";
@@ -14,6 +14,13 @@ import lensK8sProxyPathInjectable from "./lens-k8s-proxy-path.injectable";
 import getPortFromStreamInjectable from "../utils/get-port-from-stream.injectable";
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
 import broadcastConnectionUpdateInjectable from "../cluster/broadcast-connection-update.injectable";
+
+export interface KubeAuthProxy {
+  readonly apiPrefix: string;
+  readonly port: number;
+  run: () => Promise<void>;
+  exit: () => void;
+}
 
 export type CreateKubeAuthProxy = (cluster: Cluster, env: NodeJS.ProcessEnv) => KubeAuthProxy;
 
@@ -33,7 +40,7 @@ const createKubeAuthProxyInjectable = getInjectable({
     return (cluster, env) => {
       const clusterUrl = new URL(cluster.apiUrl.get());
 
-      return new KubeAuthProxy({
+      return new KubeAuthProxyImpl({
         ...dependencies,
         proxyCert: di.inject(kubeAuthProxyCertificateInjectable, clusterUrl.hostname),
         broadcastConnectionUpdate: di.inject(broadcastConnectionUpdateInjectable, cluster),

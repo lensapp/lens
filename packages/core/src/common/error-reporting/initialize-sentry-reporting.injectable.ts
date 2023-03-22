@@ -13,7 +13,7 @@ import userStoreInjectable from "../user-store/user-store.injectable";
 
 export type InitializeSentryReportingWith = (initSentry: (opts: BrowserOptions | ElectronMainOptions) => void) => void;
 
-const mapProcessName = (type: "browser" | "renderer" | "worker") => type === "browser" ? "main" : type;
+const mapProcessName = (type: "browser" | "renderer" | "worker" | "utility") => type === "browser" ? "main" : type;
 
 const initializeSentryReportingWithInjectable = getInjectable({
   id: "initialize-sentry-reporting-with",

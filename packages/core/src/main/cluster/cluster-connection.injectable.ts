@@ -6,10 +6,7 @@
 import { type KubeConfig, HttpError } from "@kubernetes/client-node";
 import { reaction, comparer, runInAction } from "mobx";
 import { ClusterStatus } from "../../common/cluster-types";
-import type { CreateAuthorizationReview } from "../../common/cluster/authorization-review.injectable";
-import type { Cluster } from "../../common/cluster/cluster";
 import type { CreateListNamespaces } from "../../common/cluster/list-namespaces.injectable";
-import type { RequestNamespaceListPermissionsFor, RequestNamespaceListPermissions } from "../../common/cluster/request-namespace-list-permissions.injectable";
 import type { BroadcastMessage } from "../../common/ipc/broadcast-message.injectable";
 import { clusterListNamespaceForbiddenChannel } from "../../common/ipc/cluster";
 import type { Logger } from "../../common/logger";
@@ -25,7 +22,6 @@ import type { RequestApiResources } from "./request-api-resources.injectable";
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import broadcastConnectionUpdateInjectable from "./broadcast-connection-update.injectable";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
-import createAuthorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
 import createListNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import kubeAuthProxyServerInjectable from "./kube-auth-proxy-server.injectable";
 import loadProxyKubeconfigInjectable from "./load-proxy-kubeconfig.injectable";
@@ -33,21 +29,31 @@ import loggerInjectable from "../../common/logger.injectable";
 import prometheusHandlerInjectable from "./prometheus-handler/prometheus-handler.injectable";
 import removeProxyKubeconfigInjectable from "./remove-proxy-kubeconfig.injectable";
 import requestApiResourcesInjectable from "./request-api-resources.injectable";
-import requestNamespaceListPermissionsForInjectable from "../../common/cluster/request-namespace-list-permissions.injectable";
 import type { DetectClusterMetadata } from "../cluster-detectors/detect-cluster-metadata.injectable";
 import type { FallibleOnlyClusterMetadataDetector } from "../cluster-detectors/token";
 import clusterVersionDetectorInjectable from "../cluster-detectors/cluster-version-detector.injectable";
 import detectClusterMetadataInjectable from "../cluster-detectors/detect-cluster-metadata.injectable";
 import { replaceObservableObject } from "../../common/utils/replace-observable-object";
+import type { CreateAuthorizationApi } from "../../common/cluster/create-authorization-api.injectable";
+import type { CreateCanI } from "../../common/cluster/create-can-i.injectable";
+import type { CreateRequestNamespaceListPermissions, RequestNamespaceListPermissions } from "../../common/cluster/create-request-namespace-list-permissions.injectable";
+import type { Cluster } from "../../common/cluster/cluster";
+import createAuthorizationApiInjectable from "../../common/cluster/create-authorization-api.injectable";
+import createCanIInjectable from "../../common/cluster/create-can-i.injectable";
+import createRequestNamespaceListPermissionsInjectable from "../../common/cluster/create-request-namespace-list-permissions.injectable";
+import type { CreateCoreApi } from "../../common/cluster/create-core-api.injectable";
+import createCoreApiInjectable from "../../common/cluster/create-core-api.injectable";
 
 interface Dependencies {
   readonly logger: Logger;
   readonly prometheusHandler: ClusterPrometheusHandler;
   readonly kubeAuthProxyServer: KubeAuthProxyServer;
   readonly clusterVersionDetector: FallibleOnlyClusterMetadataDetector;
-  createAuthorizationReview: CreateAuthorizationReview;
+  createCanI: CreateCanI;
   requestApiResources: RequestApiResources;
-  requestNamespaceListPermissionsFor: RequestNamespaceListPermissionsFor;
+  createRequestNamespaceListPermissions: CreateRequestNamespaceListPermissions;
+  createAuthorizationApi: CreateAuthorizationApi;
+  createCoreApi: CreateCoreApi;
   createListNamespaces: CreateListNamespaces;
   detectClusterMetadata: DetectClusterMetadata;
   broadcastMessage: BroadcastMessage;
@@ -224,8 +230,9 @@ class ClusterConnection {
   private async refreshAccessibility(): Promise<void> {
     this.dependencies.logger.info(`[CLUSTER]: refreshAccessibility`, this.cluster.getMeta());
     const proxyConfig = await this.dependencies.loadProxyKubeconfig();
-    const canI = this.dependencies.createAuthorizationReview(proxyConfig);
-    const requestNamespaceListPermissions = this.dependencies.requestNamespaceListPermissionsFor(proxyConfig);
+    const api = this.dependencies.createAuthorizationApi(proxyConfig);
+    const canI = this.dependencies.createCanI(api);
+    const requestNamespaceListPermissions = this.dependencies.createRequestNamespaceListPermissions(api);
 
     const isAdmin = await canI({
       namespace: "kube-system",
@@ -360,7 +367,8 @@ class ClusterConnection {
     }
 
     try {
-      const listNamespaces = this.dependencies.createListNamespaces(proxyConfig);
+      const api = this.dependencies.createCoreApi(proxyConfig);
+      const listNamespaces = this.dependencies.createListNamespaces(api);
 
       return await listNamespaces();
     } catch (error) {
@@ -403,13 +411,15 @@ const clusterConnectionInjectable = getInjectable({
       prometheusHandler: di.inject(prometheusHandlerInjectable, cluster),
       broadcastConnectionUpdate: di.inject(broadcastConnectionUpdateInjectable, cluster),
       broadcastMessage: di.inject(broadcastMessageInjectable),
-      createAuthorizationReview: di.inject(createAuthorizationReviewInjectable),
       createListNamespaces: di.inject(createListNamespacesInjectable),
       detectClusterMetadata: di.inject(detectClusterMetadataInjectable),
       loadProxyKubeconfig: di.inject(loadProxyKubeconfigInjectable, cluster),
       removeProxyKubeconfig: di.inject(removeProxyKubeconfigInjectable, cluster),
       requestApiResources: di.inject(requestApiResourcesInjectable),
-      requestNamespaceListPermissionsFor: di.inject(requestNamespaceListPermissionsForInjectable),
+      createAuthorizationApi: di.inject(createAuthorizationApiInjectable),
+      createCoreApi: di.inject(createCoreApiInjectable),
+      createCanI: di.inject(createCanIInjectable),
+      createRequestNamespaceListPermissions: di.inject(createRequestNamespaceListPermissionsInjectable),
     },
     cluster,
   ),
