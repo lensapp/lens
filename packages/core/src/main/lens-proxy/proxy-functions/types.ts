@@ -3,14 +3,15 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type http from "http";
 import type net from "net";
-import type { SetRequired } from "type-fest";
 import type { Cluster } from "../../../common/cluster/cluster";
+import type { ProxyIncomingMessage } from "../messages";
 
 export interface ProxyApiRequestArgs {
-  req: SetRequired<http.IncomingMessage, "url" | "method">;
+  req: ProxyIncomingMessage;
   socket: net.Socket;
   head: Buffer;
   cluster: Cluster;
 }
+
+export type LensProxyApiRequest = (args: ProxyApiRequestArgs) => void;

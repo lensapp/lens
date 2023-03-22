@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { AddressInfo } from "net";
 import emitAppEventInjectable from "../../common/app-event-bus/emit-event.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import lensProxyHttpsServerInjectable from "./https-proxy/server.injectable";
@@ -30,7 +29,7 @@ const attemptToListenInjectable = getInjectable({
         .once("listening", () => {
           proxyServer.removeAllListeners("error"); // don't reject the promise
 
-          const { address, port } = proxyServer.address() as AddressInfo;
+          const { address, port } = proxyServer.address();
 
           lensProxyPort.set(port);
 

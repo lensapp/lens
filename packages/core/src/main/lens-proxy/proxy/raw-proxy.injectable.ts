@@ -10,6 +10,7 @@ import type { ProxyIncomingMessage } from "../messages";
 const rawHttpProxyInjectable = getInjectable({
   id: "raw-http-proxy",
   instantiate: () => createProxy<ProxyIncomingMessage>(),
+  causesSideEffects: true,
 });
 
 export default rawHttpProxyInjectable;

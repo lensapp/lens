@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { apiPrefix } from "../../../../common/vars";
-import { getRouteInjectable } from "../../../router/router.injectable";
+import { getRouteInjectable } from "../../../router/route-request.injectable";
 import { clusterRoute } from "../../../router/route";
 import getClusterHelmReleaseHistoryInjectable from "../../../helm/helm-service/get-helm-release-history.injectable";
 

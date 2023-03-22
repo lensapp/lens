@@ -32,7 +32,6 @@ import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTest
 import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
-import lensProxyPortInjectable from "../../../main/lens-proxy/lens-proxy-port.injectable";
 import type { Route } from "../../../common/front-end-routing/front-end-route-injection-token";
 import type { NavigateToRouteOptions } from "../../../common/front-end-routing/navigate-to-route-injection-token";
 import { navigateToRouteInjectionToken } from "../../../common/front-end-routing/navigate-to-route-injection-token";
@@ -72,6 +71,7 @@ import { applicationFeature, startApplicationInjectionToken } from "@k8slens/app
 import { testUsingFakeTime } from "../../../test-utils/use-fake-time";
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import { getMessageBridgeFake } from "@k8slens/messaging-fake-bridge";
+import { overrideFetchingInternalRoutes } from "../../../test-utils/override-internal-backend-routes.injectable";
 
 type MainDiCallback = (container: { mainDi: DiContainer }) => void | Promise<void>;
 type WindowDiCallback = (container: { windowDi: DiContainer }) => void | Promise<void>;
@@ -192,6 +192,7 @@ export const getApplicationBuilder = () => {
   const overrideFsWithFakes = getOverrideFsWithFakes();
 
   overrideFsWithFakes(mainDi);
+  overrideFetchingInternalRoutes(mainDi);
 
   // Set up ~/.kube as existing as a folder
   {
@@ -235,6 +236,7 @@ export const getApplicationBuilder = () => {
     messageBridgeFake.involve(windowDi);
 
     overrideFsWithFakes(windowDi);
+    overrideFetchingInternalRoutes(mainDi, windowDi);
 
     runInAction(() => {
       registerFeature(
@@ -310,8 +312,6 @@ export const getApplicationBuilder = () => {
   const startApplication = mainDi.inject(startApplicationInjectionToken);
 
   const startApp = async ({ shouldStartHidden }: { shouldStartHidden: boolean }) => {
-    mainDi.inject(lensProxyPortInjectable).set(42);
-
     for (const callback of beforeApplicationStartCallbacks) {
       await callback({ mainDi });
     }

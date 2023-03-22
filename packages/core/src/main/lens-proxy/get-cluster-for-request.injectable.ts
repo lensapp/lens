@@ -3,10 +3,13 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import getClusterByIdInjectable from "../../features/cluster/storage/common/get-by-id.injectable";
+import type { Cluster } from "../../common/cluster/cluster";
 import { getClusterIdFromHost } from "../../common/utils";
 import { apiKubePrefix } from "../../common/vars";
-import getClusterByIdInjectable from "../../features/cluster/storage/common/get-by-id.injectable";
-import type { GetClusterForRequest } from "./lens-proxy";
+import type { ProxyIncomingMessage } from "./messages";
+
+export type GetClusterForRequest = (req: ProxyIncomingMessage) => Cluster | undefined;
 
 const getClusterForRequestInjectable = getInjectable({
   id: "get-cluster-for-request",
@@ -19,7 +22,7 @@ const getClusterForRequestInjectable = getInjectable({
       }
 
       // lens-server is connecting to 127.0.0.1:<port>/<uid>
-      if (req.url && req.headers.host.startsWith("127.0.0.1")) {
+      if (req.headers.host.startsWith("127.0.0.1")) {
         const clusterId = req.url.split("/")[1];
         const cluster = getClusterById(clusterId);
 

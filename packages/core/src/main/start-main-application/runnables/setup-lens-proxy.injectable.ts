@@ -49,6 +49,7 @@ const setupLensProxyInjectable = getInjectable({
 
         logger.info("⚡ LensProxy connection OK");
       } catch (error) {
+        console.log(error);
         logger.error(`🛑 LensProxy: failed connection test: ${error}`);
 
         const hostsPath = isWindows
@@ -68,8 +69,6 @@ const setupLensProxyInjectable = getInjectable({
     },
     runAfter: initializeBuildVersionInjectable,
   }),
-
-  causesSideEffects: true,
 
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });

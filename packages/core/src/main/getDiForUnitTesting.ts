@@ -9,7 +9,6 @@ import { createContainer, isInjectable } from "@ogre-tools/injectable";
 import spawnInjectable from "./child-process/spawn.injectable";
 import initializeExtensionsInjectable from "./start-main-application/runnables/initialize-extensions.injectable";
 import setupIpcMainHandlersInjectable from "./electron-app/runnables/setup-ipc-main-handlers/setup-ipc-main-handlers.injectable";
-import setupLensProxyInjectable from "./start-main-application/runnables/setup-lens-proxy.injectable";
 import setupSyncingOfWeblinksInjectable from "../features/weblinks/main/setup-syncing-of-weblinks.injectable";
 import setupDeepLinkingInjectable from "./electron-app/runnables/setup-deep-linking.injectable";
 import setupMainWindowVisibilityAfterActivationInjectable from "./electron-app/runnables/setup-main-window-visibility-after-activation.injectable";
@@ -88,7 +87,6 @@ const overrideRunnablesHavingSideEffects = (di: DiContainer) => {
     initializeExtensionsInjectable,
     initializeClusterManagerInjectable,
     setupIpcMainHandlersInjectable,
-    setupLensProxyInjectable,
     setupSyncingOfWeblinksInjectable,
   ].forEach((injectable) => {
     di.override(injectable, () => ({

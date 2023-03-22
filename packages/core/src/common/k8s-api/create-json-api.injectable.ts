@@ -3,13 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { Agent } from "https";
 import type { RequestInit } from "@k8slens/node-fetch";
-import lensProxyCertificateInjectable from "../certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../fetch/fetch.injectable";
 import loggerInjectable from "../logger.injectable";
 import type { JsonApiConfig, JsonApiData, JsonApiDependencies, JsonApiParams } from "./json-api";
 import { JsonApi } from "./json-api";
+import lensAgentInjectable from "./lens-agent.injectable";
 
 export type CreateJsonApi = <Data = JsonApiData, Params extends JsonApiParams<Data> = JsonApiParams<Data>>(config: JsonApiConfig, reqInit?: RequestInit) => JsonApi<Data, Params>;
 
@@ -20,20 +19,11 @@ const createJsonApiInjectable = getInjectable({
       fetch: di.inject(fetchInjectable),
       logger: di.inject(loggerInjectable),
     };
-    const lensProxyCert = di.inject(lensProxyCertificateInjectable);
 
     return (config, reqInit) => {
-      if (!config.getRequestOptions) {
-        config.getRequestOptions = async () => {
-          const agent = new Agent({
-            ca: lensProxyCert.get().cert,
-          });
-  
-          return {
-            agent,
-          };
-        };
-      }
+      config.getRequestOptions ??= async () => ({
+        agent: di.inject(lensAgentInjectable),
+      });
 
       return new JsonApi(deps, config, reqInit);
     };

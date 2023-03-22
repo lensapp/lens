@@ -2,7 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getRouteInjectable } from "../../router/router.injectable";
+import { getRouteInjectable } from "../../router/route-request.injectable";
 import { apiPrefix } from "../../../common/vars";
 import { payloadValidatedClusterRoute } from "../../router/route";
 import Joi from "joi";

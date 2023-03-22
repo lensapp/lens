@@ -4,7 +4,7 @@
  */
 
 import { apiPrefix } from "../../../common/vars";
-import { getRouteInjectable } from "../../router/router.injectable";
+import { getRouteInjectable } from "../../router/route-request.injectable";
 import type { ClusterPrometheusMetadata } from "../../../common/cluster-types";
 import { ClusterMetadataKey } from "../../../common/cluster-types";
 import type { Cluster } from "../../../common/cluster/cluster";

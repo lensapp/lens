@@ -9,9 +9,9 @@ import { connect } from "tls";
 import url, { URL } from "url";
 import { apiKubePrefix } from "../../../common/vars";
 import { getInjectable } from "@ogre-tools/injectable";
-import type { LensProxyApiRequest } from "../lens-proxy";
 import kubeAuthProxyServerInjectable from "../../cluster/kube-auth-proxy-server.injectable";
 import kubeAuthProxyCertificateInjectable from "../../kube-auth-proxy/kube-auth-proxy-certificate.injectable";
+import type { LensProxyApiRequest } from "./types";
 
 const skipRawHeaders = new Set(["Host", "Authorization"]);
 

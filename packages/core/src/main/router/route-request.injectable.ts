@@ -10,8 +10,8 @@ import Call from "@hapi/call";
 import Subtext from "@hapi/subtext";
 import type http from "http";
 import type { Cluster } from "../../common/cluster/cluster";
-import type { ServerIncomingMessage } from "../lens-proxy/lens-proxy";
 import type { RouteHandler } from "./create-handler-for-route.injectable";
+import type { ProxyIncomingMessage } from "../lens-proxy/messages";
 
 export const routeInjectionToken = getInjectionToken<Route<unknown, string>>({
   id: "route-injection-token",
@@ -26,7 +26,7 @@ export function getRouteInjectable<T, Path extends string>(
   });
 }
 
-export type RouteRequest = (cluster: Cluster | undefined, req: ServerIncomingMessage, res: http.ServerResponse) => Promise<boolean>;
+export type RouteRequest = (cluster: Cluster | undefined, req: ProxyIncomingMessage, res: http.ServerResponse) => Promise<boolean>;
 
 const createRouter = (di: DiContainerForInjection) => {
   const routes = di.injectMany(routeInjectionToken);

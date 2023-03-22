@@ -3,31 +3,27 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import lensFetchInjectable from "../fetch/lens-fetch.injectable";
+import loggerInjectable from "../logger.injectable";
 import { apiPrefix } from "../vars";
-import isDebuggingInjectable from "../vars/is-debugging.injectable";
-import isDevelopmentInjectable from "../vars/is-development.injectable";
 import { apiBaseHostHeaderInjectionToken, apiBaseServerAddressInjectionToken } from "./api-base-configs";
-import createJsonApiInjectable from "./create-json-api.injectable";
+import isApiBaseInDebugModeInjectable from "./is-api-in-debug-mode.injectable";
+import { JsonApi } from "./json-api";
 
 const apiBaseInjectable = getInjectable({
   id: "api-base",
-  instantiate: (di) => {
-    const createJsonApi = di.inject(createJsonApiInjectable);
-    const isDebugging = di.inject(isDebuggingInjectable);
-    const isDevelopment = di.inject(isDevelopmentInjectable);
-    const serverAddress = di.inject(apiBaseServerAddressInjectionToken);
-    const hostHeaderValue = di.inject(apiBaseHostHeaderInjectionToken);
-
-    return createJsonApi({
-      serverAddress,
-      apiBase: apiPrefix,
-      debug: isDevelopment || isDebugging,
-    }, {
-      headers: {
-        "Host": hostHeaderValue,
-      },
-    });
-  },
+  instantiate: (di) => new JsonApi({
+    fetch: di.inject(lensFetchInjectable),
+    logger: di.inject(loggerInjectable),
+  }, {
+    serverAddress: di.inject(apiBaseServerAddressInjectionToken),
+    apiBase: apiPrefix,
+    debug: di.inject(isApiBaseInDebugModeInjectable),
+  }, {
+    headers: {
+      "Host": di.inject(apiBaseHostHeaderInjectionToken),
+    },
+  }),
 });
 
 export default apiBaseInjectable;
