@@ -5,11 +5,9 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import EventEmitter from "events";
 import type TypedEventEmitter from "typed-emitter";
-import type { CustomResourceDefinition } from "../endpoints";
 import type { KubeApi } from "../kube-api";
 
 export interface LegacyAutoRegistration {
-  customResourceDefinition: (crd: CustomResourceDefinition) => void;
   kubeApi: (api: KubeApi<any, any>) => void;
 }
 
