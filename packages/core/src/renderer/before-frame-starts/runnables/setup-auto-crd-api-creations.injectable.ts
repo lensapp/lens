@@ -17,6 +17,7 @@ import { beforeClusterFrameStartsSecondInjectionToken } from "../tokens";
 const setupAutoCrdApiCreationsInjectable = getInjectable({
   id: "setup-auto-crd-api-creations",
   instantiate: (di) => ({
+    id: "setup-auto-crd-api-creations",
     run: () => {
       const customResourceDefinitionStore = di.inject(customResourceDefinitionStoreInjectable);
       const injectableDifferencingRegistrator = injectableDifferencingRegistratorWith(di);
