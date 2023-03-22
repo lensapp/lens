@@ -55,7 +55,7 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
 
       enabled: computed(() => !checkingForUpdatesState.value.get() && !downloadingUpdateState.value.get()),
 
-      visible: computed(() => true),
+      visible: computed(() => updatingIsEnabled),
 
       click: pipeline(
         async () => {
