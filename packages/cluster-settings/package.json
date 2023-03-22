@@ -17,7 +17,8 @@
   "scripts": {
     "clean": "rimraf dist/",
     "generate-types": "tsc --d --declarationDir ./dist --declarationMap --emitDeclarationOnly",
-    "build": "npm run generate-types && swc ./src/index.ts -d ./dist"
+    "build": "npm run generate-types && swc ./src/index.ts -d ./dist",
+    "prepare:test": "npm run build"
   },
   "devDependencies": {
     "@ogre-tools/injectable": "^15.1.2",
