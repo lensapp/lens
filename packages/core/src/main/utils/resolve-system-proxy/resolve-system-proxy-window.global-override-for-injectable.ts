@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getGlobalOverride } from "@k8slens/test-utils";
+import { getGlobalOverride } from "../../../common/test-utils/get-global-override";
 import type { BrowserWindow, Session, WebContents } from "electron";
 import resolveSystemProxyWindowInjectable from "./resolve-system-proxy-window.injectable";
 
 export default getGlobalOverride(
-  resolveSystemProxyWindowInjectable, 
+  resolveSystemProxyWindowInjectable,
   () => ({
     webContents: {
       session: {
