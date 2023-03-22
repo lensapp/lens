@@ -68,4 +68,3 @@ export enum MetricNodeRole {
   MASTER = "master",
   WORKER = "worker",
 }
-
