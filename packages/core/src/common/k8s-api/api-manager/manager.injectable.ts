@@ -9,6 +9,8 @@ import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-f
 import { kubeObjectStoreInjectionToken } from "./kube-object-store-token";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
 import { computed } from "mobx";
+import { customResourceDefinitionApiInjectionToken } from "./crd-api-token";
+import createCustomResourceStoreInjectable from "./create-custom-resource-store.injectable";
 
 const apiManagerInjectable = getInjectable({
   id: "api-manager",
@@ -23,6 +25,10 @@ const apiManagerInjectable = getInjectable({
       stores: storesAndApisCanBeCreated
         ? computedInjectMany(kubeObjectStoreInjectionToken)
         : computed(() => []),
+      crdApis: storesAndApisCanBeCreated
+        ? computedInjectMany(customResourceDefinitionApiInjectionToken)
+        : computed(() => []),
+      createCustomResourceStore: di.inject(createCustomResourceStoreInjectable),
     });
   },
 });
