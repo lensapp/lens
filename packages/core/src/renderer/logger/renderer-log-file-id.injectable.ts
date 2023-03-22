@@ -19,10 +19,10 @@ const rendererLogFileIdInjectable = getInjectable({
 
       frameId = `cluster-${clusterId}`;
     } else {
-      frameId = "main";
+      frameId = "root";
     }
 
-    return `renderer-${frameId}`;
+    return `renderer-${frameId}-frame`;
   },
 });
 

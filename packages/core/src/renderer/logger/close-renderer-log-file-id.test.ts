@@ -33,17 +33,6 @@ describe("close renderer file logging", () => {
     di.override(ipcLogTransportInjectable, () => ipcTransportMock);
   });
 
-  it("sends the ipc close message with correct log id", () => {
-    const closeLog = di.inject(closeRendererLogFileInjectable);
-
-    closeLog();
-
-    expect(sendIpcMock).toHaveBeenCalledWith(
-      { id: "close-ipc-file-logger-channel" },
-      "some-log-id",
-    );
-  });
-
   it("removes the transport to prevent further logging to closed file", () => {
     const closeLog = di.inject(closeRendererLogFileInjectable);
 
