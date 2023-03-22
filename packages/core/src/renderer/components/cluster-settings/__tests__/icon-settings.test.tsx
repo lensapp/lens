@@ -21,6 +21,9 @@ const cluster = new Cluster({
   contextName: "some-context",
   id: "some-id",
   kubeConfigPath: "/some/path/to/kubeconfig",
+  preferences: {
+    clusterName: "some-cluster-name"
+  },
 }, {
   clusterServerUrl: "https://localhost:9999",
 });
@@ -39,8 +42,6 @@ const clusterEntity = new KubernetesCluster({
     phase: "connecting",
   },
 });
-
-cluster.preferences.clusterName = "some-cluster-name";
 
 const newMenuItem = getInjectable({
   id: "cluster-icon-settings-menu-test-item",
