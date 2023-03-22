@@ -26,7 +26,6 @@ import electronUpdaterIsActiveInjectable from "./electron-app/features/electron-
 import setUpdateOnQuitInjectable from "./electron-app/features/set-update-on-quit.injectable";
 import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-application/lens-window/application-window/wait-until-bundled-extensions-are-loaded.injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
-import electronInjectable from "./utils/resolve-system-proxy/electron.injectable";
 import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
 import applicationInformationInjectable from "../common/vars/application-information-injectable";
@@ -73,7 +72,6 @@ export function getDiForUnitTesting(opts: { doGeneralOverrides?: boolean } = {})
       di.override(globalOverride.injectable, globalOverride.overridingInstantiate);
     }
 
-    di.override(electronInjectable, () => ({}));
     di.override(waitUntilBundledExtensionsAreLoadedInjectable, () => async () => {});
 
     overrideRunnablesHavingSideEffects(di);
