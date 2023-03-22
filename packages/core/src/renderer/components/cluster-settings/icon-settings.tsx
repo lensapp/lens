@@ -15,9 +15,8 @@ import { FilePicker, OverSizeLimitStyle } from "../file-picker";
 import { MenuActions, MenuItem } from "../menu";
 import type { ShowNotification } from "../notifications";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
-import { ClusterIconSettingsComponent, clusterIconSettingsComponentInjectionToken } from "./cluster-settings-component-injection-token";
-import type { ClusterIconMenuItem } from "./cluster-settings-menu-injection-token";
-import { clusterIconSettingsMenuInjectionToken } from "./cluster-settings-menu-injection-token";
+import { ClusterIconSettingsComponent, clusterIconSettingsComponentInjectionToken, clusterIconSettingsMenuInjectionToken } from "@k8slens/cluster-settings";
+import type { ClusterIconMenuItem } from "@k8slens/cluster-settings";
 
 export interface ClusterIconSettingProps {
   cluster: Cluster;
