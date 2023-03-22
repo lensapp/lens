@@ -5,10 +5,6 @@
 import { Cluster } from "../../common/cluster/cluster";
 import { Kubectl } from "../kubectl/kubectl";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import createAuthorizationReviewInjectable from "../../common/cluster/authorization-review.injectable";
-import requestNamespaceListPermissionsForInjectable from "../../common/cluster/request-namespace-list-permissions.injectable";
-import createListNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
-import prometheusHandlerInjectable from "../cluster/prometheus-handler/prometheus-handler.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import normalizedPlatformInjectable from "../../common/vars/normalized-platform.injectable";
@@ -19,6 +15,10 @@ import clusterConnectionInjectable from "../cluster/cluster-connection.injectabl
 import kubeconfigManagerInjectable from "../kubeconfig-manager/kubeconfig-manager.injectable";
 import type { KubeconfigManager } from "../kubeconfig-manager/kubeconfig-manager";
 import broadcastConnectionUpdateInjectable from "../cluster/broadcast-connection-update.injectable";
+import createCanIInjectable from "../../common/cluster/create-can-i.injectable";
+import createRequestNamespaceListPermissionsInjectable from "../../common/cluster/create-request-namespace-list-permissions.injectable";
+import createListNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
+import prometheusHandlerInjectable from "../cluster/prometheus-handler/prometheus-handler.injectable";
 
 describe("create clusters", () => {
   let cluster: Cluster;
@@ -34,8 +34,8 @@ describe("create clusters", () => {
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
     di.override(broadcastConnectionUpdateInjectable, () => async () => {});
-    di.override(createAuthorizationReviewInjectable, () => () => () => Promise.resolve(true));
-    di.override(requestNamespaceListPermissionsForInjectable, () => () => async () => () => true);
+    di.override(createCanIInjectable, () => () => () => Promise.resolve(true));
+    di.override(createRequestNamespaceListPermissionsInjectable, () => () => async () => () => true);
     di.override(createListNamespacesInjectable, () => () => () => Promise.resolve([ "default" ]));
     di.override(prometheusHandlerInjectable, () => ({
       getPrometheusDetails: jest.fn(),
