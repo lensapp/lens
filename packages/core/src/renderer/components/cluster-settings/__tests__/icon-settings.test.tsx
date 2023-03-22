@@ -56,7 +56,7 @@ const newMenuItem = getInjectable({
   injectionToken: clusterIconSettingsMenuInjectionToken,
 });
 
-function customSettingsComponent(props: ClusterIconSettingComponentProps) {
+function CustomSettingsComponent(props: ClusterIconSettingComponentProps) {
   return (
     <div data-testid="my-react-component">
       <span>Test React Component</span>
@@ -73,7 +73,7 @@ const newSettingsReactComponent = getInjectable({
 
   instantiate: () => ({
     id: "test-react-component",
-    Component: customSettingsComponent,
+    Component: CustomSettingsComponent,
   }),
 
   injectionToken: clusterIconSettingsComponentInjectionToken,
