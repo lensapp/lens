@@ -28,7 +28,7 @@ const checkForUpdatesMenuItemInjectable = getInjectable({
       id: "check-for-updates",
       parentId: isMac ? "mac" : "help",
       orderNumber: isMac ? 20 : 50,
-      label: "Check for Updates",
+      label: "Check for Updates...",
       isShown: updatingIsEnabled,
 
       onClick: () => {

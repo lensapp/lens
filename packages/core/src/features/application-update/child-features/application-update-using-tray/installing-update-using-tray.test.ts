@@ -177,7 +177,7 @@ describe("installing update using tray", () => {
         it("name of tray item for checking updates no longer indicates that checking is happening", () => {
           expect(
             builder.tray.get("check-for-updates")?.label,
-          ).toBe("Check for Updates");
+          ).toBe("Check for Updates...");
         });
 
         it("renders", () => {
@@ -241,7 +241,7 @@ describe("installing update using tray", () => {
           it("name of tray item for checking updates no longer indicates that downloading is happening", () => {
             expect(
               builder.tray.get("check-for-updates")?.label,
-            ).toBe("Check for Updates");
+            ).toBe("Check for Updates...");
           });
 
           it("renders", () => {
@@ -269,7 +269,7 @@ describe("installing update using tray", () => {
           it("name of tray item for checking updates no longer indicates that downloading is happening", () => {
             expect(
               builder.tray.get("check-for-updates")?.label,
-            ).toBe("Check for Updates");
+            ).toBe("Check for Updates...");
           });
 
           it("renders", () => {
