@@ -8,7 +8,7 @@ import { beforeQuitOfFrontEndInjectionToken, beforeQuitOfBackEndInjectionToken }
 import electronAppInjectable from "../electron-app.injectable";
 import isIntegrationTestingInjectable from "../../../common/vars/is-integration-testing.injectable";
 import autoUpdaterInjectable from "../features/auto-updater.injectable";
-import { runManySyncFor } from "@k8slens/run-many";
+import { runManySyncFor, runManyFor } from "@k8slens/run-many";
 
 const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
   id: "setup-closing-of-application",
@@ -16,8 +16,9 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
   instantiate: (di) => ({
     run: () => {
       const runManySync = runManySyncFor(di);
+      const runMany = runManyFor(di);
       const runRunnablesBeforeQuitOfFrontEnd = runManySync(beforeQuitOfFrontEndInjectionToken);
-      const runRunnablesBeforeQuitOfBackEnd = runManySync(beforeQuitOfBackEndInjectionToken);
+      const runRunnablesBeforeQuitOfBackEnd = runMany(beforeQuitOfBackEndInjectionToken);
       const app = di.inject(electronAppInjectable);
       const isIntegrationTesting = di.inject(isIntegrationTestingInjectable);
       const autoUpdater = di.inject(autoUpdaterInjectable);
@@ -27,17 +28,43 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
         isAutoUpdating = true;
       });
 
-      app.on("will-quit", (event) => {
+      app.on("will-quit", () => {
         runRunnablesBeforeQuitOfFrontEnd();
 
-        const shouldQuitBackEnd = isIntegrationTesting || isAutoUpdating;
+        let isAsyncQuitting = false;
 
-        if (shouldQuitBackEnd) {
-          runRunnablesBeforeQuitOfBackEnd();
-        } else {
-          // IMPORTANT: This cannot be destructured as it would break binding of "this" for the Electron event
+        const doAsyncQuit = (event: Electron.Event, exitCode = 0) => {
+          if (isAsyncQuitting) {
+            return;
+          }
+
+          isAsyncQuitting = true;
+
+          void (async () => {
+            try {
+              await runRunnablesBeforeQuitOfBackEnd();
+            } catch (error) {
+              console.error("A beforeQuitOfBackEnd failed!!!!", error);
+              exitCode = 1;
+            }
+
+            app.exit(exitCode);
+          })();
+        };
+
+        app.on("will-quit", (event) => {
+          runRunnablesBeforeQuitOfFrontEnd();
           event.preventDefault();
-        }
+
+          if (isIntegrationTesting || isAutoUpdating) {
+            doAsyncQuit(event);
+          }
+        });
+
+        app.on("quit", (event, exitCode) => {
+          event.preventDefault();
+          doAsyncQuit(event, exitCode);
+        });
       });
 
       return undefined;

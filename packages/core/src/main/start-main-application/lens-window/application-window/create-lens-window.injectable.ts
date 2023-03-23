@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window.injectable";
-import createElectronWindowForInjectable from "./create-electron-window.injectable";
+import createElectronWindowInjectable from "./create-electron-window.injectable";
 import type { ClusterFrameInfo } from "../../../../common/cluster-frames.injectable";
 
 export interface ElectronWindow {
@@ -59,7 +59,7 @@ const createLensWindowInjectable = getInjectable({
   id: "create-lens-window",
 
   instantiate: (di) => {
-    const createElectronWindow = di.inject(createElectronWindowForInjectable);
+    const createElectronWindow = di.inject(createElectronWindowInjectable);
 
     return (configuration: LensWindowConfiguration): LensWindow => {
       let browserWindow: ElectronWindow | undefined;

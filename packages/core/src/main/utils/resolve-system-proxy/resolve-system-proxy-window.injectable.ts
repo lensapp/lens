@@ -12,13 +12,13 @@ const resolveSystemProxyWindowInjectable = getInjectable({
     const app = di.inject(electronAppInjectable);
 
     await app.whenReady();
-    
+
     const window = new BrowserWindow({
       show: false,
       paintWhenInitiallyHidden: false,
     });
 
-    window.hide();  
+    window.hide();
 
     return window;
   },
