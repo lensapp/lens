@@ -16,6 +16,7 @@ import type { Logger } from "../../common/logger";
 import type { WaitUntilPortIsUsed } from "./wait-until-port-is-used/wait-until-port-is-used.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 import type { BroadcastConnectionUpdate } from "../cluster/broadcast-connection-update.injectable";
+import type { KubeAuthProxy } from "./create-kube-auth-proxy.injectable";
 
 const startingServeMatcher = "starting to serve on (?<address>.+)";
 const startingServeRegex = Object.assign(TypedRegEx(startingServeMatcher, "i"), {
@@ -33,7 +34,7 @@ export interface KubeAuthProxyDependencies {
   broadcastConnectionUpdate: BroadcastConnectionUpdate;
 }
 
-export class KubeAuthProxy {
+export class KubeAuthProxyImpl implements KubeAuthProxy {
   public readonly apiPrefix = `/${randomBytes(8).toString("hex")}`;
 
   public get port(): number {

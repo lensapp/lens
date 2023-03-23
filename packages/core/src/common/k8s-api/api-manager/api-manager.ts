@@ -10,7 +10,8 @@ import { autorun,  action, observable } from "mobx";
 import type { KubeApi } from "../kube-api";
 import type { KubeObject, ObjectReference } from "../kube-object";
 import { parseKubeApi, createKubeApiURL } from "../kube-api-parse";
-import { iter } from "@k8slens/utilities";
+import { getOrInsertWith, iter } from "@k8slens/utilities";
+import type { CreateCustomResourceStore } from "./create-custom-resource-store.injectable";
 
 export type RegisterableStore<Store> = Store extends KubeObjectStore<any, any, any>
   ? Store
@@ -26,13 +27,15 @@ export type FindApiCallback = (api: KubeApi<KubeObject>) => boolean;
 
 interface Dependencies {
   readonly apis: IComputedValue<KubeApi[]>;
+  readonly crdApis: IComputedValue<KubeApi[]>;
   readonly stores: IComputedValue<KubeObjectStore[]>;
+  createCustomResourceStore: CreateCustomResourceStore;
 }
 
 export class ApiManager {
   private readonly externalApis = observable.array<KubeApi>();
   private readonly externalStores = observable.array<KubeObjectStore>();
-
+  private readonly defaultCrdStores = observable.map<string, KubeObjectStore>();
   private readonly apis = observable.map<string, KubeApi>();
 
   constructor(private readonly dependencies: Dependencies) {
@@ -53,6 +56,12 @@ export class ApiManager {
           if (storedApi === api) {
             newState.delete(apiBase);
           }
+        }
+      }
+
+      for (const crdApi of this.dependencies.crdApis.get()) {
+        if (!newState.has(crdApi.apiBase)) {
+          newState.set(crdApi.apiBase, crdApi);
         }
       }
 
@@ -110,6 +119,16 @@ export class ApiManager {
     this.externalStores.push(store);
   }
 
+  private apiIsDefaultCrdApi(api: KubeApi): boolean {
+    for (const crdApi of this.dependencies.crdApis.get()) {
+      if (crdApi.apiBase === api.apiBase) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   getStore(api: string | undefined): KubeObjectStore | undefined;
   getStore<Api>(api: RegisterableApi<Api>): KubeObjectStoreFrom<Api> | undefined;
   /**
@@ -130,9 +149,19 @@ export class ApiManager {
       return undefined;
     }
 
-    return iter.chain(this.dependencies.stores.get().values())
+    const defaultResult = iter.chain(this.dependencies.stores.get().values())
       .concat(this.externalStores.values())
       .find(store => store.api.apiBase === api.apiBase);
+
+    if (defaultResult) {
+      return defaultResult;
+    }
+
+    if (this.apiIsDefaultCrdApi(api)) {
+      return getOrInsertWith(this.defaultCrdStores, api.apiBase, () => this.dependencies.createCustomResourceStore(api));
+    }
+
+    return undefined;
   }
 
   lookupApiLink(ref: ObjectReference, parentObject?: KubeObject): string {

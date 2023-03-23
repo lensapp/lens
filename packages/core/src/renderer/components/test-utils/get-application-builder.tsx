@@ -29,7 +29,6 @@ import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/elect
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
 import { getDiForUnitTesting as getMainDi } from "../../../main/getDiForUnitTesting";
-import { overrideChannels } from "../../../test-utils/channel-fakes/override-channels";
 import assert from "assert";
 import { openMenu } from "react-select-event";
 import userEvent from "@testing-library/user-event";
@@ -40,7 +39,7 @@ import { navigateToRouteInjectionToken } from "../../../common/front-end-routing
 import type { LensMainExtension } from "../../../extensions/lens-main-extension";
 import type { LensExtension } from "../../../extensions/lens-extension";
 import extensionInjectable from "../../../extensions/extension-loader/extension/extension.injectable";
-import { renderFor } from "./renderFor";
+import { renderFor } from "@k8slens/test-utils";
 import { RootFrame } from "../../frames/root-frame/root-frame";
 import { ClusterFrame } from "../../frames/cluster-frame/cluster-frame";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
@@ -54,7 +53,7 @@ import { applicationWindowInjectionToken } from "../../../main/start-main-applic
 import closeAllWindowsInjectable from "../../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
 import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { FakeExtensionOptions } from "./get-extension-fake";
-import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
+import { getMainExtensionFakeWith, getRendererExtensionFakeWith } from "./get-extension-fake";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import { getOverrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
@@ -71,6 +70,8 @@ import { registerFeature } from "@k8slens/feature-core";
 import { applicationFeatureForElectronMain, testUtils as applicationForElectronTestUtils } from "@k8slens/application-for-electron-main";
 import { applicationFeature, startApplicationInjectionToken } from "@k8slens/application";
 import { testUsingFakeTime } from "../../../test-utils/use-fake-time";
+import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
+import { getMessageBridgeFake } from "@k8slens/messaging-fake-bridge";
 
 type MainDiCallback = (container: { mainDi: DiContainer }) => void | Promise<void>;
 type WindowDiCallback = (container: { windowDi: DiContainer }) => void | Promise<void>;
@@ -179,7 +180,9 @@ export const getApplicationBuilder = () => {
 
   testUsingFakeTime();
 
-  const { overrideForWindow, sendToWindow } = overrideChannels(mainDi);
+  const messageBridgeFake = getMessageBridgeFake();
+
+  messageBridgeFake.involve(mainDi);
 
   const beforeApplicationStartCallbacks: MainDiCallback[] = [];
   const afterApplicationStartCallbacks: MainDiCallback[] = [];
@@ -229,7 +232,8 @@ export const getApplicationBuilder = () => {
 
     const windowDi = getRendererDi();
 
-    overrideForWindow(windowDi, windowId);
+    messageBridgeFake.involve(windowDi);
+
     overrideFsWithFakes(windowDi);
 
     runInAction(() => {
@@ -284,8 +288,10 @@ export const getApplicationBuilder = () => {
         );
       },
 
-      send: (arg) => {
-        sendToWindow(windowId, arg);
+      send: ({ channel: channelId, data }) => {
+        const sendMessageToChannel = mainDi.inject(sendMessageToChannelInjectionToken);
+
+        sendMessageToChannel({ id: channelId }, data);
       },
 
       reload: () => {
@@ -588,49 +594,28 @@ export const getApplicationBuilder = () => {
       },
 
       enable: (...extensions) => {
-        builder.afterWindowStart(({ windowDi }) => {
-          const rendererExtensionInstances = extensions.map((options) =>
-            getExtensionFakeForRenderer(
-              windowDi,
-              options.id,
-              options.name,
-              options.rendererOptions || {},
-            ),
-          );
+        builder.afterWindowStart(action(({ windowDi }) => {
+          extensions
+            .map(getRendererExtensionFakeWith(windowDi))
+            .forEach(enableExtensionFor(windowDi, rendererExtensionsStateInjectable));
+        }));
 
-          rendererExtensionInstances.forEach(
-            enableExtensionFor(windowDi, rendererExtensionsStateInjectable),
-          );
-        });
-
-        builder.afterApplicationStart(({ mainDi }) => {
-          const mainExtensionInstances = extensions.map((extension) =>
-            getExtensionFakeForMain(mainDi, extension.id, extension.name, extension.mainOptions || {}),
-          );
-
-          runInAction(() => {
-            mainExtensionInstances.forEach(
-              enableExtensionFor(mainDi, mainExtensionsStateInjectable),
-            );
-          });
-        });
+        builder.afterApplicationStart(action(({ mainDi }) => {
+          extensions
+            .map(getMainExtensionFakeWith(mainDi))
+            .forEach(enableExtensionFor(mainDi, mainExtensionsStateInjectable));
+        }));
       },
 
       disable: (...extensions) => {
         builder.afterWindowStart(({ windowDi }) => {
           extensions
-            .map((ext) => ext.id)
-            .forEach(
-              disableExtensionFor(windowDi, rendererExtensionsStateInjectable),
-            );
+            .forEach(disableExtensionFor(windowDi, rendererExtensionsStateInjectable));
         });
 
         builder.afterApplicationStart(({ mainDi }) => {
           extensions
-            .map((ext) => ext.id)
-            .forEach(
-              disableExtensionFor(mainDi, mainExtensionsStateInjectable),
-            );
+            .forEach(disableExtensionFor(mainDi, mainExtensionsStateInjectable));
         });
       },
     },
@@ -829,49 +814,29 @@ const selectOptionFor = (builder: ApplicationBuilder, menuId: string) => (labelT
   userEvent.click(option);
 };
 
-const enableExtensionFor = (
-  di: DiContainer,
-  stateInjectable: Injectable<ObservableMap<string, any>, any, any>,
-) => {
+function enableExtensionFor(di: DiContainer, stateInjectable: Injectable<ObservableMap<string, any>, any, any>) {
   const extensionState = di.inject(stateInjectable);
 
-  const getExtension = (extension: LensExtension) =>
-    di.inject(extensionInjectable, extension);
+  return (instance: LensExtension) => {
+    const extension = di.inject(extensionInjectable, instance);
 
-  return (extensionInstance: LensExtension) => {
-    const extension = getExtension(extensionInstance);
-
-    runInAction(() => {
-      extension.register();
-      extensionState.set(extensionInstance.id, extensionInstance);
-    });
+    extension.register();
+    extensionState.set(instance.id, instance);
   };
-};
+}
 
-const disableExtensionFor =
-  (
-    di: DiContainer,
-    stateInjectable: Injectable<ObservableMap<string, any>, unknown, void>,
-  ) =>
-    (id: string) => {
-      const getExtension = (extension: LensExtension) =>
-        di.inject(extensionInjectable, extension);
+function disableExtensionFor(di: DiContainer, stateInjectable: Injectable<ObservableMap<string, any>, unknown, void>) {
+  return (extension: FakeExtensionOptions) => {
+    const extensionsState = di.inject(stateInjectable);
+    const instance = extensionsState.get(extension.id);
 
-      const extensionsState = di.inject(stateInjectable);
+    if (!instance) {
+      throw new Error(`Tried to disable extension with ID "${extension.id}", but it wasn't enabled`);
+    }
 
-      const instance = extensionsState.get(id);
+    const injectable = di.inject(extensionInjectable, instance);
 
-      if (!instance) {
-        throw new Error(
-          `Tried to disable extension with ID "${id}", but it wasn't enabled`,
-        );
-      }
-
-      const injectable = getExtension(instance);
-
-      runInAction(() => {
-        injectable.deregister();
-
-        extensionsState.delete(id);
-      });
-    };
+    injectable.deregister();
+    extensionsState.delete(extension.id);
+  };
+}

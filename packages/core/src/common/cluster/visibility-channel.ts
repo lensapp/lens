@@ -4,7 +4,7 @@
  */
 
 import type { ClusterId } from "../cluster-types";
-import type { MessageChannel } from "../utils/channel/message-channel-listener-injection-token";
+import type { MessageChannel } from "@k8slens/messaging";
 
 export const clusterVisibilityChannel: MessageChannel<ClusterId | null> = {
   id: "cluster-visibility",

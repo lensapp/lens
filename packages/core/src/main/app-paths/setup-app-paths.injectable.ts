@@ -34,6 +34,7 @@ const setupAppPathsInjectable = getInjectable({
       const appDataPath = getElectronAppPath("appData");
 
       setElectronAppPath("userData", joinPaths(appDataPath, appName));
+      setElectronAppPath("sessionData", getElectronAppPath("userData"));
 
       const appPaths = pipeline(
         pathNames,

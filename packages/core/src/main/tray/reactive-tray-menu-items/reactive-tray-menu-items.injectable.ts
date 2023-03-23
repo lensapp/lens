@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { getStartableStoppable } from "../../../common/utils/get-startable-stoppable";
+import { getStartableStoppable } from "@k8slens/startable-stoppable";
 import { reaction } from "mobx";
 import type { MinimalTrayMenuItem } from "../electron-tray/electron-tray.injectable";
 import electronTrayInjectable from "../electron-tray/electron-tray.injectable";

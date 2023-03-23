@@ -4,11 +4,12 @@
  */
 import removeHelmRepositoryInjectable from "./remove-helm-repository.injectable";
 import { removeHelmRepositoryChannel } from "../../../../common/helm/remove-helm-repository-channel";
-import { getRequestChannelListenerInjectable } from "../../../utils/channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 
 const removeHelmRepositoryChannelListenerInjectable = getRequestChannelListenerInjectable({
+  id: "remove-helm-repository-channel-listener",
   channel: removeHelmRepositoryChannel,
-  handler: (di) => di.inject(removeHelmRepositoryInjectable),
+  getHandler: (di) => di.inject(removeHelmRepositoryInjectable),
 });
 
 export default removeHelmRepositoryChannelListenerInjectable;

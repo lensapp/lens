@@ -19,6 +19,7 @@
     "clean:node_modules": "lerna clean -y && rimraf node_modules",
     "dev": "lerna run dev --stream --skip-nx-cache",
     "lint": "lerna run lint --stream",
+    "lint:fix": "lerna run lint:fix --stream",
     "mkdocs:serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
     "mkdocs:verify": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
     "test:unit": "lerna run --stream test:unit",
@@ -27,6 +28,11 @@
     "bump-version": "lerna version --no-git-tag-version --no-push",
     "precreate-release-pr": "cd packages/release-tool && npm run build",
     "create-release-pr": "node packages/release-tool/dist/index.js"
+  },
+  "overrides": {
+    "underscore": "^1.12.1",
+    "react": "^17",
+    "@types/react": "^17"
   },
   "devDependencies": {
     "adr": "^1.4.3",

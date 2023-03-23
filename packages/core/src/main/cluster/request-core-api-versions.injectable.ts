@@ -5,33 +5,36 @@
 import type { V1APIVersions } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
 import k8sRequestInjectable from "../k8s-request.injectable";
-import { requestApiVersionsInjectionToken } from "./request-api-versions";
+import { apiVersionsRequesterInjectionToken } from "./api-versions-requester";
 
 const requestCoreApiVersionsInjectable = getInjectable({
   id: "request-core-api-versions",
   instantiate: (di) => {
     const k8sRequest = di.inject(k8sRequestInjectable);
 
-    return async (cluster) => {
-      try {
-        const { versions } = await k8sRequest(cluster, "/api") as V1APIVersions;
+    return {
+      request: async (cluster) => {
+        try {
+          const { versions } = await k8sRequest(cluster, "/api") as V1APIVersions;
 
-        return {
-          callWasSuccessful: true,
-          response: versions.map(version => ({
-            group: "",
-            path: `/api/${version}`,
-          })),
-        };
-      } catch (error) {
-        return {
-          callWasSuccessful: false,
-          error: error as Error,
-        };
-      }
+          return {
+            callWasSuccessful: true,
+            response: versions.map(version => ({
+              group: "",
+              path: `/api/${version}`,
+            })),
+          };
+        } catch (error) {
+          return {
+            callWasSuccessful: false,
+            error: error as Error,
+          };
+        }
+      },
+      orderNumber: 10,
     };
   },
-  injectionToken: requestApiVersionsInjectionToken,
+  injectionToken: apiVersionsRequesterInjectionToken,
 });
 
 export default requestCoreApiVersionsInjectable;

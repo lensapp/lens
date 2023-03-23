@@ -5,13 +5,13 @@
 
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import resolveSystemProxyFromElectronInjectable from "./resolve-system-proxy-from-electron.injectable";
-import electronInjectable from "./electron.injectable";
+import resolveSystemProxyWindowInjectable from "./resolve-system-proxy-window.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type electron from "electron";
 import { getPromiseStatus } from "@k8slens/test-utils";
 import logErrorInjectable from "../../../common/log-error.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
+import type { BrowserWindow, Session, WebContents } from "electron";
 
 describe("technical: resolve-system-proxy-from-electron", () => {
   let resolveSystemProxyMock: AsyncFnMock<(url: string) => Promise<string>>;
@@ -26,44 +26,19 @@ describe("technical: resolve-system-proxy-from-electron", () => {
     di.override(logErrorInjectable, () => logErrorMock);
   });
 
-  describe("given there are non-destroyed Lens windows, when called with URL", () => {
+  describe("given there are no unexpected issues, when called with URL", () => {
     beforeEach(() => {
       resolveSystemProxyMock = asyncFn();
 
       di.override(
-        electronInjectable,
-
-        () =>
-          ({
-            webContents: {
-              getAllWebContents: () => [
-                {
-                  isDestroyed: () => true,
-
-                  session: {
-                    resolveProxy: () => {
-                      throw new Error("should never come here");
-                    },
-                  },
-                },
-
-                {
-                  isDestroyed: () => false,
-                  session: { resolveProxy: resolveSystemProxyMock },
-                },
-
-                {
-                  isDestroyed: () => false,
-
-                  session: {
-                    resolveProxy: () => {
-                      throw new Error("should never come here");
-                    },
-                  },
-                },
-              ],
-            },
-          } as unknown as typeof electron),
+        resolveSystemProxyWindowInjectable,
+        () => ({
+          webContents: {
+            session: {
+              resolveProxy: resolveSystemProxyMock,
+            } as unknown as Session,
+          } as unknown as WebContents,
+        } as unknown as BrowserWindow),
       );
 
       const resolveSystemProxyFromElectron = di.inject(
@@ -73,7 +48,7 @@ describe("technical: resolve-system-proxy-from-electron", () => {
       actualPromise = resolveSystemProxyFromElectron("some-url");
     });
 
-    it("calls to resolve proxy from the first window", () => {
+    it("calls to resolve proxy from the browser window", () => {
       expect(resolveSystemProxyMock).toHaveBeenCalledWith("some-url");
     });
 
@@ -90,28 +65,23 @@ describe("technical: resolve-system-proxy-from-electron", () => {
     });
   });
 
-  describe("given there are only destroyed Lens windows, when called with URL", () => {
+  describe("given there are unexpected issues, when called with URL", () => {
     let error: any;
 
     beforeEach(async () => {
-      di.override(
-        electronInjectable,
-        () =>
-          ({
-            webContents: {
-              getAllWebContents: () => [
-                {
-                  isDestroyed: () => true,
+      resolveSystemProxyMock = asyncFn();
 
-                  session: {
-                    resolveProxy: () => {
-                      throw new Error("should never come here");
-                    },
-                  },
-                },
-              ],
-            },
-          } as unknown as typeof electron),
+      di.override(
+        resolveSystemProxyWindowInjectable,
+        () => ({
+          webContents: {
+            session: {
+              resolveProxy: () => {
+                throw new Error("unexpected error");
+              },
+            } as unknown as Session,
+          } as unknown as WebContents,
+        } as unknown as BrowserWindow),
       );
 
       resolveSystemProxyMock = asyncFn();
@@ -128,7 +98,7 @@ describe("technical: resolve-system-proxy-from-electron", () => {
     });
 
     it("throws error", () => {
-      expect(error.message).toBe('Tried to resolve proxy for "some-url", but no browser window was available');
+      expect(error.message).toBe("unexpected error");
     });
 
     it("logs error", () => {

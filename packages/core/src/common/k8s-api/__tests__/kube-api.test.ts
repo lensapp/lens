@@ -22,7 +22,6 @@ import { flushPromises } from "@k8slens/test-utils";
 import createKubeJsonApiInjectable from "../create-kube-json-api.injectable";
 import type { IKubeWatchEvent } from "../kube-watch-event";
 import type { KubeJsonApiDataFor, KubeStatusData } from "../kube-object";
-import AbortController from "abort-controller";
 import setupAutoRegistrationInjectable
   from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
 import {

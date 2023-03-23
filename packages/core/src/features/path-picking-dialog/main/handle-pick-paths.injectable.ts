@@ -4,12 +4,13 @@
  */
 
 import askUserForFilePathsInjectable from "../../../main/ipc/ask-user-for-file-paths.injectable";
-import { getRequestChannelListenerInjectable } from "../../../main/utils/channel/channel-listeners/listener-tokens";
+import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { openPathPickingDialogChannel } from "../common/channel";
 
 const openPathPickingDialogListener = getRequestChannelListenerInjectable({
+  id: "open-path-picking-dialog",
   channel: openPathPickingDialogChannel,
-  handler: (di) => di.inject(askUserForFilePathsInjectable),
+  getHandler: (di) => di.inject(askUserForFilePathsInjectable),
 });
 
 export default openPathPickingDialogListener;

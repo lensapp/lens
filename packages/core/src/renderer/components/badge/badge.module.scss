@@ -34,7 +34,8 @@
 .badge:not(.flat) {
   background: var(--colorVague);
   border-radius: 3px;
-  padding: .2em .4em;
+  line-height: normal;
+  padding: 0.2rem 0.4rem;
 }
 
 .small {

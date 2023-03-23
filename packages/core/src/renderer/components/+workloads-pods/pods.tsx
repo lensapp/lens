@@ -29,6 +29,7 @@ import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.inject
 import eventStoreInjectable from "../+events/store.injectable";
 import podStoreInjectable from "./store.injectable";
 import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
+import { Tooltip } from "../tooltip";
 
 enum columnId {
   name = "name",
@@ -163,13 +164,14 @@ class NonInjectedPods extends React.Component<Dependencies> {
             { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
           ]}
           renderTableContents={pod => [
-            <Badge
-              flat
-              key="name"
-              label={pod.getName()}
-              tooltip={pod.getName()}
-              expandable={false}
-            />,
+            <>
+              <span id={`list-pod-${pod.getId()}`}>
+                {pod.getName()}
+              </span>
+              <Tooltip targetId={`list-pod-${pod.getId()}`}>
+                {pod.getName()}
+              </Tooltip>
+            </>,
             <KubeObjectStatusIcon key="icon" object={pod} />,
             <NamespaceSelectBadge
               key="namespace"

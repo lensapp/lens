@@ -22,12 +22,18 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack --mode=development --watch",
-    "test": "jest --coverage --runInBand"
+    "test:unit": "jest --coverage --runInBand"
   },
   "peerDependencies": {
     "@k8slens/test-utils": "^1.0.0-alpha.1",
     "@k8slens/utilities": "^1.0.0-alpha.1",
-    "@ogre-tools/fp": "^15.1.1",
-    "@ogre-tools/injectable": "^15.1.1"
+    "@ogre-tools/fp": "^15.1.2",
+    "@ogre-tools/injectable": "^15.1.2",
+    "type-fest": "^2.19.0",
+    "typed-emitter": "^1.4.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.1"
   }
 }

@@ -43,7 +43,7 @@ const createTestPrometheusProvider = (kind: string, alwaysFail: ServiceResult): 
   },
 });
 
-describe("ContextHandler", () => {
+describe("PrometheusHandler", () => {
   let di: DiContainer;
   let cluster: Cluster;
 

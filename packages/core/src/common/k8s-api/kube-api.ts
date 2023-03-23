@@ -20,7 +20,6 @@ import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import type { Logger } from "../logger";
-import type AbortController from "abort-controller";
 import { matches } from "lodash/fp";
 import { makeObservable, observable } from "mobx";
 

@@ -739,10 +739,10 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
                           style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
                         >
                           <div
-                            style="height: 99px; width: 100%;"
+                            style="height: 108px; width: 100%;"
                           >
                             <div
-                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 0px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -815,7 +815,7 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 36px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -888,7 +888,7 @@ exports[`opening catalog entity details panel when navigated to the catalog rend
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 72px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -1560,10 +1560,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                           style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
                         >
                           <div
-                            style="height: 99px; width: 100%;"
+                            style="height: 108px; width: 100%;"
                           >
                             <div
-                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 0px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -1636,7 +1636,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 36px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -1709,7 +1709,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 72px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -2413,10 +2413,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                           style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
                         >
                           <div
-                            style="height: 99px; width: 100%;"
+                            style="height: 108px; width: 100%;"
                           >
                             <div
-                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 0px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -2489,7 +2489,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 36px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -2562,7 +2562,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 72px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -3266,10 +3266,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                           style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
                         >
                           <div
-                            style="height: 99px; width: 100%;"
+                            style="height: 108px; width: 100%;"
                           >
                             <div
-                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 0px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -3342,7 +3342,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 36px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -3415,7 +3415,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 72px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -4370,10 +4370,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                           style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
                         >
                           <div
-                            style="height: 99px; width: 100%;"
+                            style="height: 108px; width: 100%;"
                           >
                             <div
-                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 0px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -4446,7 +4446,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 36px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -4519,7 +4519,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 72px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -5211,10 +5211,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                           style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
                         >
                           <div
-                            style="height: 99px; width: 100%;"
+                            style="height: 108px; width: 100%;"
                           >
                             <div
-                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 0px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -5287,7 +5287,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 36px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -5360,7 +5360,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 72px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -6052,10 +6052,10 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                           style="position: relative; height: 420000px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
                         >
                           <div
-                            style="height: 99px; width: 100%;"
+                            style="height: 108px; width: 100%;"
                           >
                             <div
-                              style="position: absolute; left: 0px; top: 0px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 0px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -6128,7 +6128,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 33px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 36px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
@@ -6201,7 +6201,7 @@ exports[`opening catalog entity details panel when navigated to the catalog when
                               </div>
                             </div>
                             <div
-                              style="position: absolute; left: 0px; top: 66px; height: 33px; width: 100%;"
+                              style="position: absolute; left: 0px; top: 72px; height: 36px; width: 100%;"
                             >
                               <div
                                 class="TableRow nowrap"
