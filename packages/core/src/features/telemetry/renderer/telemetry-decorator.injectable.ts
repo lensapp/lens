@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainerForInjection } from "@ogre-tools/injectable";
-
 import {
   getInjectable,
   instantiationDecoratorToken,
@@ -24,6 +23,7 @@ import logErrorInjectable, {
 } from "../../../common/log-error.injectable";
 
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
+import { getFailure, getSuccess } from "./call-result/call-result";
 
 const telemetryDecoratorInjectable = getInjectable({
   id: "telemetry-decorator",
@@ -85,17 +85,19 @@ const doTelemetryFor =
     args: any[],
     currentContext: any
   ) => {
-    try {
-      const params = whiteListed.getParams(...args);
+    const getParamsSafe = withNoThrownErrors(whiteListed.getParams);
 
+    const params = getParamsSafe(...args);
+
+    if (params.callWasSuccessful) {
       emitTelemetry({
         action: currentContext.injectable.id,
-        params,
+        params: params.response,
       });
-    } catch (e: any) {
+    } else {
       logError(
         `Tried to produce params for telemetry of "${currentContext.injectable.id}", but getParams() threw an error`,
-        e
+        params.error
       );
 
       emitTelemetry({
@@ -127,5 +129,23 @@ const getWhiteListMap = (whiteList: WhiteListItem[]) =>
           ]
     )
   );
+
+type ToBeDecorated<TValue, TArgs extends unknown[]> = (
+  ...args: TArgs
+) => TValue;
+
+const withNoThrownErrors =
+  <TValue, TArgs extends unknown[]>(
+    toBeDecorated: ToBeDecorated<TValue, TArgs>
+  ) =>
+  (...args: TArgs) => {
+    try {
+      const result = toBeDecorated(...args);
+
+      return getSuccess(result);
+    } catch (error) {
+      return getFailure(error);
+    }
+  };
 
 export default telemetryDecoratorInjectable;
