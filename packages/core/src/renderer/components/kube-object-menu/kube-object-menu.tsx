@@ -177,6 +177,8 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
   render() {
     const {
       className,
+      editable,
+      removable,
       object,
       removeAction, // This is here so we don't pass it down to `<MenuAction>`
       removeConfirmationMessage, // This is here so we don't pass it down to `<MenuAction>`
