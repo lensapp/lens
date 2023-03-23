@@ -5,6 +5,9 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "./logger.injectable";
 
+
+export type LogError = (message: string, ...data: any) => void;
+
 const logErrorInjectable = getInjectable({
   id: "log-error",
   instantiate: (di) => di.inject(loggerInjectable).error,
