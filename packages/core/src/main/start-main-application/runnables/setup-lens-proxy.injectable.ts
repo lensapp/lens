@@ -11,7 +11,7 @@ import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import initializeBuildVersionInjectable from "../../vars/build-version/init.injectable";
 import startLensProxyListeningInjectable from "../../lens-proxy/start-listening.injectable";
-import lensFetchInjectable from "../../../common/fetch/lens-fetch.injectable";
+import lensFetchInjectable from "../../../features/lens-fetch/common/lens-fetch.injectable";
 
 const setupLensProxyInjectable = getInjectable({
   id: "setup-lens-proxy",

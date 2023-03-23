@@ -4,7 +4,7 @@
  */
 
 import type { DiContainer } from "@ogre-tools/injectable";
-import lensFetchInjectable from "../common/fetch/lens-fetch.injectable";
+import lensFetchInjectable from "../features/lens-fetch/common/lens-fetch.injectable";
 import { Headers, Response } from "@k8slens/node-fetch";
 import handleRouteRequestInjectable from "../main/lens-proxy/handle-route-request.injectable";
 import fetchInjectable from "../common/fetch/fetch.injectable";

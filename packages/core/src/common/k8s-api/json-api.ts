@@ -9,14 +9,14 @@ import { Agent as HttpAgent } from "http";
 import { Agent as HttpsAgent } from "https";
 import { merge } from "lodash";
 import type { Response, RequestInit } from "@k8slens/node-fetch";
-import { stringify } from "querystring";
 import type { Patch } from "rfc6902";
-import type { PartialDeep, ValueOf } from "type-fest";
+import type { PartialDeep, SetRequired, ValueOf } from "type-fest";
 import { EventEmitter } from "../../common/event-emitter";
 import type { Logger } from "../../common/logger";
 import type { Fetch } from "../fetch/fetch.injectable";
 import type { Defaulted } from "@k8slens/utilities";
-import { isObject, isString, json } from "@k8slens/utilities";
+import { object, isObject, isString, json } from "@k8slens/utilities";
+import { format, parse, URLSearchParams } from "url";
 
 export interface JsonApiData {}
 
@@ -40,11 +40,17 @@ export interface JsonApiLog {
 
 export type GetRequestOptions = () => Promise<RequestInit>;
 
+export const usingLensFetch = Symbol("using-lens-fetch");
+
 export interface JsonApiConfig {
   apiBase: string;
-  serverAddress: string;
+  serverAddress: string | typeof usingLensFetch;
   debug?: boolean;
   getRequestOptions?: GetRequestOptions;
+}
+
+export interface InternalJsonApiConfig extends JsonApiConfig {
+  serverAddress: string | typeof usingLensFetch;
 }
 
 const httpAgent = new HttpAgent({ keepAlive: true });
@@ -64,6 +70,11 @@ export interface JsonApiDependencies {
   readonly logger: Logger;
 }
 
+interface RequestDetails {
+  reqUrl: string;
+  reqInit: SetRequired<RequestInit, "method">;
+}
+
 export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = JsonApiParams<Data>> {
   static readonly reqInitDefault = {
     headers: {
@@ -76,7 +87,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
     debug: false,
   };
 
-  constructor(protected readonly dependencies: JsonApiDependencies, public readonly config: JsonApiConfig, reqInit?: RequestInit) {
+  constructor(protected readonly dependencies: JsonApiDependencies, public readonly config: InternalJsonApiConfig, reqInit?: RequestInit) {
     this.config = Object.assign({}, JsonApi.configDefault, config);
     this.reqInit = merge({}, JsonApi.reqInitDefault, reqInit);
     this.parseResponse = this.parseResponse.bind(this);
@@ -87,28 +98,53 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
   public readonly onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
   private readonly getRequestOptions: GetRequestOptions;
 
+  private async getRequestDetails(
+    path: string,
+    query: Partial<Record<string, string>> | undefined,
+    init: RequestInit,
+  ): Promise<RequestDetails> {
+    const reqUrl = (() => {
+      const base = this.config.serverAddress === usingLensFetch
+        ? parse(`${this.config.apiBase}${path}`)
+        : parse(`${this.config.serverAddress}${this.config.apiBase}${path}`);
+      const searchParams = new URLSearchParams(base.query ?? undefined);
+
+      for (const [key, value] of object.entries(query ?? {})) {
+        searchParams.append(key, value);
+      }
+
+      return format({ ...base, query: searchParams.toString() });
+    })();
+    const reqInit = await (async () => {
+      const baseInit: SetRequired<RequestInit, "method"> = { method: "get" };
+
+      if (this.config.serverAddress !== usingLensFetch) {
+        baseInit.agent = this.config.serverAddress.startsWith("https://")
+          ? httpsAgent
+          : httpAgent;
+      }
+
+      return merge(
+        baseInit,
+        this.reqInit,
+        await this.getRequestOptions(),
+        init,
+      );
+    })();
+
+    return { reqInit, reqUrl };
+  }
+
   async getResponse<Query>(
     path: string,
     params?: ParamsAndQuery<Params, Query>,
     init: RequestInit = {},
   ): Promise<Response> {
-    let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
-    const reqInit = merge(
-      {
-        method: "get",
-        agent: reqUrl.startsWith("https:") ? httpsAgent : httpAgent,
-      },
-      this.reqInit,
-      await this.getRequestOptions(),
+    const { reqInit, reqUrl } = await this.getRequestDetails(
+      path,
+      params?.query as Partial<Record<string, string>>,
       init,
     );
-    const { query } = params ?? {};
-
-    if (query && Object.keys(query).length > 0) {
-      const queryString = stringify(query as unknown as QueryParams);
-
-      reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
-    }
 
     return this.dependencies.fetch(reqUrl, reqInit);
   }
@@ -155,34 +191,26 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 
   protected async request<OutData, Query = QueryParams>(
     path: string,
-    params: (ParamsAndQuery<Omit<Params, "data">, Query> & { data?: unknown }) | undefined,
+    rawParams: (ParamsAndQuery<Omit<Params, "data">, Query> & { data?: unknown }) | undefined,
     init: Defaulted<RequestInit, "method">,
   ) {
-    let reqUrl = `${this.config.serverAddress}${this.config.apiBase}${path}`;
-    const reqInit = merge(
-      {},
-      this.reqInit,
-      await this.getRequestOptions(),
+    const { data, query } = rawParams ?? {};
+    const { reqInit, reqUrl } = await this.getRequestDetails(
+      path,
+      query as Partial<Record<string, string>>,
       init,
     );
-    const { data, query } = params || {};
 
     if (data && !reqInit.body) {
       reqInit.body = JSON.stringify(data);
     }
 
-    if (query && Object.keys(query).length > 0) {
-      const queryString = stringify(query as unknown as QueryParams);
-
-      reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
-    }
+    const res = await this.dependencies.fetch(reqUrl, reqInit);
     const infoLog: JsonApiLog = {
       method: reqInit.method.toUpperCase(),
       reqUrl,
       reqInit,
     };
-
-    const res = await this.dependencies.fetch(reqUrl, reqInit);
 
     return await this.parseResponse(res, infoLog) as OutData;
   }

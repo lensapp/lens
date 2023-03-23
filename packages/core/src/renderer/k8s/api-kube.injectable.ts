@@ -7,24 +7,27 @@ import assert from "assert";
 import { apiKubePrefix } from "../../common/vars";
 import { apiKubeInjectionToken } from "../../common/k8s-api/api-kube";
 import { storesAndApisCanBeCreatedInjectionToken } from "../../common/k8s-api/stores-apis-can-be-created.token";
-import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-api.injectable";
 import isDevelopmentInjectable from "../../common/vars/is-development.injectable";
 import showErrorNotificationInjectable from "../components/notifications/show-error-notification.injectable";
 import windowLocationInjectable from "../../common/k8s-api/window-location.injectable";
-import { apiBaseServerAddressInjectionToken } from "../../common/k8s-api/api-base-configs";
+import { KubeJsonApi } from "../../common/k8s-api/kube-json-api";
+import lensFetchInjectable from "../../features/lens-fetch/common/lens-fetch.injectable";
+import loggerInjectable from "../../common/logger.injectable";
+import { usingLensFetch } from "../../common/k8s-api/json-api";
 
 const apiKubeInjectable = getInjectable({
   id: "api-kube",
   instantiate: (di) => {
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "apiKube is only available in certain environments");
-    const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
-    const apiBaseServerAddress = di.inject(apiBaseServerAddressInjectionToken);
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const { host } = di.inject(windowLocationInjectable);
 
-    const apiKube = createKubeJsonApi({
-      serverAddress: apiBaseServerAddress,
+    const apiKube = new KubeJsonApi({
+      fetch: di.inject(lensFetchInjectable),
+      logger: di.inject(loggerInjectable),
+    }, {
+      serverAddress: usingLensFetch,
       apiBase: apiKubePrefix,
       debug: isDevelopment,
     }, {

@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../logger.injectable";
 import { apiKubePrefix } from "../vars";
 import isDevelopmentInjectable from "../vars/is-development.injectable";
-import apiBaseInjectable from "./api-base.injectable";
+import { apiBaseServerAddressInjectionToken } from "./api-base-configs";
 import type { KubeApiConstructor } from "./create-kube-api-for-remote-cluster.injectable";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
 import { KubeApi } from "./kube-api";
@@ -34,10 +34,11 @@ export interface CreateKubeApiForCluster {
 const createKubeApiForClusterInjectable = getInjectable({
   id: "create-kube-api-for-cluster",
   instantiate: (di): CreateKubeApiForCluster => {
-    const apiBase = di.inject(apiBaseInjectable);
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
     const logger = di.inject(loggerInjectable);
+    const apiBaseServerAddress = di.inject(apiBaseServerAddressInjectionToken);
+    const { port } = new URL(apiBaseServerAddress);
 
     return (
       cluster: CreateKubeApiForLocalClusterConfig,
@@ -46,12 +47,12 @@ const createKubeApiForClusterInjectable = getInjectable({
     ) => {
       const request = createKubeJsonApi(
         {
-          serverAddress: apiBase.config.serverAddress,
+          serverAddress: apiBaseServerAddress,
           apiBase: apiKubePrefix,
           debug: isDevelopment,
         }, {
           headers: {
-            "Host": `${cluster.metadata.uid}.lens.app:${new URL(apiBase.config.serverAddress).port}`,
+            "Host": `${cluster.metadata.uid}.lens.app:${port}`,
           },
         });
 
