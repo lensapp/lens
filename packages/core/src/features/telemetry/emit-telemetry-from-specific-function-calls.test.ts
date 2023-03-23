@@ -45,6 +45,19 @@ describe("emit-telemetry-from-specific-function-calls", () => {
       di.override(emitEventInjectable, () => emitEventMock);
     });
 
+    it("given injectable that is not a function, when injected, does so", () => {
+      const nonFunctionInjectable = getInjectable({
+        id: "some-non-function-injectable",
+        instantiate: () => "some-non-function-instance",
+      });
+
+      di.register(nonFunctionInjectable);
+
+      const instance = di.inject(nonFunctionInjectable);
+
+      expect(instance).toBe("some-non-function-instance");
+    });
+
     describe("given instances of white-listed and non-white-listed functions", () => {
       let whiteListedFunctionMock: jest.Mock;
       let nonWhiteListedFunctionMock: jest.Mock;
@@ -55,7 +68,7 @@ describe("emit-telemetry-from-specific-function-calls", () => {
       let logErrorMock: jest.Mock;
 
       beforeEach(() => {
-        whiteListedFunctionMock = jest.fn();
+        whiteListedFunctionMock = jest.fn(() => "some-result");
         nonWhiteListedFunctionMock = jest.fn();
         logErrorMock = jest.fn();
 
@@ -84,7 +97,7 @@ describe("emit-telemetry-from-specific-function-calls", () => {
             whiteListedInjectable,
             whiteListedInjectableWithArgument,
             whiteListedInjectableWithBadConfig,
-            nonWhiteListedInjectable,
+            nonWhiteListedInjectable
           );
         });
 
@@ -93,11 +106,11 @@ describe("emit-telemetry-from-specific-function-calls", () => {
         whiteListedFunction = di.inject(whiteListedInjectable);
 
         whiteListedFunctionWithArgument = di.inject(
-          whiteListedInjectableWithArgument,
+          whiteListedInjectableWithArgument
         );
 
         whiteListedFunctionWithFaultyConfig = di.inject(
-          whiteListedInjectableWithBadConfig,
+          whiteListedInjectableWithBadConfig
         );
 
         nonWhiteListedFunction = di.inject(nonWhiteListedInjectable);
@@ -112,8 +125,10 @@ describe("emit-telemetry-from-specific-function-calls", () => {
       });
 
       describe("when a normal white-listed function is called with arguments", () => {
+        let actualResult: string;
+
         beforeEach(() => {
-          whiteListedFunction("some-arg", "some-other-arg");
+          actualResult = whiteListedFunction("some-arg", "some-other-arg");
         });
 
         it("telemetry is emitted in event bus without the arguments", () => {
@@ -122,6 +137,10 @@ describe("emit-telemetry-from-specific-function-calls", () => {
             action: "telemetry-from-business-action",
             name: "some-white-listed-function",
           });
+        });
+
+        it("the result of the function call is intact", () => {
+          expect(actualResult).toBe('some-result');
         });
       });
 
@@ -165,14 +184,19 @@ describe("emit-telemetry-from-specific-function-calls", () => {
             action: "telemetry-from-business-action",
             destination: "auto-capture",
             name: "some-white-listed-function-with-bad-config",
-            params: { error: "Tried to produce params for telemetry, but getParams() threw an error" },
+            params: {
+              error:
+                "Tried to produce params for telemetry, but getParams() threw an error",
+            },
           });
         });
 
         it("logs error", () => {
           expect(logErrorMock).toHaveBeenCalledWith(
             'Tried to produce params for telemetry of "some-white-listed-function-with-bad-config", but getParams() threw an error',
-            expect.objectContaining({ message: "some-error-from-bad-configuration" }),
+            expect.objectContaining({
+              message: "some-error-from-bad-configuration",
+            })
           );
         });
       });
@@ -188,7 +212,7 @@ describe("emit-telemetry-from-specific-function-calls", () => {
 
           whiteListedFunctionWithArgument(
             "irrelevant-argument",
-            someObservable,
+            someObservable
           );
         });
 
