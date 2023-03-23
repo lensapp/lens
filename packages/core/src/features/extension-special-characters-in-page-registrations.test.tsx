@@ -31,8 +31,7 @@ describe("extension special characters in page registrations", () => {
 
   describe("when navigating to route with ID having special characters", () => {
     beforeEach(() => {
-      const testExtension =
-        builder.extensions.get("some-extension-id").applicationWindows.only;
+      const testExtension = builder.extensions.get("some-extension-id").applicationWindows.only;
 
       testExtension.navigate("/some-page-id/");
     });

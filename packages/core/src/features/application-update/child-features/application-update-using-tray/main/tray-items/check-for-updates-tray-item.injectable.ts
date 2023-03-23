@@ -49,10 +49,10 @@ const checkForUpdatesTrayItemInjectable = getInjectable({
         }
 
         if (checkingForUpdatesState.value.get()) {
-          return "Checking for updates...";
+          return "Checking for Updates...";
         }
 
-        return "Check for updates";
+        return "Check for Updates...";
       }),
 
       enabled: computed(() => !checkingForUpdatesState.value.get() && !downloadingUpdateState.value.get()),

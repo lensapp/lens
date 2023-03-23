@@ -10,13 +10,13 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import type { K8sRequest } from "../k8s-request.injectable";
 import k8sRequestInjectable from "../k8s-request.injectable";
-import type { RequestApiVersions } from "./request-api-versions";
+import type { ApiVersionsRequester } from "./api-versions-requester";
 import requestNonCoreApiVersionsInjectable from "./request-non-core-api-versions.injectable";
 
 describe("requestNonCoreApiVersions", () => {
   let di: DiContainer;
   let k8sRequestMock: AsyncFnMock<K8sRequest>;
-  let requestNonCoreApiVersions: RequestApiVersions;
+  let requestNonCoreApiVersions: ApiVersionsRequester;
 
   beforeEach(() => {
     di = getDiForUnitTesting();
@@ -28,10 +28,10 @@ describe("requestNonCoreApiVersions", () => {
   });
 
   describe("when called", () => {
-    let versionsRequest: ReturnType<RequestApiVersions>;
+    let versionsRequest: ReturnType<ApiVersionsRequester["request"]>;
 
     beforeEach(() => {
-      versionsRequest = requestNonCoreApiVersions({ id: "some-cluster-id" });
+      versionsRequest = requestNonCoreApiVersions.request({ id: "some-cluster-id" });
     });
 
     it("should request all api groups", () => {

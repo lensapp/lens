@@ -88,7 +88,7 @@ export interface KubeObjectStoreDependencies {
   readonly logger: Logger;
 }
 
-export abstract class KubeObjectStore<
+export class KubeObjectStore<
   K extends KubeObject = KubeObject,
   A extends KubeApi<K, D> = KubeApi<K, KubeJsonApiDataFor<K>>,
   D extends KubeJsonApiDataFor<K> = KubeApiDataFrom<K, A>,

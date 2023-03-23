@@ -96,7 +96,7 @@
   },
   "build": {
     "npmRebuild": false,
-    "electronVersion": "19.1.9",
+    "electronVersion": "22.3.3",
     "generateUpdatesFilesForAllChannels": true,
     "files": [
       "static/**/*",
@@ -251,7 +251,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.2",
-    "electron": "^19.1.9",
+    "electron": "^22.3.3",
     "electron-builder": "^23.6.0",
     "electron-notarize": "^0.3.0",
     "esbuild-loader": "^2.20.0",

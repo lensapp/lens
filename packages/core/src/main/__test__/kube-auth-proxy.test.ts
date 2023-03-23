@@ -5,7 +5,6 @@
 
 import waitUntilPortIsUsedInjectable from "../kube-auth-proxy/wait-until-port-is-used/wait-until-port-is-used.injectable";
 import { Cluster } from "../../common/cluster/cluster";
-import type { KubeAuthProxy } from "../kube-auth-proxy/kube-auth-proxy";
 import type { ChildProcess } from "child_process";
 import { Kubectl } from "../kubectl/kubectl";
 import type { DeepMockProxy } from "jest-mock-extended";
@@ -13,6 +12,7 @@ import { mockDeep, mock } from "jest-mock-extended";
 import type { Readable } from "stream";
 import { EventEmitter } from "stream";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
+import type { CreateKubeAuthProxy, KubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import spawnInjectable from "../child-process/spawn.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -29,7 +29,7 @@ import getBasenameOfPathInjectable from "../../common/path/get-basename.injectab
 const clusterServerUrl = "https://192.168.64.3:8443";
 
 describe("kube auth proxy tests", () => {
-  let createKubeAuthProxy: (cluster: Cluster, environmentVariables: NodeJS.ProcessEnv) => KubeAuthProxy;
+  let createKubeAuthProxy: CreateKubeAuthProxy;
   let spawnMock: jest.Mock;
   let waitUntilPortIsUsedMock: jest.Mock;
   let broadcastMessageMock: jest.Mock;
