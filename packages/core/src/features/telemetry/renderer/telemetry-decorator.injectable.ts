@@ -50,28 +50,30 @@ const telemetryDecoratorInjectable = getInjectable({
 
             const whiteListed = whiteListMap.get(currentContext.injectable.id);
 
-            if (whiteListed) {
-              let params;
-
-              try {
-                params = whiteListed.getParams(...args);
-              } catch (e) {
-                params = {
-                  error:
-                    "Tried to produce params for telemetry, but getParams() threw an error",
-                };
-
-                logError(
-                  `Tried to produce params for telemetry of "${currentContext.injectable.id}", but getParams() threw an error`,
-                  e
-                );
-              }
-
-              emitTelemetry({
-                action: currentContext.injectable.id,
-                params,
-              });
+            if (!whiteListed) {
+              return instance(...args);
             }
+
+            let params;
+
+            try {
+              params = whiteListed.getParams(...args);
+            } catch (e) {
+              params = {
+                error:
+                  "Tried to produce params for telemetry, but getParams() threw an error",
+              };
+
+              logError(
+                `Tried to produce params for telemetry of "${currentContext.injectable.id}", but getParams() threw an error`,
+                e
+              );
+            }
+
+            emitTelemetry({
+              action: currentContext.injectable.id,
+              params,
+            });
 
             return instance(...args);
           };
