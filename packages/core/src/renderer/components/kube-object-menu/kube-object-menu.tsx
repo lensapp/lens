@@ -31,6 +31,8 @@ import { observer } from "mobx-react";
 
 export interface KubeObjectMenuProps<TKubeObject extends KubeObject> extends MenuActionsProps {
   object: TKubeObject;
+  editable?: boolean;
+  removable?: boolean;
 }
 
 interface Dependencies {
@@ -84,6 +86,8 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
   private emitOnContextMenuOpen(object: KubeObject) {
     const {
       apiManager,
+      editable,
+      removable,
       hideDetails,
       createEditResourceTab,
       withConfirmation,
@@ -94,8 +98,8 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
     } = this.props;
 
     const store = apiManager.getStore(object.selfLink);
-    const isEditable = Boolean(updateAction ?? store?.patch);
-    const isRemovable = Boolean(removeAction ?? store?.remove);
+    const isEditable = editable ?? (Boolean(store?.patch) || Boolean(updateAction));
+    const isRemovable = removable ?? (Boolean(store?.remove) || Boolean(removeAction));
 
     runInAction(() => {
       this.menuItems.clear();
