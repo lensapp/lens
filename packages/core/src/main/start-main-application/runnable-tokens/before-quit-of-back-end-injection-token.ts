@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectionToken } from "@ogre-tools/injectable";
-import type { RunnableSync } from "../../../common/runnable/run-many-sync-for";
+import type { Runnable } from "../../../common/runnable/run-many-for";
 
-export const beforeQuitOfBackEndInjectionToken = getInjectionToken<RunnableSync>({
+export const beforeQuitOfBackEndInjectionToken = getInjectionToken<Runnable>({
   id: "before-quit-of-back-end",
 });
