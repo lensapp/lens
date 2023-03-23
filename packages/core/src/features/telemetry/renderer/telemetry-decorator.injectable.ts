@@ -27,54 +27,54 @@ const telemetryDecoratorInjectable = getInjectable({
         (di: DiContainerForInjection, instantiationParameter: any) => {
           const instance = instantiateToBeDecorated(di, instantiationParameter);
 
-          if (isFunction(instance)) {
-            return (...args: any[]) => {
-              const currentContext = di.context.at(-1);
-
-              assert(currentContext);
-
-              const emitTelemetry = diForDecorator.inject(
-                emitTelemetryInjectable,
-              );
-
-              const logError = diForDecorator.inject(logErrorInjectable);
-
-              const whiteList = diForDecorator.inject(
-                telemetryWhiteListForFunctionsInjectable,
-              );
-
-              const whiteListMap = getWhiteListMap(whiteList);
-
-              const whiteListed = whiteListMap.get(currentContext.injectable.id);
-
-              if (whiteListed) {
-                let params;
-
-                try {
-                  params = whiteListed.getParams(...args);
-                } catch (e) {
-                  params = {
-                    error:
-                    "Tried to produce params for telemetry, but getParams() threw an error",
-                  };
-
-                  logError(
-                    `Tried to produce params for telemetry of "${currentContext.injectable.id}", but getParams() threw an error`,
-                    e,
-                  );
-                }
-
-                emitTelemetry({
-                  action: currentContext.injectable.id,
-                  params,
-                });
-              }
-
-              return instance(...args);
-            };
+          if (!isFunction(instance)) {
+            return instance;
           }
 
-          return instance;
+          return (...args: any[]) => {
+            const currentContext = di.context.at(-1);
+
+            assert(currentContext);
+
+            const emitTelemetry = diForDecorator.inject(
+              emitTelemetryInjectable
+            );
+
+            const logError = diForDecorator.inject(logErrorInjectable);
+
+            const whiteList = diForDecorator.inject(
+              telemetryWhiteListForFunctionsInjectable
+            );
+
+            const whiteListMap = getWhiteListMap(whiteList);
+
+            const whiteListed = whiteListMap.get(currentContext.injectable.id);
+
+            if (whiteListed) {
+              let params;
+
+              try {
+                params = whiteListed.getParams(...args);
+              } catch (e) {
+                params = {
+                  error:
+                    "Tried to produce params for telemetry, but getParams() threw an error",
+                };
+
+                logError(
+                  `Tried to produce params for telemetry of "${currentContext.injectable.id}", but getParams() threw an error`,
+                  e
+                );
+              }
+
+              emitTelemetry({
+                action: currentContext.injectable.id,
+                params,
+              });
+            }
+
+            return instance(...args);
+          };
         },
   }),
 
