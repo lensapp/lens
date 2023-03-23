@@ -130,13 +130,11 @@ const getWhiteListMap = (whiteList: WhiteListItem[]) =>
     )
   );
 
-type ToBeDecorated<TValue, TArgs extends unknown[]> = (
-  ...args: TArgs
-) => TValue;
-
 const withNoThrownErrors =
   <TValue, TArgs extends unknown[]>(
-    toBeDecorated: ToBeDecorated<TValue, TArgs>
+    toBeDecorated: (
+      ...args: TArgs
+    ) => TValue
   ) =>
   (...args: TArgs) => {
     try {
