@@ -2,8 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { DiContainer } from "@ogre-tools/injectable";
-import { getInjectable } from "@ogre-tools/injectable";
+
 import type { RenderResult } from "@testing-library/react";
 import React from "react";
 import { KubernetesCluster } from "../../../../common/catalog-entities";
@@ -13,13 +12,18 @@ import { renderFor } from "../../test-utils/renderFor";
 import { ClusterIconSetting } from "../icon-settings";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { clusterIconSettingsMenuInjectionToken } from "../cluster-settings-menu-injection-token";
+import type { ClusterIconSettingComponentProps } from "@k8slens/cluster-settings";
+import { clusterIconSettingsComponentInjectionToken, clusterIconSettingsMenuInjectionToken } from "@k8slens/cluster-settings";
 import { runInAction } from "mobx";
+import { getInjectable, type DiContainer } from "@ogre-tools/injectable";
 
 const cluster = new Cluster({
   contextName: "some-context",
   id: "some-id",
   kubeConfigPath: "/some/path/to/kubeconfig",
+  preferences: {
+    clusterName: "some-cluster-name",
+  },
 }, {
   clusterServerUrl: "https://localhost:9999",
 });
@@ -51,6 +55,29 @@ const newMenuItem = getInjectable({
   }),
 
   injectionToken: clusterIconSettingsMenuInjectionToken,
+});
+
+function CustomSettingsComponent(props: ClusterIconSettingComponentProps) {
+  return (
+    <div data-testid="my-react-component">
+      <span>Test React Component</span>
+      <span>
+        Cluster
+        {props.preferences.clusterName}
+      </span>
+    </div>
+  );
+} 
+
+const newSettingsReactComponent = getInjectable({
+  id: "cluster-icon-settings-react-component",
+
+  instantiate: () => ({
+    id: "test-react-component",
+    Component: CustomSettingsComponent,
+  }),
+
+  injectionToken: clusterIconSettingsComponentInjectionToken,
 });
 
 describe("Icon settings", () => {
@@ -96,6 +123,32 @@ describe("Icon settings", () => {
       userEvent.click(await screen.findByTestId("icon-for-menu-actions-for-cluster-icon-settings-for-some-entity-id"));
 
       expect(rendered.getByText("Hello World")).toBeInTheDocument();
+    });
+  });
+
+  describe("given no registrations for cluster settings component injection token", () => {
+    it("renders", () => {
+      expect(rendered.baseElement).toMatchSnapshot();
+    });
+
+    it("does not have any external components", async () => {
+      expect(rendered.queryByTestId("test-react-component")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("given registration for cluster settings component injection token", () => {
+    beforeEach(() => {
+      runInAction(() => {
+        di.register(newSettingsReactComponent);
+      });
+    });
+
+    it("renders external component", async () => {
+      expect(rendered.queryByTestId("my-react-component")).toBeInTheDocument();
+    });
+
+    it("external component has cluster preferences in props", async () => {
+      expect(rendered.getByText(/some-cluster-name/)).toBeInTheDocument();
     });
   });
 });
