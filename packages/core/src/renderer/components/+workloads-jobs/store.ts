@@ -19,6 +19,9 @@ export class JobStore extends KubeObjectStore<Job, JobApi> {
     super(dependencies, api, opts);
   }
 
+  /**
+   * @deprecated Switch to using `getPodsByOwnerId` directly
+   */
   getChildPods(job: Job): Pod[] {
     return this.dependencies.getPodsByOwnerId(job.getId());
   }
