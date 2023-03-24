@@ -115,7 +115,6 @@ const createPersistentStorageInjectable = getInjectable({
             reaction(
               () => toJSON(),
               model => {
-                console.log("here2", { sendChannel });
                 persistStateToConfig(config, model);
                 sendMessageToChannel(sendChannel, model);
               },
