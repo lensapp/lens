@@ -23,7 +23,7 @@ import logErrorInjectable, {
 } from "../../../common/log-error.injectable";
 
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
-import { getFailure, getSuccess } from "./call-result/call-result";
+import { getFailure, getSuccess } from "./error-handling/call-result/call-result";
 
 const telemetryDecoratorInjectable = getInjectable({
   id: "telemetry-decorator",
