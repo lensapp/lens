@@ -113,7 +113,15 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
         searchParams.append(key, value);
       }
 
-      return format({ ...base, query: searchParams.toString() });
+      return format({
+        protocol: base.protocol || undefined,
+        auth: base.auth || undefined,
+        host: base.host || undefined,
+        hostname: base.hostname || undefined,
+        pathname: base.pathname || undefined,
+        hash: base.hash || undefined,
+        query: Object.fromEntries(searchParams.entries()),
+      });
     })();
     const reqInit = await (async () => {
       const baseInit: SetRequired<RequestInit, "method"> = { method: "get" };

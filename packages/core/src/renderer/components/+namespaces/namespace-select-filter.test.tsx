@@ -12,8 +12,6 @@ import React from "react";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { Cluster } from "../../../common/cluster/cluster";
-import type { Fetch } from "../../../common/fetch/fetch.injectable";
-import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import { createMockResponseFromString } from "../../../test-utils/mock-responses";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
@@ -26,6 +24,8 @@ import { renderFor } from "../test-utils/renderFor";
 import { NamespaceSelectFilter } from "./namespace-select-filter";
 import type { NamespaceStore } from "./store";
 import namespaceStoreInjectable from "./store.injectable";
+import type { LensFetch } from "../../../features/lens-fetch/common/lens-fetch.injectable";
+import lensFetchInjectable from "../../../features/lens-fetch/common/lens-fetch.injectable";
 
 function createNamespace(name: string): Namespace {
   return new Namespace({
@@ -43,7 +43,7 @@ function createNamespace(name: string): Namespace {
 describe("<NamespaceSelectFilter />", () => {
   let di: DiContainer;
   let namespaceStore: NamespaceStore;
-  let fetchMock: AsyncFnMock<Fetch>;
+  let lensFetchMock: AsyncFnMock<LensFetch>;
   let result: RenderResult;
   let cleanup: Disposer;
 
@@ -55,8 +55,8 @@ describe("<NamespaceSelectFilter />", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    fetchMock = asyncFn();
-    di.override(fetchInjectable, () => fetchMock);
+    lensFetchMock = asyncFn();
+    di.override(lensFetchInjectable, () => lensFetchMock);
 
     di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
@@ -85,8 +85,8 @@ describe("<NamespaceSelectFilter />", () => {
 
   describe("once the subscribe resolves", () => {
     beforeEach(async () => {
-      await fetchMock.resolveSpecific([
-        "https://127.0.0.1:12345/api-kube/api/v1/namespaces",
+      await lensFetchMock.resolveSpecific([
+        "/api-kube/api/v1/namespaces",
       ], createMockResponseFromString("https://127.0.0.1:12345/api-kube/api/v1/namespaces", JSON.stringify({
         apiVersion: "v1",
         kind: "NamespaceList",

@@ -9,34 +9,19 @@ import { PassThrough } from "stream";
 import type { DeploymentApi, NamespaceApi } from "../endpoints";
 import { Deployment, Pod, PodApi } from "../endpoints";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
-import type { Fetch } from "../../fetch/fetch.injectable";
-import fetchInjectable from "../../fetch/fetch.injectable";
-import type {
-  CreateKubeApiForRemoteCluster,
-} from "../create-kube-api-for-remote-cluster.injectable";
-import createKubeApiForRemoteClusterInjectable
-  from "../create-kube-api-for-remote-cluster.injectable";
+import type { CreateKubeApiForRemoteCluster } from "../create-kube-api-for-remote-cluster.injectable";
+import createKubeApiForRemoteClusterInjectable from "../create-kube-api-for-remote-cluster.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { flushPromises } from "@k8slens/test-utils";
-import createKubeJsonApiInjectable from "../create-kube-json-api.injectable";
 import type { IKubeWatchEvent } from "../kube-watch-event";
 import type { KubeJsonApiDataFor, KubeStatusData } from "../kube-object";
-import setupAutoRegistrationInjectable
-  from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
-import {
-  createMockResponseFromStream,
-  createMockResponseFromString,
-} from "../../../test-utils/mock-responses";
-import storesAndApisCanBeCreatedInjectable
-  from "../../../renderer/stores-apis-can-be-created.injectable";
-import directoryForUserDataInjectable
-  from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import hostedClusterInjectable
-  from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
-import directoryForKubeConfigsInjectable
-  from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
-import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
+import setupAutoRegistrationInjectable from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
+import { createMockResponseFromStream, createMockResponseFromString } from "../../../test-utils/mock-responses";
+import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
+import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
+import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import deploymentApiInjectable from "../endpoints/deployment.api.injectable";
 import podApiInjectable from "../endpoints/pod.api.injectable";
@@ -46,6 +31,10 @@ import namespaceApiInjectable from "../endpoints/namespace.api.injectable";
 // eslint-disable-next-line no-restricted-imports
 import { PodsApi } from "../../../extensions/common-api/k8s-api";
 import { Cluster } from "../../cluster/cluster";
+import type { LensFetch } from "../../../features/lens-fetch/common/lens-fetch.injectable";
+import lensFetchInjectable from "../../../features/lens-fetch/common/lens-fetch.injectable";
+import type { Fetch } from "../../fetch/fetch.injectable";
+import fetchInjectable from "../../fetch/fetch.injectable";
 
 describe("createKubeApiForRemoteCluster", () => {
   let createKubeApiForRemoteCluster: CreateKubeApiForRemoteCluster;
@@ -149,7 +138,7 @@ describe("createKubeApiForRemoteCluster", () => {
 });
 
 describe("KubeApi", () => {
-  let fetchMock: AsyncFnMock<Fetch>;
+  let lensFetchMock: AsyncFnMock<LensFetch>;
   let di: DiContainer;
 
   beforeEach(async () => {
@@ -159,10 +148,8 @@ describe("KubeApi", () => {
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
 
-    fetchMock = asyncFn();
-    di.override(fetchInjectable, () => fetchMock);
-
-    const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
+    lensFetchMock = asyncFn();
+    di.override(lensFetchInjectable, () => lensFetchMock);
 
     di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",
@@ -170,11 +157,6 @@ describe("KubeApi", () => {
       kubeConfigPath: "/some-path-to-a-kubeconfig",
     }, {
       clusterServerUrl: "https://localhost:8080",
-    }));
-
-    di.override(apiKubeInjectable, () => createKubeJsonApi({
-      serverAddress: `http://127.0.0.1:9999`,
-      apiBase: "/api-kube",
     }));
 
     const setupAutoRegistration = di.inject(setupAutoRegistrationInjectable);
@@ -202,8 +184,8 @@ describe("KubeApi", () => {
       });
 
       it("requests a patch using strategic merge", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/apis/apps/v1/namespaces/default/deployments/test",
           {
             headers: {
               "content-type": "application/strategic-merge-patch+json",
@@ -216,8 +198,8 @@ describe("KubeApi", () => {
 
       describe("when the patch request resolves with data", () => {
         beforeEach(async () => {
-          await fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test"],
+          await lensFetchMock.resolveSpecific(
+            ["/api-kube/apis/apps/v1/namespaces/default/deployments/test"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test", JSON.stringify({
               apiVersion: "v1",
               kind: "Deployment",
@@ -253,8 +235,8 @@ describe("KubeApi", () => {
       });
 
       it("requests a patch using json merge", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/apis/apps/v1/namespaces/default/deployments/test",
           {
             headers: {
               "content-type": "application/json-patch+json",
@@ -269,8 +251,8 @@ describe("KubeApi", () => {
 
       describe("when the patch request resolves with data", () => {
         beforeEach(async () => {
-          await fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test"],
+          await lensFetchMock.resolveSpecific(
+            ["/api-kube/apis/apps/v1/namespaces/default/deployments/test"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test", JSON.stringify({
               apiVersion: "v1",
               kind: "Deployment",
@@ -308,8 +290,8 @@ describe("KubeApi", () => {
       });
 
       it("requests a patch using json merge", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/apis/apps/v1/namespaces/default/deployments/test",
           {
             headers: {
               "content-type": "application/merge-patch+json",
@@ -322,8 +304,8 @@ describe("KubeApi", () => {
 
       describe("when the patch request resolves with data", () => {
         beforeEach(async () => {
-          await fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test"],
+          await lensFetchMock.resolveSpecific(
+            ["/api-kube/apis/apps/v1/namespaces/default/deployments/test"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/apis/apps/v1/namespaces/default/deployments/test", JSON.stringify({
               apiVersion: "v1",
               kind: "Deployment",
@@ -365,8 +347,8 @@ describe("KubeApi", () => {
       });
 
       it("requests deleting pod in default namespace", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background",
           {
             headers: {
               "content-type": "application/json",
@@ -378,8 +360,8 @@ describe("KubeApi", () => {
 
       describe("when request resolves", () => {
         beforeEach(async () => {
-          fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background"],
+          lensFetchMock.resolveSpecific(
+            ["/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background", "{}"),
           );
         });
@@ -401,8 +383,8 @@ describe("KubeApi", () => {
       });
 
       it("requests deleting pod in default namespace", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background",
           {
             headers: {
               "content-type": "application/json",
@@ -414,8 +396,8 @@ describe("KubeApi", () => {
 
       describe("when request resolves", () => {
         beforeEach(async () => {
-          fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background"],
+          lensFetchMock.resolveSpecific(
+            ["/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background", "{}"),
           );
         });
@@ -437,8 +419,8 @@ describe("KubeApi", () => {
       });
 
       it("requests deleting pod in given namespace", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo?propagationPolicy=Background",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/test/pods/foo?propagationPolicy=Background",
           {
             headers: {
               "content-type": "application/json",
@@ -450,8 +432,8 @@ describe("KubeApi", () => {
 
       describe("when request resolves", () => {
         beforeEach(async () => {
-          fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo?propagationPolicy=Background"],
+          lensFetchMock.resolveSpecific(
+            ["/api-kube/api/v1/namespaces/test/pods/foo?propagationPolicy=Background"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo?propagationPolicy=Background", "{}"),
           );
         });
@@ -470,8 +452,8 @@ describe("KubeApi", () => {
       });
 
       it("requests evicting a pod in given namespace", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/test/pods/foo/eviction",
           {
             headers: {
               "content-type": "application/json",
@@ -482,8 +464,8 @@ describe("KubeApi", () => {
       });
 
       it("should resolve the call with >=200 <300 http code", async () => {
-        fetchMock.resolveSpecific(
-          ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction"],
+        lensFetchMock.resolveSpecific(
+          ["/api-kube/api/v1/namespaces/test/pods/foo/eviction"],
           createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction", JSON.stringify({
             apiVersion: "policy/v1",
             kind: "Status",
@@ -496,8 +478,8 @@ describe("KubeApi", () => {
       });
 
       it("should throw in case of error", async () => {
-        fetchMock.resolveSpecific(
-          ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction"],
+        lensFetchMock.resolveSpecific(
+          ["/api-kube/api/v1/namespaces/test/pods/foo/eviction"],
           createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction", JSON.stringify({
             apiVersion: "policy/v1",
             kind: "Status",
@@ -511,7 +493,7 @@ describe("KubeApi", () => {
     });
   });
 
-  describe("deleting namespaces (cluser scoped resource)", () => {
+  describe("deleting namespaces (cluster scoped resource)", () => {
     let api: NamespaceApi;
 
     beforeEach(() => {
@@ -529,8 +511,8 @@ describe("KubeApi", () => {
       });
 
       it("requests deleting Namespace without namespace", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/foo?propagationPolicy=Background",
           {
             headers: {
               "content-type": "application/json",
@@ -542,8 +524,8 @@ describe("KubeApi", () => {
 
       describe("when request resolves", () => {
         beforeEach(async () => {
-          fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background"],
+          lensFetchMock.resolveSpecific(
+            ["/api-kube/api/v1/namespaces/foo?propagationPolicy=Background"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background", "{}"),
           );
         });
@@ -565,8 +547,8 @@ describe("KubeApi", () => {
       });
 
       it("requests deleting Namespace without namespace", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/foo?propagationPolicy=Background",
           {
             headers: {
               "content-type": "application/json",
@@ -578,8 +560,8 @@ describe("KubeApi", () => {
 
       describe("when request resolves", () => {
         beforeEach(async () => {
-          fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background"],
+          lensFetchMock.resolveSpecific(
+            ["/api-kube/api/v1/namespaces/foo?propagationPolicy=Background"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background", "{}"),
           );
         });
@@ -626,8 +608,8 @@ describe("KubeApi", () => {
       });
 
       it("requests the watch", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=600",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=600",
           {
             headers: {
               "content-type": "application/json",
@@ -639,9 +621,9 @@ describe("KubeApi", () => {
 
       describe("when the request resolves with a stream", () => {
         beforeEach(async () => {
-          await fetchMock.resolveSpecific(
+          await lensFetchMock.resolveSpecific(
             ([url, init]) => {
-              const isMatch = url === "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=600";
+              const isMatch = url === "/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=600";
 
               if (isMatch) {
                 init?.signal?.addEventListener("abort", () => {
@@ -722,8 +704,8 @@ describe("KubeApi", () => {
       });
 
       it("requests the watch", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=600",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=600",
           {
             headers: {
               "content-type": "application/json",
@@ -735,9 +717,9 @@ describe("KubeApi", () => {
 
       describe("when the request resolves with a stream", () => {
         beforeEach(async () => {
-          await fetchMock.resolveSpecific(
+          await lensFetchMock.resolveSpecific(
             ([url, init]) => {
-              const isMatch = url === "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=600";
+              const isMatch = url === "/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=600";
 
               if (isMatch) {
                 init?.signal?.addEventListener("abort", () => {
@@ -817,8 +799,8 @@ describe("KubeApi", () => {
       });
 
       it("requests the watch", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=60",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=60",
           {
             headers: {
               "content-type": "application/json",
@@ -830,9 +812,9 @@ describe("KubeApi", () => {
 
       describe("when the request resolves with a stream", () => {
         beforeEach(async () => {
-          await fetchMock.resolveSpecific(
+          await lensFetchMock.resolveSpecific(
             ([url, init]) => {
-              const isMatch = url === "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=60";
+              const isMatch = url === "/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=60";
 
               if (isMatch) {
                 init?.signal?.addEventListener("abort", () => {
@@ -899,8 +881,8 @@ describe("KubeApi", () => {
             });
 
             it("requests a new watch", () => {
-              expect(fetchMock.mock.lastCall).toMatchObject([
-                "http://127.0.0.1:9999/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=60",
+              expect(lensFetchMock.mock.lastCall).toMatchObject([
+                "/api-kube/api/v1/namespaces/kube-system/pods?watch=1&resourceVersion=&timeoutSeconds=60",
                 {
                   headers: {
                     "content-type": "application/json",
@@ -967,8 +949,8 @@ describe("KubeApi", () => {
       });
 
       it("should request to create a pod with full descriptor", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/default/pods",
           {
             headers: {
               "content-type": "application/json",
@@ -1002,8 +984,8 @@ describe("KubeApi", () => {
 
       describe("when request resolves with data", () => {
         beforeEach(async () =>  {
-          await fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods"],
+          await lensFetchMock.resolveSpecific(
+            ["/api-kube/api/v1/namespaces/default/pods"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods", JSON.stringify({
               kind: "Pod",
               apiVersion: "v1",
@@ -1077,8 +1059,8 @@ describe("KubeApi", () => {
       });
 
       it("should request that the pod is updated", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foobar",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/default/pods/foobar",
           {
             headers: {
               "content-type": "application/json",
@@ -1112,8 +1094,8 @@ describe("KubeApi", () => {
 
       describe("when the request resolves with data", () => {
         beforeEach(async () => {
-          await fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foobar"],
+          await lensFetchMock.resolveSpecific(
+            ["/api-kube/api/v1/namespaces/default/pods/foobar"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foobar", JSON.stringify({
               kind: "Pod",
               apiVersion: "v1",
@@ -1165,8 +1147,8 @@ describe("KubeApi", () => {
       });
 
       it("should request that the pods from all namespaces", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/pods",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/pods",
           {
             headers: {
               "content-type": "application/json",
@@ -1178,8 +1160,8 @@ describe("KubeApi", () => {
 
       describe("when the request resolves with empty data", () => {
         beforeEach(async () => {
-          await fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/api/v1/pods"],
+          await lensFetchMock.resolveSpecific(
+            ["/api-kube/api/v1/pods"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/pods", JSON.stringify({
               kind: "PodList",
               apiVersion: "v1",
@@ -1207,8 +1189,8 @@ describe("KubeApi", () => {
       });
 
       it("should request that the pods from all namespaces", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/pods",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/pods",
           {
             headers: {
               "content-type": "application/json",
@@ -1220,8 +1202,8 @@ describe("KubeApi", () => {
 
       describe("when the request resolves with empty data", () => {
         beforeEach(async () => {
-          await fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/api/v1/pods"],
+          await lensFetchMock.resolveSpecific(
+            ["/api-kube/api/v1/pods"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/pods", JSON.stringify({
               kind: "PodList",
               apiVersion: "v1",
@@ -1249,8 +1231,8 @@ describe("KubeApi", () => {
       });
 
       it("should request that the pods from just the default namespace", () => {
-        expect(fetchMock.mock.lastCall).toMatchObject([
-          "http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods",
+        expect(lensFetchMock.mock.lastCall).toMatchObject([
+          "/api-kube/api/v1/namespaces/default/pods",
           {
             headers: {
               "content-type": "application/json",
@@ -1262,8 +1244,8 @@ describe("KubeApi", () => {
 
       describe("when the request resolves with empty data", () => {
         beforeEach(async () => {
-          await fetchMock.resolveSpecific(
-            ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods"],
+          await lensFetchMock.resolveSpecific(
+            ["/api-kube/api/v1/namespaces/default/pods"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods", JSON.stringify({
               kind: "PodList",
               apiVersion: "v1",
