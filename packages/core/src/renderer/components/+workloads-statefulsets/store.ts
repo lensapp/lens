@@ -18,6 +18,9 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet, StatefulSetAp
     super(dependencies, api, opts);
   }
 
+  /**
+   * @deprecated Switch to using `getPodsByOwnerId` directly
+   */
   getChildPods(statefulSet: StatefulSet) {
     return this.dependencies.getPodsByOwnerId(statefulSet.getId());
   }

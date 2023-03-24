@@ -32,11 +32,13 @@ import type { KubeJsonApi as InternalKubeJsonApi } from "../../common/k8s-api/ku
 import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-api.injectable";
 import type { RequestInit } from "@k8slens/node-fetch";
 import createKubeJsonApiForClusterInjectable from "../../common/k8s-api/create-kube-json-api-for-cluster.injectable";
+import getPodsByOwnerIdInjectable from "../../renderer/components/+workloads-pods/get-pods-by-owner-id.injectable";
 
 export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);
 export const forCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForClusterInjectable);
 export const forRemoteCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForRemoteClusterInjectable);
 export const createResourceStack = asLegacyGlobalFunctionForExtensionApi(createResourceStackInjectable);
+export const getPodsByOwnerId = asLegacyGlobalFunctionForExtensionApi(getPodsByOwnerIdInjectable);
 
 const getKubeApiDeps = (): KubeApiDependencies => {
   const di = getLegacyGlobalDiForExtensionApi();
@@ -50,7 +52,7 @@ const getKubeApiDeps = (): KubeApiDependencies => {
 export interface ExternalKubeApiOptions {
   /**
    * If `true` then on creation of the `KubeApi`instance a call to `apiManager.registerApi` will be
-   * made. This is `true` by default to maintain backwards compatability.
+   * made. This is `true` by default to maintain backwards compatibility.
    *
    * Setting this to `false` might make `KubeObject`'s details drawer stop working.
    *
@@ -200,7 +202,7 @@ export type {
 } from "../../common/k8s-api/kube-object.store";
 
 /**
- * @deprecated This type is only present for backwards compatable typescript support
+ * @deprecated This type is only present for backwards compatible typescript support
  */
 export interface IgnoredKubeApiOptions {
   /**

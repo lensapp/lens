@@ -18,6 +18,9 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet, DaemonSetApi> {
     super(dependencies, api, opts);
   }
 
+  /**
+   * @deprecated Switch to using `getPodsByOwnerId` directly
+   */
   getChildPods(daemonSet: DaemonSet): Pod[] {
     return this.dependencies.getPodsByOwnerId(daemonSet.getId());
   }
