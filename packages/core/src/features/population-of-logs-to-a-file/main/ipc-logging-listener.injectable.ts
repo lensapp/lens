@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
-import type { IpcFileLogObject } from "../../common/logger/ipc-file-logger-channel";
-import { ipcFileLoggerChannel } from "../../common/logger/ipc-file-logger-channel";
+import type { IpcFileLogObject } from "../common/ipc-file-logger-channel";
+import { ipcFileLoggerChannel } from "../common/ipc-file-logger-channel";
 import { MESSAGE } from "triple-beam";
 import ipcFileLoggerInjectable from "./ipc-file-logger.injectable";
 

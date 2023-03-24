@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import windowLocationInjectable from "../../common/k8s-api/window-location.injectable";
-import currentlyInClusterFrameInjectable from "../routes/currently-in-cluster-frame.injectable";
-import { getClusterIdFromHost } from "../../common/utils";
+import windowLocationInjectable from "../../../common/k8s-api/window-location.injectable";
+import currentlyInClusterFrameInjectable from "../../../renderer/routes/currently-in-cluster-frame.injectable";
+import { getClusterIdFromHost } from "../../../common/utils";
 
 const rendererLogFileIdInjectable = getInjectable({
   id: "renderer-log-file-id",

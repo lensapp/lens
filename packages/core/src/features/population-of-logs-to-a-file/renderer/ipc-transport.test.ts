@@ -6,9 +6,9 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import { MESSAGE } from "triple-beam";
 import type { SendMessageToChannel } from "@k8slens/messaging";
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
-import { getDiForUnitTesting } from "../getDiForUnitTesting";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 import ipcLogTransportInjectable from "./ipc-transport.injectable";
+import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 
 describe("renderer log transport through ipc", () => {
   let di: DiContainer;

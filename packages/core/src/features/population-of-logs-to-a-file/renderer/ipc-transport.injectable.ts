@@ -3,16 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerTransportInjectionToken } from "../../common/logger/transports";
+import { loggerTransportInjectionToken } from "../../../common/logger/transports";
 import type winston from "winston";
 import { MESSAGE } from "triple-beam";
 
 import IpcLogTransport from "./ipc-transport";
-import type { IpcFileLogObject } from "../../common/logger/ipc-file-logger-channel";
+import type { IpcFileLogObject } from "../common/ipc-file-logger-channel";
 import {
   closeIpcFileLoggerChannel,
   ipcFileLoggerChannel,
-} from "../../common/logger/ipc-file-logger-channel";
+} from "../common/ipc-file-logger-channel";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 

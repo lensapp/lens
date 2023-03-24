@@ -6,7 +6,7 @@ import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
 import ipcFileLoggerInjectable from "./ipc-file-logger.injectable";
 import {
   closeIpcFileLoggerChannel,
-} from "../../common/logger/ipc-file-logger-channel";
+} from "../common/ipc-file-logger-channel";
 
 const closeIpcFileLoggingListenerInjectable = getMessageChannelListenerInjectable({
   id: "close-ipc-file-logging",

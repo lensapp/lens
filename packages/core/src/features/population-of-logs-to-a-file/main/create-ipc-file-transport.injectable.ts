@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { transports } from "winston";
-import directoryForLogsInjectable from "../../common/app-paths/directory-for-logs.injectable";
+import directoryForLogsInjectable from "../../../common/app-paths/directory-for-logs.injectable";
 
 const createIpcFileLoggerTransportInjectable = getInjectable({
   id: "create-ipc-file-logger-transport",

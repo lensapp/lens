@@ -10,8 +10,8 @@ import type winston from "winston";
 import { MESSAGE } from "triple-beam";
 import { noop } from "@k8slens/utilities";
 import windowLocationInjectable from "../../common/k8s-api/window-location.injectable";
-import closeRendererLogFileInjectable from "../../renderer/logger/close-renderer-log-file.injectable";
-import createIpcFileLoggerTransportInjectable from "../../main/logger/create-ipc-file-transport.injectable";
+import closeRendererLogFileInjectable from "./renderer/close-renderer-log-file.injectable";
+import createIpcFileLoggerTransportInjectable from "./main/create-ipc-file-transport.injectable";
 import browserLoggerTransportInjectable from "../../renderer/logger/browser-transport.injectable";
 import { runInAction } from "mobx";
 
