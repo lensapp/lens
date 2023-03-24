@@ -74,7 +74,6 @@
         "@swc/jest"
       ]
     },
-    "workerIdleMemoryLimit": "64MiB",
     "testEnvironment": "jsdom",
     "resolver": "<rootDir>/src/jest-28-resolver.js",
     "moduleNameMapper": {
