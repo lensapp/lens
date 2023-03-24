@@ -4,7 +4,6 @@
  */
 import { disposer, isPromiseLike } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
-import type Conf from "conf/dist/source";
 import type { Options } from "conf/dist/source";
 import { isEqual, kebabCase } from "lodash";
 import type { IEqualsComparer } from "mobx";
@@ -13,13 +12,13 @@ import directoryForUserDataInjectable from "../app-paths/directory-for-user-data
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
 import loggerInjectable from "../logger.injectable";
 import getBasenameOfPathInjectable from "../path/get-basename.injectable";
-import { toJS } from "../utils";
 import { enlistMessageChannelListenerInjectionToken, sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import type { MessageChannel } from "@k8slens/messaging";
 import { persistentStorageIpcChannelPrefixesInjectionToken } from "./channel-prefix";
 import { shouldPersistentStorageDisableSyncInIpcListenerInjectionToken } from "./disable-sync";
 import { persistStateToConfigInjectionToken } from "./save-to-file";
 import type { Migrations } from "./migrations.injectable";
+import { nextTick } from "process";
 
 export interface PersistentStorage {
   /**
@@ -82,7 +81,6 @@ const createPersistentStorageInjectable = getInjectable({
         ...params
       } = rawParams;
       const displayName = kebabCase(params.configName).toUpperCase();
-      const syncDisposers = disposer();
 
       const loadAndStartSyncing = () => {
         logger.info(`[${displayName}]: LOADING ...`);
@@ -100,11 +98,9 @@ const createPersistentStorageInjectable = getInjectable({
           logger.error(`${displayName} extends BaseStore<T>'s fromStore method returns a Promise or promise-like object. This is an error and must be fixed.`);
         }
 
-        startSyncing(config);
         logger.info(`[${displayName}]: LOADED from ${config.path}`);
-      };
 
-      const startSyncing = (config: Conf<T>) => {
+        const syncDisposers = disposer();
         const sendChannel: MessageChannel<T> = {
           id: `${ipcChannelPrefixes.remote}:${config.path}`,
         };
@@ -117,8 +113,9 @@ const createPersistentStorageInjectable = getInjectable({
         const enableSync = () => {
           syncDisposers.push(
             reaction(
-              () => toJS(toJSON()), // unwrap possible observables and react to everything
+              () => toJSON(),
               model => {
+                console.log("here2", { sendChannel });
                 persistStateToConfig(config, model);
                 sendMessageToChannel(sendChannel, model);
               },
@@ -140,7 +137,9 @@ const createPersistentStorageInjectable = getInjectable({
                 }
 
                 if (shouldDisableSyncInListener) {
-                  enableSync();
+                  nextTick(() => {
+                    enableSync();
+                  });
                 }
               },
             }),

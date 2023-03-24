@@ -19,7 +19,11 @@ export const advanceFakeTime = (milliseconds: number) => {
 export const testUsingFakeTime = (dateTime = "2015-10-21T07:28:00Z") => {
   usingFakeTime = true;
 
-  jest.useFakeTimers();
+  jest.useFakeTimers({
+    doNotFake: [
+      "nextTick",
+    ],
+  });
 
   jest.setSystemTime(new Date(dateTime));
 };
