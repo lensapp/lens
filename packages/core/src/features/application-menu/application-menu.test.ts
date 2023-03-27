@@ -8,6 +8,7 @@ import populateApplicationMenuInjectable from "./main/populate-application-menu.
 import { advanceFakeTime, testUsingFakeTime } from "../../test-utils/use-fake-time";
 import { getCompositePaths } from "../../common/utils/composite/get-composite-paths/get-composite-paths";
 import platformInjectable, { allPlatforms } from "../../common/vars/platform.injectable";
+import { inspect } from "util";
 
 describe.each(allPlatforms)("application-menu, given platform is '%s'", (platform) => {
   let builder: ApplicationBuilder;
@@ -53,7 +54,14 @@ describe.each(allPlatforms)("application-menu, given platform is '%s'", (platfor
     });
 
     it("populates application menu", () => {
-      expect(applicationMenuPaths.map(x => x.join(" -> "))).toMatchSnapshot();
+      expect(inspect(applicationMenuPaths.map(x => x.join(" -> ")), {
+        compact: false,
+        breakLength: Infinity,
+        colors: false,
+        depth: Infinity,
+        maxArrayLength: Infinity,
+        maxStringLength: Infinity,
+      })).toMatchSnapshot();
     });
   });
 });
