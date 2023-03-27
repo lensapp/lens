@@ -190,12 +190,12 @@ describe("download logs options in logs dock tab", () => {
             it("logs have been called with query", () => {
               expect(callForLogsMock).toHaveBeenCalledWith(
                 { name: "dockerExporter", namespace: "default" },
-                { "previous": true, "timestamps": false },
+                { "previous": true, "timestamps": false, container: "docker-exporter" },
               );
             });
 
             it("shows save dialog with proper attributes", async () => {
-              expect(openSaveFileDialogMock).toHaveBeenCalledWith("dockerExporter.log", "all-logs", "text/plain");
+              expect(openSaveFileDialogMock).toHaveBeenCalledWith("docker-exporter.log", "all-logs", "text/plain");
             });
 
             it("doesn't block download dropdown for interaction after click", async () => {
@@ -265,7 +265,7 @@ describe("download logs options in logs dock tab", () => {
             it("logs have been called", () => {
               expect(callForLogsMock).toHaveBeenCalledWith(
                 { name: "dockerExporter", namespace: "default" },
-                { "previous": true, "timestamps": false },
+                { "previous": true, "timestamps": false, container: "docker-exporter" },
               );
             });
 
