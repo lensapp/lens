@@ -101,7 +101,7 @@ export class LogTabViewModel {
 
     if (pod && tabData) {
       const params = { name: pod.getName(), namespace: pod.getNs() };
-      const query = { timestamps: tabData.showTimestamps, previous: tabData.showPrevious };
+      const query = { timestamps: tabData.showTimestamps, previous: tabData.showPrevious, container: tabData.selectedContainer };
 
       return this.dependencies.downloadAllLogs(params, query);
     }

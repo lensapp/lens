@@ -25,7 +25,7 @@ const downloadAllLogsInjectable = getInjectable({
       });
 
       if (logs) {
-        openSaveFileDialog(`${params.name}.log`, logs, "text/plain");
+        openSaveFileDialog(`${query.container}.log`, logs, "text/plain");
       } else {
         showErrorNotification("No logs to download");
       }
