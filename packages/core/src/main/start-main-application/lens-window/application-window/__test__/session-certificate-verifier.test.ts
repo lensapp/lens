@@ -48,8 +48,8 @@ describe("sessionCertificateVerifier", () => {
   let di: DiContainer;
 
   beforeEach(() => {
-    di = getDiForUnitTesting({ doGeneralOverrides: false });
-
+    di = getDiForUnitTesting();
+    di.unoverride(lensProxyCertificateInjectable);
     di.inject(setupLensProxyCertificateInjectable).run();
   });
 
@@ -58,8 +58,8 @@ describe("sessionCertificateVerifier", () => {
     const lensProxyCertificate = di.inject(lensProxyCertificateInjectable).get();
     const callback = jest.fn();
 
-    sessionCertificateVerifier({ 
-      certificate: { data: lensProxyCertificate.cert }, 
+    sessionCertificateVerifier({
+      certificate: { data: lensProxyCertificate.cert },
     } as any, callback);
 
     expect(callback).toHaveBeenCalledWith(ChromiumNetError.SUCCESS);
@@ -69,8 +69,8 @@ describe("sessionCertificateVerifier", () => {
     const sessionCertificateVerifier = di.inject(sessionCertificateVerifierInjectable);
     const callback = jest.fn();
 
-    sessionCertificateVerifier({ 
-      certificate: { data: externalCertificate }, 
+    sessionCertificateVerifier({
+      certificate: { data: externalCertificate },
     } as any, callback);
 
     expect(callback).toHaveBeenCalledWith(ChromiumNetError.RESULT_FROM_CHROMIUM);
