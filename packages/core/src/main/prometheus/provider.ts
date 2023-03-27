@@ -52,7 +52,9 @@ export const createPrometheusProvider = ({ getService, ...opts }: CreatePromethe
 export async function findFirstNamespacedService(client: CoreV1Api, ...selectors: string[]): Promise<PrometheusServiceInfo> {
   try {
     for (const selector of selectors) {
-      const { body: { items: [service] }} = await client.listServiceForAllNamespaces(undefined, undefined, undefined, selector);
+      const { items: [service] } = await client.listServiceForAllNamespaces({
+        labelSelector: selector,
+      });
 
       if (service?.metadata?.namespace && service.metadata.name && service.spec?.ports) {
         return {
@@ -71,7 +73,7 @@ export async function findFirstNamespacedService(client: CoreV1Api, ...selectors
 
 export async function findNamespacedService(client: CoreV1Api, name: string, namespace: string): Promise<PrometheusServiceInfo> {
   try {
-    const { body: service } = await client.readNamespacedService(name, namespace);
+    const service = await client.readNamespacedService({ name, namespace });
 
     if (!service.metadata?.namespace || !service.metadata.name || !service.spec?.ports) {
       throw new Error(`Service found in namespace="${namespace}" did not have required information`);

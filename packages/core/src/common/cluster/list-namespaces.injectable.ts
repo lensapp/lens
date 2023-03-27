@@ -12,7 +12,7 @@ export type CreateListNamespaces = (api: CoreV1Api) => ListNamespaces;
 const createListNamespacesInjectable = getInjectable({
   id: "create-list-namespaces",
   instantiate: (): CreateListNamespaces => (api) => async () => {
-    const { body: { items }} = await api.listNamespace();
+    const { items } = await api.listNamespace();
 
     return items
       .map(ns => ns.metadata?.name)
