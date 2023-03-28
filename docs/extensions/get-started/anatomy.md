@@ -68,13 +68,10 @@ Some of the most-important fields include:
     "react-open-doodles": "^1.0.5"
   },
   "devDependencies": {
+    "@k8slens/typescript": "^6.5.0-alpha.1",
+    "@k8slens/webpack": "^6.5.0-alpha.1",
     "@k8slens/extensions": "^5.4.6",
-    "ts-loader": "^8.0.4",
-    "typescript": "^4.5.5",
-    "@types/react": "^17.0.44",
-    "@types/node": "^16.14.2",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.11"
+    "@types/react": "^17.0.44"
   }
 }
 ```
@@ -102,11 +99,11 @@ For example, the following is how you would specify these within your webpack co
   "externals": [
     ...
     {
-      "mobx": "var global.Mobx"
-      "mobx-react": "var global.MobxReact"
-      "react": "var global.React"
-      "react-router": "var global.ReactRouter"
-      "react-router-dom": "var global.ReactRouterDom"
+      "mobx": "var global.Mobx",
+      "mobx-react": "var global.MobxReact",
+      "react": "var global.React",
+      "react-router": "var global.ReactRouter",
+      "react-router-dom": "var global.ReactRouterDom",
       "react-dom": "var global.ReactDOM"
     }
   ]
