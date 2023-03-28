@@ -375,7 +375,7 @@ exports[`preferences: URLs of legacy extensions given extension with both custom
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -804,7 +804,7 @@ exports[`preferences: URLs of legacy extensions given extension with both custom
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1195,7 +1195,7 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1560,7 +1560,7 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1965,7 +1965,7 @@ exports[`preferences: URLs of legacy extensions given extension with custom pref
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span

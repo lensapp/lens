@@ -230,7 +230,7 @@ exports[`extensions - navigation using application menu renders 1`] = `
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -543,7 +543,7 @@ exports[`extensions - navigation using application menu when navigating to exten
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span

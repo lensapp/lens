@@ -4,9 +4,9 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import catalogCategoryRegistryInjectable from "../../../common/catalog/category-registry.injectable";
-import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
 import loadKubeconfigInjectable from "../../../common/cluster/load-kubeconfig.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import getClusterByIdInjectable from "../../../features/cluster/storage/common/get-by-id.injectable";
 import openDeleteClusterDialogInjectable from "../../components/delete-cluster-dialog/open.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../tokens";
 

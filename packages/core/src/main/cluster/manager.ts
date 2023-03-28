@@ -4,34 +4,37 @@
  */
 
 import "../../common/ipc/cluster";
-import type { IObservableValue, ObservableSet } from "mobx";
+import type { IComputedValue, IObservableValue, ObservableSet } from "mobx";
 import { action, makeObservable, observe, reaction, toJS } from "mobx";
 import type { Cluster } from "../../common/cluster/cluster";
 import { isErrnoException } from "@k8slens/utilities";
 import { isKubernetesCluster, KubernetesCluster, LensKubernetesClusterStatus } from "../../common/catalog-entities/kubernetes-cluster";
 import { ipcMainOn } from "../../common/ipc";
 import { once } from "lodash";
-import type { ClusterStore } from "../../common/cluster-store/cluster-store";
 import type { ClusterId } from "../../common/cluster-types";
 import type { CatalogEntityRegistry } from "../catalog";
 import type { Logger } from "../../common/logger";
 import type { UpdateEntityMetadata } from "./update-entity-metadata.injectable";
 import type { UpdateEntitySpec } from "./update-entity-spec.injectable";
 import type { ClusterConnection } from "./cluster-connection.injectable";
+import type { GetClusterById } from "../../features/cluster/storage/common/get-by-id.injectable";
+import type { AddCluster } from "../../features/cluster/storage/common/add.injectable";
 
 const logPrefix = "[CLUSTER-MANAGER]:";
 
 const lensSpecificClusterStatuses: Set<string> = new Set(Object.values(LensKubernetesClusterStatus));
 
 interface Dependencies {
-  readonly store: ClusterStore;
   readonly catalogEntityRegistry: CatalogEntityRegistry;
   readonly clustersThatAreBeingDeleted: ObservableSet<ClusterId>;
   readonly visibleCluster: IObservableValue<ClusterId | null>;
   readonly logger: Logger;
+  readonly clusters: IComputedValue<Cluster[]>;
   updateEntityMetadata: UpdateEntityMetadata;
   updateEntitySpec: UpdateEntitySpec;
   getClusterConnection: (cluster: Cluster) => ClusterConnection;
+  getClusterById: GetClusterById;
+  addCluster: AddCluster;
 }
 
 export class ClusterManager {
@@ -42,15 +45,15 @@ export class ClusterManager {
   init = once(() => {
     // reacting to every cluster's state change and total amount of items
     reaction(
-      () => this.dependencies.store.clustersList.map(c => c.getState()),
-      () => this.updateCatalog(this.dependencies.store.clustersList),
+      () => this.dependencies.clusters.get().map(c => c.getState()),
+      () => this.updateCatalog(this.dependencies.clusters.get()),
       { fireImmediately: false },
     );
 
     // reacting to every cluster's preferences change and total amount of items
     reaction(
-      () => this.dependencies.store.clustersList.map(c => toJS(c.preferences)),
-      () => this.updateCatalog(this.dependencies.store.clustersList),
+      () => this.dependencies.clusters.get().map(c => toJS(c.preferences)),
+      () => this.updateCatalog(this.dependencies.clusters.get()),
       { fireImmediately: false },
     );
 
@@ -152,7 +155,7 @@ export class ClusterManager {
   @action
   protected syncClustersFromCatalog(entities: KubernetesCluster[]) {
     for (const entity of entities) {
-      const cluster = this.dependencies.store.getById(entity.getId());
+      const cluster = this.dependencies.getClusterById(entity.getId());
 
       if (!cluster) {
         const model = {
@@ -167,7 +170,7 @@ export class ClusterManager {
            * Add the bare minimum of data to ClusterStore. And especially no
            * preferences, as those might be configured by the entity's source
            */
-          this.dependencies.store.addCluster(model);
+          this.dependencies.addCluster(model);
         } catch (error) {
           if (isErrnoException(error) && error.code === "ENOENT" && error.path === entity.spec.kubeconfigPath) {
             this.dependencies.logger.warn(`${logPrefix} kubeconfig file disappeared`, model);
@@ -208,7 +211,9 @@ export class ClusterManager {
     this.dependencies.logger.info(`${logPrefix} network is offline`);
 
     await Promise.allSettled(
-      this.dependencies.store.clustersList
+      this.dependencies
+        .clusters
+        .get()
         .filter(cluster => !cluster.disconnected.get())
         .map(async (cluster) => {
           cluster.online.set(false);
@@ -225,7 +230,9 @@ export class ClusterManager {
     this.dependencies.logger.info(`${logPrefix} network is online`);
 
     await Promise.allSettled(
-      this.dependencies.store.clustersList
+      this.dependencies
+        .clusters
+        .get()
         .filter(cluster => !cluster.disconnected.get())
         .map((cluster) => (
           this.dependencies
@@ -236,7 +243,7 @@ export class ClusterManager {
   };
 
   stop() {
-    for (const cluster of this.dependencies.store.clustersList) {
+    for (const cluster of this.dependencies.clusters.get()) {
       this.dependencies
         .getClusterConnection(cluster)
         .disconnect();

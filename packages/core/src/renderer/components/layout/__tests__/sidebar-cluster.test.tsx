@@ -5,56 +5,47 @@
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
+import type { RenderResult } from "@testing-library/react";
 import { fireEvent } from "@testing-library/react";
 import { SidebarCluster } from "../sidebar-cluster";
 import { KubernetesCluster } from "../../../../common/catalog-entities";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
-import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";
-import hotbarStoreInjectable from "../../../../common/hotbars/store.injectable";
-import type { HotbarStore } from "../../../../common/hotbars/store";
-
-const clusterEntity = new KubernetesCluster({
-  metadata: {
-    uid: "test-uid",
-    name: "test-cluster",
-    source: "local",
-    labels: {},
-  },
-  spec: {
-    kubeconfigPath: "",
-    kubeconfigContext: "",
-  },
-  status: {
-    phase: "connected",
-  },
-});
 
 describe("<SidebarCluster/>", () => {
-  let render: DiRender;
+  let result: RenderResult;
 
   beforeEach(() => {
     const di = getDiForUnitTesting();
+    const render = renderFor(di);
 
-    di.override(hotbarStoreInjectable, () => ({
-      isAddedToActive: () => {},
-    }) as unknown as HotbarStore);
+    const clusterEntity = new KubernetesCluster({
+      metadata: {
+        uid: "test-uid",
+        name: "test-cluster",
+        source: "local",
+        labels: {},
+      },
+      spec: {
+        kubeconfigPath: "",
+        kubeconfigContext: "",
+      },
+      status: {
+        phase: "connected",
+      },
+    });
 
-    render = renderFor(di);
+    result = render(<SidebarCluster clusterEntity={clusterEntity}/>);
   });
 
   it("renders w/o errors", () => {
-    const { container } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
-
-    expect(container).toBeInstanceOf(HTMLElement);
+    expect(result.container).toMatchSnapshot();
   });
 
   it("renders cluster avatar and name", () => {
-    const { getByText, getAllByText } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
+    expect(result.getByText("tc")).toBeInTheDocument();
 
-    expect(getByText("tc")).toBeInTheDocument();
-
-    const v = getAllByText("test-cluster");
+    const v = result.getAllByText("test-cluster");
 
     expect(v.length).toBeGreaterThan(0);
 
@@ -64,11 +55,8 @@ describe("<SidebarCluster/>", () => {
   });
 
   it("renders cluster menu", () => {
-    const { getByTestId, getByText } = render(<SidebarCluster clusterEntity={clusterEntity}/>);
-    const link = getByTestId("sidebar-cluster-dropdown");
-
-    fireEvent.click(link);
-    expect(getByText("Add to Hotbar")).toBeInTheDocument();
+    fireEvent.click(result.getByTestId("sidebar-cluster-dropdown"));
+    expect(result.getByText("Add to Hotbar")).toBeInTheDocument();
   });
 });
 

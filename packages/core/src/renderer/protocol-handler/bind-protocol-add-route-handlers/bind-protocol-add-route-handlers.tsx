@@ -17,7 +17,7 @@ import type { NavigateToEntitySettings } from "../../../common/front-end-routing
 import type { NavigateToClusterView } from "../../../common/front-end-routing/routes/cluster-view/navigate-to-cluster-view.injectable";
 import assert from "assert";
 import type { AttemptInstallByInfo } from "../../components/+extensions/attempt-install-by-info.injectable";
-import type { GetClusterById } from "../../../common/cluster-store/get-by-id.injectable";
+import type { GetClusterById } from "../../../features/cluster/storage/common/get-by-id.injectable";
 
 interface Dependencies {
   attemptInstallByInfo: AttemptInstallByInfo;

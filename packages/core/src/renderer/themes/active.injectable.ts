@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { computed } from "mobx";
-import lensColorThemePreferenceInjectable from "../../common/user-store/lens-color-theme.injectable";
+import lensColorThemePreferenceInjectable from "../../features/user-preferences/common/lens-color-theme.injectable";
 import { lensThemeDeclarationInjectionToken } from "./declaration";
 import defaultLensThemeInjectable from "./default-theme.injectable";
 import systemThemeConfigurationInjectable from "./system-theme.injectable";

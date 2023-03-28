@@ -28,8 +28,6 @@ import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entit
 import visitEntityContextMenuInjectable from "../../../common/catalog/visit-entity-context-menu.injectable";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import type { HotbarStore } from "../../../common/hotbars/store";
-import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { Logger } from "../../../common/logger";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
@@ -51,6 +49,8 @@ import type { OnCatalogEntityListClick } from "./entity-details/on-catalog-click
 import onCatalogEntityListClickInjectable from "./entity-details/on-catalog-click.injectable";
 import type { ShowEntityDetails } from "./entity-details/show.injectable";
 import showEntityDetailsInjectable from "./entity-details/show.injectable";
+import type { Hotbar } from "../../../features/hotbar/storage/common/hotbar";
+import activeHotbarInjectable from "../../../features/hotbar/storage/common/active.injectable";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: StorageLayer<string | null>;
@@ -65,13 +65,13 @@ interface Dependencies {
     kind: IComputedValue<string>;
   };
   navigateToCatalog: NavigateToCatalog;
-  hotbarStore: HotbarStore;
   catalogCategoryRegistry: CatalogCategoryRegistry;
   visitEntityContextMenu: VisitEntityContextMenu;
   navigate: Navigate;
   normalizeMenuItem: NormalizeCatalogEntityContextMenu;
   showErrorNotification: ShowNotification;
   logger: Logger;
+  activeHotbar: IComputedValue<Hotbar | undefined>;
 }
 
 @observer
@@ -156,11 +156,11 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
   }
 
   addToHotbar(entity: CatalogEntity): void {
-    this.props.hotbarStore.addToHotbar(entity);
+    this.props.activeHotbar.get()?.addEntity(entity);
   }
 
   removeFromHotbar(entity: CatalogEntity): void {
-    this.props.hotbarStore.removeFromHotbar(entity.getId());
+    this.props.activeHotbar.get()?.removeEntity(entity.getId());
   }
 
   onTabChange = action((tabId: string | null) => {
@@ -323,7 +323,7 @@ export const Catalog = withInjectables<Dependencies>(NonInjectedCatalog, {
     routeParameters: di.inject(catalogRouteParametersInjectable),
     navigateToCatalog: di.inject(navigateToCatalogInjectable),
     emitEvent: di.inject(emitAppEventInjectable),
-    hotbarStore: di.inject(hotbarStoreInjectable),
+    activeHotbar: di.inject(activeHotbarInjectable),
     catalogCategoryRegistry: di.inject(catalogCategoryRegistryInjectable),
     visitEntityContextMenu: di.inject(visitEntityContextMenuInjectable),
     navigate: di.inject(navigateInjectable),

@@ -7,15 +7,15 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Input } from "../input";
 import { isUrl } from "../input/input_validators";
-import type { WeblinkStore } from "../../../common/weblinks-store/weblink-store";
 import { computed, makeObservable, observable } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
-import weblinkStoreInjectable from "../../../common/weblinks-store/weblink-store.injectable";
+import type { AddWeblink } from "../../../features/weblinks/common/add.injectable";
+import addWeblinkInjectable from "../../../features/weblinks/common/add.injectable";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
-  weblinkStore: WeblinkStore;
+  addWeblink: AddWeblink;
 }
 
 
@@ -42,7 +42,7 @@ class NonInjectedWeblinkAddCommand extends React.Component<Dependencies> {
   }
 
   onSubmit(name: string) {
-    this.props.weblinkStore.add({
+    this.props.addWeblink({
       name: name || this.url,
       url: this.url,
     });
@@ -97,6 +97,6 @@ export const WeblinkAddCommand = withInjectables<Dependencies>(NonInjectedWeblin
   getProps: (di, props) => ({
     ...props,
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
-    weblinkStore: di.inject(weblinkStoreInjectable),
+    addWeblink: di.inject(addWeblinkInjectable),
   }),
 });

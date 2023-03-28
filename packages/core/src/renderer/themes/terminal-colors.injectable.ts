@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import terminalThemePreferenceInjectable from "../../common/user-store/terminal-theme.injectable";
+import terminalThemePreferenceInjectable from "../../features/user-preferences/common/terminal-theme.injectable";
 import activeThemeInjectable from "./active.injectable";
 import lensThemesInjectable from "./themes.injectable";
 

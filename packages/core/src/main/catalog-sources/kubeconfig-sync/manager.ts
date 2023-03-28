@@ -8,9 +8,9 @@ import { action, observable, computed, makeObservable, observe } from "mobx";
 import type { CatalogEntity } from "../../../common/catalog";
 import type { Disposer } from "@k8slens/utilities";
 import { iter } from "@k8slens/utilities";
-import type { KubeconfigSyncValue } from "../../../common/user-store";
 import type { Logger } from "../../../common/logger";
 import type { WatchKubeconfigFileChanges } from "./watch-file-changes.injectable";
+import type { KubeconfigSyncValue } from "../../../features/user-preferences/common/preferences-helpers";
 
 interface KubeconfigSyncManagerDependencies {
   readonly directoryForKubeConfigs: string;

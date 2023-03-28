@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import userInfoInjectable from "../user-store/user-info.injectable";
+import userInfoInjectable from "../vars/user-info.injectable";
 
 const homeDirectoryPathInjectable = getInjectable({
   id: "home-directory-path",

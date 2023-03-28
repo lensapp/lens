@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
 import { getClusterIdFromHost } from "../../common/utils";
 import { apiKubePrefix } from "../../common/vars";
+import getClusterByIdInjectable from "../../features/cluster/storage/common/get-by-id.injectable";
 import type { GetClusterForRequest } from "./lens-proxy";
 
 const getClusterForRequestInjectable = getInjectable({

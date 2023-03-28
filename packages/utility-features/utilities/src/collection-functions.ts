@@ -74,7 +74,11 @@ export function getOrInsertWith<K extends object, V>(map: Map<K, V> | WeakMap<K,
  */
 export async function getOrInsertWithAsync<K, V>(map: Map<K, V>, key: K, asyncBuilder: () => Promise<V>): Promise<V> {
   if (!map.has(key)) {
-    map.set(key, await asyncBuilder());
+    const newValue = await asyncBuilder();
+
+    runInAction(() => {
+      map.set(key, newValue);
+    });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

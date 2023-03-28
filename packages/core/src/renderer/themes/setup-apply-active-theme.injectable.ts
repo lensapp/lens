@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { reaction } from "mobx";
 import initializeSystemThemeTypeInjectable from "../../features/theme/system-type/renderer/initialize.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../before-frame-starts/tokens";
-import initUserStoreInjectable from "../stores/init-user-store.injectable";
+import initUserStoreInjectable from "../../features/user-preferences/renderer/load-storage.injectable";
 import activeThemeInjectable from "./active.injectable";
 import applyLensThemeInjectable from "./apply-lens-theme.injectable";
 

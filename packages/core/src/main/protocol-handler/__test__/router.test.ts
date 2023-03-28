@@ -6,12 +6,10 @@
 import * as uuid from "uuid";
 
 import { ProtocolHandlerExtension, ProtocolHandlerInternal, ProtocolHandlerInvalid } from "../../../common/protocol-handler";
-import { delay, noop } from "@k8slens/utilities";
-import type { ExtensionsStore, IsEnabledExtensionDescriptor } from "../../../extensions/extensions-store/extensions-store";
+import { noop } from "@k8slens/utilities";
 import type { LensProtocolRouterMain } from "../lens-protocol-router-main/lens-protocol-router-main";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import lensProtocolRouterMainInjectable from "../lens-protocol-router-main/lens-protocol-router-main.injectable";
-import extensionsStoreInjectable from "../../../extensions/extensions-store/extensions-store.injectable";
 import getConfigurationFileModelInjectable from "../../../common/get-configuration-file-model/get-configuration-file-model.injectable";
 import { LensExtension } from "../../../extensions/lens-extension";
 import type { ObservableMap } from "mobx";
@@ -23,6 +21,8 @@ import pathExistsInjectable from "../../../common/fs/path-exists.injectable";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
 import type { LensExtensionId } from "@k8slens/legacy-extensions";
+import type { LensExtensionState } from "../../../features/extensions/enabled/common/state.injectable";
+import enabledExtensionsStateInjectable from "../../../features/extensions/enabled/common/state.injectable";
 
 function throwIfDefined(val: any): void {
   if (val != null) {
@@ -33,7 +33,7 @@ function throwIfDefined(val: any): void {
 describe("protocol router tests", () => {
   let extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
   let lpr: LensProtocolRouterMain;
-  let enabledExtensions: Set<string>;
+  let enabledExtensions: ObservableMap<LensExtensionId, LensExtensionState>;
   let broadcastMessageMock: jest.Mock;
 
   beforeEach(async () => {
@@ -44,11 +44,7 @@ describe("protocol router tests", () => {
     di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });
     di.override(writeJsonSyncInjectable, () => () => { throw new Error("tried call writeJsonSync without override"); });
 
-    enabledExtensions = new Set();
-
-    di.override(extensionsStoreInjectable, () => ({
-      isEnabled: ({ id, isBundled }: IsEnabledExtensionDescriptor) => isBundled || enabledExtensions.has(id),
-    } as unknown as ExtensionsStore));
+    enabledExtensions = di.inject(enabledExtensionsStateInjectable);
 
     di.permitSideEffects(getConfigurationFileModelInjectable);
 
@@ -95,7 +91,7 @@ describe("protocol router tests", () => {
     });
 
     extensionInstances.set(extId, ext);
-    enabledExtensions.add(extId);
+    enabledExtensions.set(extId, { name: "@mirantis/minikube", enabled: true });
 
     lpr.addInternalHandler("/", noop);
 
@@ -105,14 +101,14 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
+    expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app", "matched");
+
     try {
       expect(await lpr.route("lens://extension/@mirantis/minikube")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    await delay(50);
-    expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerInternal, "lens://app", "matched");
     expect(broadcastMessageMock).toHaveBeenCalledWith(ProtocolHandlerExtension, "lens://extension/@mirantis/minikube", "matched");
   });
 
@@ -175,7 +171,7 @@ describe("protocol router tests", () => {
       });
 
     extensionInstances.set(extId, ext);
-    enabledExtensions.add(extId);
+    enabledExtensions.set(extId, { name: "@foobar/icecream", enabled: true });
 
     try {
       expect(await lpr.route("lens://extension/@foobar/icecream/page/foob")).toBeUndefined();
@@ -183,7 +179,6 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    await delay(50);
     expect(called).toBe("foob");
     expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/@foobar/icecream/page/foob", "matched");
   });
@@ -214,7 +209,7 @@ describe("protocol router tests", () => {
         });
 
       extensionInstances.set(extId, ext);
-      enabledExtensions.add(extId);
+      enabledExtensions.set(extId, { name: "@foobar/icecream", enabled: true });
     }
 
     {
@@ -240,11 +235,8 @@ describe("protocol router tests", () => {
         });
 
       extensionInstances.set(extId, ext);
-      enabledExtensions.add(extId);
+      enabledExtensions.set(extId, { name: "icecream", enabled: true });
     }
-
-    enabledExtensions.add("@foobar/icecream");
-    enabledExtensions.add("icecream");
 
     try {
       expect(await lpr.route("lens://extension/icecream/page")).toBeUndefined();
@@ -252,7 +244,6 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    await delay(50);
 
     expect(called).toBe(1);
     expect(broadcastMessageMock).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/icecream/page", "matched");

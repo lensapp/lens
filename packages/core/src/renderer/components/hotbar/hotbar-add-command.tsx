@@ -7,15 +7,15 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { InputValidator } from "../input";
 import { Input } from "../input";
-import type { CreateHotbarData, CreateHotbarOptions } from "../../../common/hotbars/types";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import uniqueHotbarNameInjectable from "../input/validators/unique-hotbar-name.injectable";
-import addHotbarInjectable from "../../../common/hotbars/add-hotbar.injectable";
+import type { AddHotbar } from "../../../features/hotbar/storage/common/add.injectable";
+import addHotbarInjectable from "../../../features/hotbar/storage/common/add.injectable";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
-  addHotbar: (data: CreateHotbarData, opts: CreateHotbarOptions) => void;
+  addHotbar: AddHotbar;
   uniqueHotbarName: InputValidator<boolean>;
 }
 

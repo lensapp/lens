@@ -10,13 +10,13 @@ import type { Route } from "../common/front-end-routing/front-end-route-injectio
 import type { CatalogEntityRegistry as MainCatalogEntityRegistry } from "../main/catalog";
 import type { CatalogEntityRegistry as RendererCatalogEntityRegistry } from "../renderer/api/catalog/entity/registry";
 import type { GetExtensionPageParameters } from "../renderer/routes/get-extension-page-parameters.injectable";
-import type { FileSystemProvisionerStore } from "./extension-loader/file-system-provisioner-store/file-system-provisioner-store";
 import type { NavigateForExtension } from "../main/start-main-application/lens-window/navigate-for-extension.injectable";
 import type { Logger } from "../common/logger";
+import type { EnsureHashedDirectoryForExtension } from "./extension-loader/file-system-provisioner-store/ensure-hashed-directory-for-extension.injectable";
 
 export interface LensExtensionDependencies {
-  readonly fileSystemProvisionerStore: FileSystemProvisionerStore;
   readonly logger: Logger;
+  ensureHashedDirectoryForExtension: EnsureHashedDirectoryForExtension;
 }
 
 export interface LensMainExtensionDependencies extends LensExtensionDependencies {

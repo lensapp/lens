@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { ExtensionLoader } from "./extension-loader";
-import updateExtensionsStateInjectable from "./update-extensions-state/update-extensions-state.injectable";
 import { createExtensionInstanceInjectionToken } from "./create-extension-instance.token";
 import extensionInstancesInjectable from "./extension-instances.injectable";
 import type { LensExtension } from "../lens-extension";
@@ -14,6 +13,7 @@ import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
 import { bundledExtensionInjectionToken } from "@k8slens/legacy-extensions";
 import { extensionEntryPointNameInjectionToken } from "./entry-point-name";
+import updateExtensionsStateInjectable from "../../features/extensions/enabled/common/update-state.injectable";
 
 const extensionLoaderInjectable = getInjectable({
   id: "extension-loader",

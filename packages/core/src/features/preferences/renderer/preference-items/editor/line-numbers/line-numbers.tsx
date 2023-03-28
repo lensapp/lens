@@ -5,15 +5,15 @@
 import React from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { UserStore } from "../../../../../../common/user-store";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { Select } from "../../../../../../renderer/components/select";
-import { defaultEditorConfig } from "../../../../../../common/user-store/preferences-helpers";
 import { capitalize } from "lodash/fp";
 import { observer } from "mobx-react";
+import type { UserPreferencesState } from "../../../../../user-preferences/common/state.injectable";
+import { defaultEditorConfig } from "../../../../../user-preferences/common/preferences-helpers";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
 }
 
 const lineNumberOptions = ([
@@ -26,7 +26,7 @@ const lineNumberOptions = ([
   label: capitalize(lineNumbers),
 }));
 
-const NonInjectedLineNumbers = observer(({ userStore: { editorConfiguration }}: Dependencies) => (
+const NonInjectedLineNumbers = observer(({ state: { editorConfiguration }}: Dependencies) => (
   <section>
     <SubTitle title="Line numbers"/>
     <Select
@@ -37,15 +37,10 @@ const NonInjectedLineNumbers = observer(({ userStore: { editorConfiguration }}: 
       themeName="lens"
     />
   </section>
-
 ));
 
-export const LineNumbers = withInjectables<Dependencies>(
-  NonInjectedLineNumbers,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-    }),
-  },
-);
+export const LineNumbers = withInjectables<Dependencies>(NonInjectedLineNumbers, {
+  getProps: (di) => ({
+    state: di.inject(userPreferencesStateInjectable),
+  }),
+});

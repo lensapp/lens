@@ -5,15 +5,15 @@
 import React from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { UserStore } from "../../../../../../common/user-store";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { Switch } from "../../../../../../renderer/components/switch";
 import { SubHeader } from "../../../../../../renderer/components/layout/sub-header";
 import { Select } from "../../../../../../renderer/components/select";
 import { observer } from "mobx-react";
+import type { UserPreferencesState } from "../../../../../user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
 }
 
 const minimapPositionOptions = (["left", "right"] as const)
@@ -23,7 +23,7 @@ const minimapPositionOptions = (["left", "right"] as const)
   }));
 
 
-const NonInjectedMinimap = observer(({ userStore: { editorConfiguration }}: Dependencies) => (
+const NonInjectedMinimap = observer(({ state: { editorConfiguration }}: Dependencies) => (
   <section>
     <SubTitle title="Minimap"/>
 
@@ -50,12 +50,8 @@ const NonInjectedMinimap = observer(({ userStore: { editorConfiguration }}: Depe
   </section>
 ));
 
-export const Minimap = withInjectables<Dependencies>(
-  NonInjectedMinimap,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-    }),
-  },
-);
+export const Minimap = withInjectables<Dependencies>(NonInjectedMinimap, {
+  getProps: (di) => ({
+    state: di.inject(userPreferencesStateInjectable),
+  }),
+});

@@ -5,14 +5,16 @@
 
 import type { ExtensionLoader } from "../extension-loader";
 import extensionLoaderInjectable from "../extension-loader/extension-loader.injectable";
+import type { ObservableMap } from "mobx";
 import { runInAction } from "mobx";
-import updateExtensionsStateInjectable from "../extension-loader/update-extensions-state/update-extensions-state.injectable";
 import { delay } from "@k8slens/utilities";
 import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
 import type { IpcRenderer } from "electron";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import currentlyInClusterFrameInjectable from "../../renderer/routes/currently-in-cluster-frame.injectable";
+import type { LensExtensionState } from "../../features/extensions/enabled/common/state.injectable";
+import enabledExtensionsStateInjectable from "../../features/extensions/enabled/common/state.injectable";
 
 const manifestPath = "manifest/path";
 const manifestPath2 = "manifest/path2";
@@ -20,7 +22,7 @@ const manifestPath3 = "manifest/path3";
 
 describe("ExtensionLoader", () => {
   let extensionLoader: ExtensionLoader;
-  let updateExtensionStateMock: jest.Mock;
+  let enabledExtensionsState: ObservableMap<string, LensExtensionState>;
 
   beforeEach(() => {
     const di = getDiForUnitTesting();
@@ -106,69 +108,60 @@ describe("ExtensionLoader", () => {
       },
     }) as unknown as IpcRenderer);
 
-    updateExtensionStateMock = jest.fn();
-
-    di.override(updateExtensionsStateInjectable, () => updateExtensionStateMock);
-
     extensionLoader = di.inject(extensionLoaderInjectable);
+    enabledExtensionsState = di.inject(enabledExtensionsStateInjectable);
   });
 
   it("renderer updates extension after ipc broadcast", async () => {
-    expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`Map {}`);
+    expect(extensionLoader.userExtensions).toEqual(new Map());
 
     await extensionLoader.init();
     await delay(10);
 
     // Assert the extensions after the extension broadcast event
-    expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`
-      Map {
-        "manifest/path" => Object {
-          "absolutePath": "/test/1",
-          "id": "manifest/path",
-          "isBundled": false,
-          "isEnabled": true,
-          "manifest": Object {
-            "name": "TestExtension",
-            "version": "1.0.0",
+    expect(extensionLoader.userExtensions).toEqual(
+      new Map([
+        ["manifest/path", {
+          absolutePath: "/test/1",
+          id: "manifest/path",
+          isBundled: false,
+          isEnabled: true,
+          manifest: {
+            name: "TestExtension",
+            version: "1.0.0",
           },
-          "manifestPath": "manifest/path",
-        },
-        "manifest/path3" => Object {
-          "absolutePath": "/test/3",
-          "id": "manifest/path3",
-          "isBundled": false,
-          "isEnabled": true,
-          "manifest": Object {
-            "name": "TestExtension3",
-            "version": "3.0.0",
+          manifestPath: "manifest/path",
+        }],
+        ["manifest/path3", {
+          absolutePath: "/test/3",
+          id: "manifest/path3",
+          isBundled: false,
+          isEnabled: true,
+          manifest: {
+            name: "TestExtension3",
+            version: "3.0.0",
           },
-          "manifestPath": "manifest/path3",
-        },
-      }
-    `);
+          manifestPath: "manifest/path3",
+        }],
+      ]),
+    );
   });
 
   it("updates ExtensionsStore after isEnabled is changed", async () => {
     await extensionLoader.init();
 
-    expect(updateExtensionStateMock).not.toHaveBeenCalled();
-
     runInAction(() => {
       extensionLoader.setIsEnabled("manifest/path", false);
     });
 
-    expect(updateExtensionStateMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        "manifest/path": {
-          enabled: false,
-          name: "TestExtension",
-        },
-
-        "manifest/path2": {
-          enabled: true,
-          name: "TestExtension2",
-        },
-      }),
-    );
+    expect(enabledExtensionsState.size).toBe(2);
+    expect(enabledExtensionsState.get("manifest/path")).toMatchObject({
+      enabled: false,
+      name: "TestExtension",
+    });
+    expect(enabledExtensionsState.get("manifest/path2")).toMatchObject({
+      enabled: true,
+      name: "TestExtension2",
+    });
   });
 });

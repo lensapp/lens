@@ -9,7 +9,6 @@ import { action } from "mobx";
 import { homedir } from "os";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import type { CatalogEntity } from "../../../common/catalog";
-import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
 import { Cluster } from "../../../common/cluster/cluster";
 import { loadConfigFromString } from "../../../common/kube-helpers";
 import clustersThatAreBeingDeletedInjectable from "../../cluster/are-being-deleted.injectable";
@@ -17,6 +16,7 @@ import { catalogEntityFromCluster } from "../../cluster/manager";
 import configToModelsInjectable from "./config-to-models.injectable";
 import kubeconfigSyncLoggerInjectable from "./logger.injectable";
 import clusterConnectionInjectable from "../../cluster/cluster-connection.injectable";
+import getClusterByIdInjectable from "../../../features/cluster/storage/common/get-by-id.injectable";
 
 export type ComputeKubeconfigDiff = (contents: string, source: ObservableMap<string, [Cluster, CatalogEntity]>, filePath: string) => void;
 

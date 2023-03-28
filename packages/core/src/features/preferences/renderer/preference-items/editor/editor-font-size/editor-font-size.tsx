@@ -5,16 +5,16 @@
 import React from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { UserStore } from "../../../../../../common/user-store";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { Input, InputValidators } from "../../../../../../renderer/components/input";
 import { observer } from "mobx-react";
+import type { UserPreferencesState } from "../../../../../user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
 }
 
-const NonInjectedEditorFontSize = observer(({ userStore: { editorConfiguration }}: Dependencies) => (
+const NonInjectedEditorFontSize = observer(({ state: { editorConfiguration }}: Dependencies) => (
   <section>
     <SubTitle title="Font size" />
     <Input
@@ -28,12 +28,8 @@ const NonInjectedEditorFontSize = observer(({ userStore: { editorConfiguration }
   </section>
 ));
 
-export const EditorFontSize = withInjectables<Dependencies>(
-  NonInjectedEditorFontSize,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-    }),
-  },
-);
+export const EditorFontSize = withInjectables<Dependencies>(NonInjectedEditorFontSize, {
+  getProps: (di) => ({
+    state: di.inject(userPreferencesStateInjectable),
+  }),
+});

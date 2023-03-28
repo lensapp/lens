@@ -14,7 +14,6 @@ import loggerInjectable from "../../../common/logger.injectable";
 import createKubeJsonApiForClusterInjectable from "../../../common/k8s-api/create-kube-json-api-for-cluster.injectable";
 import computeShellEnvironmentInjectable from "../../../features/shell-sync/main/compute-shell-environment.injectable";
 import spawnPtyInjectable from "../spawn-pty.injectable";
-import userShellSettingInjectable from "../../../common/user-store/shell-setting.injectable";
 import appNameInjectable from "../../../common/vars/app-name.injectable";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
@@ -22,6 +21,7 @@ import statInjectable from "../../../common/fs/stat.injectable";
 import createKubeApiInjectable from "../../../common/k8s-api/create-kube-api.injectable";
 import loadProxyKubeconfigInjectable from "../../cluster/load-proxy-kubeconfig.injectable";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
+import userShellSettingInjectable from "../../../features/user-preferences/common/shell-setting.injectable";
 
 export interface NodeShellSessionArgs {
   websocket: WebSocket;

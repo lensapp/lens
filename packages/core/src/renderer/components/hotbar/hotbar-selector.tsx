@@ -7,28 +7,40 @@ import styles from "./hotbar-selector.module.scss";
 import React, { useRef, useState } from "react";
 import { Icon } from "../icon";
 import { Badge } from "../badge";
-import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import { observer } from "mobx-react";
-import type { Hotbar } from "../../../common/hotbars/types";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import { cssNames } from "@k8slens/utilities";
-import type { HotbarStore } from "../../../common/hotbars/store";
+import type { IComputedValue } from "mobx";
+import activeHotbarInjectable from "../../../features/hotbar/storage/common/active.injectable";
+import type { SwitchToPreviousHotbar } from "../../../features/hotbar/storage/common/switch-to-previous.injectable";
+import type { SwitchToNextHotbar } from "../../../features/hotbar/storage/common/switch-to-next.injectable";
+import switchToNextHotbarInjectable from "../../../features/hotbar/storage/common/switch-to-next.injectable";
+import switchToPreviousHotbarInjectable from "../../../features/hotbar/storage/common/switch-to-previous.injectable";
+import type { Hotbar } from "../../../features/hotbar/storage/common/hotbar";
+import type { ComputeDisplayIndex } from "../../../features/hotbar/storage/common/compute-display-index.injectable";
+import computeDisplayIndexInjectable from "../../../features/hotbar/storage/common/compute-display-index.injectable";
 
 interface Dependencies {
-  hotbarStore: HotbarStore;
+  activeHotbar: IComputedValue<Hotbar | undefined>;
   openCommandOverlay: (component: React.ReactElement) => void;
+  switchToPreviousHotbar: SwitchToPreviousHotbar;
+  switchToNextHotbar: SwitchToNextHotbar;
+  computeDisplayIndex: ComputeDisplayIndex;
 }
 
-export interface HotbarSelectorProps extends Partial<Dependencies> {
-  hotbar: Hotbar;
-}
-
-const NonInjectedHotbarSelector = observer(({ hotbar, hotbarStore, openCommandOverlay }: HotbarSelectorProps & Dependencies) => {
+const NonInjectedHotbarSelector = observer(({
+  activeHotbar,
+  openCommandOverlay,
+  switchToNextHotbar,
+  switchToPreviousHotbar,
+  computeDisplayIndex,
+}: Dependencies) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const tooltipTimeout = useRef<number>();
+  const hotbar = activeHotbar.get();
 
   function clearTimer() {
     clearTimeout(tooltipTimeout.current);
@@ -42,12 +54,12 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarStore, openCommandOv
 
   function onPrevClick() {
     onTooltipShow();
-    hotbarStore.switchToPrevious();
+    switchToPreviousHotbar();
   }
 
   function onNextClick() {
     onTooltipShow();
-    hotbarStore.switchToNext();
+    switchToNextHotbar();
   }
 
   function onMouseEvent(event: React.MouseEvent) {
@@ -59,13 +71,13 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarStore, openCommandOv
     <div className={styles.HotbarSelector}>
       <Icon
         material="arrow_left"
-        className={cssNames(styles.Icon, styles.previous)}
+        className={cssNames(styles.Icon)}
         onClick={onPrevClick}/>
       <div className={styles.HotbarIndex}>
         <Badge
           id="hotbarIndex"
           small
-          label={hotbarStore.getDisplayIndex(hotbarStore.getActive())}
+          label={hotbar ? computeDisplayIndex(hotbar.id) : "??"}
           onClick={() => openCommandOverlay(<HotbarSwitchCommand />)}
           className={styles.Badge}
           onMouseEnter={onMouseEvent}
@@ -76,7 +88,7 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarStore, openCommandOv
           targetId="hotbarIndex"
           preferredPositions={[TooltipPosition.TOP, TooltipPosition.TOP_LEFT]}
         >
-          {hotbar.name}
+          {hotbar?.name}
         </Tooltip>
       </div>
       <Icon
@@ -88,10 +100,13 @@ const NonInjectedHotbarSelector = observer(({ hotbar, hotbarStore, openCommandOv
   );
 });
 
-export const HotbarSelector = withInjectables<Dependencies, HotbarSelectorProps>(NonInjectedHotbarSelector, {
+export const HotbarSelector = withInjectables<Dependencies>(NonInjectedHotbarSelector, {
   getProps: (di, props) => ({
-    hotbarStore: di.inject(hotbarStoreInjectable),
-    openCommandOverlay: di.inject(commandOverlayInjectable).open,
     ...props,
+    openCommandOverlay: di.inject(commandOverlayInjectable).open,
+    activeHotbar: di.inject(activeHotbarInjectable),
+    switchToNextHotbar: di.inject(switchToNextHotbarInjectable),
+    switchToPreviousHotbar: di.inject(switchToPreviousHotbarInjectable),
+    computeDisplayIndex: di.inject(computeDisplayIndexInjectable),
   }),
 });

@@ -649,7 +649,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1391,7 +1391,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -2133,7 +2133,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -2986,7 +2986,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -3736,7 +3736,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -4589,7 +4589,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -5624,7 +5624,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -6477,7 +6477,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -7512,7 +7512,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -8366,7 +8366,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -9105,7 +9105,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -9844,7 +9844,7 @@ exports[`add custom helm repository in preferences when navigating to preference
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span

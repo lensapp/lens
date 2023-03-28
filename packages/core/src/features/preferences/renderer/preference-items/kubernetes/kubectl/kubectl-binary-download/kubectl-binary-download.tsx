@@ -5,34 +5,29 @@
 import React from "react";
 import { SubTitle } from "../../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { UserStore } from "../../../../../../../common/user-store";
-import userStoreInjectable from "../../../../../../../common/user-store/user-store.injectable";
 import { observer } from "mobx-react";
 import { Switch } from "../../../../../../../renderer/components/switch";
+import type { UserPreferencesState } from "../../../../../../user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../../../user-preferences/common/state.injectable";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
 }
 
-const NonInjectedKubectlBinaryDownload = observer(({ userStore }: Dependencies) => (
+const NonInjectedKubectlBinaryDownload = observer(({ state }: Dependencies) => (
   <section>
     <SubTitle title="Kubectl binary download" />
     <Switch
-      checked={userStore.downloadKubectlBinaries}
-      onChange={() => userStore.downloadKubectlBinaries = !userStore.downloadKubectlBinaries}
+      checked={state.downloadKubectlBinaries}
+      onChange={() => state.downloadKubectlBinaries = !state.downloadKubectlBinaries}
     >
       Download kubectl binaries matching the Kubernetes cluster version
     </Switch>
   </section>
-
 ));
 
-export const KubectlBinaryDownload = withInjectables<Dependencies>(
-  NonInjectedKubectlBinaryDownload,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-    }),
-  },
-);
+export const KubectlBinaryDownload = withInjectables<Dependencies>(NonInjectedKubectlBinaryDownload, {
+  getProps: (di) => ({
+    state: di.inject(userPreferencesStateInjectable),
+  }),
+});

@@ -12,19 +12,19 @@ import isMacInjectable from "../../../common/vars/is-mac.injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import type WebSocket from "ws";
 import getDirnameOfPathInjectable from "../../../common/path/get-dirname.injectable";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 import computeShellEnvironmentInjectable from "../../../features/shell-sync/main/compute-shell-environment.injectable";
 import spawnPtyInjectable from "../spawn-pty.injectable";
-import userShellSettingInjectable from "../../../common/user-store/shell-setting.injectable";
 import appNameInjectable from "../../../common/vars/app-name.injectable";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import statInjectable from "../../../common/fs/stat.injectable";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
+import userPreferencesStateInjectable from "../../../features/user-preferences/common/state.injectable";
+import userShellSettingInjectable from "../../../features/user-preferences/common/shell-setting.injectable";
 
 export interface OpenLocalShellSessionArgs {
   websocket: WebSocket;
@@ -44,7 +44,7 @@ const openLocalShellSessionInjectable = getInjectable({
       isMac: di.inject(isMacInjectable),
       isWindows: di.inject(isWindowsInjectable),
       logger: di.inject(loggerInjectable),
-      userStore: di.inject(userStoreInjectable),
+      state: di.inject(userPreferencesStateInjectable),
       userShellSetting: di.inject(userShellSettingInjectable),
       appName: di.inject(appNameInjectable),
       buildVersion: di.inject(buildVersionInjectable),

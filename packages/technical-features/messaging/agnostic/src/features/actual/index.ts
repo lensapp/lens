@@ -6,8 +6,6 @@ export { getMessageChannel } from "./message/get-message-channel";
 
 export { requestFromChannelInjectionToken } from "./request/request-from-channel-injection-token";
 
-export type { Channel } from "./channel.no-coverage";
-
 export { sendMessageToChannelInjectionToken } from "./message/message-to-channel-injection-token";
 export type { SendMessageToChannel } from "./message/message-to-channel-injection-token";
 

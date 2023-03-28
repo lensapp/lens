@@ -121,5 +121,7 @@ jobs:
           retry_on: error
           command: npm ci
 
-      - run: npm run test:unit
+      - run: |
+          npm run build -- --ignore open-lens
+          npm run test:unit
         name: Run tests

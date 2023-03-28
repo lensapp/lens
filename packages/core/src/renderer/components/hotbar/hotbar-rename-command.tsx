@@ -6,36 +6,46 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import type { InputValidator } from "../input";
 import { Input } from "../input";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
 import uniqueHotbarNameInjectable from "../input/validators/unique-hotbar-name.injectable";
-import type { HotbarStore } from "../../../common/hotbars/store";
+import type { IComputedValue } from "mobx";
+import { action } from "mobx";
+import type { Hotbar } from "../../../features/hotbar/storage/common/hotbar";
+import type { GetHotbarById } from "../../../features/hotbar/storage/common/get-by-id.injectable";
+import getHotbarByIdInjectable from "../../../features/hotbar/storage/common/get-by-id.injectable";
+import hotbarsInjectable from "../../../features/hotbar/storage/common/hotbars.injectable";
+import type { ComputeHotbarDisplayLabel } from "../../../features/hotbar/storage/common/compute-display-label.injectable";
+import computeHotbarDisplayLabelInjectable from "../../../features/hotbar/storage/common/compute-display-label.injectable";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
-  hotbarStore: HotbarStore;
+  getHotbarById: GetHotbarById;
+  computeHotbarDisplayLabel: ComputeHotbarDisplayLabel;
   uniqueHotbarName: InputValidator<false>;
+  hotbars: IComputedValue<Hotbar[]>;
 }
 
 const NonInjectedHotbarRenameCommand = observer(({
   closeCommandOverlay,
-  hotbarStore,
+  getHotbarById,
+  computeHotbarDisplayLabel,
   uniqueHotbarName,
+  hotbars,
 }: Dependencies) => {
   const [hotbarId, setHotbarId] = useState("");
   const [hotbarName, setHotbarName] = useState("");
 
-  const onSubmit = (name: string) => {
+  const onSubmit = action((name: string) => {
     if (!name.trim()) {
       return;
     }
 
-    hotbarStore.setHotbarName(hotbarId, name);
+    getHotbarById(hotbarId)?.name.set(name);
     closeCommandOverlay();
-  };
+  });
 
   if (hotbarId) {
     return (
@@ -65,16 +75,16 @@ const NonInjectedHotbarRenameCommand = observer(({
       onChange={(option) => {
         if (option) {
           setHotbarId(option.value.id);
-          setHotbarName(option.value.name);
+          setHotbarName(option.value.name.get());
         }
       }}
       components={{ DropdownIndicator: null, IndicatorSeparator: null }}
       menuIsOpen={true}
       options={(
-        hotbarStore.hotbars
+        hotbars.get()
           .map(hotbar => ({
             value: hotbar,
-            label: hotbarStore.getDisplayLabel(hotbar),
+            label: computeHotbarDisplayLabel(hotbar),
           }))
       )}
       autoFocus={true}
@@ -86,9 +96,11 @@ const NonInjectedHotbarRenameCommand = observer(({
 
 export const HotbarRenameCommand = withInjectables<Dependencies>(NonInjectedHotbarRenameCommand, {
   getProps: (di, props) => ({
-    closeCommandOverlay: di.inject(commandOverlayInjectable).close,
-    hotbarStore: di.inject(hotbarStoreInjectable),
-    uniqueHotbarName: di.inject(uniqueHotbarNameInjectable),
     ...props,
+    closeCommandOverlay: di.inject(commandOverlayInjectable).close,
+    uniqueHotbarName: di.inject(uniqueHotbarNameInjectable),
+    getHotbarById: di.inject(getHotbarByIdInjectable),
+    hotbars: di.inject(hotbarsInjectable),
+    computeHotbarDisplayLabel: di.inject(computeHotbarDisplayLabelInjectable),
   }),
 });

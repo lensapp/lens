@@ -7,7 +7,6 @@ import fs from "fs";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
 import { SemVer, coerce } from "semver";
-import { defaultPackageMirror, packageMirrors } from "../../common/user-store/preferences-helpers";
 import got from "got/dist/source";
 import { promisify } from "util";
 import stream from "stream";
@@ -20,6 +19,7 @@ import type { Logger } from "../../common/logger";
 import type { ExecFile } from "../../common/fs/exec-file.injectable";
 import { hasTypedProperty, isObject, isString, json } from "@k8slens/utilities";
 import type { Unlink } from "../../common/fs/unlink.injectable";
+import { packageMirrors, defaultPackageMirror } from "../../features/user-preferences/common/preferences-helpers";
 
 const initScriptVersionString = "# lens-initscript v3";
 
@@ -30,7 +30,7 @@ export interface KubectlDependencies {
   readonly kubectlBinaryName: string;
   readonly bundledKubectlBinaryPath: string;
   readonly baseBundeledBinariesDirectory: string;
-  readonly userStore: {
+  readonly state: {
     readonly kubectlBinariesPath?: string;
     readonly downloadBinariesPath?: string;
     readonly downloadKubectlBinaries: boolean;
@@ -91,12 +91,12 @@ export class Kubectl {
   }
 
   public getPathFromPreferences() {
-    return this.dependencies.userStore.kubectlBinariesPath || this.getBundledPath();
+    return this.dependencies.state.kubectlBinariesPath || this.getBundledPath();
   }
 
   protected getDownloadDir() {
-    if (this.dependencies.userStore.downloadBinariesPath) {
-      return this.dependencies.joinPaths(this.dependencies.userStore.downloadBinariesPath, "kubectl");
+    if (this.dependencies.state.downloadBinariesPath) {
+      return this.dependencies.joinPaths(this.dependencies.state.downloadBinariesPath, "kubectl");
     }
 
     return this.dependencies.directoryForKubectlBinaries;
@@ -107,7 +107,7 @@ export class Kubectl {
       return this.getBundledPath();
     }
 
-    if (this.dependencies.userStore.downloadKubectlBinaries === false) {
+    if (this.dependencies.state.downloadKubectlBinaries === false) {
       return this.getPathFromPreferences();
     }
 
@@ -231,7 +231,7 @@ export class Kubectl {
   }
 
   public async ensureKubectl(): Promise<boolean> {
-    if (this.dependencies.userStore.downloadKubectlBinaries === false) {
+    if (this.dependencies.state.downloadKubectlBinaries === false) {
       return true;
     }
 
@@ -303,7 +303,7 @@ export class Kubectl {
 
   protected async writeInitScripts() {
     const binariesDir = this.dependencies.baseBundeledBinariesDirectory;
-    const kubectlPath = this.dependencies.userStore.downloadKubectlBinaries
+    const kubectlPath = this.dependencies.state.downloadKubectlBinaries
       ? this.dirname
       : this.dependencies.getDirnameOfPath(this.getPathFromPreferences());
 
@@ -370,7 +370,7 @@ export class Kubectl {
   protected getDownloadMirror(): string {
     // MacOS packages are only available from default
 
-    const { url } = packageMirrors.get(this.dependencies.userStore.downloadMirror)
+    const { url } = packageMirrors.get(this.dependencies.state.downloadMirror)
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       ?? packageMirrors.get(defaultPackageMirror)!;
 

@@ -7,7 +7,7 @@ import type { Writable } from "type-fest";
 import catalogCategoryRegistryInjectable from "../../common/catalog/category-registry.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import { createExtensionInstanceInjectionToken } from "../../extensions/extension-loader/create-extension-instance.token";
-import fileSystemProvisionerStoreInjectable from "../../extensions/extension-loader/file-system-provisioner-store/file-system-provisioner-store.injectable";
+import ensureHashedDirectoryForExtensionInjectable from "../../extensions/extension-loader/file-system-provisioner-store/ensure-hashed-directory-for-extension.injectable";
 import { lensExtensionDependencies } from "../../extensions/lens-extension";
 import type { LensRendererExtensionDependencies } from "../../extensions/lens-extension-set-dependencies";
 import type { LensRendererExtension } from "../../extensions/lens-renderer-extension";
@@ -22,7 +22,7 @@ const createExtensionInstanceInjectable = getInjectable({
     const deps: LensRendererExtensionDependencies = {
       categoryRegistry: di.inject(catalogCategoryRegistryInjectable),
       entityRegistry: di.inject(catalogEntityRegistryInjectable),
-      fileSystemProvisionerStore: di.inject(fileSystemProvisionerStoreInjectable),
+      ensureHashedDirectoryForExtension: di.inject(ensureHashedDirectoryForExtensionInjectable),
       getExtensionPageParameters: di.inject(getExtensionPageParametersInjectable),
       navigateToRoute: di.inject(navigateToRouteInjectable),
       routes: di.inject(routesInjectable),

@@ -18,10 +18,10 @@ import clusterViewRouteParametersInjectable from "./cluster-view-route-parameter
 import clusterFrameHandlerInjectable from "./cluster-frame-handler.injectable";
 import type { CatalogEntityRegistry } from "../../api/catalog/entity/registry";
 import catalogEntityRegistryInjectable from "../../api/catalog/entity/registry.injectable";
-import type { GetClusterById } from "../../../common/cluster-store/get-by-id.injectable";
-import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
 import type { RequestClusterActivation } from "../../../features/cluster/activation/common/request-token";
 import requestClusterActivationInjectable from "../../../features/cluster/activation/renderer/request-activation.injectable";
+import type { GetClusterById } from "../../../features/cluster/storage/common/get-by-id.injectable";
+import getClusterByIdInjectable from "../../../features/cluster/storage/common/get-by-id.injectable";
 
 interface Dependencies {
   clusterId: IComputedValue<string>;

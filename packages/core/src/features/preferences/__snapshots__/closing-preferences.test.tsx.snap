@@ -709,7 +709,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -1057,7 +1057,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -1263,7 +1263,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -1469,7 +1469,7 @@ exports[`preferences - closing-preferences given accessing preferences directly 
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -2231,7 +2231,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -2579,7 +2579,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -2785,7 +2785,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -2991,7 +2991,7 @@ exports[`preferences - closing-preferences given already in a page and then navi
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span

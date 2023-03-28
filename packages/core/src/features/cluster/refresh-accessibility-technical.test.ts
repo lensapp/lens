@@ -6,7 +6,6 @@
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { AuthorizationV1Api, CoreV1Api, V1APIGroupList, V1APIVersions, V1NamespaceList, V1SelfSubjectAccessReview, V1SelfSubjectRulesReview } from "@kubernetes/client-node";
-import clusterStoreInjectable from "../../common/cluster-store/cluster-store.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import createAuthorizationApiInjectable from "../../common/cluster/create-authorization-api.injectable";
 import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable";
@@ -26,6 +25,7 @@ import type { KubeAuthProxy } from "../../main/kube-auth-proxy/create-kube-auth-
 import createKubeAuthProxyInjectable from "../../main/kube-auth-proxy/create-kube-auth-proxy.injectable";
 import type { Mocked } from "../../test-utils/mock-interface";
 import { flushPromises } from "@k8slens/test-utils";
+import addClusterInjectable from "./storage/common/add.injectable";
 
 describe("Refresh Cluster Accessibility Technical Tests", () => {
   let builder: ApplicationBuilder;
@@ -79,7 +79,7 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
 
     beforeEach(async () => {
       const mainDi = builder.mainDi;
-      const clusterStore = mainDi.inject(clusterStoreInjectable);
+      const addCluster = mainDi.inject(addClusterInjectable);
       const writeJsonFile = mainDi.inject(writeJsonFileInjectable);
 
       await writeJsonFile("/some-kube-config-path", {
@@ -103,13 +103,11 @@ describe("Refresh Cluster Accessibility Technical Tests", () => {
         }],
       });
 
-      clusterStore.addCluster({
+      cluster = addCluster({
         contextName: "some-cluster-context",
         id: "some-cluster-id",
         kubeConfigPath: "/some-kube-config-path",
       });
-
-      cluster = clusterStore.getById("some-cluster-id") ?? (() => { throw new Error("missing cluster"); })();
       clusterConnection = mainDi.inject(clusterConnectionInjectable, cluster);
       refreshPromise = clusterConnection.refreshAccessibilityAndMetadata();
     });

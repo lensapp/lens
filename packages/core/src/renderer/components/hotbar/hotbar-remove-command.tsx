@@ -6,23 +6,32 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Select } from "../select";
-import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import commandOverlayInjectable from "../command-palette/command-overlay.injectable";
-import type { HotbarStore } from "../../../common/hotbars/store";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
+import type { IComputedValue } from "mobx";
+import type { Hotbar } from "../../../features/hotbar/storage/common/hotbar";
+import type { ComputeHotbarDisplayLabel } from "../../../features/hotbar/storage/common/compute-display-label.injectable";
+import computeHotbarDisplayLabelInjectable from "../../../features/hotbar/storage/common/compute-display-label.injectable";
+import hotbarsInjectable from "../../../features/hotbar/storage/common/hotbars.injectable";
+import type { RemoveHotbar } from "../../../features/hotbar/storage/common/remove.injectable";
+import removeHotbarInjectable from "../../../features/hotbar/storage/common/remove.injectable";
 
 interface Dependencies {
   closeCommandOverlay: () => void;
   openConfirmDialog: OpenConfirmDialog;
-  hotbarStore: HotbarStore;
+  hotbars: IComputedValue<Hotbar[]>;
+  computeHotbarDisplayLabel: ComputeHotbarDisplayLabel;
+  removeHotbar: RemoveHotbar;
 }
 
 const NonInjectedHotbarRemoveCommand = observer(({
   closeCommandOverlay,
-  hotbarStore,
   openConfirmDialog,
+  hotbars,
+  computeHotbarDisplayLabel,
+  removeHotbar,
 }: Dependencies) => (
   <Select
     menuPortalTarget={null}
@@ -38,28 +47,28 @@ const NonInjectedHotbarRemoveCommand = observer(({
           primary: false,
           accent: true,
         },
-        ok: () => hotbarStore.remove(option.value),
+        ok: () => removeHotbar(option.value),
         message: (
           <div className="confirm flex column gaps">
             <p>
               Are you sure you want remove hotbar
               {" "}
               <b>
-                {option.value.name}
+                {option.value.name.get()}
               </b>
               ?
             </p>
           </div>
         ),
       });
-    } }
+    }}
     components={{ DropdownIndicator: null, IndicatorSeparator: null }}
     menuIsOpen={true}
     options={(
-      hotbarStore.hotbars
+      hotbars.get()
         .map(hotbar => ({
           value: hotbar,
-          label: hotbarStore.getDisplayLabel(hotbar),
+          label: computeHotbarDisplayLabel(hotbar),
         }))
     )}
     autoFocus={true}
@@ -72,7 +81,9 @@ export const HotbarRemoveCommand = withInjectables<Dependencies>(NonInjectedHotb
   getProps: (di, props) => ({
     ...props,
     closeCommandOverlay: di.inject(commandOverlayInjectable).close,
-    hotbarStore: di.inject(hotbarStoreInjectable),
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
+    computeHotbarDisplayLabel: di.inject(computeHotbarDisplayLabelInjectable),
+    hotbars: di.inject(hotbarsInjectable),
+    removeHotbar: di.inject(removeHotbarInjectable),
   }),
 });

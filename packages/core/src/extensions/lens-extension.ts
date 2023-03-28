@@ -83,7 +83,7 @@ export class LensExtension<
    */
   async getExtensionFileFolder(): Promise<string> {
     // storeName is read from the manifest and has a fallback to the manifest name, which equals id
-    return this[lensExtensionDependencies].fileSystemProvisionerStore.requestDirectory(this.storeName);
+    return this[lensExtensionDependencies].ensureHashedDirectoryForExtension(this.storeName);
   }
 
   @action

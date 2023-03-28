@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import getClusterByIdInjectable from "../../../../common/cluster-store/get-by-id.injectable";
 import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
+import getClusterByIdInjectable from "../../storage/common/get-by-id.injectable";
 import { clusterStateSyncChannel } from "../common/channels";
 
 const clusterStateListenerInjectable = getMessageChannelListenerInjectable({
