@@ -29,22 +29,11 @@
     "@k8slens/core": "^6.5.0-alpha.3"
   },
   "devDependencies": {
-    "@types/node": "^16.18.6",
-    "@types/webpack": "^5.28.0",
-    "@types/webpack-env": "^1.18.0",
-    "@types/webpack-node-externals": "2.5.3",
-    "css-loader": "^6.7.2",
-    "node-loader": "^2.0.0",
+    "@k8slens/typescript": "^6.5.0-alpha.1",
+    "@k8slens/webpack": "^6.5.0-alpha.1",
     "rimraf": "^4.1.2",
-    "style-loader": "^3.3.1",
-    "ts-loader": "^9.4.2",
-    "ts-node": "^10.9.1",
     "typed-emitter": "^2.1.0",
     "typedoc": "0.23.25",
-    "typedoc-plugin-markdown": "^3.13.6",
-    "typescript": "^4.9.5",
-    "typescript-plugin-css-modules": "^4.1.1",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1"
+    "typedoc-plugin-markdown": "^3.13.6"
   }
 }
