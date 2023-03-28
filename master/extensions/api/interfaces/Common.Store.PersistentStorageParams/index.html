@@ -13,7 +13,7 @@
         <meta name="author" content="Mirantis, Inc.">
       
       
-        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/modules/Renderer.Navigation/">
+        <link rel="canonical" href="https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Store.PersistentStorageParams/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Namespace: Navigation - Lens Extension Development</title>
+        <title>Interface: PersistentStorageParams - Lens Extension Development</title>
       
     
     
@@ -88,7 +88,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#namespace-navigation" class="md-skip">
+        <a href="#interface-persistentstorageparamst" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Namespace: Navigation
+              Interface: PersistentStorageParams<T\>
             
           </span>
         </div>
@@ -712,6 +712,20 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    Hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     Table of contents
   </a>
@@ -720,22 +734,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#classes" class="md-nav__link">
-    Classes
+  <a href="#properties" class="md-nav__link">
+    Properties
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#interfaces" class="md-nav__link">
-    Interfaces
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#functions" class="md-nav__link">
-    Functions
+  <a href="#methods" class="md-nav__link">
+    Methods
   </a>
   
 </li>
@@ -746,65 +753,57 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#functions_1" class="md-nav__link">
-    Functions
+  <a href="#properties_1" class="md-nav__link">
+    Properties
   </a>
   
-    <nav class="md-nav" aria-label="Functions">
+    <nav class="md-nav" aria-label="Properties">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#createpageparam" class="md-nav__link">
-    createPageParam
+  <a href="#configname" class="md-nav__link">
+    configName
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#getdetailsurl" class="md-nav__link">
-    getDetailsUrl
+  <a href="#migrations" class="md-nav__link">
+    migrations
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#hidedetails" class="md-nav__link">
-    hideDetails
+  <a href="#syncoptions" class="md-nav__link">
+    syncOptions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods_1" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fromstore" class="md-nav__link">
+    fromStore
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#hideentitydetails" class="md-nav__link">
-    hideEntityDetails
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#isactiveroute" class="md-nav__link">
-    isActiveRoute
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#navigate" class="md-nav__link">
-    navigate
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#showdetails" class="md-nav__link">
-    showDetails
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#showentitydetails" class="md-nav__link">
-    showEntityDetails
+  <a href="#tojson" class="md-nav__link">
+    toJSON
   </a>
   
 </li>
@@ -828,33 +827,52 @@
                 
                 
                 
-                <h1 id="namespace-navigation">Namespace: Navigation<a class="headerlink" href="#namespace-navigation" title="Permanent link">#</a></h1>
-<p><a href="../Renderer/">Renderer</a>.Navigation</p>
+                <h1 id="interface-persistentstorageparamst">Interface: PersistentStorageParams&lt;T><a class="headerlink" href="#interface-persistentstorageparamst" title="Permanent link">#</a></h1>
+<p><a href="../../modules/Common/">Common</a>.<a href="../../modules/Common.Store/">Store</a>.PersistentStorageParams</p>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left">extends <code>object</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
+<ul>
+<li><code>Omit</code>&lt;<code>Options</code>&lt;<code>T</code>>, <code>"migrations"</code>></li>
+</ul>
+<p>↳ <strong><code>PersistentStorageParams</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
-<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">#</a></h3>
+<h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="../../classes/Renderer.Navigation.PageParam/">PageParam</a></li>
+<li><a href="./#configname">configName</a></li>
+<li><a href="./#migrations">migrations</a></li>
+<li><a href="./#syncoptions">syncOptions</a></li>
 </ul>
-<h3 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">#</a></h3>
+<h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="../../interfaces/Renderer.Navigation.PageParamInit/">PageParamInit</a></li>
-<li><a href="../../interfaces/Renderer.Navigation.URLParams/">URLParams</a></li>
+<li><a href="./#fromstore">fromStore</a></li>
+<li><a href="./#tojson">toJSON</a></li>
 </ul>
-<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="./#createpageparam">createPageParam</a></li>
-<li><a href="./#getdetailsurl">getDetailsUrl</a></li>
-<li><a href="./#hidedetails">hideDetails</a></li>
-<li><a href="./#hideentitydetails">hideEntityDetails</a></li>
-<li><a href="./#isactiveroute">isActiveRoute</a></li>
-<li><a href="./#navigate">navigate</a></li>
-<li><a href="./#showdetails">showDetails</a></li>
-<li><a href="./#showentitydetails">showEntityDetails</a></li>
-</ul>
-<h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
-<h3 id="createpageparam">createPageParam<a class="headerlink" href="#createpageparam" title="Permanent link">#</a></h3>
-<p>▸ <strong>createPageParam</strong>&lt;<code>Value</code>>(<code>init</code>): <a href="../../classes/Renderer.Navigation.PageParam/"><code>PageParam</code></a>&lt;<code>Value</code>></p>
-<h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h4>
+<h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
+<h3 id="configname">configName<a class="headerlink" href="#configname" title="Permanent link">#</a></h3>
+<p>• <code>Readonly</code> <strong>configName</strong>: <code>string</code></p>
+<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
+<p>Omit.configName</p>
+<hr />
+<h3 id="migrations">migrations<a class="headerlink" href="#migrations" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>migrations</strong>: <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, (<code>store</code>: <code>MigrationStore</code>) =&gt; <code>void</code>>></p>
+<hr />
+<h3 id="syncoptions">syncOptions<a class="headerlink" href="#syncoptions" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <code>Readonly</code> <strong>syncOptions</strong>: <code>Object</code></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -864,112 +882,22 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>Value</code></td>
-<td align="left"><code>string</code></td>
+<td align="left"><code>equals?</code></td>
+<td align="left"><code>IEqualsComparer</code>&lt;<code>T</code>></td>
+</tr>
+<tr>
+<td align="left"><code>fireImmediately?</code></td>
+<td align="left"><code>boolean</code></td>
 </tr>
 </tbody>
 </table>
+<h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
+<h3 id="fromstore">fromStore<a class="headerlink" href="#fromstore" title="Permanent link">#</a></h3>
+<p>▸ <strong>fromStore</strong>(<code>data</code>): <code>void</code></p>
+<p>fromStore is called internally when a child class syncs with the file
+system.</p>
+<p>Note: This function <strong>must</strong> be synchronous.</p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>init</code></td>
-<td align="left"><a href="../../interfaces/Renderer.Navigation.PageParamInit/"><code>PageParamInit</code></a>&lt;<code>Value</code>></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
-<p><a href="../../classes/Renderer.Navigation.PageParam/"><code>PageParam</code></a>&lt;<code>Value</code>></p>
-<hr />
-<h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
-<p>▸ <strong>getDetailsUrl</strong>(<code>selfLink</code>, <code>resetSelected?</code>, <code>mergeGlobals?</code>): <code>string</code></p>
-<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>selfLink</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>resetSelected?</code></td>
-<td align="left"><code>boolean</code></td>
-</tr>
-<tr>
-<td align="left"><code>mergeGlobals?</code></td>
-<td align="left"><code>boolean</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
-<p><code>string</code></p>
-<hr />
-<h3 id="hidedetails">hideDetails<a class="headerlink" href="#hidedetails" title="Permanent link">#</a></h3>
-<p>▸ <strong>hideDetails</strong>(): <code>void</code></p>
-<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<hr />
-<h3 id="hideentitydetails">hideEntityDetails<a class="headerlink" href="#hideentitydetails" title="Permanent link">#</a></h3>
-<p>▸ <strong>hideEntityDetails</strong>(): <code>void</code></p>
-<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<hr />
-<h3 id="isactiveroute">isActiveRoute<a class="headerlink" href="#isactiveroute" title="Permanent link">#</a></h3>
-<p>▸ <strong>isActiveRoute</strong>(<code>route</code>): <code>boolean</code></p>
-<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>route</code></td>
-<td align="left"><code>string</code> | <code>RouteProps</code>&lt;<code>string</code>, {}> | <code>string</code>[]</td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
-<p><code>boolean</code></p>
-<hr />
-<h3 id="navigate">navigate<a class="headerlink" href="#navigate" title="Permanent link">#</a></h3>
-<p>▸ <strong>navigate</strong>(<code>location</code>): <code>void</code></p>
-<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>location</code></td>
-<td align="left"><code>LocationDescriptor</code>&lt;<code>unknown</code>></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
-<hr />
-<h3 id="showdetails">showDetails<a class="headerlink" href="#showdetails" title="Permanent link">#</a></h3>
-<p>▸ <strong>showDetails</strong>(<code>selfLink</code>, <code>resetSelected?</code>): <code>void</code></p>
-<p><strong><code>Default</code></strong></p>
-<p>resetSelected true</p>
-<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -980,39 +908,23 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>selfLink</code></td>
-<td align="left"><code>undefined</code> | <code>string</code></td>
-<td align="left">The Kube selflink to show details for</td>
-</tr>
-<tr>
-<td align="left"><code>resetSelected?</code></td>
-<td align="left"><code>boolean</code></td>
-<td align="left">If true then will reset the selected kube object (which object is highlighted generally)</td>
+<td align="left"><code>data</code></td>
+<td align="left"><code>Partial</code>&lt;<code>T</code>></td>
+<td align="left">the parsed information read from the stored JSON file</td>
 </tr>
 </tbody>
 </table>
-<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">#</a></h4>
+<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
 <hr />
-<h3 id="showentitydetails">showEntityDetails<a class="headerlink" href="#showentitydetails" title="Permanent link">#</a></h3>
-<p>▸ <strong>showEntityDetails</strong>(<code>id</code>): <code>void</code></p>
-<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">#</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>id</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-</tbody>
-</table>
-<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">#</a></h4>
-<p><code>void</code></p>
+<h3 id="tojson">toJSON<a class="headerlink" href="#tojson" title="Permanent link">#</a></h3>
+<p>▸ <strong>toJSON</strong>(): <code>T</code></p>
+<p>toJSON is called when syncing the store to the filesystem. It should
+produce a JSON serializable object representation of the current state.</p>
+<p>It is recommended that a round trip is valid. Namely, calling
+<code>this.fromStore(this.toJSON())</code> shouldn't change the state.</p>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
+<p><code>T</code></p>
                 
               
               

@@ -706,7 +706,12 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Store.BaseStoreParams/</loc>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Store.ExtensionStoreParams/</loc>
+         <lastmod>2023-03-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.Store.PersistentStorageParams/</loc>
          <lastmod>2023-03-28</lastmod>
          <changefreq>daily</changefreq>
     </url>

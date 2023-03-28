@@ -719,13 +719,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hierarchy" class="md-nav__link">
-    Hierarchy
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     Table of contents
   </a>
@@ -788,13 +781,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#displayname" class="md-nav__link">
-    displayName
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#extension" class="md-nav__link">
     extension
   </a>
@@ -802,8 +788,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#params" class="md-nav__link">
-    params
+  <a href="#persistentstorage" class="md-nav__link">
+    persistentStorage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rawparams" class="md-nav__link">
+    rawParams
   </a>
   
 </li>
@@ -913,11 +906,6 @@
 </tr>
 </tbody>
 </table>
-<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
-<ul>
-<li><code>BaseStore</code>&lt;<code>T</code>></li>
-</ul>
-<p>↳ <strong><code>ExtensionStore</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
 <ul>
@@ -925,9 +913,9 @@
 </ul>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#displayname">displayName</a></li>
 <li><a href="./#extension">extension</a></li>
-<li><a href="./#params">params</a></li>
+<li><a href="./#persistentstorage">persistentStorage</a></li>
+<li><a href="./#rawparams">rawParams</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
@@ -942,7 +930,7 @@
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>• <strong>new ExtensionStore</strong>&lt;<code>T</code>>(<code>«destructured»</code>)</p>
+<p>• <strong>new ExtensionStore</strong>&lt;<code>T</code>>(<code>rawParams</code>)</p>
 <h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -968,67 +956,52 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>«destructured»</code></td>
-<td align="left"><code>ExtensionStoreParams</code>&lt;<code>T</code>></td>
+<td align="left"><code>rawParams</code></td>
+<td align="left"><a href="../../interfaces/Common.Store.ExtensionStoreParams/"><code>ExtensionStoreParams</code></a>&lt;<code>T</code>></td>
 </tr>
 </tbody>
 </table>
-<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">#</a></h4>
-<p>BaseStore&lt;T\&gt;.constructor</p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="displayname">displayName<a class="headerlink" href="#displayname" title="Permanent link">#</a></h3>
-<p>• <code>Readonly</code> <strong>displayName</strong>: <code>string</code></p>
-<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
-<p>BaseStore.displayName</p>
-<hr />
 <h3 id="extension">extension<a class="headerlink" href="#extension" title="Permanent link">#</a></h3>
 <p>• <code>Protected</code> <code>Optional</code> <strong>extension</strong>: <a href="../Common.LensExtension/"><code>LensExtension</code></a>&lt;<code>LensExtensionDependencies</code>></p>
 <hr />
-<h3 id="params">params<a class="headerlink" href="#params" title="Permanent link">#</a></h3>
-<p>• <code>Protected</code> <code>Readonly</code> <strong>params</strong>: <a href="../../interfaces/Common.Store.BaseStoreParams/"><code>BaseStoreParams</code></a>&lt;<code>T</code>></p>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
-<p>BaseStore.params</p>
+<h3 id="persistentstorage">persistentStorage<a class="headerlink" href="#persistentstorage" title="Permanent link">#</a></h3>
+<p>• <code>Protected</code> <code>Optional</code> <strong>persistentStorage</strong>: <code>PersistentStorage</code></p>
+<hr />
+<h3 id="rawparams">rawParams<a class="headerlink" href="#rawparams" title="Permanent link">#</a></h3>
+<p>• <code>Protected</code> <code>Readonly</code> <strong>rawParams</strong>: <a href="../../interfaces/Common.Store.ExtensionStoreParams/"><code>ExtensionStoreParams</code></a>&lt;<code>T</code>></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="cwd">cwd<a class="headerlink" href="#cwd" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code> <strong>cwd</strong>(): <code>string</code></p>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">#</a></h4>
 <p><code>string</code></p>
-<h4 id="overrides_1">Overrides<a class="headerlink" href="#overrides_1" title="Permanent link">#</a></h4>
-<p>BaseStore.cwd</p>
 <hr />
 <h3 id="fromstore">fromStore<a class="headerlink" href="#fromstore" title="Permanent link">#</a></h3>
-<p>▸ <code>Protected</code> <code>Abstract</code> <strong>fromStore</strong>(<code>data</code>): <code>void</code></p>
-<p>fromStore is called internally when a child class syncs with the file
-system.</p>
-<p>Note: This function <strong>must</strong> be synchronous.</p>
+<p>▸ <code>Abstract</code> <strong>fromStore</strong>(<code>data</code>): <code>void</code></p>
 <h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
 <th align="left">Name</th>
 <th align="left">Type</th>
-<th align="left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td align="left"><code>data</code></td>
-<td align="left"><code>T</code></td>
-<td align="left">the parsed information read from the stored JSON file</td>
+<td align="left"><code>Partial</code>&lt;<code>T</code>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
-<p>BaseStore.fromStore</p>
 <hr />
 <h3 id="load">load<a class="headerlink" href="#load" title="Permanent link">#</a></h3>
 <p>▸ <strong>load</strong>(): <code>void</code></p>
+<p><strong><code>Deprecated</code></strong></p>
+<p>Never use this method. Instead call BaseExtensionStore.loadExtension</p>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">#</a></h4>
 <p><code>void</code></p>
-<h4 id="overrides_2">Overrides<a class="headerlink" href="#overrides_2" title="Permanent link">#</a></h4>
-<p>BaseStore.load</p>
 <hr />
 <h3 id="loadextension">loadExtension<a class="headerlink" href="#loadextension" title="Permanent link">#</a></h3>
 <p>▸ <strong>loadExtension</strong>(<code>extension</code>): <code>void</code></p>
@@ -1052,14 +1025,8 @@ system.</p>
 <hr />
 <h3 id="tojson">toJSON<a class="headerlink" href="#tojson" title="Permanent link">#</a></h3>
 <p>▸ <code>Abstract</code> <strong>toJSON</strong>(): <code>T</code></p>
-<p>toJSON is called when syncing the store to the filesystem. It should
-produce a JSON serializable object representation of the current state.</p>
-<p>It is recommended that a round trip is valid. Namely, calling
-<code>this.fromStore(this.toJSON())</code> shouldn't change the state.</p>
 <h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">#</a></h4>
 <p><code>T</code></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
-<p>BaseStore.toJSON</p>
 <hr />
 <h3 id="createinstance">createInstance<a class="headerlink" href="#createinstance" title="Permanent link">#</a></h3>
 <p>▸ <code>Static</code> <strong>createInstance</strong>&lt;<code>T</code>, <code>R</code>>(<code>this</code>, <code>...args</code>): <code>T</code></p>
