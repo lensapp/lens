@@ -1,7 +1,6 @@
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 
 import {
-  _getGlobalState,
   computed,
   IComputedValue,
   observable,
@@ -13,12 +12,7 @@ import {
 import type { MessageChannel } from "@k8slens/messaging";
 import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
-import type { JsonPrimitive } from "type-fest";
 import { computedChannelAdministrationChannel } from "./computed-channel-administration-channel.injectable";
-
-export type JsonifiableObject = { [Key in string]?: Jsonifiable } | { toJSON: () => Jsonifiable };
-export type JsonifiableArray = readonly Jsonifiable[];
-export type Jsonifiable = JsonPrimitive | JsonifiableObject | JsonifiableArray;
 
 export type ComputedChannelFactory = <T>(
   channel: MessageChannel<T>,
@@ -29,14 +23,12 @@ export const computedChannelInjectionToken = getInjectionToken<ComputedChannelFa
   id: "computed-channel-injection-token",
 });
 
-export type ChannelObserver<T extends Jsonifiable> = {
+export type ChannelObserver<T> = {
   channel: MessageChannel<T>;
   observer: IComputedValue<T>;
 };
 
-export const computedChannelObserverInjectionToken = getInjectionToken<
-  ChannelObserver<Jsonifiable>
->({
+export const computedChannelObserverInjectionToken = getInjectionToken<ChannelObserver<unknown>>({
   id: "computed-channel-observer",
 });
 
@@ -49,19 +41,7 @@ const computedChannelInjectable = getInjectable({
     return ((channel, pendingValue) => {
       const observableValue = observable.box(pendingValue);
 
-      const computedValue = computed(() => {
-        const { trackingDerivation } = _getGlobalState();
-
-        const contextIsReactive = !!trackingDerivation;
-
-        if (!contextIsReactive) {
-          throw new Error(
-            `Tried to access value of computed channel "${channel.id}" outside of reactive context. This is not possible, as the value is acquired asynchronously sometime *after* being observed. Not respecting that, the value could be stale.`,
-          );
-        }
-
-        return observableValue.get();
-      });
+      const computedValue = computed(() => observableValue.get());
 
       const valueReceiverInjectable = getMessageChannelListenerInjectable({
         id: `computed-channel-value-receiver-for-${channel.id}`,
