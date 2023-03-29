@@ -97,6 +97,18 @@
 - But the namespace is marked as selected
 - When I click the select control the namespace selector closes
 
+### Scenario: A new namespace is created while the selector is open
+- Given that the namespace selector is open
+- And a new namespace is created
+- Then new namespace is now visible as an option
+- And the new namespace is not shown as selected
+- And the namespace is sorted alphabetically into the "never selected" section
+
+### Scenario: A non-selected namespace is deleted while the selector is open
+- Given that the namespace selector is open
+- And a namespace that is not selected is deleted
+- Then the namespace is no longer visible as an option
+
 ### Scenario: Closing dropdown after selecting multiple namespaces onKeyUp CTRL/CMD and mouse
 - Given I’ve opened namespace selector
 - And CTRL/CMD is pressed
