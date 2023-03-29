@@ -53,6 +53,7 @@ theme:
     - toc.autohide
     - search.suggest
     - search.highlight
+    - content.code.copy
 
 extra_css:
   - stylesheets/extra.css
