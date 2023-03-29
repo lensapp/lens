@@ -70,7 +70,7 @@ class NonInjectedHelmChartDetails extends Component<HelmChartDetailsProps & Depe
     return (
       <div className="introduction flex align-flex-start">
         <HelmChartIcon
-          chart={selectedChart}
+          imageUrl={selectedChart.getIcon()}
           className="intro-logo"
         />
         <div className="intro-contents box grow">

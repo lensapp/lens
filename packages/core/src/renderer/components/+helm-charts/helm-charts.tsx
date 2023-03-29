@@ -121,7 +121,7 @@ class NonInjectedHelmCharts extends Component<Dependencies> {
           ]}
           renderTableContents={chart => [
             <figure key="image">
-              <HelmChartIcon chart={chart} />
+              <HelmChartIcon imageUrl={chart.getIcon()} />
             </figure>,
             chart.getName(),
             chart.getDescription(),
