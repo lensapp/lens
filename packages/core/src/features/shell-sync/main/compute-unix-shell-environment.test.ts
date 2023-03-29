@@ -72,7 +72,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
       });
     });
     di.override(spawnInjectable, () => spawnMock);
-    di.override(randomUUIDInjectable, () => () => "deadbeef");
+    di.override(randomUUIDInjectable, () => () => "xxx-xxx-xxx-xxx-xxx");
 
     di.override(processEnvInjectable, () => ({
       SOME_ENV_VAR: "some-env-value",
