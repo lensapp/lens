@@ -15,9 +15,7 @@ import { interval } from "@k8slens/utilities";
 import { TabLayout } from "../layout/tab-layout";
 import { Spinner } from "../spinner";
 import { ClusterIssues } from "./cluster-issues";
-import { ClusterMetrics } from "./cluster-metrics";
 import type { ClusterOverviewStore } from "./cluster-overview-store/cluster-overview-store";
-import { ClusterPieCharts } from "./cluster-pie-charts";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import type { EventStore } from "../+events/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -28,6 +26,9 @@ import podStoreInjectable from "../+workloads-pods/store.injectable";
 import eventStoreInjectable from "../+events/store.injectable";
 import nodeStoreInjectable from "../+nodes/store.injectable";
 import enabledMetricsInjectable from "../../api/catalog/entity/metrics-enabled.injectable";
+import type { ClusterOverviewUIBlock } from "@k8slens/metrics";
+import { clusterOverviewUIBlockInjectionToken } from "@k8slens/metrics";
+import { orderByOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
@@ -36,6 +37,7 @@ interface Dependencies {
   eventStore: EventStore;
   nodeStore: NodeStore;
   clusterMetricsAreVisible: IComputedValue<boolean>;
+  uiBlocks: ClusterOverviewUIBlock[];
 }
 
 @observer
@@ -76,8 +78,9 @@ class NonInjectedClusterOverview extends React.Component<Dependencies> {
 
     return (
       <>
-        <ClusterMetrics/>
-        <ClusterPieCharts/>
+        {orderByOrderNumber(this.props.uiBlocks).map((block) => (
+          <block.Component key={block.id} />
+        ))}
       </>
     );
   }
@@ -118,5 +121,6 @@ export const ClusterOverview = withInjectables<Dependencies>(NonInjectedClusterO
     podStore: di.inject(podStoreInjectable),
     eventStore: di.inject(eventStoreInjectable),
     nodeStore: di.inject(nodeStoreInjectable),
+    uiBlocks: di.injectMany(clusterOverviewUIBlockInjectionToken),
   }),
 });

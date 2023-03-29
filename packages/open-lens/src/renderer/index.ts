@@ -4,6 +4,7 @@ import {
   rendererExtensionApi as Renderer,
   commonExtensionApi as Common,
   registerLensCore,
+  metricsFeature
 } from "@k8slens/core/renderer";
 import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registration";
 import { registerFeature } from "@k8slens/feature-core";
@@ -32,7 +33,8 @@ runInAction(() => {
     applicationFeature,
     messagingFeatureForRenderer,
     keyboardShortcutsFeature,
-    reactApplicationFeature
+    reactApplicationFeature,
+    metricsFeature
   );
 
   autoRegister({
