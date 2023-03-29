@@ -15,10 +15,9 @@
   ],
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "webpack --config webpack.ts",
+    "dev": "webpack --mode=development --config webpack.ts --progress",
+    "build": "webpack --config webpack.ts --progress",
     "lint": "exit 0",
-    "prepare": "npm run build",
-    "prepare:dev": "npm run build",
     "prepare:test": "npm run build"
   },
   "dependencies": {

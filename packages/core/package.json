@@ -48,8 +48,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config webpack/library-bundle.ts --progress",
     "clean": "rimraf dist static/build",
-    "prepare:dev": "cross-env NODE_ENV=development webpack --config webpack/library-bundle.ts --progress",
-    "dev": "cross-env NODE_ENV=development webpack --config webpack/library-bundle.ts --watch",
+    "dev": "cross-env NODE_ENV=development webpack --config webpack/library-bundle.ts --progress",
     "test:unit": "jest --testPathIgnorePatterns integration",
     "test:watch": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
     "lint": "PROD=true eslint --ext js,ts,tsx --max-warnings=0 .",
@@ -98,7 +97,6 @@
     ],
     "runtime": "@side/jest-runtime"
   },
-  "build": {},
   "nx": {
     "targets": {
       "build": {
@@ -120,8 +118,6 @@
     "@astronautlabs/jsonpath": "^1.1.0",
     "@hapi/call": "^9.0.1",
     "@hapi/subtext": "^7.1.0",
-    "@k8slens/cluster-settings": "^6.5.0-alpha.1",
-    "@k8slens/node-fetch": "^6.5.0-alpha.1",
     "@kubernetes/client-node": "^0.18.1",
     "@material-ui/styles": "^4.11.5",
     "@ogre-tools/fp": "^15.1.2",
@@ -322,6 +318,7 @@
   "peerDependencies": {
     "@k8slens/application": "^6.5.0-alpha.0",
     "@k8slens/application-for-electron-main": "^6.5.0-alpha.0",
+    "@k8slens/cluster-settings": "^6.5.0-alpha.1",
     "@k8slens/legacy-extensions": "^1.0.0-alpha.0",
     "@k8slens/messaging": "^1.0.0-alpha.1",
     "@k8slens/messaging-for-main": "^1.0.0-alpha.1",

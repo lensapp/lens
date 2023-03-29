@@ -20,8 +20,8 @@
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
-    "build": "webpack",
-    "dev": "webpack --mode=development --watch"
+    "build": "webpack --progress",
+    "dev": "webpack --mode=development --progress"
   },
   "peerDependencies": {
     "@ogre-tools/injectable": "^15.1.2",

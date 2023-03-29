@@ -31,8 +31,8 @@
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "webpack --config webpack.ts",
-    "dev": "webpack --mode=development --watch --config webpack.ts",
+    "build": "webpack --config webpack.ts --progress",
+    "dev": "webpack --mode=development --config webpack.ts",
     "lint": "lens-lint",
     "lint:fix": "lens-lint --fix"
   },

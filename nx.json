@@ -24,7 +24,7 @@
     },
     "dev": {
       "dependsOn": [
-        "prepare:dev"
+        "^dev"
       ]
     },
     "lint": {
