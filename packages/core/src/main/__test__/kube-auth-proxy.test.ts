@@ -83,7 +83,6 @@ describe("kube auth proxy tests", () => {
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
 
-    const createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
     const addCluster = di.inject(addClusterInjectable);
 
     cluster = addCluster({
@@ -91,7 +90,7 @@ describe("kube auth proxy tests", () => {
       kubeConfigPath: "/minikube-config.yml",
       contextName: "minikube",
     });
-    kubeAuthProxy = createKubeAuthProxy(cluster, {});
+    kubeAuthProxy = di.inject(createKubeAuthProxyInjectable, cluster)({});
   });
 
   it("calling exit multiple times shouldn't throw", async () => {
