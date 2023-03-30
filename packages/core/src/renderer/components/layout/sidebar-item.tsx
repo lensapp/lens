@@ -37,7 +37,7 @@ class NonInjectedSidebarItem extends React.Component<
   }
 
   get id(): string {
-    return this.registration.id;
+    return this.item.id;
   }
 
   @computed get expanded(): boolean {
@@ -52,8 +52,8 @@ class NonInjectedSidebarItem extends React.Component<
     return this.props.item.isActive.get();
   }
 
-  get registration() {
-    return this.props.item.registration;
+  get item() {
+    return this.props.item;
   }
 
   toggleExpand = () => {
@@ -71,7 +71,7 @@ class NonInjectedSidebarItem extends React.Component<
 
     return (
       <ul className={cssNames(styles.subMenu, { [styles.active]: this.isActive })}>
-        {this.props.item.children.map(item => <SidebarItem key={item.registration.id} item={item} />)}
+        {this.props.item.children.map(item => <SidebarItem key={item.id} item={item} />)}
       </ul>
     );
   }
@@ -82,7 +82,7 @@ class NonInjectedSidebarItem extends React.Component<
         className={styles.SidebarItem}
         data-testid={`sidebar-item-${this.id}`}
         data-is-active-test={this.isActive}
-        data-parent-id-test={this.registration.parentId}
+        data-parent-id-test={this.item.parentId}
       >
         <NavLink
           to={""}
@@ -95,13 +95,13 @@ class NonInjectedSidebarItem extends React.Component<
             if (this.isExpandable) {
               this.toggleExpand();
             } else {
-              this.registration.onClick();
+              this.item.onClick();
             }
           }}
           data-testid={`sidebar-item-link-for-${this.id}`}
         >
-          {this.registration.getIcon?.()}
-          <span>{this.registration.title}</span>
+          {this.item.getIcon?.()}
+          <span>{this.item.title}</span>
           {this.isExpandable && (
             <Icon
               className={styles.expandIcon}

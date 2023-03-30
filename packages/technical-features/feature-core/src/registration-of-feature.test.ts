@@ -109,7 +109,9 @@ describe("register-feature", () => {
       instantiate: (di) => di.inject(someInjectable),
     });
 
-    const di = createContainer("some-container");
+    const di = createContainer("some-container", {
+      detectCycles: false,
+    });
 
     const someFeature = getFeature({
       id: "some-feature-1",
@@ -132,9 +134,9 @@ describe("register-feature", () => {
     expect(() => {
       di.inject(someInjectable);
     }).toThrow(
-      // 'Cycle of injectables encountered: "some-container" -> "some-feature-1:some-injectable-1"
-      // -> "some-feature-2:some-injectable-2" -> "some-feature-1:some-injectable-1"'
       "Maximum call stack size exceeded",
+      // eslint-disable-next-line max-len
+      // 'Cycle of injectables encountered: "some-feature-1:some-injectable-1" -> "some-feature-2:some-injectable-2" -> "some-feature-1:some-injectable-1"',
     );
   });
 });

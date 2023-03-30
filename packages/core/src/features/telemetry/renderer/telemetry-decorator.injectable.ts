@@ -2,105 +2,100 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { DiContainerForInjection } from "@ogre-tools/injectable";
-
-import {
-  getInjectable,
-  instantiationDecoratorToken,
-  lifecycleEnum,
-} from "@ogre-tools/injectable";
-
+import { injectionDecoratorToken, getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { isFunction } from "lodash/fp";
 import emitTelemetryInjectable from "./emit-telemetry.injectable";
-
 import type { WhiteListItem } from "./telemetry-white-list-for-functions.injectable";
 import telemetryWhiteListForFunctionsInjectable from "./telemetry-white-list-for-functions.injectable";
 import logErrorInjectable from "../../../common/log-error.injectable";
+import { isFunction, isString } from "@k8slens/utilities";
 
 const telemetryDecoratorInjectable = getInjectable({
   id: "telemetry-decorator",
 
   instantiate: (diForDecorator) => ({
-    decorate:
-      (instantiateToBeDecorated: any) =>
-        (di: DiContainerForInjection, instantiationParameter: any) => {
-          const instance = instantiateToBeDecorated(di, instantiationParameter);
+    decorate: (instantiateToBeDecorated) =>
+      (di, instantiationParameter) => {
+        const instance = instantiateToBeDecorated(di, instantiationParameter);
 
-          if (isFunction(instance)) {
-            return (...args: any[]) => {
-              const currentContext = di.context.at(-1);
+        if (isFunction(instance)) {
+          return (...args: unknown[]) => {
+            const currentContext = di.context.at(-1);
 
-              assert(currentContext);
+            assert(currentContext);
 
-              const emitTelemetry = diForDecorator.inject(
-                emitTelemetryInjectable,
-              );
+            const emitTelemetry = diForDecorator.inject(emitTelemetryInjectable);
+            const logError = diForDecorator.inject(logErrorInjectable);
+            const whiteList = diForDecorator.inject(telemetryWhiteListForFunctionsInjectable);
 
-              const logError = diForDecorator.inject(logErrorInjectable);
+            const { isWhiteListed, getParams } = findWhiteListEntry(whiteList, currentContext.injectable.id);
 
-              const whiteList = diForDecorator.inject(
-                telemetryWhiteListForFunctionsInjectable,
-              );
+            if (isWhiteListed) {
+              let params;
 
-              const whiteListMap = getWhiteListMap(whiteList);
-
-              const whiteListed = whiteListMap.get(currentContext.injectable.id);
-
-              if (whiteListed) {
-                let params;
-
-                try {
-                  params = whiteListed.getParams(...args);
-                } catch (e) {
-                  params = {
-                    error:
+              try {
+                params = getParams(...args);
+              } catch (e) {
+                params = {
+                  error:
                     "Tried to produce params for telemetry, but getParams() threw an error",
-                  };
+                };
 
-                  logError(
-                    `Tried to produce params for telemetry of "${currentContext.injectable.id}", but getParams() threw an error`,
-                    e,
-                  );
-                }
-
-                emitTelemetry({
-                  action: currentContext.injectable.id,
-                  params,
-                });
+                logError(
+                  `Tried to produce params for telemetry of "${currentContext.injectable.id}", but getParams() threw an error`,
+                  e,
+                );
               }
 
-              return instance(...args);
-            };
-          }
+              emitTelemetry({
+                action: currentContext.injectable.id,
+                params,
+              });
+            }
 
-          return instance;
-        },
+            return instance(...args);
+          };
+        }
+
+        return instance;
+      },
   }),
 
   decorable: false,
-  // Todo: this is required because of imperfect typing in injectable.
-  lifecycle: lifecycleEnum.singleton,
-  injectionToken: instantiationDecoratorToken,
+  injectionToken: injectionDecoratorToken,
 });
 
-const getWhiteListMap = (whiteList: WhiteListItem[]) =>
-  new Map(
-    whiteList.map((item) =>
-      typeof item === "string"
-        ? [
-          item,
-          {
-            getParams: () => undefined,
-          },
-        ]
-        : [
-          item.id,
-          {
-            getParams: item.getParams,
-          },
-        ],
-    ),
-  );
+type WhiteListEntry = {
+  isWhiteListed: true;
+  getParams: (...args: unknown[]) => Record<string, any> | undefined;
+} | {
+  isWhiteListed: false;
+  getParams?: undefined;
+};
+
+
+const findWhiteListEntry = (whiteList: WhiteListItem[], id: string): WhiteListEntry => {
+  for (const entry of whiteList) {
+    if (isString(entry)) {
+      if (entry === id) {
+        return {
+          isWhiteListed: true,
+          getParams: () => undefined,
+        };
+      }
+    } else {
+      if (entry.id === id) {
+        return {
+          isWhiteListed: true,
+          getParams: entry.getParams,
+        };
+      }
+    }
+  }
+
+  return {
+    isWhiteListed: false,
+  };
+};
 
 export default telemetryDecoratorInjectable;

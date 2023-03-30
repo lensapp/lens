@@ -122,7 +122,7 @@ function VirtualListInner<T extends { getId(): string } | string>({
           ? renderList(fixedHeight)
           : (
             <AutoSizer disableWidth>
-              {({ height }) => renderList(height)}
+              {({ height = 0 }) => renderList(height)}
             </AutoSizer>
           )
       }

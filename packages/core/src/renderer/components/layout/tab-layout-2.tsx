@@ -34,21 +34,17 @@ export const TabLayout = observer(
 
         {hasTabs && (
           <Tabs center>
-            {tabs.map(({ registration, isActive }) => {
-              const active = isActive.get();
-
-              return (
-                <Tab
-                  onClick={registration.onClick}
-                  key={registration.id}
-                  label={registration.title}
-                  active={active}
-                  data-is-active-test={active}
-                  data-testid={`tab-link-for-${registration.id}`}
-                  value={undefined}
-                />
-              );
-            })}
+            {tabs.map(({ onClick, id, title, isActive }) => (
+              <Tab
+                onClick={onClick}
+                key={id}
+                label={title}
+                active={isActive.get()}
+                data-is-active-test={isActive.get()}
+                data-testid={`tab-link-for-${id}`}
+                value={undefined}
+              />
+            ))}
           </Tabs>
         )}
 

@@ -72,7 +72,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
       });
     });
     di.override(spawnInjectable, () => spawnMock);
-    di.override(randomUUIDInjectable, () => () => "deadbeef");
+    di.override(randomUUIDInjectable, () => () => "dead-foo-bar-foo-beef");
 
     di.override(processEnvInjectable, () => ({
       SOME_ENV_VAR: "some-env-value",
@@ -110,7 +110,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
     });
 
     it("should send the command via stdin", () => {
-      expect(stdinValue).toBe(`'/some/process/exec/path' -p '"deadbeef" + JSON.stringify(process.env) + "deadbeef"'`);
+      expect(stdinValue).toBe(`'/some/process/exec/path' -p '"deadfoobarfoobeef" + JSON.stringify(process.env) + "deadfoobarfoobeef"'`);
     });
 
     it("should close stdin", () => {
@@ -167,7 +167,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
           ...expectedEnv,
         };
 
-        shellStdout.emit("data", Buffer.from(`some-other-datadeadbeef${JSON.stringify(fakeInnerEnv)}deadbeefsome-third-other-data`));
+        shellStdout.emit("data", Buffer.from(`some-other-datadeadfoobarfoobeef${JSON.stringify(fakeInnerEnv)}deadfoobarfoobeefsome-third-other-data`));
       });
 
       describe("when process successfully exits", () => {
@@ -216,7 +216,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
     });
 
     it("should send the command via stdin", () => {
-      expect(stdinValue).toBe(` '/some/process/exec/path' -p '"deadbeef" + JSON.stringify(process.env) + "deadbeef"'`);
+      expect(stdinValue).toBe(` '/some/process/exec/path' -p '"deadfoobarfoobeef" + JSON.stringify(process.env) + "deadfoobarfoobeef"'`);
     });
 
     it("should close stdin", () => {
@@ -273,7 +273,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
           ...expectedEnv,
         };
 
-        shellStdout.emit("data", Buffer.from(`some-other-datadeadbeef${JSON.stringify(fakeInnerEnv)}deadbeefsome-third-other-data`));
+        shellStdout.emit("data", Buffer.from(`some-other-datadeadfoobarfoobeef${JSON.stringify(fakeInnerEnv)}deadfoobarfoobeefsome-third-other-data`));
       });
 
       describe("when process successfully exits", () => {
@@ -312,7 +312,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
         [
           "-l",
           "-c",
-          `'/some/process/exec/path' -p '"deadbeef" + JSON.stringify(process.env) + "deadbeef"'`,
+          `'/some/process/exec/path' -p '"deadfoobarfoobeef" + JSON.stringify(process.env) + "deadfoobarfoobeef"'`,
         ],
         expect.objectContaining({
           env: expectedEnv,
@@ -378,7 +378,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
           ...expectedEnv,
         };
 
-        shellStdout.emit("data", Buffer.from(`some-other-datadeadbeef${JSON.stringify(fakeInnerEnv)}deadbeefsome-third-other-data`));
+        shellStdout.emit("data", Buffer.from(`some-other-datadeadfoobarfoobeef${JSON.stringify(fakeInnerEnv)}deadfoobarfoobeefsome-third-other-data`));
       });
 
       describe("when process successfully exits", () => {
@@ -425,7 +425,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
     });
 
     it("should send the command via stdin", () => {
-      expect(stdinValue).toBe(`Command '/some/process/exec/path' -p '\\"deadbeef\\" + JSON.stringify(process.env) + \\"deadbeef\\"'`);
+      expect(stdinValue).toBe(`Command '/some/process/exec/path' -p '\\"deadfoobarfoobeef\\" + JSON.stringify(process.env) + \\"deadfoobarfoobeef\\"'`);
     });
 
     it("should close stdin", () => {
@@ -482,7 +482,7 @@ describe("computeUnixShellEnvironment technical tests", () => {
           ...expectedEnv,
         };
 
-        shellStdout.emit("data", Buffer.from(`some-other-datadeadbeef${JSON.stringify(fakeInnerEnv)}deadbeefsome-third-other-data`));
+        shellStdout.emit("data", Buffer.from(`some-other-datadeadfoobarfoobeef${JSON.stringify(fakeInnerEnv)}deadfoobarfoobeefsome-third-other-data`));
       });
 
       describe("when process successfully exits", () => {

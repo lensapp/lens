@@ -1,49 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`get-multi-export-config given maximal package.json, when creating configuration works 1`] = `
-Array [
-  Object {
-    "entry": Object {
+[
+  {
+    "entry": {
       "index": "./index.ts",
     },
-    "externalsPresets": Object {
+    "externals": [
+      [Function],
+      [Function],
+    ],
+    "externalsPresets": {
       "node": true,
     },
     "mode": "production",
-    "module": Object {
-      "rules": Array [
-        Object {
+    "module": {
+      "rules": [
+        {
           "loader": "ts-loader",
           "test": /\\\\\\.ts\\(x\\)\\?\\$/,
         },
       ],
     },
     "name": "./index.ts",
-    "node": Object {
+    "node": {
       "__dirname": true,
       "__filename": true,
     },
-    "output": Object {
+    "output": {
       "filename": [Function],
       "libraryTarget": "commonjs2",
       "path": "/some-working-directory/dist",
     },
-    "performance": Object {
+    "performance": {
       "hints": "error",
       "maxEntrypointSize": 100000,
     },
-    "plugins": Array [
+    "plugins": [
       MakePeerDependenciesExternalPlugin {},
       ProtectFromImportingNonDependencies {},
       ForkTsCheckerWebpackPlugin {
-        "options": Object {
-          "typescript": Object {
-            "configOverwrite": Object {
-              "compilerOptions": Object {
+        "options": {
+          "typescript": {
+            "configOverwrite": {
+              "compilerOptions": {
                 "declaration": true,
                 "declarationDir": "/some-working-directory/dist",
               },
-              "include": Array [
+              "include": [
                 "./index.ts",
               ],
             },
@@ -52,8 +56,8 @@ Array [
         },
       },
     ],
-    "resolve": Object {
-      "extensions": Array [
+    "resolve": {
+      "extensions": [
         ".ts",
         ".tsx",
         ".js",
@@ -61,48 +65,52 @@ Array [
     },
     "target": "node",
   },
-  Object {
-    "entry": Object {
+  {
+    "entry": {
       "index": "./some-entrypoint/index.ts",
     },
-    "externalsPresets": Object {
+    "externals": [
+      [Function],
+      [Function],
+    ],
+    "externalsPresets": {
       "node": true,
     },
     "mode": "production",
-    "module": Object {
-      "rules": Array [
-        Object {
+    "module": {
+      "rules": [
+        {
           "loader": "ts-loader",
           "test": /\\\\\\.ts\\(x\\)\\?\\$/,
         },
       ],
     },
     "name": "./some-entrypoint/index.ts",
-    "node": Object {
+    "node": {
       "__dirname": true,
       "__filename": true,
     },
-    "output": Object {
+    "output": {
       "filename": [Function],
       "libraryTarget": "commonjs2",
       "path": "/some-working-directory/dist/some-entrypoint",
     },
-    "performance": Object {
+    "performance": {
       "hints": "error",
       "maxEntrypointSize": 100000,
     },
-    "plugins": Array [
+    "plugins": [
       MakePeerDependenciesExternalPlugin {},
       ProtectFromImportingNonDependencies {},
       ForkTsCheckerWebpackPlugin {
-        "options": Object {
-          "typescript": Object {
-            "configOverwrite": Object {
-              "compilerOptions": Object {
+        "options": {
+          "typescript": {
+            "configOverwrite": {
+              "compilerOptions": {
                 "declaration": true,
                 "declarationDir": "/some-working-directory/dist/some-entrypoint",
               },
-              "include": Array [
+              "include": [
                 "./some-entrypoint/index.ts",
               ],
             },
@@ -111,8 +119,8 @@ Array [
         },
       },
     ],
-    "resolve": Object {
-      "extensions": Array [
+    "resolve": {
+      "extensions": [
         ".ts",
         ".tsx",
         ".js",
@@ -120,30 +128,34 @@ Array [
     },
     "target": "node",
   },
-  Object {
-    "entry": Object {
+  {
+    "entry": {
       "index": "./some-other-entrypoint/index.ts",
     },
-    "externalsPresets": Object {
+    "externals": [
+      [Function],
+      [Function],
+    ],
+    "externalsPresets": {
       "node": true,
     },
     "mode": "production",
-    "module": Object {
-      "rules": Array [
-        Object {
+    "module": {
+      "rules": [
+        {
           "loader": "ts-loader",
           "test": /\\\\\\.ts\\(x\\)\\?\\$/,
         },
-        Object {
+        {
           "test": /\\\\\\.s\\?css\\$/,
-          "use": Array [
-            Object {
+          "use": [
+            {
               "some": "miniCssExtractPluginLoader",
             },
-            Object {
+            {
               "loader": "css-loader",
-              "options": Object {
-                "modules": Object {
+              "options": {
+                "modules": {
                   "auto": /\\\\\\.module\\\\\\./i,
                   "localIdentName": "[name]__[local]--[hash:base64:5]",
                   "mode": "local",
@@ -151,7 +163,7 @@ Array [
                 "sourceMap": false,
               },
             },
-            Object {
+            {
               "loader": "postcss-loader",
               "options": Object {
                 "postcssOptions": Object {
@@ -162,9 +174,9 @@ Array [
                 "sourceMap": false,
               },
             },
-            Object {
+            {
               "loader": "sass-loader",
-              "options": Object {
+              "options": {
                 "sourceMap": false,
               },
             },
@@ -185,31 +197,31 @@ Array [
       ],
     },
     "name": "./some-other-entrypoint/index.ts",
-    "node": Object {
+    "node": {
       "__dirname": true,
       "__filename": true,
     },
-    "output": Object {
+    "output": {
       "filename": [Function],
       "libraryTarget": "commonjs2",
       "path": "/some-working-directory/dist/some-other-entrypoint",
     },
-    "performance": Object {
+    "performance": {
       "hints": "error",
       "maxEntrypointSize": 100000,
     },
-    "plugins": Array [
+    "plugins": [
       MakePeerDependenciesExternalPlugin {},
       ProtectFromImportingNonDependencies {},
       ForkTsCheckerWebpackPlugin {
-        "options": Object {
-          "typescript": Object {
-            "configOverwrite": Object {
-              "compilerOptions": Object {
+        "options": {
+          "typescript": {
+            "configOverwrite": {
+              "compilerOptions": {
                 "declaration": true,
                 "declarationDir": "/some-working-directory/dist/some-other-entrypoint",
               },
-              "include": Array [
+              "include": [
                 "./some-other-entrypoint/index.ts",
               ],
             },
@@ -219,22 +231,22 @@ Array [
       },
       MiniCssExtractPlugin {
         "_sortedModulesCache": WeakMap {},
-        "options": Object {
+        "options": {
           "chunkFilename": "[name].css",
           "experimentalUseImportModule": undefined,
           "filename": "[name].css",
           "ignoreOrder": false,
           "runtime": true,
         },
-        "runtimeOptions": Object {
+        "runtimeOptions": {
           "attributes": undefined,
           "insert": undefined,
           "linkType": "text/css",
         },
       },
     ],
-    "resolve": Object {
-      "extensions": Array [
+    "resolve": {
+      "extensions": [
         ".ts",
         ".tsx",
         ".js",
