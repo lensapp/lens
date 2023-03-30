@@ -97,23 +97,6 @@
     ],
     "runtime": "@side/jest-runtime"
   },
-  "nx": {
-    "targets": {
-      "build": {
-        "dependsOn": [
-          "^build"
-        ],
-        "outputs": [
-          "{workspaceRoot}/static/build/"
-        ]
-      },
-      "dev": {
-        "outputs": [
-          "{workspaceRoot}/static/build/"
-        ]
-      }
-    }
-  },
   "dependencies": {
     "@astronautlabs/jsonpath": "^1.1.0",
     "@hapi/call": "^9.0.1",

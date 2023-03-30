@@ -11,8 +11,6 @@ const apiBaseServerAddressInjectable = getInjectable({
   instantiate: (di) => {
     const lensProxyPort = di.inject(lensProxyPortInjectable);
 
-    console.log("hello");
-
     return `https://127.0.0.1:${lensProxyPort.get()}`;
   },
   injectionToken: apiBaseServerAddressInjectionToken,

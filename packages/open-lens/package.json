@@ -59,28 +59,9 @@
   },
   "nx": {
     "targets": {
-      "build": {
-        "dependsOn": [
-          "^build"
-        ],
-        "outputs": [
-          "{workspaceRoot}/binaries/",
-          "{workspaceRoot}/build/webpack/",
-          "{workspaceRoot}/static/build/"
-        ]
-      },
-      "dev": {
-        "outputs": [
-          "{workspaceRoot}/binaries/",
-          "{workspaceRoot}/static/build/"
-        ]
-      },
       "build:app": {
         "dependsOn": [
           "build"
-        ],
-        "outputs": [
-          "{workspaceRoot}/dist/"
         ]
       },
       "test:integration": {
