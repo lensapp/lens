@@ -21,7 +21,7 @@ const metricsDetailsComponentEnabledInjectable = getInjectable({
         return false;
       }
 
-      return current.object.kind == kind && metricsEnabled.get();
+      return metricsEnabled.get() && current.object.kind == kind;
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({
