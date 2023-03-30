@@ -25,17 +25,6 @@
     "dev": {
       "dependsOn": [
         "^dev"
-      ],
-      "outputs": [
-        "{workspaceRoot}/dist",
-        "{workspaceRoot}/static/build",
-        "{workspaceRoot}/binaries",
-        "{workspaceRoot}/build/webpack"
-      ],
-      "inputs": [
-        "{workspaceRoot}/src/**/*.ts",
-        "{workspaceRoot}/src/**/*.tsx",
-        "{workspaceRoot}/index.ts"
       ]
     },
     "lint": {
