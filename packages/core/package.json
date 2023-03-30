@@ -122,6 +122,7 @@
     "@hapi/subtext": "^7.1.0",
     "@k8slens/cluster-settings": "^6.5.0-alpha.1",
     "@k8slens/node-fetch": "^6.5.0-alpha.1",
+    "@k8slens/react-application-root": "^1.0.0-alpha.0",
     "@kubernetes/client-node": "^0.18.1",
     "@material-ui/styles": "^4.11.5",
     "@ogre-tools/fp": "^15.1.2",
