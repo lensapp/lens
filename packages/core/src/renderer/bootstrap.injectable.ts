@@ -3,9 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import {
-  afterApplicationIsLoadedInjectionToken,
-} from "@k8slens/application";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import { bootstrap } from "./bootstrap";
 import startFrameInjectable from "./start-frame/start-frame.injectable";
 
@@ -22,7 +20,7 @@ const bootstrapInjectable = getInjectable({
 
   causesSideEffects: true,
 
-  injectionToken: afterApplicationIsLoadedInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default bootstrapInjectable;
