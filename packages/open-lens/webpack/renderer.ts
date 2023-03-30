@@ -7,7 +7,6 @@
  import type webpack from "webpack";
  import HtmlWebpackPlugin from "html-webpack-plugin";
  import MiniCssExtractPlugin from "mini-css-extract-plugin";
- import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
  import MonacoWebpackPlugin from "monaco-editor-webpack-plugin";
  import CircularDependencyPlugin from "circular-dependency-plugin";
  import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
@@ -84,7 +83,6 @@
       CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
       CONTEXT_MATCHER_FOR_FEATURES: `/\\/(renderer|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
     }),
-    new ForkTsCheckerPlugin(),
 
     // see also: https://github.com/Microsoft/monaco-editor-webpack-plugin#options
     new MonacoWebpackPlugin({

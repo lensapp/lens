@@ -13,8 +13,8 @@ import { contentTypes } from "../../router/router-content-types";
 import loggerInjectable from "../../../common/logger.injectable";
 import { publicPath } from "../../../common/vars";
 
-const prodStaticFileRouteHandlerInjectable = getInjectable({
-  id: "prod-static-file-route-handler",
+const staticFileRouteHandlerInjectable = getInjectable({
+  id: "tatic-file-route-handler",
   instantiate: (di) => {
     const readFileBuffer = di.inject(readFileBufferInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
@@ -56,4 +56,4 @@ const prodStaticFileRouteHandlerInjectable = getInjectable({
   },
 });
 
-export default prodStaticFileRouteHandlerInjectable;
+export default staticFileRouteHandlerInjectable;
