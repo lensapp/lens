@@ -35,7 +35,7 @@ const NonInjectedSidebar = observer(({
           .map(hierarchicalSidebarItem => (
             <SidebarItem
               item={hierarchicalSidebarItem}
-              key={hierarchicalSidebarItem.registration.id}
+              key={hierarchicalSidebarItem.id}
             />
           ))
       }
