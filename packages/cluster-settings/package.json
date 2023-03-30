@@ -20,6 +20,7 @@
     "build": "npm run generate-types && swc ./src/index.ts -d ./dist",
     "prepare": "npm run build",
     "dev": "npm run build",
+    "watch-dev": "npm run dev",
     "prepare:test": "npm run build"
   },
   "devDependencies": {

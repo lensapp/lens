@@ -49,6 +49,7 @@
     "build": "cross-env NODE_ENV=production webpack --config webpack/library-bundle.ts --progress",
     "clean": "rimraf dist static/build",
     "dev": "cross-env NODE_ENV=development webpack --config webpack/library-bundle.ts --progress",
+    "watch-dev": "npm run dev",
     "test:unit": "jest --testPathIgnorePatterns integration",
     "test:watch": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
     "lint": "PROD=true eslint --ext js,ts,tsx --max-warnings=0 .",

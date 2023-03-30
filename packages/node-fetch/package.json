@@ -16,6 +16,7 @@
   "scripts": {
     "clean": "rimraf dist/",
     "dev": "webpack --mode=development --config webpack.ts --progress",
+    "watch-dev": "npm run dev",
     "build": "webpack --config webpack.ts --progress",
     "lint": "exit 0",
     "prepare:test": "npm run build"

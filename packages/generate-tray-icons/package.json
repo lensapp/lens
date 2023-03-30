@@ -9,6 +9,7 @@
     "postbuild": "run-script-os",
     "postbuild:nix": "chmod u+x ./dist/index.js",
     "dev": "npm run build",
+    "watch-dev": "npm run dev",
     "prepare": "npm run build"
   },
   "bin": {

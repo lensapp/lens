@@ -28,6 +28,7 @@
   "scripts": {
     "build": "webpack --progress",
     "dev": "webpack --mode=development --progress",
+    "watch-dev": "npm run dev",
     "test:unit": "jest --coverage --runInBand",
     "lint:fix": "lens-lint --fix",
     "lint": "lens-lint"
