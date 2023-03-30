@@ -5,10 +5,7 @@
 
 import "./components/app.scss";
 
-import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import { DefaultProps } from "./mui-base-theme";
-import { DiContextProvider } from "@ogre-tools/injectable-react";
+import { unmountComponentAtNode } from "react-dom";
 import type {
   DiContainerForInjection,
 } from "@ogre-tools/injectable";
@@ -17,8 +14,6 @@ import extensionDiscoveryInjectable from "../extensions/extension-discovery/exte
 import extensionInstallationStateStoreInjectable from "../extensions/extension-installation-state-store/extension-installation-state-store.injectable";
 import initRootFrameInjectable from "./frames/root-frame/init-root-frame.injectable";
 import initClusterFrameInjectable from "./frames/cluster-frame/init-cluster-frame/init-cluster-frame.injectable";
-import { Router } from "react-router";
-import historyInjectable from "./navigation/history.injectable";
 import assert from "assert";
 
 export async function bootstrap(di: DiContainerForInjection) {
@@ -30,16 +25,13 @@ export async function bootstrap(di: DiContainerForInjection) {
   await di.inject(extensionDiscoveryInjectable).init();
   di.inject(extensionInstallationStateStoreInjectable).bindIpcListeners();
 
-  let App;
   let initializeApp;
 
   // TODO: Introduce proper architectural boundaries between root and cluster iframes
   if (process.isMainFrame) {
     initializeApp = di.inject(initRootFrameInjectable);
-    App = (await import("./frames/root-frame/root-frame")).RootFrame;
   } else {
     initializeApp = di.inject(initClusterFrameInjectable);
-    App = (await import("./frames/cluster-frame/cluster-frame")).ClusterFrame;
   }
 
   try {
@@ -50,15 +42,4 @@ export async function bootstrap(di: DiContainerForInjection) {
       isTopFrameView: process.isMainFrame,
     });
   }
-
-  const history = di.inject(historyInjectable);
-
-  render(
-    <DiContextProvider value={{ di }}>
-      <Router history={history}>
-        {DefaultProps(App)}
-      </Router>
-    </DiContextProvider>,
-    rootElem,
-  );
 }
