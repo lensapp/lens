@@ -10,7 +10,7 @@ export const beforeQuitOfFrontEndInjectionToken = getInjectionToken<RunnableSync
   id: "before-quit-of-front-end",
 });
 
-export const beforeQuitOfBackEndInjectionToken = getInjectionToken<RunnableSync>({
+export const beforeQuitOfBackEndInjectionToken = getInjectionToken<Runnable>({
   id: "before-quit-of-back-end",
 });
 
