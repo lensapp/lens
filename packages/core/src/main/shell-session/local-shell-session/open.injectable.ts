@@ -24,6 +24,8 @@ import appNameInjectable from "../../../common/vars/app-name.injectable";
 import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import statInjectable from "../../../common/fs/stat.injectable";
+import shellSessionEnvsInjectable from "../shell-envs.injectable";
+import shellSessionProcessesInjectable from "../processes.injectable";
 
 export interface OpenLocalShellSessionArgs {
   websocket: WebSocket;
@@ -47,6 +49,8 @@ const openLocalShellSessionInjectable = getInjectable({
       userShellSetting: di.inject(userShellSettingInjectable),
       appName: di.inject(appNameInjectable),
       buildVersion: di.inject(buildVersionInjectable),
+      shellSessionEnvs: di.inject(shellSessionEnvsInjectable),
+      shellSessionProcesses: di.inject(shellSessionProcessesInjectable),
       modifyTerminalShellEnv: di.inject(modifyTerminalShellEnvInjectable),
       emitAppEvent: di.inject(emitAppEventInjectable),
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),

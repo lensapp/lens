@@ -47,7 +47,7 @@ export function isLongRunningRequest(reqUrl: string) {
 
 /**
  * This is the list of ports that chrome considers unsafe to allow HTTP
- * conntections to. Because they are the standard ports for processes that are
+ * connections to. Because they are the standard ports for processes that are
  * too forgiving in the connection types they accept.
  *
  * If we get one of these ports, the easiest thing to do is to just try again.
@@ -165,10 +165,17 @@ export class LensProxy {
   }
 
   close() {
+    if (this.closed) {
+      return;
+    }
+
+    // mark as closed immediately
+    this.closed = true;
     this.dependencies.logger.info("[LENS-PROXY]: Closing server");
 
-    this.proxyServer.close();
-    this.closed = true;
+    return new Promise<void>((resolve) => {
+      this.proxyServer.close(() => resolve());
+    });
   }
 
   protected configureProxy(proxy: httpProxy): httpProxy {

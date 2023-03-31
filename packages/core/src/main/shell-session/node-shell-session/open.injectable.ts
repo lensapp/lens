@@ -20,6 +20,8 @@ import buildVersionInjectable from "../../vars/build-version/build-version.injec
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import statInjectable from "../../../common/fs/stat.injectable";
 import createKubeApiInjectable from "../../../common/k8s-api/create-kube-api.injectable";
+import shellSessionEnvsInjectable from "../shell-envs.injectable";
+import shellSessionProcessesInjectable from "../processes.injectable";
 
 export interface NodeShellSessionArgs {
   websocket: WebSocket;
@@ -41,6 +43,8 @@ const openNodeShellSessionInjectable = getInjectable({
       userShellSetting: di.inject(userShellSettingInjectable),
       appName: di.inject(appNameInjectable),
       buildVersion: di.inject(buildVersionInjectable),
+      shellSessionEnvs: di.inject(shellSessionEnvsInjectable),
+      shellSessionProcesses: di.inject(shellSessionProcessesInjectable),
       createKubeJsonApiForCluster: di.inject(createKubeJsonApiForClusterInjectable),
       computeShellEnvironment: di.inject(computeShellEnvironmentInjectable),
       spawnPty: di.inject(spawnPtyInjectable),
