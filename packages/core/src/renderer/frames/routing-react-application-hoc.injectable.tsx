@@ -6,25 +6,26 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { Router } from "react-router";
 import historyInjectable from "../navigation/history.injectable";
 import React from "react";
+
 import {
-  reactApplicationWrapperInjectionToken,
+  reactApplicationHigherOrderComponentInjectionToken,
 } from "@k8slens/react-application-root";
 
-const routingApplicationRootWrapperInjectable = getInjectable({
-  id: "routing-application-root-wrapper",
+const routingReactApplicationHocInjectable = getInjectable({
+  id: "routing-react-application-hoc",
 
   instantiate: (di) => {
     const history = di.inject(historyInjectable);
 
-    return (Component) => () =>
+    return ({ children }) =>
       (
         <Router history={history}>
-          <Component />
+          {children}
         </Router>
       );
   },
 
-  injectionToken: reactApplicationWrapperInjectionToken,
+  injectionToken: reactApplicationHigherOrderComponentInjectionToken,
 });
 
-export default routingApplicationRootWrapperInjectable;
+export default routingReactApplicationHocInjectable;
