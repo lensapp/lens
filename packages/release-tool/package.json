@@ -7,7 +7,9 @@
   "private": true,
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "swc ./src/index.ts -d ./dist"
+    "build": "swc ./src/index.ts -d ./dist",
+    "postbuild": "run-script-os",
+    "postbuild:nix": "chmod u+x ./dist/index.js"
   },
   "bin": {
     "create-release-pr": "./dist/index.js"
@@ -19,7 +21,8 @@
     "@types/inquirer": "^9.0.3",
     "@types/node": "^16.18.11",
     "@types/semver": "^7.3.13",
-    "rimraf": "^4.4.1"
+    "rimraf": "^4.4.1",
+    "run-script-os": "^1.1.6"
   },
   "dependencies": {
     "chalk": "^5.2.0",

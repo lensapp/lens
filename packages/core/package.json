@@ -48,8 +48,6 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config webpack/library-bundle.ts --progress",
     "clean": "rimraf dist static/build",
-    "prepare:dev": "cross-env NODE_ENV=development webpack --config webpack/library-bundle.ts --progress",
-    "dev": "cross-env NODE_ENV=development webpack --config webpack/library-bundle.ts --watch",
     "test:unit": "jest --testPathIgnorePatterns integration",
     "test:watch": "func() { jest ${1} --watch --testPathIgnorePatterns integration; }; func",
     "lint": "PROD=true eslint --ext js,ts,tsx --max-warnings=0 .",
@@ -98,18 +96,12 @@
     ],
     "runtime": "@side/jest-runtime"
   },
-  "build": {},
   "nx": {
     "targets": {
       "build": {
         "dependsOn": [
           "^build"
         ],
-        "outputs": [
-          "{workspaceRoot}/static/build/"
-        ]
-      },
-      "dev": {
         "outputs": [
           "{workspaceRoot}/static/build/"
         ]

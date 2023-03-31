@@ -7,6 +7,8 @@
   "scripts": {
     "clean": "rimraf dist/",
     "build": "swc ./src/index.ts -d ./dist/",
+    "postbuild": "run-script-os",
+    "postbuild:nix": "chmod u+x ./dist/index.js",
     "prepare:dev": "npm run build",
     "prepare": "npm run build"
   },
@@ -38,6 +40,7 @@
     "@types/node": "^16.18.11",
     "@types/semver": "^7.3.13",
     "@types/tar-stream": "^2.2.2",
-    "rimraf": "^4.4.1"
+    "rimraf": "^4.4.1",
+    "run-script-os": "^1.1.6"
   }
 }
