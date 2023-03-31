@@ -104,10 +104,236 @@ exports[`kube-object-list-layout given pod store renders 1`] = `
           class="items box grow flex column"
         >
           <div
-            class="Table flex column KubeObjectListLayout Pods box grow dark selectable scrollable autoSize virtual"
+            class="Table flex column KubeObjectListLayout Pods box grow dark selectable scrollable sortable autoSize virtual"
           >
             <div
+              class="TableHead sticky nowrap topLine"
+            >
+              <div
+                class="TableCell checkbox"
+              >
+                <label
+                  class="Checkbox flex align-center"
+                >
+                  <input
+                    type="checkbox"
+                  />
+                  <i
+                    class="box flex align-center"
+                  />
+                </label>
+              </div>
+              <div
+                class="TableCell name nowrap sorting"
+                id="name"
+              >
+                <div
+                  class="content"
+                >
+                  Name
+                </div>
+                <i
+                  class="Icon sortIcon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="arrow_drop_down"
+                  >
+                    arrow_drop_down
+                  </span>
+                </i>
+              </div>
+              <div
+                class="TableCell warning nowrap"
+              >
+                <div
+                  class="content"
+                />
+              </div>
+              <div
+                class="TableCell namespace nowrap sorting"
+                id="namespace"
+              >
+                <div
+                  class="content"
+                >
+                  Namespace
+                </div>
+                <i
+                  class="Icon sortIcon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="arrow_drop_down"
+                  >
+                    arrow_drop_down
+                  </span>
+                </i>
+              </div>
+              <div
+                class="TableCell containers nowrap sorting"
+                id="containers"
+              >
+                <div
+                  class="content"
+                >
+                  Containers
+                </div>
+                <i
+                  class="Icon sortIcon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="arrow_drop_down"
+                  >
+                    arrow_drop_down
+                  </span>
+                </i>
+              </div>
+              <div
+                class="TableCell restarts nowrap sorting"
+                id="restarts"
+              >
+                <div
+                  class="content"
+                >
+                  Restarts
+                </div>
+                <i
+                  class="Icon sortIcon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="arrow_drop_down"
+                  >
+                    arrow_drop_down
+                  </span>
+                </i>
+              </div>
+              <div
+                class="TableCell owners nowrap sorting"
+                id="owners"
+              >
+                <div
+                  class="content"
+                >
+                  Controlled By
+                </div>
+                <i
+                  class="Icon sortIcon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="arrow_drop_down"
+                  >
+                    arrow_drop_down
+                  </span>
+                </i>
+              </div>
+              <div
+                class="TableCell node nowrap sorting"
+                id="node"
+              >
+                <div
+                  class="content"
+                >
+                  Node
+                </div>
+                <i
+                  class="Icon sortIcon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="arrow_drop_down"
+                  >
+                    arrow_drop_down
+                  </span>
+                </i>
+              </div>
+              <div
+                class="TableCell qos nowrap sorting"
+                id="qos"
+              >
+                <div
+                  class="content"
+                >
+                  QoS
+                </div>
+                <i
+                  class="Icon sortIcon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="arrow_drop_down"
+                  >
+                    arrow_drop_down
+                  </span>
+                </i>
+              </div>
+              <div
+                class="TableCell age nowrap sorting"
+                id="age"
+              >
+                <div
+                  class="content"
+                >
+                  Age
+                </div>
+                <i
+                  class="Icon sortIcon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="arrow_drop_down"
+                  >
+                    arrow_drop_down
+                  </span>
+                </i>
+              </div>
+              <div
+                class="TableCell status nowrap sorting"
+                id="status"
+              >
+                <div
+                  class="content"
+                >
+                  Status
+                </div>
+                <i
+                  class="Icon sortIcon material focusable"
+                >
+                  <span
+                    class="icon"
+                    data-icon-name="arrow_drop_down"
+                  >
+                    arrow_drop_down
+                  </span>
+                </i>
+              </div>
+              <div
+                class="TableCell menu nowrap"
+              >
+                <div
+                  class="content"
+                >
+                  <i
+                    class="Icon material interactive focusable"
+                    id="menu-actions-for-item-object-list-content"
+                    tabindex="0"
+                  >
+                    <span
+                      class="icon"
+                      data-icon-name="more_vert"
+                    >
+                      more_vert
+                    </span>
+                  </i>
+                </div>
+              </div>
+            </div>
+            <div
               class="Spinner singleColor center"
+              data-testid="kube-object-list-layout-spinner"
             />
           </div>
           <div

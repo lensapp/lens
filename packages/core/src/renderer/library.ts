@@ -12,6 +12,7 @@ export type {
 } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 
 export { nodeEnvInjectionToken } from "../common/vars/node-env-injection-token";
+export * from "./components/kube-object-list-layout/kube-object-list-layout-column-injection-token";
 export { registerLensCore } from "./register-lens-core";
 export { React, ReactDOM };
 export * as Mobx from "mobx";
