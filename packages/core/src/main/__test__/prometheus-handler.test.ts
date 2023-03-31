@@ -13,8 +13,8 @@ import { runInAction } from "mobx";
 import prometheusHandlerInjectable from "../cluster/prometheus-handler/prometheus-handler.injectable";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import lensProxyPortInjectable from "../lens-proxy/lens-proxy-port.injectable";
-import loadProxyKubeconfigInjectable from "../cluster/load-proxy-kubeconfig.injectable";
-import { KubeConfig } from "@kubernetes/client-node";
+import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
+import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable";
 
 enum ServiceResult {
   Success,
@@ -47,35 +47,46 @@ describe("PrometheusHandler", () => {
   let di: DiContainer;
   let cluster: Cluster;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     di = getDiForUnitTesting();
-    di.override(loadProxyKubeconfigInjectable, () => async () => {
-      const res = new KubeConfig();
-
-      res.addCluster({
-        name: "some-cluster-name",
-        server: "http://localhost:81",
-        skipTLSVerify: false,
-      });
-      res.addContext({
-        cluster: "some-cluster-name",
-        name: "some-context-name",
-        user: "some-user-name",
-      });
-      res.addUser({
-        name: "some-user-name",
-      });
-      res.setCurrentContext("some-context-name");
-
-      return res;
-    });
+    di.override(createKubeAuthProxyInjectable, () => () => ({
+      apiPrefix: "/some-api-prefix",
+      exit: () => {},
+      run: async () => {},
+      port: 9191,
+    }));
     di.override(directoryForTempInjectable, () => "/some-temp-dir");
     di.inject(lensProxyPortInjectable).set(12345);
 
+    const writeJsonFile = di.inject(writeJsonFileInjectable);
+    const kubeConfigPath = "/some/path-to-a-config";
+    const contextName = "some-context-name";
+
+    await writeJsonFile(kubeConfigPath, {
+      apiVersion: "v1",
+      kind: "Config",
+      clusters: [{
+        name: "some-cluster-name",
+        cluster: {
+          server: "https://localhost:8989",
+        },
+      }],
+      users: [{
+        name: "some-user-name",
+      }],
+      contexts: [{
+        name: contextName,
+        context: {
+          user: "some-user-name",
+          cluster: "some-cluster-name",
+        },
+      }],
+    });
+
     cluster = new Cluster({
-      contextName: "some-context-name",
+      contextName,
       id: "some-cluster-id",
-      kubeConfigPath: "/some/path",
+      kubeConfigPath,
     });
   });
 
