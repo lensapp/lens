@@ -4,14 +4,30 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeQuitOfBackEndInjectionToken } from "../runnable-tokens/before-quit-of-back-end-injection-token";
-import { ShellSession } from "../../shell-session/shell-session";
+import shellSessionProcessesInjectable from "../../shell-session/processes.injectable";
+import prefixedLoggerInjectable from "../../../common/logger/prefixed-logger.injectable";
 
 const cleanUpShellSessionsInjectable = getInjectable({
   id: "clean-up-shell-sessions",
 
-  instantiate: () => ({
+  instantiate: (di) => ({
     id: "clean-up-shell-sessions",
-    run: () => void ShellSession.cleanup(),
+    run: () => {
+      const shellSessionProcesses = di.inject(shellSessionProcessesInjectable);
+      const logger = di.inject(prefixedLoggerInjectable, "SHELL-SESSIONS");
+
+      logger.info("Killing all remaining shell sessions");
+
+      for (const { pid } of shellSessionProcesses.values()) {
+        try {
+          process.kill(pid);
+        } catch {
+          // ignore error
+        }
+      }
+
+      shellSessionProcesses.clear();
+    },
   }),
 
   injectionToken: beforeQuitOfBackEndInjectionToken,

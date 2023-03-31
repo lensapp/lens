@@ -10,6 +10,7 @@ import extensionDiscoveryInjectable from "../../../extensions/extension-discover
 import extensionLoaderInjectable from "../../../extensions/extension-loader/extension-loader.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
 import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
+import setupShellInjectable from "../../../features/shell-sync/main/setup-shell.injectable";
 
 const initializeExtensionsInjectable = getInjectable({
   id: "initialize-extensions",
@@ -57,6 +58,7 @@ const initializeExtensionsInjectable = getInjectable({
           console.trace();
         }
       },
+      runAfter: di.inject(setupShellInjectable),
     };
   },
 

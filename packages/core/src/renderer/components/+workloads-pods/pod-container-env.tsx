@@ -5,19 +5,19 @@
 
 import "./pod-container-env.scss";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
-import type { Container, EnvVarKeySelector, Secret } from "../../../common/k8s-api/endpoints";
+import type { Container } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
 import { autorun } from "mobx";
-import { Icon } from "../icon";
-import { base64, cssNames, object } from "../../utils";
+import { object } from "../../utils";
 import _ from "lodash";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ConfigMapStore } from "../+config-maps/store";
 import type { SecretStore } from "../+config-secrets/store";
 import configMapStoreInjectable from "../+config-maps/store.injectable";
 import secretStoreInjectable from "../+config-secrets/store.injectable";
+import { SecretKey } from "./secret-key";
 
 export interface ContainerEnvironmentProps {
   container: Container;
@@ -74,9 +74,11 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
         } else if (secretKeyRef?.name) {
           secretValue = (
             <SecretKey
-              reference={secretKeyRef}
+              reference={{
+                ...secretKeyRef,
+                name: secretKeyRef.name,
+              }}
               namespace={namespace}
-              secretStore={secretStore}
             />
           );
         } else if (configMapKeyRef?.name) {
@@ -151,7 +153,6 @@ const NonInjectedContainerEnvironment = observer((props: Dependencies & Containe
               key,
             }}
             namespace={namespace}
-            secretStore={secretStore}
           />
         </div>
       ));
@@ -172,52 +173,3 @@ export const ContainerEnvironment = withInjectables<Dependencies, ContainerEnvir
     secretStore: di.inject(secretStoreInjectable),
   }),
 });
-
-interface SecretKeyProps {
-  reference: EnvVarKeySelector;
-  namespace: string;
-  secretStore: SecretStore;
-}
-
-const SecretKey = (props: SecretKeyProps) => {
-  const {
-    reference: { name, key },
-    namespace,
-    secretStore,
-  } = props;
-
-  const [loading, setLoading] = useState(false);
-  const [secret, setSecret] = useState<Secret>();
-
-  if (!name) {
-    return null;
-  }
-
-  const showKey = async (evt: React.MouseEvent) => {
-    evt.preventDefault();
-    setLoading(true);
-    const secret = await secretStore.load({ name, namespace });
-
-    setLoading(false);
-    setSecret(secret);
-  };
-
-  const value = secret?.data?.[key];
-
-  if (value) {
-    return <>{base64.decode(value)}</>;
-  }
-
-  return (
-    <>
-      {`secretKeyRef(${name}.${key})`}
-      &nbsp;
-      <Icon
-        className={cssNames("secret-button", { loading })}
-        material="visibility"
-        tooltip="Show"
-        onClick={showKey}
-      />
-    </>
-  );
-};
