@@ -8,7 +8,7 @@ import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.
 import type { ClusterModel } from "../../../../common/cluster-types";
 import { Cluster } from "../../../../common/cluster/cluster";
 import clustersStateInjectable from "./state.injectable";
-import { setAndInsert } from "@k8slens/utilities";
+import { setAndGet } from "@k8slens/utilities";
 
 export type AddCluster = (clusterModel: ClusterModel) => Cluster;
 
@@ -21,7 +21,7 @@ const addClusterInjectable = getInjectable({
     return action((clusterModel) => {
       emitAppEvent({ name: "cluster", action: "add" });
 
-      return setAndInsert(clustersState, clusterModel.id, new Cluster(clusterModel));
+      return setAndGet(clustersState, clusterModel.id, new Cluster(clusterModel));
     });
   },
 });

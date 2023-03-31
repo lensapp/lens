@@ -88,7 +88,7 @@ export async function getOrInsertWithAsync<K, V>(map: Map<K, V>, key: K, asyncBu
 /**
  * Insert `val` into `map` under `key` and then get the value back
  */
-export function setAndInsert<K, V>(map: Map<K, V>, key: K, val: V): V {
+export function setAndGet<K, V>(map: Map<K, V>, key: K, val: V): V {
   map.set(key, val);
 
   return map.get(key)!;
