@@ -8,6 +8,7 @@
     "clean": "rimraf dist/",
     "build": "swc ./src/index.ts -d ./dist/",
     "postbuild": "run-script-os",
+    "postbuild:windows": "",
     "postbuild:nix": "chmod u+x ./dist/index.js",
     "prepare:dev": "npm run build",
     "prepare": "npm run build"
