@@ -5,8 +5,8 @@
 import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
-import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import type { Discover } from "@k8slens/react-testing-library-discovery";
+import { discoverFor } from "@k8slens/react-testing-library-discovery";
 
 describe("show-about-using-tray", () => {
   let applicationBuilder: ApplicationBuilder;

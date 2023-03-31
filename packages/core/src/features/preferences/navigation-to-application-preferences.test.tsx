@@ -7,8 +7,8 @@ import type { RenderResult } from "@testing-library/react";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import navigateToProxyPreferencesInjectable from "./common/navigate-to-proxy-preferences.injectable";
-import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
-import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import type { Discover } from "@k8slens/react-testing-library-discovery";
+import { discoverFor } from "@k8slens/react-testing-library-discovery";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 
 describe("preferences - navigation to application preferences", () => {

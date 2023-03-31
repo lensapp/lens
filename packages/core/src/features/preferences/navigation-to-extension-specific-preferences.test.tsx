@@ -8,8 +8,8 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
-import type { Discover } from "../../renderer/components/test-utils/discovery-of-html-elements";
-import { discoverFor } from "../../renderer/components/test-utils/discovery-of-html-elements";
+import type { Discover } from "@k8slens/react-testing-library-discovery";
+import { discoverFor } from "@k8slens/react-testing-library-discovery";
 import logErrorInjectable from "../../common/log-error.injectable";
 
 describe("preferences - navigation to extension specific preferences", () => {
