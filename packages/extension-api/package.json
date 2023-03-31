@@ -35,7 +35,7 @@
     "@types/webpack-node-externals": "2.5.3",
     "css-loader": "^6.7.2",
     "node-loader": "^2.0.0",
-    "rimraf": "^4.1.2",
+    "rimraf": "^4.4.1",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
