@@ -19,6 +19,6 @@
     "@types/command-line-args": "^5.2.0",
     "@types/node": "^16.18.11",
     "@types/semver": "^7.3.13",
-    "rimraf": "^4.1.2"
+    "rimraf": "^4.4.1"
   }
 }

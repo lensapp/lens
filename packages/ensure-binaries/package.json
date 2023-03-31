@@ -38,6 +38,6 @@
     "@types/node": "^16.18.11",
     "@types/semver": "^7.3.13",
     "@types/tar-stream": "^2.2.2",
-    "rimraf": "^4.1.2"
+    "rimraf": "^4.4.1"
   }
 }

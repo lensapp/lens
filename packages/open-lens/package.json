@@ -217,7 +217,7 @@
     "@ogre-tools/injectable-extension-for-mobx": "^15.1.2",
     "@ogre-tools/injectable-react": "^15.1.2",
     "mobx": "^6.8.0",
-    "rimraf": "^4.1.2"
+    "rimraf": "^4.4.1"
   },
   "devDependencies": {
     "@electron/rebuild": "^3.2.10",
@@ -270,7 +270,7 @@
     "react-refresh": "^0.14.0",
     "react-refresh-typescript": "^2.0.7",
     "react-select": "^5.7.0",
-    "rimraf": "^4.1.2",
+    "rimraf": "^4.4.1",
     "run-script-os": "^1.1.6",
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.2.4",
