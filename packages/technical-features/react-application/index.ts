@@ -7,4 +7,4 @@ export type { ReactApplicationChildren } from "./src/react-application/react-app
 export { reactApplicationHigherOrderComponentInjectionToken } from "./src/react-application/react-application-higher-order-component-injection-token";
 export type { ReactApplicationHigherOrderComponent } from "./src/react-application/react-application-higher-order-component-injection-token";
 
-export { reactApplicationRootFeature } from "./src/feature";
+export { reactApplicationFeature } from "./src/feature";

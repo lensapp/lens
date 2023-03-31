@@ -9,7 +9,7 @@ import React from "react";
 
 import {
   reactApplicationHigherOrderComponentInjectionToken,
-} from "@k8slens/react-application-root";
+} from "@k8slens/react-application";
 
 const routingReactApplicationHocInjectable = getInjectable({
   id: "routing-react-application-hoc",

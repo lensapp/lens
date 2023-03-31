@@ -1,13 +1,13 @@
-# @k8slens/react-application-root
+# @k8slens/react-application
 
 # Usage
 
 ```bash
-$ npm install @k8slens/react-application-root
+$ npm install @k8slens/react-application
 ```
 
 ```typescript
-import { reactApplicationRootFeature } from "@k8slens/application";
+import { reactApplicationFeature } from "@k8slens/react-application";
 import { registerFeature } from "@k8slens/feature-core";
 import { createContainer } from "@ogre-tools/injectable";
 

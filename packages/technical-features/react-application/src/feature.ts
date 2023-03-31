@@ -2,8 +2,8 @@ import { getFeature } from "@k8slens/feature-core";
 import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registration";
 import { applicationFeature } from "@k8slens/application";
 
-export const reactApplicationRootFeature = getFeature({
-  id: "react-application-root",
+export const reactApplicationFeature = getFeature({
+  id: "react-application",
 
   register: (di) => {
     autoRegister({

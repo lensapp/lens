@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import {
   reactApplicationChildrenInjectionToken,
-} from "@k8slens/react-application-root";
+} from "@k8slens/react-application";
 import { computed } from "mobx";
 
 const frameApplicationRootInjectable = getInjectable({

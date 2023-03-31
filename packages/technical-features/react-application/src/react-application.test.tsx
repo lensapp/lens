@@ -2,7 +2,7 @@ import { registerFeature } from "@k8slens/feature-core";
 import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerInjectableReact } from "@ogre-tools/injectable-react";
-import { reactApplicationRootFeature } from "./feature";
+import { reactApplicationFeature } from "./feature";
 import { runInAction, computed, observable, IObservableValue } from "mobx";
 import { startApplicationInjectionToken } from "@k8slens/application";
 import type { RenderResult } from "@testing-library/react";
@@ -31,7 +31,7 @@ describe("react-application", () => {
     registerMobX(di);
 
     runInAction(() => {
-      registerFeature(di, reactApplicationRootFeature);
+      registerFeature(di, reactApplicationFeature);
     });
 
     di.override(renderInjectable, () => (application) => {

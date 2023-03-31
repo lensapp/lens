@@ -15,7 +15,7 @@ import { createContainer } from "@ogre-tools/injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerInjectableReact } from "@ogre-tools/injectable-react";
 import { messagingFeatureForRenderer } from "@k8slens/messaging-for-renderer";
-import { reactApplicationRootFeature } from "@k8slens/react-application-root";
+import { reactApplicationFeature } from "@k8slens/react-application";
 
 const environment = "renderer";
 
@@ -30,7 +30,7 @@ runInAction(() => {
     di,
     applicationFeature,
     messagingFeatureForRenderer,
-    reactApplicationRootFeature
+    reactApplicationFeature
   );
 
   autoRegister({

@@ -1,8 +1,8 @@
 {
-  "name": "@k8slens/react-application-root",
+  "name": "@k8slens/react-application",
   "private": false,
   "version": "1.0.0-alpha.0",
-  "description": "Package for Application Root in React",
+  "description": "Package for React Application",
   "type": "commonjs",
   "files": [
     "dist"
