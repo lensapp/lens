@@ -1,38 +1,34 @@
 import userEvent from "@testing-library/user-event";
 import type { RenderResult } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injectable";
 import { registerInjectableReact } from "@ogre-tools/injectable-react";
+import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { keyboardShortcutInjectionToken } from "./keyboard-shortcut-injection-token";
 import { registerFeature } from "@k8slens/feature-core";
 import { keyboardShortcutsFeature } from "./feature";
-import { renderFor } from "@k8slens/test-utils";
 import React from "react";
+import { computed, runInAction } from "mobx";
 import { KeyboardShortcutScope } from "./keyboard-shortcut-scope";
 import { Discover, discoverFor } from "@k8slens/react-testing-library-discovery";
-import { KeyboardShortcutListener } from "./keyboard-shortcut-listener";
-
-const TestComponent = () => (
-  <KeyboardShortcutListener>
-    <div>
-      <div>
-        <KeyboardShortcutScope id="some-scope">
-          <div />
-        </KeyboardShortcutScope>
-      </div>
-    </div>
-  </KeyboardShortcutListener>
-);
+import { startApplicationInjectionToken } from "@k8slens/application";
+import { renderInjectionToken } from "@k8slens/react-application";
+import { reactApplicationChildrenInjectionToken } from "@k8slens/react-application";
 
 describe("keyboard-shortcuts", () => {
   let di: DiContainer;
   let invokeMock: jest.Mock;
+  let rendered: RenderResult;
 
   beforeEach(() => {
     di = createContainer("irrelevant");
 
     registerInjectableReact(di);
+    registerMobX(di);
 
-    registerFeature(di, keyboardShortcutsFeature);
+    runInAction(() => {
+      registerFeature(di, keyboardShortcutsFeature);
+    });
 
     invokeMock = jest.fn();
 
@@ -70,21 +66,45 @@ describe("keyboard-shortcuts", () => {
       injectionToken: keyboardShortcutInjectionToken,
     });
 
-    di.register(
-      someKeyboardShortcutInjectable,
-      someScopedKeyboardShortcutInjectable,
-      someOtherKeyboardShortcutInjectable,
-    );
+    const childComponentForScopeInjectable = getInjectable({
+      id: "some-child-component-for-scope",
+
+      instantiate: () => ({
+        id: "some-child-component-for-scope",
+
+        enabled: computed(() => true),
+
+        Component: () => (
+          <KeyboardShortcutScope id="some-scope">
+            <div />
+          </KeyboardShortcutScope>
+        ),
+      }),
+
+      injectionToken: reactApplicationChildrenInjectionToken,
+    });
+
+    runInAction(() => {
+      di.register(
+        someKeyboardShortcutInjectable,
+        someScopedKeyboardShortcutInjectable,
+        someOtherKeyboardShortcutInjectable,
+        childComponentForScopeInjectable,
+      );
+    });
+
+    di.override(renderInjectionToken, () => (application) => {
+      rendered = render(application);
+    });
   });
 
-  describe("when rendered", () => {
-    let rendered: RenderResult;
+  describe("when application is started", () => {
     let discover: Discover;
 
     beforeEach(async () => {
-      const render = renderFor(di);
+      const startApplication = di.inject(startApplicationInjectionToken);
 
-      rendered = render(<TestComponent />);
+      await startApplication();
 
       discover = discoverFor(() => rendered);
     });
@@ -123,7 +143,9 @@ describe("keyboard-shortcuts", () => {
         injectionToken: keyboardShortcutInjectionToken,
       });
 
-      di.register(conflictingShortcutInjectable);
+      runInAction(() => {
+        di.register(conflictingShortcutInjectable);
+      });
 
       userEvent.keyboard("{Escape}");
 
@@ -192,7 +214,9 @@ describe("keyboard-shortcuts", () => {
           injectionToken: keyboardShortcutInjectionToken,
         });
 
-        di.register(shortcutInjectable);
+        runInAction(() => {
+          di.register(shortcutInjectable);
+        });
 
         userEvent.keyboard(keyboard);
 

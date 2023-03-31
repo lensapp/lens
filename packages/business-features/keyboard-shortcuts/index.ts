@@ -1,6 +1,3 @@
-export { KeyboardShortcutListener } from "./src/keyboard-shortcut-listener";
-export type { KeyboardShortcutListenerProps } from "./src/keyboard-shortcut-listener";
-
 export { KeyboardShortcutScope } from "./src/keyboard-shortcut-scope";
 export type { KeyboardShortcutScopeProps } from "./src/keyboard-shortcut-scope";
 
