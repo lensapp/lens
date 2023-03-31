@@ -6,6 +6,9 @@
   "scripts": {
     "clean": "rimraf dist/",
     "build": "swc ./src/index.ts -d ./dist/",
+    "postbuild": "run-script-os",
+    "postbuild:windows": "",
+    "postbuild:nix": "chmod u+x ./dist/index.js",
     "prepare:dev": "npm run build",
     "prepare": "npm run build"
   },
@@ -27,7 +30,8 @@
     "@types/jsdom": "^20.0.1",
     "@types/node": "^18.11.18",
     "@types/sharp": "^0.31.1",
-    "rimraf": "^4.4.1"
+    "rimraf": "^4.4.1",
+    "run-script-os": "^1.1.6"
   },
   "dependencies": {
     "arg": "^5.0.2",

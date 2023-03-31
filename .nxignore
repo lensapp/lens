@@ -1,0 +1,4 @@
+packages/**/dist
+packages/**/static/build
+packages/**/build/webpack
+packages/**/binaries
