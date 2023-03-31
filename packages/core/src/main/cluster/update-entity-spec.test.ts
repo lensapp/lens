@@ -31,8 +31,6 @@ describe("update-entity-spec", () => {
       id: "some-id",
       contextName: "some-context",
       kubeConfigPath: "minikube-config.yml",
-    }, {
-      clusterServerUrl: "foo",
     });
 
     entity = new KubernetesCluster({

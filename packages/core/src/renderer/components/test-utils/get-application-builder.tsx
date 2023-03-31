@@ -528,8 +528,6 @@ export const getApplicationBuilder = () => {
           id: "some-cluster-id",
           contextName: "some-context-name",
           kubeConfigPath: "/some-path-to-kube-config",
-        }, {
-          clusterServerUrl: "https://localhost:12345",
         });
 
         windowDi.override(activeKubernetesClusterInjectable, () =>

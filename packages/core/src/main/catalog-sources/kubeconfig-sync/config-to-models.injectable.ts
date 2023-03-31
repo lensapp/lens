@@ -4,11 +4,11 @@
  */
 import type { KubeConfig } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ClusterConfigData, UpdateClusterModel } from "../../../common/cluster-types";
+import type { UpdateClusterModel } from "../../../common/cluster-types";
 import { splitConfig } from "../../../common/kube-helpers";
 import kubeconfigSyncLoggerInjectable from "./logger.injectable";
 
-export type ConfigToModels = (rootConfig: KubeConfig, filePath: string) => [UpdateClusterModel, ClusterConfigData][];
+export type ConfigToModels = (rootConfig: KubeConfig, filePath: string) => UpdateClusterModel[];
 
 const configToModelsInjectable = getInjectable({
   id: "config-to-models",
@@ -22,15 +22,10 @@ const configToModelsInjectable = getInjectable({
         if (validationResult.error) {
           logger.debug(`context failed validation: ${validationResult.error}`, { context: config.currentContext, filePath });
         } else {
-          validConfigs.push([
-            {
-              kubeConfigPath: filePath,
-              contextName: config.currentContext,
-            },
-            {
-              clusterServerUrl: validationResult.cluster.server,
-            },
-          ]);
+          validConfigs.push({
+            kubeConfigPath: filePath,
+            contextName: config.currentContext,
+          });
         }
       }
 

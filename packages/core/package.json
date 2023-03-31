@@ -120,7 +120,6 @@
     "@astronautlabs/jsonpath": "^1.1.0",
     "@hapi/call": "^9.0.1",
     "@hapi/subtext": "^7.1.0",
-    "@k8slens/cluster-settings": "^6.5.0-alpha.1",
     "@k8slens/node-fetch": "^6.5.0-alpha.1",
     "@k8slens/react-application": "^1.0.0-alpha.0",
     "@kubernetes/client-node": "^0.18.1",
@@ -324,6 +323,7 @@
   "peerDependencies": {
     "@k8slens/application": "^6.5.0-alpha.0",
     "@k8slens/application-for-electron-main": "^6.5.0-alpha.0",
+    "@k8slens/cluster-settings": "^6.5.0-alpha.1",
     "@k8slens/legacy-extensions": "^1.0.0-alpha.0",
     "@k8slens/messaging": "^1.0.0-alpha.1",
     "@k8slens/messaging-for-main": "^1.0.0-alpha.1",

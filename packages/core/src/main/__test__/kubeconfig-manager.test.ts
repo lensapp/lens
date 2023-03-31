@@ -89,8 +89,6 @@ describe("kubeconfig manager tests", () => {
       id: "foo",
       contextName: "minikube",
       kubeConfigPath: "/minikube-config.yml",
-    }, {
-      clusterServerUrl,
     });
 
     kubeConfManager = di.inject(kubeconfigManagerInjectable, clusterFake);

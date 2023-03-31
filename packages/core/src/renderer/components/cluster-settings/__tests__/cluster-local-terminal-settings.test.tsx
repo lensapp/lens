@@ -55,8 +55,6 @@ describe("ClusterLocalTerminalSettings", () => {
         terminalCWD: "/foobar",
         defaultNamespace: "kube-system",
       },
-    }, {
-      clusterServerUrl: "https://localhost:12345",
     });
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
 
@@ -76,8 +74,6 @@ describe("ClusterLocalTerminalSettings", () => {
       preferences: {
         terminalCWD: "/foobar",
       },
-    }, {
-      clusterServerUrl: "https://localhost:12345",
     });
 
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
@@ -98,8 +94,6 @@ describe("ClusterLocalTerminalSettings", () => {
       preferences: {
         terminalCWD: "/foobar",
       },
-    }, {
-      clusterServerUrl: "https://localhost:12345",
     });
 
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
@@ -129,8 +123,6 @@ describe("ClusterLocalTerminalSettings", () => {
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some/path",
-    }, {
-      clusterServerUrl: "https://localhost:12345",
     });
 
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);
@@ -161,8 +153,6 @@ describe("ClusterLocalTerminalSettings", () => {
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some/path",
-    }, {
-      clusterServerUrl: "https://localhost:12345",
     });
 
     const dom = render(<ClusterLocalTerminalSetting cluster={cluster}/>);

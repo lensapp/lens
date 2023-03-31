@@ -48,16 +48,11 @@ describe("<ClusterFrame />", () => {
 
     testUsingFakeTime("2000-01-01 12:00:00am");
 
-    cluster = new Cluster(
-      {
-        contextName: "my-cluster",
-        id: "123456",
-        kubeConfigPath: "/irrelavent",
-      },
-      {
-        clusterServerUrl: "https://localhost",
-      },
-    );
+    cluster = new Cluster({
+      contextName: "my-cluster",
+      id: "123456",
+      kubeConfigPath: "/irrelavent",
+    });
 
     di.override(hostedClusterInjectable, () => cluster);
     di.override(hostedClusterIdInjectable, () => cluster.id);

@@ -3,8 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import waitUntilPortIsUsedInjectable from "../kube-auth-proxy/wait-until-port-is-used/wait-until-port-is-used.injectable";
-import { Cluster } from "../../common/cluster/cluster";
 import type { ChildProcess } from "child_process";
 import { Kubectl } from "../kubectl/kubectl";
 import type { DeepMockProxy } from "jest-mock-extended";
@@ -12,7 +10,7 @@ import { mockDeep, mock } from "jest-mock-extended";
 import type { Readable } from "stream";
 import { EventEmitter } from "stream";
 import { getDiForUnitTesting } from "../getDiForUnitTesting";
-import type { CreateKubeAuthProxy, KubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
+import type { KubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import spawnInjectable from "../child-process/spawn.injectable";
 import directoryForUserDataInjectable from "../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
@@ -25,15 +23,17 @@ import writeJsonSyncInjectable from "../../common/fs/write-json-sync.injectable"
 import ensureDirInjectable from "../../common/fs/ensure-dir.injectable";
 import type { GetBasenameOfPath } from "../../common/path/get-basename.injectable";
 import getBasenameOfPathInjectable from "../../common/path/get-basename.injectable";
-
-const clusterServerUrl = "https://192.168.64.3:8443";
+import type { Cluster } from "../../common/cluster/cluster";
+import waitUntilPortIsUsedInjectable from "../kube-auth-proxy/wait-until-port-is-used/wait-until-port-is-used.injectable";
+import addClusterInjectable from "../../features/cluster/storage/common/add.injectable";
 
 describe("kube auth proxy tests", () => {
-  let createKubeAuthProxy: CreateKubeAuthProxy;
   let spawnMock: jest.Mock;
   let waitUntilPortIsUsedMock: jest.Mock;
   let broadcastMessageMock: jest.Mock;
   let getBasenameOfPath: GetBasenameOfPath;
+  let cluster: Cluster;
+  let kubeAuthProxy: KubeAuthProxy;
 
   beforeEach(async () => {
     const di = getDiForUnitTesting();
@@ -51,7 +51,7 @@ describe("kube auth proxy tests", () => {
       clusters: [{
         name: "minikube",
         cluster: {
-          server: clusterServerUrl,
+          server: "https://192.168.64.3:8443",
         },
       }],
       "current-context": "minikube",
@@ -83,29 +83,25 @@ describe("kube auth proxy tests", () => {
     di.override(kubectlDownloadingNormalizedArchInjectable, () => "amd64");
     di.override(normalizedPlatformInjectable, () => "darwin");
 
-    createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
+    const addCluster = di.inject(addClusterInjectable);
+
+    cluster = addCluster({
+      id: "foobar",
+      kubeConfigPath: "/minikube-config.yml",
+      contextName: "minikube",
+    });
+    kubeAuthProxy = di.inject(createKubeAuthProxyInjectable, cluster)({});
   });
 
   it("calling exit multiple times shouldn't throw", async () => {
-    const cluster = new Cluster({
-      id: "foobar",
-      kubeConfigPath: "minikube-config.yml",
-      contextName: "minikube",
-    }, {
-      clusterServerUrl,
-    });
-
-    const kap = createKubeAuthProxy(cluster, {});
-
-    kap.exit();
-    kap.exit();
-    kap.exit();
+    kubeAuthProxy.exit();
+    kubeAuthProxy.exit();
+    kubeAuthProxy.exit();
   });
 
   describe("spawn tests", () => {
     let mockedCP: DeepMockProxy<ChildProcess>;
     let listeners: EventEmitter;
-    let proxy: KubeAuthProxy;
 
     beforeEach(async () => {
       mockedCP = mockDeep<ChildProcess>();
@@ -184,16 +180,7 @@ describe("kube auth proxy tests", () => {
       });
       waitUntilPortIsUsedMock.mockReturnValueOnce(Promise.resolve());
 
-      const cluster = new Cluster({
-        id: "foobar",
-        kubeConfigPath: "minikube-config.yml",
-        contextName: "minikube",
-      }, {
-        clusterServerUrl,
-      });
-
-      proxy = createKubeAuthProxy(cluster, {});
-      await proxy.run();
+      await kubeAuthProxy.run();
     });
 
     it("should call spawn and broadcast errors", () => {

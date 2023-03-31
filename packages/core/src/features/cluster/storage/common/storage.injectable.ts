@@ -6,7 +6,6 @@ import { iter } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import { comparer, action } from "mobx";
 import { clusterStoreMigrationInjectionToken } from "./migration-token";
-import readClusterConfigSyncInjectable from "./read-cluster-config.injectable";
 import type { ClusterId, ClusterModel } from "../../../../common/cluster-types";
 import { Cluster } from "../../../../common/cluster/cluster";
 import loggerInjectable from "../../../../common/logger.injectable";
@@ -23,7 +22,6 @@ const clustersPersistentStorageInjectable = getInjectable({
   id: "clusters-persistent-storage",
   instantiate: (di) => {
     const createPersistentStorage = di.inject(createPersistentStorageInjectable);
-    const readClusterConfigSync = di.inject(readClusterConfigSyncInjectable);
     const clustersState = di.inject(clustersStateInjectable);
     const logger = di.inject(loggerInjectable);
 
@@ -39,7 +37,6 @@ const clustersPersistentStorageInjectable = getInjectable({
         const currentClusters = new Map(clustersState);
         const newClusters = new Map<ClusterId, Cluster>();
 
-        // update new clusters
         for (const clusterModel of clusters) {
           try {
             let cluster = currentClusters.get(clusterModel.id);
@@ -47,11 +44,9 @@ const clustersPersistentStorageInjectable = getInjectable({
             if (cluster) {
               cluster.updateModel(clusterModel);
             } else {
-              cluster = new Cluster(
-                clusterModel,
-                readClusterConfigSync(clusterModel),
-              );
+              cluster = new Cluster(clusterModel);
             }
+
             newClusters.set(clusterModel.id, cluster);
           } catch (error) {
             logger.warn(`[CLUSTER-STORE]: Failed to update/create a cluster: ${error}`);

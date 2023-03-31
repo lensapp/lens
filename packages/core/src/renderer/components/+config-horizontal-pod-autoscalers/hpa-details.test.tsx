@@ -53,8 +53,6 @@ describe("<HpaDetails/>", () => {
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
-    }, {
-      clusterServerUrl: "https://localhost:8080",
     }));
 
     render = renderFor(di);

@@ -23,7 +23,6 @@ import type { WriteFileSync } from "../../../common/fs/write-file-sync.injectabl
 import writeFileSyncInjectable from "../../../common/fs/write-file-sync.injectable";
 import type { WriteBufferSync } from "../../../common/fs/write-buffer-sync.injectable";
 import writeBufferSyncInjectable from "../../../common/fs/write-buffer-sync.injectable";
-import { Cluster } from "../../../common/cluster/cluster";
 import clustersPersistentStorageInjectable from "./common/storage.injectable";
 import type { PersistentStorage } from "../../../common/persistent-storage/create.injectable";
 import type { AddCluster } from "./common/add.injectable";
@@ -32,6 +31,7 @@ import type { GetClusterById } from "./common/get-by-id.injectable";
 import getClusterByIdInjectable from "./common/get-by-id.injectable";
 import type { IComputedValue } from "mobx";
 import clustersInjectable from "./common/clusters.injectable";
+import type { Cluster } from "../../../common/cluster/cluster";
 
 // NOTE: this is intended to read the actual file system
 const testDataIcon = readFileSync("test-data/cluster-store-migration-icon.png");
@@ -102,7 +102,7 @@ describe("cluster storage technical tests", () => {
 
     describe("with foo cluster added", () => {
       beforeEach(() => {
-        const cluster = new Cluster({
+        addCluster({
           id: "foo",
           contextName: "foo",
           preferences: {
@@ -114,11 +114,7 @@ describe("cluster storage technical tests", () => {
             getCustomKubeConfigFilePath("foo"),
             kubeconfig,
           ),
-        }, {
-          clusterServerUrl,
         });
-
-        addCluster(cluster);
       });
 
       it("adds new cluster to store", async () => {
@@ -232,47 +228,6 @@ describe("cluster storage technical tests", () => {
     });
   });
 
-  describe("config with invalid cluster kubeconfig", () => {
-    beforeEach(() => {
-      writeFileSync("/invalid-kube-config", invalidKubeconfig);
-      writeFileSync("/valid-kube-config", kubeconfig);
-      writeJsonSync("/some-directory-for-user-data/lens-cluster-store.json", {
-        __internal__: {
-          migrations: {
-            version: "99.99.99",
-          },
-        },
-        clusters: [
-          {
-            id: "cluster1",
-            kubeConfigPath: "/invalid-kube-config",
-            contextName: "test",
-            preferences: { terminalCWD: "/foo" },
-            workspace: "foo",
-          },
-          {
-            id: "cluster2",
-            kubeConfigPath: "/valid-kube-config",
-            contextName: "foo",
-            preferences: { terminalCWD: "/foo" },
-            workspace: "default",
-          },
-        ],
-      });
-
-      getCustomKubeConfigFilePath = di.inject(getCustomKubeConfigFilePathInjectable);
-
-      clustersPersistentStorage = di.inject(clustersPersistentStorageInjectable);
-      clustersPersistentStorage.loadAndStartSyncing();
-    });
-
-    it("does not enable clusters with invalid kubeconfig", () => {
-      const storedClusters = clusters.get();
-
-      expect(storedClusters.length).toBe(1);
-    });
-  });
-
   describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     beforeEach(() => {
       di.override(storeMigrationVersionInjectable, () => "3.6.0");
@@ -313,32 +268,6 @@ describe("cluster storage technical tests", () => {
       expect(clusters.get()[0].preferences.icon).toMatch(/data:;base64,/);
     });
   });
-});
-
-const invalidKubeconfig = JSON.stringify({
-  apiVersion: "v1",
-  clusters: [{
-    cluster: {
-      server: "https://localhost",
-    },
-    name: "test2",
-  }],
-  contexts: [{
-    context: {
-      cluster: "test",
-      user: "test",
-    },
-    name: "test",
-  }],
-  "current-context": "test",
-  kind: "Config",
-  preferences: {},
-  users: [{
-    user: {
-      token: "kubeconfig-user-q4lm4:xxxyyyy",
-    },
-    name: "test",
-  }],
 });
 
 const minimalValidKubeConfig = JSON.stringify({

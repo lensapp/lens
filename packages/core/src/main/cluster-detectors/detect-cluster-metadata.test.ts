@@ -67,8 +67,6 @@ describe("detect-cluster-metadata", () => {
       id: "some-id",
       contextName: "some-context",
       kubeConfigPath: "minikube-config.yml",
-    }, {
-      clusterServerUrl: "foo",
     });
   });
 
