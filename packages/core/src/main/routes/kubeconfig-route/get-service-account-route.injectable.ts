@@ -84,7 +84,7 @@ function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster
     ],
     "contexts": [
       {
-        "name": cluster.contextName.get(),
+        "name": [cluster.contextName.get(), username].join("-"),
         "context": {
           "user": username,
           "cluster": cluster.contextName.get(),
