@@ -19,6 +19,8 @@ import type { InitializableState } from "../../common/initializable-state/create
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Stat } from "../../common/fs/stat.injectable";
 import type { IComputedValue } from "mobx";
+import type { ShellSessionEnvs } from "./shell-envs.injectable";
+import type { ShellSessionProcesses } from "./processes.injectable";
 
 export class ShellOpenError extends Error {
   constructor(message: string, options?: ErrorOptions) {
@@ -113,6 +115,8 @@ export interface ShellSessionDependencies {
   readonly buildVersion: InitializableState<string>;
   readonly proxyKubeconfigPath: string;
   readonly directoryContainingKubectl: string;
+  readonly shellSessionEnvs: ShellSessionEnvs;
+  readonly shellSessionProcesses: ShellSessionProcesses;
   computeShellEnvironment: ComputeShellEnvironment;
   spawnPty: SpawnPty;
   emitAppEvent: EmitAppEvent;
@@ -129,25 +133,6 @@ export interface ShellSessionArgs {
 export abstract class ShellSession {
   abstract readonly ShellType: string;
 
-  private static readonly shellEnvs = new Map<string, Record<string, string | undefined>>();
-  private static readonly processes = new Map<string, pty.IPty>();
-
-  /**
-   * Kill all remaining shell backing processes. Should be called when about to
-   * quit
-   */
-  public static cleanup(): void {
-    for (const shellProcess of this.processes.values()) {
-      try {
-        process.kill(shellProcess.pid);
-      } catch {
-        // ignore error
-      }
-    }
-
-    this.processes.clear();
-  }
-
   protected running = false;
   protected readonly terminalId: string;
   protected readonly kubectl: Kubectl;
@@ -157,8 +142,8 @@ export abstract class ShellSession {
   protected abstract get cwd(): string | undefined;
 
   protected ensureShellProcess(shell: string, args: string[], env: Partial<Record<string, string>>, cwd: string): { shellProcess: pty.IPty; resume: boolean } {
-    const resume = ShellSession.processes.has(this.terminalId);
-    const shellProcess = getOrInsertWith(ShellSession.processes, this.terminalId, () => (
+    const resume = this.dependencies.shellSessionProcesses.has(this.terminalId);
+    const shellProcess = getOrInsertWith(this.dependencies.shellSessionProcesses, this.terminalId, () => (
       this.dependencies.spawnPty(shell, args, {
         rows: 30,
         cols: 80,
@@ -304,7 +289,7 @@ export abstract class ShellSession {
           try {
             this.dependencies.logger.info(`[SHELL-SESSION]: Killing shell process (pid=${shellProcess.pid}) for ${this.terminalId}`);
             shellProcess.kill();
-            ShellSession.processes.delete(this.terminalId);
+            this.dependencies.shellSessionProcesses.delete(this.terminalId);
           } catch (error) {
             this.dependencies.logger.warn(`[SHELL-SESSION]: failed to kill shell process (pid=${shellProcess.pid}) for ${this.terminalId}`, error);
           }
@@ -321,15 +306,15 @@ export abstract class ShellSession {
   protected async getCachedShellEnv() {
     const { id: clusterId } = this.cluster;
 
-    let env = ShellSession.shellEnvs.get(clusterId);
+    let env = this.dependencies.shellSessionEnvs.get(clusterId);
 
     if (!env) {
       env = await this.getShellEnv();
-      ShellSession.shellEnvs.set(clusterId, env);
+      this.dependencies.shellSessionEnvs.set(clusterId, env);
     } else {
       // refresh env in the background
       this.getShellEnv().then((shellEnv: any) => {
-        ShellSession.shellEnvs.set(clusterId, shellEnv);
+        this.dependencies.shellSessionEnvs.set(clusterId, shellEnv);
       });
     }
 

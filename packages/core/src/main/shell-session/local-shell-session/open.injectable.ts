@@ -25,6 +25,8 @@ import statInjectable from "../../../common/fs/stat.injectable";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 import userPreferencesStateInjectable from "../../../features/user-preferences/common/state.injectable";
 import userShellSettingInjectable from "../../../features/user-preferences/common/shell-setting.injectable";
+import shellSessionEnvsInjectable from "../shell-envs.injectable";
+import shellSessionProcessesInjectable from "../processes.injectable";
 
 export interface OpenLocalShellSessionArgs {
   websocket: WebSocket;
@@ -48,6 +50,8 @@ const openLocalShellSessionInjectable = getInjectable({
       userShellSetting: di.inject(userShellSettingInjectable),
       appName: di.inject(appNameInjectable),
       buildVersion: di.inject(buildVersionInjectable),
+      shellSessionEnvs: di.inject(shellSessionEnvsInjectable),
+      shellSessionProcesses: di.inject(shellSessionProcessesInjectable),
       modifyTerminalShellEnv: di.inject(modifyTerminalShellEnvInjectable),
       emitAppEvent: di.inject(emitAppEventInjectable),
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
