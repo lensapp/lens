@@ -20,7 +20,7 @@
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens",
   "dependencies": {
-    "@swc/core": "^1.3.38",
+    "@swc/core": "^1.3.44",
     "@swc/jest": "^0.2.23",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
