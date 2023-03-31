@@ -11,9 +11,12 @@ import renderInjectable from "./render-application/render.injectable";
 import { reactApplicationChildrenInjectionToken } from "./react-application/react-application-children-injection-token";
 import React from "react";
 import { Discover, discoverFor } from "@k8slens/react-testing-library-discovery";
-import { reactApplicationWrapperInjectionToken } from "./react-application/react-application-wrapper-injection-token";
+import {
+  ReactApplicationHigherOrderComponent,
+  reactApplicationHigherOrderComponentInjectionToken,
+} from "./react-application/react-application-higher-order-component-injection-token";
 
-const SomeChildren = () => <div data-some-children-test>Some children</div>;
+const SomeContent = () => <div data-some-content-test>Some children</div>;
 
 describe("react-application", () => {
   let rendered: RenderResult;
@@ -46,18 +49,18 @@ describe("react-application", () => {
     expect(rendered.baseElement).toMatchSnapshot();
   });
 
-  describe("when children is registered and enabled", () => {
+  describe("when content is registered and enabled", () => {
     let someObservable: IObservableValue<boolean>;
 
     beforeEach(() => {
       someObservable = observable.box(true);
 
-      const someChildrenInjectable = getInjectable({
-        id: "some-children",
+      const someContentInjectable = getInjectable({
+        id: "some-content",
 
         instantiate: () => ({
-          id: "some-children",
-          Component: SomeChildren,
+          id: "some-content",
+          Component: SomeContent,
           enabled: computed(() => someObservable.get()),
         }),
 
@@ -65,7 +68,7 @@ describe("react-application", () => {
       });
 
       runInAction(() => {
-        di.register(someChildrenInjectable);
+        di.register(someContentInjectable);
       });
     });
 
@@ -73,29 +76,28 @@ describe("react-application", () => {
       expect(rendered.baseElement).toMatchSnapshot();
     });
 
-    it("renders the children", () => {
-      const { discovered } = discover.getSingleElement("some-children");
+    it("renders the content", () => {
+      const { discovered } = discover.getSingleElement("some-content");
 
       expect(discovered).not.toBeNull();
     });
 
-    describe("when wrapper is registered", () => {
+    describe("when higher order component is registered", () => {
       beforeEach(() => {
-        const someWrapperInjectable = getInjectable({
-          id: "some-wrapper",
+        const SomeHigherOrderComponent: ReactApplicationHigherOrderComponent = ({ children }) => (
+          <div data-some-higher-order-component-test>{children}</div>
+        );
 
-          instantiate: () => (Component) => () =>
-            (
-              <div data-some-wrapper-test>
-                <Component />
-              </div>
-            ),
+        const someHigherOrderComponentInjectable = getInjectable({
+          id: "some-higher-order-component",
 
-          injectionToken: reactApplicationWrapperInjectionToken,
+          instantiate: () => SomeHigherOrderComponent,
+
+          injectionToken: reactApplicationHigherOrderComponentInjectionToken,
         });
 
         runInAction(() => {
-          di.register(someWrapperInjectable);
+          di.register(someHigherOrderComponentInjectable);
         });
       });
 
@@ -103,16 +105,16 @@ describe("react-application", () => {
         expect(rendered.baseElement).toMatchSnapshot();
       });
 
-      it("renders the children inside the wrapper", () => {
+      it("renders the content inside the higher order component", () => {
         const { discovered } = discover
-          .getSingleElement("some-wrapper")
-          .getSingleElement("some-children");
+          .getSingleElement("some-higher-order-component")
+          .getSingleElement("some-content");
 
         expect(discovered).not.toBeNull();
       });
     });
 
-    describe("when children is enabled", () => {
+    describe("when content is disabled", () => {
       beforeEach(() => {
         act(() => {
           runInAction(() => {
@@ -125,8 +127,8 @@ describe("react-application", () => {
         expect(rendered.baseElement).toMatchSnapshot();
       });
 
-      it("does not render the children", () => {
-        const { discovered } = discover.querySingleElement("some-children");
+      it("does not render the content", () => {
+        const { discovered } = discover.querySingleElement("some-content");
 
         expect(discovered).toBeNull();
       });

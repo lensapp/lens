@@ -8,11 +8,11 @@ import {
 import type { IComputedValue } from "mobx";
 import { observer, Observer } from "mobx-react";
 
-type Dependencies = { children: IComputedValue<ReactApplicationChildren[]> };
+type Dependencies = { contents: IComputedValue<ReactApplicationChildren[]> };
 
-const NonInjectedContent = observer(({ children }: Dependencies) => (
+const NonInjectedContent = observer(({ contents }: Dependencies) => (
   <>
-    {children.get().map((child) => (
+    {contents.get().map((child) => (
       <Observer key={child.id}>{() => (child.enabled.get() ? <child.Component /> : null)}</Observer>
     ))}
   </>
@@ -23,7 +23,7 @@ export const ReactApplicationContent = withInjectables<Dependencies>(
 
   {
     getProps: (di) => ({
-      children: di.inject(computedInjectManyInjectable)(reactApplicationChildrenInjectionToken),
+      contents: di.inject(computedInjectManyInjectable)(reactApplicationChildrenInjectionToken),
     }),
   },
 );

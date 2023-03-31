@@ -6,11 +6,11 @@ exports[`react-application renders 1`] = `
 </body>
 `;
 
-exports[`react-application when children is registered and enabled renders 1`] = `
+exports[`react-application when content is registered and enabled renders 1`] = `
 <body>
   <div>
     <div
-      data-some-children-test="true"
+      data-some-content-test="true"
     >
       Some children
     </div>
@@ -18,20 +18,20 @@ exports[`react-application when children is registered and enabled renders 1`] =
 </body>
 `;
 
-exports[`react-application when children is registered and enabled when children is enabled renders 1`] = `
+exports[`react-application when content is registered and enabled when content is disabled renders 1`] = `
 <body>
   <div />
 </body>
 `;
 
-exports[`react-application when children is registered and enabled when wrapper is registered renders 1`] = `
+exports[`react-application when content is registered and enabled when higher order component is registered renders 1`] = `
 <body>
   <div>
     <div
-      data-some-wrapper-test="true"
+      data-some-higher-order-component-test="true"
     >
       <div
-        data-some-children-test="true"
+        data-some-content-test="true"
       >
         Some children
       </div>
