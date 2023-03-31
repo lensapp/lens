@@ -8,8 +8,8 @@ import type { BrowserWindow, Session, WebContents } from "electron";
 import resolveSystemProxyWindowInjectable from "./resolve-system-proxy-window.injectable";
 
 export default getGlobalOverride(
-  resolveSystemProxyWindowInjectable, 
-  () => ({
+  resolveSystemProxyWindowInjectable,
+  async () => ({
     webContents: {
       session: {
         resolveProxy: () => "DIRECT",
