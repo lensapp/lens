@@ -8,7 +8,7 @@ import clusterManagerInjectable from "./cluster/manager.injectable";
 import loggerInjectable from "../common/logger.injectable";
 import closeAllWindowsInjectable from "./start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
 import emitAppEventInjectable from "../common/app-event-bus/emit-event.injectable";
-const { app, crashReporter } = require('electron');
+const { app, crashReporter } = require("electron");
 
 const stopServicesAndExitAppInjectable = getInjectable({
   id: "stop-services-and-exit-app",
@@ -22,8 +22,8 @@ const stopServicesAndExitAppInjectable = getInjectable({
 
     return () => {
       logger.info("CRASHREPORTER:START");
-      logger.info(app.getPath('crashDumps'))
-      crashReporter.start({ submitURL: '', uploadToServer: false })
+      logger.info(app.getPath("crashDumps"));
+      crashReporter.start({ submitURL: "", uploadToServer: false });
       emitAppEvent({ name: "service", action: "close" });
       closeAllWindows();
       clusterManager.stop();
