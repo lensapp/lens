@@ -5,7 +5,7 @@
 
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import { base64 } from "@k8slens/utilities";
+import { base64 } from "../../utils";
 import type { RenderResult } from "@testing-library/react";
 import { act } from "@testing-library/react";
 import React from "react";
