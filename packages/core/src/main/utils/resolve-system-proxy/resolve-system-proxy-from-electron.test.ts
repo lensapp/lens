@@ -32,7 +32,7 @@ describe("technical: resolve-system-proxy-from-electron", () => {
 
       di.override(
         resolveSystemProxyWindowInjectable,
-        () => ({
+        async () => ({
           webContents: {
             session: {
               resolveProxy: resolveSystemProxyMock,
@@ -73,7 +73,7 @@ describe("technical: resolve-system-proxy-from-electron", () => {
 
       di.override(
         resolveSystemProxyWindowInjectable,
-        () => ({
+        async () => ({
           webContents: {
             session: {
               resolveProxy: () => {
