@@ -46,8 +46,8 @@ describe("installing update using tray", () => {
       mainDi.override(publishIsConfiguredInjectable, () => true);
 
       mainDi.override(
-          showMessagePopupInjectable,
-          () => showMessagePopupMock,
+        showMessagePopupInjectable,
+        () => showMessagePopupMock,
       );
 
     });
@@ -176,10 +176,10 @@ describe("installing update using tray", () => {
 
         it("it displays a popup", () => {
           expect(showMessagePopupMock).toHaveBeenCalledWith(
-              "No Updates Available",
-              "You're all good",
-              "You've got the latest version of Lens,\nthanks for staying on the ball.",
-              { "textWidth": 300 }
+            "No Updates Available",
+            "You're all good",
+            "You've got the latest version of Lens,\nthanks for staying on the ball.",
+            { "textWidth": 300 },
           );
         });
 

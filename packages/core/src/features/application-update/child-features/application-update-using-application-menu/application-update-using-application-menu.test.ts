@@ -12,6 +12,10 @@ import checkForPlatformUpdatesInjectable from "../../main/check-for-updates/chec
 import type { RenderResult } from "@testing-library/react";
 import showMessagePopupInjectable from "../../../../main/electron-app/features/show-message-popup.injectable";
 import type { ShowMessagePopup } from "../../../../main/electron-app/features/show-message-popup.injectable";
+import electronUpdaterIsActiveInjectable
+  from "../../../../main/electron-app/features/electron-updater-is-active.injectable";
+import publishIsConfiguredInjectable
+  from "../../main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
 
 describe("installing update using application menu", () => {
   let applicationBuilder: ApplicationBuilder;
@@ -22,14 +26,19 @@ describe("installing update using application menu", () => {
     applicationBuilder = getApplicationBuilder();
     applicationBuilder.beforeApplicationStart(({ mainDi }) => {
       checkForPlatformUpdatesMock = asyncFn();
+      showMessagePopupMock = asyncFn();
+
       mainDi.override(
         checkForPlatformUpdatesInjectable,
         () => checkForPlatformUpdatesMock,
       );
 
+      mainDi.override(electronUpdaterIsActiveInjectable, () => true);
+      mainDi.override(publishIsConfiguredInjectable, () => true);
+
       mainDi.override(
-          showMessagePopupInjectable,
-          () => showMessagePopupMock,
+        showMessagePopupInjectable,
+        () => showMessagePopupMock,
       );
     });
   });
@@ -49,7 +58,7 @@ describe("installing update using application menu", () => {
       beforeEach(() => {
         applicationBuilder.applicationMenu.click(
           "root",
-          "help",
+          "mac",
           "check-for-updates",
         );
       });
@@ -62,13 +71,12 @@ describe("installing update using application menu", () => {
 
         it("it displays a popup", () => {
           expect(showMessagePopupMock).toHaveBeenCalledWith(
-              "No Updates Available",
-              "You're all good",
-              "You've got the latest version of Lens,\nthanks for staying on the ball.",
-              { "textWidth": 300 }
+            "No Updates Available",
+            "You're all good",
+            "You've got the latest version of Lens,\nthanks for staying on the ball.",
+            { "textWidth": 300 },
           );
         });
-
       });
     });
   });
