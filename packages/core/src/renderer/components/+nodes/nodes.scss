@@ -16,6 +16,10 @@
       @include table-cell-warning;
     }
 
+    .LineProgress {
+      width: 100%;
+    }
+
     &.cpu {
       flex: 1.0;
       align-self: center;
