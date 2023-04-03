@@ -175,7 +175,6 @@ describe("installing update using tray", () => {
         });
 
         it("it displays a popup", () => {
-          expect(showMessagePopupMock).toHaveBeenCalled();
           expect(showMessagePopupMock).toHaveBeenCalledWith(
               "No Updates Available",
               "You're all good",

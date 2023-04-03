@@ -10,10 +10,13 @@ import type { ApplicationBuilder } from "../../../../renderer/components/test-ut
 import type { CheckForPlatformUpdates } from "../../main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
 import checkForPlatformUpdatesInjectable from "../../main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
 import type { RenderResult } from "@testing-library/react";
+import showMessagePopupInjectable from "../../../../main/electron-app/features/show-message-popup.injectable";
+import type { ShowMessagePopup } from "../../../../main/electron-app/features/show-message-popup.injectable";
 
 describe("installing update using application menu", () => {
   let applicationBuilder: ApplicationBuilder;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
+  let showMessagePopupMock: AsyncFnMock<ShowMessagePopup>;
 
   beforeEach(() => {
     applicationBuilder = getApplicationBuilder();
@@ -22,6 +25,11 @@ describe("installing update using application menu", () => {
       mainDi.override(
         checkForPlatformUpdatesInjectable,
         () => checkForPlatformUpdatesMock,
+      );
+
+      mainDi.override(
+          showMessagePopupInjectable,
+          () => showMessagePopupMock,
       );
     });
   });
@@ -41,7 +49,7 @@ describe("installing update using application menu", () => {
       beforeEach(() => {
         applicationBuilder.applicationMenu.click(
           "root",
-          "mac",
+          "help",
           "check-for-updates",
         );
       });
@@ -52,15 +60,15 @@ describe("installing update using application menu", () => {
           });
         });
 
-        // it displays a popup
-        // showMessagePopup(
-        //   "No Updates Available",
-        //   "You're all good",
-        //   "You've got the latest version of Lens,\nthanks for staying on the ball.",
-        //   {
-        //       textWidth: 300,
-        //   },
-        // );
+        it("it displays a popup", () => {
+          expect(showMessagePopupMock).toHaveBeenCalledWith(
+              "No Updates Available",
+              "You're all good",
+              "You've got the latest version of Lens,\nthanks for staying on the ball.",
+              { "textWidth": 300 }
+          );
+        });
+
       });
     });
   });
