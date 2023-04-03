@@ -4,9 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
-import {
-  getWorkloadKindFromUrl,
-} from "../../../renderer/components/kube-detail-params/get-workload-kind-from-url";
+import { parseKubeApi } from "../../../common/k8s-api/kube-api-parse";
 
 const navigateTo = [
   "navigate-to-preference-tab-id",
@@ -96,9 +94,11 @@ const externalActions = ["open-link-in-browser"];
 
 const uiInteraction = [{
   id: "show-details",
-  getParams: (selfLink: unknown) => ({
-    kind: getWorkloadKindFromUrl(selfLink as string),
-  }),
+  getParams: (selfLink: unknown) => {
+    return {
+      kind: parseKubeApi(selfLink as string).resource,
+    };
+  },
 }];
 
 const terminal = ["create-terminal-tab"];
