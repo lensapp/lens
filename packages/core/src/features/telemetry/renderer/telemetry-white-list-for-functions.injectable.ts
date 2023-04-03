@@ -4,6 +4,9 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { AppEvent } from "../../../common/app-event-bus/event-bus";
+import {
+  getWorkloadKindFromUrl,
+} from "../../../renderer/components/kube-detail-params/get-workload-kind-from-url";
 
 const navigateTo = [
   "navigate-to-preference-tab-id",
@@ -91,7 +94,12 @@ const extensions = [
 
 const externalActions = ["open-link-in-browser"];
 
-const uiInteraction = ["show-details"];
+const uiInteraction = [{
+  id: "show-details",
+  getParams: (selfLink: unknown) => ({
+    kind: getWorkloadKindFromUrl(selfLink as string),
+  }),
+}];
 
 const terminal = ["create-terminal-tab"];
 
