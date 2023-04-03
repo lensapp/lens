@@ -16,10 +16,10 @@ const enabledMetricsInjectable = getInjectable({
       const cluster = activeEntityInternalCluster.get();
 
       if (!cluster?.preferences.hiddenMetrics) {
-        return false;
+        return true;
       }
 
-      return cluster.preferences.hiddenMetrics.includes(kind);
+      return !cluster.preferences.hiddenMetrics.includes(kind);
     });
   },
   lifecycle: lifecycleEnum.keyedSingleton({

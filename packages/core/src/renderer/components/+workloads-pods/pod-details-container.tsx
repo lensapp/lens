@@ -97,7 +97,7 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
     const readiness = pod.getReadinessProbe(container);
     const startup = pod.getStartupProbe(container);
     const isInitContainer = !!pod.getInitContainers().find(c => c.name == name);
-    const isMetricHidden = containerMetricsVisible.get();
+    const isMetricVisible = containerMetricsVisible.get();
 
     return (
       <div className="PodDetailsContainer">
@@ -105,7 +105,7 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
           <StatusBrick className={cssNames(state, { ready })}/>
           {name}
         </div>
-        {(!isMetricHidden && !isInitContainer && metrics) && (
+        {(isMetricVisible && !isInitContainer && metrics) && (
           <ResourceMetrics
             object={pod}
             tabs={[
