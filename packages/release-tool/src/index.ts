@@ -316,6 +316,10 @@ async function cherryPickCommits(prs: ExtendedGithubPrData[]): Promise<void> {
 }
 
 async function pickRelevantPrs(prs: ExtendedGithubPrData[], isMasterBranch: boolean): Promise<ExtendedGithubPrData[]> {
+  if (prs.length === 0) {
+    throw new Error("Cannot pick relevant PRs for release if there are none. Are the milestones on github correct?");
+  }
+
   if (isMasterBranch) {
     return prs;
   }
@@ -324,7 +328,7 @@ async function pickRelevantPrs(prs: ExtendedGithubPrData[], isMasterBranch: bool
 
   do {
     selectedPrs = await pickWhichPRsToUse(prs);
-  } while (selectedPrs.length === 0 && (console.warn("[WARNING]: must pick at least once commit"), true));
+  } while (selectedPrs.length === 0 && (console.warn("[WARNING]: must pick at least one commit"), true));
 
   await cherryPickCommits(selectedPrs);
 
