@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/release-tool",
-  "version": "6.4.7",
+  "version": "6.4.14",
   "description": "Release tool for lens monorepo",
   "main": "dist/index.mjs",
   "license": "MIT",

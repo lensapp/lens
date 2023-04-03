@@ -183,7 +183,7 @@ export enum ClusterMetricsResourceType {
   StatefulSet = "StatefulSet",
   Container = "Container",
   Ingress = "Ingress",
-  VolumeClaim = "VolumeClaim",
+  VolumeClaim = "PersistentVolumeClaim",
   ReplicaSet = "ReplicaSet",
   DaemonSet = "DaemonSet",
   Job = "Job",
