@@ -3,8 +3,8 @@
   "version": "6.5.0-alpha.2",
   "description": "Injection token exporter for cluster settings configuration",
   "license": "MIT",
+  "type": "commonjs",
   "private": false,
-  "mode": "production",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -16,8 +16,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist/",
-    "generate-types": "tsc --d --declarationDir ./dist --declarationMap --emitDeclarationOnly",
-    "build": "npm run generate-types && swc ./src/index.ts -d ./dist"
+    "build": "webpack"
   },
   "devDependencies": {
     "rimraf": "^4.4.1"
