@@ -328,7 +328,7 @@ async function pickRelevantPrs(prs: ExtendedGithubPrData[], isMasterBranch: bool
 
   do {
     selectedPrs = await pickWhichPRsToUse(prs);
-  } while (selectedPrs.length === 0 && (console.warn("[WARNING]: must pick at least once commit"), true));
+  } while (selectedPrs.length === 0 && (console.warn("[WARNING]: must pick at least one commit"), true));
 
   await cherryPickCommits(selectedPrs);
 
