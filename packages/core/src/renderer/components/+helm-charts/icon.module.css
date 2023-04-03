@@ -1,0 +1,13 @@
+.chartIcon {
+  background-size: cover;
+  background-position: center;
+}
+
+.imageNotLoaded {
+  width: 95%;
+  height: 95%;
+}
+
+.img {
+  opacity: 0;
+}

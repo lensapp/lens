@@ -98,11 +98,12 @@ class NonInjectedClusterOverview extends React.Component<Dependencies> {
   render() {
     const { eventStore, nodeStore, clusterMetricsAreVisible } = this.props;
     const isLoaded = nodeStore.isLoaded && eventStore.isLoaded;
+    const isMetricsHidden = !clusterMetricsAreVisible.get();
 
     return (
       <TabLayout scrollable>
         <div className={styles.ClusterOverview} data-testid="cluster-overview-page">
-          {this.renderClusterOverview(isLoaded, clusterMetricsAreVisible.get())}
+          {this.renderClusterOverview(isLoaded, isMetricsHidden)}
         </div>
       </TabLayout>
     );

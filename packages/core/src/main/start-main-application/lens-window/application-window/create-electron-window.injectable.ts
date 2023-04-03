@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { timingSafeEqual, X509Certificate } from "crypto";
 import loggerInjectable from "../../../../common/logger.injectable";
 import applicationWindowStateInjectable from "./application-window-state.injectable";
 import { BrowserWindow } from "electron";
@@ -14,8 +13,8 @@ import getAbsolutePathInjectable from "../../../../common/path/get-absolute-path
 import lensResourcesDirInjectable from "../../../../common/vars/lens-resources-dir.injectable";
 import isLinuxInjectable from "../../../../common/vars/is-linux.injectable";
 import pathExistsSyncInjectable from "../../../../common/fs/path-exists-sync.injectable";
-import lensProxyCertificateInjectable from "../../../../common/certificate/lens-proxy-certificate.injectable";
 import { applicationInformationToken } from "@k8slens/application";
+import sessionCertificateVerifierInjectable from "./session-certificate-verifier.injectable";
 
 export type ElectronWindowTitleBarStyle = "hiddenInset" | "hidden" | "default" | "customButtonsOnHover";
 
@@ -26,13 +25,6 @@ export interface UrlSource {
   url: string;
 }
 export type ContentSource = RequireExactlyOne<FileSource & UrlSource>;
-
-// see https://www.electronjs.org/docs/latest/api/session#sessetcertificateverifyprocproc
-enum ChromiumNetError {
-  SUCCESS = 0,
-  FAILURE = -2,
-  RESULT_FROM_CHROMIUM = -3,
-}
 
 export interface ElectronWindowConfiguration {
   id: string;
@@ -64,8 +56,7 @@ const createElectronWindowInjectable = getInjectable({
     const isLinux = di.inject(isLinuxInjectable);
     const applicationInformation = di.inject(applicationInformationToken);
     const pathExistsSync = di.inject(pathExistsSyncInjectable);
-    const lensProxyCertificate = di.inject(lensProxyCertificateInjectable).get();
-    const lensProxyX509Cert = new X509Certificate(lensProxyCertificate.cert);
+    const sessionCertificateVerifier = di.inject(sessionCertificateVerifierInjectable);
 
     return (configuration) => {
       const applicationWindowState = di.inject(
@@ -119,14 +110,7 @@ const createElectronWindowInjectable = getInjectable({
 
       applicationWindowState.manage(browserWindow);
 
-      browserWindow.webContents.session.setCertificateVerifyProc((request, shouldBeTrusted) => {
-        const { certificate } = request;
-        const cert = new X509Certificate(certificate.data);
-        const shouldTrustCert = cert.raw.length === lensProxyX509Cert.raw.length
-          && timingSafeEqual(cert.raw, lensProxyX509Cert.raw);
-
-        shouldBeTrusted(shouldTrustCert ? ChromiumNetError.SUCCESS : ChromiumNetError.RESULT_FROM_CHROMIUM);
-      });
+      browserWindow.webContents.session.setCertificateVerifyProc(sessionCertificateVerifier);
 
       browserWindow
         .on("focus", () => {

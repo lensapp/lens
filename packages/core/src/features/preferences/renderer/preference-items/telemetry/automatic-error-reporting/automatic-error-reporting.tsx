@@ -5,16 +5,16 @@
 import React from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { UserStore } from "../../../../../../common/user-store";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { observer } from "mobx-react";
 import { Checkbox } from "../../../../../../renderer/components/checkbox";
+import type { UserPreferencesState } from "../../../../../user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
 }
 
-const NonInjectedAutomaticErrorReporting = observer(({ userStore }: Dependencies) => (
+const NonInjectedAutomaticErrorReporting = observer(({ state }: Dependencies) => (
   <div
     id="sentry"
     className="small"
@@ -23,8 +23,8 @@ const NonInjectedAutomaticErrorReporting = observer(({ userStore }: Dependencies
     <SubTitle title="Automatic Error Reporting" />
     <Checkbox
       label="Allow automatic error reporting"
-      value={userStore.allowErrorReporting}
-      onChange={(value) => (userStore.allowErrorReporting = value)}
+      value={state.allowErrorReporting}
+      onChange={(value) => (state.allowErrorReporting = value)}
     />
     <div className="hint">
       <span>
@@ -36,12 +36,8 @@ const NonInjectedAutomaticErrorReporting = observer(({ userStore }: Dependencies
   </div>
 ));
 
-export const AutomaticErrorReporting = withInjectables<Dependencies>(
-  NonInjectedAutomaticErrorReporting,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-    }),
-  },
-);
+export const AutomaticErrorReporting = withInjectables<Dependencies>(NonInjectedAutomaticErrorReporting, {
+  getProps: (di) => ({
+    state: di.inject(userPreferencesStateInjectable),
+  }),
+});

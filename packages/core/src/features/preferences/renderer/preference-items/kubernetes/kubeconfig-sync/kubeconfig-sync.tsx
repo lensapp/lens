@@ -7,13 +7,11 @@ import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
 import { Notice } from "../../../../../../renderer/components/+extensions/notice";
-import type { UserStore } from "../../../../../../common/user-store";
 import { iter, tuple } from "@k8slens/utilities";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { PathPicker } from "../../../../../../renderer/components/path-picker/path-picker";
 import { Spinner } from "../../../../../../renderer/components/spinner";
 import { RemovableItem } from "../../../removable-item/removable-item";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import isWindowsInjectable from "../../../../../../common/vars/is-windows.injectable";
 import loggerInjectable from "../../../../../../common/logger.injectable";
 import type { Logger } from "../../../../../../common/logger";
@@ -21,13 +19,15 @@ import type { DiscoverAllKubeconfigSyncKinds } from "./discover-all-sync-kinds.i
 import type { DiscoverKubeconfigSyncKind, SyncKind } from "./discover-sync-kind.injectable";
 import discoverKubeconfigSyncKindInjectable from "./discover-sync-kind.injectable";
 import discoverAllKubeconfigSyncKindsInjectable from "./discover-all-sync-kinds.injectable";
+import type { UserPreferencesState } from "../../../../../user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
 
 interface Entry extends SyncKind {
   filePath: string;
 }
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
   isWindows: boolean;
   logger: Logger;
   discoverAllKubeconfigSyncKinds: DiscoverAllKubeconfigSyncKinds;
@@ -47,7 +47,7 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
   async componentDidMount() {
     const mapEntries = await Promise.all(
       iter.map(
-        this.props.userStore.syncKubeconfigEntries,
+        this.props.state.syncKubeconfigEntries,
         ([filePath]) => this.props.discoverKubeconfigSyncKind(filePath),
       ),
     );
@@ -59,7 +59,7 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
       reaction(
         () => Array.from(this.syncs.entries(), ([filePath, kind]) => tuple.from(filePath, kind)),
         syncs => {
-          this.props.userStore.syncKubeconfigEntries.replace(syncs);
+          this.props.state.syncKubeconfigEntries.replace(syncs);
         },
       ),
     ]);
@@ -177,7 +177,7 @@ class NonInjectedKubeconfigSync extends React.Component<Dependencies> {
 
 export const KubeconfigSync = withInjectables<Dependencies>(NonInjectedKubeconfigSync, {
   getProps: (di) => ({
-    userStore: di.inject(userStoreInjectable),
+    state: di.inject(userPreferencesStateInjectable),
     isWindows: di.inject(isWindowsInjectable),
     logger: di.inject(loggerInjectable),
     discoverAllKubeconfigSyncKinds: di.inject(discoverAllKubeconfigSyncKindsInjectable),

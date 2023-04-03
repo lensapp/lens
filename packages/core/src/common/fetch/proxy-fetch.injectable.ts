@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { HttpsProxyAgent } from "hpagent";
-import userStoreInjectable from "../user-store/user-store.injectable";
+import userPreferencesStateInjectable from "../../features/user-preferences/common/state.injectable";
 import type { Fetch } from "./fetch.injectable";
 import fetchInjectable from "./fetch.injectable";
 
@@ -12,7 +12,7 @@ const proxyFetchInjectable = getInjectable({
   id: "proxy-fetch",
   instantiate: (di): Fetch => {
     const fetch = di.inject(fetchInjectable);
-    const { httpsProxy, allowUntrustedCAs } = di.inject(userStoreInjectable);
+    const { httpsProxy, allowUntrustedCAs } = di.inject(userPreferencesStateInjectable);
     const agent = httpsProxy
       ? new HttpsProxyAgent({
         proxy: httpsProxy,

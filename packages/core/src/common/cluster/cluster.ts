@@ -5,7 +5,7 @@
 
 import { computed, observable, toJS, runInAction } from "mobx";
 import type { KubeApiResource } from "../rbac";
-import type { ClusterState, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel, ClusterConfigData } from "../cluster-types";
+import type { ClusterState, ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences, UpdateClusterModel } from "../cluster-types";
 import { ClusterMetadataKey, clusterModelIdChecker, updateClusterModelChecker } from "../cluster-types";
 import type { IObservableValue } from "mobx";
 import { replaceObservableObject } from "../utils/replace-observable-object";
@@ -26,11 +26,6 @@ export class Cluster {
    * Path to kubeconfig
    */
   readonly kubeConfigPath = observable.box() as IObservableValue<string>;
-
-  /**
-   * Kubernetes API server URL
-   */
-  readonly apiUrl: IObservableValue<string>;
 
   /**
    * Describes if we can detect that cluster is online
@@ -122,7 +117,7 @@ export class Cluster {
    */
   readonly prometheusPreferences = computed(() => pick(toJS(this.preferences), "prometheus", "prometheusProvider") as ClusterPrometheusPreferences);
 
-  constructor({ id, ...model }: ClusterModel, configData: ClusterConfigData) {
+  constructor({ id, ...model }: ClusterModel) {
     const { error } = clusterModelIdChecker.validate({ id });
 
     if (error) {
@@ -131,7 +126,6 @@ export class Cluster {
 
     this.id = id;
     this.updateModel(model);
-    this.apiUrl = observable.box(configData.clusterServerUrl);
   }
 
   /**
@@ -187,7 +181,6 @@ export class Cluster {
    */
   getState(): ClusterState {
     return {
-      apiUrl: this.apiUrl.get(),
       online: this.online.get(),
       ready: this.ready.get(),
       disconnected: this.disconnected.get(),
@@ -207,7 +200,6 @@ export class Cluster {
       this.accessible.set(state.accessible);
       this.allowedNamespaces.replace(state.allowedNamespaces);
       this.resourcesToShow.replace(state.resourcesToShow);
-      this.apiUrl.set(state.apiUrl);
       this.disconnected.set(state.disconnected);
       this.isAdmin.set(state.isAdmin);
       this.isGlobalWatchEnabled.set(state.isGlobalWatchEnabled);

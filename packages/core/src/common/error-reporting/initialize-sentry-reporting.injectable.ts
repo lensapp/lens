@@ -9,7 +9,7 @@ import isProductionInjectable from "../vars/is-production.injectable";
 import sentryDataSourceNameInjectable from "../vars/sentry-dsn-url.injectable";
 import { Dedupe, Offline } from "@sentry/integrations";
 import { inspect } from "util";
-import userStoreInjectable from "../user-store/user-store.injectable";
+import userPreferencesStateInjectable from "../../features/user-preferences/common/state.injectable";
 
 export type InitializeSentryReportingWith = (initSentry: (opts: BrowserOptions | ElectronMainOptions) => void) => void;
 
@@ -20,7 +20,7 @@ const initializeSentryReportingWithInjectable = getInjectable({
   instantiate: (di): InitializeSentryReportingWith => {
     const sentryDataSourceName = di.inject(sentryDataSourceNameInjectable);
     const isProduction = di.inject(isProductionInjectable);
-    const userStore = di.inject(userStoreInjectable);
+    const state = di.inject(userPreferencesStateInjectable);
 
     if (!sentryDataSourceName) {
       return () => {};
@@ -28,7 +28,7 @@ const initializeSentryReportingWithInjectable = getInjectable({
 
     return (initSentry) => initSentry({
       beforeSend: (event) => {
-        if (userStore.allowErrorReporting) {
+        if (state.allowErrorReporting) {
           return event;
         }
 

@@ -5,38 +5,31 @@
 import React from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { UserStore } from "../../../../../../common/user-store";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { observer } from "mobx-react";
 import { Switch } from "../../../../../../renderer/components/switch";
+import type { UserPreferencesState } from "../../../../../user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
 }
 
-const NonInjectedCopyPasteFromTerminal = observer(
-  ({ userStore }: Dependencies) => {
+const NonInjectedCopyPasteFromTerminal = observer(({
+  state,
+}: Dependencies) => (
+  <section id="terminalSelection">
+    <SubTitle title="Terminal copy & paste" />
+    <Switch
+      checked={state.terminalCopyOnSelect}
+      onChange={() => state.terminalCopyOnSelect = !state.terminalCopyOnSelect}
+    >
+      Copy on select and paste on right-click
+    </Switch>
+  </section>
+));
 
-    return (
-      <section id="terminalSelection">
-        <SubTitle title="Terminal copy & paste" />
-        <Switch
-          checked={userStore.terminalCopyOnSelect}
-          onChange={() => userStore.terminalCopyOnSelect = !userStore.terminalCopyOnSelect}
-        >
-          Copy on select and paste on right-click
-        </Switch>
-      </section>
-    );
-  },
-);
-
-export const CopyPasteFromTerminal = withInjectables<Dependencies>(
-  NonInjectedCopyPasteFromTerminal,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-    }),
-  },
-);
+export const CopyPasteFromTerminal = withInjectables<Dependencies>(NonInjectedCopyPasteFromTerminal, {
+  getProps: (di) => ({
+    state: di.inject(userPreferencesStateInjectable),
+  }),
+});

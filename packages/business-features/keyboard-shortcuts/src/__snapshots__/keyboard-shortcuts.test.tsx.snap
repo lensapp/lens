@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`keyboard-shortcuts when application is started renders 1`] = `
+<body>
+  <div>
+    <div
+      data-keyboard-shortcut-scope="some-scope"
+      data-keyboard-shortcut-scope-test="some-scope"
+      tabindex="-1"
+    >
+      <div />
+    </div>
+  </div>
+</body>
+`;

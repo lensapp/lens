@@ -231,7 +231,7 @@ exports[`Showing correct entity settings renders 1`] = `
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -593,7 +593,7 @@ exports[`Showing correct entity settings when navigating to local cluster entity
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -976,7 +976,7 @@ exports[`Showing correct entity settings when navigating to non-local cluster en
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1261,7 +1261,7 @@ exports[`Showing correct entity settings when navigating to weblink entity setti
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span

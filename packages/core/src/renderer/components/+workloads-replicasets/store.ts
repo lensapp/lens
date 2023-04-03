@@ -18,6 +18,9 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet, ReplicaSetApi> 
     super(dependencies, api, opts);
   }
 
+  /**
+   * @deprecated Switch to using `getPodsByOwnerId` directly
+   */
   getChildPods(replicaSet: ReplicaSet) {
     return this.dependencies.getPodsByOwnerId(replicaSet.getId());
   }

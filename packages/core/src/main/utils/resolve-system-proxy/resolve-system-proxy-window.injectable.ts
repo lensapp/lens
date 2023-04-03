@@ -4,11 +4,19 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { BrowserWindow } from "electron";
+import electronAppInjectable from "../../electron-app/electron-app.injectable";
 
 const resolveSystemProxyWindowInjectable = getInjectable({
   id: "resolve-system-proxy-window",
-  instantiate: () => {
-    const window = new BrowserWindow({ show: false });
+  instantiate: async (di) => {
+    const app = di.inject(electronAppInjectable);
+
+    await app.whenReady();
+
+    const window = new BrowserWindow({
+      show: false,
+      paintWhenInitiallyHidden: false,
+    });
 
     window.hide();
 

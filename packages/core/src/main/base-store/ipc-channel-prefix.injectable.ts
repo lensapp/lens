@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { baseStoreIpcChannelPrefixesInjectionToken } from "../../common/base-store/channel-prefix";
+import { persistentStorageIpcChannelPrefixesInjectionToken } from "../../common/persistent-storage/channel-prefix";
 
 const baseStoreIpcChannelPrefixInjectable = getInjectable({
   id: "base-store-ipc-channel-prefix",
@@ -11,7 +11,7 @@ const baseStoreIpcChannelPrefixInjectable = getInjectable({
     local: "store-sync-main",
     remote: "store-sync-renderer",
   }),
-  injectionToken: baseStoreIpcChannelPrefixesInjectionToken,
+  injectionToken: persistentStorageIpcChannelPrefixesInjectionToken,
 });
 
 export default baseStoreIpcChannelPrefixInjectable;

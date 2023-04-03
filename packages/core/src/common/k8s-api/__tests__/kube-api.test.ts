@@ -62,8 +62,6 @@ describe("createKubeApiForRemoteCluster", () => {
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
-    }, {
-      clusterServerUrl: "https://localhost:8080",
     }));
 
     fetchMock = asyncFn();
@@ -168,8 +166,6 @@ describe("KubeApi", () => {
       contextName: "some-context-name",
       id: "some-cluster-id",
       kubeConfigPath: "/some-path-to-a-kubeconfig",
-    }, {
-      clusterServerUrl: "https://localhost:8080",
     }));
 
     di.override(apiKubeInjectable, () => createKubeJsonApi({

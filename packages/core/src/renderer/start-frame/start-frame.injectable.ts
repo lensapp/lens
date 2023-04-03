@@ -6,9 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { runManyFor } from "@k8slens/run-many";
 import * as tokens from "../before-frame-starts/tokens";
 import currentlyInClusterFrameInjectable from "../routes/currently-in-cluster-frame.injectable";
-import {
-  afterApplicationIsLoadedInjectionToken,
-} from "@k8slens/application";
+import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const startFrameInjectable = getInjectable({
   id: "start-frame",
@@ -44,7 +42,7 @@ const startFrameInjectable = getInjectable({
     };
   },
 
-  injectionToken: afterApplicationIsLoadedInjectionToken,
+  injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default startFrameInjectable;

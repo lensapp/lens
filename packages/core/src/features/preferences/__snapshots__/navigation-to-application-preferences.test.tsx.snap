@@ -697,7 +697,7 @@ exports[`preferences - navigation to application preferences given in preference
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -1478,7 +1478,7 @@ exports[`preferences - navigation to application preferences given in preference
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -1884,7 +1884,7 @@ exports[`preferences - navigation to application preferences given in some child
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -2634,7 +2634,7 @@ exports[`preferences - navigation to application preferences given in some child
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -3385,7 +3385,7 @@ exports[`preferences - navigation to application preferences given in some child
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span

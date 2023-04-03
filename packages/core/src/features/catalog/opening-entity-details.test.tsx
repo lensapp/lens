@@ -6,19 +6,18 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { RenderResult } from "@testing-library/react";
 import { KubernetesCluster, WebLink } from "../../common/catalog-entities";
-import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
-import { Cluster } from "../../common/cluster/cluster";
 import navigateToCatalogInjectable from "../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import { advanceFakeTime, testUsingFakeTime } from "../../test-utils/use-fake-time";
+import { advanceFakeTime } from "../../test-utils/use-fake-time";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
 import showEntityDetailsInjectable from "../../renderer/components/+catalog/entity-details/show.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
+import writeJsonFileInjectable from "../../common/fs/write-json-file.injectable";
+import addClusterInjectable from "../cluster/storage/common/add.injectable";
 
 describe("opening catalog entity details panel", () => {
   let builder: ApplicationBuilder;
   let rendered: RenderResult;
   let windowDi: DiContainer;
-  let cluster: Cluster;
   let clusterEntity: KubernetesCluster;
   let localClusterEntity: KubernetesCluster;
   let otherEntity: WebLink;
@@ -26,20 +25,7 @@ describe("opening catalog entity details panel", () => {
   beforeEach(async () => {
     builder = getApplicationBuilder();
 
-    builder.beforeWindowStart(({ windowDi }) => {
-      // TODO: remove once ClusterStore can be used without overriding it
-      windowDi.override(getClusterByIdInjectable, () => (clusterId) => {
-        if (clusterId === cluster?.id) {
-          return cluster;
-        }
-
-        return undefined;
-      });
-    });
-
-    testUsingFakeTime();
-
-    builder.afterWindowStart(({ windowDi }) => {
+    builder.afterWindowStart(async ({ windowDi }) => {
       clusterEntity = new KubernetesCluster({
         metadata: {
           labels: {},
@@ -82,12 +68,33 @@ describe("opening catalog entity details panel", () => {
           phase: "available",
         },
       });
-      cluster = new Cluster({
-        contextName: clusterEntity.spec.kubeconfigContext,
+
+      const writeJsonFile = windowDi.inject(writeJsonFileInjectable);
+      const addCluster = windowDi.inject(addClusterInjectable);
+
+      await writeJsonFile(clusterEntity.spec.kubeconfigPath, {
+        contexts: [{
+          name: clusterEntity.spec.kubeconfigContext,
+          context: {
+            cluster: "some-cluster",
+            user: "some-user",
+          },
+        }],
+        clusters: [{
+          name: "some-cluster",
+          cluster: {
+            server: "https://localhost:9999",
+          },
+        }],
+        users: [{
+          name: "some-user",
+        }],
+      });
+
+      addCluster({
         id: clusterEntity.getId(),
         kubeConfigPath: clusterEntity.spec.kubeconfigPath,
-      }, {
-        clusterServerUrl: "https://localhost:9999",
+        contextName: clusterEntity.spec.kubeconfigContext,
       });
 
       // TODO: replace with proper entity source once syncing entities between main and windows is injectable

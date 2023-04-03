@@ -1,5 +1,11 @@
 import type { DiContainer } from "@ogre-tools/injectable";
-import type { Channel, MessageChannelHandler, RequestChannelHandler } from "@k8slens/messaging";
+import type {
+  MessageChannel,
+  MessageChannelHandler,
+  MessageChannelListener,
+  RequestChannel,
+  RequestChannelHandler,
+} from "@k8slens/messaging";
 
 import {
   enlistMessageChannelListenerInjectionToken,
@@ -20,6 +26,8 @@ export type MessageBridgeFake = {
   setAsync: (value: boolean) => void;
 };
 
+type MessageHandlers = Set<MessageChannelHandler<MessageChannel<any>>>;
+
 const overrideMessaging = ({
   di,
   messageListenersByDi,
@@ -28,13 +36,13 @@ const overrideMessaging = ({
 }: {
   di: DiContainer;
 
-  messageListenersByDi: Map<DiContainer, Map<string, Set<MessageChannelHandler<Channel>>>>;
+  messageListenersByDi: Map<DiContainer, Map<string, MessageHandlers>>;
 
   messagePropagationBuffer: Set<{ resolve: () => Promise<void> }>;
 
   getAsyncModeStatus: () => boolean;
 }) => {
-  const messageHandlersByChannel = new Map<string, Set<MessageChannelHandler<Channel>>>();
+  const messageHandlersByChannel = new Map<string, MessageHandlers>();
 
   messageListenersByDi.set(di, messageHandlersByChannel);
 
@@ -64,20 +72,26 @@ const overrideMessaging = ({
     });
   });
 
-  di.override(enlistMessageChannelListenerInjectionToken, () => (listener) => {
-    if (!messageHandlersByChannel.has(listener.channel.id)) {
-      messageHandlersByChannel.set(listener.channel.id, new Set());
-    }
+  di.override(
+    enlistMessageChannelListenerInjectionToken,
+    () =>
+      <T>(listener: MessageChannelListener<MessageChannel<T>>) => {
+        if (!messageHandlersByChannel.has(listener.channel.id)) {
+          messageHandlersByChannel.set(listener.channel.id, new Set());
+        }
 
-    const handlerSet = messageHandlersByChannel.get(listener.channel.id);
+        const handlerSet = messageHandlersByChannel.get(listener.channel.id);
 
-    handlerSet?.add(listener.handler);
+        handlerSet?.add(listener.handler);
 
-    return () => {
-      handlerSet?.delete(listener.handler);
-    };
-  });
+        return () => {
+          handlerSet?.delete(listener.handler);
+        };
+      },
+  );
 };
+
+type RequestHandlers = Set<RequestChannelHandler<RequestChannel<any, any>>>;
 
 const overrideRequesting = ({
   di,
@@ -85,9 +99,9 @@ const overrideRequesting = ({
 }: {
   di: DiContainer;
 
-  requestListenersByDi: Map<DiContainer, Map<string, Set<RequestChannelHandler<Channel>>>>;
+  requestListenersByDi: Map<DiContainer, Map<string, RequestHandlers>>;
 }) => {
-  const requestHandlersByChannel = new Map<string, Set<RequestChannelHandler<Channel>>>();
+  const requestHandlersByChannel = new Map<string, RequestHandlers>();
 
   requestListenersByDi.set(di, requestHandlersByChannel);
 
@@ -141,15 +155,8 @@ const overrideRequesting = ({
 };
 
 export const getMessageBridgeFake = (): MessageBridgeFake => {
-  const messageListenersByDi = new Map<
-    DiContainer,
-    Map<string, Set<MessageChannelHandler<Channel>>>
-  >();
-
-  const requestListenersByDi = new Map<
-    DiContainer,
-    Map<string, Set<RequestChannelHandler<Channel>>>
-  >();
+  const messageListenersByDi = new Map<DiContainer, Map<string, MessageHandlers>>();
+  const requestListenersByDi = new Map<DiContainer, Map<string, RequestHandlers>>();
 
   const messagePropagationBuffer = new Set<AsyncFnMock<() => void>>();
 

@@ -9,6 +9,7 @@ import type { Cluster } from "../../common/cluster/cluster";
 import createKubeAuthProxyInjectable from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
 import kubeAuthProxyCertificateInjectable from "../kube-auth-proxy/kube-auth-proxy-certificate.injectable";
 import type { KubeAuthProxy } from "../kube-auth-proxy/create-kube-auth-proxy.injectable";
+import clusterApiUrlInjectable from "../../features/cluster/connections/main/api-url.injectable";
 
 export interface KubeAuthProxyServer {
   getApiTarget(isLongRunningRequest?: boolean): Promise<ServerOptions>;
@@ -24,23 +25,23 @@ const thirtySecondsInMs = 30 * 1000;
 const kubeAuthProxyServerInjectable = getInjectable({
   id: "kube-auth-proxy-server",
   instantiate: (di, cluster): KubeAuthProxyServer => {
-    const clusterUrl = new URL(cluster.apiUrl.get());
-
-    const createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable);
-    const certificate = di.inject(kubeAuthProxyCertificateInjectable, clusterUrl.hostname);
+    const clusterApiUrl = di.inject(clusterApiUrlInjectable, cluster);
+    const createKubeAuthProxy = di.inject(createKubeAuthProxyInjectable, cluster);
 
     let kubeAuthProxy: KubeAuthProxy | undefined = undefined;
     let apiTarget: ServerOptions | undefined = undefined;
 
     const ensureServerHelper = async (): Promise<KubeAuthProxy> => {
       if (!kubeAuthProxy) {
-        const proxyEnv = Object.assign({}, process.env);
+        const proxyEnv = {
+          ...process.env,
+        };
 
         if (cluster.preferences.httpsProxy) {
           proxyEnv.HTTPS_PROXY = cluster.preferences.httpsProxy;
         }
 
-        kubeAuthProxy = createKubeAuthProxy(cluster, proxyEnv);
+        kubeAuthProxy = createKubeAuthProxy(proxyEnv);
       }
 
       await kubeAuthProxy.run();
@@ -49,31 +50,24 @@ const kubeAuthProxyServerInjectable = getInjectable({
     };
 
     const newApiTarget = async (timeout: number): Promise<ServerOptions> => {
-      const kubeAuthProxy = await ensureServerHelper();
-      const headers: Record<string, string> = {};
-
-      if (clusterUrl.hostname) {
-        headers.Host = clusterUrl.hostname;
-
-        // fix current IPv6 inconsistency in url.Parse() and httpProxy.
-        // with url.Parse the IPv6 Hostname has no Square brackets but httpProxy needs the Square brackets to work.
-        if (headers.Host.includes(":")) {
-          headers.Host = `[${headers.Host}]`;
-        }
-      }
+      const { hostname } = await clusterApiUrl();
+      const certificate = di.inject(kubeAuthProxyCertificateInjectable, hostname);
+      const { port, apiPrefix: path } = await ensureServerHelper();
 
       return {
         target: {
           protocol: "https:",
           host: "127.0.0.1",
-          port: kubeAuthProxy.port,
-          path: kubeAuthProxy.apiPrefix,
+          port,
+          path,
           ca: certificate.cert,
         },
         changeOrigin: true,
         timeout,
         secure: true,
-        headers,
+        headers: {
+          Host: hostname,
+        },
       };
     };
 

@@ -5,17 +5,14 @@
 
 .HelmChartDetails {
   .intro-logo {
-    margin-right: $margin * 2;
-    background: var(--helmLogoBackground);
-    border-radius: $radius;
-    max-width: 150px;
-    max-height: 100px;
-    padding: $padding;
-    box-sizing: content-box;
-  }
-
-  div.intro-logo {
+    margin-right: calc(var(--margin) * 2);
+    background: var(--helmLogoBackground) center no-repeat;
+    border-radius: var(--border-radius);
+    padding: var(--padding);
     width: 100px;
+    height: 100px;
+    box-sizing: content-box;
+    background-size: contain;
   }
 
   .Select__option {

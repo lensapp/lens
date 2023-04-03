@@ -10,8 +10,8 @@ import type { IpcRendererEvent } from "electron";
 import React from "react";
 import notificationsStoreInjectable from "../components/notifications/notifications-store.injectable";
 import { getMillisecondsFromUnixEpoch } from "../../common/utils/date/get-current-date-time";
-import getClusterByIdInjectable from "../../common/cluster-store/get-by-id.injectable";
 import showSuccessNotificationInjectable from "../components/notifications/show-success-notification.injectable";
+import getClusterByIdInjectable from "../../features/cluster/storage/common/get-by-id.injectable";
 
 const intervalBetweenNotifications = 1000 * 60; // 60s
 

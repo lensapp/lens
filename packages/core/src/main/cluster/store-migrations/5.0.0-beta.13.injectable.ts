@@ -10,7 +10,7 @@ import { isDefined } from "@k8slens/utilities";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import { clusterStoreMigrationInjectionToken } from "../../../common/cluster-store/migration-token";
+import { clusterStoreMigrationInjectionToken } from "../../../features/cluster/storage/common/migration-token";
 import { generateNewIdFor } from "../../../common/utils/generate-new-id-for";
 
 interface Pre500ClusterModel extends ClusterModel {

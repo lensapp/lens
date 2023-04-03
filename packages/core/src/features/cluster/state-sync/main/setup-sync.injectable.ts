@@ -5,22 +5,22 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { isEqual } from "lodash";
 import { autorun } from "mobx";
-import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import type { ClusterId, ClusterState } from "../../../../common/cluster-types";
 import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
-import initClusterStoreInjectable from "../../store/main/init.injectable";
+import initClusterStoreInjectable from "../../storage/main/init.injectable";
 import emitClusterStateUpdateInjectable from "./emit-update.injectable";
+import clustersInjectable from "../../storage/common/clusters.injectable";
 
 const setupClusterStateBroadcastingInjectable = getInjectable({
   id: "setup-cluster-state-broadcasting",
   instantiate: (di) => ({
     run: () => {
       const emitClusterStateUpdate = di.inject(emitClusterStateUpdateInjectable);
-      const clusterStore = di.inject(clusterStoreInjectable);
+      const clusters = di.inject(clustersInjectable);
       const prevStates = new Map<ClusterId, ClusterState>();
 
       autorun(() => {
-        for (const cluster of clusterStore.clusters.values()) {
+        for (const cluster of clusters.get()) {
           const prevState = prevStates.get(cluster.id);
           const curState = cluster.getState();
 

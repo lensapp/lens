@@ -710,7 +710,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1090,7 +1090,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -1481,7 +1481,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -1872,7 +1872,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -2289,7 +2289,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -3039,7 +3039,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -3827,7 +3827,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -4232,7 +4232,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -4568,7 +4568,7 @@ exports[`preferences - navigation to extension specific preferences given in pre
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span

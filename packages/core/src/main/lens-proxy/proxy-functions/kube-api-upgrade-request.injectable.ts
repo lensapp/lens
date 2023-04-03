@@ -6,24 +6,24 @@
 import { chunk } from "lodash";
 import type { ConnectionOptions } from "tls";
 import { connect } from "tls";
-import url, { URL } from "url";
+import url from "url";
 import { apiKubePrefix } from "../../../common/vars";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { LensProxyApiRequest } from "../lens-proxy";
 import kubeAuthProxyServerInjectable from "../../cluster/kube-auth-proxy-server.injectable";
 import kubeAuthProxyCertificateInjectable from "../../kube-auth-proxy/kube-auth-proxy-certificate.injectable";
+import clusterApiUrlInjectable from "../../../features/cluster/connections/main/api-url.injectable";
 
 const skipRawHeaders = new Set(["Host", "Authorization"]);
 
 const kubeApiUpgradeRequestInjectable = getInjectable({
   id: "kube-api-upgrade-request",
   instantiate: (di): LensProxyApiRequest => async ({ req, socket, head, cluster }) => {
-    const clusterUrl = new URL(cluster.apiUrl.get());
+    const clusterApiUrl = await di.inject(clusterApiUrlInjectable, cluster)();
     const kubeAuthProxyServer = di.inject(kubeAuthProxyServerInjectable, cluster);
-    const kubeAuthProxyCertificate = di.inject(kubeAuthProxyCertificateInjectable, clusterUrl.hostname);
+    const kubeAuthProxyCertificate = di.inject(kubeAuthProxyCertificateInjectable, clusterApiUrl.hostname);
 
     const proxyUrl = await kubeAuthProxyServer.ensureAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
-    const apiUrl = url.parse(cluster.apiUrl.get());
     const pUrl = url.parse(proxyUrl);
     const connectOpts: ConnectionOptions = {
       port: pUrl.port ? parseInt(pUrl.port) : undefined,
@@ -33,7 +33,7 @@ const kubeApiUpgradeRequestInjectable = getInjectable({
 
     const proxySocket = connect(connectOpts, () => {
       proxySocket.write(`${req.method} ${pUrl.path} HTTP/1.1\r\n`);
-      proxySocket.write(`Host: ${apiUrl.host}\r\n`);
+      proxySocket.write(`Host: ${clusterApiUrl.host}\r\n`);
 
       for (const [key, value] of chunk(req.rawHeaders, 2)) {
         if (skipRawHeaders.has(key)) {

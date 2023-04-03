@@ -1,3 +1,4 @@
+import type { Disposer } from "@k8slens/utilities";
 import { getInjectionToken } from "@ogre-tools/injectable";
 
 import type {
@@ -5,9 +6,9 @@ import type {
   MessageChannelListener,
 } from "./message-channel-listener-injection-token";
 
-export type EnlistMessageChannelListener = (
-  listener: MessageChannelListener<MessageChannel<unknown>>,
-) => () => void;
+export type EnlistMessageChannelListener = <T>(
+  listener: MessageChannelListener<MessageChannel<T>>,
+) => Disposer;
 
 export const enlistMessageChannelListenerInjectionToken =
   getInjectionToken<EnlistMessageChannelListener>({

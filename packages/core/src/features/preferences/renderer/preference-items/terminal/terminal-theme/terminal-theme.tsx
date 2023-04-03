@@ -5,26 +5,25 @@
 import React from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { UserStore } from "../../../../../../common/user-store";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { observer } from "mobx-react";
 import { Select } from "../../../../../../renderer/components/select";
 import type { LensTheme } from "../../../../../../renderer/themes/lens-theme";
 import { lensThemeDeclarationInjectionToken } from "../../../../../../renderer/themes/declaration";
+import type { UserPreferencesState } from "../../../../../user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
   themes: LensTheme[];
 }
 
 const NonInjectedTerminalTheme = observer(({
-  userStore,
+  state,
   themes,
 }: Dependencies) => {
-
   const themeOptions = [
     {
-      value: "", // TODO: replace with a sentinal value that isn't string (and serialize it differently)
+      value: "", // TODO: replace with a sentinel value that isn't string (and serialize it differently)
       label: "Match Lens Theme",
     },
     ...themes.map(theme => ({
@@ -40,8 +39,8 @@ const NonInjectedTerminalTheme = observer(({
         id="terminal-theme-input"
         themeName="lens"
         options={themeOptions}
-        value={userStore.terminalTheme}
-        onChange={option => userStore.terminalTheme = option?.value ?? ""}
+        value={state.terminalTheme}
+        onChange={option => state.terminalTheme = option?.value ?? ""}
       />
     </section>
   );
@@ -50,7 +49,7 @@ const NonInjectedTerminalTheme = observer(({
 
 export const TerminalTheme = withInjectables<Dependencies>(NonInjectedTerminalTheme, {
   getProps: (di) => ({
-    userStore: di.inject(userStoreInjectable),
+    state: di.inject(userPreferencesStateInjectable),
     themes: di.injectMany(lensThemeDeclarationInjectionToken),
   }),
 });

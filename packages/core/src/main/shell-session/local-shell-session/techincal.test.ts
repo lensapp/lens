@@ -103,8 +103,6 @@ describe("technical unit tests for local shell sessions", () => {
           contextName: "some-context-name",
           id: "some-cluster-id",
           kubeConfigPath: "/some-kube-config-path",
-        }, {
-          clusterServerUrl: "https://localhost:9999",
         });
 
         await openLocalShellSession({

@@ -6,7 +6,4 @@ export {
 export type {
   ChannelObserver,
   ComputedChannelFactory,
-  JsonifiableObject,
-  JsonifiableArray,
-  Jsonifiable,
 } from "./src/computed-channel/computed-channel.injectable";

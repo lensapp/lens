@@ -25,15 +25,17 @@ import type { LensTheme } from "../../themes/lens-theme";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
-import type { UserStore } from "../../../common/user-store";
 import type { ItemListStore } from "./list-layout";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import userStoreInjectable from "../../../common/user-store/user-store.injectable";
 import pageFiltersStoreInjectable from "./page-filters/store.injectable";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 import activeThemeInjectable from "../../themes/active.injectable";
 import autoBindReact from "auto-bind/react";
+import type { ToggleTableColumnVisibility } from "../../../features/user-preferences/common/toggle-table-column-visibility.injectable";
+import toggleTableColumnVisibilityInjectable from "../../../features/user-preferences/common/toggle-table-column-visibility.injectable";
+import type { IsTableColumnHidden } from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
+import isTableColumnHiddenInjectable from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
 
 export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStores extends boolean> {
   getFilters: () => Filter[];
@@ -74,9 +76,10 @@ export interface ItemListLayoutContentProps<Item extends ItemObject, PreLoadStor
 
 interface Dependencies {
   activeTheme: IComputedValue<LensTheme>;
-  userStore: UserStore;
   pageFiltersStore: PageFiltersStore;
   openConfirmDialog: OpenConfirmDialog;
+  toggleTableColumnVisibility: ToggleTableColumnVisibility;
+  isTableColumnHidden: IsTableColumnHidden;
 }
 
 @observer
@@ -342,7 +345,7 @@ class NonInjectedItemListLayoutContent<
   showColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
     const { tableId, isConfigurable } = this.props;
 
-    return !isConfigurable || !tableId || !this.props.userStore.isTableColumnHidden(tableId, columnId, showWithColumn);
+    return !isConfigurable || !tableId || !this.props.isTableColumnHidden(tableId, columnId, showWithColumn);
   }
 
   renderColumnVisibilityMenu(tableId: string) {
@@ -365,7 +368,7 @@ class NonInjectedItemListLayoutContent<
                 <Checkbox
                   label={cellProps.title ?? `<${cellProps.className}>`}
                   value={this.showColumn(cellProps)}
-                  onChange={() => this.props.userStore.toggleTableColumnVisibility(tableId, cellProps.id)}
+                  onChange={() => this.props.toggleTableColumnVisibility(tableId, cellProps.id)}
                 />
               </MenuItem>
             ))
@@ -379,8 +382,9 @@ export const ItemListLayoutContent = withInjectables<Dependencies, ItemListLayou
   getProps: (di, props) => ({
     ...props,
     activeTheme: di.inject(activeThemeInjectable),
-    userStore: di.inject(userStoreInjectable),
     pageFiltersStore: di.inject(pageFiltersStoreInjectable),
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
+    toggleTableColumnVisibility: di.inject(toggleTableColumnVisibilityInjectable),
+    isTableColumnHidden: di.inject(isTableColumnHiddenInjectable),
   }),
 }) as <Item extends ItemObject, PreLoadStores extends boolean>(props: ItemListLayoutContentProps<Item, PreLoadStores>) => React.ReactElement;

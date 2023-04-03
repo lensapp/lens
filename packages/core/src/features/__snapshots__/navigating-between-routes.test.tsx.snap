@@ -154,7 +154,7 @@ exports[`navigating between routes given route with optional path parameters whe
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -358,7 +358,7 @@ exports[`navigating between routes given route without path parameters when navi
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span

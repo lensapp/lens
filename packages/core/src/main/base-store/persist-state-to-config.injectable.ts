@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { persistStateToConfigInjectionToken } from "../../common/base-store/save-to-file";
+import { persistStateToConfigInjectionToken } from "../../common/persistent-storage/save-to-file";
 import loggerInjectable from "../../common/logger.injectable";
 
 const persistStateToConfigInjectable = getInjectable({

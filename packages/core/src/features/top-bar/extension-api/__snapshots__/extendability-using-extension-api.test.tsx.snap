@@ -231,7 +231,7 @@ exports[`extendability-using-extension-api given an extension with a weakly type
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -525,7 +525,7 @@ exports[`extendability-using-extension-api given an extension with top-bar items
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -810,7 +810,7 @@ exports[`extendability-using-extension-api given an extension with top-bar items
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1095,7 +1095,7 @@ exports[`extendability-using-extension-api renders 1`] = `
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span

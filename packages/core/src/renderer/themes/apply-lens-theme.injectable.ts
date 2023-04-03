@@ -4,9 +4,9 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../common/logger.injectable";
-import userStoreInjectable from "../../common/user-store/user-store.injectable";
 import { object } from "@k8slens/utilities";
 import type { LensTheme } from "./lens-theme";
+import resetThemeInjectable from "../../features/user-preferences/common/reset-theme.injectable";
 
 export type ApplyLensTheme = (theme: LensTheme) => void;
 
@@ -14,7 +14,7 @@ const applyLensThemeInjectable = getInjectable({
   id: "apply-lens-theme",
   instantiate: (di): ApplyLensTheme => {
     const logger = di.inject(loggerInjectable);
-    const userStore = di.inject(userStoreInjectable);
+    const resetTheme = di.inject(resetThemeInjectable);
 
     return (theme) => {
       try {
@@ -28,7 +28,7 @@ const applyLensThemeInjectable = getInjectable({
         document.body.classList.toggle("theme-light", theme.type === "light");
       } catch (error) {
         logger.error("[THEME]: Failed to apply active theme", error);
-        userStore.resetTheme();
+        resetTheme();
       }
     };
   },

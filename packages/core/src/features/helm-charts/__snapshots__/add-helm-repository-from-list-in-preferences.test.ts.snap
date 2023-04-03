@@ -649,7 +649,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -1391,7 +1391,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -2135,7 +2135,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -2928,7 +2928,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -3670,7 +3670,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -4401,7 +4401,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -5177,7 +5177,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -5955,7 +5955,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -6792,7 +6792,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span
@@ -7523,7 +7523,7 @@ exports[`add helm repository from list in preferences when navigating to prefere
           class="HotbarSelector"
         >
           <i
-            class="Icon Icon previous material interactive focusable"
+            class="Icon material interactive focusable"
             tabindex="0"
           >
             <span

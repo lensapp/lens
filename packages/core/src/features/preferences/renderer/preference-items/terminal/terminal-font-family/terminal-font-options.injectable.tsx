@@ -7,10 +7,10 @@ import type { IComputedValue } from "mobx";
 import { action, computed } from "mobx";
 import React from "react";
 import type { SingleValue } from "react-select";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { defaultTerminalFontFamily } from "../../../../../../common/vars";
 import type { SelectOption } from "../../../../../../renderer/components/select";
 import { terminalFontInjectionToken } from "../../../../../terminal/renderer/fonts/token";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
 
 export interface TerminalFontPreferencePresenter {
   readonly options: IComputedValue<SelectOption<string>[]>;
@@ -21,7 +21,7 @@ export interface TerminalFontPreferencePresenter {
 const terminalFontPreferencePresenterInjectable = getInjectable({
   id: "terminal-font-preference-presenter",
   instantiate: (di): TerminalFontPreferencePresenter => {
-    const userStore = di.inject(userStoreInjectable);
+    const state = di.inject(userPreferencesStateInjectable);
     const terminalFonts = di.injectMany(terminalFontInjectionToken);
 
     return {
@@ -30,18 +30,18 @@ const terminalFontPreferencePresenterInjectable = getInjectable({
           <span
             style={{
               fontFamily: `${font.name}, var(--font-terminal)`,
-              fontSize: userStore.terminalConfig.fontSize,
+              fontSize: state.terminalConfig.fontSize,
             }}
           >
             {font.name}
           </span>
         ),
         value: font.name,
-        isSelected: userStore.terminalConfig.fontFamily === font.name,
+        isSelected: state.terminalConfig.fontFamily === font.name,
       }))),
-      current: computed(() => userStore.terminalConfig.fontFamily),
+      current: computed(() => state.terminalConfig.fontFamily),
       onSelection: action(selection => {
-        userStore.terminalConfig.fontFamily = selection?.value ?? defaultTerminalFontFamily;
+        state.terminalConfig.fontFamily = selection?.value ?? defaultTerminalFontFamily;
       }),
     };
   },

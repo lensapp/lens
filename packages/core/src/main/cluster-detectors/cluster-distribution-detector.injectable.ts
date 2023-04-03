@@ -9,22 +9,24 @@ import { getInjectable } from "@ogre-tools/injectable";
 import k8SRequestInjectable from "../k8s-request.injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import requestClusterVersionInjectable from "./request-cluster-version.injectable";
+import type { URL } from "url";
+import clusterApiUrlInjectable from "../../features/cluster/connections/main/api-url.injectable";
 
 const isGKE = (version: string) => version.includes("gke");
 const isEKS = (version: string) => version.includes("eks");
 const isIKS = (version: string) => version.includes("IKS");
-const isAKS = (cluster: Cluster) => cluster.apiUrl.get().includes("azmk8s.io");
+const isAKS = (apiUrl: URL) => apiUrl.hostname.includes("azmk8s.io");
 const isMirantis = (version: string) => version.includes("-mirantis-") || version.includes("-docker-");
-const isDigitalOcean = (cluster: Cluster) => cluster.apiUrl.get().endsWith("k8s.ondigitalocean.com");
-const isMinikube = (cluster: Cluster) => cluster.contextName.get().startsWith("minikube");
-const isMicrok8s = (cluster: Cluster) => cluster.contextName.get().startsWith("microk8s");
-const isKind = (cluster: Cluster) => cluster.contextName.get().startsWith("kubernetes-admin@kind-");
-const isDockerDesktop = (cluster: Cluster) => cluster.contextName.get() === "docker-desktop";
+const isDigitalOcean = (apiUrl: URL) => apiUrl.hostname.endsWith("k8s.ondigitalocean.com");
+const isMinikube = (contextName: string) => contextName.startsWith("minikube");
+const isMicrok8s = (contextName: string) => contextName.startsWith("microk8s");
+const isKind = (contextName: string) => contextName.startsWith("kubernetes-admin@kind-");
+const isDockerDesktop = (contextName: string) => contextName === "docker-desktop";
 const isTke = (version: string) => version.includes("-tke.");
 const isCustom = (version: string) => version.includes("+");
 const isVMWare = (version: string) => version.includes("+vmware");
 const isRke = (version: string) => version.includes("-rancher");
-const isRancherDesktop = (cluster: Cluster) => cluster.contextName.get() === "rancher-desktop";
+const isRancherDesktop = (contextName: string) => contextName === "rancher-desktop";
 const isK3s = (version: string) => version.includes("+k3s");
 const isK0s = (version: string) => version.includes("-k0s") || version.includes("+k0s");
 const isAlibaba = (version: string) => version.includes("-aliyun");
@@ -49,12 +51,14 @@ const clusterDistributionDetectorInjectable = getInjectable({
       key: ClusterMetadataKey.DISTRIBUTION,
       detect: async (cluster) => {
         const version = await requestClusterVersion(cluster);
+        const apiUrl = await di.inject(clusterApiUrlInjectable, cluster)();
+        const contextName = cluster.contextName.get();
 
         if (isRke(version)) {
           return { value: "rke", accuracy: 80 };
         }
 
-        if (isRancherDesktop(cluster)) {
+        if (isRancherDesktop(contextName)) {
           return { value: "rancher-desktop", accuracy: 80 };
         }
 
@@ -74,11 +78,11 @@ const clusterDistributionDetectorInjectable = getInjectable({
           return { value: "iks", accuracy: 80 };
         }
 
-        if (isAKS(cluster)) {
+        if (isAKS(apiUrl)) {
           return { value: "aks", accuracy: 80 };
         }
 
-        if (isDigitalOcean(cluster)) {
+        if (isDigitalOcean(apiUrl)) {
           return { value: "digitalocean", accuracy: 90 };
         }
 
@@ -106,19 +110,19 @@ const clusterDistributionDetectorInjectable = getInjectable({
           return { value: "tencent", accuracy: 90 };
         }
 
-        if (isMinikube(cluster)) {
+        if (isMinikube(contextName)) {
           return { value: "minikube", accuracy: 80 };
         }
 
-        if (isMicrok8s(cluster)) {
+        if (isMicrok8s(contextName)) {
           return { value: "microk8s", accuracy: 80 };
         }
 
-        if (isKind(cluster)) {
+        if (isKind(contextName)) {
           return { value: "kind", accuracy: 70 };
         }
 
-        if (isDockerDesktop(cluster)) {
+        if (isDockerDesktop(contextName)) {
           return { value: "docker-desktop", accuracy: 80 };
         }
 

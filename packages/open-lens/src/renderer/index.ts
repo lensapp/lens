@@ -15,6 +15,8 @@ import { createContainer } from "@ogre-tools/injectable";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerInjectableReact } from "@ogre-tools/injectable-react";
 import { messagingFeatureForRenderer } from "@k8slens/messaging-for-renderer";
+import { keyboardShortcutsFeature } from "@k8slens/keyboard-shortcuts";
+import { reactApplicationFeature } from "@k8slens/react-application";
 
 const environment = "renderer";
 
@@ -24,7 +26,14 @@ runInAction(() => {
   registerMobX(di);
   registerInjectableReact(di);
   registerLensCore(di, environment);
-  registerFeature(di, applicationFeature, messagingFeatureForRenderer);
+
+  registerFeature(
+    di,
+    applicationFeature,
+    messagingFeatureForRenderer,
+    keyboardShortcutsFeature,
+    reactApplicationFeature
+  );
 
   autoRegister({
     di,

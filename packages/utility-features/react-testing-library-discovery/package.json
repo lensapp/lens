@@ -1,0 +1,33 @@
+{
+  "name": "@k8slens/react-testing-library-discovery",
+  "private": false,
+  "version": "1.0.0-alpha.0",
+  "description": "A way to discover HTML-elements using react-testing-library",
+  "type": "commonjs",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "clean": "rimraf dist/",
+    "build": "webpack",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix"
+  },
+  "dependencies": {
+    "@testing-library/dom": "^8.19.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0"
+  }
+}

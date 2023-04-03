@@ -337,7 +337,7 @@ exports[`preferences - navigation to telemetry preferences given URL for Sentry 
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -1087,7 +1087,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -1849,7 +1849,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -2228,7 +2228,7 @@ exports[`preferences - navigation to telemetry preferences given in preferences,
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span
@@ -2567,7 +2567,7 @@ exports[`preferences - navigation to telemetry preferences given no URL for Sent
         class="HotbarSelector"
       >
         <i
-          class="Icon Icon previous material interactive focusable"
+          class="Icon material interactive focusable"
           tabindex="0"
         >
           <span

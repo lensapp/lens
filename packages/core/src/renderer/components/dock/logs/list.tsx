@@ -15,7 +15,6 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import moment from "moment-timezone";
 import type { Align, ListOnScrollProps } from "react-window";
 import { SearchStore } from "../../../search-store/search-store";
-import type { UserStore } from "../../../../common/user-store";
 import { array, cssNames } from "@k8slens/utilities";
 import type { VirtualListRef } from "../../virtual-list";
 import { VirtualList } from "../../virtual-list";
@@ -23,8 +22,9 @@ import { ToBottom } from "./to-bottom";
 import type { LogTabViewModel } from "../logs/logs-view-model";
 import { Spinner } from "../../spinner";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import userStoreInjectable from "../../../../common/user-store/user-store.injectable";
 import autoBindReact from "auto-bind/react";
+import type { UserPreferencesState } from "../../../../features/user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../features/user-preferences/common/state.injectable";
 
 export interface LogListProps {
   model: LogTabViewModel;
@@ -37,7 +37,7 @@ export interface LogListRef {
 }
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
 }
 
 @observer
@@ -129,7 +129,7 @@ class NonForwardedLogList extends React.Component<Dependencies & LogListProps & 
 
     return this.props.model.timestampSplitLogs
       .get()
-      .map(([logTimestamp, log]) => (`${logTimestamp && moment.tz(logTimestamp, this.props.userStore.localeTimezone).format()}${log}`));
+      .map(([logTimestamp, log]) => (`${logTimestamp && moment.tz(logTimestamp, this.props.state.localeTimezone).format()}${log}`));
   }
 
   /**
@@ -283,7 +283,7 @@ class NonForwardedLogList extends React.Component<Dependencies & LogListProps & 
 const InjectedNonForwardedLogList = withInjectables<Dependencies, LogListProps & { innerRef: ForwardedRef<LogListRef> }>(NonForwardedLogList, {
   getProps: (di, props) => ({
     ...props,
-    userStore: di.inject(userStoreInjectable),
+    state: di.inject(userPreferencesStateInjectable),
   }),
 });
 

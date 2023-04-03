@@ -6,16 +6,16 @@ import React from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { Select } from "../../../../../../renderer/components/select";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { defaultExtensionRegistryUrl, defaultExtensionRegistryUrlLocation } from "../../../../../../common/user-store/preferences-helpers";
 import { Input } from "../../../../../../renderer/components/input";
 import { isUrl } from "../../../../../../renderer/components/input/input_validators";
-import type { UserStore } from "../../../../../../common/user-store";
 import { runInAction } from "mobx";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { observer } from "mobx-react";
+import type { UserPreferencesState } from "../../../../../user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
+import { defaultExtensionRegistryUrlLocation, defaultExtensionRegistryUrl } from "../../../../../user-preferences/common/preferences-helpers";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
 }
 
 const extensionInstallRegistryOptions = [
@@ -33,8 +33,8 @@ const extensionInstallRegistryOptions = [
   },
 ] as const;
 
-const NonInjectedExtensionInstallRegistry = observer(({ userStore }: Dependencies) => {
-  const [customUrl, setCustomUrl] = React.useState(userStore.extensionRegistryUrl.customUrl || "");
+const NonInjectedExtensionInstallRegistry = observer(({ state }: Dependencies) => {
+  const [customUrl, setCustomUrl] = React.useState(state.extensionRegistryUrl.customUrl || "");
 
   return (
     <section id="extensionRegistryUrl">
@@ -42,14 +42,14 @@ const NonInjectedExtensionInstallRegistry = observer(({ userStore }: Dependencie
       <Select
         id="extension-install-registry-input"
         options={extensionInstallRegistryOptions}
-        value={userStore.extensionRegistryUrl.location}
+        value={state.extensionRegistryUrl.location}
         onChange={(value) =>
           runInAction(() => {
-            userStore.extensionRegistryUrl.location =
+            state.extensionRegistryUrl.location =
               value?.value ?? defaultExtensionRegistryUrlLocation;
 
-            if (userStore.extensionRegistryUrl.location === "custom") {
-              userStore.extensionRegistryUrl.customUrl = "";
+            if (state.extensionRegistryUrl.location === "custom") {
+              state.extensionRegistryUrl.customUrl = "";
             }
           })
         }
@@ -69,20 +69,16 @@ const NonInjectedExtensionInstallRegistry = observer(({ userStore }: Dependencie
         validators={isUrl}
         value={customUrl}
         onChange={setCustomUrl}
-        onBlur={() => (userStore.extensionRegistryUrl.customUrl = customUrl)}
+        onBlur={() => (state.extensionRegistryUrl.customUrl = customUrl)}
         placeholder="Custom Extension Registry URL..."
-        disabled={userStore.extensionRegistryUrl.location !== "custom"}
+        disabled={state.extensionRegistryUrl.location !== "custom"}
       />
     </section>
   );
 });
 
-export const ExtensionInstallRegistry = withInjectables<Dependencies>(
-  NonInjectedExtensionInstallRegistry,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-    }),
-  },
-);
+export const ExtensionInstallRegistry = withInjectables<Dependencies>(NonInjectedExtensionInstallRegistry, {
+  getProps: (di) => ({
+    state: di.inject(userPreferencesStateInjectable),
+  }),
+});

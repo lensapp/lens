@@ -8,9 +8,9 @@ import styles from "./avatar.module.scss";
 import type { ImgHTMLAttributes, MouseEventHandler } from "react";
 import React from "react";
 import randomColor from "randomcolor";
-import GraphemeSplitter from "grapheme-splitter";
 import type { SingleOrMany } from "@k8slens/utilities";
-import { cssNames, isDefined, iter } from "@k8slens/utilities";
+import { cssNames } from "@k8slens/utilities";
+import { computeDefaultShortName } from "../../../common/catalog/helpers";
 
 export interface AvatarProps {
   title: string;
@@ -26,40 +26,6 @@ export interface AvatarProps {
   id?: string;
   onClick?: MouseEventHandler<HTMLDivElement>;
   "data-testid"?: string;
-}
-
-function getNameParts(name: string): string[] {
-  const byWhitespace = name.split(/\s+/);
-
-  if (byWhitespace.length > 1) {
-    return byWhitespace;
-  }
-
-  const byDashes = name.split(/[-_]+/);
-
-  if (byDashes.length > 1) {
-    return byDashes;
-  }
-
-  return name.split(/@+/);
-}
-
-function getLabelFromTitle(title: string) {
-  if (!title) {
-    return "??";
-  }
-
-  const [rawFirst, rawSecond, rawThird] = getNameParts(title);
-  const splitter = new GraphemeSplitter();
-  const first = splitter.iterateGraphemes(rawFirst);
-  const second = rawSecond ? splitter.iterateGraphemes(rawSecond): first;
-  const third = rawThird ? splitter.iterateGraphemes(rawThird) : iter.newEmpty();
-
-  return [
-    ...iter.take(first, 1),
-    ...iter.take(second, 1),
-    ...iter.take(third, 1),
-  ].filter(isDefined).join("");
 }
 
 export const Avatar = ({
@@ -104,6 +70,6 @@ export const Avatar = ({
           alt={title}
         />
       )
-      : children || getLabelFromTitle(title)}
+      : children || computeDefaultShortName(title)}
   </div>
 );

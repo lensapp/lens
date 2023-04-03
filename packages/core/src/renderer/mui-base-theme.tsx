@@ -6,7 +6,7 @@
 import React from "react";
 import { createTheme, ThemeProvider } from "@material-ui/core";
 
-const defaultTheme = createTheme({
+export const defaultMuiBaseTheme = createTheme({
   props: {
     MuiIconButton: {
       color: "inherit",
@@ -32,7 +32,7 @@ const defaultTheme = createTheme({
 
 export function DefaultProps(App: React.ComponentType | React.FunctionComponent) {
   return (
-    <ThemeProvider theme= { defaultTheme } >
+    <ThemeProvider theme= { defaultMuiBaseTheme } >
       <App />
     </ThemeProvider>
   );

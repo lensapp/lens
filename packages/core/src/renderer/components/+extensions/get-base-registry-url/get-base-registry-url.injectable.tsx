@@ -7,15 +7,15 @@ import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
 import execFileInjectable from "../../../../common/fs/exec-file.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
-import { defaultExtensionRegistryUrl } from "../../../../common/user-store/preferences-helpers";
-import userStoreInjectable from "../../../../common/user-store/user-store.injectable";
+import { defaultExtensionRegistryUrl } from "../../../../features/user-preferences/common/preferences-helpers";
+import userPreferencesStateInjectable from "../../../../features/user-preferences/common/state.injectable";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
 
 const getBaseRegistryUrlInjectable = getInjectable({
   id: "get-base-registry-url",
 
   instantiate: (di) => {
-    const { extensionRegistryUrl } = di.inject(userStoreInjectable);
+    const { extensionRegistryUrl } = di.inject(userPreferencesStateInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
     const logger = di.inject(loggerInjectable);
     const execFile = di.inject(execFileInjectable);

@@ -4,7 +4,6 @@
  */
 import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
 import clusterFramesInjectable from "../../../../common/cluster-frames.injectable";
-import clusterStoreInjectable from "../../../../common/cluster-store/cluster-store.injectable";
 import directoryForLensLocalStorageInjectable from "../../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import removePathInjectable from "../../../../common/fs/remove.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
@@ -12,22 +11,23 @@ import clusterConnectionInjectable from "../../../../main/cluster/cluster-connec
 import { noop } from "@k8slens/utilities";
 import { getRequestChannelListenerInjectable } from "@k8slens/messaging";
 import { deleteClusterChannel } from "../common/delete-channel";
+import clustersStateInjectable from "../../storage/common/state.injectable";
 
 const deleteClusterChannelListenerInjectable = getRequestChannelListenerInjectable({
   id: "delete-cluster-channel-listener",
   channel: deleteClusterChannel,
   getHandler: (di) => {
     const emitAppEvent = di.inject(emitAppEventInjectable);
-    const clusterStore = di.inject(clusterStoreInjectable);
     const clusterFrames = di.inject(clusterFramesInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
     const directoryForLensLocalStorage = di.inject(directoryForLensLocalStorageInjectable);
     const deleteFile = di.inject(removePathInjectable);
+    const clustersState = di.inject(clustersStateInjectable);
 
     return async (clusterId) => {
       emitAppEvent({ name: "cluster", action: "remove" });
 
-      const cluster = clusterStore.getById(clusterId);
+      const cluster = clustersState.get(clusterId);
 
       if (!cluster) {
         return;
@@ -37,9 +37,7 @@ const deleteClusterChannelListenerInjectable = getRequestChannelListenerInjectab
 
       clusterConnection.disconnect();
       clusterFrames.delete(cluster.id);
-
-      // Remove from the cluster store as well, this should clear any old settings
-      clusterStore.clusters.delete(cluster.id);
+      clustersState.delete(cluster.id);
 
       // remove the local storage file
       const localStorageFilePath = joinPaths(directoryForLensLocalStorage, `${cluster.id}.json`);

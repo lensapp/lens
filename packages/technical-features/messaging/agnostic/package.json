@@ -26,8 +26,8 @@
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
+    "clean": "rimraf dist/",
     "build": "webpack",
-    "dev": "webpack --mode=development --watch",
     "test:unit": "jest --coverage --runInBand",
     "lint:fix": "lens-lint --fix",
     "lint": "lens-lint"

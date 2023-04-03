@@ -5,23 +5,21 @@
 import React from "react";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import type { UserStore } from "../../../../../../common/user-store";
-import userStoreInjectable from "../../../../../../common/user-store/user-store.injectable";
 import { observer } from "mobx-react";
 import { Switch } from "../../../../../../renderer/components/switch";
+import type { UserPreferencesState } from "../../../../../user-preferences/common/state.injectable";
+import userPreferencesStateInjectable from "../../../../../user-preferences/common/state.injectable";
 
 interface Dependencies {
-  userStore: UserStore;
+  state: UserPreferencesState;
 }
 
-const NonInjectedAllowUntrustedCertificates = observer(({ userStore }: Dependencies) => (
+const NonInjectedAllowUntrustedCertificates = observer(({ state }: Dependencies) => (
   <section className="small">
     <SubTitle title="Certificate Trust" />
     <Switch
-      checked={userStore.allowUntrustedCAs}
-      onChange={() =>
-        (userStore.allowUntrustedCAs = !userStore.allowUntrustedCAs)
-      }
+      checked={state.allowUntrustedCAs}
+      onChange={() => state.allowUntrustedCAs = !state.allowUntrustedCAs}
     >
       Allow untrusted Certificate Authorities
     </Switch>
@@ -33,12 +31,8 @@ const NonInjectedAllowUntrustedCertificates = observer(({ userStore }: Dependenc
   </section>
 ));
 
-export const AllowUntrustedCertificates = withInjectables<Dependencies>(
-  NonInjectedAllowUntrustedCertificates,
-
-  {
-    getProps: (di) => ({
-      userStore: di.inject(userStoreInjectable),
-    }),
-  },
-);
+export const AllowUntrustedCertificates = withInjectables<Dependencies>(NonInjectedAllowUntrustedCertificates, {
+  getProps: (di) => ({
+    state: di.inject(userPreferencesStateInjectable),
+  }),
+});

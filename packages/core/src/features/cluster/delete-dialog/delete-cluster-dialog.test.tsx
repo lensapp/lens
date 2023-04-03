@@ -109,8 +109,6 @@ describe("Deleting a cluster", () => {
           clusterName: "some-current-context-cluster",
         },
         kubeConfigPath: "./temp-kube-config",
-      }, {
-        clusterServerUrl: currentClusterServerUrl,
       });
       nonCurrentCluster = new Cluster({
         id: "some-non-current-context-cluster",
@@ -119,8 +117,6 @@ describe("Deleting a cluster", () => {
           clusterName: "some-non-current-context-cluster",
         },
         kubeConfigPath: "./temp-kube-config",
-      }, {
-        clusterServerUrl: currentClusterServerUrl,
       });
     });
 
@@ -197,8 +193,6 @@ describe("Deleting a cluster", () => {
           clusterName: "some-cluster",
         },
         kubeConfigPath: joinPaths(directoryForKubeConfigs, "some-cluster.json"),
-      }, {
-        clusterServerUrl: singleClusterServerUrl,
       });
     });
 
@@ -233,8 +227,6 @@ describe("Deleting a cluster", () => {
           clusterName: "some-cluster",
         },
         kubeConfigPath: "./temp-kube-config",
-      }, {
-        clusterServerUrl: singleClusterServerUrl,
       });
     });
 

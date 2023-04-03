@@ -292,14 +292,6 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                       });
                     });
 
-                    it("when accessing the computed value outside of reactive context, throws", () => {
-                      expect(() => {
-                        computedTestChannel.get();
-                      }).toThrow(
-                        'Tried to access value of computed channel "some-channel-id" outside of reactive context. This is not possible, as the value is acquired asynchronously sometime *after* being observed. Not respecting that, the value could be stale.',
-                      );
-                    });
-
                     it("no value gets listened in di-1 anymore", () => {
                       expect(latestValueMessage).toBeUndefined();
                     });
@@ -380,14 +372,6 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                       });
                     });
                   });
-                });
-
-                it("when accessing the computed value outside of reactive context, throws", () => {
-                  expect(() => {
-                    computedTestChannel.get();
-                  }).toThrow(
-                    'Tried to access value of computed channel "some-channel-id" outside of reactive context. This is not possible, as the value is acquired asynchronously sometime *after* being observed. Not respecting that, the value could be stale.',
-                  );
                 });
               });
 
@@ -507,14 +491,6 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
               });
             });
           });
-        });
-
-        it("when accessing the computed value outside of reactive context, throws", () => {
-          expect(() => {
-            computedTestChannel.get();
-          }).toThrow(
-            'Tried to access value of computed channel "some-channel-id" outside of reactive context. This is not possible, as the value is acquired asynchronously sometime *after* being observed. Not respecting that, the value could be stale.',
-          );
         });
 
         it("given duplicate channel observer for the channel is registered, when the computed channel is observer, throws", () => {

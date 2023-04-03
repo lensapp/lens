@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`react-application renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`react-application when content is registered and enabled renders 1`] = `
+<body>
+  <div>
+    <div
+      data-some-content-test="true"
+    >
+      Some children
+    </div>
+  </div>
+</body>
+`;
+
+exports[`react-application when content is registered and enabled when content is disabled renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`react-application when content is registered and enabled when higher order component is registered renders 1`] = `
+<body>
+  <div>
+    <div
+      data-some-higher-order-component-test="true"
+    >
+      <div
+        data-some-content-test="true"
+      >
+        Some children
+      </div>
+    </div>
+  </div>
+</body>
+`;

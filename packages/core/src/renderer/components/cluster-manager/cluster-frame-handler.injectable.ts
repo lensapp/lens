@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import getClusterByIdInjectable from "../../../common/cluster-store/get-by-id.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
+import getClusterByIdInjectable from "../../../features/cluster/storage/common/get-by-id.injectable";
 import { ClusterFrameHandler } from "./cluster-frame-handler";
 import emitClusterVisibilityInjectable from "./emit-cluster-visibility.injectable";
 
