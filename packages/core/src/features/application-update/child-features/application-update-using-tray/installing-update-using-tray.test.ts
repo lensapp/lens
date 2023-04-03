@@ -15,11 +15,14 @@ import type { DownloadPlatformUpdate } from "../../main/download-update/download
 import downloadPlatformUpdateInjectable from "../../main/download-update/download-platform-update/download-platform-update.injectable";
 import type { LensWindow } from "../../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import getCurrentApplicationWindowInjectable from "../../../../main/start-main-application/lens-window/application-window/get-current-application-window.injectable";
+import showMessagePopupInjectable from "../../../../main/electron-app/features/show-message-popup.injectable";
+import type { ShowMessagePopup } from "../../../../main/electron-app/features/show-message-popup.injectable";
 
 describe("installing update using tray", () => {
   let builder: ApplicationBuilder;
   let checkForPlatformUpdatesMock: AsyncFnMock<CheckForPlatformUpdates>;
   let downloadPlatformUpdateMock: AsyncFnMock<DownloadPlatformUpdate>;
+  let showMessagePopupMock: AsyncFnMock<ShowMessagePopup>;
 
   beforeEach(() => {
     builder = getApplicationBuilder();
@@ -27,6 +30,7 @@ describe("installing update using tray", () => {
     builder.beforeApplicationStart(({ mainDi }) => {
       checkForPlatformUpdatesMock = asyncFn();
       downloadPlatformUpdateMock = asyncFn();
+      showMessagePopupMock = asyncFn();
 
       mainDi.override(
         checkForPlatformUpdatesInjectable,
@@ -40,6 +44,12 @@ describe("installing update using tray", () => {
 
       mainDi.override(electronUpdaterIsActiveInjectable, () => true);
       mainDi.override(publishIsConfiguredInjectable, () => true);
+
+      mainDi.override(
+          showMessagePopupInjectable,
+          () => showMessagePopupMock,
+      );
+
     });
   });
 
@@ -164,15 +174,15 @@ describe("installing update using tray", () => {
           });
         });
 
-        // it displays a popup
-        // showMessagePopup(
-        //     "No Updates Available",
-        //     "You're all good",
-        //     "You've got the latest version of Lens,\nthanks for staying on the ball.",
-        //     {
-        //         textWidth: 300,
-        //     },
-        // );
+        it("it displays a popup", () => {
+          expect(showMessagePopupMock).toHaveBeenCalled();
+          expect(showMessagePopupMock).toHaveBeenCalledWith(
+              "No Updates Available",
+              "You're all good",
+              "You've got the latest version of Lens,\nthanks for staying on the ball.",
+              { "textWidth": 300 }
+          );
+        });
 
         it("user cannot install update", () => {
           expect(builder.tray.get("install-update")).toBeNull();
