@@ -158,12 +158,35 @@ Array [
               },
             },
             Object {
+              "loader": "postcss-loader",
+              "options": Object {
+                "postcssOptions": Object {
+                  "plugins": Array [
+                    "tailwindcss",
+                  ],
+                },
+                "sourceMap": false,
+              },
+            },
+            Object {
               "loader": "sass-loader",
               "options": Object {
                 "sourceMap": false,
               },
             },
           ],
+        },
+        Object {
+          "test": /\\\\\\.\\(ttf\\|eot\\|woff2\\?\\)\\$/,
+          "type": "asset/resource",
+        },
+        Object {
+          "test": /\\\\\\.svg\\$/,
+          "type": "asset/source",
+        },
+        Object {
+          "test": /\\\\\\.\\(jpg\\|png\\|ico\\)\\$/,
+          "type": "asset/resource",
         },
       ],
     },

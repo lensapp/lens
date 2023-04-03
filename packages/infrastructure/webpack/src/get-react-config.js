@@ -8,7 +8,6 @@ module.exports =
       entrypointFilePath,
       outputDirectory,
     });
-
     return {
       ...nodeConfig,
 
@@ -47,12 +46,37 @@ module.exports =
               },
 
               {
+                loader: "postcss-loader",
+                options: {
+                  sourceMap: false,
+                  postcssOptions: {
+                    plugins: ["tailwindcss"],
+                  },
+                },
+              },
+
+              {
                 loader: "sass-loader",
                 options: {
                   sourceMap: false,
                 },
               },
             ],
+          },
+
+          {
+            test: /\.(ttf|eot|woff2?)$/,
+            type: "asset/resource",
+          },
+
+          {
+            test: /\.svg$/,
+            type: "asset/source", // exports the source code of the asset, so we get XML
+          },
+
+          {
+            test: /\.(jpg|png|ico)$/,
+            type: "asset/resource",
           },
         ],
       },
