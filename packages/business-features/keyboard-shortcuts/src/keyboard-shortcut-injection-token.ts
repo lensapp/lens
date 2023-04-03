@@ -2,7 +2,14 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 
 export type Binding =
   | string
-  | { code: string; shift?: boolean; ctrl?: boolean; altOrOption?: boolean; meta?: boolean };
+  | {
+      code: string;
+      shift?: boolean;
+      ctrl?: boolean;
+      altOrOption?: boolean;
+      meta?: boolean;
+      ctrlOrCommand?: boolean;
+    };
 
 export type KeyboardShortcut = {
   binding: Binding;

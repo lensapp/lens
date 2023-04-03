@@ -6,6 +6,7 @@ import {
   KeyboardShortcut,
   keyboardShortcutInjectionToken,
 } from "./keyboard-shortcut-injection-token";
+import platformInjectable from "./platform.injectable";
 
 export type InvokeShortcut = (event: KeyboardEvent) => void;
 
@@ -28,36 +29,58 @@ const toShortcutsWithMatchingScope = (shortcut: KeyboardShortcut) => {
 
 const toBindingWithDefaults = (binding: Binding) =>
   isString(binding)
-    ? { code: binding, shift: false, ctrl: false, altOrOption: false, meta: false }
-    : { ctrl: false, shift: false, altOrOption: false, meta: false, ...binding };
+    ? {
+        code: binding,
+        shift: false,
+        ctrl: false,
+        altOrOption: false,
+        meta: false,
+        ctrlOrCommand: false,
+      }
+    : {
+        ctrl: false,
+        shift: false,
+        altOrOption: false,
+        meta: false,
+        ctrlOrCommand: false,
+        ...binding,
+      };
 
-const toShortcutsWithMatchingBinding = (event: KeyboardEvent) => (shortcut: KeyboardShortcut) => {
-  const binding = toBindingWithDefaults(shortcut.binding);
+const toShortcutsWithMatchingBinding =
+  (event: KeyboardEvent, platform: string) => (shortcut: KeyboardShortcut) => {
+    const binding = toBindingWithDefaults(shortcut.binding);
 
-  const shiftModifierMatches = binding.shift === event.shiftKey;
-  const ctrlModifierMatches = binding.ctrl === event.ctrlKey;
-  const altModifierMatches = binding.altOrOption === event.altKey;
-  const metaModifierMatches = binding.meta === event.metaKey;
+    const shiftModifierMatches = binding.shift === event.shiftKey;
+    const altModifierMatches = binding.altOrOption === event.altKey;
 
-  return (
-    event.code === binding.code &&
-    shiftModifierMatches &&
-    ctrlModifierMatches &&
-    altModifierMatches &&
-    metaModifierMatches
-  );
-};
+    const isMac = platform === "darwin";
+
+    const ctrlModifierMatches =
+      binding.ctrl === event.ctrlKey || (!isMac && binding.ctrlOrCommand === event.ctrlKey);
+
+    const metaModifierMatches =
+      binding.meta === event.metaKey || (isMac && binding.ctrlOrCommand === event.metaKey);
+
+    return (
+      event.code === binding.code &&
+      shiftModifierMatches &&
+      ctrlModifierMatches &&
+      altModifierMatches &&
+      metaModifierMatches
+    );
+  };
 
 const invokeShortcutInjectable = getInjectable({
   id: "invoke-shortcut",
 
   instantiate: (di): InvokeShortcut => {
     const getShortcuts = () => di.injectMany(keyboardShortcutInjectionToken);
+    const platform = di.inject(platformInjectable);
 
     return (event) => {
       const shortcutsToInvoke = pipeline(
         getShortcuts(),
-        filter(toShortcutsWithMatchingBinding(event)),
+        filter(toShortcutsWithMatchingBinding(event, platform)),
         filter(toShortcutsWithMatchingScope),
       );
 

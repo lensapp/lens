@@ -14,6 +14,7 @@ import { Discover, discoverFor } from "@k8slens/react-testing-library-discovery"
 import { startApplicationInjectionToken } from "@k8slens/application";
 import { renderInjectionToken } from "@k8slens/react-application";
 import { reactApplicationChildrenInjectionToken } from "@k8slens/react-application";
+import platformInjectable from "./platform.injectable";
 
 describe("keyboard-shortcuts", () => {
   let di: DiContainer;
@@ -203,6 +204,8 @@ describe("keyboard-shortcuts", () => {
     ].forEach(({ binding, keyboard, scenario, shouldCallCallback }) => {
       // eslint-disable-next-line jest/valid-title
       it(scenario, () => {
+        const invokeMock = jest.fn();
+
         const shortcutInjectable = getInjectable({
           id: "shortcut",
 
@@ -228,6 +231,123 @@ describe("keyboard-shortcuts", () => {
           expect(invokeMock).not.toHaveBeenCalled();
         }
       });
+    });
+  });
+
+  describe("given in mac and keyboard shortcut with modifier for ctrl or command", () => {
+    beforeEach(async () => {
+      di.override(platformInjectable, () => "darwin");
+
+      invokeMock = jest.fn();
+
+      const shortcutInjectable = getInjectable({
+        id: "shortcut",
+
+        instantiate: () => ({
+          binding: { code: "KeyK", ctrlOrCommand: true },
+          invoke: invokeMock,
+        }),
+
+        injectionToken: keyboardShortcutInjectionToken,
+      });
+
+      runInAction(() => {
+        di.register(shortcutInjectable);
+      });
+
+      const startApplication = di.inject(startApplicationInjectionToken);
+
+      await startApplication();
+    });
+
+    it("when pressing the keyboard shortcut with command, calls the callback", () => {
+      userEvent.keyboard("{Meta>}[KeyK]");
+
+      expect(invokeMock).toHaveBeenCalled();
+    });
+
+    it("when pressing the keyboard shortcut with ctrl, does not call the callback", () => {
+      userEvent.keyboard("{Control>}[KeyK]");
+
+      expect(invokeMock).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("given in windows and keyboard shortcut with modifier for ctrl or command", () => {
+    beforeEach(async () => {
+      di.override(platformInjectable, () => "win32");
+
+      invokeMock = jest.fn();
+
+      const shortcutInjectable = getInjectable({
+        id: "shortcut",
+
+        instantiate: () => ({
+          binding: { code: "KeyK", ctrlOrCommand: true },
+          invoke: invokeMock,
+        }),
+
+        injectionToken: keyboardShortcutInjectionToken,
+      });
+
+      runInAction(() => {
+        di.register(shortcutInjectable);
+      });
+
+      const startApplication = di.inject(startApplicationInjectionToken);
+
+      await startApplication();
+    });
+
+    it("when pressing the keyboard shortcut with windows, does not call the callback", () => {
+      userEvent.keyboard("{Meta>}[KeyK]");
+
+      expect(invokeMock).not.toHaveBeenCalled();
+    });
+
+    it("when pressing the keyboard shortcut with ctrl, calls the callback", () => {
+      userEvent.keyboard("{Control>}[KeyK]");
+
+      expect(invokeMock).toHaveBeenCalled();
+    });
+  });
+
+  describe("given in any other platform and keyboard shortcut with modifier for ctrl or command", () => {
+    beforeEach(async () => {
+      di.override(platformInjectable, () => "some-other-platform");
+
+      invokeMock = jest.fn();
+
+      const shortcutInjectable = getInjectable({
+        id: "shortcut",
+
+        instantiate: () => ({
+          binding: { code: "KeyK", ctrlOrCommand: true },
+          invoke: invokeMock,
+        }),
+
+        injectionToken: keyboardShortcutInjectionToken,
+      });
+
+      runInAction(() => {
+        di.register(shortcutInjectable);
+      });
+
+      const startApplication = di.inject(startApplicationInjectionToken);
+
+      await startApplication();
+    });
+
+    it("when pressing the keyboard shortcut with meta, does not call the callback", () => {
+      userEvent.keyboard("{Meta>}[KeyK]");
+
+      expect(invokeMock).not.toHaveBeenCalled();
+    });
+
+    it("when pressing the keyboard shortcut with ctrl, calls the callback", () => {
+      userEvent.keyboard("{Control>}[KeyK]");
+
+      expect(invokeMock).toHaveBeenCalled();
     });
   });
 });
