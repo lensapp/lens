@@ -1,11 +1,7 @@
 import { pipeline } from "@ogre-tools/fp";
 import { filter, isString } from "lodash/fp";
 import { getInjectable } from "@ogre-tools/injectable";
-import {
-  Binding,
-  KeyboardShortcut,
-  keyboardShortcutInjectionToken,
-} from "./keyboard-shortcut-injection-token";
+import { Binding, KeyboardShortcut, keyboardShortcutInjectionToken } from "./keyboard-shortcut-injection-token";
 import platformInjectable from "./platform.injectable";
 
 export type InvokeShortcut = (event: KeyboardEvent) => void;
@@ -46,29 +42,26 @@ const toBindingWithDefaults = (binding: Binding) =>
         ...binding,
       };
 
-const toShortcutsWithMatchingBinding =
-  (event: KeyboardEvent, platform: string) => (shortcut: KeyboardShortcut) => {
-    const binding = toBindingWithDefaults(shortcut.binding);
+const toShortcutsWithMatchingBinding = (event: KeyboardEvent, platform: string) => (shortcut: KeyboardShortcut) => {
+  const binding = toBindingWithDefaults(shortcut.binding);
 
-    const shiftModifierMatches = binding.shift === event.shiftKey;
-    const altModifierMatches = binding.altOrOption === event.altKey;
+  const shiftModifierMatches = binding.shift === event.shiftKey;
+  const altModifierMatches = binding.altOrOption === event.altKey;
 
-    const isMac = platform === "darwin";
+  const isMac = platform === "darwin";
 
-    const ctrlModifierMatches =
-      binding.ctrl === event.ctrlKey || (!isMac && binding.ctrlOrCommand === event.ctrlKey);
+  const ctrlModifierMatches = binding.ctrl === event.ctrlKey || (!isMac && binding.ctrlOrCommand === event.ctrlKey);
 
-    const metaModifierMatches =
-      binding.meta === event.metaKey || (isMac && binding.ctrlOrCommand === event.metaKey);
+  const metaModifierMatches = binding.meta === event.metaKey || (isMac && binding.ctrlOrCommand === event.metaKey);
 
-    return (
-      event.code === binding.code &&
-      shiftModifierMatches &&
-      ctrlModifierMatches &&
-      altModifierMatches &&
-      metaModifierMatches
-    );
-  };
+  return (
+    event.code === binding.code &&
+    shiftModifierMatches &&
+    ctrlModifierMatches &&
+    altModifierMatches &&
+    metaModifierMatches
+  );
+};
 
 const invokeShortcutInjectable = getInjectable({
   id: "invoke-shortcut",

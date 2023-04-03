@@ -26,10 +26,7 @@ const NonInjectedKeyboardShortcutListener = ({
   return <>{children}</>;
 };
 
-export const KeyboardShortcutListener = withInjectables<
-  Dependencies,
-  KeyboardShortcutListenerProps
->(
+export const KeyboardShortcutListener = withInjectables<Dependencies, KeyboardShortcutListenerProps>(
   NonInjectedKeyboardShortcutListener,
 
   {
