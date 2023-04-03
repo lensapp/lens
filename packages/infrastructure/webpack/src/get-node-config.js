@@ -2,6 +2,10 @@ const ForkTsCheckerPlugin = require("fork-ts-checker-webpack-plugin");
 const { MakePeerDependenciesExternalPlugin } = require("./plugins/make-peer-dependencies-external");
 const { ProtectFromImportingNonDependencies } = require("./plugins/protect-from-importing-non-dependencies");
 
+/**
+ *
+ * @returns {import("webpack").Configuration}
+ */
 module.exports = ({ entrypointFilePath, outputDirectory }) => ({
   name: entrypointFilePath,
   entry: { index: entrypointFilePath },
@@ -45,7 +49,9 @@ module.exports = ({ entrypointFilePath, outputDirectory }) => ({
         ? "index.js"
         : `${pathData.chunk.name}/index.js`,
 
-    libraryTarget: "commonjs2",
+    library: {
+      type: "commonjs2"
+    }
   },
 
   externalsPresets: { node: true },
