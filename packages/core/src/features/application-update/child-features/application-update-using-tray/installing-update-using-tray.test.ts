@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
+import type { ApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../../../main/electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable from "../../main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
@@ -163,6 +163,16 @@ describe("installing update using tray", () => {
             updateWasDiscovered: false,
           });
         });
+
+        // it displays a popup
+        // showMessagePopup(
+        //     "No Updates Available",
+        //     "You're all good",
+        //     "You've got the latest version of Lens,\nthanks for staying on the ball.",
+        //     {
+        //         textWidth: 300,
+        //     },
+        // );
 
         it("user cannot install update", () => {
           expect(builder.tray.get("install-update")).toBeNull();
