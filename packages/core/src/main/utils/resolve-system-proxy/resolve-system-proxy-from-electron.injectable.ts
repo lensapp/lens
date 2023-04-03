@@ -12,11 +12,15 @@ const resolveSystemProxyFromElectronInjectable = getInjectable({
   instantiate: (di) => {
     const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
     const withErrorLogging = withErrorLoggingFor(() => "Error resolving proxy");
-    
+
     return withErrorLogging(async (url: string) => {
       const helperWindow = await di.inject(resolveSystemProxyWindowInjectable);
 
-      return await helperWindow.webContents.session.resolveProxy(url);
+      const proxy = await helperWindow.webContents.session.resolveProxy(url);
+
+      helperWindow.close();
+
+      return proxy;
     });
   },
 });
