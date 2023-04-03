@@ -27,12 +27,17 @@ describe("technical: resolve-system-proxy-from-electron", () => {
   });
 
   describe("given there are no unexpected issues, when called with URL", () => {
+    let closeMock: jest.Mock;
+
     beforeEach(() => {
       resolveSystemProxyMock = asyncFn();
+      closeMock = jest.fn();
 
       di.override(
         resolveSystemProxyWindowInjectable,
         async () => ({
+          close: closeMock,
+
           webContents: {
             session: {
               resolveProxy: resolveSystemProxyMock,
@@ -58,10 +63,26 @@ describe("technical: resolve-system-proxy-from-electron", () => {
       expect(promiseStatus.fulfilled).toBe(false);
     });
 
-    it("when call for proxy, resolves with the proxy", async () => {
-      resolveSystemProxyMock.resolve("some-proxy");
+    it("does not close the window yet", () => {
+      expect(closeMock).not.toHaveBeenCalled();
+    });
 
-      expect(await actualPromise).toBe("some-proxy");
+    describe("when call for proxy resolves", () => {
+      beforeEach(async () => {
+
+        await resolveSystemProxyMock.resolve("some-proxy");
+
+      });
+
+      it("closes the window", () => {
+        expect(closeMock).toHaveBeenCalled();
+      });
+
+      it("resolves with the proxy", async () => {
+        const actual = await actualPromise;
+
+        expect(actual).toBe("some-proxy");
+      });
     });
   });
 
@@ -81,6 +102,8 @@ describe("technical: resolve-system-proxy-from-electron", () => {
               },
             } as unknown as Session,
           } as unknown as WebContents,
+
+          close: () => {},
         } as unknown as BrowserWindow),
       );
 
