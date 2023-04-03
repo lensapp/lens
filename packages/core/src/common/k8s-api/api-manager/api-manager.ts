@@ -25,7 +25,7 @@ export type KubeObjectStoreFrom<Api> = Api extends KubeApi<infer KubeObj, infer 
 
 export type FindApiCallback = (api: KubeApi<KubeObject>) => boolean;
 
-interface Dependencies {
+export interface ApiManagerDependencies {
   readonly apis: IComputedValue<KubeApi[]>;
   readonly crdApis: IComputedValue<KubeApi[]>;
   readonly stores: IComputedValue<KubeObjectStore[]>;
@@ -38,7 +38,7 @@ export class ApiManager {
   private readonly defaultCrdStores = observable.map<string, KubeObjectStore>();
   private readonly apis = observable.map<string, KubeApi>();
 
-  constructor(private readonly dependencies: Dependencies) {
+  constructor(private readonly dependencies: ApiManagerDependencies) {
     // NOTE: this is done to preserve the old behaviour of an API being discoverable using all previous apiBases
     autorun(() => {
       const apis = iter.chain(this.dependencies.apis.get().values())

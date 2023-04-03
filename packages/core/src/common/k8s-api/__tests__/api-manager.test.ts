@@ -206,3 +206,17 @@ describe("ApiManager", () => {
     });
   });
 });
+
+describe("ApiManger without storesAndApisCanBeCreated", () => {
+  let di: DiContainer;
+
+  beforeEach(() => {
+    di = getDiForUnitTesting();
+
+    di.override(storesAndApisCanBeCreatedInjectable, () => false);
+  });
+
+  it("should not throw when creating apiManager", () => {
+    di.inject(apiManagerInjectable);
+  });
+});
