@@ -25,7 +25,7 @@
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack --mode=development --watch",
+    "clean": "rimraf dist/",
     "test:unit": "jest --coverage --runInBand",
     "lint": "lens-lint",
     "lint:fix": "lens-lint --fix"
