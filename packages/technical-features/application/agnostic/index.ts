@@ -7,3 +7,5 @@ export { startApplicationInjectionToken } from "./src/start-application/start-ap
 
 export { applicationInformationToken } from "./src/application-information-token.no-coverage";
 export type { ApplicationInformation } from "./src/application-information-token.no-coverage";
+
+export { lensBuildEnvironmentInjectionToken } from "./src/environment-token";
