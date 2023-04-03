@@ -94,9 +94,9 @@ const externalActions = ["open-link-in-browser"];
 
 const uiInteraction = [{
   id: "show-details",
-  getParams: (selfLink: unknown) => {
+  getParams: (selfLink: string) => {
     return {
-      kind: parseKubeApi(selfLink as string).resource,
+      kind: selfLink ? parseKubeApi(selfLink).resource : "",
     };
   },
 }];
@@ -105,7 +105,7 @@ const terminal = ["create-terminal-tab"];
 
 export type WhiteListItem =
   | string
-  | { id: string; getParams: (...args: unknown[]) => AppEvent["params"] };
+  | { id: string; getParams: (...args: any[]) => AppEvent["params"] };
 
 const telemetryWhiteListForFunctionsInjectable = getInjectable({
   id: "telemetry-white-list-for-functions",
