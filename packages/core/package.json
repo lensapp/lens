@@ -296,7 +296,7 @@
     "sass": "^1.58.2",
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.1",
-    "tailwindcss": "^3.2.4",
+    "tailwindcss": "^3.3.1",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
     "type-fest": "^2.14.0",
