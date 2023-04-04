@@ -239,7 +239,7 @@
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.57.1",
     "adr": "^1.4.3",
-    "ansi_up": "^5.1.0",
+    "ansi_up": "^5.2.1",
     "chalk": "^4.1.2",
     "chart.js": "^2.9.4",
     "circular-dependency-plugin": "^5.2.2",
