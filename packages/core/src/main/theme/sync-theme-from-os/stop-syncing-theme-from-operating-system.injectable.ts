@@ -14,8 +14,6 @@ const stopSyncingThemeFromOperatingSystemInjectable = getInjectable({
       const syncTheme = di.inject(syncThemeFromOperatingSystemInjectable);
 
       syncTheme.stop();
-
-      return undefined;
     },
   }),
 

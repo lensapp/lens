@@ -3,24 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ContentSource, ElectronWindowTitleBarStyle } from "./create-electron-window.injectable";
+import type { ContentSource, ElectronWindow, ElectronWindowTitleBarStyle, SendToViewArgs } from "./create-electron-window.injectable";
 import createElectronWindowInjectable from "./create-electron-window.injectable";
-import type { ClusterFrameInfo } from "../../../../common/cluster-frames.injectable";
-
-export interface ElectronWindow {
-  show: () => void;
-  close: () => void;
-  send: (args: SendToViewArgs) => void;
-  loadFile: (filePath: string) => Promise<void>;
-  loadUrl: (url: string) => Promise<void>;
-  reload: () => void;
-}
-
-export interface SendToViewArgs {
-  channel: string;
-  frameInfo?: ClusterFrameInfo;
-  data?: unknown;
-}
 
 export interface LensWindow {
   id: string;
@@ -91,6 +75,7 @@ const createLensWindowInjectable = getInjectable({
           if (!browserWindow) {
             windowIsStarting = true;
 
+            console.log("BEFORE createElectronWindow");
             browserWindow = createElectronWindow({
               ...configuration,
               onClose: () => {
@@ -104,11 +89,14 @@ const createLensWindowInjectable = getInjectable({
               url: urlForContent,
             } = configuration.getContentSource();
 
+            console.log("BEFORE configuration.beforeOpen?.()");
             const beforeOpen = configuration.beforeOpen?.();
 
             if (filePathForContent) {
+              console.log("BEFORE browserWindow.loadFile");
               await browserWindow.loadFile(filePathForContent);
             } else if (urlForContent) {
+              console.log("BEFORE browserWindow.loadUrl");
               await browserWindow.loadUrl(urlForContent);
             }
 

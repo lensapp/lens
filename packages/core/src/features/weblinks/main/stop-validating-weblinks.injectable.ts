@@ -13,8 +13,6 @@ const stopValidatingWeblinksInjectable = getInjectable({
       const weblinkVerificationStartableStoppable = di.inject(weblinkVerificationStartableStoppableInjectable);
 
       weblinkVerificationStartableStoppable.stop();
-
-      return undefined;
     },
   }),
   injectionToken: beforeQuitOfBackEndInjectionToken,

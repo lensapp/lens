@@ -69,10 +69,6 @@ export class ExtensionLoader {
 
   @observable isLoaded = false;
 
-  get whenLoaded() {
-    return when(() => this.isLoaded);
-  }
-
   constructor(protected readonly dependencies: Dependencies) {
     makeObservable(this);
 
@@ -138,9 +134,8 @@ export class ExtensionLoader {
       await this.initMain();
     } else {
       await this.initRenderer();
+      await when(() => this.isLoaded);
     }
-
-    await Promise.all([this.whenLoaded]);
 
     // broadcasting extensions between main/renderer processes
     reaction(() => this.toJSON(), () => this.broadcastExtensions(), {

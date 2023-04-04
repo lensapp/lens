@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import powerMonitorInjectable from "../features/power-monitor.injectable";
-import exitAppInjectable from "../features/exit-app.injectable";
+import quitAppInjectable from "../features/exit-app.injectable";
 import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 
 const setupDeviceShutdownInjectable = getInjectable({
@@ -13,9 +13,9 @@ const setupDeviceShutdownInjectable = getInjectable({
   instantiate: (di) => ({
     run: () => {
       const powerMonitor = di.inject(powerMonitorInjectable);
-      const exitApp = di.inject(exitAppInjectable);
+      const quitApp = di.inject(quitAppInjectable);
 
-      powerMonitor.on("shutdown", exitApp);
+      powerMonitor.on("shutdown", quitApp);
     },
   }),
 

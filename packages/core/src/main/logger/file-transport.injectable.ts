@@ -13,10 +13,6 @@ const fileLoggerTransportInjectable = getInjectable({
     handleExceptions: false,
     level: "debug",
     filename: "lens.log",
-    /**
-         * SAFTEY: the `ipcMain` check above should mean that this is only
-         * called in the main process
-         */
     dirname: di.inject(directoryForLogsInjectable),
     maxsize: 1024 * 1024,
     maxFiles: 16,

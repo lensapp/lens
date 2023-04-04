@@ -26,8 +26,6 @@ const cleanUpShellSessionsInjectable = getInjectable({
       }
 
       shellSessionProcesses.clear();
-
-      return undefined;
     },
   }),
 

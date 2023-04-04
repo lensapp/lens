@@ -44,7 +44,7 @@ class DynamicBarrier {
   }
 }
 
-const executeRunnableWith = <Param>(param: Param) => {
+const executeRunnableWith = <Param>(tokenId: string, param: Param) => {
   const barrier = new DynamicBarrier();
 
   return async (runnable: RunnableWithId<Param>): Promise<void> => {
@@ -52,7 +52,9 @@ const executeRunnableWith = <Param>(param: Param) => {
       await barrier.blockOn(parentRunnable.id);
     }
 
+    console.log(`^^^ "${tokenId}" @ "${runnable.id}"`)
     await runnable.run(param);
+    console.log(`--- "${tokenId}" @ "${runnable.id}"`)
     barrier.setFinished(runnable.id);
   };
 };
@@ -61,7 +63,7 @@ export function runManyFor(di: DiContainerForInjection): RunMany {
   const convertToWithId = convertToWithIdWith(di);
 
   return <Param>(injectionToken: InjectionToken<Runnable<Param>, void>) => async (param: Param) => {
-    const executeRunnable = executeRunnableWith(param);
+    const executeRunnable = executeRunnableWith(injectionToken.id, param);
     const allRunnables = di.injectManyWithMeta(injectionToken).map(x => convertToWithId(x));
 
     verifyRunnablesAreDAG(injectionToken.id, allRunnables);

@@ -5,7 +5,7 @@
 
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
-import { makeObservable, observable, reaction, when } from "mobx";
+import { makeObservable, observable, reaction } from "mobx";
 import { broadcastMessage, ipcMainHandle, ipcRendererOn } from "../../common/ipc";
 import { toJS } from "../../common/utils";
 import { isErrnoException } from "@k8slens/utilities";
@@ -31,6 +31,7 @@ import type { GetRelativePath } from "../../common/path/get-relative-path.inject
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type TypedEventEmitter from "typed-emitter";
 import type { IsExtensionEnabled } from "../../features/extensions/enabled/common/is-enabled.injectable";
+import assert from "assert";
 
 interface Dependencies {
   readonly extensionLoader: ExtensionLoader;
@@ -101,10 +102,6 @@ export class ExtensionDiscovery {
   // True if extensions have been loaded from the disk after app startup
   @observable isLoaded = false;
 
-  get whenLoaded() {
-    return when(() => this.isLoaded);
-  }
-
   public readonly events: TypedEventEmitter<ExtensionDiscoveryEvents> = new EventEmitter();
 
   constructor(protected readonly dependencies: Dependencies) {
@@ -157,11 +154,10 @@ export class ExtensionDiscovery {
    * Watches for added/removed local extensions.
    * Dependencies are installed automatically after an extension folder is copied.
    */
-  async watchExtensions(): Promise<void> {
-    this.dependencies.logger.info(`${logModule} watching extension add/remove in ${this.localFolderPath}`);
+  watchExtensions() {
+    assert(this.isLoaded, "This function can only be called after a call to 'load' has resolved");
 
-    // Wait until .load() has been called and has been resolved
-    await this.whenLoaded;
+    this.dependencies.logger.info(`${logModule} watching extension add/remove in ${this.localFolderPath}`);
 
     this.dependencies.watch(this.localFolderPath, {
       // For adding and removing symlinks to work, the depth has to be 1.

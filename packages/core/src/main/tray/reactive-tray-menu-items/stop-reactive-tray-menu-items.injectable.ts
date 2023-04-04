@@ -14,8 +14,6 @@ const stopReactiveTrayMenuItemsInjectable = getInjectable({
       const reactiveTrayMenuItems = di.inject(reactiveTrayMenuItemsInjectable);
 
       reactiveTrayMenuItems.stop();
-
-      return undefined;
     },
   }),
 

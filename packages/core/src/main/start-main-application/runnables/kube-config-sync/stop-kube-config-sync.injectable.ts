@@ -14,8 +14,6 @@ const stopKubeConfigSyncInjectable = getInjectable({
       const kubeConfigSyncManager = di.inject(kubeconfigSyncManagerInjectable);
 
       kubeConfigSyncManager.stopSync();
-
-      return undefined;
     },
   }),
 

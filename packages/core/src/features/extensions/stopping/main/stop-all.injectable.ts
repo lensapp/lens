@@ -5,21 +5,23 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import extensionInjectable from "../../../../extensions/extension-loader/extension/extension.injectable";
 import extensionsInjectable from "../../../../extensions/extensions.injectable";
+import { beforeQuitOfBackEndInjectionToken } from "../../../../main/start-main-application/runnable-tokens/phases";
 
 const stopAllExtensionsInjectable = getInjectable({
   id: "stop-all-extensions",
-  instantiate: (di) => {
-    const extensionInstances = di.inject(extensionsInjectable);
+  instantiate: (di) => ({
+    run: async () => {
+      const instances = di.inject(extensionsInjectable).get();
 
-    return async () => {
-      for (const instance of extensionInstances.get()) {
+      for (const instance of instances) {
         const extension = di.inject(extensionInjectable, instance);
 
         await instance.disable();
         extension.deregister();
       }
-    };
-  },
+    },
+  }),
+  injectionToken: beforeQuitOfBackEndInjectionToken,
 });
 
 export default stopAllExtensionsInjectable;

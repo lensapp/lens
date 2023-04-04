@@ -12,12 +12,25 @@ export interface Runnable<T = void> {
   id?: never;
   run: Run<T>;
   readonly runAfter?: SingleOrMany<Injectable<Runnable<T>, Runnable<T>, void>>;
+  /**
+   * Allows for specifying an black box ordering so that some runnables can be run at the end of the phase in
+   * a sorted order but after all other ones
+   *
+   * NOTE: Must be exclusively set to `runAfter`
+   */
+  readonly afterOrderNumber?: number;
 }
 
 export interface RunnableWithId<T> {
   run: Run<T>;
   readonly id: string;
   readonly runAfter: RunnableWithId<T>[];
+}
+
+export interface AfterRunnableWithId<T> {
+  run: Run<T>;
+  readonly id: string;
+  readonly runAfter: number;
 }
 
 export interface RunnableSync<T = void> {

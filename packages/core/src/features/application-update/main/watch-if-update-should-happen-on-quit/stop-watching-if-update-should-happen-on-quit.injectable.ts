@@ -14,8 +14,6 @@ const stopWatchingIfUpdateShouldHappenOnQuitInjectable = getInjectable({
       const watchIfUpdateShouldHappenOnQuit = di.inject(watchIfUpdateShouldHappenOnQuitInjectable);
 
       watchIfUpdateShouldHappenOnQuit.stop();
-
-      return undefined;
     },
   }),
 

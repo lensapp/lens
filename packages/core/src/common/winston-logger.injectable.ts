@@ -8,11 +8,10 @@ import { loggerTransportInjectionToken } from "./logger/transports";
 
 const winstonLoggerInjectable = getInjectable({
   id: "winston-logger",
-  instantiate: (di) =>
-    createLogger({
-      format: format.combine(format.splat(), format.simple()),
-      transports: di.injectMany(loggerTransportInjectionToken),
-    }),
+  instantiate: (di) => createLogger({
+    format: format.combine(format.splat(), format.simple()),
+    transports: di.injectMany(loggerTransportInjectionToken),
+  }),
 });
 
 export default winstonLoggerInjectable;

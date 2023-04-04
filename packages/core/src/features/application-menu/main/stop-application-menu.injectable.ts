@@ -14,8 +14,6 @@ const stopApplicationMenuInjectable = getInjectable({
       const applicationMenu = di.inject(applicationMenuReactivityInjectable);
 
       applicationMenu.stop();
-
-      return undefined;
     },
   }),
 

@@ -26,7 +26,7 @@ const ipcFileLoggerInjectable = getInjectable({
         () => createIpcFileTransport(fileId),
       );
 
-      transport?.log?.(entry, () => {});
+      transport.log?.(entry, () => {});
     }
 
     function close(fileId: string) {

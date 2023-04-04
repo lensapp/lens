@@ -16,8 +16,6 @@ const stopCheckingForUpdatesInjectable = getInjectable({
       if (periodicalCheckForUpdates.started) {
         periodicalCheckForUpdates.stop();
       }
-
-      return undefined;
     },
   }),
 

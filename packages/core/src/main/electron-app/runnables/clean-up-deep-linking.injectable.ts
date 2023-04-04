@@ -14,8 +14,6 @@ const cleanUpDeepLinkingInjectable = getInjectable({
       const lensProtocolRouterMain = di.inject(lensProtocolRouterMainInjectable);
 
       lensProtocolRouterMain.cleanup();
-
-      return undefined;
     },
   }),
 
