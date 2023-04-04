@@ -17,7 +17,7 @@ const podMetricsInjectable = getInjectable({
     const podMetrics = di.injectMany(podDetailsMetricsInjectionToken);
     const first = podMetrics[0];
 
-    const Component = first?.Component ?? Empty;
+    const Component = first ?? Empty;
 
     return {
       Component,

@@ -11,18 +11,15 @@ import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { Pod } from "../../../common/k8s-api/endpoints";
 import type { NodeApi, PriorityClassApi, RuntimeClassApi, ServiceAccountApi } from "../../../common/k8s-api/endpoints";
-import { DrawerItem, DrawerTitle } from "../drawer";
+import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import { cssNames, stopPropagation } from "@k8slens/utilities";
-import { PodDetailsContainer } from "./pod-details-container";
 import { PodDetailsAffinities } from "./pod-details-affinities";
 import { PodDetailsTolerations } from "./pod-details-tolerations";
 import { PodDetailsSecrets } from "./pod-details-secrets";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { getItemMetrics } from "../../../common/k8s-api/endpoints/metrics.api";
 import type { Logger } from "../../../common/logger";
 import { PodVolumes } from "./details/volumes/view";
-import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
@@ -31,9 +28,8 @@ import runtimeClassApiInjectable from "../../../common/k8s-api/endpoints/runtime
 import serviceAccountApiInjectable from "../../../common/k8s-api/endpoints/service-account.api.injectable";
 import priorityClassApiInjectable from "../../../common/k8s-api/endpoints/priority-class.api.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import type { PodMetricData } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics.injectable";
-import podContainerMetricsInjectable from "./container-metrics.injectable";
-import { toJS } from "../../../common/utils";
+import { PodDetailsContainers } from "./details/containers/pod-details-containers";
+import { PodDetailsInitContainers } from "./details/containers/pod-details-init-containers";
 
 export interface PodDetailsProps extends KubeObjectDetailsProps<Pod> {
 }
@@ -45,13 +41,12 @@ interface Dependencies {
   runtimeClassApi: RuntimeClassApi;
   serviceAccountApi: ServiceAccountApi;
   logger: Logger;
-  containerMetrics: IAsyncComputed<PodMetricData>;
 }
 
 @observer
 class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependencies> {
   render() {
-    const { object: pod, getDetailsUrl, nodeApi, logger, containerMetrics } = this.props;
+    const { object: pod, getDetailsUrl, nodeApi, logger } = this.props;
 
     if (!pod) {
       return null;
@@ -68,8 +63,6 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
     const podIPs = pod.getIPs();
     const { nodeName } = spec ?? {};
     const nodeSelector = pod.getNodeSelectors();
-    const initContainers = pod.getInitContainers();
-    const containers = pod.getContainers();
 
     const namespace = pod.getNs();
     const priorityClassName = pod.getPriorityClassName();
@@ -169,28 +162,9 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
           <PodDetailsSecrets pod={pod} />
         </DrawerItem>
 
-        {initContainers.length > 0 && (
-          <>
-            <DrawerTitle>Init Containers</DrawerTitle>
-            {initContainers.map(container => (
-              <PodDetailsContainer
-                key={container.name}
-                pod={pod}
-                container={container}
-              />
-            ))}
-          </>
-        )}
+        <PodDetailsInitContainers pod={pod} />
 
-        <DrawerTitle>Containers</DrawerTitle>
-        {containers.map(container => (
-          <PodDetailsContainer
-            key={container.name}
-            pod={pod}
-            container={container}
-            metrics={getItemMetrics(toJS(containerMetrics.value.get()), container.name)}
-          />
-        ))}
+        <PodDetailsContainers pod={pod} />
 
         <PodVolumes pod={pod} />
       </div>
@@ -207,6 +181,5 @@ export const PodDetails = withInjectables<Dependencies, PodDetailsProps>(NonInje
     runtimeClassApi: di.inject(runtimeClassApiInjectable),
     serviceAccountApi: di.inject(serviceAccountApiInjectable),
     logger: di.inject(loggerInjectable),
-    containerMetrics: di.inject(podContainerMetricsInjectable, props.object),
   }),
 });

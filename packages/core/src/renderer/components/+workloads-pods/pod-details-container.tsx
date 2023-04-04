@@ -13,9 +13,6 @@ import { StatusBrick } from "../status-brick";
 import { Badge } from "../badge";
 import { ContainerEnvironment } from "./pod-container-env";
 import { PodContainerPort } from "./pod-container-port";
-import { ResourceMetrics } from "../resource-metrics";
-import type { MetricData } from "../../../common/k8s-api/endpoints/metrics.api";
-import { ContainerCharts } from "./container-charts";
 import { LocaleDate } from "../locale-date";
 import { ClusterMetricsResourceType } from "../../../common/cluster-types";
 import type { PortForwardStore } from "../../port-forward";
@@ -24,16 +21,18 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import portForwardStoreInjectable from "../../port-forward/port-forward-store/port-forward-store.injectable";
 import type { IComputedValue } from "mobx";
 import enabledMetricsInjectable from "../../api/catalog/entity/metrics-enabled.injectable";
+import type { PodDetailsContainerMetricsComponent } from "@k8slens/metrics";
+import { podDetailsContainerMetricsInjectionToken } from "@k8slens/metrics";
 
 export interface PodDetailsContainerProps {
   pod: Pod;
   container: Container;
-  metrics?: Partial<Record<string, MetricData>>;
 }
 
 interface Dependencies {
   portForwardStore: PortForwardStore;
   containerMetricsVisible: IComputedValue<boolean>;
+  containerMetrics: PodDetailsContainerMetricsComponent[];
 }
 
 @observer
@@ -84,7 +83,7 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
   }
 
   render() {
-    const { pod, container, metrics, containerMetricsVisible } = this.props;
+    const { pod, container, containerMetricsVisible, containerMetrics } = this.props;
 
     if (!pod || !container) return null;
     const { name, image, imagePullPolicy, ports, volumeMounts, command, args } = container;
@@ -105,18 +104,15 @@ class NonInjectedPodDetailsContainer extends React.Component<PodDetailsContainer
           <StatusBrick className={cssNames(state, { ready })}/>
           {name}
         </div>
-        {(isMetricVisible && !isInitContainer && metrics) && (
-          <ResourceMetrics
-            object={pod}
-            tabs={[
-              "CPU",
-              "Memory",
-              "Filesystem",
-            ]}
-            metrics={metrics}
-          >
-            <ContainerCharts/>
-          </ResourceMetrics>
+        {(isMetricVisible && !isInitContainer) && (
+          <>
+            {containerMetrics.map(ContainerMetrics => (
+              <ContainerMetrics.Component
+                key={ContainerMetrics.id}
+                container={container}
+                pod={pod}/>
+            ))}
+          </>
         )}
         {status && (
           <DrawerItem name="Status">
@@ -218,5 +214,6 @@ export const PodDetailsContainer = withInjectables<Dependencies, PodDetailsConta
     ...props,
     portForwardStore: di.inject(portForwardStoreInjectable),
     containerMetricsVisible: di.inject(enabledMetricsInjectable, ClusterMetricsResourceType.Container),
+    containerMetrics: di.injectMany(podDetailsContainerMetricsInjectionToken),
   }),
 });
