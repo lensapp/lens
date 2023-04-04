@@ -15,6 +15,7 @@ import initializeBuildVersionInjectable from "../../vars/build-version/init.inje
 import lensProxyCertificateInjectable from "../../../common/certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Agent } from "https";
+import appEventBusInjectable from "../../../common/app-event-bus/app-event-bus.injectable";
 
 const setupLensProxyInjectable = getInjectable({
   id: "setup-lens-proxy",
@@ -30,9 +31,19 @@ const setupLensProxyInjectable = getInjectable({
     const lensProxyCertificate = di.inject(lensProxyCertificateInjectable);
     const fetch = di.inject(fetchInjectable);
 
+    const appEventBus = di.inject(appEventBusInjectable);
+
     return {
       id: "setup-lens-proxy",
       run: async () => {
+        appEventBus.addListener((event) => {
+          console.log('appEventBus listener', event)
+          if (event.name === 'service' && event.action === 'close') {
+          console.log('appEventBus listener 1111')
+            lensProxy.close();
+          }
+        })
+
         try {
           logger.info("🔌 Starting LensProxy");
           await lensProxy.listen(); // lensProxy.port available

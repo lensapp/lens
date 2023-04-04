@@ -14,9 +14,13 @@ export interface StartableStoppable {
 
 type StartableStoppableState = "stopped" | "started" | "starting";
 
+export const startableStoppableMap = new Map();
+
 export function getStartableStoppable(id: string, startAndGetStopper: Starter): StartableStoppable {
   let stop: Stopper;
   let state: StartableStoppableState = "stopped";
+
+  startableStoppableMap.set(id, state);
 
   return {
     get started() {
@@ -29,8 +33,10 @@ export function getStartableStoppable(id: string, startAndGetStopper: Starter): 
       }
 
       state = "starting";
+      startableStoppableMap.set(id, state);
       stop = startAndGetStopper();
       state = "started";
+      startableStoppableMap.set(id, state);
     },
 
     stop: () => {
@@ -40,6 +46,7 @@ export function getStartableStoppable(id: string, startAndGetStopper: Starter): 
 
       stop();
       state = "stopped";
+      startableStoppableMap.set(id, state);
     },
   };
 }

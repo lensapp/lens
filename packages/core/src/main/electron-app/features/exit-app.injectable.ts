@@ -11,7 +11,7 @@ const exitAppInjectable = getInjectable({
   instantiate: (di) => () => {
     const app = di.inject(electronAppInjectable);
 
-    app.exit(0);
+    app.quit();
   },
 });
 
