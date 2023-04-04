@@ -43,7 +43,7 @@
     "@async-fn/jest": "^1.6.4",
     "@k8slens/feature-core": "6.5.0-alpha.1",
     "@k8slens/eslint-config": "^6.5.0-alpha.1",
-    "@ogre-tools/injectable-extension-for-mobx": "^15.1.2",
+    "@ogre-tools/injectable-extension-for-mobx": "^15.2.1",
     "mobx": "^6.7.0"
   }
 }

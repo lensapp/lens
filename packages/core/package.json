@@ -119,7 +119,7 @@
     "@ogre-tools/fp": "^15.1.2",
     "@ogre-tools/injectable": "^15.1.2",
     "@ogre-tools/injectable-extension-for-auto-registration": "^15.1.2",
-    "@ogre-tools/injectable-extension-for-mobx": "^15.1.2",
+    "@ogre-tools/injectable-extension-for-mobx": "^15.2.1",
     "@ogre-tools/injectable-react": "^15.1.2",
     "@sentry/electron": "^3.0.8",
     "@sentry/integrations": "^6.19.3",
