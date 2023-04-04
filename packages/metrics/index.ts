@@ -15,3 +15,12 @@ export type ClusterOverviewUIBlock = {
 export const clusterOverviewUIBlockInjectionToken = getInjectionToken<ClusterOverviewUIBlock>({
   id: "cluster-overview-ui-block-injection-token",
 });
+
+export type KubeObjectDetailMetrics = {
+  id: string;
+  Component: React.ElementType;
+};
+
+export const podDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
+  id: "pod-details-metrics-injection-token",
+});
