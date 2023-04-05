@@ -29,7 +29,6 @@ export * from "./src/noop";
 export * from "./src/object";
 export * from "./src/observable-crate";
 export * from "./src/on-keyboard-shortcut";
-export * from "./src/platform-specific-version"
 export * from "./src/prevDefault";
 export * from "./src/readableStream";
 export * from "./src/readonly";
