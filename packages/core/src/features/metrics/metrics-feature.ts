@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getFeature } from "@k8slens/feature-core";
-import { clusterOverviewUIBlockInjectionToken, daemonSetDetailsMetricsInjectionToken, deploymentDetailsMetricsInjectionToken, jobDetailsMetricsInjectionToken, namespaceDetailsMetricsInjectionToken, nodeDetailsMetricsInjectionToken, persistentVolumeClaimDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken, replicaSetDetailsMetricsInjectionToken, statefulSetDetailsMetricsInjectionToken } from "@k8slens/metrics";
+import { clusterOverviewUIBlockInjectionToken, daemonSetDetailsMetricsInjectionToken, deploymentDetailsMetricsInjectionToken, jobDetailsMetricsInjectionToken, namespaceDetailsMetricsInjectionToken, ingressDetailsMetricsInjectionToken, nodeDetailsMetricsInjectionToken, persistentVolumeClaimDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken, replicaSetDetailsMetricsInjectionToken, statefulSetDetailsMetricsInjectionToken } from "@k8slens/metrics";
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterMetrics } from "../../renderer/components/+cluster/cluster-metrics";
 import { ClusterPieCharts } from "../../renderer/components/+cluster/cluster-pie-charts";
@@ -17,6 +17,7 @@ import { PodDetailsContainerMetrics } from "../../renderer/components/+workloads
 import PodMetricsDetailsComponent from "../../renderer/components/+workloads-pods/pod-metrics-details-component";
 import { ReplicaSetMetricsDetailsComponent } from "../../renderer/components/+workloads-replicasets/metrics-details-component";
 import { StatefulSetMetricsDetailsComponent } from "../../renderer/components/+workloads-statefulsets/metrics-details-component";
+import { IngressMetricsDetailsComponent } from "../../renderer/components/+network-ingresses/metrics-details-component";
 
 const clusterPieChartsClusterOverviewInjectable = getInjectable({
   id: "cluster-pie-charts-cluster-overview",
@@ -132,6 +133,15 @@ const daemonSetDetailsMetricsInjectable = getInjectable({
   injectionToken: daemonSetDetailsMetricsInjectionToken,
 });
 
+const ingressDetailsMetricsInjectable = getInjectable({
+  id: "network-ingress-details-metrics-injectable",
+  instantiate: () => ({
+    id: "network-ingress-details-metrics",
+    Component: IngressMetricsDetailsComponent,
+  }),
+  injectionToken: ingressDetailsMetricsInjectionToken,
+});
+
 export const metricsFeature = getFeature({
   id: "core-metrics-feature",
 
@@ -149,5 +159,6 @@ export const metricsFeature = getFeature({
     di.register(namespaceDetailsMetricsInjectable);
     di.register(jobDetailsMetricsInjectable);
     di.register(daemonSetDetailsMetricsInjectable);
+    di.register(ingressDetailsMetricsInjectable);
   },
 });

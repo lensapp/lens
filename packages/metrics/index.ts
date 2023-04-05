@@ -62,6 +62,10 @@ export const daemonSetDetailsMetricsInjectionToken = getInjectionToken<KubeObjec
   id: "daemon-set-details-metrics-injection-token",
 });
 
+export const ingressDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
+  id: "ingress-details-metrics-injection-token",
+});
+
 export interface PodDetailsContainerMetricsComponentProps {
   container: any;
   pod: any;
