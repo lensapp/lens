@@ -9,8 +9,6 @@ import loggerInjectable from "../../../common/logger.injectable";
 import extensionDiscoveryInjectable from "../../../extensions/extension-discovery/extension-discovery.injectable";
 import extensionLoaderInjectable from "../../../extensions/extension-loader/extension-loader.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
-import { onLoadOfApplicationInjectionToken } from "../runnable-tokens/on-load-of-application-injection-token";
-import setupShellInjectable from "../../../features/shell-sync/main/setup-shell.injectable";
 
 const initializeExtensionsInjectable = getInjectable({
   id: "initialize-extensions",
@@ -51,20 +49,20 @@ const initializeExtensionsInjectable = getInjectable({
             "Lens Error",
             `Could not load extensions${
               error?.message ? `: ${error.message}` : ""
-            }`,
+            }`
           );
 
           console.error(error);
           console.trace();
         }
       },
-      runAfter: di.inject(setupShellInjectable),
+      // runAfter: di.inject(setupShellInjectable),
     };
   },
 
   causesSideEffects: true,
 
-  injectionToken: onLoadOfApplicationInjectionToken,
+  // injectionToken: onLoadOfApplicationInjectionToken,
 });
 
 export default initializeExtensionsInjectable;

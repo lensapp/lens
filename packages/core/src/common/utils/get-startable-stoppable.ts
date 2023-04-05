@@ -41,6 +41,8 @@ export function getStartableStoppable(id: string, startAndGetStopper: Starter): 
 
     stop: () => {
       if (state !== "started") {
+        return;
+
         throw new Error(`Tried to stop "${id}", but it is already ${state}.`);
       }
 
