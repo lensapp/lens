@@ -5,6 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeQuitOfBackEndInjectionToken } from "../../../../main/start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
 import userTemplatesInjectable from "./user-templates.injectable";
+import loggerInjectable from "../../../../common/logger.injectable";
 
 const stopWatchingUserTemplatesOnQuitInjectable = getInjectable({
   id: "stop-watching-user-templates-on-quit",
@@ -14,10 +15,13 @@ const stopWatchingUserTemplatesOnQuitInjectable = getInjectable({
     return {
       id: "stop-watching-user-templates-on-quit",
 
-      run: () => {
-        const [, disposer] = di.inject(userTemplatesInjectable);
+      run: async () => {
+        const [, watcher] = di.inject(userTemplatesInjectable);
+        const logger = di.inject(loggerInjectable);
 
-        disposer();
+        logger.info("[USER-CREATE-RESOURCE-TEMPLATES]: stopping watch");
+  
+        await watcher?.close();
       },
     };
   },

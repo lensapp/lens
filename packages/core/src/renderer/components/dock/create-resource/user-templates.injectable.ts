@@ -17,9 +17,8 @@ import homeDirectoryPathInjectable from "../../../../common/os/home-directory-pa
 import getDirnameOfPathInjectable from "../../../../common/path/get-dirname.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import parsePathInjectable from "../../../../common/path/parse.injectable";
-import type { Disposer } from "../../../../common/utils";
 
-export type ResourceTemplates = [IComputedValue<RawTemplates[]>, Disposer];
+export type ResourceTemplates = [IComputedValue<RawTemplates[]>, Watcher<false>|undefined];
 
 const userCreateResourceTemplatesInjectable = getInjectable({
   id: "user-create-resource-templates",
@@ -101,7 +100,7 @@ const userCreateResourceTemplatesInjectable = getInjectable({
         },
         ignoreInitial: false,
         atomic: 150, // for "atomic writes"
-      })
+      });
 
       watcher
         .on("add", onAddOrChange)
@@ -112,11 +111,7 @@ const userCreateResourceTemplatesInjectable = getInjectable({
         });
     })();
 
-    return [computed(() => groupTemplates(templates)), () => {
-      logger.info("[USER-CREATE-RESOURCE-TEMPLATES]: stopping watch");
-
-      watcher?.close()
-   }];
+    return [computed(() => groupTemplates(templates)), watcher];
   },
 });
 

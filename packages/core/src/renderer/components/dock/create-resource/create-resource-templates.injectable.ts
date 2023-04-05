@@ -15,7 +15,7 @@ const createResourceTemplatesInjectable = getInjectable({
 
   instantiate: async (di) => {
     const lensResourceTemplates = await di.inject(lensCreateResourceTemplatesInjectable);
-    const [ userResourceTemplates, ] = di.inject(userCreateResourceTemplatesInjectable);
+    const [ userResourceTemplates ] = di.inject(userCreateResourceTemplatesInjectable);
 
     return computed((): GroupBase<{ label: string; value: string }>[] => {
       const res = [
