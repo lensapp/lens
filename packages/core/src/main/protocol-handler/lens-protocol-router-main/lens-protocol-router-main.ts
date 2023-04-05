@@ -6,7 +6,7 @@
 import * as proto from "../../../common/protocol-handler";
 import URLParse from "url-parse";
 import type { LensExtension } from "../../../extensions/lens-extension";
-import { observable, when, makeObservable } from "mobx";
+import { observable, when } from "mobx";
 import type { LensProtocolRouterDependencies, RouteAttempt } from "../../../common/protocol-handler";
 import { ProtocolHandlerInvalid } from "../../../common/protocol-handler";
 import { disposer, noop } from "@k8slens/utilities";
@@ -39,17 +39,15 @@ export interface LensProtocolRouterMainDependencies extends LensProtocolRouterDe
 }
 
 export class LensProtocolRouterMain extends proto.LensProtocolRouter {
-  private missingExtensionHandlers: FallbackHandler[] = [];
+  private readonly missingExtensionHandlers: FallbackHandler[] = [];
 
   // TODO: This is used to solve out-of-place temporal dependency. Remove, and solve otherwise.
-  @observable rendererLoaded = false;
+  readonly rendererLoaded = observable.box(false);
 
-  protected disposers = disposer();
+  protected readonly disposers = disposer();
 
   constructor(protected readonly dependencies: LensProtocolRouterMainDependencies) {
     super(dependencies);
-
-    makeObservable(this);
   }
 
   public cleanup() {
@@ -118,13 +116,12 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
   protected _routeToInternal(url: URLParse<Record<string, string | undefined>>): RouteAttempt {
     const rawUrl = url.toString(); // for sending to renderer
     const attempt = super._routeToInternal(url);
+    const broadcastToRenderer = () => this.dependencies.broadcastMessage(proto.ProtocolHandlerInternal, rawUrl, attempt);
 
-    const sendRoutingToRenderer = () => this.dependencies.broadcastMessage(proto.ProtocolHandlerInternal, rawUrl, attempt);
-
-    if (this.rendererLoaded) {
-      sendRoutingToRenderer();
+    if (this.rendererLoaded.get()) {
+      broadcastToRenderer();
     } else {
-      this.disposers.push(when(() => this.rendererLoaded, sendRoutingToRenderer));
+      this.disposers.push(when(() => this.rendererLoaded.get(), broadcastToRenderer));
     }
 
     return attempt;
@@ -141,13 +138,12 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
      * argument.
      */
     const attempt = await super._routeToExtension(new URLParse(url.toString(), true));
+    const broadcastToRenderer = () => this.dependencies.broadcastMessage(proto.ProtocolHandlerExtension, rawUrl, attempt);
 
-    const sendRoutingToRenderer = () => this.dependencies.broadcastMessage(proto.ProtocolHandlerExtension, rawUrl, attempt);
-
-    if (this.rendererLoaded) {
-      sendRoutingToRenderer();
+    if (this.rendererLoaded.get()) {
+      broadcastToRenderer();
     } else {
-      this.disposers.push(when(() => this.rendererLoaded, sendRoutingToRenderer));
+      this.disposers.push(when(() => this.rendererLoaded.get(), broadcastToRenderer));
     }
 
     return attempt;

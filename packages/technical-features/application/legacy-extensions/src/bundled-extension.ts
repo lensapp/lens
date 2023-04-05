@@ -1,13 +1,13 @@
 import { getInjectionToken } from "@ogre-tools/injectable";
 import type {
-  LensExtensionConstructor,
-  LensExtensionManifest,
+  BundledLensExtensionConstructor,
+  BundledLensExtensionManifest,
 } from "./lens-extension";
 
 export interface BundledExtension {
-  readonly manifest: LensExtensionManifest;
-  main: () => LensExtensionConstructor | null;
-  renderer: () => LensExtensionConstructor | null;
+  readonly manifest: BundledLensExtensionManifest;
+  main: () => Promise<BundledLensExtensionConstructor | null>;
+  renderer: () => Promise<BundledLensExtensionConstructor | null>;
 }
 
 export const bundledExtensionInjectionToken =

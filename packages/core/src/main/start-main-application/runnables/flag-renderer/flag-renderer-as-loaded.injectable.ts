@@ -16,7 +16,7 @@ const flagRendererAsLoadedInjectable = getInjectable({
 
       runInAction(() => {
         // Todo: remove this kludge which enables out-of-place temporal dependency.
-        lensProtocolRouterMain.rendererLoaded = true;
+        lensProtocolRouterMain.rendererLoaded.set(true);
       });
     },
   }),
