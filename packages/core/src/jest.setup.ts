@@ -58,7 +58,7 @@ jest.mock("./renderer/components/tooltip/withTooltip");
 jest.mock("monaco-editor");
 
 const getInjectables = (environment: "renderer" | "main", filePathGlob: string) => [
-  ...glob.sync(`./{common,extensions,${environment}}/**/${filePathGlob}`, {
+  ...glob.sync(`./{common,extensions,${environment},test-env}/**/${filePathGlob}`, {
     cwd: __dirname,
   }),
 
