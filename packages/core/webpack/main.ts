@@ -10,7 +10,6 @@ import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import { iconsAndImagesWebpackRules } from "./renderer";
 import { DefinePlugin } from "webpack";
 import { buildDir, isDevelopment } from "./vars";
-import { platform } from "process";
 
 const webpackLensMain = (): webpack.Configuration => {
   return {
