@@ -9,5 +9,9 @@ import type { PlatformSpecific } from "../../../common/utils/platform-specific-v
 export type RequestSystemCAs = () => Promise<string[]>;
 
 export const platformSpecificRequestSystemCAsInjectionToken = getInjectionToken<PlatformSpecific<RequestSystemCAs>>({
+  id: "platform-specific-request-system-cas-token",
+});
+
+export const requestSystemCAsInjectionToken = getInjectionToken<RequestSystemCAs>({
   id: "request-system-cas-token",
 });
