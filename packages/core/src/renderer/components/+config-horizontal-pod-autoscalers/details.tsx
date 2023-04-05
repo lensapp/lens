@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "./hpa-details.scss";
+import "./details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -22,8 +22,8 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
-import getHorizontalPodAutoscalerMetrics from "./get-hpa-metrics.injectable";
-import { getMetricName } from "./get-hpa-metric-name";
+import getHorizontalPodAutoscalerMetrics from "./get-metrics.injectable";
+import { getMetricName } from "./get-metric-name";
 
 export interface HpaDetailsProps extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 }
@@ -36,7 +36,7 @@ interface Dependencies {
 }
 
 @observer
-class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependencies> {
+class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<HpaDetailsProps & Dependencies> {
   private renderTargetLink(target: HorizontalPodAutoscalerMetricTarget | undefined) {
     if (!target) {
       return null;
@@ -177,7 +177,7 @@ class NonInjectedHpaDetails extends React.Component<HpaDetailsProps & Dependenci
   }
 }
 
-export const HpaDetails = withInjectables<Dependencies, HpaDetailsProps>(NonInjectedHpaDetails, {
+export const HorizontalPodAutoscalerDetails = withInjectables<Dependencies, HpaDetailsProps>(NonInjectedHorizontalPodAutoscalerDetails, {
   getProps: (di, props) => ({
     ...props,
     apiManager: di.inject(apiManagerInjectable),

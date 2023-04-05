@@ -22,7 +22,7 @@ import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 export type MessageBridgeFake = {
   involve: (...dis: DiContainer[]) => void;
   messagePropagation: () => Promise<void>;
-  messagePropagationRecursive: (callback: any) => any;
+  messagePropagationRecursive: (callback: () => any) => any;
   setAsync: (value: boolean) => void;
 };
 
@@ -167,9 +167,7 @@ export const getMessageBridgeFake = (): MessageBridgeFake => {
     await Promise.all(oldMessages.map((x) => wrapper(x.resolve)));
   };
 
-  const messagePropagationRecursive = async (
-    wrapper: (callback: any) => any = (callback) => callback(),
-  ) => {
+  const messagePropagationRecursive = async (wrapper = (callback: () => any) => callback()) => {
     while (messagePropagationBuffer.size) {
       await messagePropagation(wrapper);
     }

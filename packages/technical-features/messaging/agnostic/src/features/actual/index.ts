@@ -21,15 +21,9 @@ export {
   getMessageChannelListenerInjectable,
 } from "./message/message-channel-listener-injection-token";
 
-export type {
-  RequestChannel,
-  RequestChannelHandler,
-} from "./request/request-channel-listener-injection-token";
+export type { RequestChannel, RequestChannelHandler } from "./request/request-channel-listener-injection-token";
 
-export type {
-  RequestFromChannel,
-  ChannelRequester,
-} from "./request/request-from-channel-injection-token";
+export type { RequestFromChannel, ChannelRequester } from "./request/request-from-channel-injection-token";
 
 export type { EnlistMessageChannelListener } from "./message/enlist-message-channel-listener-injection-token";
 export { enlistMessageChannelListenerInjectionToken } from "./message/enlist-message-channel-listener-injection-token";

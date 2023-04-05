@@ -21,9 +21,7 @@ export const listeningOfChannelsInjectionToken = getInjectionToken<ListeningOfCh
   id: "listening-of-channels-injection-token",
 });
 
-const listening = <
-  T extends { id: string; channel: MessageChannel<any> | RequestChannel<any, any> },
->(
+const listening = <T extends { id: string; channel: MessageChannel<any> | RequestChannel<any, any> }>(
   channelListeners: IComputedValue<T[]>,
   enlistChannelListener: (listener: T) => () => void,
   getId: (listener: T) => string,
@@ -33,9 +31,7 @@ const listening = <
   const reactionDisposer = reaction(
     () => channelListeners.get(),
     (newValues, oldValues = []) => {
-      const addedListeners = newValues.filter(
-        (newValue) => !oldValues.some((oldValue) => oldValue.id === newValue.id),
-      );
+      const addedListeners = newValues.filter((newValue) => !oldValues.some((oldValue) => oldValue.id === newValue.id));
 
       const removedListeners = oldValues.filter(
         (oldValue) => !newValues.some((newValue) => newValue.id === oldValue.id),
@@ -45,9 +41,7 @@ const listening = <
         const id = getId(listener);
 
         if (listenerDisposers.has(id)) {
-          throw new Error(
-            `Tried to add listener for channel "${listener.channel.id}" but listener already exists.`,
-          );
+          throw new Error(`Tried to add listener for channel "${listener.channel.id}" but listener already exists.`);
         }
 
         const disposer = enlistChannelListener(listener);

@@ -2,9 +2,7 @@ import type { DiContainer } from "@ogre-tools/injectable";
 import type { Feature } from "./feature";
 import { featureContextMapInjectable } from "./feature-context-map-injectable";
 
-const getDependingFeaturesFor = (
-  featureContextMap: Map<Feature, { dependedBy: Map<Feature, number> }>,
-) => {
+const getDependingFeaturesFor = (featureContextMap: Map<Feature, { dependedBy: Map<Feature, number> }>) => {
   const getDependingFeaturesForRecursion = (feature: Feature, atRoot = true): string[] => {
     const context = featureContextMap.get(feature);
 
@@ -36,11 +34,9 @@ const deregisterFeatureRecursed = (di: DiContainer, feature: Feature, dependedBy
   const dependingFeatures = getDependingFeatures(feature);
 
   if (!dependedBy && dependingFeatures.length) {
-    throw new Error(
-      `Tried to deregister Feature "${
-        feature.id
-      }", but it is the dependency of Features "${dependingFeatures.join(", ")}"`,
-    );
+    const names = dependingFeatures.join(", ");
+
+    throw new Error(`Tried to deregister Feature "${feature.id}", but it is the dependency of Features "${names}"`);
   }
 
   if (dependedBy) {

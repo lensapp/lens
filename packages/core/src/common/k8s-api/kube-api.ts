@@ -193,7 +193,7 @@ export interface KubeApiWatchOptions<Object extends KubeObject, Data extends Kub
 
 export type KubeApiPatchType = "merge" | "json" | "strategic";
 
-const patchTypeHeaders: Record<KubeApiPatchType, string> = {
+export const patchTypeHeaders: Record<KubeApiPatchType, string> = {
   "merge": "application/merge-patch+json",
   "json": "application/json-patch+json",
   "strategic": "application/strategic-merge-patch+json",

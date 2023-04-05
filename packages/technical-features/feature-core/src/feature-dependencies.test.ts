@@ -59,9 +59,7 @@ describe("feature-dependencies", () => {
 
       expect(() => {
         deregisterFeature(di, someDependencyFeature);
-      }).toThrow(
-        'Tried to deregister feature "some-dependency-feature", but it was not registered.',
-      );
+      }).toThrow('Tried to deregister feature "some-dependency-feature", but it was not registered.');
     });
 
     it("given the parent Feature is deregistered, when injecting an injectable from the dependency Feature, throws", () => {
@@ -104,9 +102,7 @@ describe("feature-dependencies", () => {
     it("when the first Feature is deregistered, throws", () => {
       expect(() => {
         deregisterFeature(di, someFeature1);
-      }).toThrow(
-        'Tried to deregister Feature "some-feature-1", but it is the dependency of Features "some-feature-2"',
-      );
+      }).toThrow('Tried to deregister Feature "some-feature-1", but it is the dependency of Features "some-feature-2"');
     });
 
     it("given the second Feature is deregistered, when injecting an injectable from the first Feature, still does so", () => {
@@ -180,9 +176,7 @@ describe("feature-dependencies", () => {
 
       expect(() => {
         di.inject(someInjectableInDependencyFeature);
-      }).toThrow(
-        'Tried to inject non-registered injectable "irrelevant" -> "some-injectable-in-dependency-feature".',
-      );
+      }).toThrow('Tried to inject non-registered injectable "irrelevant" -> "some-injectable-in-dependency-feature".');
     });
   });
 
@@ -256,9 +250,7 @@ describe("feature-dependencies", () => {
 
       expect(() => {
         di.inject(someInjectableInDependencyFeature);
-      }).toThrow(
-        'Tried to inject non-registered injectable "irrelevant" -> "some-injectable-in-dependency-feature".',
-      );
+      }).toThrow('Tried to inject non-registered injectable "irrelevant" -> "some-injectable-in-dependency-feature".');
     });
   });
 });

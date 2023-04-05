@@ -26,8 +26,7 @@ export interface Discover {
   getSingleElement: GetSingleElement;
 }
 
-const getBaseElement = (source: DiscoverySourceTypes) =>
-  "baseElement" in source ? source.baseElement : source;
+const getBaseElement = (source: DiscoverySourceTypes) => ("baseElement" in source ? source.baseElement : source);
 
 export function querySingleElement(getSource: () => DiscoverySourceTypes): QuerySingleElement {
   return (attributeName, attributeValue) => {
@@ -35,9 +34,7 @@ export function querySingleElement(getSource: () => DiscoverySourceTypes): Query
 
     const dataAttribute = `data-${attributeName}-test`;
 
-    const selector = attributeValue
-      ? `[${dataAttribute}="${attributeValue}"]`
-      : `[${dataAttribute}]`;
+    const selector = attributeValue ? `[${dataAttribute}="${attributeValue}"]` : `[${dataAttribute}]`;
 
     const discovered = getBaseElement(source).querySelector(selector);
 
@@ -78,10 +75,7 @@ export function getSingleElement(getSource: () => DiscoverySourceTypes): GetSing
   return (attributeName, attributeValue) => {
     const dataAttribute = `data-${attributeName}-test`;
 
-    const { discovered, ...nestedDiscover } = querySingleElement(getSource)(
-      attributeName,
-      attributeValue,
-    );
+    const { discovered, ...nestedDiscover } = querySingleElement(getSource)(attributeName, attributeValue);
 
     if (!discovered) {
       // eslint-disable-next-line xss/no-mixed-html
@@ -97,18 +91,14 @@ export function getSingleElement(getSource: () => DiscoverySourceTypes): GetSing
         );
       }
 
-      throw new Error(
-        `Couldn't find HTML-element with attribute "${dataAttribute}"\n\nHTML is:\n\n${html}`,
-      );
+      throw new Error(`Couldn't find HTML-element with attribute "${dataAttribute}"\n\nHTML is:\n\n${html}`);
     }
 
     const click = () => {
       if ("click" in discovered && typeof discovered.click === "function") {
         discovered.click();
       } else {
-        throw new Error(
-          `Tried to click something that was not clickable:\n\n${prettyDom(discovered)}`,
-        );
+        throw new Error(`Tried to click something that was not clickable:\n\n${prettyDom(discovered)}`);
       }
     };
 

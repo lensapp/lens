@@ -56,12 +56,14 @@ const NonInjectedEditResource = observer(({
                   <span>Namespace:</span>
                   <Badge label={model.namespace} />
                 </div>
-              )} />
+              )}
+            />
             <EditorPanel
               tabId={tabId}
               value={model.configuration.value.get()}
               onChange={model.configuration.onChange}
-              onError={model.configuration.error.onChange} />
+              onError={model.configuration.error.onChange}
+            />
           </>
         )
     }
