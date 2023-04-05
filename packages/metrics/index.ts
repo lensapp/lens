@@ -58,6 +58,10 @@ export const jobDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetai
   id: "job-details-metrics-injection-token",
 });
 
+export const daemonSetDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
+  id: "daemon-set-details-metrics-injection-token",
+});
+
 export interface PodDetailsContainerMetricsComponentProps {
   container: any;
   pod: any;

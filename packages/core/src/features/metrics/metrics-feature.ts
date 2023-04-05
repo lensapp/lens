@@ -3,13 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getFeature } from "@k8slens/feature-core";
-import { clusterOverviewUIBlockInjectionToken, deploymentDetailsMetricsInjectionToken, jobDetailsMetricsInjectionToken, namespaceDetailsMetricsInjectionToken, nodeDetailsMetricsInjectionToken, persistentVolumeClaimDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken, replicaSetDetailsMetricsInjectionToken, statefulSetDetailsMetricsInjectionToken } from "@k8slens/metrics";
+import { clusterOverviewUIBlockInjectionToken, daemonSetDetailsMetricsInjectionToken, deploymentDetailsMetricsInjectionToken, jobDetailsMetricsInjectionToken, namespaceDetailsMetricsInjectionToken, nodeDetailsMetricsInjectionToken, persistentVolumeClaimDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken, replicaSetDetailsMetricsInjectionToken, statefulSetDetailsMetricsInjectionToken } from "@k8slens/metrics";
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterMetrics } from "../../renderer/components/+cluster/cluster-metrics";
 import { ClusterPieCharts } from "../../renderer/components/+cluster/cluster-pie-charts";
 import { NamespaceMetricsDetailsComponent } from "../../renderer/components/+namespaces/metrics-details-component";
 import { NodeMetricsDetailsComponent } from "../../renderer/components/+nodes/metrics-details-component";
 import { PersistentVolumeClaimMetricsDetailsComponent } from "../../renderer/components/+storage-volume-claims/metrics-details-component";
+import { DaemonSetMetricsDetailsComponent } from "../../renderer/components/+workloads-daemonsets/metrics-details-component";
 import { DeploymentMetricsDetailsComponent } from "../../renderer/components/+workloads-deployments/metrics-details-component";
 import { JobMetricsDetailsComponent } from "../../renderer/components/+workloads-jobs/metrics-details-component";
 import { PodDetailsContainerMetrics } from "../../renderer/components/+workloads-pods/pod-details-container-metrics";
@@ -122,7 +123,14 @@ const jobDetailsMetricsInjectable = getInjectable({
   injectionToken: jobDetailsMetricsInjectionToken,
 });
 
-console.log(jobDetailsMetricsInjectable);
+const daemonSetDetailsMetricsInjectable = getInjectable({
+  id: "daemon-set-details-metrics-injectable",
+  instantiate: () => ({
+    id: "daemon-set-details-metrics",
+    Component: DaemonSetMetricsDetailsComponent,
+  }),
+  injectionToken: daemonSetDetailsMetricsInjectionToken,
+});
 
 export const metricsFeature = getFeature({
   id: "core-metrics-feature",
@@ -140,5 +148,6 @@ export const metricsFeature = getFeature({
     di.register(statefulSetDetailsMetricsInjectable);
     di.register(namespaceDetailsMetricsInjectable);
     di.register(jobDetailsMetricsInjectable);
+    di.register(daemonSetDetailsMetricsInjectable);
   },
 });
