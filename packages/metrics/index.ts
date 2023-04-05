@@ -46,6 +46,10 @@ export const persistentVolumeClaimDetailsMetricsInjectionToken =
     id: "persistent-volume-claim-details-metrics-injection-token",
   });
 
+export const statefulSetDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
+  id: "stateful-set-details-metrics-injection-token",
+});
+
 export interface PodDetailsContainerMetricsComponentProps {
   container: any;
   pod: any;

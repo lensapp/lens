@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getFeature } from "@k8slens/feature-core";
-import { clusterOverviewUIBlockInjectionToken, deploymentDetailsMetricsInjectionToken, nodeDetailsMetricsInjectionToken, persistentVolumeClaimDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken, replicaSetDetailsMetricsInjectionToken } from "@k8slens/metrics";
+import { clusterOverviewUIBlockInjectionToken, deploymentDetailsMetricsInjectionToken, nodeDetailsMetricsInjectionToken, persistentVolumeClaimDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken, replicaSetDetailsMetricsInjectionToken, statefulSetDetailsMetricsInjectionToken } from "@k8slens/metrics";
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterMetrics } from "../../renderer/components/+cluster/cluster-metrics";
 import { ClusterPieCharts } from "../../renderer/components/+cluster/cluster-pie-charts";
@@ -13,6 +13,7 @@ import { DeploymentMetricsDetailsComponent } from "../../renderer/components/+wo
 import { PodDetailsContainerMetrics } from "../../renderer/components/+workloads-pods/pod-details-container-metrics";
 import PodMetricsDetailsComponent from "../../renderer/components/+workloads-pods/pod-metrics-details-component";
 import { ReplicaSetMetricsDetailsComponent } from "../../renderer/components/+workloads-replicasets/metrics-details-component";
+import { StatefulSetMetricsDetailsComponent } from "../../renderer/components/+workloads-statefulsets/metrics-details-component";
 
 const clusterPieChartsClusterOverviewInjectable = getInjectable({
   id: "cluster-pie-charts-cluster-overview",
@@ -92,6 +93,15 @@ const persistentVolumeClaimDetailsMetricsInjectable = getInjectable({
   injectionToken: persistentVolumeClaimDetailsMetricsInjectionToken,
 });
 
+const statefulSetDetailsMetricsInjectable = getInjectable({
+  id: "stateful-set-details-metrics-injectable",
+  instantiate: () => ({
+    id: "stateful-set-details-metrics",
+    Component: StatefulSetMetricsDetailsComponent,
+  }),
+  injectionToken: statefulSetDetailsMetricsInjectionToken,
+});
+
 export const metricsFeature = getFeature({
   id: "core-metrics-feature",
 
@@ -105,5 +115,6 @@ export const metricsFeature = getFeature({
     di.register(nodeDetailsMetricsInjectable);
     di.register(replicaSetDetailsMetricsInjectable);
     di.register(persistentVolumeClaimDetailsMetricsInjectable);
+    di.register(statefulSetDetailsMetricsInjectable);
   },
 });
