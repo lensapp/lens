@@ -32,7 +32,7 @@
     "dev-run": "nodemon --watch ./static/build/main.js --exec \"electron --remote-debugging-port=9223 --inspect .\"",
     "dev:main": "cross-env NODE_ENV=development webpack --config webpack/main.ts --progress --watch",
     "dev:renderer": "cross-env NODE_ENV=development ts-node ./webpack/dev-server.ts",
-    "test:integration": "jest -xyz --runInBand --detectOpenHandles --forceExit --modulePaths=[\"<rootDir>/integration/\"];",
+    "test:integration": "jest -xyz --runInBand --modulePaths=[\"<rootDir>/integration/\"];",
     "build:tray-icons": "generate-tray-icons --output ./static/build/tray --input ../../node_modules/@k8slens/core/src/renderer/components/icon/logo-lens.svg --notice-icon ../../node_modules/@k8slens/core/src/renderer/components/icon/notice.svg --spinner-icon ../../node_modules/@k8slens/core/src/renderer/components/icon/arrow-spinner.svg",
     "download:binaries": "ensure-binaries --package ./package.json --base-dir ./binaries/client",
     "postinstall": "electron-rebuild"
