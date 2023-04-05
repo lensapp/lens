@@ -7,8 +7,8 @@ import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-el
 import { afterQuitOfFrontEndInjectionToken, onQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
 import electronAppInjectable from "../electron-app.injectable";
 import isIntegrationTestingInjectable from "../../../common/vars/is-integration-testing.injectable";
-import autoUpdaterInjectable from "../features/auto-updater.injectable";
 import { runManySyncFor, runManyFor } from "@k8slens/run-many";
+import isAutoUpdatingInjectable from "../features/is-auto-updating.injectable";
 
 const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
   id: "setup-closing-of-application",
@@ -21,12 +21,7 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
       const runOnQuitOfBackEnd = runMany(onQuitOfBackEndInjectionToken);
       const app = di.inject(electronAppInjectable);
       const isIntegrationTesting = di.inject(isIntegrationTestingInjectable);
-      const autoUpdater = di.inject(autoUpdaterInjectable);
-      let isAutoUpdating = false;
-
-      autoUpdater.on("before-quit-for-update", () => {
-        isAutoUpdating = true;
-      });
+      const isAutoUpdating = di.inject(isAutoUpdatingInjectable);
 
       app.on("will-quit", () => {
         runAfterQuitOfFrontEnd();
@@ -56,7 +51,7 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
           runAfterQuitOfFrontEnd();
           event.preventDefault();
 
-          if (isIntegrationTesting || isAutoUpdating) {
+          if (isIntegrationTesting || isAutoUpdating.get()) {
             doAsyncQuit(event);
           }
         });
