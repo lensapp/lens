@@ -3,10 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getFeature } from "@k8slens/feature-core";
-import { clusterOverviewUIBlockInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken } from "@k8slens/metrics";
+import { clusterOverviewUIBlockInjectionToken, deploymentDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken } from "@k8slens/metrics";
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterMetrics } from "../../renderer/components/+cluster/cluster-metrics";
 import { ClusterPieCharts } from "../../renderer/components/+cluster/cluster-pie-charts";
+import { DeploymentMetricsDetailsComponent } from "../../renderer/components/+workloads-deployments/metrics-details-component";
 import { PodDetailsContainerMetrics } from "../../renderer/components/+workloads-pods/pod-details-container-metrics";
 import PodMetricsDetailsComponent from "../../renderer/components/+workloads-pods/pod-metrics-details-component";
 
@@ -36,9 +37,23 @@ const clusterMetricsOverviewBlockInjectable = getInjectable({
 
 const podDetailsMetricsInjectable = getInjectable({
   id: "pod-details-metrics-injectable",
-  instantiate: () => PodMetricsDetailsComponent,
+  instantiate: () => ({
+    id: "pod-details-metrics",
+    Component: PodMetricsDetailsComponent,
+  }),
   injectionToken: podDetailsMetricsInjectionToken,
 });
+
+const deploymentDetailsMetricsInjectable = getInjectable({
+  id: "deployment-details-metrics-injectable",
+  instantiate: () => ({
+    id: "deployment-details-metrics",
+    Component: DeploymentMetricsDetailsComponent,
+  }),
+  injectionToken: deploymentDetailsMetricsInjectionToken,
+});
+
+console.log(deploymentDetailsMetricsInjectable);
 
 const podDetailsContainerMetricsInjectable = getInjectable({
   id: "pod-details-container-metrics-injectable",
@@ -58,5 +73,6 @@ export const metricsFeature = getFeature({
 
     di.register(podDetailsMetricsInjectable);
     di.register(podDetailsContainerMetricsInjectable);
+    di.register(deploymentDetailsMetricsInjectable);
   },
 });

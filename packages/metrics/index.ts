@@ -16,16 +16,28 @@ export const clusterOverviewUIBlockInjectionToken = getInjectionToken<ClusterOve
   id: "cluster-overview-ui-block-injection-token",
 });
 
-export type KubeObjectDetailMetrics = React.ElementType;
+export type KubeObjectDetailMetricsComponentProps = {
+  object: any;
+};
+
+export type KubeObjectDetailMetrics = {
+  id: string;
+  Component: React.ComponentType<KubeObjectDetailMetricsComponentProps>;
+};
 
 export const podDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
   id: "pod-details-metrics-injection-token",
+});
+
+export const deploymentDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
+  id: "deployment-details-metrics-injection-token",
 });
 
 export interface PodDetailsContainerMetricsComponentProps {
   container: any;
   pod: any;
 }
+
 export interface PodDetailsContainerMetricsComponent {
   id: string;
   Component: React.ComponentType<PodDetailsContainerMetricsComponentProps>;
