@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getFeature } from "@k8slens/feature-core";
-import { clusterOverviewUIBlockInjectionToken, deploymentDetailsMetricsInjectionToken, nodeDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken } from "@k8slens/metrics";
+import { clusterOverviewUIBlockInjectionToken, deploymentDetailsMetricsInjectionToken, nodeDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken, replicaSetDetailsMetricsInjectionToken } from "@k8slens/metrics";
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterMetrics } from "../../renderer/components/+cluster/cluster-metrics";
 import { ClusterPieCharts } from "../../renderer/components/+cluster/cluster-pie-charts";
@@ -11,6 +11,7 @@ import { NodeMetricsDetailsComponent } from "../../renderer/components/+nodes/me
 import { DeploymentMetricsDetailsComponent } from "../../renderer/components/+workloads-deployments/metrics-details-component";
 import { PodDetailsContainerMetrics } from "../../renderer/components/+workloads-pods/pod-details-container-metrics";
 import PodMetricsDetailsComponent from "../../renderer/components/+workloads-pods/pod-metrics-details-component";
+import { ReplicaSetMetricsDetailsComponent } from "../../renderer/components/+workloads-replicasets/metrics-details-component";
 
 const clusterPieChartsClusterOverviewInjectable = getInjectable({
   id: "cluster-pie-charts-cluster-overview",
@@ -72,6 +73,15 @@ const nodeDetailsMetricsInjectable = getInjectable({
   injectionToken: nodeDetailsMetricsInjectionToken,
 });
 
+const replicaSetDetailsMetricsInjectable = getInjectable({
+  id: "replica-set-details-metrics-injectable",
+  instantiate: () => ({
+    id: "replica-set-details-metrics",
+    Component: ReplicaSetMetricsDetailsComponent,
+  }),
+  injectionToken: replicaSetDetailsMetricsInjectionToken,
+});
+
 export const metricsFeature = getFeature({
   id: "core-metrics-feature",
 
@@ -83,5 +93,6 @@ export const metricsFeature = getFeature({
     di.register(podDetailsContainerMetricsInjectable);
     di.register(deploymentDetailsMetricsInjectable);
     di.register(nodeDetailsMetricsInjectable);
+    di.register(replicaSetDetailsMetricsInjectable);
   },
 });

@@ -37,6 +37,10 @@ export const nodeDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDeta
   id: "node-details-metrics-injection-token",
 });
 
+export const replicaSetDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
+  id: "replica-set-details-metrics-injection-token",
+});
+
 export interface PodDetailsContainerMetricsComponentProps {
   container: any;
   pod: any;
