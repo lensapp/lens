@@ -4,7 +4,6 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import forceAppExitInjectable from "./electron-app/features/force-app-exit.injectable";
-import loggerInjectable from "../common/logger.injectable";
 import emitAppEventInjectable from "../common/app-event-bus/emit-event.injectable";
 
 const stopServicesAndExitAppInjectable = getInjectable({
@@ -12,12 +11,10 @@ const stopServicesAndExitAppInjectable = getInjectable({
 
   instantiate: (di) => {
     const forceAppExit = di.inject(forceAppExitInjectable);
-    const logger = di.inject(loggerInjectable);
     const emitAppEvent = di.inject(emitAppEventInjectable);
 
     return async () => {
       emitAppEvent({ name: "service", action: "close" });
-      logger.info("SERVICE:QUIT");
       setTimeout(forceAppExit, 1000);
     };
   },
