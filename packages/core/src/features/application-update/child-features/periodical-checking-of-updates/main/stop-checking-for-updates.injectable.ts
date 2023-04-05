@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import periodicalCheckForUpdatesInjectable from "./periodical-check-for-updates.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../../../../main/start-main-application/runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../../../../../main/start-main-application/runnable-tokens/phases";
 
 const stopCheckingForUpdatesInjectable = getInjectable({
   id: "stop-checking-for-updates",
@@ -21,7 +21,7 @@ const stopCheckingForUpdatesInjectable = getInjectable({
     },
   }),
 
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default stopCheckingForUpdatesInjectable;

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../main/start-main-application/runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../../main/start-main-application/runnable-tokens/phases";
 import extensionDiscoveryInjectable from "./extension-discovery.injectable";
 
 const stopWatchingExtensionsOnQuitInjectable = getInjectable({
@@ -17,7 +17,7 @@ const stopWatchingExtensionsOnQuitInjectable = getInjectable({
     },
   }),
 
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default stopWatchingExtensionsOnQuitInjectable;

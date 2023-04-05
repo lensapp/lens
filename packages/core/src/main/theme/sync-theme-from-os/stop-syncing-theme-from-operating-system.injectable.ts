@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import syncThemeFromOperatingSystemInjectable from "../../electron-app/features/sync-theme-from-operating-system.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
 
 const stopSyncingThemeFromOperatingSystemInjectable = getInjectable({
   id: "stop-syncing-theme-from-operating-system",
@@ -19,7 +19,7 @@ const stopSyncingThemeFromOperatingSystemInjectable = getInjectable({
     },
   }),
 
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default stopSyncingThemeFromOperatingSystemInjectable;

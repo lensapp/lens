@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../start-main-application/runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../start-main-application/runnable-tokens/phases";
 import lensProxyInjectable from "./lens-proxy.injectable";
 
 const closeLensProxyOnQuitInjectable = getInjectable({
@@ -15,7 +15,7 @@ const closeLensProxyOnQuitInjectable = getInjectable({
       await lensProxy.close();
     },
   }),
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default closeLensProxyOnQuitInjectable;

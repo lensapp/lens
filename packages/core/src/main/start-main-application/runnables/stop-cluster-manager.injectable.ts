@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import clusterManagerInjectable from "../../cluster/manager.injectable";
-import { beforeQuitOfFrontEndInjectionToken } from "../runnable-tokens/phases";
+import { afterQuitOfFrontEndInjectionToken } from "../runnable-tokens/phases";
 
 const stopClusterManagerInjectable = getInjectable({
   id: "stop-cluster-manager",
@@ -19,7 +19,7 @@ const stopClusterManagerInjectable = getInjectable({
     },
   }),
 
-  injectionToken: beforeQuitOfFrontEndInjectionToken,
+  injectionToken: afterQuitOfFrontEndInjectionToken,
 });
 
 export default stopClusterManagerInjectable;
