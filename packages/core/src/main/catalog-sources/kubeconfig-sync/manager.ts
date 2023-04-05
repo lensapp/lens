@@ -98,10 +98,18 @@ export class KubeconfigSyncManager {
 
   @action
   protected stopOldSync(filePath: string): void {
-    if (!this.sources.delete(filePath)) {
-      // already stopped
+    const source = this.sources.get(filePath);
+
+    // already stopped
+    if (!source) {
       return this.dependencies.logger.debug(`no syncing file/folder to stop`, { filePath });
     }
+
+    const [, disposer] = source;
+
+    disposer();
+
+    this.sources.delete(filePath);
 
     this.dependencies.logger.info(`stopping sync of file/folder`, { filePath });
     this.dependencies.logger.debug(`${this.sources.size} files/folders watched`, { files: Array.from(this.sources.keys()) });
