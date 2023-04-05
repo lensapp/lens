@@ -17,7 +17,7 @@ import { requestInitialExtensionDiscovery } from "../../renderer/ipc";
 import type { ReadJson } from "../../common/fs/read-json-file.injectable";
 import type { Logger } from "../../common/logger";
 import type { PathExists } from "../../common/fs/path-exists.injectable";
-import type { Watch } from "../../common/fs/watch/watch.injectable";
+import type { Watch, Watcher } from "../../common/fs/watch/watch.injectable";
 import type { Stats } from "fs";
 import type { LStat } from "../../common/fs/lstat.injectable";
 import type { ReadDirectory } from "../../common/fs/read-directory.injectable";
@@ -168,6 +168,8 @@ export class ExtensionDiscovery {
     });
   }
 
+  private _watch: Watcher<false>|undefined;
+
   /**
    * Watches for added/removed local extensions.
    * Dependencies are installed automatically after an extension folder is copied.
@@ -178,7 +180,7 @@ export class ExtensionDiscovery {
     // Wait until .load() has been called and has been resolved
     await this.whenLoaded;
 
-    this.dependencies.watch(this.localFolderPath, {
+    this._watch = this.dependencies.watch(this.localFolderPath, {
       // For adding and removing symlinks to work, the depth has to be 1.
       depth: 1,
       ignoreInitial: true,
@@ -196,6 +198,12 @@ export class ExtensionDiscovery {
       .on("unlinkDir", this.handleWatchUnlinkEvent)
       // Extension remove is detected by watching "<extensionSymLink>" unlink
       .on("unlink", this.handleWatchUnlinkEvent);
+  }
+
+  async stopWatchingExtensions() {
+    this.dependencies.logger.info(`${logModule} stopping the watch for extensions`);
+
+    await this._watch?.close();
   }
 
   handleWatchFileAdd = async (manifestPath: string): Promise<void> => {
