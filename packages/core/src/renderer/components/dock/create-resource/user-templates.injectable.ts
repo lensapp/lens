@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
+import type { IComputedValue } from "mobx";
 import { computed, observable } from "mobx";
 import { delay, getOrInsert, isErrnoException, waitForPath } from "../../../utils";
 import { readFile } from "fs/promises";
@@ -10,15 +11,19 @@ import { hasCorrectExtension } from "./has-correct-extension";
 import type { RawTemplates } from "./create-resource-templates.injectable";
 import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import watchInjectable from "../../../../common/fs/watch/watch.injectable";
+import type { Watcher } from "../../../../common/fs/watch/watch.injectable";
 import getRelativePathInjectable from "../../../../common/path/get-relative-path.injectable";
 import homeDirectoryPathInjectable from "../../../../common/os/home-directory-path.injectable";
 import getDirnameOfPathInjectable from "../../../../common/path/get-dirname.injectable";
 import loggerInjectable from "../../../../common/logger.injectable";
 import parsePathInjectable from "../../../../common/path/parse.injectable";
+import type { Disposer } from "../../../../common/utils";
+
+export type ResourceTemplates = [IComputedValue<RawTemplates[]>, Disposer];
 
 const userCreateResourceTemplatesInjectable = getInjectable({
   id: "user-create-resource-templates",
-  instantiate: (di) => {
+  instantiate: (di): ResourceTemplates => {
     const joinPaths = di.inject(joinPathsInjectable);
     const watch = di.inject(watchInjectable);
     const getRelativePath = di.inject(getRelativePathInjectable);
@@ -70,6 +75,8 @@ const userCreateResourceTemplatesInjectable = getInjectable({
       templates.delete(filePath);
     };
 
+    let watcher: Watcher<false>|undefined;
+
     (async () => {
       for (let i = 1;; i *= 2) {
         try {
@@ -84,7 +91,7 @@ const userCreateResourceTemplatesInjectable = getInjectable({
       /**
      * NOTE: There is technically a race condition here of the form "time-of-check to time-of-use"
      */
-      watch(userTemplatesFolder, {
+      watcher = watch<false>(userTemplatesFolder, {
         disableGlobbing: true,
         ignorePermissionErrors: true,
         usePolling: false,
@@ -95,6 +102,8 @@ const userCreateResourceTemplatesInjectable = getInjectable({
         ignoreInitial: false,
         atomic: 150, // for "atomic writes"
       })
+
+      watcher
         .on("add", onAddOrChange)
         .on("change", onAddOrChange)
         .on("unlink", onUnlink)
@@ -103,7 +112,11 @@ const userCreateResourceTemplatesInjectable = getInjectable({
         });
     })();
 
-    return computed(() => groupTemplates(templates));
+    return [computed(() => groupTemplates(templates)), () => {
+      logger.info("[USER-CREATE-RESOURCE-TEMPLATES]: stopping watch");
+
+      watcher?.close()
+   }];
   },
 });
 
