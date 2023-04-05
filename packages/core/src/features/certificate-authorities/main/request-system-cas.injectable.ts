@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { requestSystemCAsInjectionToken } from "../common/request-system-cas-token";
+import platformSpecificVersionInjectable from "../../../common/utils/platform-specific-version.injectable";
+import { platformSpecificRequestSystemCAsInjectionToken } from "../common/request-system-cas-token";
 
 const requestSystemCAsInjectable = getInjectable({
   id: "request-system-cas",
-  instantiate: () => async () => [],
-  injectionToken: requestSystemCAsInjectionToken,
+  instantiate: (di) => di.inject(platformSpecificVersionInjectable)(platformSpecificRequestSystemCAsInjectionToken),
 });
 
 export default requestSystemCAsInjectable;
