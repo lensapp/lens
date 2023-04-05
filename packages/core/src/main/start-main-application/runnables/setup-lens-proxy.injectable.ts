@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import exitAppInjectable from "../../electron-app/features/exit-app.injectable";
+import forceAppExitInjectable from "../../electron-app/features/force-app-exit.injectable";
 import lensProxyInjectable from "../../lens-proxy/lens-proxy.injectable";
 import loggerInjectable from "../../../common/logger.injectable";
 import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable";
@@ -22,7 +22,7 @@ const setupLensProxyInjectable = getInjectable({
   instantiate: (di) => ({
     run: async () => {
       const lensProxy = di.inject(lensProxyInjectable);
-      const exitApp = di.inject(exitAppInjectable);
+      const forceAppExit = di.inject(forceAppExitInjectable);
       const logger = di.inject(loggerInjectable);
       const lensProxyPort = di.inject(lensProxyPortInjectable);
       const isWindows = di.inject(isWindowsInjectable);
@@ -37,7 +37,7 @@ const setupLensProxyInjectable = getInjectable({
       } catch (error: any) {
         showErrorPopup("Lens Error", `Could not start proxy: ${error?.message || "unknown error"}`);
 
-        return exitApp();
+        return forceAppExit();
       }
 
       // test proxy connection
@@ -54,7 +54,7 @@ const setupLensProxyInjectable = getInjectable({
         if (buildVersion.get() !== versionFromProxy) {
           logger.error("Proxy server responded with invalid response");
 
-          return exitApp();
+          return forceAppExit();
         }
 
         logger.info("⚡ LensProxy connection OK");
@@ -73,7 +73,7 @@ const setupLensProxyInjectable = getInjectable({
 
         showErrorPopup("Lens Proxy Error", message.join("\n\n"));
 
-        return exitApp();
+        return forceAppExit();
       }
     },
     runAfter: initializeBuildVersionInjectable,

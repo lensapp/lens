@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
 import requestSingleInstanceLockInjectable from "../features/request-single-instance-lock.injectable";
-import exitAppInjectable from "../features/exit-app.injectable";
+import forceAppExitInjectable from "../features/force-app-exit.injectable";
 
 const enforceSingleApplicationInstanceInjectable = getInjectable({
   id: "enforce-single-application-instance",
@@ -13,10 +13,10 @@ const enforceSingleApplicationInstanceInjectable = getInjectable({
   instantiate: (di) => ({
     run: () => {
       const requestSingleInstanceLock = di.inject(requestSingleInstanceLockInjectable);
-      const exitApp = di.inject(exitAppInjectable);
+      const forceAppExit = di.inject(forceAppExitInjectable);
 
       if (!requestSingleInstanceLock()) {
-        exitApp();
+        forceAppExit();
       }
 
       return undefined;

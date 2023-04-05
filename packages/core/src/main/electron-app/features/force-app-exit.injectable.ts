@@ -5,8 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import electronAppInjectable from "../electron-app.injectable";
 
-const exitAppInjectable = getInjectable({
-  id: "exit-app",
+const forceAppExitInjectable = getInjectable({
+  id: "force-app-exit",
 
   instantiate: (di) => () => {
     const app = di.inject(electronAppInjectable);
@@ -15,4 +15,4 @@ const exitAppInjectable = getInjectable({
   },
 });
 
-export default exitAppInjectable;
+export default forceAppExitInjectable;

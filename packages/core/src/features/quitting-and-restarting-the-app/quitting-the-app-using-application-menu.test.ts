@@ -6,7 +6,7 @@
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { ClusterManager } from "../../main/cluster/manager";
-import exitAppInjectable from "../../main/electron-app/features/exit-app.injectable";
+import forceAppExitInjectable from "../../main/electron-app/features/force-app-exit.injectable";
 import clusterManagerInjectable from "../../main/cluster/manager.injectable";
 import stopServicesAndExitAppInjectable from "../../main/stop-services-and-exit-app.injectable";
 import { testUsingFakeTime, advanceFakeTime } from "../../test-utils/use-fake-time";
@@ -15,7 +15,7 @@ describe("quitting the app using application menu", () => {
   describe("given application has started", () => {
     let builder: ApplicationBuilder;
     let clusterManagerStub: ClusterManager;
-    let exitAppMock: jest.Mock;
+    let forceAppExitMock: jest.Mock;
 
     beforeEach(async () => {
       testUsingFakeTime("2015-10-21T07:28:00Z");
@@ -28,8 +28,8 @@ describe("quitting the app using application menu", () => {
         clusterManagerStub = { stop: jest.fn() } as unknown as ClusterManager;
         mainDi.override(clusterManagerInjectable, () => clusterManagerStub);
 
-        exitAppMock = jest.fn();
-        mainDi.override(exitAppInjectable, () => exitAppMock);
+        forceAppExitMock = jest.fn();
+        mainDi.override(forceAppExitInjectable, () => forceAppExitMock);
       });
 
       await builder.render();
@@ -59,7 +59,7 @@ describe("quitting the app using application menu", () => {
       it("after insufficient time passes, does not terminate application yet", () => {
         advanceFakeTime(999);
 
-        expect(exitAppMock).not.toHaveBeenCalled();
+        expect(forceAppExitMock).not.toHaveBeenCalled();
       });
 
       describe("after sufficient time passes", () => {
@@ -68,7 +68,7 @@ describe("quitting the app using application menu", () => {
         });
 
         it("terminates application", () => {
-          expect(exitAppMock).toHaveBeenCalled();
+          expect(forceAppExitMock).toHaveBeenCalled();
         });
       });
     });
