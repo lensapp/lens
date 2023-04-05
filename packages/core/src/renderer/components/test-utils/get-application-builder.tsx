@@ -50,7 +50,6 @@ import createApplicationWindowInjectable from "../../../main/start-main-applicat
 import type { CreateElectronWindow } from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import createElectronWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import { applicationWindowInjectionToken } from "../../../main/start-main-application/lens-window/application-window/application-window-injection-token";
-import closeAllWindowsInjectable from "../../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
 import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { FakeExtensionOptions } from "./get-extension-fake";
 import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
@@ -330,9 +329,11 @@ export const getApplicationBuilder = () => {
     mainDi,
     applicationWindow: {
       closeAll: () => {
-        const closeAll = mainDi.inject(closeAllWindowsInjectable);
+        const lensWindows = mainDi.injectMany(applicationWindowInjectionToken);
 
-        closeAll();
+        for (const lensWindow of lensWindows) {
+          lensWindow.close();
+        }
 
         document.documentElement.innerHTML = "";
       },

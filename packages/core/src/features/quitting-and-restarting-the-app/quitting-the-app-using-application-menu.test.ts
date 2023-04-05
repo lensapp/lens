@@ -5,14 +5,13 @@
 
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import forceAppExitInjectable from "../../main/electron-app/features/force-app-exit.injectable";
-import stopServicesAndExitAppInjectable from "../../main/stop-services-and-exit-app.injectable";
-import { testUsingFakeTime, advanceFakeTime } from "../../test-utils/use-fake-time";
+import { testUsingFakeTime } from "../../test-utils/use-fake-time";
+import requestQuitOfAppInjectable from "../../main/electron-app/features/require-quit.injectable";
 
 describe("quitting the app using application menu", () => {
   describe("given application has started", () => {
     let builder: ApplicationBuilder;
-    let forceAppExitMock: jest.Mock;
+    let requestQuitOfAppMock: jest.Mock;
 
     beforeEach(async () => {
       testUsingFakeTime("2015-10-21T07:28:00Z");
@@ -20,10 +19,8 @@ describe("quitting the app using application menu", () => {
       builder = getApplicationBuilder();
 
       builder.beforeApplicationStart(({ mainDi }) => {
-        mainDi.unoverride(stopServicesAndExitAppInjectable);
-
-        forceAppExitMock = jest.fn();
-        mainDi.override(forceAppExitInjectable, () => forceAppExitMock);
+        requestQuitOfAppMock = jest.fn();
+        mainDi.override(requestQuitOfAppInjectable, () => requestQuitOfAppMock);
       });
 
       await builder.render();
@@ -40,26 +37,8 @@ describe("quitting the app using application menu", () => {
         builder.applicationMenu.click("root", "mac", "quit");
       });
 
-      it("closes all windows", () => {
-        const windows = builder.applicationWindow.getAll();
-
-        expect(windows).toEqual([]);
-      });
-
-      it("after insufficient time passes, does not terminate application yet", () => {
-        advanceFakeTime(999);
-
-        expect(forceAppExitMock).not.toHaveBeenCalled();
-      });
-
-      describe("after sufficient time passes", () => {
-        beforeEach(() => {
-          advanceFakeTime(1000);
-        });
-
-        it("terminates application", () => {
-          expect(forceAppExitMock).toHaveBeenCalled();
-        });
+      it("requests quit of application", () => {
+        expect(requestQuitOfAppMock).toBeCalled();
       });
     });
   });
