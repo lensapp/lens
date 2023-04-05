@@ -5,16 +5,13 @@
 
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
-import type { ClusterManager } from "../../main/cluster/manager";
 import forceAppExitInjectable from "../../main/electron-app/features/force-app-exit.injectable";
-import clusterManagerInjectable from "../../main/cluster/manager.injectable";
 import stopServicesAndExitAppInjectable from "../../main/stop-services-and-exit-app.injectable";
 import { testUsingFakeTime, advanceFakeTime } from "../../test-utils/use-fake-time";
 
 describe("quitting the app using application menu", () => {
   describe("given application has started", () => {
     let builder: ApplicationBuilder;
-    let clusterManagerStub: ClusterManager;
     let forceAppExitMock: jest.Mock;
 
     beforeEach(async () => {
@@ -24,9 +21,6 @@ describe("quitting the app using application menu", () => {
 
       builder.beforeApplicationStart(({ mainDi }) => {
         mainDi.unoverride(stopServicesAndExitAppInjectable);
-
-        clusterManagerStub = { stop: jest.fn() } as unknown as ClusterManager;
-        mainDi.override(clusterManagerInjectable, () => clusterManagerStub);
 
         forceAppExitMock = jest.fn();
         mainDi.override(forceAppExitInjectable, () => forceAppExitMock);
@@ -50,10 +44,6 @@ describe("quitting the app using application menu", () => {
         const windows = builder.applicationWindow.getAll();
 
         expect(windows).toEqual([]);
-      });
-
-      it("disconnects all clusters", () => {
-        expect(clusterManagerStub.stop).toHaveBeenCalled();
       });
 
       it("after insufficient time passes, does not terminate application yet", () => {
