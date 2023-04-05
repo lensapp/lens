@@ -3,23 +3,19 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../main/start-main-application/runnable-tokens/before-quit-of-back-end-injection-token";
+import { beforeQuitOfBackEndInjectionToken } from "../../main/start-main-application/runnable-tokens/phases";
 import extensionDiscoveryInjectable from "./extension-discovery.injectable";
 
 const stopWatchingExtensionsOnQuitInjectable = getInjectable({
   id: "stop-watching-extensions-on-quit",
 
-  instantiate: (di) => {
-    const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
+  instantiate: (di) => ({
+    run: async () => {
+      const extensionDiscovery = di.inject(extensionDiscoveryInjectable);
 
-    return {
-      id: "stop-watching-extensions-on-quit",
-
-      run: async () => {
-        await extensionDiscovery.stopWatchingExtensions();
-      },
-    };
-  },
+      await extensionDiscovery.stopWatchingExtensions();
+    },
+  }),
 
   injectionToken: beforeQuitOfBackEndInjectionToken,
 });
