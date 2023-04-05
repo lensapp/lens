@@ -10,8 +10,8 @@ export const afterQuitOfFrontEndInjectionToken = getInjectionToken<RunnableSync>
   id: "after-quit-of-front-end",
 });
 
-export const beforeQuitOfBackEndInjectionToken = getInjectionToken<Runnable>({
-  id: "before-quit-of-back-end",
+export const onQuitOfBackEndInjectionToken = getInjectionToken<Runnable>({
+  id: "on-quit-of-back-end",
 });
 
 export const afterWindowIsOpenedInjectionToken = getInjectionToken<Runnable>({

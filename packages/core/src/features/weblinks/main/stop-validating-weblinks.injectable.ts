@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../../main/start-main-application/runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../../../main/start-main-application/runnable-tokens/phases";
 import weblinkVerificationStartableStoppableInjectable from "./weblink-verification.injectable";
 
 const stopValidatingWeblinksInjectable = getInjectable({
@@ -15,7 +15,7 @@ const stopValidatingWeblinksInjectable = getInjectable({
       weblinkVerificationStartableStoppable.stop();
     },
   }),
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default stopValidatingWeblinksInjectable;

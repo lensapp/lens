@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import extensionInjectable from "../../../../extensions/extension-loader/extension/extension.injectable";
 import extensionsInjectable from "../../../../extensions/extensions.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../../../main/start-main-application/runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../../../../main/start-main-application/runnable-tokens/phases";
 
 const stopAllExtensionsInjectable = getInjectable({
   id: "stop-all-extensions",
@@ -21,7 +21,7 @@ const stopAllExtensionsInjectable = getInjectable({
       }
     },
   }),
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default stopAllExtensionsInjectable;

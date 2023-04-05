@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
 import lensProtocolRouterMainInjectable from "../../protocol-handler/lens-protocol-router-main/lens-protocol-router-main.injectable";
 
 const cleanUpDeepLinkingInjectable = getInjectable({
@@ -17,7 +17,7 @@ const cleanUpDeepLinkingInjectable = getInjectable({
     },
   }),
 
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default cleanUpDeepLinkingInjectable;

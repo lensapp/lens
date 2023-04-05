@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { loggerTransportInjectionToken } from "../../common/logger/transports";
 import winstonLoggerInjectable from "../../common/winston-logger.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../start-main-application/runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../start-main-application/runnable-tokens/phases";
 
 const closeLoggerOnQuitInjectable = getInjectable({
   id: "close-file-transport-on-quit",
@@ -21,7 +21,7 @@ const closeLoggerOnQuitInjectable = getInjectable({
       }
     },
   }),
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default closeLoggerOnQuitInjectable;

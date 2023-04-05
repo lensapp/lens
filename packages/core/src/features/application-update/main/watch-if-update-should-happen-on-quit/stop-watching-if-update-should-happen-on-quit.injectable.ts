@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import watchIfUpdateShouldHappenOnQuitInjectable from "./watch-if-update-should-happen-on-quit.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../../../main/start-main-application/runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../../../../main/start-main-application/runnable-tokens/phases";
 
 const stopWatchingIfUpdateShouldHappenOnQuitInjectable = getInjectable({
   id: "stop-watching-if-update-should-happen-on-quit",
@@ -17,7 +17,7 @@ const stopWatchingIfUpdateShouldHappenOnQuitInjectable = getInjectable({
     },
   }),
 
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default stopWatchingIfUpdateShouldHappenOnQuitInjectable;

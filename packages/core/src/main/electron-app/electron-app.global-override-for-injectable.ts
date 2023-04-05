@@ -6,16 +6,16 @@
 import { kebabCase } from "lodash";
 import { getGlobalOverride } from "@k8slens/test-utils";
 import electronAppInjectable from "./electron-app.injectable";
+import EventEmitter from "events";
 
 export default getGlobalOverride(electronAppInjectable, () => {
   const commandLineArgs: string[] = [];
   const chromiumArgs = new Map<string, string | undefined>();
   const appPaths = new Map<string, string>();
 
-  const app = ({
+  const app = Object.assign(new EventEmitter(), {
     getVersion: () => "6.0.0",
     setLoginItemSettings: () => { },
-    on: () => app,
     whenReady: async () => {},
     getPath: (name) => appPaths.get(name) ?? `/some-directory-for-${kebabCase(name)}`,
     setPath: (name, value) => appPaths.set(name, value),

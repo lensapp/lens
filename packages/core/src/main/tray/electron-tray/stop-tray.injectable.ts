@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronTrayInjectable from "./electron-tray.injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
 import stopReactiveTrayMenuItemsInjectable from "../reactive-tray-menu-items/stop-reactive-tray-menu-items.injectable";
 
 const stopTrayInjectable = getInjectable({
@@ -19,7 +19,7 @@ const stopTrayInjectable = getInjectable({
     runAfter: stopReactiveTrayMenuItemsInjectable,
   }),
 
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default stopTrayInjectable;
