@@ -15,7 +15,6 @@ import setupDeepLinkingInjectable from "./electron-app/runnables/setup-deep-link
 import setupMainWindowVisibilityAfterActivationInjectable from "./electron-app/runnables/setup-main-window-visibility-after-activation.injectable";
 import setupDeviceShutdownInjectable from "./electron-app/runnables/setup-device-shutdown.injectable";
 import setupApplicationNameInjectable from "./electron-app/runnables/setup-application-name.injectable";
-import setupRunnablesBeforeClosingOfApplicationInjectable from "./electron-app/runnables/setup-runnables-before-closing-of-application.injectable";
 import { runInAction } from "mobx";
 import broadcastMessageInjectable from "../common/ipc/broadcast-message.injectable";
 import electronQuitAndInstallUpdateInjectable from "./electron-app/features/electron-quit-and-install-update.injectable";
@@ -104,7 +103,6 @@ const overrideElectronFeatures = (di: DiContainer) => {
     setupDeviceShutdownInjectable,
     setupDeepLinkingInjectable,
     setupApplicationNameInjectable,
-    setupRunnablesBeforeClosingOfApplicationInjectable,
   ].forEach((injectable) => {
     di.override(injectable, () => ({
       id: injectable.id,
