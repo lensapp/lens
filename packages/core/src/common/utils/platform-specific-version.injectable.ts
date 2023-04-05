@@ -17,17 +17,11 @@ const platformSpecificVersionInjectable = getInjectable({
   instantiate: (di: DiContainerForInjection) => {
     const targetPlatform = di.inject(platformInjectable);
 
-    return <T>(token: InjectionToken<PlatformSpecific<T>, void>) => {
-      const impls = di.injectMany(token);
-
-      const impl = impls.find(impl => impl.platform === targetPlatform);
-
-      if (!impl) {
-        throw new Error(`No platform specific implementation of "${token.id}" found`);
-      }
-
-      return impl.instantiate();
-    };
+    return <T>(token: InjectionToken<PlatformSpecific<T>, void>) => (
+      di.injectMany(token)
+        .find(impl => impl.platform === targetPlatform)
+        ?.instantiate()
+    );
   },
 });
 
