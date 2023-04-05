@@ -711,6 +711,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    Hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#table-of-contents" class="md-nav__link">
     Table of contents
   </a>
@@ -767,6 +774,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#publishconfig" class="md-nav__link">
+    publishConfig
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#renderer" class="md-nav__link">
     renderer
   </a>
@@ -809,6 +823,11 @@
 
 <h1 id="interface-lensextensionmanifest">Interface: LensExtensionManifest<a class="headerlink" href="#interface-lensextensionmanifest" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Common/">Common</a>.LensExtensionManifest</p>
+<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
+<ul>
+<li><code>BundledLensExtensionManifest</code></li>
+</ul>
+<p>↳ <strong><code>LensExtensionManifest</code></strong></p>
 <h2 id="table-of-contents">Table of contents<a class="headerlink" href="#table-of-contents" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
@@ -816,6 +835,7 @@
 <li><a href="./#engines">engines</a></li>
 <li><a href="./#main">main</a></li>
 <li><a href="./#name">name</a></li>
+<li><a href="./#publishconfig">publishConfig</a></li>
 <li><a href="./#renderer">renderer</a></li>
 <li><a href="./#storename">storeName</a></li>
 <li><a href="./#version">version</a></li>
@@ -823,11 +843,15 @@
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="description">description<a class="headerlink" href="#description" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>description</strong>: <code>string</code></p>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">#</a></h4>
+<p>BundledLensExtensionManifest.description</p>
 <hr />
 <h3 id="engines">engines<a class="headerlink" href="#engines" title="Permanent link">#</a></h3>
 <p>• <strong>engines</strong>: <code>Object</code></p>
 <p>Supported Lens version engine by extension could be defined in <code>manifest.engines.lens</code>
 Only MAJOR.MINOR version is taken in consideration.</p>
+<h4 id="index-signature">Index signature<a class="headerlink" href="#index-signature" title="Permanent link">#</a></h4>
+<p>▪ [x: <code>string</code>]: <code>string</code> | <code>undefined</code></p>
 <h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">#</a></h4>
 <table>
 <thead>
@@ -841,14 +865,6 @@ Only MAJOR.MINOR version is taken in consideration.</p>
 <td align="left"><code>lens</code></td>
 <td align="left"><code>string</code></td>
 </tr>
-<tr>
-<td align="left"><code>node?</code></td>
-<td align="left"><code>string</code></td>
-</tr>
-<tr>
-<td align="left"><code>npm?</code></td>
-<td align="left"><code>string</code></td>
-</tr>
 </tbody>
 </table>
 <hr />
@@ -857,6 +873,13 @@ Only MAJOR.MINOR version is taken in consideration.</p>
 <hr />
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
 <p>• <strong>name</strong>: <code>string</code></p>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">#</a></h4>
+<p>BundledLensExtensionManifest.name</p>
+<hr />
+<h3 id="publishconfig">publishConfig<a class="headerlink" href="#publishconfig" title="Permanent link">#</a></h3>
+<p>• <code>Optional</code> <strong>publishConfig</strong>: <code>Partial</code>&lt;<code>Record</code>&lt;<code>string</code>, <code>string</code>>></p>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">#</a></h4>
+<p>BundledLensExtensionManifest.publishConfig</p>
 <hr />
 <h3 id="renderer">renderer<a class="headerlink" href="#renderer" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>renderer</strong>: <code>string</code></p>
@@ -865,9 +888,13 @@ Only MAJOR.MINOR version is taken in consideration.</p>
 <p>• <code>Optional</code> <strong>storeName</strong>: <code>string</code></p>
 <p>Specify extension name used for persisting data.
 Useful if extension is renamed but the data should not be lost.</p>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">#</a></h4>
+<p>BundledLensExtensionManifest.storeName</p>
 <hr />
 <h3 id="version">version<a class="headerlink" href="#version" title="Permanent link">#</a></h3>
 <p>• <strong>version</strong>: <code>string</code></p>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">#</a></h4>
+<p>BundledLensExtensionManifest.version</p>
 
 
   

@@ -691,11 +691,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.InstalledExtension/</loc>
-         <lastmod>2023-04-05</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://api-docs.k8slens.dev/master/extensions/api/interfaces/Common.LensExtensionManifest/</loc>
          <lastmod>2023-04-05</lastmod>
          <changefreq>daily</changefreq>
