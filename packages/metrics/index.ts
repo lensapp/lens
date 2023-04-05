@@ -54,6 +54,10 @@ export const namespaceDetailsMetricsInjectionToken = getInjectionToken<KubeObjec
   id: "namespace-details-metrics-injection-token",
 });
 
+export const jobDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
+  id: "job-details-metrics-injection-token",
+});
+
 export interface PodDetailsContainerMetricsComponentProps {
   container: any;
   pod: any;
