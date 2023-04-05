@@ -3,10 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getFeature } from "@k8slens/feature-core";
-import { clusterOverviewUIBlockInjectionToken, deploymentDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken } from "@k8slens/metrics";
+import { clusterOverviewUIBlockInjectionToken, deploymentDetailsMetricsInjectionToken, nodeDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken } from "@k8slens/metrics";
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterMetrics } from "../../renderer/components/+cluster/cluster-metrics";
 import { ClusterPieCharts } from "../../renderer/components/+cluster/cluster-pie-charts";
+import { NodeMetricsDetailsComponent } from "../../renderer/components/+nodes/metrics-details-component";
 import { DeploymentMetricsDetailsComponent } from "../../renderer/components/+workloads-deployments/metrics-details-component";
 import { PodDetailsContainerMetrics } from "../../renderer/components/+workloads-pods/pod-details-container-metrics";
 import PodMetricsDetailsComponent from "../../renderer/components/+workloads-pods/pod-metrics-details-component";
@@ -53,8 +54,6 @@ const deploymentDetailsMetricsInjectable = getInjectable({
   injectionToken: deploymentDetailsMetricsInjectionToken,
 });
 
-console.log(deploymentDetailsMetricsInjectable);
-
 const podDetailsContainerMetricsInjectable = getInjectable({
   id: "pod-details-container-metrics-injectable",
   instantiate: () => ({
@@ -62,6 +61,15 @@ const podDetailsContainerMetricsInjectable = getInjectable({
     Component: PodDetailsContainerMetrics,
   }),
   injectionToken: podDetailsContainerMetricsInjectionToken,
+});
+
+const nodeDetailsMetricsInjectable = getInjectable({
+  id: "node-details-metrics-injectable",
+  instantiate: () => ({
+    id: "node-details-metrics",
+    Component: NodeMetricsDetailsComponent,
+  }),
+  injectionToken: nodeDetailsMetricsInjectionToken,
 });
 
 export const metricsFeature = getFeature({
@@ -74,5 +82,6 @@ export const metricsFeature = getFeature({
     di.register(podDetailsMetricsInjectable);
     di.register(podDetailsContainerMetricsInjectable);
     di.register(deploymentDetailsMetricsInjectable);
+    di.register(nodeDetailsMetricsInjectable);
   },
 });

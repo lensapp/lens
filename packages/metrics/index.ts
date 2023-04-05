@@ -33,6 +33,10 @@ export const deploymentDetailsMetricsInjectionToken = getInjectionToken<KubeObje
   id: "deployment-details-metrics-injection-token",
 });
 
+export const nodeDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
+  id: "node-details-metrics-injection-token",
+});
+
 export interface PodDetailsContainerMetricsComponentProps {
   container: any;
   pod: any;
