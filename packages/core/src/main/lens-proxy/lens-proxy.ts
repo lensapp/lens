@@ -18,6 +18,7 @@ import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injecta
 import type { Logger } from "../../common/logger";
 import type { SelfSignedCert } from "selfsigned";
 import type { KubeAuthProxyServer } from "../cluster/kube-auth-proxy-server.injectable";
+import stoppable from "stoppable";
 
 export type GetClusterForRequest = (req: http.IncomingMessage) => Cluster | undefined;
 export type ServerIncomingMessage = SetRequired<http.IncomingMessage, "url" | "method">;
@@ -65,14 +66,14 @@ const disallowedPorts = new Set([
 ]);
 
 export class LensProxy {
-  protected proxyServer: https.Server;
+  protected readonly proxyServer: https.Server & stoppable.WithStop;
   protected closed = false;
-  protected retryCounters = new Map<string, number>();
+  protected readonly retryCounters = new Map<string, number>();
 
   constructor(private readonly dependencies: Dependencies) {
     this.configureProxy(dependencies.proxy);
 
-    this.proxyServer = https.createServer(
+    this.proxyServer = stoppable(https.createServer(
       {
         key: dependencies.certificate.private,
         cert: dependencies.certificate.cert,
@@ -80,7 +81,7 @@ export class LensProxy {
       (req, res) => {
         this.handleRequest(req as ServerIncomingMessage, res);
       },
-    );
+    ), 500);
 
     this.proxyServer
       .on("upgrade", (req: ServerIncomingMessage, socket: net.Socket, head: Buffer) => {
@@ -175,7 +176,7 @@ export class LensProxy {
     this.dependencies.logger.info("[LENS-PROXY]: Closing server");
 
     return new Promise<void>((resolve) => {
-      this.proxyServer.close(() => resolve());
+      this.proxyServer.stop(() => resolve());
     });
   }
 
