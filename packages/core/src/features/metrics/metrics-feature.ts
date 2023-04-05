@@ -3,10 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getFeature } from "@k8slens/feature-core";
-import { clusterOverviewUIBlockInjectionToken, deploymentDetailsMetricsInjectionToken, nodeDetailsMetricsInjectionToken, persistentVolumeClaimDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken, replicaSetDetailsMetricsInjectionToken, statefulSetDetailsMetricsInjectionToken } from "@k8slens/metrics";
+import { clusterOverviewUIBlockInjectionToken, deploymentDetailsMetricsInjectionToken, namespaceDetailsMetricsInjectionToken, nodeDetailsMetricsInjectionToken, persistentVolumeClaimDetailsMetricsInjectionToken, podDetailsContainerMetricsInjectionToken, podDetailsMetricsInjectionToken, replicaSetDetailsMetricsInjectionToken, statefulSetDetailsMetricsInjectionToken } from "@k8slens/metrics";
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterMetrics } from "../../renderer/components/+cluster/cluster-metrics";
 import { ClusterPieCharts } from "../../renderer/components/+cluster/cluster-pie-charts";
+import { NamespaceMetricsDetailsComponent } from "../../renderer/components/+namespaces/metrics-details-component";
 import { NodeMetricsDetailsComponent } from "../../renderer/components/+nodes/metrics-details-component";
 import { PersistentVolumeClaimMetricsDetailsComponent } from "../../renderer/components/+storage-volume-claims/metrics-details-component";
 import { DeploymentMetricsDetailsComponent } from "../../renderer/components/+workloads-deployments/metrics-details-component";
@@ -102,6 +103,15 @@ const statefulSetDetailsMetricsInjectable = getInjectable({
   injectionToken: statefulSetDetailsMetricsInjectionToken,
 });
 
+const namespaceDetailsMetricsInjectable = getInjectable({
+  id: "namespace-details-metrics-injectable",
+  instantiate: () => ({
+    id: "namespace-details-metrics",
+    Component: NamespaceMetricsDetailsComponent,
+  }),
+  injectionToken: namespaceDetailsMetricsInjectionToken,
+});
+
 export const metricsFeature = getFeature({
   id: "core-metrics-feature",
 
@@ -116,5 +126,6 @@ export const metricsFeature = getFeature({
     di.register(replicaSetDetailsMetricsInjectable);
     di.register(persistentVolumeClaimDetailsMetricsInjectable);
     di.register(statefulSetDetailsMetricsInjectable);
+    di.register(namespaceDetailsMetricsInjectable);
   },
 });

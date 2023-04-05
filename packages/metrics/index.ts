@@ -50,6 +50,10 @@ export const statefulSetDetailsMetricsInjectionToken = getInjectionToken<KubeObj
   id: "stateful-set-details-metrics-injection-token",
 });
 
+export const namespaceDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
+  id: "namespace-details-metrics-injection-token",
+});
+
 export interface PodDetailsContainerMetricsComponentProps {
   container: any;
   pod: any;
