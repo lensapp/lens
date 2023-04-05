@@ -67,8 +67,8 @@ const webpackLensMain = (): webpack.Configuration => {
     },
     plugins: [
       new DefinePlugin({
-        CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
-        CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
+        CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable\\.tsx?$/`,
+        CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable\\.tsx?$/`,
       }),
       new ForkTsCheckerPlugin({
         typescript: {

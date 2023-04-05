@@ -70,10 +70,10 @@ const getInjectables = (environment: "renderer" | "main", filePathGlob: string) 
 global.injectablePaths = {
   renderer: {
     globalOverridePaths: getInjectables("renderer", "*.global-override-for-injectable.{ts,tsx}"),
-    paths: getInjectables("renderer", "*.{injectable,injectable.testing-env}.{ts,tsx}"),
+    paths: getInjectables("renderer", "*.injectable.{ts,tsx}"),
   },
   main: {
     globalOverridePaths: getInjectables("main", "*.global-override-for-injectable.{ts,tsx}"),
-    paths: getInjectables("main", "*.{injectable,injectable.testing-env}.{ts,tsx}"),
+    paths: getInjectables("main", "*.injectable.{ts,tsx}"),
   },
 };
