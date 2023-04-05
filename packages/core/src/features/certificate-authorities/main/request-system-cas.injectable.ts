@@ -8,7 +8,12 @@ import { platformSpecificRequestSystemCAsInjectionToken, requestSystemCAsInjecti
 
 const requestSystemCAsInjectable = getInjectable({
   id: "request-system-cas",
-  instantiate: (di) => di.inject(platformSpecificVersionInjectable)(platformSpecificRequestSystemCAsInjectionToken),
+  instantiate: (di) => {
+    const platformSpecificVersion = di.inject(platformSpecificVersionInjectable);
+    const platformSpecificRequestSystemCAs = platformSpecificVersion(platformSpecificRequestSystemCAsInjectionToken);
+
+    return platformSpecificRequestSystemCAs ?? (async () => []);
+  },
   injectionToken: requestSystemCAsInjectionToken,
 });
 
