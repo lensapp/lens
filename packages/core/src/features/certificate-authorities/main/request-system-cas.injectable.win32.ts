@@ -23,7 +23,7 @@ const pemEncoding = (hexEncodedCert: String) => {
 const requestSystemCAsInjectable = getInjectable({
   id: "request-system-cas",
   instantiate: (di) => {
-    const wincaRootsExePath: string = __non_webpack_require__.resolve("win-ca/lib/roots.exe");
+    const winCARootsExePath: string = __non_webpack_require__.resolve("win-ca/lib/roots.exe");
     const execFile = di.inject(execFileInjectable);
     const logger = di.inject(loggerInjectable);
 
@@ -32,12 +32,12 @@ const requestSystemCAsInjectable = getInjectable({
        * This needs to be done manually because for some reason calling the api from "win-ca"
        * directly fails to load "child_process" correctly on renderer
        */
-      const result = await execFile(wincaRootsExePath, {
+      const result = await execFile(winCARootsExePath, {
         maxBuffer: 128 * 1024 * 1024, // 128 MiB
       });
 
       if (!result.callWasSuccessful) {
-        logger.warn(`[INJECT-CAS]: Error retreiving CAs`, result.error);
+        logger.warn(`[INJECT-CAS]: Error retrieving CAs`, result.error);
 
         return [];
       }
