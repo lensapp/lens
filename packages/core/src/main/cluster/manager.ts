@@ -226,14 +226,6 @@ export class ClusterManager {
         )),
     );
   };
-
-  stop() {
-    for (const cluster of this.dependencies.clusters.get()) {
-      this.dependencies
-        .getClusterConnection(cluster)
-        .disconnect();
-    }
-  }
 }
 
 export function catalogEntityFromCluster(cluster: Cluster) {
