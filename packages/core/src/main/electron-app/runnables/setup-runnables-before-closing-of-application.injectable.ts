@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeElectronIsReadyInjectionToken } from "@k8slens/application-for-electron-main";
-import { beforeQuitOfFrontEndInjectionToken, beforeQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
+import { afterQuitOfFrontEndInjectionToken, onQuitOfBackEndInjectionToken } from "../../start-main-application/runnable-tokens/phases";
 import electronAppInjectable from "../electron-app.injectable";
 import isIntegrationTestingInjectable from "../../../common/vars/is-integration-testing.injectable";
 import autoUpdaterInjectable from "../features/auto-updater.injectable";
@@ -17,8 +17,8 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
     run: () => {
       const runManySync = runManySyncFor(di);
       const runMany = runManyFor(di);
-      const runRunnablesBeforeQuitOfFrontEnd = runManySync(beforeQuitOfFrontEndInjectionToken);
-      const runRunnablesBeforeQuitOfBackEnd = runMany(beforeQuitOfBackEndInjectionToken);
+      const runAfterQuitOfFrontEnd = runManySync(afterQuitOfFrontEndInjectionToken);
+      const runOnQuitOfBackEnd = runMany(onQuitOfBackEndInjectionToken);
       const app = di.inject(electronAppInjectable);
       const isIntegrationTesting = di.inject(isIntegrationTestingInjectable);
       const autoUpdater = di.inject(autoUpdaterInjectable);
@@ -29,7 +29,7 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
       });
 
       app.on("will-quit", () => {
-        runRunnablesBeforeQuitOfFrontEnd();
+        runAfterQuitOfFrontEnd();
 
         let isAsyncQuitting = false;
 
@@ -42,7 +42,7 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
 
           void (async () => {
             try {
-              await runRunnablesBeforeQuitOfBackEnd();
+              await runOnQuitOfBackEnd();
             } catch (error) {
               console.error("A beforeQuitOfBackEnd failed!!!!", error);
               exitCode = 1;
@@ -53,7 +53,7 @@ const setupRunnablesBeforeClosingOfApplicationInjectable = getInjectable({
         };
 
         app.on("will-quit", (event) => {
-          runRunnablesBeforeQuitOfFrontEnd();
+          runAfterQuitOfFrontEnd();
           event.preventDefault();
 
           if (isIntegrationTesting || isAutoUpdating) {

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeQuitOfFrontEndInjectionToken } from "../../../start-main-application/runnable-tokens/phases";
+import { afterQuitOfFrontEndInjectionToken } from "../../../start-main-application/runnable-tokens/phases";
 import electronAppInjectable from "../../electron-app.injectable";
 import { isEmpty } from "lodash/fp";
 import getVisibleWindowsInjectable from "../../../start-main-application/lens-window/get-visible-windows.injectable";
@@ -25,7 +25,7 @@ const hideDockForLastClosedWindowInjectable = getInjectable({
     },
   }),
 
-  injectionToken: beforeQuitOfFrontEndInjectionToken,
+  injectionToken: afterQuitOfFrontEndInjectionToken,
 });
 
 export default hideDockForLastClosedWindowInjectable;

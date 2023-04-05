@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../../runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../../runnable-tokens/phases";
 import kubeconfigSyncManagerInjectable from "../../../catalog-sources/kubeconfig-sync/manager.injectable";
 
 const stopKubeConfigSyncInjectable = getInjectable({
@@ -19,7 +19,7 @@ const stopKubeConfigSyncInjectable = getInjectable({
     },
   }),
 
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default stopKubeConfigSyncInjectable;

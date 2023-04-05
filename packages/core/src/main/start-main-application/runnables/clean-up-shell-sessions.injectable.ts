@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeQuitOfBackEndInjectionToken } from "../runnable-tokens/phases";
+import { onQuitOfBackEndInjectionToken } from "../runnable-tokens/phases";
 import shellSessionProcessesInjectable from "../../shell-session/processes.injectable";
 import prefixedLoggerInjectable from "../../../common/logger/prefixed-logger.injectable";
 
@@ -31,7 +31,7 @@ const cleanUpShellSessionsInjectable = getInjectable({
     },
   }),
 
-  injectionToken: beforeQuitOfBackEndInjectionToken,
+  injectionToken: onQuitOfBackEndInjectionToken,
 });
 
 export default cleanUpShellSessionsInjectable;

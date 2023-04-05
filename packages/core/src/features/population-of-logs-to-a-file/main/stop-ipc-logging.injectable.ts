@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { beforeQuitOfFrontEndInjectionToken } from "../../../main/start-main-application/runnable-tokens/phases";
+import { afterQuitOfFrontEndInjectionToken } from "../../../main/start-main-application/runnable-tokens/phases";
 import ipcFileLoggerInjectable from "./ipc-file-logger.injectable";
 
 const stopIpcLoggingInjectable = getInjectable({
@@ -21,7 +21,7 @@ const stopIpcLoggingInjectable = getInjectable({
     };
   },
 
-  injectionToken: beforeQuitOfFrontEndInjectionToken,
+  injectionToken: afterQuitOfFrontEndInjectionToken,
 });
 
 export default stopIpcLoggingInjectable;
