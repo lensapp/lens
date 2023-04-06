@@ -41,10 +41,9 @@ export const replicaSetDetailsMetricsInjectionToken = getInjectionToken<KubeObje
   id: "replica-set-details-metrics-injection-token",
 });
 
-export const persistentVolumeClaimDetailsMetricsInjectionToken =
-  getInjectionToken<KubeObjectDetailMetrics>({
-    id: "persistent-volume-claim-details-metrics-injection-token",
-  });
+export const persistentVolumeClaimDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
+  id: "persistent-volume-claim-details-metrics-injection-token",
+});
 
 export const statefulSetDetailsMetricsInjectionToken = getInjectionToken<KubeObjectDetailMetrics>({
   id: "stateful-set-details-metrics-injection-token",
@@ -76,7 +75,6 @@ export interface PodDetailsContainerMetricsComponent {
   Component: React.ComponentType<PodDetailsContainerMetricsComponentProps>;
 }
 
-export const podDetailsContainerMetricsInjectionToken =
-  getInjectionToken<PodDetailsContainerMetricsComponent>({
-    id: "pod-details-container-metrics-injection-token",
-  });
+export const podDetailsContainerMetricsInjectionToken = getInjectionToken<PodDetailsContainerMetricsComponent>({
+  id: "pod-details-container-metrics-injection-token",
+});
