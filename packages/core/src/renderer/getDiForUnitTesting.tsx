@@ -5,7 +5,7 @@
 
 import { noop, chunk } from "lodash/fp";
 import type { Injectable } from "@ogre-tools/injectable";
-import { createContainer, isInjectable, getInjectable } from "@ogre-tools/injectable";
+import { createContainer, isInjectable } from "@ogre-tools/injectable";
 import { Environments, setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import requestFromChannelInjectable from "./utils/channel/request-from-channel.injectable";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
@@ -18,8 +18,6 @@ import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.injectable";
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import type { GlobalOverride } from "../common/test-utils/get-global-override";
-import applicationInformationInjectable from "../common/vars/application-information-injectable";
-import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
 
 export const getDiForUnitTesting = (
   opts: { doGeneralOverrides?: boolean } = {},
@@ -27,12 +25,6 @@ export const getDiForUnitTesting = (
   const { doGeneralOverrides = false } = opts;
 
   const di = createContainer("renderer");
-
-  di.register(getInjectable({
-    id: "node-env",
-    instantiate: () => "production",
-    injectionToken: nodeEnvInjectionToken,
-  }));
 
   di.preventSideEffects();
 
@@ -47,7 +39,6 @@ export const getDiForUnitTesting = (
 
   runInAction(() => {
     registerMobX(di);
-    di.register(applicationInformationInjectable);
 
     chunk(100)(injectables).forEach((chunkInjectables) => {
       di.register(...chunkInjectables);
