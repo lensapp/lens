@@ -14,7 +14,9 @@ import { messagingFeatureForMain } from "@k8slens/messaging-for-main";
 
 const environment = "main";
 
-const di = createContainer(environment);
+const di = createContainer(environment, {
+  detectCycles: false,
+});
 
 registerMobX(di);
 

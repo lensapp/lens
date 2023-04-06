@@ -21,7 +21,9 @@ import { reactApplicationFeature } from "@k8slens/react-application";
 
 const environment = "renderer";
 
-const di = createContainer(environment);
+const di = createContainer(environment, {
+  detectCycles: false,
+});
 
 runInAction(() => {
   registerMobX(di);
