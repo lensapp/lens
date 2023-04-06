@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { getGlobalOverride } from "@k8slens/test-utils";
+import { getGlobalOverride } from "../../../common/test-utils/get-global-override";
 import requestSystemCAsInjectable from "./request-system-cas.injectable";
 
 export default getGlobalOverride(requestSystemCAsInjectable, () => async () => []);

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { nodeEnvInjectionToken } from "../main/library";
+import nodeEnvInjectionToken from "../common/vars/node-env-injection-token";
 
 const nodeEnvForTestingEnvInjectable = getInjectable({
   id: "node-env-for-testing-env",

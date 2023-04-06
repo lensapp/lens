@@ -4,7 +4,7 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import { applicationInformationToken } from "@k8slens/application";
+import { applicationInformationToken } from "../common/vars/application-information-token";
 
 export const applicationInformationFakeInjectable = getInjectable({
   id: "application-information-fake",
@@ -14,15 +14,19 @@ export const applicationInformationFakeInjectable = getInjectable({
     productName: "some-product-name",
     version: "6.0.0",
     updatingIsEnabled: false,
-    k8sProxyVersion: "0.2.1",
-    bundledKubectlVersion: "1.23.3",
-    bundledHelmVersion: "3.7.2",
-    sentryDsn: "",
-    contentSecurityPolicy: "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
-    welcomeRoute: "/welcome",
     copyright: "some-copyright-information",
     description: "some-descriptive-text",
     dependencies: {},
+    build: {},
+
+    config: {
+      welcomeRoute: "/welcome",
+      bundledKubectlVersion: "1.23.3",
+      bundledHelmVersion: "3.7.2",
+      k8sProxyVersion: "0.2.1",
+      sentryDsn: "",
+      contentSecurityPolicy: "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
+    }
   }),
 
   injectionToken: applicationInformationToken,
