@@ -155,6 +155,10 @@ interface MutatingWebhook {
   // needs to run. This should be false when the webhook only applies to resources that have
   // the sideEffects field set to None. Defaults to true.
   sideEffects?: string;
+
+  // reinvocationPolicy indicates whether this webhook should be called multiple times as part of a
+  // single admission evaluation. Allowed values are "Never" and "IfNeeded"
+  reinvocationPolicy?: "Never" | "IfNeeded";
 }
 
 interface ServiceReference {
