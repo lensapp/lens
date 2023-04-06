@@ -92,8 +92,8 @@ const externalActions = ["open-link-in-browser"];
 
 const terminal = ["create-terminal-tab"];
 
-const telemetryWhiteListForFunctionsInjectable = getInjectable({
-  id: "telemetry-white-list-for-functions",
+const telemetryWhiteListForParameterlessFunctionsInjectable = getInjectable({
+  id: "telemetry-white-list-for-parameterless-functions",
   instantiate: () => new Set([
     ...navigateTo,
     ...helmInjectableIds,
@@ -105,4 +105,4 @@ const telemetryWhiteListForFunctionsInjectable = getInjectable({
   decorable: false,
 });
 
-export default telemetryWhiteListForFunctionsInjectable;
+export default telemetryWhiteListForParameterlessFunctionsInjectable;

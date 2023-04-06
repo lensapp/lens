@@ -3,6 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, createInstantiationTargetDecorator, instantiationDecoratorToken } from "@ogre-tools/injectable";
+import { pick } from "lodash";
 import { parseKubeApi } from "../../../common/k8s-api/kube-api-parse";
 import showDetailsInjectable from "../../../renderer/components/kube-detail-params/show-details.injectable";
 import emitTelemetryInjectable from "./emit-telemetry.injectable";
@@ -16,17 +17,26 @@ const telemetryDecoratorForShowDetailsInjectable = getInjectable({
       const showDetails = instantiate(di);
 
       return (...args) => {
-        emitTelemetry({
-          action: showDetailsInjectable.id,
-          params: {
-            kind: (() => {
+        const params = args[0]
+          ? {
+            action: "open",
+            ...(() => {
               try {
-                return parseKubeApi(args[0] || "").resource;
-              } catch {
-                return "";
+                return {
+                  resource: pick(parseKubeApi(args[0]), "apiPrefix", "apiVersion", "apiGroup", "namespace", "resource", "name"),
+                };
+              } catch (error) {
+                return { error: `${error}` };
               }
             })(),
-          },
+          }
+          : {
+            action: "close",
+          };
+
+        emitTelemetry({
+          action: showDetailsInjectable.id,
+          params,
         });
 
         return showDetails(...args);
