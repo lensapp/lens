@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { workloadsSidebarItemId } from "../+workloads/workloads-sidebar-items.injectable";
 import { sidebarItemsInjectionToken } from "../layout/sidebar-items.injectable";
 import routeIsActiveInjectable from "../../routes/route-is-active.injectable";
 import mutatingWebhookConfigurationsRouteInjectable
   from "../../../common/front-end-routing/routes/cluster/config/mutating-webhook-configurations/mutating-webhook-configurations-route.injectable";
 import navigateToMutatingWebhookConfigurationsInjectable
   from "../../../common/front-end-routing/routes/cluster/config/mutating-webhook-configurations/navigate-to-mutating-webhook-configurations.injectable";
+import { configSidebarItemId } from "../+config/config-sidebar-items.injectable";
 
 const mutatingWebhookConfigurationsSidebarItemsInjectable = getInjectable({
   id: "mutating-webhook-configurations-sidebar-items",
@@ -23,7 +23,7 @@ const mutatingWebhookConfigurationsSidebarItemsInjectable = getInjectable({
     return computed(() => [
       {
         id: "mutating-webhook-configurations",
-        parentId: workloadsSidebarItemId,
+        parentId: configSidebarItemId,
         title: "Mutating Webhook Configs",
         onClick: navigateToPage,
         isActive: routeIsActive,
