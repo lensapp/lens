@@ -2,16 +2,16 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { injectionDecoratorToken, getInjectable } from "@ogre-tools/injectable";
+import { getInjectable, instantiationDecoratorToken, createInstantiationTargetDecorator } from "@ogre-tools/injectable";
 import assert from "assert";
 import emitTelemetryInjectable from "./emit-telemetry.injectable";
-import telemetryWhiteListForFunctionsInjectable from "./telemetry-white-list-for-functions.injectable";
+import telemetryWhiteListForParameterlessFunctionsInjectable from "./telemetry-white-list-for-parameterless-functions.injectable";
 import { isFunction } from "@k8slens/utilities";
 
 const basicTelemetryDecoratorInjectable = getInjectable({
   id: "basic-telemetry-decorator",
 
-  instantiate: (diForDecorator) => ({
+  instantiate: (diForDecorator) => createInstantiationTargetDecorator({
     decorate: (instantiateToBeDecorated) =>
       (di, instantiationParameter) => {
         const instance = instantiateToBeDecorated(di, instantiationParameter);
@@ -23,7 +23,7 @@ const basicTelemetryDecoratorInjectable = getInjectable({
             assert(currentContext);
 
             const emitTelemetry = diForDecorator.inject(emitTelemetryInjectable);
-            const whiteList = diForDecorator.inject(telemetryWhiteListForFunctionsInjectable);
+            const whiteList = diForDecorator.inject(telemetryWhiteListForParameterlessFunctionsInjectable);
 
             if (whiteList.has(currentContext.injectable.id)) {
               emitTelemetry({
@@ -40,7 +40,7 @@ const basicTelemetryDecoratorInjectable = getInjectable({
   }),
 
   decorable: false,
-  injectionToken: injectionDecoratorToken,
+  injectionToken: instantiationDecoratorToken,
 });
 
 export default basicTelemetryDecoratorInjectable;

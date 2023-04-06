@@ -33,8 +33,8 @@
   "peerDependencies": {
     "@k8slens/feature-core": "^6.5.0-alpha.0",
     "@k8slens/run-many": "^1.0.0-alpha.1",
-    "@ogre-tools/fp": "^15.3.0",
-    "@ogre-tools/injectable": "^15.3.0",
+    "@ogre-tools/fp": "^15.3.1",
+    "@ogre-tools/injectable": "^15.3.1",
     "@ogre-tools/injectable-extension-for-auto-registration": "^15.3.0",
     "lodash": "^4.17.15"
   },
