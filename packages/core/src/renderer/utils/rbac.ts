@@ -44,6 +44,7 @@ export const ResourceNames: Record<KubeResource, string> = {
   "clusterroles": "Cluster Roles",
   "serviceaccounts": "Service Accounts",
   "verticalpodautoscalers": "Vertical Pod Autoscalers",
+  "mutatingwebhookconfigurations": "Mutating Webhook Configurations",
 };
 
 export const ResourceKindMap = object.fromEntries(
