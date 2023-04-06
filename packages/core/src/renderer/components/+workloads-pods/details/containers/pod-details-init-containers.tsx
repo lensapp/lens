@@ -12,7 +12,7 @@ interface PodDetailsContainersProps {
   pod: Pod;
 }
 
-const NonInjectedPodDetailsInitContainers = observer(({ pod }: PodDetailsContainersProps) => {
+const PodDetailsInitContainers = observer(({ pod }: PodDetailsContainersProps) => {
   const initContainers = pod.getInitContainers();
 
   if (initContainers.length === 0) {
@@ -33,8 +33,4 @@ const NonInjectedPodDetailsInitContainers = observer(({ pod }: PodDetailsContain
   );
 });
 
-const PodDetailsInitContainers = NonInjectedPodDetailsInitContainers;
-
 export { PodDetailsInitContainers };
-
-
