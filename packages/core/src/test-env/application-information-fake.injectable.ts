@@ -26,7 +26,7 @@ export const applicationInformationFakeInjectable = getInjectable({
       k8sProxyVersion: "0.2.1",
       sentryDsn: "",
       contentSecurityPolicy: "script-src 'unsafe-eval' 'self'; frame-src http://*.localhost:*/; img-src * data:",
-    }
+    },
   }),
 
   injectionToken: applicationInformationToken,
