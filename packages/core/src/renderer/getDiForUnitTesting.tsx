@@ -22,7 +22,9 @@ import { messagingFeature, testUtils as messagingTestUtils } from "@k8slens/mess
 
 export const getDiForUnitTesting = () => {
   const environment = "renderer";
-  const di = createContainer(environment);
+  const di = createContainer(environment, {
+    detectCycles: false,
+  });
 
   registerMobX(di);
   registerInjectableReact(di);

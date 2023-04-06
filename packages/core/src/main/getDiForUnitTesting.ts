@@ -24,18 +24,19 @@ import waitUntilBundledExtensionsAreLoadedInjectable from "./start-main-applicat
 import initializeClusterManagerInjectable from "./cluster/initialize-manager.injectable";
 import type { GlobalOverride } from "@k8slens/test-utils";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
-import {
-  setLegacyGlobalDiForExtensionApi,
-} from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerFeature } from "@k8slens/feature-core";
 import { messagingFeature, testUtils as messagingTestUtils } from "@k8slens/messaging";
 
 export function getDiForUnitTesting() {
-  const di = createContainer("main");
+  const environment = "main";
+  const di = createContainer(environment, {
+    detectCycles: false,
+  });
 
   registerMobX(di);
-  setLegacyGlobalDiForExtensionApi(di, "main");
+  setLegacyGlobalDiForExtensionApi(di, environment);
 
   runInAction(() => {
     registerFeature(di, messagingFeature, messagingTestUtils.messagingFeatureForUnitTesting);
