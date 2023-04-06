@@ -22,8 +22,46 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
         <DrawerItem name="API version">
           {webhookConfig.apiVersion}
         </DrawerItem>
-
         <DrawerTitle>Webhooks</DrawerTitle>
+        {webhookConfig.getWebhooks()?.map((webhook) => (
+          <React.Fragment key={webhook.name}>
+            <DrawerItem name="Name">
+              <strong>{webhook.name}</strong>
+            </DrawerItem>
+            <DrawerItem name="Client Config">
+              {webhook.clientConfig?.service?.name && (
+                <div>
+                  <div>
+                    Name:
+                    {webhook.clientConfig.service.name}
+                  </div>
+                  <div>
+                    Namespace:
+                    {webhook.clientConfig.service.namespace}
+                  </div>
+                </div>
+              )}
+            </DrawerItem>
+            <DrawerItem name="Match Policy">
+              {webhook.matchPolicy}
+            </DrawerItem>
+            <DrawerItem name="Failure Policy">
+              {webhook.failurePolicy}
+            </DrawerItem>
+            <DrawerItem name="Admission Review Versions">
+              {webhook.admissionReviewVersions?.join(", ")}
+            </DrawerItem>
+            <DrawerItem name="Reinvocation Policy">
+              {webhook.reinvocationPolicy}
+            </DrawerItem>
+            <DrawerItem name="Side Effects">
+              {webhook.sideEffects}
+            </DrawerItem>
+            <DrawerItem name="Timeout Seconds">
+              {webhook.timeoutSeconds}
+            </DrawerItem>
+          </React.Fragment>
+        ))}
       </div >
     );
   }
