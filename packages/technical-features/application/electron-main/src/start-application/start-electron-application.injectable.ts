@@ -1,8 +1,4 @@
-import {
-  getInjectable,
-  instantiationDecoratorToken,
-  createInstantiationTargetDecorator,
-} from "@ogre-tools/injectable";
+import { getInjectable, instantiationDecoratorToken, createInstantiationTargetDecorator } from "@ogre-tools/injectable";
 import { startApplicationInjectionToken } from "@k8slens/application";
 import whenAppIsReadyInjectable from "./when-app-is-ready.injectable";
 import { beforeAnythingInjectionToken, beforeElectronIsReadyInjectionToken } from "./time-slots";
