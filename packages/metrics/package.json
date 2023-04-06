@@ -36,6 +36,8 @@
       "react": "^17.0.2"
     },
     "devDependencies": {
-      "@k8slens/eslint-config": "6.5.0-alpha.1"
+      "@k8slens/eslint-config": "6.5.0-alpha.1",
+      "@k8slens/typescript": "6.5.0-alpha.1",
+      "@k8slens/jest":  "6.5.0-alpha.1"
     }
   }
