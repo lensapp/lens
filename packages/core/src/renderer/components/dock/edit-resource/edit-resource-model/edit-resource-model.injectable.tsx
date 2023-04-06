@@ -7,9 +7,9 @@ import type { CallForResource } from "./call-for-resource/call-for-resource.inje
 import callForResourceInjectable from "./call-for-resource/call-for-resource.injectable";
 import { waitUntilDefined } from "@k8slens/utilities";
 import editResourceTabStoreInjectable from "../store.injectable";
-import type { EditResourceTabStore } from "../store";
-import { action, computed, makeObservable, observable, runInAction } from "mobx";
-import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
+import type { EditingResource, EditResourceTabStore } from "../store";
+import { action, computed, observable, runInAction } from "mobx";
+import type { KubeObject, RawKubeObject } from "../../../../../common/k8s-api/kube-object";
 import yaml from "js-yaml";
 import assert from "assert";
 import type { CallForPatchResource } from "./call-for-patch-resource/call-for-patch-resource.injectable";
@@ -19,18 +19,22 @@ import type { ShowNotification } from "../../../notifications";
 import showSuccessNotificationInjectable from "../../../notifications/show-success-notification.injectable";
 import React from "react";
 import showErrorNotificationInjectable from "../../../notifications/show-error-notification.injectable";
+import { createKubeApiURL, parseKubeApi } from "../../../../../common/k8s-api/kube-api-parse";
 
 const editResourceModelInjectable = getInjectable({
   id: "edit-resource-model",
 
   instantiate: async (di, tabId: string) => {
+    const store = di.inject(editResourceTabStoreInjectable);
+
     const model = new EditResourceModel({
       callForResource: di.inject(callForResourceInjectable),
       callForPatchResource: di.inject(callForPatchResourceInjectable),
       showSuccessNotification: di.inject(showSuccessNotificationInjectable),
       showErrorNotification: di.inject(showErrorNotificationInjectable),
-      store: di.inject(editResourceTabStoreInjectable),
+      store,
       tabId,
+      waitForEditingResource: () => waitUntilDefined(() => store.getData(tabId)),
     });
 
     await model.load();
@@ -48,19 +52,42 @@ export default editResourceModelInjectable;
 interface Dependencies {
   callForResource: CallForResource;
   callForPatchResource: CallForPatchResource;
+  waitForEditingResource: () => Promise<EditingResource>;
   showSuccessNotification: ShowNotification;
   showErrorNotification: ShowNotification;
   readonly store: EditResourceTabStore;
   readonly tabId: string;
 }
 
-export class EditResourceModel {
-  constructor(private readonly dependencies: Dependencies) {
-    makeObservable(this);
+function getEditSelfLinkFor(object: RawKubeObject): string {
+  const lensVersionLabel = object.metadata.labels?.[EditResourceLabelName];
+
+  if (lensVersionLabel) {
+    const { apiVersionWithGroup, ...parsedApi } = parseKubeApi(object.metadata.selfLink);
+
+    parsedApi.apiVersion = lensVersionLabel;
+
+    return createKubeApiURL({
+      ...parsedApi,
+      apiVersion: `${parsedApi.apiGroup}/${parsedApi.apiVersion}`,
+    });
   }
 
+  return object.metadata.selfLink;
+}
+
+/**
+ * The label name that Lens uses to receive the desired api version
+ */
+export const EditResourceLabelName = "k8slens-edit-resource-version";
+
+export class EditResourceModel {
+  constructor(protected readonly dependencies: Dependencies) {}
+
   readonly configuration = {
-    value: computed(() => this.editingResource.draft || this.editingResource.firstDraft || ""),
+    value: computed(
+      () => this.editingResource.draft || this.editingResource.firstDraft || "",
+    ),
 
     onChange: action((value: string) => {
       this.editingResource.draft = value;
@@ -100,27 +127,39 @@ export class EditResourceModel {
     return this.editingResource.resource;
   }
 
-  load = async () => {
-    await waitUntilDefined(() => this.dependencies.store.getData(this.dependencies.tabId));
+  load = async (): Promise<void> => {
+    await this.dependencies.waitForEditingResource();
 
-    const result = await this.dependencies.callForResource(this.selfLink);
+    let result = await this.dependencies.callForResource(this.selfLink);
 
     if (!result.callWasSuccessful) {
-      this.dependencies.showErrorNotification(
-        `Loading resource failed: ${result.error}`,
-      );
+      return void this.dependencies.showErrorNotification(`Loading resource failed: ${result.error}`);
+    }
 
+    if (result?.response?.metadata.labels?.[EditResourceLabelName]) {
+      const parsed = parseKubeApi(this.selfLink);
+
+      parsed.apiVersion = result.response.metadata.labels[EditResourceLabelName];
+
+      result = await this.dependencies.callForResource(createKubeApiURL(parsed));
+    }
+
+    if (!result.callWasSuccessful) {
+      return void this.dependencies.showErrorNotification(`Loading resource failed: ${result.error}`);
+    }
+
+    const resource = result.response;
+
+    runInAction(() => {
+      this._resource = resource;
+    });
+
+    if (!resource) {
       return;
     }
 
     runInAction(() => {
-      this._resource = result.response;
-
-      if (this._resource) {
-        this.editingResource.firstDraft = yaml.dump(
-          this._resource.toPlainObject(),
-        );
-      }
+      this.editingResource.firstDraft = yaml.dump(resource.toPlainObject());
     });
   };
 
@@ -138,16 +177,16 @@ export class EditResourceModel {
 
   save = async () => {
     const currentValue = this.configuration.value.get();
-    const currentVersion = yaml.load(currentValue);
-    const firstVersion = yaml.load(
-      this.editingResource.firstDraft ?? currentValue,
-    );
-    const patches = createPatch(firstVersion, currentVersion);
+    const currentVersion = yaml.load(currentValue) as RawKubeObject;
+    const firstVersion = yaml.load(this.editingResource.firstDraft ?? currentValue);
 
-    const result = await this.dependencies.callForPatchResource(
-      this.resource,
-      patches,
-    );
+    // Make sure we save this label so that we can use it in the future
+    currentVersion.metadata.labels ??= {};
+    currentVersion.metadata.labels[EditResourceLabelName] = currentVersion.apiVersion.split("/").pop();
+
+    const patches = createPatch(firstVersion, currentVersion);
+    const selfLink = getEditSelfLinkFor(currentVersion);
+    const result = await this.dependencies.callForPatchResource(this.resource, patches);
 
     if (!result.callWasSuccessful) {
       this.dependencies.showErrorNotification((
@@ -158,23 +197,26 @@ export class EditResourceModel {
         </p>
       ));
 
-      return;
+      return null;
     }
 
     const { kind, name } = result.response;
 
-    this.dependencies.showSuccessNotification((
+    this.dependencies.showSuccessNotification(
       <p>
-        {`${kind} `}
+        {kind}
+        {" "}
         <b>{name}</b>
         {" updated."}
-      </p>
-    ));
+      </p>,
+    );
 
     runInAction(() => {
-      this.editingResource.firstDraft = currentValue;
+      this.editingResource.firstDraft = yaml.dump(currentVersion);
+      this.editingResource.resource = selfLink;
     });
 
-    return result.response.toString();
+    // NOTE: This is required for `saveAndClose` to work correctly
+    return [];
   };
 }

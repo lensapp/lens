@@ -14,6 +14,7 @@ import { buildVersionInjectionToken } from "../../common/vars/build-semantic-ver
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import enabledExtensionsInjectable from "../../features/extensions/enabled/common/enabled-extensions.injectable";
 import userPreferencesStateInjectable from "../../features/user-preferences/common/state.injectable";
+import { lensBuildEnvironmentInjectionToken } from "@k8slens/application";
 
 const userStore = asLegacyGlobalForExtensionApi(userPreferencesStateInjectable);
 const enabledExtensions = asLegacyGlobalForExtensionApi(enabledExtensionsInjectable);
@@ -52,6 +53,11 @@ export const App = {
     const di = getLegacyGlobalDiForExtensionApi();
 
     return di.inject(isLinuxInjectable);
+  },
+  get lensBuildEnvironment() {
+    const di = getLegacyGlobalDiForExtensionApi();
+
+    return di.inject(lensBuildEnvironmentInjectionToken);
   },
   /**
    * @deprecated This value is now `""` and is left here for backwards compatibility.

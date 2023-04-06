@@ -18,9 +18,7 @@ export interface MessageChannelListener<Channel> {
   handler: MessageChannelHandler<Channel>;
 }
 
-export const messageChannelListenerInjectionToken = getInjectionToken<
-  MessageChannelListener<MessageChannel<unknown>>
->({
+export const messageChannelListenerInjectionToken = getInjectionToken<MessageChannelListener<MessageChannel<unknown>>>({
   id: "message-channel-listener",
 });
 
@@ -31,10 +29,7 @@ export interface GetMessageChannelListenerInfo<Channel extends MessageChannel<Me
   causesSideEffects?: boolean;
 }
 
-export const getMessageChannelListenerInjectable = <
-  Channel extends MessageChannel<Message>,
-  Message,
->(
+export const getMessageChannelListenerInjectable = <Channel extends MessageChannel<Message>, Message>(
   info: GetMessageChannelListenerInfo<Channel, Message>,
 ) =>
   getInjectable({

@@ -13,9 +13,7 @@ const startApplicationInjectable = getInjectable({
 
   instantiate: (di): StartApplication => {
     const runManyAsync = runManyFor(di);
-    const beforeApplicationIsLoading = runManyAsync(
-      timeSlots.beforeApplicationIsLoadingInjectionToken,
-    );
+    const beforeApplicationIsLoading = runManyAsync(timeSlots.beforeApplicationIsLoadingInjectionToken);
     const onLoadOfApplication = runManyAsync(timeSlots.onLoadOfApplicationInjectionToken);
     const afterApplicationIsLoaded = runManyAsync(timeSlots.afterApplicationIsLoadedInjectionToken);
 

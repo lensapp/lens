@@ -18,18 +18,23 @@ const apiManagerInjectable = getInjectable({
     const computedInjectMany = di.inject(computedInjectManyInjectable);
     const storesAndApisCanBeCreated = di.inject(storesAndApisCanBeCreatedInjectionToken);
 
-    return new ApiManager({
-      apis: storesAndApisCanBeCreated
-        ? computedInjectMany(kubeApiInjectionToken)
-        : computed(() => []),
-      stores: storesAndApisCanBeCreated
-        ? computedInjectMany(kubeObjectStoreInjectionToken)
-        : computed(() => []),
-      crdApis: storesAndApisCanBeCreated
-        ? computedInjectMany(customResourceDefinitionApiInjectionToken)
-        : computed(() => []),
-      createCustomResourceStore: di.inject(createCustomResourceStoreInjectable),
-    });
+    return new ApiManager((
+      storesAndApisCanBeCreated
+        ? {
+          apis: computedInjectMany(kubeApiInjectionToken),
+          stores: computedInjectMany(kubeObjectStoreInjectionToken),
+          crdApis: computedInjectMany(customResourceDefinitionApiInjectionToken),
+          createCustomResourceStore: di.inject(createCustomResourceStoreInjectable),
+        }
+        : {
+          apis: computed(() => []),
+          stores: computed(() => []),
+          crdApis: computed(() => []),
+          createCustomResourceStore: () => {
+            throw new Error("Tried to create a KubeObjectStore for a CustomResource in a disallowed environment");
+          },
+        }
+    ));
   },
 });
 

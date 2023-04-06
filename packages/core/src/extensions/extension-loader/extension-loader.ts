@@ -6,9 +6,10 @@
 import { ipcMain, ipcRenderer } from "electron";
 import { isEqual } from "lodash";
 import type { ObservableMap } from "mobx";
-import { action, computed, makeObservable, toJS, observable, observe, reaction, when } from "mobx";
+import { runInAction, action, computed, toJS, observable, reaction, when } from "mobx";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
-import { isDefined } from "@k8slens/utilities";
+import { isDefined, iter } from "@k8slens/utilities";
+import type { ExternalInstalledExtension, InstalledExtension, LensExtensionConstructor, LensExtensionId, BundledExtension } from "@k8slens/legacy-extensions";
 import type { LensExtension } from "../lens-extension";
 import { extensionLoaderFromMainChannel, extensionLoaderFromRendererChannel } from "../../common/ipc/extension-handling";
 import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
@@ -19,7 +20,6 @@ import type { Extension } from "./extension/extension.injectable";
 import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
-import type { LensExtensionId, BundledExtension, InstalledExtension, LensExtensionConstructor } from "@k8slens/legacy-extensions";
 import type { UpdateExtensionsState } from "../../features/extensions/enabled/common/update-state.injectable";
 
 const logModule = "[EXTENSIONS-LOADER]";
@@ -60,51 +60,21 @@ export class ExtensionLoader {
    */
   protected readonly nonInstancesByName = observable.set<string>();
 
-  /**
-   * This is updated by the `observe` in the constructor. DO NOT write directly to it
-   */
-  protected readonly instancesByName = observable.map<string, LensExtension>();
+  protected readonly instancesByName = computed(() => new Map((
+    iter.chain(this.dependencies.extensionInstances.entries())
+      .map(([, instance]) => [instance.name, instance])
+  )));
 
   private readonly onRemoveExtensionId = new EventEmitter<[string]>();
 
-  @observable isLoaded = false;
+  readonly isLoaded = observable.box(false);
 
-  get whenLoaded() {
-    return when(() => this.isLoaded);
-  }
+  constructor(protected readonly dependencies: Dependencies) {}
 
-  constructor(protected readonly dependencies: Dependencies) {
-    makeObservable(this);
-
-    observe(this.dependencies.extensionInstances, change => {
-      switch (change.type) {
-        case "add":
-          if (this.instancesByName.has(change.newValue.name)) {
-            throw new TypeError("Extension names must be unique");
-          }
-
-          this.instancesByName.set(change.newValue.name, change.newValue);
-          break;
-        case "delete":
-          this.instancesByName.delete(change.oldValue.name);
-          break;
-        case "update":
-          throw new Error("Extension instances shouldn't be updated");
-      }
-    });
-  }
-
-  @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
-    const extensions = this.toJSON();
-
-    extensions.forEach((ext, extId) => {
-      if (ext.isBundled) {
-        extensions.delete(extId);
-      }
-    });
-
-    return extensions;
-  }
+  readonly userExtensions = computed(() => new Map((
+    this.extensions.toJSON()
+      .filter(([, extension]) => !extension.isBundled)
+  )));
 
   /**
    * Get the extension instance by its manifest name
@@ -120,19 +90,18 @@ export class ExtensionLoader {
       return null;
     }
 
-    return this.instancesByName.get(name);
+    return this.instancesByName.get().get(name);
   }
 
   // Transform userExtensions to a state object for storing into ExtensionsStore
-  @computed get storeState() {
-    return Array.from(this.userExtensions)
-      .map(([extId, extension]) => [extId, {
-        enabled: extension.isEnabled,
-        name: extension.manifest.name,
-      }] as const);
-  }
+  readonly storeState = computed(() => Array.from(
+    this.userExtensions.get(),
+    ([extId, extension]) => [extId, {
+      enabled: extension.isEnabled,
+      name: extension.manifest.name,
+    }] as const,
+  ));
 
-  @action
   async init() {
     if (ipcMain) {
       await this.initMain();
@@ -140,7 +109,7 @@ export class ExtensionLoader {
       await this.initRenderer();
     }
 
-    await Promise.all([this.whenLoaded]);
+    await when(() => this.isLoaded.get());
 
     // broadcasting extensions between main/renderer processes
     reaction(() => this.toJSON(), () => this.broadcastExtensions(), {
@@ -148,8 +117,7 @@ export class ExtensionLoader {
     });
 
     reaction(
-      () => this.storeState,
-
+      () => this.storeState.get(),
       (state) => {
         this.dependencies.updateExtensionsState(state);
       },
@@ -199,18 +167,20 @@ export class ExtensionLoader {
   setIsEnabled(lensExtensionId: LensExtensionId, isEnabled: boolean) {
     const extension = this.extensions.get(lensExtensionId);
 
-    assert(extension, `Must register extension ${lensExtensionId} with before enabling it`);
+    assert(extension, `Extension "${lensExtensionId}" must be registered before it can be enabled.`);
+    assert(!extension.isBundled, `Cannot change the enabled state of a bundled extension`);
 
     extension.isEnabled = isEnabled;
   }
 
   protected async initMain() {
-    this.isLoaded = true;
+    runInAction(() => {
+      this.isLoaded.set(true);
+    });
+
     await this.autoInitExtensions();
 
-    ipcMainHandle(extensionLoaderFromMainChannel, () => {
-      return Array.from(this.toJSON());
-    });
+    ipcMainHandle(extensionLoaderFromMainChannel, () => [...this.toJSON()]);
 
     ipcMainOn(extensionLoaderFromRendererChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
       this.syncExtensions(extensions);
@@ -219,7 +189,9 @@ export class ExtensionLoader {
 
   protected async initRenderer() {
     const extensionListHandler = (extensions: [LensExtensionId, InstalledExtension][]) => {
-      this.isLoaded = true;
+      runInAction(() => {
+        this.isLoaded.set(true);
+      });
       this.syncExtensions(extensions);
 
       const receivedExtensionIds = extensions.map(([lensExtensionId]) => lensExtensionId);
@@ -255,10 +227,10 @@ export class ExtensionLoader {
   }
 
   protected async loadBundledExtensions() {
-    return this.dependencies.bundledExtensions
-      .map(extension => {
+    const bundledExtensions = await Promise.all((this.dependencies.bundledExtensions
+      .map(async extension => {
         try {
-          const LensExtensionClass = extension[this.dependencies.extensionEntryPointName]();
+          const LensExtensionClass = await extension[this.dependencies.extensionEntryPointName]();
 
           if (!LensExtensionClass) {
             return null;
@@ -291,7 +263,9 @@ export class ExtensionLoader {
           return null;
         }
       })
-      .filter(isDefined);
+    ));
+
+    return bundledExtensions.filter(isDefined);
   }
 
   protected async loadExtensions(extensions: ExtensionBeingActivated[]): Promise<ExtensionLoading[]> {
@@ -332,6 +306,7 @@ export class ExtensionLoader {
     // 4. Return ExtensionLoading[]
 
     return [...installedExtensions.entries()]
+      .filter((entry): entry is [string, ExternalInstalledExtension] => !entry[1].isBundled)
       .map(([extId, extension]) => {
         const alreadyInit = this.dependencies.extensionInstances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
 
@@ -391,7 +366,7 @@ export class ExtensionLoader {
     return loadedExtensions;
   }
 
-  protected requireExtension(extension: InstalledExtension): LensExtensionConstructor | null {
+  protected requireExtension(extension: ExternalInstalledExtension): LensExtensionConstructor | null {
     const extRelativePath = extension.manifest[this.dependencies.extensionEntryPointName];
 
     if (!extRelativePath) {
@@ -411,7 +386,7 @@ export class ExtensionLoader {
     return null;
   }
 
-  getExtension(extId: LensExtensionId) {
+  getExtensionById(extId: LensExtensionId) {
     return this.extensions.get(extId);
   }
 

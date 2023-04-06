@@ -1,10 +1,7 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Feature } from "./feature";
-import {
-  featureContextMapInjectable,
-  featureContextMapInjectionToken,
-} from "./feature-context-map-injectable";
+import { featureContextMapInjectable, featureContextMapInjectionToken } from "./feature-context-map-injectable";
 
 const createFeatureContext = (feature: Feature, di: DiContainer) => {
   const featureContextInjectable = getInjectable({
@@ -58,10 +55,9 @@ const registerFeatureRecursed = (di: DiContainer, feature: Feature, dependedBy?:
 
   if (dependedBy) {
     const oldNumberOfDependents = featureContext.dependedBy.get(dependedBy) || 0;
+    const newNumberOfDependents = oldNumberOfDependents + 1;
 
-    const newNumberOfDependants = oldNumberOfDependents + 1;
-
-    featureContext.dependedBy.set(dependedBy, newNumberOfDependants);
+    featureContext.dependedBy.set(dependedBy, newNumberOfDependents);
   }
 
   if (!existingFeatureContext) {

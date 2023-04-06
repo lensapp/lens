@@ -113,13 +113,13 @@ describe("ExtensionLoader", () => {
   });
 
   it("renderer updates extension after ipc broadcast", async () => {
-    expect(extensionLoader.userExtensions).toEqual(new Map());
+    expect(extensionLoader.userExtensions.get()).toEqual(new Map());
 
     await extensionLoader.init();
     await delay(10);
 
     // Assert the extensions after the extension broadcast event
-    expect(extensionLoader.userExtensions).toEqual(
+    expect(extensionLoader.userExtensions.get()).toEqual(
       new Map([
         ["manifest/path", {
           absolutePath: "/test/1",

@@ -175,8 +175,7 @@ describe("keyboard-shortcuts", () => {
         shouldCallCallback: true,
       },
       {
-        scenario:
-          "given shortcut with shift modifier, when shortcut is pressed, calls the callback",
+        scenario: "given shortcut with shift modifier, when shortcut is pressed, calls the callback",
 
         binding: { shift: true, code: "F1" },
         keyboard: "{Shift>}[F1]",

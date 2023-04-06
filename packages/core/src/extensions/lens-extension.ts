@@ -9,7 +9,6 @@ import type { LensExtensionDependencies } from "./lens-extension-set-dependencie
 import type { ProtocolHandlerRegistration } from "../common/protocol-handler/registration";
 import type { InstalledExtension, LegacyLensExtension, LensExtensionId, LensExtensionManifest } from "@k8slens/legacy-extensions";
 
-
 export const lensExtensionDependencies = Symbol("lens-extension-dependencies");
 export const Disposers = Symbol("disposers");
 
@@ -42,14 +41,12 @@ export class LensExtension<
   [Disposers] = disposer();
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
-    makeObservable(this);
-
     // id is the name of the manifest
     this.id = id;
-
-    this.manifest = manifest;
+    this.manifest = manifest as LensExtensionManifest;
     this.manifestPath = manifestPath;
     this.isBundled = !!isBundled;
+    makeObservable(this);
   }
 
   get name() {

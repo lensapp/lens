@@ -10,7 +10,6 @@ import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import { iconsAndImagesWebpackRules } from "./renderer";
 import { DefinePlugin } from "webpack";
 import { buildDir, isDevelopment } from "./vars";
-import { platform } from "process";
 
 const webpackLensMain = (): webpack.Configuration => {
   return {
@@ -67,8 +66,8 @@ const webpackLensMain = (): webpack.Configuration => {
     },
     plugins: [
       new DefinePlugin({
-        CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable(\\.${platform})?\\.tsx?$/`,
-        CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable(\\.${platform})?\\.tsx?$/`,
+        CONTEXT_MATCHER_FOR_NON_FEATURES: `/\\.injectable\\.tsx?$/`,
+        CONTEXT_MATCHER_FOR_FEATURES: `/\\/(main|common)\\/.+\\.injectable\\.tsx?$/`,
       }),
       new ForkTsCheckerPlugin({
         typescript: {

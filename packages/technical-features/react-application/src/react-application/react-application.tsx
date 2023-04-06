@@ -27,9 +27,7 @@ const render = (components: ReactApplicationHigherOrderComponent[]) => {
 export const ReactApplication = observer(({ di }: ReactApplicationProps) => {
   const computedInjectMany = di.inject(computedInjectManyInjectable);
 
-  const higherOrderComponents = computedInjectMany(
-    reactApplicationHigherOrderComponentInjectionToken,
-  );
+  const higherOrderComponents = computedInjectMany(reactApplicationHigherOrderComponentInjectionToken);
 
   const Components = [...higherOrderComponents.get(), ReactApplicationContent];
 
