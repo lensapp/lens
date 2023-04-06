@@ -4,6 +4,8 @@
  */
 import type { LabelSelector, NamespaceScopedMetadata } from "../kube-object";
 import { KubeObject } from "../kube-object";
+import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
+import { KubeApi } from "../kube-api";
 
 interface MutatingWebhookConfigurationStatus {
   // The latest generation observed by the webhook.
@@ -236,5 +238,14 @@ export class MutatingWebhookConfiguration extends KubeObject<
 
   getReinvocationPolicy(): string | undefined {
     return this.spec?.reinvocationPolicy;
+  }
+}
+
+export class MutatingWebhookConfigurationApi extends KubeApi<MutatingWebhookConfiguration> {
+  constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
+    super(deps, {
+      ...opts ?? {},
+      objectConstructor: MutatingWebhookConfiguration,
+    });
   }
 }
