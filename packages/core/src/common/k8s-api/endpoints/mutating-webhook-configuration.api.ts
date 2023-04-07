@@ -8,74 +8,6 @@ import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 
-interface MutatingWebhookConfigurationStatus {
-  // The latest generation observed by the webhook.
-  observedGeneration?: number;
-
-  // Conditions for the MutatingWebhookConfiguration.
-  conditions?: {
-    // Type of MutatingWebhookConfiguration condition.
-    type: string;
-
-    // Status of the condition, one of True, False, Unknown.
-    status: string;
-
-    // Reason for the current status of the condition.
-    reason?: string;
-
-    // Message describing the current status of the condition.
-    message?: string;
-  }[];
-
-  // Webhooks that failed to be registered.
-  failedWebhooks?: {
-    // Name of the failed webhook.
-    name: string;
-
-    // Failure type of the webhook.
-    failureType: string;
-
-    // Reason for the failure.
-    reason?: string;
-
-    // Message describing the failure.
-    message?: string;
-  }[];
-
-  // Webhooks that are not registered yet.
-  webhookConfigurations?: {
-    // Name of the webhook configuration.
-    name: string;
-
-    // Namespace of the webhook configuration.
-    namespace: string;
-
-    // API version of the webhook configuration.
-    apiVersion: string;
-
-    // Kind of the webhook configuration.
-    kind: string;
-
-    // Object reference to the webhook configuration.
-    objectReference?: {
-      // API version of the object reference.
-      apiVersion?: string;
-
-      // Kind of the object reference.
-      kind: string;
-
-      // Name of the object reference.
-      name: string;
-
-      // Namespace of the object reference.
-      namespace?: string;
-
-      // UID of the object reference.
-      uid?: string;
-    };
-  }[];
-}
-
 interface WebhookClientConfig {
   // `url` gives the location of the webhook
   url?: string;
@@ -176,42 +108,14 @@ interface ServiceReference {
   port?: number | string;
 }
 
-interface MutatingWebhookConfigurationSpec {
-  // Webhooks to be applied.
-  webhooks: MutatingWebhook[];
-
-  // CABundle is a PEM encoded CA bundle which will be used to validate webhook's server certificate.
-  // If unspecified, system trust roots on the apiserver are used.
-  caBundle?: string;
-
-  // Determines the admission success of the MutatingWebhook. Allowed values are "Ignore"/"Fail"/"DryRun".
-  // If Ignore, any webhook failure or timeout will be ignored and the API request will be allowed to continue
-  // as if the webhook was not configured. You should use this option with caution and only for debugging
-  // purposes. If Fail, any webhook failure or timeout will cause the API request to fail. If DryRun,
-  // MutatingWebhook will be executed without really modifying the object. This is useful for testing webhook
-  // without really modifying objects.
-  // Defaults to "Fail".
-  failurePolicy?: string;
-
-  // Indicates whether the webhook should be called on the request before or after the object mutation.
-  // Allowed values are "None"/"Before"/"After". Mutating admission webhook and validating admission
-  // webhook can be configured to perform the mutation changes before or after the resource mutation respectively.
-  // If no phases are specified, the webhook is assumed to support all phases.
-  sideEffects?: string;
-
-  // ReinvocationPolicy indicates whether this webhook should be called multiple times as part of a single admission
-  // evaluation. Allowed values are "Never"/"IfNeeded".
-  reinvocationPolicy?: string;
-}
-
-interface MutatingWebhookConfigurationData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Namespace>, MutatingWebhookConfigurationStatus, MutatingWebhookConfigurationSpec> {
+interface MutatingWebhookConfigurationData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Namespace>, void, void> {
   webhooks?: MutatingWebhook[];
 }
 
 export class MutatingWebhookConfiguration extends KubeObject<
   NamespaceScopedMetadata,
-  MutatingWebhookConfigurationStatus,
-  MutatingWebhookConfigurationSpec
+  void,
+  void
 > {
   static kind = "MutatingWebhookConfiguration";
   static namespaced = false;
@@ -238,22 +142,6 @@ export class MutatingWebhookConfiguration extends KubeObject<
     }
 
     return undefined;
-  }
-
-  getCaBundle(): string | undefined {
-    return this.spec?.caBundle;
-  }
-
-  getFailurePolicy(): string | undefined {
-    return this.spec?.failurePolicy;
-  }
-
-  getSideEffects(): string | undefined {
-    return this.spec?.sideEffects;
-  }
-
-  getReinvocationPolicy(): string | undefined {
-    return this.spec?.reinvocationPolicy;
   }
 }
 
