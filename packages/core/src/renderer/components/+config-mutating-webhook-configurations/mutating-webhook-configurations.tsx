@@ -27,7 +27,8 @@ const NonInjectedMutatingWebhookConfigurations = observer((props: Dependencies) 
     <SiblingsInTabLayout>
       <KubeObjectListLayout
         isConfigurable
-        customizeHeader={({ searchProps }) => ({
+        customizeHeader={({ searchProps, ...rest }) => ({
+          ...rest,
           searchProps: {
             ...searchProps,
             placeholder: "Search...",
@@ -45,7 +46,7 @@ const NonInjectedMutatingWebhookConfigurations = observer((props: Dependencies) 
           item => item.getSearchFields(),
           item => item.getLabels(),
         ]}
-        renderHeaderTitle="Mutating Webhook Configurations"
+        renderHeaderTitle="Mutating Webhook Configs"
         renderTableHeader={[
           { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
           {
