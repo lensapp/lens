@@ -24,6 +24,9 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
           {webhookConfig.apiVersion}
         </DrawerItem>
         <DrawerTitle>Webhooks</DrawerTitle>
+        {webhookConfig.getWebhooks()?.length == 0 && (
+          <div style={{ opacity: 0.6 }}>No webhooks set</div>
+        )}
         {webhookConfig.getWebhooks()?.map((webhook) => (
           <React.Fragment key={webhook.name}>
             <DrawerItem name="Name">
@@ -62,6 +65,42 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
             </DrawerItem>
             <DrawerItem name="Timeout Seconds">
               {webhook.timeoutSeconds}
+            </DrawerItem>
+            <DrawerItem name="Namespace Selector">
+              {webhook.namespaceSelector && (
+                <div>
+                  <div>Match Expressions:</div>
+                  {webhook.namespaceSelector.matchExpressions?.map((expression, index) => (
+                    <div key={index}>
+                      <div>
+                        Key:
+                        {" "}
+                        <b>{expression.key}</b>
+                      </div>
+                      <div>
+                        Operator:
+                        {" "}
+                        <b>{expression.operator}</b>
+                      </div>
+                      <div>
+                        Values:
+                        {" "}
+                        <b>{expression.values?.join(", ")}</b>
+                      </div>
+                    </div>
+                  ))}
+                  {webhook.namespaceSelector.matchLabels && (
+                    <div>
+                      <div>Match Labels:</div>
+                      <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                        {Object.entries(webhook.namespaceSelector.matchLabels).map(([key, value], index) => (
+                          <Badge label={`${key}=${value}`} key={index} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </DrawerItem>
             <DrawerItem name="Object Selector">
               {webhook.objectSelector && (
