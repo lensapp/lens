@@ -110,15 +110,18 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
                     <div key={index}>
                       <div>
                         Key:
-                        {expression.key}
+                        {" "}
+                        <b>{expression.key}</b>
                       </div>
                       <div>
                         Operator:
-                        {expression.operator}
+                        {" "}
+                        <b>{expression.operator}</b>
                       </div>
                       <div>
                         Values:
-                        {expression.values?.join(", ")}
+                        {" "}
+                        <b>{expression.values?.join(", ")}</b>
                       </div>
                     </div>
                   ))}
@@ -134,6 +137,41 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
                   )}
                 </div>
               )}
+            </DrawerItem>
+            <DrawerItem name="Rules">
+              {webhook.rules?.map((rule, index) => (
+                <div key={index}>
+                  <div>
+                    API Groups:
+                    {" "}
+                    {rule.apiGroups.join(", ")}
+                  </div>
+                  <div>
+                    API Versions:
+                    {" "}
+                    {rule.apiVersions?.join(", ")}
+                  </div>
+                  <div>
+                    Operations:
+                    {" "}
+                    {rule.operations.join(", ")}
+                  </div>
+                  {rule.resources && (
+                    <div>
+                      Resources:
+                      {" "}
+                      {rule.resources.join(", ")}
+                    </div>
+                  )}
+                  {rule.scope && (
+                    <div>
+                      Scope:
+                      {" "}
+                      {rule.scope}
+                    </div>
+                  )}
+                </div>
+              ))}
             </DrawerItem>
           </React.Fragment>
         ))}
