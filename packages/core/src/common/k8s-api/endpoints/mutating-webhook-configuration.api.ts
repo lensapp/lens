@@ -214,7 +214,7 @@ export class MutatingWebhookConfiguration extends KubeObject<
   MutatingWebhookConfigurationSpec
 > {
   static kind = "MutatingWebhookConfiguration";
-  static namespaced = true;
+  static namespaced = false;
   static apiBase = "/apis/admissionregistration.k8s.io/v1/mutatingwebhookconfigurations";
 
   webhooks?: MutatingWebhook[];
