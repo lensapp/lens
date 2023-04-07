@@ -75,17 +75,17 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
                       <div>
                         Key:
                         {" "}
-                        <b>{expression.key}</b>
+                        {expression.key}
                       </div>
                       <div>
                         Operator:
                         {" "}
-                        <b>{expression.operator}</b>
+                        {expression.operator}
                       </div>
                       <div>
                         Values:
                         {" "}
-                        <b>{expression.values?.join(", ")}</b>
+                        {expression.values?.join(", ")}
                       </div>
                     </div>
                   ))}
@@ -111,17 +111,17 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
                       <div>
                         Key:
                         {" "}
-                        <b>{expression.key}</b>
+                        {expression.key}
                       </div>
                       <div>
                         Operator:
                         {" "}
-                        <b>{expression.operator}</b>
+                        {expression.operator}
                       </div>
                       <div>
                         Values:
                         {" "}
-                        <b>{expression.values?.join(", ")}</b>
+                        {expression.values?.join(", ")}
                       </div>
                     </div>
                   ))}
