@@ -27,6 +27,12 @@ const NonInjectedMutatingWebhookConfigurations = observer((props: Dependencies) 
     <SiblingsInTabLayout>
       <KubeObjectListLayout
         isConfigurable
+        customizeHeader={({ searchProps }) => ({
+          searchProps: {
+            ...searchProps,
+            placeholder: "Search...",
+          },
+        })}
         tableId="config_mutating_webhook_configurations"
         className={"MutatingWebhookConfigurations"}
         store={props.store}
