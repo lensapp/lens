@@ -1,0 +1,9 @@
+.matchLabels {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.lastItem + .firstItem {
+    margin-top: 1rem;
+}

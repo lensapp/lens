@@ -2,6 +2,7 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+import styles from "./mutating-webhook-configs-details.module.css";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -29,7 +30,7 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
         )}
         {webhookConfig.getWebhooks()?.map((webhook) => (
           <React.Fragment key={webhook.name}>
-            <DrawerItem name="Name">
+            <DrawerItem name="Name" className={styles.firstItem}>
               <strong>{webhook.name}</strong>
             </DrawerItem>
             <DrawerItem name="Client Config">
@@ -92,7 +93,7 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
                   {webhook.namespaceSelector.matchLabels && (
                     <div>
                       <div>Match Labels:</div>
-                      <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                      <div className={styles.matchLabels}>
                         {Object.entries(webhook.namespaceSelector.matchLabels).map(([key, value], index) => (
                           <Badge label={`${key}=${value}`} key={index} />
                         ))}
@@ -128,7 +129,7 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
                   {webhook.objectSelector.matchLabels && (
                     <div>
                       <div>Match Labels:</div>
-                      <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                      <div className={styles.matchLabels}>
                         {Object.entries(webhook.objectSelector.matchLabels).map(([key, value], index) => (
                           <Badge label={`${key}=${value}`} key={index} />
                         ))}
@@ -138,7 +139,7 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
                 </div>
               )}
             </DrawerItem>
-            <DrawerItem name="Rules">
+            <DrawerItem name="Rules" className={styles.lastItem}>
               {webhook.rules?.map((rule, index) => (
                 <div key={index}>
                   <div>
