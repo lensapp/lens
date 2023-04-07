@@ -2,10 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { LabelSelector, NamespaceScopedMetadata } from "../kube-object";
+import type { LabelSelector, NamespaceScopedMetadata, KubeObjectMetadata, KubeObjectScope } from "../kube-object";
 import { KubeObject } from "../kube-object";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
+import type { KubeJsonApiData } from "../kube-json-api";
 
 interface MutatingWebhookConfigurationStatus {
   // The latest generation observed by the webhook.
@@ -203,6 +204,10 @@ interface MutatingWebhookConfigurationSpec {
   reinvocationPolicy?: string;
 }
 
+interface MutatingWebhookConfigurationData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Namespace>, MutatingWebhookConfigurationStatus, MutatingWebhookConfigurationSpec> {
+  webhooks?: MutatingWebhook[];
+}
+
 export class MutatingWebhookConfiguration extends KubeObject<
   NamespaceScopedMetadata,
   MutatingWebhookConfigurationStatus,
@@ -212,8 +217,15 @@ export class MutatingWebhookConfiguration extends KubeObject<
   static namespaced = true;
   static apiBase = "/apis/admissionregistration.k8s.io/v1/mutatingwebhookconfigurations";
 
+  webhooks?: MutatingWebhook[];
+
+  constructor({ webhooks, ...rest }: MutatingWebhookConfigurationData) {
+    super(rest);
+    this.webhooks = webhooks;
+  }
+
   getWebhooks(): MutatingWebhook[] {
-    return this.spec?.webhooks ?? [];
+    return this.webhooks ?? [];
   }
 
   getClientConfig(serviceName: string, serviceNamespace: string): WebhookClientConfig | undefined {
