@@ -8,6 +8,7 @@ import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { MutatingWebhookConfiguration } from "../../../common/k8s-api/endpoints";
+import { Badge } from "../badge";
 
 export interface MutatingWebhookDetailsProps extends KubeObjectDetailsProps<MutatingWebhookConfiguration> {
 }
@@ -33,10 +34,12 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
                 <div>
                   <div>
                     Name:
+                    {" "}
                     {webhook.clientConfig.service.name}
                   </div>
                   <div>
                     Namespace:
+                    {" "}
                     {webhook.clientConfig.service.namespace}
                   </div>
                 </div>
@@ -59,6 +62,39 @@ export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetai
             </DrawerItem>
             <DrawerItem name="Timeout Seconds">
               {webhook.timeoutSeconds}
+            </DrawerItem>
+            <DrawerItem name="Object Selector">
+              {webhook.objectSelector && (
+                <div>
+                  <div>Match Expressions:</div>
+                  {webhook.objectSelector.matchExpressions?.map((expression, index) => (
+                    <div key={index}>
+                      <div>
+                        Key:
+                        {expression.key}
+                      </div>
+                      <div>
+                        Operator:
+                        {expression.operator}
+                      </div>
+                      <div>
+                        Values:
+                        {expression.values?.join(", ")}
+                      </div>
+                    </div>
+                  ))}
+                  {webhook.objectSelector.matchLabels && (
+                    <div>
+                      <div>Match Labels:</div>
+                      <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                        {Object.entries(webhook.objectSelector.matchLabels).map(([key, value], index) => (
+                          <Badge label={`${key}=${value}`} key={index} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </DrawerItem>
           </React.Fragment>
         ))}
