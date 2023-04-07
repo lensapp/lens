@@ -4,9 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { ExtensionLoader } from "./extension-loader";
-import { createExtensionInstanceInjectionToken } from "./create-extension-instance.token";
 import extensionInstancesInjectable from "./extension-instances.injectable";
-import type { LensExtension } from "../lens-extension";
 import extensionInjectable from "./extension/extension.injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
@@ -20,9 +18,8 @@ const extensionLoaderInjectable = getInjectable({
 
   instantiate: (di) => new ExtensionLoader({
     updateExtensionsState: di.inject(updateExtensionsStateInjectable),
-    createExtensionInstance: di.inject(createExtensionInstanceInjectionToken),
     extensionInstances: di.inject(extensionInstancesInjectable),
-    getExtension: (instance: LensExtension) => di.inject(extensionInjectable, instance),
+    getExtension: (instance) => di.inject(extensionInjectable, instance),
     bundledExtensions: di.injectMany(bundledExtensionInjectionToken),
     extensionEntryPointName: di.inject(extensionEntryPointNameInjectionToken),
     logger: di.inject(loggerInjectable),

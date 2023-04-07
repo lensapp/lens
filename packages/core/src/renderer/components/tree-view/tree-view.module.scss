@@ -1,0 +1,63 @@
+.treeItem {
+  display: flex;
+  flex-direction: row;
+  padding: 2px var(--padding) 2px 0;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--sidebarItemHoverBackground);
+  }
+
+  &.selected:hover {
+    background-color: var(--blue);
+  }
+}
+
+.selected {
+  background-color: var(--blue);
+  color: white;
+  border-radius: 2px;
+  width: 100%;
+}
+
+.treeGroup {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.contents {
+  padding-left: 25px;
+  transition: all 300ms ease;
+  overflow: hidden;
+
+  &.expanded {
+    max-height: 100%;
+  }
+
+  &:not(.expanded) {
+    max-height: 0;
+  }
+}
+
+.selected {
+  color: white;
+  background-color: var(--blue);
+}
+
+.group {
+  display: flex;
+  flex-direction: row;
+}
+
+.iconContainer {
+  align-self: flex-start;
+  width: 21px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.treeView {
+  display: flex;
+  flex-direction: column;
+}

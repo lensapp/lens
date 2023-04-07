@@ -82,6 +82,7 @@ exports[`installing update using application menu when started renders 1`] = `
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"

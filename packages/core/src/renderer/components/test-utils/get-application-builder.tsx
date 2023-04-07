@@ -53,7 +53,7 @@ import { applicationWindowInjectionToken } from "../../../main/start-main-applic
 import closeAllWindowsInjectable from "../../../main/start-main-application/lens-window/hide-all-windows/close-all-windows.injectable";
 import type { LensWindow } from "../../../main/start-main-application/lens-window/application-window/create-lens-window.injectable";
 import type { FakeExtensionOptions } from "./get-extension-fake";
-import { getMainExtensionFakeWith, getRendererExtensionFakeWith } from "./get-extension-fake";
+import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import { getOverrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
@@ -594,13 +594,13 @@ export const getApplicationBuilder = () => {
       enable: (...extensions) => {
         builder.afterWindowStart(action(({ windowDi }) => {
           extensions
-            .map(getRendererExtensionFakeWith(windowDi))
+            .map(getExtensionFakeForRenderer)
             .forEach(enableExtensionFor(windowDi, rendererExtensionsStateInjectable));
         }));
 
         builder.afterApplicationStart(action(({ mainDi }) => {
           extensions
-            .map(getMainExtensionFakeWith(mainDi))
+            .map(getExtensionFakeForMain)
             .forEach(enableExtensionFor(mainDi, mainExtensionsStateInjectable));
         }));
       },

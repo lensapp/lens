@@ -82,6 +82,7 @@ exports[`periodical checking of updates given updater is enabled and configurati
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
