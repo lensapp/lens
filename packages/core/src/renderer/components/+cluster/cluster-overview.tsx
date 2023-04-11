@@ -29,6 +29,7 @@ import enabledMetricsInjectable from "../../api/catalog/entity/metrics-enabled.i
 import type { ClusterOverviewUIBlock } from "@k8slens/metrics";
 import { clusterOverviewUIBlockInjectionToken } from "@k8slens/metrics";
 import { orderByOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
+import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 
 interface Dependencies {
   subscribeStores: SubscribeStores;
@@ -37,7 +38,7 @@ interface Dependencies {
   eventStore: EventStore;
   nodeStore: NodeStore;
   clusterMetricsAreVisible: IComputedValue<boolean>;
-  uiBlocks: ClusterOverviewUIBlock[];
+  uiBlocks: IComputedValue<ClusterOverviewUIBlock[]>;
 }
 
 @observer
@@ -78,7 +79,7 @@ class NonInjectedClusterOverview extends React.Component<Dependencies> {
 
     return (
       <>
-        {orderByOrderNumber(this.props.uiBlocks).map((block) => (
+        {orderByOrderNumber(this.props.uiBlocks.get()).map((block) => (
           <block.Component key={block.id} />
         ))}
       </>
@@ -121,6 +122,6 @@ export const ClusterOverview = withInjectables<Dependencies>(NonInjectedClusterO
     podStore: di.inject(podStoreInjectable),
     eventStore: di.inject(eventStoreInjectable),
     nodeStore: di.inject(nodeStoreInjectable),
-    uiBlocks: di.injectMany(clusterOverviewUIBlockInjectionToken),
+    uiBlocks: di.inject(computedInjectManyInjectable)(clusterOverviewUIBlockInjectionToken),
   }),
 });
