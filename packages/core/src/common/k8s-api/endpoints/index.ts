@@ -22,6 +22,7 @@ export * from "./ingress-class.api";
 export * from "./job.api";
 export * from "./lease.api";
 export * from "./limit-range.api";
+export * from "./mutating-webhook-configuration.api";
 export * from "./namespace.api";
 export * from "./network-policy.api";
 export * from "./node.api";
