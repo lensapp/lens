@@ -12,6 +12,7 @@ export type ClusterOverviewUIBlock = {
   orderNumber: number;
 };
 
+// this should be moved to cluster-overview package when there is one
 export const clusterOverviewUIBlockInjectionToken = getInjectionToken<ClusterOverviewUIBlock>({
   id: "cluster-overview-ui-block-injection-token",
 });
