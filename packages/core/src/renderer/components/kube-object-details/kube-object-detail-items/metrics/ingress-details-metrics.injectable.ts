@@ -6,7 +6,7 @@ import { ingressDetailsMetricsInjectionToken } from "@k8slens/metrics";
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterMetricsResourceType } from "../../../../../common/cluster-types";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
-import { getMetricsKubeObjectDetailItemInjectable } from "./getMetricsKubeObjectDetailItem.injectable";
+import { getMetricsKubeObjectDetailItemInjectable } from "./get-metrics-kube-object-detail-item.injectable";
 
 const ingressMetricsInjectable = getInjectable({
   id: "ingress-details-metrics",

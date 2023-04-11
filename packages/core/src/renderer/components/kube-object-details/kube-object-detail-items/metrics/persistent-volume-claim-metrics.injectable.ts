@@ -6,7 +6,7 @@ import { persistentVolumeClaimDetailsMetricsInjectionToken } from "@k8slens/metr
 import { getInjectable } from "@ogre-tools/injectable";
 import { ClusterMetricsResourceType } from "../../../../../common/cluster-types";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
-import { getMetricsKubeObjectDetailItemInjectable } from "./getMetricsKubeObjectDetailItem.injectable";
+import { getMetricsKubeObjectDetailItemInjectable } from "./get-metrics-kube-object-detail-item.injectable";
 
 const persistentVolumeClaimMetricsInjectable = getInjectable({
   id: "persistent-volume-claim-details-metrics",
