@@ -30,7 +30,7 @@ const catalogEntityStoreInjectable = getInjectable({
     const catalogCategoryRegistry = di.inject(catalogCategoryRegistryInjectable);
     const selectedCatalogEntityParam = di.inject(selectedCatalogEntityParamInjectable);
 
-    const activeCategory = observable.box<CatalogCategory | undefined>(undefined);
+    const activeCategory = observable.box<CatalogCategory>();
     const entities = computed(() => {
       const category = activeCategory.get();
 

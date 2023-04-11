@@ -107,6 +107,7 @@ exports[`force user to update when too long since update was downloaded when app
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -417,6 +418,7 @@ exports[`force user to update when too long since update was downloaded when app
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"
@@ -774,6 +776,7 @@ exports[`force user to update when too long since update was downloaded when app
           >
             <i
               class="Icon logo svg focusable"
+              data-testid="no-welcome-banners-icon"
             >
               <span
                 class="icon"

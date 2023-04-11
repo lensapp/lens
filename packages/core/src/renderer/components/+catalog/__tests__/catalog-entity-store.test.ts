@@ -13,6 +13,7 @@ import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { CatalogEntityStore } from "../catalog-entity-store.injectable";
 import catalogEntityStoreInjectable from "../catalog-entity-store.injectable";
 import { noop } from "@k8slens/utilities";
+import type { CatalogEntityRegistry } from "../../../api/catalog/entity/registry";
 
 class TestEntityOne extends CatalogEntity {
   public static readonly apiVersion: string = "entity.k8slens.dev/v1alpha1";
@@ -152,7 +153,7 @@ describe("CatalogEntityStore", () => {
         getItemsForCategory: <T extends CatalogEntity>(category: CatalogCategory): T[] => {
           return entityItems.filter(item => category.spec.versions.some(version => item instanceof version.entityClass)) as T[];
         },
-      } as any));
+      } as CatalogEntityRegistry));
 
       store = di.inject(catalogEntityStoreInjectable);
     });

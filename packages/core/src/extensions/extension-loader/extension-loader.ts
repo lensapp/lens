@@ -9,13 +9,12 @@ import type { ObservableMap } from "mobx";
 import { runInAction, action, computed, toJS, observable, reaction, when } from "mobx";
 import { broadcastMessage, ipcMainOn, ipcRendererOn, ipcMainHandle } from "../../common/ipc";
 import { isDefined, iter } from "@k8slens/utilities";
-import type { ExternalInstalledExtension, InstalledExtension, LensExtensionConstructor, LensExtensionId, BundledExtension } from "@k8slens/legacy-extensions";
+import type { ExternalInstalledExtension, InstalledExtension, LensExtensionConstructor, LensExtensionId, BundledExtension, BundledInstalledExtension, LegacyLensExtension } from "@k8slens/legacy-extensions";
 import type { LensExtension } from "../lens-extension";
 import { extensionLoaderFromMainChannel, extensionLoaderFromRendererChannel } from "../../common/ipc/extension-handling";
 import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
 import assert from "assert";
 import { EventEmitter } from "../../common/event-emitter";
-import type { CreateExtensionInstance } from "./create-extension-instance.token";
 import type { Extension } from "./extension/extension.injectable";
 import type { Logger } from "../../common/logger";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
@@ -25,13 +24,12 @@ import type { UpdateExtensionsState } from "../../features/extensions/enabled/co
 const logModule = "[EXTENSIONS-LOADER]";
 
 interface Dependencies {
-  readonly extensionInstances: ObservableMap<LensExtensionId, LensExtension>;
+  readonly extensionInstances: ObservableMap<LensExtensionId, LegacyLensExtension>;
   readonly bundledExtensions: BundledExtension[];
   readonly logger: Logger;
   readonly extensionEntryPointName: "main" | "renderer";
   updateExtensionsState: UpdateExtensionsState;
-  createExtensionInstance: CreateExtensionInstance;
-  getExtension: (instance: LensExtension) => Extension;
+  getExtension: (instance: LegacyLensExtension) => Extension;
   joinPaths: JoinPaths;
   getDirnameOfPath: GetDirnameOfPath;
 }
@@ -85,7 +83,7 @@ export class ExtensionLoader {
    * - `null` if no class definition is provided for the current process
    * - `undefined` if the name is not known about
    */
-  getInstanceByName(name: string): LensExtension | null | undefined {
+  getInstanceByName(name: string): LegacyLensExtension | null | undefined {
     if (this.nonInstancesByName.has(name)) {
       return null;
     }
@@ -236,7 +234,7 @@ export class ExtensionLoader {
             return null;
           }
 
-          const installedExtension: InstalledExtension = {
+          const installedExtension: BundledInstalledExtension = {
             absolutePath: "irrelevant",
             id: extension.manifest.name,
             isBundled: true,
@@ -245,10 +243,7 @@ export class ExtensionLoader {
             manifest: extension.manifest,
             manifestPath: "irrelevant",
           };
-          const instance = this.dependencies.createExtensionInstance(
-            LensExtensionClass,
-            installedExtension,
-          );
+          const instance = new LensExtensionClass(installedExtension);
 
           this.dependencies.extensionInstances.set(extension.manifest.name, instance);
 
@@ -307,35 +302,32 @@ export class ExtensionLoader {
 
     return [...installedExtensions.entries()]
       .filter((entry): entry is [string, ExternalInstalledExtension] => !entry[1].isBundled)
-      .map(([extId, extension]) => {
-        const alreadyInit = this.dependencies.extensionInstances.has(extId) || this.nonInstancesByName.has(extension.manifest.name);
+      .map(([extId, installedExtension]) => {
+        const alreadyInit = this.dependencies.extensionInstances.has(extId) || this.nonInstancesByName.has(installedExtension.manifest.name);
 
-        if (extension.isCompatible && extension.isEnabled && !alreadyInit) {
+        if (installedExtension.isCompatible && installedExtension.isEnabled && !alreadyInit) {
           try {
-            const LensExtensionClass = this.requireExtension(extension);
+            const LensExtensionClass = this.requireExtension(installedExtension);
 
             if (!LensExtensionClass) {
-              this.nonInstancesByName.add(extension.manifest.name);
+              this.nonInstancesByName.add(installedExtension.manifest.name);
 
               return null;
             }
 
-            const instance = this.dependencies.createExtensionInstance(
-              LensExtensionClass,
-              extension,
-            );
+            const instance = new LensExtensionClass(installedExtension);
 
             this.dependencies.extensionInstances.set(extId, instance);
 
             return {
               instance,
-              installedExtension: extension,
+              installedExtension,
               activated: instance.activate(),
             } as ExtensionBeingActivated;
           } catch (err) {
-            this.dependencies.logger.error(`${logModule}: error loading extension`, { ext: extension, err });
+            this.dependencies.logger.error(`${logModule}: error loading extension`, { ext: installedExtension, err });
           }
-        } else if (!extension.isEnabled && alreadyInit) {
+        } else if (!installedExtension.isEnabled && alreadyInit) {
           this.removeInstance(extId);
         }
 

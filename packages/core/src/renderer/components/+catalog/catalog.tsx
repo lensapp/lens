@@ -135,16 +135,19 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
         }
       }, { fireImmediately: true }),
       // If active category is filtered out, automatically switch to the first category
-      reaction(() => catalogCategoryRegistry.filteredItems, () => {
-        if (!catalogCategoryRegistry.filteredItems.find(item => item.getId() === catalogEntityStore.activeCategory.get()?.getId())) {
-          const item = catalogCategoryRegistry.filteredItems[0];
+      reaction(() => [...catalogCategoryRegistry.filteredItems], (categories) => {
+        const currentCategory = catalogEntityStore.activeCategory.get();
+        const someCategory = categories[0];
 
-          runInAction(() => {
-            if (item) {
-              this.activeTab = item.getId();
-              this.props.catalogEntityStore.activeCategory.set(item);
-            }
-          });
+        if (this.routeActiveTab === browseCatalogTab || !someCategory) {
+          return;
+        }
+
+        const currentCategoryShouldBeShown = Boolean(categories.find(item => item.getId() === someCategory.getId()));
+
+        if (!currentCategory || !currentCategoryShouldBeShown) {
+          this.activeTab = someCategory.getId();
+          this.props.catalogEntityStore.activeCategory.set(someCategory);
         }
       }),
     ]);

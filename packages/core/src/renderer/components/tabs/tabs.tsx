@@ -55,7 +55,7 @@ export interface TabProps<D> extends DOMAttributes<HTMLElement> {
   className?: string;
   active?: boolean;
   disabled?: boolean;
-  icon?: React.ReactNode | string; // material-ui name or custom icon
+  icon?: React.ReactNode | string; // material-io name or custom icon
   label?: React.ReactNode;
   value: D;
 }

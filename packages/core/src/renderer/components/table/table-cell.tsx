@@ -71,6 +71,11 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
    * indicator, might come from parent <TableHead>, don't use this prop outside (!)
    */
   _nowrap?: boolean;
+
+  /**
+   * For passing in the testid
+   */
+  "data-testid"?: string;
 }
 
 export class TableCell extends React.Component<TableCellProps> {
