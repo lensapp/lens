@@ -35,6 +35,10 @@
   display: flex;
   align-items: center;
 
+  &:empty {
+    padding-inline: 0;
+  }
+
   &:hover {
     cursor: pointer;
     background-color: #ffffff33;
