@@ -20,3 +20,4 @@ export * as ReactRouter from "react-router";
 export * as ReactRouterDom from "react-router-dom";
 export * as rendererExtensionApi from "../extensions/renderer-api";
 export * as commonExtensionApi from "../extensions/common-api";
+export { metricsFeature } from "../features/metrics/metrics-feature";
