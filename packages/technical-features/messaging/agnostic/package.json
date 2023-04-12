@@ -1,15 +1,13 @@
 {
   "name": "@k8slens/messaging",
   "private": false,
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "An abstraction for messaging between Lens environments",
   "type": "commonjs",
-
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-
   "files": [
     "dist"
   ],
@@ -42,8 +40,7 @@
     "lodash": "^4.17.21",
     "mobx": "^6.7.0"
   },
-
   "devDependencies": {
-    "@k8slens/eslint-config": "^6.5.0-alpha.1"
+    "@k8slens/eslint-config": "^6.5.0-alpha.2"
   }
 }

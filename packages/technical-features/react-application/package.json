@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/react-application",
   "private": false,
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Package for React Application",
   "type": "commonjs",
   "files": [
@@ -31,8 +31,8 @@
     "lint:fix": "lens-lint --fix"
   },
   "peerDependencies": {
-    "@k8slens/feature-core": "^6.5.0-alpha.0",
     "@k8slens/application": "^6.5.0-alpha.2",
+    "@k8slens/feature-core": "^6.5.0-alpha.0",
     "@ogre-tools/fp": "^15.1.2",
     "@ogre-tools/injectable": "^15.1.2",
     "@ogre-tools/injectable-extension-for-auto-registration": "^15.1.2",
@@ -45,8 +45,8 @@
   },
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
-    "@k8slens/eslint-config": "6.5.0-alpha.1",
-    "@testing-library/react": "^12.1.5",
-    "@k8slens/react-testing-library-discovery": "*"
+    "@k8slens/eslint-config": "^6.5.0-alpha.2",
+    "@k8slens/react-testing-library-discovery": "*",
+    "@testing-library/react": "^12.1.5"
   }
 }

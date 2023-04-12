@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/cluster-settings",
-  "version": "6.5.0-alpha.1",
+  "version": "6.5.0-alpha.2",
   "description": "Injection token exporter for cluster settings configuration",
   "license": "MIT",
   "private": false,

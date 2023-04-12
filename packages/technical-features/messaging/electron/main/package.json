@@ -1,15 +1,13 @@
 {
   "name": "@k8slens/messaging-for-main",
   "private": false,
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Implementations for 'messaging' in Electron main",
   "type": "commonjs",
-
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-
   "files": [
     "dist"
   ],
@@ -42,6 +40,6 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@k8slens/eslint-config": "^6.5.0-alpha.1"
+    "@k8slens/eslint-config": "^6.5.0-alpha.2"
   }
 }

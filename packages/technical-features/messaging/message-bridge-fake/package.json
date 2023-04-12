@@ -1,15 +1,13 @@
 {
   "name": "@k8slens/messaging-fake-bridge",
   "private": false,
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Fake implementation to bridge multiple dependency injection containers.",
   "type": "commonjs",
-
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-
   "files": [
     "dist"
   ],
@@ -38,11 +36,10 @@
     "@ogre-tools/injectable": "^15.1.2",
     "lodash": "^4.17.21"
   },
-
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
-    "@k8slens/feature-core": "6.5.0-alpha.1",
-    "@k8slens/eslint-config": "^6.5.0-alpha.1",
+    "@k8slens/eslint-config": "^6.5.0-alpha.2",
+    "@k8slens/feature-core": "^6.5.0-alpha.2",
     "@ogre-tools/injectable-extension-for-mobx": "^15.3.0",
     "mobx": "^6.7.0"
   }
