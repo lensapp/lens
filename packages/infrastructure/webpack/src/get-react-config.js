@@ -50,7 +50,11 @@ module.exports =
                 options: {
                   sourceMap: false,
                   postcssOptions: {
-                    plugins: ["tailwindcss"],
+                    plugins: {
+                      tailwindcss: {
+                        config: {}
+                      }
+                    },
                   },
                 },
               },

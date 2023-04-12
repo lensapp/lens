@@ -20,6 +20,6 @@
   "homepage": "https://github.com/lensapp/lens",
   "dependencies": {
     "typescript": "^4.9.3",
-    "typescript-plugin-css-modules": "^3.4.0"
+    "typescript-plugin-css-modules": "^5.0.1"
   }
 }

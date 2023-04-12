@@ -30,7 +30,7 @@ module.exports = ({ entrypointFilePath, outputDirectory }) => ({
         mode: "write-dts",
 
         configOverwrite: {
-          include: [entrypointFilePath],
+          include: [entrypointFilePath, './styles.d.ts'],
 
           compilerOptions: {
             declaration: true,

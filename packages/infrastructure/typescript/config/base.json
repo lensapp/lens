@@ -41,7 +41,5 @@
     "compilerOptions": {
       "module": "CommonJS"
     }
-  },
-
-  "include": ["./styles.d.ts"]
+  }
 }
