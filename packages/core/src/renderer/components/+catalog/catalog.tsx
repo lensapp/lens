@@ -51,6 +51,7 @@ import type { ShowEntityDetails } from "./entity-details/show.injectable";
 import showEntityDetailsInjectable from "./entity-details/show.injectable";
 import type { Hotbar } from "../../../features/hotbar/storage/common/hotbar";
 import activeHotbarInjectable from "../../../features/hotbar/storage/common/active.injectable";
+import { DockHost } from "@k8slens/dock";
 
 interface Dependencies {
   catalogPreviousActiveTabStorage: StorageLayer<string | null>;
@@ -298,6 +299,8 @@ class NonInjectedCatalog extends React.Component<Dependencies> {
             onItemClick={this.onTabChange}
           />
         )}
+
+        footer={<DockHost />}
       >
         <div className={styles.views}>
           {this.renderViews(activeCategory)}
