@@ -33,10 +33,7 @@ export function withTooltip<TargetProps>(
     // TODO: Remove side-effect to allow deterministic unit testing
     const [defaultTooltipId] = useState(uniqueId("tooltip_target_"));
 
-    let {
-      id: targetId,
-      children: targetChildren,
-    } = props;
+    let { id: targetId, children: targetChildren } = props;
     const {
       tooltip,
       tooltipOverrideDisabled,
@@ -56,16 +53,14 @@ export function withTooltip<TargetProps>(
       targetId = tooltipProps.targetId;
       targetChildren = (
         <>
-          <div>
-            {targetChildren}
-          </div>
+          <div>{targetChildren}</div>
           <Tooltip {...tooltipProps} />
         </>
       );
     }
 
     return (
-      <Target id={targetId} {...targetProps as any}>
+      <Target id={targetId} {...(targetProps as any)}>
         {targetChildren}
       </Target>
     );

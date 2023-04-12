@@ -12,7 +12,7 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { Node } from "../../../common/k8s-api/endpoints/node.api";
 import { formatNodeTaint } from "../../../common/k8s-api/endpoints/node.api";
 import { LineProgress } from "../line-progress";
-import { Tooltip, TooltipPosition } from "../tooltip";
+import { Tooltip, TooltipPosition } from "@k8slens/tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

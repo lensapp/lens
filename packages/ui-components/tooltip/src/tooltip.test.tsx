@@ -15,7 +15,7 @@ describe("<Tooltip />", () => {
   beforeEach(() => {
     requestAnimationFrameSpy = jest.spyOn(window, "requestAnimationFrame");
 
-    requestAnimationFrameSpy.mockImplementation(cb => {
+    requestAnimationFrameSpy.mockImplementation((cb) => {
       cb(0);
 
       return 0;
@@ -26,31 +26,28 @@ describe("<Tooltip />", () => {
     requestAnimationFrameSpy.mockRestore();
   });
 
-
-  it("does not render to DOM if not visibile", () => {
-    const result = render((
+  it("does not render to DOM if not visible", () => {
+    const result = render(
       <>
-        <Tooltip targetId="my-target" usePortal={false}>I am a tooltip</Tooltip>
+        <Tooltip targetId="my-target" usePortal={false}>
+          I am a tooltip
+        </Tooltip>
         <div id="my-target">Target Text</div>
-      </>
-    ));
+      </>,
+    );
 
     expect(result.baseElement).toMatchSnapshot();
   });
 
   it("renders to DOM when hovering over target", () => {
-    const result = render((
+    const result = render(
       <>
-        <Tooltip
-          targetId="my-target"
-          data-testid="tooltip"
-          usePortal={false}
-        >
+        <Tooltip targetId="my-target" data-testid="tooltip" usePortal={false}>
           I am a tooltip
         </Tooltip>
         <div id="my-target">Target Text</div>
-      </>
-    ));
+      </>,
+    );
 
     const target = result.baseElement.querySelector("#my-target");
 
@@ -60,20 +57,15 @@ describe("<Tooltip />", () => {
     expect(result.baseElement).toMatchSnapshot();
   });
 
-  it("renders to DOM when forced to by visibile prop", () => {
-    const result = render((
+  it("renders to DOM when forced to by visible prop", () => {
+    const result = render(
       <>
-        <Tooltip
-          targetId="my-target"
-          data-testid="tooltip"
-          visible={true}
-          usePortal={false}
-        >
+        <Tooltip targetId="my-target" data-testid="tooltip" visible={true} usePortal={false}>
           I am a tooltip
         </Tooltip>
         <div id="my-target">Target Text</div>
-      </>
-    ));
+      </>,
+    );
 
     expect(result.baseElement).toMatchSnapshot();
   });

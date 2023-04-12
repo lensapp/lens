@@ -12,6 +12,7 @@ class ProtectFromImportingNonDependencies {
     compiler.hooks.normalModuleFactory.tap("irrelevant", (normalModuleFactory) => {
       normalModuleFactory.hooks.resolve.tap("irrelevant", (toBeResolved) => {
 
+        const isSassDependency = toBeResolved.request.endsWith(".scss");
         const isLocalDependency = toBeResolved.request.startsWith(".");
         const isDependencyOfDependency =
           toBeResolved.context.includes("node_modules");
@@ -19,7 +20,7 @@ class ProtectFromImportingNonDependencies {
           const dependencyName = getDependencyName(toBeResolved.request);
 
           const dependencyWeAreInterested =
-            !isLocalDependency && !isDependencyOfDependency && dependencyName;
+            !isSassDependency && !isLocalDependency && !isDependencyOfDependency && dependencyName;
 
           if (dependencyWeAreInterested) {
             nodeModulesToBeResolved.add(dependencyName);

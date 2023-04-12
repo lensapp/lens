@@ -64,7 +64,7 @@ export const ConfirmDialog = Object.assign(_ConfirmDialog, {
 });
 
 export * from "../../renderer/components/icon";
-export * from "../../renderer/components/tooltip";
+export * from "@k8slens/tooltip";
 export * from "../../renderer/components/tabs";
 export * from "../../renderer/components/table";
 export * from "../../renderer/components/badge";

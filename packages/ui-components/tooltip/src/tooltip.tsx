@@ -55,8 +55,11 @@ export class Tooltip extends React.Component<TooltipProps> {
   static defaultProps = defaultProps as object;
 
   @observable.ref elem: HTMLDivElement | null = null;
+
   @observable activePosition?: TooltipPosition;
+
   @observable isVisible = false;
+
   @observable isContentVisible = false; // animation manager
 
   constructor(props: TooltipProps) {
@@ -95,7 +98,7 @@ export class Tooltip extends React.Component<TooltipProps> {
   @action
   protected onEnterTarget() {
     this.isVisible = true;
-    requestAnimationFrame(action(() => this.isContentVisible = true));
+    requestAnimationFrame(action(() => (this.isContentVisible = true)));
   }
 
   @action
@@ -134,7 +137,8 @@ export class Tooltip extends React.Component<TooltipProps> {
     // find proper position
     for (const pos of positions) {
       const { left, top, right, bottom } = this.getPosition(pos, selfBounds, targetBounds);
-      const fitsToWindow = left >= 0 && top >= 0 && right <= viewportWidth && bottom <= viewportHeight;
+      const fitsToWindow =
+        left >= 0 && top >= 0 && right <= viewportWidth && bottom <= viewportHeight;
 
       if (fitsToWindow) {
         this.activePosition = pos;
@@ -224,12 +228,7 @@ export class Tooltip extends React.Component<TooltipProps> {
       formatter: !!formatters,
     });
     const tooltip = (
-      <div
-        className={className}
-        style={style}
-        ref={elem => this.elem = elem}
-        role="tooltip"
-      >
+      <div className={className} style={style} ref={(elem) => (this.elem = elem)} role="tooltip">
         {children}
       </div>
     );

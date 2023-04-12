@@ -12,7 +12,7 @@ import { IpcRendererNavigationEvents } from "../../../common/ipc/navigation-even
 import { Avatar } from "../avatar";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
-import { Tooltip } from "../tooltip";
+import { Tooltip } from "@k8slens/tooltip";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { observer } from "mobx-react";
 import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entity-context-menu.injectable";
