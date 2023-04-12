@@ -10,7 +10,7 @@ import React, { createRef } from "react";
 import { NavLink } from "react-router-dom";
 import type { LocationDescriptor } from "history";
 import { cssNames } from "../../utils";
-import { withTooltip } from "../tooltip";
+import { withTooltip } from "@k8slens/tooltip";
 import isNumber from "lodash/isNumber";
 import Configuration from "./configuration.svg";
 import Crane from "./crane.svg";

@@ -9,7 +9,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { action, observable } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils/cssNames";
-import { withTooltip } from "../tooltip";
+import { withTooltip } from "@k8slens/tooltip";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   small?: boolean;

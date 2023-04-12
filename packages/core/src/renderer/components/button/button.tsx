@@ -7,7 +7,7 @@ import "./button.scss";
 import type { ButtonHTMLAttributes } from "react";
 import React from "react";
 import { cssNames } from "../../utils";
-import { withTooltip } from "../tooltip";
+import { withTooltip } from "@k8slens/tooltip";
 
 export interface ButtonProps extends ButtonHTMLAttributes<any> {
   label?: React.ReactNode;

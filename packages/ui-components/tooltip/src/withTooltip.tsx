@@ -9,9 +9,9 @@ import type { ReactNode } from "react";
 import React, { useState } from "react";
 import type { TooltipProps } from "@k8slens/tooltip";
 import { Tooltip } from "@k8slens/tooltip";
-import { isReactNode } from "../../utils/isReactNode";
+import { isReactNode } from "@k8slens/utilities";
 import uniqueId from "lodash/uniqueId";
-import type { SingleOrMany } from "../../utils";
+import type { SingleOrMany } from "@k8slens/utilities";
 
 export interface TooltipDecoratorProps {
   tooltip?: ReactNode | Omit<TooltipProps, "targetId">;
