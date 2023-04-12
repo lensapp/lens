@@ -1,0 +1,8 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+/**
+ * A function that does nothing
+ */
+export declare function noop<T extends any[]>(...args: T): void;

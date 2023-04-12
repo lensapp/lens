@@ -9,7 +9,7 @@ import { Icon } from "../icon";
 import { Badge } from "../badge";
 import hotbarStoreInjectable from "../../../common/hotbars/store.injectable";
 import { HotbarSwitchCommand } from "./hotbar-switch-command";
-import { Tooltip, TooltipPosition } from "../tooltip";
+import { Tooltip, TooltipPosition } from "@k8slens/tooltip";
 import { observer } from "mobx-react";
 import type { Hotbar } from "../../../common/hotbars/types";
 import { withInjectables } from "@ogre-tools/injectable-react";

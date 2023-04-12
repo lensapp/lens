@@ -53,8 +53,6 @@ global.ResizeObserver = class {
 };
 
 jest.mock("./renderer/components/monaco-editor/monaco-editor");
-jest.mock("./renderer/components/tooltip/withTooltip");
-
 jest.mock("monaco-editor");
 
 const getInjectables = (environment: "renderer" | "main", filePathGlob: string) => [

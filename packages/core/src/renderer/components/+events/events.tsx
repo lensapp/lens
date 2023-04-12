@@ -16,7 +16,7 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import type { KubeEvent, KubeEventApi, KubeEventData } from "../../../common/k8s-api/endpoints/events.api";
 import type { TableSortCallbacks, TableSortParams } from "../table";
 import type { HeaderCustomizer } from "../item-object-list";
-import { Tooltip } from "../tooltip";
+import { Tooltip } from "@k8slens/tooltip";
 import { Link } from "react-router-dom";
 import type { IClassName } from "../../utils";
 import { cssNames, stopPropagation } from "../../utils";

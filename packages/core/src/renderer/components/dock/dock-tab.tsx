@@ -16,7 +16,7 @@ import { Menu, MenuItem } from "../menu";
 import { observable } from "mobx";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import dockStoreInjectable from "./dock/store.injectable";
-import { Tooltip, TooltipPosition } from "../tooltip";
+import { Tooltip, TooltipPosition } from "@k8slens/tooltip";
 import isMacInjectable from "../../../common/vars/is-mac.injectable";
 
 export interface DockTabProps extends TabProps<DockTabModel> {
