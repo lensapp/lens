@@ -29,7 +29,7 @@ import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.inject
 import eventStoreInjectable from "../+events/store.injectable";
 import podStoreInjectable from "./store.injectable";
 import { NamespaceSelectBadge } from "../+namespaces/namespace-select-badge";
-import { Tooltip } from "../tooltip";
+import { Tooltip } from "@k8slens/tooltip";
 
 enum columnId {
   name = "name",

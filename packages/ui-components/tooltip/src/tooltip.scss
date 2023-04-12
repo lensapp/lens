@@ -5,20 +5,14 @@
 
 
 .Tooltip {
-  --bgc: var(--mainBackground);
-  --radius: #{$radius};
-  --color: var(--textColorAccent);
-  --border: 1px solid var(--borderColor);
 
-  // use positioning relative to viewport (window)
-  // https://developer.mozilla.org/en-US/docs/Web/CSS/position
   position: fixed;
   margin: 0 !important;
-  background: var(--bgc);
+  background: var(--mainBackground);
   font-size: small;
   font-weight: normal;
-  border-radius: var(--radius);
-  color: var(--color);
+  border-radius: 3px;
+  color: var(--textColorAccent);
   white-space: normal;
   padding: .5em;
   text-align: center;
@@ -55,7 +49,7 @@
     }
 
     &.small {
-      font-size: $font-size-small;
+      font-size: 12px;
     }
 
     &.warning {
@@ -68,7 +62,6 @@
       grid-template-columns: max-content 1fr;
       grid-template-rows: repeat(2, 1fr);
 
-      // backward compatibility: skips element in DOM to consider only children in grid-flow
       > .flex {
         display: contents;
       }
@@ -79,7 +72,7 @@
       }
 
       .title {
-        grid-column: 1 / 3; // merge
+        grid-column: 1 / 3;
         color: var(--textColorAccent);
         text-align: center;
         font-weight: bold;

@@ -7,7 +7,7 @@ import "./status-brick.scss";
 
 import React from "react";
 import { cssNames } from "@k8slens/utilities";
-import { withTooltip } from "../tooltip";
+import { withTooltip } from "@k8slens/tooltip";
 
 export interface StatusBrickProps extends React.HTMLAttributes<HTMLDivElement> {
 }

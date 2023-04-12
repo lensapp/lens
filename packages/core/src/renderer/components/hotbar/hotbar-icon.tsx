@@ -14,7 +14,7 @@ import { observer } from "mobx-react";
 import type { AvatarProps } from "../avatar";
 import { Avatar } from "../avatar";
 import { Icon } from "../icon";
-import { Tooltip } from "../tooltip";
+import { Tooltip } from "@k8slens/tooltip";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";

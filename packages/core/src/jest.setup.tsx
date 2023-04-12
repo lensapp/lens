@@ -9,6 +9,8 @@ import { TextEncoder, TextDecoder as TextDecoderNode } from "util";
 import glob from "glob";
 import path from "path";
 import { enableMapSet, setAutoFreeze } from "immer";
+import type * as K8slensTooltip from "@k8slens/tooltip";
+import React from "react";
 
 declare global {
   interface InjectablePaths {
@@ -53,8 +55,25 @@ global.ResizeObserver = class {
 };
 
 jest.mock("./renderer/components/monaco-editor/monaco-editor");
-jest.mock("./renderer/components/tooltip/withTooltip");
+jest.mock("@k8slens/tooltip", () => ({
+  ...jest.requireActual("@k8slens/tooltip"),
+  withTooltip: (Target => ({ tooltip, tooltipOverrideDisabled, ...props }: any) => {
+    if (tooltip) {
+      const testId = props["data-testid"];
 
+      return (
+        <>
+          <Target {...props} />
+          <div data-testid={testId && `tooltip-content-for-${testId}`}>
+            {tooltip.children || tooltip}
+          </div>
+        </>
+      );
+    }
+
+    return <Target {...props} />;
+  }) as typeof K8slensTooltip.withTooltip,
+}));
 jest.mock("monaco-editor");
 
 const getInjectables = (environment: "renderer" | "main", filePathGlob: string) => [
