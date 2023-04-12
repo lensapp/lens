@@ -1,8 +1,8 @@
 .Dock {
-  position: relative;
-  background: var(--dockHeadBackground);
-  display: flex;
-  flex-direction: column;
+  //position: relative;
+  //background: var(--dockHeadBackground);
+  //display: flex;
+  //flex-direction: column;
 
   &:not(:focus-within) .DockTab.active {
     &::after {

@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dock when rendered renders 1`] = `
+<body>
+  <div>
+    <div
+      class="Dock isOpen"
+    >
+      <div
+        class="flex align-center tabs-container"
+      >
+        <div
+          class="Tab flex gaps align-center"
+        >
+          <div
+            class="label"
+          >
+            <div
+              class="flex align-center"
+            >
+              <span
+                class="overflow-hidden text-ellipsis"
+              >
+                Some title
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="Tab flex gaps align-center"
+        >
+          <div
+            class="label"
+          >
+            <div
+              class="flex align-center"
+            >
+              <span
+                class="overflow-hidden text-ellipsis"
+              >
+                Some other title
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex align-center toolbar gaps box grow pl-0"
+      >
+        <div
+          class="dock-menu box grow"
+        />
+      </div>
+      <div
+        class="tab-content"
+        style="flex-basis: 420px;"
+      >
+        Some content
+      </div>
+    </div>
+  </div>
+</body>
+`;
