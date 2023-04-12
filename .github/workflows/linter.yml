@@ -27,3 +27,6 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Verify Publish Configurations
+        run: ./scripts/lint-publish-configs.sh
