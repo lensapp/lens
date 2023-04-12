@@ -31,7 +31,7 @@ jobs:
           commit: master
           tag: ${{ steps.tagger.outputs.tagname }}
           body: ${{ github.event.pull_request.body }}
-          prerelease: ${{ endsWith(steps.tagger.outputs.tagname, '-alpha') || endsWith(steps.tagger.outputs.tagname, '-beta') }}
+          prerelease: ${{ contains(steps.tagger.outputs.tagname, '-alpha.') || contains(steps.tagger.outputs.tagname, '-beta.') }}
   publish-npm:
     uses: ./.github/workflows/publish-release-npm.yml
     needs: release
