@@ -1,15 +1,13 @@
 {
   "name": "@k8slens/computed-channel",
   "private": false,
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "MobX-like computed between channels",
   "type": "commonjs",
-
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-
   "files": [
     "dist"
   ],
@@ -44,8 +42,8 @@
     "mobx": "^6.8.0"
   },
   "devDependencies": {
-    "@k8slens/eslint-config": "^6.5.0-alpha.1",
-    "@k8slens/messaging-fake-bridge": "^1.0.0-alpha.1",
+    "@k8slens/eslint-config": "^6.5.0-alpha.2",
+    "@k8slens/messaging-fake-bridge": "^1.0.0-alpha.2",
     "type-fest": "^2.14.0"
   }
 }
