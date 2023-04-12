@@ -1,258 +1,155 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`get-multi-export-config given maximal package.json, when creating configuration works 1`] = `
-[
+"[
   {
-    "entry": {
-      "index": "./index.ts",
-    },
-    "externals": [
-      [Function],
-      [Function],
-    ],
-    "externalsPresets": {
-      "node": true,
-    },
-    "mode": "production",
-    "module": {
-      "rules": [
-        {
-          "loader": "ts-loader",
-          "test": /\\\\\\.ts\\(x\\)\\?\\$/,
-        },
-      ],
-    },
-    "name": "./index.ts",
-    "node": {
-      "__dirname": true,
-      "__filename": true,
-    },
-    "output": {
-      "filename": [Function],
-      "libraryTarget": "commonjs2",
-      "path": "/some-working-directory/dist",
-    },
-    "performance": {
-      "hints": "error",
-      "maxEntrypointSize": 100000,
-    },
-    "plugins": [
+    name: './index.ts',
+    entry: { index: './index.ts' },
+    target: 'node',
+    mode: 'production',
+    performance: { maxEntrypointSize: 100000, hints: 'error' },
+    resolve: { extensions: [ '.ts', '.tsx', '.js' ] },
+    plugins: [
       MakePeerDependenciesExternalPlugin {},
       ProtectFromImportingNonDependencies {},
       ForkTsCheckerWebpackPlugin {
-        "options": {
-          "typescript": {
-            "configOverwrite": {
-              "compilerOptions": {
-                "declaration": true,
-                "declarationDir": "/some-working-directory/dist",
-              },
-              "include": [
-                "./index.ts",
-              ],
-            },
-            "mode": "write-dts",
-          },
-        },
-      },
+        options: {
+          typescript: {
+            mode: 'write-dts',
+            configOverwrite: {
+              include: [ './index.ts' ],
+              compilerOptions: {
+                declaration: true,
+                declarationDir: '/some-working-directory/dist'
+              }
+            }
+          }
+        }
+      }
     ],
-    "resolve": {
-      "extensions": [
-        ".ts",
-        ".tsx",
-        ".js",
-      ],
+    output: {
+      path: '/some-working-directory/dist',
+      filename: [Function: filename],
+      libraryTarget: 'commonjs2'
     },
-    "target": "node",
+    externalsPresets: { node: true },
+    node: { __dirname: true, __filename: true },
+    module: { rules: [ { test: /\\.ts(x)?$/, loader: 'ts-loader' } ] }
   },
   {
-    "entry": {
-      "index": "./some-entrypoint/index.ts",
-    },
-    "externals": [
-      [Function],
-      [Function],
-    ],
-    "externalsPresets": {
-      "node": true,
-    },
-    "mode": "production",
-    "module": {
-      "rules": [
-        {
-          "loader": "ts-loader",
-          "test": /\\\\\\.ts\\(x\\)\\?\\$/,
-        },
-      ],
-    },
-    "name": "./some-entrypoint/index.ts",
-    "node": {
-      "__dirname": true,
-      "__filename": true,
-    },
-    "output": {
-      "filename": [Function],
-      "libraryTarget": "commonjs2",
-      "path": "/some-working-directory/dist/some-entrypoint",
-    },
-    "performance": {
-      "hints": "error",
-      "maxEntrypointSize": 100000,
-    },
-    "plugins": [
+    name: './some-entrypoint/index.ts',
+    entry: { index: './some-entrypoint/index.ts' },
+    target: 'node',
+    mode: 'production',
+    performance: { maxEntrypointSize: 100000, hints: 'error' },
+    resolve: { extensions: [ '.ts', '.tsx', '.js' ] },
+    plugins: [
       MakePeerDependenciesExternalPlugin {},
       ProtectFromImportingNonDependencies {},
       ForkTsCheckerWebpackPlugin {
-        "options": {
-          "typescript": {
-            "configOverwrite": {
-              "compilerOptions": {
-                "declaration": true,
-                "declarationDir": "/some-working-directory/dist/some-entrypoint",
-              },
-              "include": [
-                "./some-entrypoint/index.ts",
-              ],
-            },
-            "mode": "write-dts",
-          },
-        },
-      },
+        options: {
+          typescript: {
+            mode: 'write-dts',
+            configOverwrite: {
+              include: [ './some-entrypoint/index.ts' ],
+              compilerOptions: {
+                declaration: true,
+                declarationDir: '/some-working-directory/dist/some-entrypoint'
+              }
+            }
+          }
+        }
+      }
     ],
-    "resolve": {
-      "extensions": [
-        ".ts",
-        ".tsx",
-        ".js",
-      ],
+    output: {
+      path: '/some-working-directory/dist/some-entrypoint',
+      filename: [Function: filename],
+      libraryTarget: 'commonjs2'
     },
-    "target": "node",
+    externalsPresets: { node: true },
+    node: { __dirname: true, __filename: true },
+    module: { rules: [ { test: /\\.ts(x)?$/, loader: 'ts-loader' } ] }
   },
   {
-    "entry": {
-      "index": "./some-other-entrypoint/index.ts",
-    },
-    "externals": [
-      [Function],
-      [Function],
-    ],
-    "externalsPresets": {
-      "node": true,
-    },
-    "mode": "production",
-    "module": {
-      "rules": [
-        {
-          "loader": "ts-loader",
-          "test": /\\\\\\.ts\\(x\\)\\?\\$/,
-        },
-        {
-          "test": /\\\\\\.s\\?css\\$/,
-          "use": [
-            {
-              "some": "miniCssExtractPluginLoader",
-            },
-            {
-              "loader": "css-loader",
-              "options": {
-                "modules": {
-                  "auto": /\\\\\\.module\\\\\\./i,
-                  "localIdentName": "[name]__[local]--[hash:base64:5]",
-                  "mode": "local",
-                },
-                "sourceMap": false,
-              },
-            },
-            {
-              "loader": "postcss-loader",
-              "options": Object {
-                "postcssOptions": Object {
-                  "plugins": Array [
-                    "tailwindcss",
-                  ],
-                },
-                "sourceMap": false,
-              },
-            },
-            {
-              "loader": "sass-loader",
-              "options": {
-                "sourceMap": false,
-              },
-            },
-          ],
-        },
-        Object {
-          "test": /\\\\\\.\\(ttf\\|eot\\|woff2\\?\\)\\$/,
-          "type": "asset/resource",
-        },
-        Object {
-          "test": /\\\\\\.svg\\$/,
-          "type": "asset/source",
-        },
-        Object {
-          "test": /\\\\\\.\\(jpg\\|png\\|ico\\)\\$/,
-          "type": "asset/resource",
-        },
-      ],
-    },
-    "name": "./some-other-entrypoint/index.ts",
-    "node": {
-      "__dirname": true,
-      "__filename": true,
-    },
-    "output": {
-      "filename": [Function],
-      "libraryTarget": "commonjs2",
-      "path": "/some-working-directory/dist/some-other-entrypoint",
-    },
-    "performance": {
-      "hints": "error",
-      "maxEntrypointSize": 100000,
-    },
-    "plugins": [
+    name: './some-other-entrypoint/index.ts',
+    entry: { index: './some-other-entrypoint/index.ts' },
+    target: 'node',
+    mode: 'production',
+    performance: { maxEntrypointSize: 100000, hints: 'error' },
+    resolve: { extensions: [ '.ts', '.tsx', '.js' ] },
+    plugins: [
       MakePeerDependenciesExternalPlugin {},
       ProtectFromImportingNonDependencies {},
       ForkTsCheckerWebpackPlugin {
-        "options": {
-          "typescript": {
-            "configOverwrite": {
-              "compilerOptions": {
-                "declaration": true,
-                "declarationDir": "/some-working-directory/dist/some-other-entrypoint",
-              },
-              "include": [
-                "./some-other-entrypoint/index.ts",
-              ],
-            },
-            "mode": "write-dts",
-          },
-        },
+        options: {
+          typescript: {
+            mode: 'write-dts',
+            configOverwrite: {
+              include: [ './some-other-entrypoint/index.ts' ],
+              compilerOptions: {
+                declaration: true,
+                declarationDir: '/some-working-directory/dist/some-other-entrypoint'
+              }
+            }
+          }
+        }
       },
       MiniCssExtractPlugin {
-        "_sortedModulesCache": WeakMap {},
-        "options": {
-          "chunkFilename": "[name].css",
-          "experimentalUseImportModule": undefined,
-          "filename": "[name].css",
-          "ignoreOrder": false,
-          "runtime": true,
+        _sortedModulesCache: WeakMap { <items unknown> },
+        options: {
+          filename: '[name].css',
+          ignoreOrder: false,
+          experimentalUseImportModule: undefined,
+          runtime: true,
+          chunkFilename: '[name].css'
         },
-        "runtimeOptions": {
-          "attributes": undefined,
-          "insert": undefined,
-          "linkType": "text/css",
-        },
-      },
+        runtimeOptions: {
+          insert: undefined,
+          linkType: 'text/css',
+          attributes: undefined
+        }
+      }
     ],
-    "resolve": {
-      "extensions": [
-        ".ts",
-        ".tsx",
-        ".js",
-      ],
+    output: {
+      path: '/some-working-directory/dist/some-other-entrypoint',
+      filename: [Function: filename],
+      libraryTarget: 'commonjs2'
     },
-    "target": "node",
-  },
-]
+    externalsPresets: { node: true },
+    node: { __dirname: true, __filename: true },
+    module: {
+      rules: [
+        { test: /\\.ts(x)?$/, loader: 'ts-loader' },
+        {
+          test: /\\.s?css$/,
+          use: [
+            { some: 'miniCssExtractPluginLoader' },
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: false,
+                modules: {
+                  auto: /\\.module\\./i,
+                  mode: 'local',
+                  localIdentName: '[name]__[local]--[hash:base64:5]'
+                }
+              }
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                sourceMap: false,
+                postcssOptions: { plugins: [ 'tailwindcss' ] }
+              }
+            },
+            { loader: 'sass-loader', options: { sourceMap: false } }
+          ]
+        },
+        { test: /\\.(ttf|eot|woff2?)$/, type: 'asset/resource' },
+        { test: /\\.svg$/, type: 'asset/source' },
+        { test: /\\.(jpg|png|ico)$/, type: 'asset/resource' }
+      ]
+    }
+  }
+]"
 `;

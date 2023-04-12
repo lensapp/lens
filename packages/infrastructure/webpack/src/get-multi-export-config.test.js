@@ -1,6 +1,7 @@
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import getMultiExportConfig from "./get-multi-export-config";
 import path from "path";
+import { inspect } from "util";
 const getReactConfigFor = require("./get-react-config");
 
 const resolvePathFake = path.posix.resolve;
@@ -66,7 +67,12 @@ describe("get-multi-export-config", () => {
     });
 
     it("works", () => {
-      expect(configs).toMatchSnapshot();
+      expect(inspect(configs, {
+        colors: false,
+        depth: Infinity,
+        maxArrayLength: Infinity,
+        maxStringLength: Infinity,
+      })).toMatchSnapshot();
     });
 
     [
