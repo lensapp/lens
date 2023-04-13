@@ -33,8 +33,8 @@
     "dev:main": "cross-env NODE_ENV=development webpack --config webpack/main.ts --progress --watch",
     "dev:renderer": "cross-env NODE_ENV=development ts-node ./webpack/dev-server.ts",
     "test:integration": "jest -xyz --runInBand --modulePaths=[\"<rootDir>/integration/\"];",
-    "build:tray-icons": "npm run --workspace @k8slens/generate-tray-icons generate -- --output ./static/build/tray --input ../../node_modules/@k8slens/core/src/renderer/components/icon/logo-lens.svg --notice-icon ../../node_modules/@k8slens/core/src/renderer/components/icon/notice.svg --spinner-icon ../../node_modules/@k8slens/core/src/renderer/components/icon/arrow-spinner.svg",
-    "download:binaries": "npm run --workspace @k8slens/ensure-binaries ensure -- --package ./package.json --base-dir ./binaries/client",
+    "build:tray-icons": "npm run --workspace @k8slens/generate-tray-icons generate -- --output $INIT_CWD/static/build/tray --input $INIT_CWD/../../node_modules/@k8slens/core/src/renderer/components/icon/logo-lens.svg --notice-icon $INIT_CWD/../../node_modules/@k8slens/core/src/renderer/components/icon/notice.svg --spinner-icon $INIT_CWD/../../node_modules/@k8slens/core/src/renderer/components/icon/arrow-spinner.svg",
+    "download:binaries": "npm run --workspace @k8slens/ensure-binaries ensure -- --package $INIT_CWD/package.json --base-dir $INIT_CWD/binaries/client",
     "postinstall": "electron-rebuild"
   },
   "config": {
