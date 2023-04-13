@@ -1,4 +1,5 @@
 const ForkTsCheckerPlugin = require("fork-ts-checker-webpack-plugin");
+const { MakePeerDependenciesExternalPlugin } = require("./plugins/make-peer-dependencies-external");
 const { ProtectFromImportingNonDependencies } = require("./plugins/protect-from-importing-non-dependencies");
 
 module.exports = ({ entrypointFilePath, outputDirectory }) => ({
@@ -17,6 +18,7 @@ module.exports = ({ entrypointFilePath, outputDirectory }) => ({
   },
 
   plugins: [
+    new MakePeerDependenciesExternalPlugin(),
     new ProtectFromImportingNonDependencies(),
 
     new ForkTsCheckerPlugin({
@@ -45,21 +47,6 @@ module.exports = ({ entrypointFilePath, outputDirectory }) => ({
 
     libraryTarget: "commonjs2",
   },
-
-  externals: [
-    nodeExternals({ modulesFromFile: true }),
-
-    nodeExternals({
-      modulesDir: path.resolve(
-        __dirname,
-        "..",
-        "..",
-        "..",
-        "..",
-        "node_modules"
-      ),
-    }),
-  ],
 
   externalsPresets: { node: true },
 
