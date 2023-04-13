@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rimraf dist/",
     "build": "swc ./src/index.ts -d ./dist/",
-    "generate": "./dist/index.js"
+    "generate": "node ./dist/index.js"
   },
   "files": [
     "dist"

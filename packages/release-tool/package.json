@@ -8,7 +8,7 @@
   "scripts": {
     "clean": "rimraf dist/",
     "build": "swc ./src/index.ts -d ./dist",
-    "create": "./dist/index.js"
+    "create": "node ./dist/index.js"
   },
   "type": "module",
   "devDependencies": {

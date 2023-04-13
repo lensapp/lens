@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rimraf dist/",
     "build": "swc ./src/index.ts -d ./dist/",
-    "ensure": "./dist/index.js"
+    "ensure": "node ./dist/index.js"
   },
   "type": "module",
   "files": [
