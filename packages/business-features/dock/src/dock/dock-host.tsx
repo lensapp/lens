@@ -1,21 +1,24 @@
+import type { IComputedValue } from "mobx";
+import { observer } from "mobx-react";
+import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
 import { Tab } from "./tab";
-import { Div, Span } from "@k8slens/ui-components";
+import { Div, Map } from "@k8slens/ui-components";
+import dockTabsInjectable from "./dock-tabs.injectable";
+import type { DockTab } from "../dock-tab";
 
-export const DockHost = () => (
+const NonInjectedDockHost = observer(({ dockTabs }: Dependencies) => (
   <Div _className={["Dock", { isOpen: true }]}>
     <Div _flexParent={{ centeredVertically: true }} className="tabs-container">
-      <Tab>
-        <Div _flexParent={{ centeredVertically: true }}>
-          <Span _wordWrap>Some title</Span>
-        </Div>
-      </Tab>
-
-      <Tab>
-        <Div _flexParent={{ centeredVertically: true }}>
-          <Span _wordWrap>Some other title</Span>
-        </Div>
-      </Tab>
+      <Map items={dockTabs.get()}>
+        {({ Component }) => (
+          <Tab>
+            <Div _flexParent={{ centeredVertically: true }}>
+              <Component />
+            </Div>
+          </Tab>
+        )}
+      </Map>
     </Div>
 
     <Div
@@ -34,4 +37,19 @@ export const DockHost = () => (
       Some content
     </div>
   </Div>
+));
+
+interface Dependencies {
+  dockTabs: IComputedValue<DockTab[]>;
+}
+
+export const DockHost = withInjectables<Dependencies>(
+  NonInjectedDockHost,
+
+  {
+    getProps: (di, props) => ({
+      dockTabs: di.inject(dockTabsInjectable),
+      ...props,
+    }),
+  },
 );
