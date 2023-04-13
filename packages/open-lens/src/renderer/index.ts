@@ -1,5 +1,4 @@
 import "@k8slens/core/styles";
-import "@k8slens/dock/dist/index.css";
 import { runInAction } from "mobx";
 import {
   rendererExtensionApi as Renderer,
