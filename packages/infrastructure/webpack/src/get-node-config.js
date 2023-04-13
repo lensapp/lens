@@ -1,6 +1,6 @@
 const ForkTsCheckerPlugin = require("fork-ts-checker-webpack-plugin");
-const nodeExternals = require("webpack-node-externals");
-const path = require("path");
+const { MakePeerDependenciesExternalPlugin } = require("./plugins/make-peer-dependencies-external");
+const { ProtectFromImportingNonDependencies } = require("./plugins/protect-from-importing-non-dependencies");
 
 module.exports = ({ entrypointFilePath, outputDirectory }) => ({
   name: entrypointFilePath,
@@ -14,10 +14,13 @@ module.exports = ({ entrypointFilePath, outputDirectory }) => ({
   },
 
   resolve: {
-    extensions: [".ts", ".tsx"],
+    extensions: [".ts", ".tsx", ".js"],
   },
 
   plugins: [
+    new MakePeerDependenciesExternalPlugin(),
+    new ProtectFromImportingNonDependencies(),
+
     new ForkTsCheckerPlugin({
       typescript: {
         mode: "write-dts",
@@ -44,21 +47,6 @@ module.exports = ({ entrypointFilePath, outputDirectory }) => ({
 
     libraryTarget: "commonjs2",
   },
-
-  externals: [
-    nodeExternals({ modulesFromFile: true }),
-
-    nodeExternals({
-      modulesDir: path.resolve(
-        __dirname,
-        "..",
-        "..",
-        "..",
-        "..",
-        "node_modules"
-      ),
-    }),
-  ],
 
   externalsPresets: { node: true },
 

@@ -28,6 +28,7 @@
     "@ogre-tools/injectable-react": "^15.1.2",
     "@testing-library/react": "^12.1.5",
     "lodash": "^4.17.21",
+    "mobx": "^6.8.0",
     "react": "^17.0.2"
   },
   "devDependencies": {
