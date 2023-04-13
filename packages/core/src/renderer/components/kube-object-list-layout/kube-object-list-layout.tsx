@@ -29,9 +29,9 @@ import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details
 import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
 import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";
 import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
-import type { KubeObjectListLayoutColumn } from "./kube-object-list-layout-column-injection-token";
+import type { KubeObjectListLayoutColumn } from "@k8slens/list-layout";
 import type { ItemObject } from "../../../common/item.store";
-import { kubeObjectListLayoutColumnInjectionToken } from "./kube-object-list-layout-column-injection-token";
+import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 import { sortBy } from "lodash";
 
 export interface KubeObjectListLayoutProps<

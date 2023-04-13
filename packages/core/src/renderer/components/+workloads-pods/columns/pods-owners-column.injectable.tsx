@@ -10,8 +10,8 @@ import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager
 import type { Pod } from "../../../../common/k8s-api/endpoints";
 import { Badge } from "../../badge";
 import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.injectable";
-import type { KubeObjectListLayoutColumn } from "../../kube-object-list-layout/kube-object-list-layout-column-injection-token";
-import { kubeObjectListLayoutColumnInjectionToken } from "../../kube-object-list-layout/kube-object-list-layout-column-injection-token";
+import type { KubeObjectListLayoutColumn } from "@k8slens/list-layout";
+import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 
 export const podsOwnersColumnInjectable = getInjectable({
   id: "pods-owners-column",

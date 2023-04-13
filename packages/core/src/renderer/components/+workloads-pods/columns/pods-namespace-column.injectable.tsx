@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
 import { NamespaceSelectBadge } from "../../+namespaces/namespace-select-badge";
 import type { Pod } from "../../../../common/k8s-api/endpoints";
-import type { KubeObjectListLayoutColumn } from "../../kube-object-list-layout/kube-object-list-layout-column-injection-token";
-import { kubeObjectListLayoutColumnInjectionToken } from "../../kube-object-list-layout/kube-object-list-layout-column-injection-token";
+import type { KubeObjectListLayoutColumn } from "@k8slens/list-layout";
+import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 
 export const podsNamespaceColumnInjectable = getInjectable({
   id: "pods-namespace-column",

@@ -6,8 +6,8 @@ import { getConvertedParts } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
 import type { Pod } from "../../../../common/k8s-api/endpoints";
-import type { KubeObjectListLayoutColumn } from "../../kube-object-list-layout/kube-object-list-layout-column-injection-token";
-import { kubeObjectListLayoutColumnInjectionToken } from "../../kube-object-list-layout/kube-object-list-layout-column-injection-token";
+import type { KubeObjectListLayoutColumn } from "@k8slens/list-layout";
+import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 import { Tooltip } from "../../tooltip";
 
 export const podsNameColumnInjectable = getInjectable({

@@ -7,8 +7,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import startCase from "lodash/startCase";
 import React from "react";
 import type { ContainerStateValues, Pod } from "../../../../common/k8s-api/endpoints";
-import type { KubeObjectListLayoutColumn } from "../../kube-object-list-layout/kube-object-list-layout-column-injection-token";
-import { kubeObjectListLayoutColumnInjectionToken } from "../../kube-object-list-layout/kube-object-list-layout-column-injection-token";
+import type { KubeObjectListLayoutColumn } from "@k8slens/list-layout";
+import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 import { StatusBrick } from "../../status-brick";
 
 function renderState(name: string, ready: boolean, key: string, data?: ContainerStateValues) {

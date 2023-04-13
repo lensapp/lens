@@ -5,8 +5,8 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { kebabCase } from "lodash";
 import type { Pod } from "../../../../common/k8s-api/endpoints";
-import type { KubeObjectListLayoutColumn } from "../../kube-object-list-layout/kube-object-list-layout-column-injection-token";
-import { kubeObjectListLayoutColumnInjectionToken } from "../../kube-object-list-layout/kube-object-list-layout-column-injection-token";
+import type { KubeObjectListLayoutColumn } from "@k8slens/list-layout";
+import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 
 export const podsStatusColumnInjectable = getInjectable({
   id: "pods-status-column",
