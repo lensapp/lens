@@ -6,12 +6,9 @@
   "scripts": {
     "clean": "rimraf dist/",
     "build": "swc ./src/index.ts -d ./dist",
-    "postbuild": "run-script-os",
-    "postbuild:windows": "",
-    "postbuild:nix": "chmod u+x ./dist/index.js"
+    "bump": "./dist/index.js"
   },
   "type": "module",
-  "bin": "./dist/index.js",
   "files": [
     "dist"
   ],
@@ -29,7 +26,6 @@
     "@swc/core": "^1.3.44",
     "@types/node": "^16.18.11",
     "@types/semver": "^7.3.13",
-    "rimraf": "^4.4.1",
-    "run-script-os": "^1.1.6"
+    "rimraf": "^4.4.1"
   }
 }

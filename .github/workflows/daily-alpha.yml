@@ -23,13 +23,13 @@ jobs:
         run: |
           npm install
           sudo apt-get install -y ripgrep
-          cd packages/bump-version-for-cron && npm run build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Bump version
         id: version
         run: |
-          node packages/bump-version-for-cron/dist/index.js --path packages/core/package.json
+          npm run --workspace @k8slens/bump-version-for-cron build
+          npm run --workspace @k8slens/bump-version-for-cron bump -- --path packages/core/package.json
       - name: Check if branch already exists
         id: check-branch
         run: git ls-remote --exit-code --tags origin v${{ steps.version.outputs.VERSION }}
@@ -77,7 +77,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: v${{ needs.create_release.outputs.version }}
-      - name: Use Node.js ${{ env.NODE_VERSION }}
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v3
         with:
           node-version: "16.x"
