@@ -1,6 +1,5 @@
 const ForkTsCheckerPlugin = require("fork-ts-checker-webpack-plugin");
-const nodeExternals = require("webpack-node-externals");
-const path = require("path");
+const { ProtectFromImportingNonDependencies } = require("./plugins/protect-from-importing-non-dependencies");
 
 module.exports = ({ entrypointFilePath, outputDirectory }) => ({
   name: entrypointFilePath,
@@ -14,10 +13,12 @@ module.exports = ({ entrypointFilePath, outputDirectory }) => ({
   },
 
   resolve: {
-    extensions: [".ts", ".tsx"],
+    extensions: [".ts", ".tsx", ".js"],
   },
 
   plugins: [
+    new ProtectFromImportingNonDependencies(),
+
     new ForkTsCheckerPlugin({
       typescript: {
         mode: "write-dts",
