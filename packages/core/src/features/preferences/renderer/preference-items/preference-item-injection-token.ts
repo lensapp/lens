@@ -9,7 +9,7 @@ import type { Discriminable } from "../../../../common/utils/composable-responsi
 import type { Labelable } from "../../../../common/utils/composable-responsibilities/labelable/labelable";
 import type { MaybeShowable } from "../../../../common/utils/composable-responsibilities/showable/showable";
 import type { Orderable } from "../../../../common/utils/composable-responsibilities/orderable/orderable";
-import type { GetSeparator } from "../../../../common/utils/add-separator/add-separator";
+import type { GetSeparator } from "@k8slens/utilities";
 import type { Composite } from "../../../../common/utils/composite/get-composite/get-composite";
 
 export type ChildrenAreSeparated =

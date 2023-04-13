@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Gutter "when size is md", renders 1`] = `
+<body>
+  <div>
+    <div
+      class="w-6 h-6"
+    />
+  </div>
+</body>
+`;
+
+exports[`Gutter "when size is not set", renders 1`] = `
+<body>
+  <div>
+    <div
+      class="w-6 h-6"
+    />
+  </div>
+</body>
+`;
+
+exports[`Gutter "when size is sm", renders 1`] = `
+<body>
+  <div>
+    <div
+      class="w-4 h-4"
+    />
+  </div>
+</body>
+`;
+
+exports[`Gutter "when size is xl", renders 1`] = `
+<body>
+  <div>
+    <div
+      class="w-10 h-10"
+    />
+  </div>
+</body>
+`;
