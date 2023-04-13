@@ -30,7 +30,7 @@ exports[`get-multi-export-config given maximal package.json, when creating confi
     output: {
       path: '/some-working-directory/dist',
       filename: [Function: filename],
-      libraryTarget: 'commonjs2'
+      library: { type: 'commonjs2' }
     },
     externalsPresets: { node: true },
     node: { __dirname: true, __filename: true },
@@ -64,7 +64,7 @@ exports[`get-multi-export-config given maximal package.json, when creating confi
     output: {
       path: '/some-working-directory/dist/some-entrypoint',
       filename: [Function: filename],
-      libraryTarget: 'commonjs2'
+      library: { type: 'commonjs2' }
     },
     externalsPresets: { node: true },
     node: { __dirname: true, __filename: true },
@@ -113,7 +113,7 @@ exports[`get-multi-export-config given maximal package.json, when creating confi
     output: {
       path: '/some-working-directory/dist/some-other-entrypoint',
       filename: [Function: filename],
-      libraryTarget: 'commonjs2'
+      library: { type: 'commonjs2' }
     },
     externalsPresets: { node: true },
     node: { __dirname: true, __filename: true },
