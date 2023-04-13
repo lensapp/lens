@@ -7,12 +7,7 @@
   "scripts": {
     "clean": "rimraf dist/",
     "build": "swc ./src/index.ts -d ./dist/",
-    "postbuild": "run-script-os",
-    "postbuild:windows": "",
-    "postbuild:nix": "chmod u+x ./dist/index.js"
-  },
-  "bin": {
-    "ensure-binaries": "./dist/index.js"
+    "ensure": "./dist/index.js"
   },
   "type": "module",
   "files": [
@@ -39,7 +34,6 @@
     "@types/node": "^16.18.11",
     "@types/semver": "^7.3.13",
     "@types/tar-stream": "^2.2.2",
-    "rimraf": "^4.4.1",
-    "run-script-os": "^1.1.6"
+    "rimraf": "^4.4.1"
   }
 }
