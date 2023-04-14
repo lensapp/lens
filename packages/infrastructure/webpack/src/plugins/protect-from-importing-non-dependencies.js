@@ -16,14 +16,17 @@ class ProtectFromImportingNonDependencies {
         const isDependencyOfDependency =
           toBeResolved.context.includes("node_modules");
 
-        if (!isLocalDependency && !isDependencyOfDependency) {
-
           const dependencyName = getDependencyName(toBeResolved.request);
 
-          nodeModulesToBeResolved.add(dependencyName);
-        }
-      });
-    });
+          const dependencyWeAreInterested =
+            !isLocalDependency && !isDependencyOfDependency && dependencyName;
+
+          if (dependencyWeAreInterested) {
+            nodeModulesToBeResolved.add(dependencyName);
+          }
+        });
+      }
+    );
 
     compiler.hooks.afterCompile.tap("compile", () => {
       const notSpecifiedDependencies = [...nodeModulesToBeResolved].filter(
