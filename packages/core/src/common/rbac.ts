@@ -9,7 +9,7 @@ export type KubeResource =
   "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "replicationcontrollers" | "jobs" | "cronjobs" |
   "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "verticalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets" |
   "priorityclasses" | "runtimeclasses" |
-  "roles" | "clusterroles" | "rolebindings" | "clusterrolebindings" | "serviceaccounts" | "mutatingwebhookconfigurations";
+  "roles" | "clusterroles" | "rolebindings" | "clusterrolebindings" | "serviceaccounts" | "mutatingwebhookconfigurations" | "validatingwebhookconfigurations";
 
 export interface KubeApiResource {
   kind: string;
@@ -119,7 +119,12 @@ export const apiResourceRecord: Record<KubeResource, KubeApiResourceData> = {
   mutatingwebhookconfigurations: {
     kind: "MutatingWebhookConfiguration",
     group: "admissionregistration.k8s.io/v1",
-    namespaced: true,
+    namespaced: false,
+  },
+  validatingwebhookconfigurations: {
+    kind: "ValidatingWebhookConfiguration",
+    group: "admissionregistration.k8s.io/v1",
+    namespaced: false,
   },
   networkpolicies: {
     kind: "NetworkPolicy",
