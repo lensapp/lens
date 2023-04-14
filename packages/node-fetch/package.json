@@ -8,7 +8,7 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
   "type": "module",
   "files": [

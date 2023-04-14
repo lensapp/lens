@@ -4,7 +4,7 @@ export default {
   entry: "./index.ts",
   output: {
     path: path.resolve("dist"),
-    filename: "index.js",
+    filename: "index.cjs",
     library: {
       type: "commonjs",
     },
