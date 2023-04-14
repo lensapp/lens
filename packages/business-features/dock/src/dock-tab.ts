@@ -3,7 +3,8 @@ import { getInjectionToken } from "@ogre-tools/injectable";
 
 export type DockTab = {
   id: string;
-  Component: React.ComponentType;
+  TitleComponent: React.ComponentType;
+  ContentComponent: React.ComponentType;
 };
 
 export const dockTabInjectionToken = getInjectionToken<DockTab>({

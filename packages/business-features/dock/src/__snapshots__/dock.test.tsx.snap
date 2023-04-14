@@ -3,42 +3,24 @@
 exports[`DockHost, given rendered given implementations of dock tabs emerge renders 1`] = `
 <body>
   <div>
-    <div
-      class="Dock isOpen"
-    >
+    <div>
       <div
-        class="flex align-center tabs-container"
+        class="flex align-center"
       >
-        <div
-          class="Tab flex gaps align-center"
-        >
+        <div>
           <div
-            class="label"
+            data-some-dock-tab-title-test="true"
           >
-            <div
-              class="flex align-center"
-            >
-              <div
-                data-some-dock-tab-test="true"
-              >
-                Some content
-              </div>
-            </div>
+            Some title
           </div>
         </div>
       </div>
-      <div
-        class="flex align-center toolbar gaps box grow pl-0"
-      >
+      <div>
         <div
-          class="dock-menu box grow"
-        />
-      </div>
-      <div
-        class="tab-content"
-        style="flex-basis: 420px;"
-      >
-        Some content
+          data-some-dock-tab-content-test="true"
+        >
+          Some content
+        </div>
       </div>
     </div>
   </div>
@@ -48,25 +30,11 @@ exports[`DockHost, given rendered given implementations of dock tabs emerge rend
 exports[`DockHost, given rendered given no implementations of dock tabs, renders 1`] = `
 <body>
   <div>
-    <div
-      class="Dock isOpen"
-    >
+    <div>
       <div
-        class="flex align-center tabs-container"
+        class="flex align-center"
       />
-      <div
-        class="flex align-center toolbar gaps box grow pl-0"
-      >
-        <div
-          class="dock-menu box grow"
-        />
-      </div>
-      <div
-        class="tab-content"
-        style="flex-basis: 420px;"
-      >
-        Some content
-      </div>
+      <div />
     </div>
   </div>
 </body>

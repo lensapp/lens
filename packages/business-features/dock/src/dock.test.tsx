@@ -31,19 +31,20 @@ describe("DockHost, given rendered", () => {
 
   describe("given implementations of dock tabs emerge", () => {
     beforeEach(() => {
-      const dockInjectable = getInjectable({
+      const dockTabInjectable = getInjectable({
         id: "some-dock-tab",
 
         instantiate: () => ({
           id: "some-dock-tab",
-          Component: () => <div data-some-dock-tab-test>Some content</div>,
+          TitleComponent: () => <div data-some-dock-tab-title-test>Some title</div>,
+          ContentComponent: () => <div data-some-dock-tab-content-test>Some content</div>,
         }),
 
         injectionToken: dockTabInjectionToken,
       });
 
       runInAction(() => {
-        di.register(dockInjectable);
+        di.register(dockTabInjectable);
       });
     });
 
@@ -51,8 +52,12 @@ describe("DockHost, given rendered", () => {
       expect(rendered.baseElement).toMatchSnapshot();
     });
 
-    it("renders the dock tab", () => {
-      discover.getSingleElement("some-dock-tab");
+    it("renders the title of dock tab", () => {
+      discover.getSingleElement("some-dock-tab-title");
+    });
+
+    it("renders the content of the dock tab", () => {
+      discover.getSingleElement("some-dock-tab-content");
     });
   });
 });
