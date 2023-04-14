@@ -23,7 +23,7 @@ type Options = typeof options;
 const assertOption = <Key extends keyof Options>(key: Key): NonNullable<Options[Key]> => {
   const raw = options[key];
 
-  if (!raw) {
+  if (raw === undefined) {
     console.error(`missing ${key} option`);
     process.exit(1);
   }
@@ -31,11 +31,21 @@ const assertOption = <Key extends keyof Options>(key: Key): NonNullable<Options[
   return raw;
 };
 
+const joinWithInitCwd = (relativePath: string): string => {
+  const { INIT_CWD } = process.env;
+
+  if (!INIT_CWD) {
+    return relativePath;
+  }
+
+  return path.join(INIT_CWD, relativePath);
+};
+
 const size = options["--output-size"] ?? 16;
-const inputFile = assertOption("--input");
-const outputFolder = assertOption("--output");
-const noticeFile = assertOption("--notice-icon");
-const spinnerFile = assertOption("--spinner-icon");
+const inputFile = joinWithInitCwd(assertOption("--input"));
+const outputFolder = joinWithInitCwd(assertOption("--output"));
+const noticeFile = joinWithInitCwd(assertOption("--notice-icon"));
+const spinnerFile = joinWithInitCwd(assertOption("--spinner-icon"));
 
 const getSvgStyling = (colouring: "dark" | "light") => (
   `
