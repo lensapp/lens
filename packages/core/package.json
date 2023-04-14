@@ -298,7 +298,7 @@
     "ts-node": "^10.9.1",
     "type-fest": "^2.14.0",
     "typed-emitter": "^1.4.0",
-    "typedoc": "^0.24.0",
+    "typedoc": "^0.24.1",
     "typedoc-plugin-markdown": "^3.13.6",
     "typescript": "^4.9.5",
     "typescript-plugin-css-modules": "^3.4.0",
