@@ -8,12 +8,23 @@
   color: white;
 
   grid-area: status-bar;
-  background-color: var(--blue);
   height: var(--status-bar-height);
   font-size: var(--font-size-small);
 
   display: inline-grid;
   grid-template-columns: 1fr 1fr;
+
+  &.status-default {
+    background-color: var(--colorInfo);
+  }
+
+  &.status-warning {
+    background-color: var(--colorWarning);
+  }
+
+  &.status-error {
+    background-color: var(--colorError);
+  }
 }
 
 .leftSide {

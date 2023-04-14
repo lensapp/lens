@@ -5,47 +5,45 @@
 
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import type { IObservableArray } from "mobx";
-import { computed, observable } from "mobx";
-import type { StatusBarItems } from "./status-bar-items.injectable";
-import statusBarItemsInjectable from "./status-bar-items.injectable";
-import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import type { ApplicationBuilder } from "../test-utils/get-application-builder";
 import { getApplicationBuilder } from "../test-utils/get-application-builder";
+import setStatusBarStatusInjectable from "./set-status-bar-status.injectable";
+import type { RenderResult } from "@testing-library/react";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
 
 describe("<StatusBar />", () => {
-  let statusBarItems: IObservableArray<any>;
   let builder: ApplicationBuilder;
+  let result: RenderResult;
 
   beforeEach(async () => {
-    statusBarItems = observable.array([]);
-
     builder = getApplicationBuilder();
 
     builder.beforeWindowStart(({ windowDi }) => {
-      windowDi.unoverride(getRandomIdInjectable);
       windowDi.permitSideEffects(getRandomIdInjectable);
-      windowDi.override(directoryForUserDataInjectable, () => "some-directory-for-user-data");
+      windowDi.unoverride(getRandomIdInjectable);
     });
 
-    builder.extensions.enable({
-      id: "some-id",
-      name: "some-name",
+    result = await builder.render();
+  });
 
-      rendererOptions: {
-        statusBarItems,
-      },
+  describe("when an extension is enabled with no status items", () => {
+    beforeEach(() => {
+      builder.extensions.enable({
+        id: "some-id",
+        name: "some-name",
+
+        rendererOptions: {
+          statusBarItems: [],
+        },
+      });
+    });
+
+    it("renders", () => {
+      expect(result.baseElement).toMatchSnapshot();
     });
   });
 
-  it("renders w/o errors", async () => {
-    const { container } = await builder.render();
-
-    expect(container).toBeInstanceOf(HTMLElement);
-  });
-
-  it.each([
+  describe.each([
     undefined,
     "hello",
     6,
@@ -53,73 +51,130 @@ describe("<StatusBar />", () => {
     [],
     [{}],
     {},
-  ])("renders w/o errors when registrations are not type compliant (%p)", async val => {
-    statusBarItems.replace([val]);
+  ])("when an extension is enabled with an invalid data type, (%p)", (value) => {
+    beforeEach(() => {
+      builder.extensions.enable({
+        id: "some-id",
+        name: "some-name",
 
-    await expect(builder.render()).resolves.toBeTruthy();
-  });
-
-  it("renders items [{item: React.ReactNode}] (4.0.0-rc.1)", async () => {
-    const testId = "testId";
-    const text = "heee";
-
-    builder.beforeWindowStart(({ windowDi }) => {
-      windowDi.override(statusBarItemsInjectable, () => computed(() => ({
-        right: [ { origin: testId, component: () => <span data-testid={testId} >{text}</span> }],
-        left: [],
-      }) as StatusBarItems));
+        rendererOptions: {
+          statusBarItems: [value as any],
+        },
+      });
     });
 
-    const { getByTestId } = await builder.render();
-
-    expect(getByTestId(testId)).toHaveTextContent(text);
+    it("renders", () => {
+      expect(result.baseElement).toMatchSnapshot();
+    });
   });
 
-  it("renders items [{item: () => React.ReactNode}] (4.0.0-rc.1+)", async () => {
-    const testId = "testId";
-    const text = "heee";
+  describe("when an extension is enabled using a deprecated registration of a plain ReactNode", () => {
+    beforeEach(() => {
+      builder.extensions.enable({
+        id: "some-id",
+        name: "some-name",
 
-    statusBarItems.replace([{
-      item: () => <span data-testid={testId} >{text}</span>,
-    }]);
+        rendererOptions: {
+          statusBarItems: [{
+            item: "heeeeeeee",
+          }],
+        },
+      });
+    });
 
-    const { getByTestId } = await builder.render();
-
-    expect(getByTestId(testId)).toHaveTextContent(text);
+    it("renders the provided ReactNode", () => {
+      expect(result.baseElement).toHaveTextContent("heeeeeeee");
+    });
   });
 
+  describe("when an extension is enabled using a deprecated registration of a function returning a ReactNode", () => {
+    beforeEach(() => {
+      builder.extensions.enable({
+        id: "some-id",
+        name: "some-name",
 
-  it("sort positioned items properly", async () => {
-    statusBarItems.replace([
-      {
-        components: {
-          Item: () => <div data-testid="sortedElem">right1</div>,
+        rendererOptions: {
+          statusBarItems: [{
+            item: () => "heeeeeeee",
+          }],
         },
-      },
-      {
-        components: {
-          Item: () => <div data-testid="sortedElem">right2</div>,
-          position: "right",
-        },
-      },
-      {
-        components: {
-          Item: () => <div data-testid="sortedElem">left1</div>,
-          position: "left",
-        },
-      },
-      {
-        components: {
-          Item: () => <div data-testid="sortedElem">left2</div>,
-          position: "left",
-        },
-      },
-    ]);
+      });
+    });
 
-    const { getAllByTestId } = await builder.render();
-    const elems = getAllByTestId("sortedElem");
-    const positions = elems.map(elem => elem.textContent);
+    it("renders the provided ReactNode", () => {
+      expect(result.baseElement).toHaveTextContent("heeeeeeee");
+    });
+  });
 
-    expect(positions).toEqual(["left1", "left2", "right2", "right1"]);
+  describe("when an extension is enabled specifying the side the elements should be on", () => {
+    beforeEach(() => {
+      builder.extensions.enable({
+        id: "some-id",
+        name: "some-name",
+
+        rendererOptions: {
+          statusBarItems: [
+            {
+              components: {
+                Item: () => <div data-testid="sortedElem">right1</div>,
+              },
+            },
+            {
+              components: {
+                Item: () => <div data-testid="sortedElem">right2</div>,
+                position: "right",
+              },
+            },
+            {
+              components: {
+                Item: () => <div data-testid="sortedElem">left1</div>,
+                position: "left",
+              },
+            },
+            {
+              components: {
+                Item: () => <div data-testid="sortedElem">left2</div>,
+                position: "left",
+              },
+            },
+          ],
+        },
+      });
+    });
+
+    it("renders", () => {
+      expect(result.baseElement).toMatchSnapshot();
+    });
+
+    it("sort positioned items properly", async () => {
+      const elems = result.getAllByTestId("sortedElem");
+      const positions = elems.map(elem => elem.textContent);
+
+      expect(positions).toEqual(["left1", "left2", "right2", "right1"]);
+    });
+  });
+
+  it("has the default status by default", () => {
+    expect([...result.getByTestId("status-bar").classList]).toContain("status-default");
+  });
+
+  describe.each([
+    "warning" as const,
+    "error" as const,
+  ])("when StatusBar's status is set to %p", (value) => {
+    beforeEach(() => {
+      const di = builder.applicationWindow.only.di;
+      const setStatusBarStatus = di.inject(setStatusBarStatusInjectable);
+
+      setStatusBarStatus(value);
+    });
+
+    it("renders", () => {
+      expect(result.baseElement).toMatchSnapshot();
+    });
+
+    it(`has the ${value} status by default`, () => {
+      expect([...result.getByTestId("status-bar").classList]).toContain(`status-${value}`);
+    });
   });
 });
