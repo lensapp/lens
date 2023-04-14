@@ -23,16 +23,31 @@ const options = arg({
   "--base-dir": String,
 });
 
-const pathToPackage = options["--package"];
-const pathToBaseDir = options["--base-dir"];
+type Options = typeof options;
 
-if (typeof pathToPackage !== "string") {
-  throw new Error("--package is required");
-}
+const assertOption = <Key extends keyof Options>(key: Key): NonNullable<Options[Key]> => {
+  const raw = options[key];
 
-if (typeof pathToBaseDir !== "string") {
-  throw new Error("--base-dir is required");
-}
+  if (raw === undefined) {
+    console.error(`missing ${key} option`);
+    process.exit(1);
+  }
+
+  return raw;
+};
+
+const joinWithInitCwd = (relativePath: string): string => {
+  const { INIT_CWD } = process.env;
+
+  if (!INIT_CWD) {
+    return relativePath;
+  }
+
+  return path.join(INIT_CWD, relativePath);
+};
+
+const pathToPackage = joinWithInitCwd(assertOption("--package"));
+const pathToBaseDir = joinWithInitCwd(assertOption("--base-dir"));
 
 function setTimeoutFor(controller: AbortController, timeout: number): void {
   const handle = setTimeout(() => controller.abort(), timeout);
