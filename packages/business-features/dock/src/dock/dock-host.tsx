@@ -4,7 +4,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
 import { Tabs } from "./tabs";
 import { Div, Map } from "@k8slens/ui-components";
-import dockTabsInjectable from "./dock-tabs.injectable";
+import dockTabsInjectable, { ActivatableDockTab } from "./dock-tabs.injectable";
 import type { DockTab } from "../dock-tab";
 import activeDockTabInjectable from "./active-dock-tab.injectable";
 
@@ -15,8 +15,8 @@ const NonInjectedDockHost = observer(({ dockTabs, activeDockTab }: Dependencies)
     <Div>
       <Tabs>
         <Map items={dockTabs.get()}>
-          {({ TitleComponent }) => (
-            <Tabs.Tab>
+          {({ id, TitleComponent, activate }) => (
+            <Tabs.Tab data-dock-tab-test={id} onClick={activate}>
               <TitleComponent />
             </Tabs.Tab>
           )}
@@ -31,7 +31,7 @@ const NonInjectedDockHost = observer(({ dockTabs, activeDockTab }: Dependencies)
 });
 
 interface Dependencies {
-  dockTabs: IComputedValue<DockTab[]>;
+  dockTabs: IComputedValue<ActivatableDockTab[]>;
   activeDockTab: IComputedValue<DockTab>;
 }
 

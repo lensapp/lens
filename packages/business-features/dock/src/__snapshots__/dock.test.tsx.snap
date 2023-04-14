@@ -7,19 +7,68 @@ exports[`DockHost, given rendered given implementations of dock tabs emerge rend
       <div
         class="flex align-center"
       >
-        <div>
+        <div
+          data-dock-tab-test="some-dock-tab-1"
+        >
           <div
-            data-some-dock-tab-title-test="true"
+            data-dock-tab-title-test="some-title-1"
           >
-            Some title
+            Some title 1
+          </div>
+        </div>
+        <div
+          data-dock-tab-test="some-dock-tab-2"
+        >
+          <div
+            data-dock-tab-title-test="some-title-2"
+          >
+            Some title 2
           </div>
         </div>
       </div>
       <div>
         <div
-          data-some-dock-tab-content-test="true"
+          data-dock-tab-content-test="some-content-1"
         >
-          Some content
+          Some content 1
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DockHost, given rendered given implementations of dock tabs emerge when the second dock tab is clicked renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="flex align-center"
+      >
+        <div
+          data-dock-tab-test="some-dock-tab-1"
+        >
+          <div
+            data-dock-tab-title-test="some-title-1"
+          >
+            Some title 1
+          </div>
+        </div>
+        <div
+          data-dock-tab-test="some-dock-tab-2"
+        >
+          <div
+            data-dock-tab-title-test="some-title-2"
+          >
+            Some title 2
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          data-dock-tab-content-test="some-content-2"
+        >
+          Some content 2
         </div>
       </div>
     </div>
