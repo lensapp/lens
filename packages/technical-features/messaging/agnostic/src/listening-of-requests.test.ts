@@ -1,7 +1,6 @@
 import { createContainer, DiContainer, Injectable } from "@ogre-tools/injectable";
 
 import { registerFeature } from "@k8slens/feature-core";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { _resetGlobalState, configure, runInAction } from "mobx";
 
 import {
@@ -36,8 +35,6 @@ describe("listening-of-requests", () => {
     _resetGlobalState();
 
     di = createContainer("irrelevant");
-
-    registerMobX(di);
 
     disposeSomeListenerMock = jest.fn();
     disposeSomeUnrelatedListenerMock = jest.fn();

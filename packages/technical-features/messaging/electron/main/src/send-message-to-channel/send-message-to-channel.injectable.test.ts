@@ -5,6 +5,7 @@ import { getMessageChannel, sendMessageToChannelInjectionToken } from "@k8slens/
 import getWebContentsInjectable from "./get-web-contents.injectable";
 import type { WebContents } from "electron";
 import allowCommunicationListenerInjectable from "./allow-communication-listener.injectable";
+import { runInAction } from "mobx";
 
 const someChannel = getMessageChannel<string>("some-channel");
 
@@ -14,7 +15,9 @@ describe("send-message-to-channel", () => {
   beforeEach(() => {
     di = createContainer("irrelevant");
 
-    registerFeature(di, messagingFeatureForMain);
+    runInAction(() => {
+      registerFeature(di, messagingFeatureForMain);
+    });
   });
 
   it("given no web contents, when sending a message, does not do anything", () => {

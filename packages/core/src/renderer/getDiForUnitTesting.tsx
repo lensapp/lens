@@ -15,10 +15,9 @@ import watchHistoryStateInjectable from "./remote-helpers/watch-history-state.in
 import legacyOnChannelListenInjectable from "./ipc/legacy-channel-listen.injectable";
 import type { GlobalOverride } from "@k8slens/test-utils";
 import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
-import { registerInjectableReact } from "@ogre-tools/injectable-react";
 import { registerFeature } from "@k8slens/feature-core";
 import { messagingFeature, testUtils as messagingTestUtils } from "@k8slens/messaging";
+import { injectableReactFeature, injectableMobXFeature } from "@k8slens/basic-dependency-features";
 
 export const getDiForUnitTesting = () => {
   const environment = "renderer";
@@ -26,12 +25,16 @@ export const getDiForUnitTesting = () => {
     detectCycles: false,
   });
 
-  registerMobX(di);
-  registerInjectableReact(di);
   setLegacyGlobalDiForExtensionApi(di, environment);
 
   runInAction(() => {
-    registerFeature(di, messagingFeature, messagingTestUtils.messagingFeatureForUnitTesting);
+    registerFeature(
+      di,
+      injectableReactFeature,
+      injectableMobXFeature,
+      messagingFeature,
+      messagingTestUtils.messagingFeatureForUnitTesting
+    );
   });
 
   di.preventSideEffects();

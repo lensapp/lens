@@ -1,6 +1,7 @@
 import { getFeature } from "@k8slens/feature-core";
 import { autoRegister } from "@ogre-tools/injectable-extension-for-auto-registration";
 import { reactApplicationFeature } from "@k8slens/react-application";
+import { injectableMobXFeature, injectableReactFeature } from "@k8slens/basic-dependency-features";
 
 export const keyboardShortcutsFeature = getFeature({
   id: "keyboard-shortcuts",
@@ -13,5 +14,5 @@ export const keyboardShortcutsFeature = getFeature({
     });
   },
 
-  dependencies: [reactApplicationFeature],
+  dependencies: [injectableReactFeature, injectableMobXFeature, reactApplicationFeature],
 });

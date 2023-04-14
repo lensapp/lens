@@ -13,12 +13,11 @@ import {
   startApplicationInjectionToken,
 } from "@k8slens/application";
 import { createContainer } from "@ogre-tools/injectable";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
-import { registerInjectableReact } from "@ogre-tools/injectable-react";
 import { messagingFeatureForRenderer } from "@k8slens/messaging-for-renderer";
 import { keyboardShortcutsFeature } from "@k8slens/keyboard-shortcuts";
 import { reactApplicationFeature } from "@k8slens/react-application";
 import { dockFeature } from "@k8slens/dock";
+import { injectableReactFeature, injectableMobXFeature } from "@k8slens/basic-dependency-features";
 
 const environment = "renderer";
 
@@ -27,12 +26,12 @@ const di = createContainer(environment, {
 });
 
 runInAction(() => {
-  registerMobX(di);
-  registerInjectableReact(di);
   registerLensCore(di, environment);
 
   registerFeature(
     di,
+    injectableReactFeature,
+    injectableMobXFeature,
     applicationFeature,
     messagingFeatureForRenderer,
     keyboardShortcutsFeature,

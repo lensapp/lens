@@ -1,5 +1,4 @@
 import { createContainer, DiContainer } from "@ogre-tools/injectable";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { startApplicationInjectionToken } from "@k8slens/application";
 import { registerFeature } from "@k8slens/feature-core";
 import { messagingFeatureForRenderer } from "./feature";
@@ -14,8 +13,6 @@ describe("allow communication to iframe", () => {
 
   beforeEach(() => {
     di = createContainer("irrelevant");
-
-    registerMobX(di);
 
     runInAction(() => {
       registerFeature(di, messagingFeatureForRenderer);

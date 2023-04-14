@@ -3,6 +3,7 @@ import { registerFeature } from "@k8slens/feature-core";
 import ipcRendererInjectable from "./ipc-renderer.injectable";
 import { messagingFeatureForRenderer } from "../feature";
 import { ipcRenderer } from "electron";
+import { runInAction } from "mobx";
 
 describe("ipc-renderer", () => {
   let di: DiContainer;
@@ -10,7 +11,9 @@ describe("ipc-renderer", () => {
   beforeEach(() => {
     di = createContainer("irrelevant");
 
-    registerFeature(di, messagingFeatureForRenderer);
+    runInAction(() => {
+      registerFeature(di, messagingFeatureForRenderer);
+    });
   });
 
   it("is not undefined", () => {

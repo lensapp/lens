@@ -4,6 +4,7 @@ import { EnlistMessageChannelListener, enlistMessageChannelListenerInjectionToke
 import { createContainer } from "@ogre-tools/injectable";
 import { registerFeature } from "@k8slens/feature-core";
 import { messagingFeatureForMain } from "../feature";
+import { runInAction } from "mobx";
 
 describe("enlist message channel listener in main", () => {
   let enlistMessageChannelListener: EnlistMessageChannelListener;
@@ -14,7 +15,9 @@ describe("enlist message channel listener in main", () => {
   beforeEach(() => {
     const di = createContainer("irrelevant");
 
-    registerFeature(di, messagingFeatureForMain);
+    runInAction(() => {
+      registerFeature(di, messagingFeatureForMain);
+    });
 
     onMock = jest.fn();
     offMock = jest.fn();

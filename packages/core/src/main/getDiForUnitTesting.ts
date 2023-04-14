@@ -25,9 +25,9 @@ import initializeClusterManagerInjectable from "./cluster/initialize-manager.inj
 import type { GlobalOverride } from "@k8slens/test-utils";
 import { getOverrideFsWithFakes } from "../test-utils/override-fs-with-fakes";
 import { setLegacyGlobalDiForExtensionApi } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerFeature } from "@k8slens/feature-core";
 import { messagingFeature, testUtils as messagingTestUtils } from "@k8slens/messaging";
+import { injectableMobXFeature } from "@k8slens/basic-dependency-features";
 
 export function getDiForUnitTesting() {
   const environment = "main";
@@ -35,12 +35,15 @@ export function getDiForUnitTesting() {
     detectCycles: false,
   });
 
-  registerMobX(di);
   setLegacyGlobalDiForExtensionApi(di, environment);
 
   runInAction(() => {
-    registerFeature(di, messagingFeature, messagingTestUtils.messagingFeatureForUnitTesting);
-
+    registerFeature(
+      di,
+      injectableMobXFeature,
+      messagingFeature,
+      messagingTestUtils.messagingFeatureForUnitTesting,
+    );
   });
 
   di.preventSideEffects();

@@ -2,8 +2,6 @@ import userEvent from "@testing-library/user-event";
 import type { RenderResult } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injectable";
-import { registerInjectableReact } from "@ogre-tools/injectable-react";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { keyboardShortcutInjectionToken } from "./keyboard-shortcut-injection-token";
 import { registerFeature } from "@k8slens/feature-core";
 import { keyboardShortcutsFeature } from "./feature";
@@ -23,9 +21,6 @@ describe("keyboard-shortcuts", () => {
 
   beforeEach(() => {
     di = createContainer("irrelevant");
-
-    registerInjectableReact(di);
-    registerMobX(di);
 
     runInAction(() => {
       registerFeature(di, keyboardShortcutsFeature);

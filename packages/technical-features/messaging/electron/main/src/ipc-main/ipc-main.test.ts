@@ -3,6 +3,7 @@ import { registerFeature } from "@k8slens/feature-core";
 import ipcMainInjectable from "./ipc-main.injectable";
 import { ipcMain } from "electron";
 import { messagingFeatureForMain } from "../feature";
+import { runInAction } from "mobx";
 
 describe("ipc-main", () => {
   let di: DiContainer;
@@ -10,7 +11,9 @@ describe("ipc-main", () => {
   beforeEach(() => {
     di = createContainer("irrelevant");
 
-    registerFeature(di, messagingFeatureForMain);
+    runInAction(() => {
+      registerFeature(di, messagingFeatureForMain);
+    });
   });
 
   it("is the actual IPC-main of Electron", () => {

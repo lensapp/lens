@@ -6,11 +6,11 @@ import {
   registerLensCore,
 } from "@k8slens/core/main";
 import { createContainer } from "@ogre-tools/injectable";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerFeature } from "@k8slens/feature-core";
 import { applicationFeature, startApplicationInjectionToken } from '@k8slens/application'
 import { applicationFeatureForElectronMain } from '@k8slens/application-for-electron-main'
 import { messagingFeatureForMain } from "@k8slens/messaging-for-main";
+import { injectableMobXFeature } from "@k8slens/basic-dependency-features";
 
 const environment = "main";
 
@@ -18,12 +18,16 @@ const di = createContainer(environment, {
   detectCycles: false,
 });
 
-registerMobX(di);
-
 runInAction(() => {
   registerLensCore(di, environment);
 
-  registerFeature(di, applicationFeature, applicationFeatureForElectronMain, messagingFeatureForMain);
+  registerFeature(
+    di,
+    injectableMobXFeature,
+    applicationFeature,
+    applicationFeatureForElectronMain,
+    messagingFeatureForMain
+  );
 
   try {
     autoRegister({

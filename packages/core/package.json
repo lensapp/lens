@@ -312,6 +312,7 @@
   "peerDependencies": {
     "@k8slens/application": "^6.5.0-alpha.0",
     "@k8slens/application-for-electron-main": "^6.5.0-alpha.0",
+    "@k8slens/basic-dependency-features": "^1.0.0-alpha.0",
     "@k8slens/cluster-settings": "^6.5.0-alpha.1",
     "@k8slens/dock": "^1.0.0-alpha.0",
     "@k8slens/kubectl-versions": "^1.0.0-alpha.0",

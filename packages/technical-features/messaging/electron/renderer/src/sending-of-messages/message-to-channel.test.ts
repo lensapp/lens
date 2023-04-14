@@ -1,11 +1,12 @@
 import { createContainer, DiContainer } from "@ogre-tools/injectable";
 import { registerFeature } from "@k8slens/feature-core";
+import type { MessageChannel } from "@k8slens/messaging";
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import { messagingFeatureForRenderer } from "../feature";
-import type { MessageChannel } from "@k8slens/messaging";
 import sendToIpcInjectable from "./send-to-ipc.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
+import { runInAction } from "mobx";
 
 describe("message-from-channel", () => {
   let di: DiContainer;
@@ -14,7 +15,9 @@ describe("message-from-channel", () => {
   beforeEach(() => {
     di = createContainer("irrelevant");
 
-    registerFeature(di, messagingFeatureForRenderer);
+    runInAction(() => {
+      registerFeature(di, messagingFeatureForRenderer);
+    });
 
     sendToIpcMock = asyncFn();
     di.override(sendToIpcInjectable, () => sendToIpcMock);

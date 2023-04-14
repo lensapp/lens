@@ -1,7 +1,5 @@
 import { registerFeature } from "@k8slens/feature-core";
 import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injectable";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
-import { registerInjectableReact } from "@ogre-tools/injectable-react";
 import { reactApplicationFeature } from "./feature";
 import { runInAction, computed, observable, IObservableValue } from "mobx";
 import { startApplicationInjectionToken } from "@k8slens/application";
@@ -25,10 +23,6 @@ describe("react-application", () => {
 
   beforeEach(async () => {
     di = createContainer("some-container");
-
-    registerInjectableReact(di);
-
-    registerMobX(di);
 
     runInAction(() => {
       registerFeature(di, reactApplicationFeature);

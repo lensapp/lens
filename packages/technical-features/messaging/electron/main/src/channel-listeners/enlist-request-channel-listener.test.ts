@@ -9,6 +9,7 @@ import { getPromiseStatus } from "@k8slens/test-utils";
 import { createContainer } from "@ogre-tools/injectable";
 import { registerFeature } from "@k8slens/feature-core";
 import { messagingFeatureForMain } from "../feature";
+import { runInAction } from "mobx";
 
 type TestRequestChannel = RequestChannel<unknown, unknown>;
 
@@ -25,7 +26,9 @@ describe("enlist request channel listener in main", () => {
   beforeEach(() => {
     const di = createContainer("irrelevant");
 
-    registerFeature(di, messagingFeatureForMain);
+    runInAction(() => {
+      registerFeature(di, messagingFeatureForMain);
+    });
 
     handleMock = jest.fn();
     offMock = jest.fn();

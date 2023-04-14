@@ -13,7 +13,6 @@ import {
   sendMessageToChannelInjectionToken,
 } from "@k8slens/messaging";
 
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { runInAction } from "mobx";
 import { getPromiseStatus } from "@k8slens/test-utils";
 import { getMessageBridgeFake } from "./get-message-bridge-fake";
@@ -49,10 +48,6 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
         someDi2 = createContainer("some-di-2");
 
         someDiWithoutListeners = createContainer("some-di-3");
-
-        registerMobX(someDi1);
-        registerMobX(someDi2);
-        registerMobX(someDiWithoutListeners);
 
         runInAction(() => {
           const feature = testUtils.messagingFeatureForUnitTesting;

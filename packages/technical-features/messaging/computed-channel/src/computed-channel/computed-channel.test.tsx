@@ -6,7 +6,6 @@ import { startApplicationInjectionToken } from "@k8slens/application";
 import { computed, IComputedValue, IObservableValue, observable, reaction, runInAction } from "mobx";
 import type { MessageChannel } from "@k8slens/messaging";
 import { getMessageChannelListenerInjectable } from "@k8slens/messaging";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { registerFeature } from "@k8slens/feature-core";
 import { testUtils } from "@k8slens/messaging";
 import { computedChannelInjectionToken, computedChannelObserverInjectionToken } from "./computed-channel.injectable";
@@ -40,8 +39,6 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
 
         di1 = createContainer("some-container-1");
         di2 = createContainer("some-container-2");
-        registerMobX(di1);
-        registerMobX(di2);
 
         const administrationChannelTestListenerInjectable = getMessageChannelListenerInjectable({
           id: "administration-channel-test-listener",
