@@ -8,9 +8,8 @@ import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import type { KubeJsonApiData } from "../kube-json-api";
 import type { Webhook } from "./mutating-webhook-configuration.api";
-import { MutatingWebhookConfiguration } from "./mutating-webhook-configuration.api";
 
-interface ValidatingWebhook extends Webhook {
+export interface ValidatingWebhook extends Webhook {
 }
 
 interface ValidatingWebhookConfigurationData extends KubeJsonApiData<KubeObjectMetadata<KubeObjectScope.Namespace>, void, void> {
@@ -38,11 +37,11 @@ export class ValidatingWebhookConfiguration extends KubeObject<
   }
 }
 
-export class ValidatingWebhookConfigurationApi extends KubeApi<MutatingWebhookConfiguration> {
+export class ValidatingWebhookConfigurationApi extends KubeApi<ValidatingWebhookConfiguration> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
     super(deps, {
       ...opts ?? {},
-      objectConstructor: MutatingWebhookConfiguration,
+      objectConstructor: ValidatingWebhookConfiguration,
     });
   }
 }

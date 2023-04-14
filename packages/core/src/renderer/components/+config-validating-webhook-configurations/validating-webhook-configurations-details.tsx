@@ -6,19 +6,19 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { MutatingWebhookConfiguration } from "../../../common/k8s-api/endpoints";
-import { WebhookConfig } from "./webhook-config";
+import { WebhookConfig } from "../+config-mutating-webhook-configurations/webhook-config";
+import type { ValidatingWebhookConfiguration } from "../../../common/k8s-api/endpoints";
 
-export interface MutatingWebhookDetailsProps extends KubeObjectDetailsProps<MutatingWebhookConfiguration> {
+export interface ValidatingWebhookProps extends KubeObjectDetailsProps<ValidatingWebhookConfiguration> {
 }
 
 @observer
-export class MutatingWebhookDetails extends React.Component<MutatingWebhookDetailsProps> {
+export class ValidatingWebhookDetails extends React.Component<ValidatingWebhookProps> {
   render() {
     const { object: webhookConfig } = this.props;
 
     return (
-      <div className="MutatingWebhookDetails">
+      <div className="ValidatingWebhookDetails">
         <DrawerItem name="API version">
           {webhookConfig.apiVersion}
         </DrawerItem>
