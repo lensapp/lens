@@ -1,7 +1,5 @@
 import { runInAction } from "mobx";
 import { createContainer, DiContainer, getInjectable } from "@ogre-tools/injectable";
-import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
-import { registerInjectableReact } from "@ogre-tools/injectable-react";
 import { renderFor } from "@k8slens/test-utils";
 import { DockHost } from "./dock/dock-host";
 import React from "react";
@@ -18,11 +16,8 @@ describe("DockHost, given rendered", () => {
 
   beforeEach(() => {
     di = createContainer("some-container");
-    registerMobX(di);
-    registerInjectableReact(di);
-    runInAction(() => {
-      registerFeature(di, dockFeature);
-    });
+
+    registerFeature(di, dockFeature);
 
     const render = renderFor(di);
 
