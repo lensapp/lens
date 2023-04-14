@@ -255,7 +255,7 @@
     "jsonfile": "^6.1.0",
     "mini-css-extract-plugin": "^2.7.1",
     "monaco-editor": "^0.37.1",
-    "monaco-editor-webpack-plugin": "^5.0.0",
+    "monaco-editor-webpack-plugin": "^7.0.1",
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.20",
     "playwright": "^1.32.1",

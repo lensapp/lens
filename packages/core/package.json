@@ -273,7 +273,7 @@
     "mini-css-extract-plugin": "^2.7.2",
     "mock-http": "^1.1.0",
     "monaco-editor": "^0.37.1",
-    "monaco-editor-webpack-plugin": "^5.0.0",
+    "monaco-editor-webpack-plugin": "^7.0.1",
     "node-gyp": "^8.3.0",
     "node-loader": "^2.0.0",
     "nodemon": "^2.0.20",
