@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import releaseChannelInjectable from "../../../common/vars/release-channel.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
-import initSemanticBuildVersionInjectable from "../semantic-build-version/init.injectable";
+import { semanticBuildVersionInitializationInjectable } from "../../../features/vars/semantic-build-version/main/init.injectable";
 
 const initReleaseChannelInjectable = getInjectable({
   id: "init-release-channel",
@@ -15,7 +15,7 @@ const initReleaseChannelInjectable = getInjectable({
 
       await releaseChannel.init();
     },
-    runAfter: initSemanticBuildVersionInjectable,
+    runAfter: semanticBuildVersionInitializationInjectable,
   }),
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });
