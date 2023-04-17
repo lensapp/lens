@@ -37,21 +37,28 @@ export const getInitializable = <T>(rootId: string): Initializable<T> => ({
 
 type InitState<T> = { set: true; value: T } | { set: false };
 
-export interface ImplInitializableInjectionTokensArgs<T> {
+export type ImplInitializableInjectionTokensArgs<T> = {
   token: Initializable<T>;
   init: (di: DiContainerForInjection) => T | Promise<T>;
-  phase: InjectionToken<Runnable<void>, void>;
-  runAfter?: Runnable<void>["runAfter"];
-}
+} & (
+  {
+    phase: InjectionToken<Runnable<void>, void>;
+    runAfter?: Injectable<Runnable<void>, Runnable<void>, void>[];
+  }
+  |
+  {
+    runAfter: Injectable<Runnable<void>, Runnable<void>, void>;
+    phase?: undefined;
+  }
+);
 
 export const getInjectablesForInitializable = <T>({
   init,
-  phase,
   token: {
     rootId,
     stateToken,
   },
-  runAfter,
+  ...rest
 }: ImplInitializableInjectionTokensArgs<T>) => {
   let state: InitState<T> = { set: false };
 
@@ -73,9 +80,15 @@ export const getInjectablesForInitializable = <T>({
           value: await init(di),
         };
       },
-      runAfter,
+      runAfter: rest.runAfter,
     }),
-    injectionToken: phase,
+    injectionToken: (() => {
+      if (rest.runAfter && !Array.isArray(rest.runAfter)) {
+        return rest.runAfter.injectionToken;
+      }
+
+      return rest.phase;
+    })(),
   });
 
   return {
