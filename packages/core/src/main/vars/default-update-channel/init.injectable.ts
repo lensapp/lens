@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import defaultUpdateChannelInjectable from "../../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
-import { semanticBuildVersionInitializationInjectable } from "../../../features/vars/semantic-build-version/main/init.injectable";
+import { buildVersionInitializationInjectable } from "../../../features/vars/build-version/main/init.injectable";
 
 const initDefaultUpdateChannelInjectable = getInjectable({
   id: "init-default-update-channel",
@@ -15,7 +15,7 @@ const initDefaultUpdateChannelInjectable = getInjectable({
 
       await defaultUpdateChannel.init();
     },
-    runAfter: semanticBuildVersionInitializationInjectable,
+    runAfter: buildVersionInitializationInjectable,
   }),
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });

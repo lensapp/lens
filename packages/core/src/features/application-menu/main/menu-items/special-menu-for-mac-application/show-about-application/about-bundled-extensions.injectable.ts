@@ -6,12 +6,12 @@ import { applicationInformationToken } from "@k8slens/application";
 import { getInjectable } from "@ogre-tools/injectable";
 import { bundledExtensionInjectionToken } from "@k8slens/legacy-extensions";
 import { object } from "@k8slens/utilities";
-import { semanticBuildVersionInitializable } from "../../../../../vars/semantic-build-version/common/token";
+import semanticBuildVersionInjectable from "../../../../../vars/common/semantic-build-version.injectable";
 
 const specificVersionsInjectable = getInjectable({
   id: "specific-versions",
   instantiate: (di) => {
-    const buildSemanticVersion = di.inject(semanticBuildVersionInitializable.stateToken);
+    const buildSemanticVersion = di.inject(semanticBuildVersionInjectable);
     const bundledExtensions = di.injectMany(bundledExtensionInjectionToken);
     const applicationInformation = di.inject(applicationInformationToken);
 
