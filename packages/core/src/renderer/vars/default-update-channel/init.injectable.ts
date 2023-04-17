@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../../before-frame-starts/tokens";
-import initReleaseChannelInjectable from "../release-channel/init.injectable";
 import defaultUpdateChannelInjectable from "../../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
+import { semanticBuildVersionInitializationInjectable } from "../../../features/vars/semantic-build-version/renderer/init.injectable";
 
 const initDefaultUpdateChannelInjectable = getInjectable({
   id: "init-default-update-channel",
@@ -15,7 +15,7 @@ const initDefaultUpdateChannelInjectable = getInjectable({
 
       await defaultUpdateChannel.init();
     },
-    runAfter: initReleaseChannelInjectable,
+    runAfter: semanticBuildVersionInitializationInjectable,
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });
