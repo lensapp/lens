@@ -27,7 +27,7 @@
     "test": "jest --coverage --runInBand"
   },
   "peerDependencies": {
-    "@ogre-tools/injectable": "^15.1.1"
+    "@ogre-tools/injectable": "^15.5.1"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.62",
