@@ -19,7 +19,6 @@ import getBasenameOfPathInjectable from "../../../common/path/get-basename.injec
 import computeShellEnvironmentInjectable from "../../../features/shell-sync/main/compute-shell-environment.injectable";
 import spawnPtyInjectable from "../spawn-pty.injectable";
 import appNameInjectable from "../../../common/vars/app-name.injectable";
-import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import emitAppEventInjectable from "../../../common/app-event-bus/emit-event.injectable";
 import statInjectable from "../../../common/fs/stat.injectable";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
@@ -27,6 +26,7 @@ import userPreferencesStateInjectable from "../../../features/user-preferences/c
 import userShellSettingInjectable from "../../../features/user-preferences/common/shell-setting.injectable";
 import shellSessionEnvsInjectable from "../shell-envs.injectable";
 import shellSessionProcessesInjectable from "../processes.injectable";
+import { buildVersionInitializable } from "../../../features/vars/build-version/common/token";
 
 export interface OpenLocalShellSessionArgs {
   websocket: WebSocket;
@@ -49,7 +49,7 @@ const openLocalShellSessionInjectable = getInjectable({
       state: di.inject(userPreferencesStateInjectable),
       userShellSetting: di.inject(userShellSettingInjectable),
       appName: di.inject(appNameInjectable),
-      buildVersion: di.inject(buildVersionInjectable),
+      buildVersion: di.inject(buildVersionInitializable.stateToken),
       shellSessionEnvs: di.inject(shellSessionEnvsInjectable),
       shellSessionProcesses: di.inject(shellSessionProcessesInjectable),
       modifyTerminalShellEnv: di.inject(modifyTerminalShellEnvInjectable),

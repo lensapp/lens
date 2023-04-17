@@ -23,7 +23,7 @@ import showInfoNotificationInjectable from "../../../../renderer/components/noti
 import processCheckingForUpdatesInjectable from "../../main/process-checking-for-updates.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import getBuildVersionInjectable
-  from "../../../../main/vars/build-version/get-build-version.injectable";
+  from "../../../../main/electron-app/features/get-build-version.injectable";
 
 describe("selection of update stability", () => {
   let builder: ApplicationBuilder;

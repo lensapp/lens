@@ -6,18 +6,20 @@ import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import appNameInjectable from "../../common/vars/app-name.injectable";
-import buildVersionInjectable from "../vars/build-version/build-version.injectable";
+import { buildVersionInitializable } from "../../features/vars/build-version/common/token";
+import { buildVersionInitializationInjectable } from "../../features/vars/build-version/main/init.injectable";
 
 const logVersionOnStartInjectable = getInjectable({
   id: "log-version-on-start",
   instantiate: (di) => ({
     run: () => {
       const logger = di.inject(loggerInjectable);
-      const buildVersion = di.inject(buildVersionInjectable).get();
+      const buildVersion = di.inject(buildVersionInitializable.stateToken);
       const appName = di.inject(appNameInjectable);
 
       logger.info(`Starting v${buildVersion} of ${appName}...`);
     },
+    runAfter: buildVersionInitializationInjectable,
   }),
   injectionToken: beforeApplicationIsLoadingInjectionToken,
 });

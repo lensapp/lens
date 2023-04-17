@@ -14,7 +14,7 @@ import processCheckingForUpdatesInjectable from "./main/process-checking-for-upd
 import selectedUpdateChannelInjectable from "./common/selected-update-channel/selected-update-channel.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { updateChannels } from "./common/update-channels";
-import getBuildVersionInjectable from "../../main/vars/build-version/get-build-version.injectable";
+import getBuildVersionInjectable from "../../main/electron-app/features/get-build-version.injectable";
 
 describe("downgrading version update", () => {
   let applicationBuilder: ApplicationBuilder;

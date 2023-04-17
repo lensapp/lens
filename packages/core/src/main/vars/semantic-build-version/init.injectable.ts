@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import buildSemanticVersionInjectable from "../../../common/vars/build-semantic-version.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
-import initializeBuildVersionInjectable from "../build-version/init.injectable";
+import { buildVersionInitializationInjectable } from "../../../features/vars/build-version/main/init.injectable";
 
 const initSemanticBuildVersionInjectable = getInjectable({
   id: "init-semantic-build-version",
@@ -16,7 +16,7 @@ const initSemanticBuildVersionInjectable = getInjectable({
 
         await buildSemanticVersion.init();
       },
-      runAfter: initializeBuildVersionInjectable,
+      runAfter: buildVersionInitializationInjectable,
     };
   },
   injectionToken: beforeApplicationIsLoadingInjectionToken,

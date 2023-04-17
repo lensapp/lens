@@ -10,11 +10,11 @@ import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable
 import isWindowsInjectable from "../../../common/vars/is-windows.injectable";
 import showErrorPopupInjectable from "../../electron-app/features/show-error-popup.injectable";
 import { beforeApplicationIsLoadingInjectionToken } from "@k8slens/application";
-import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
-import initializeBuildVersionInjectable from "../../vars/build-version/init.injectable";
 import lensProxyCertificateInjectable from "../../../common/certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
 import { Agent } from "https";
+import { buildVersionInitializable } from "../../../features/vars/build-version/common/token";
+import { buildVersionInitializationInjectable } from "../../../features/vars/build-version/main/init.injectable";
 
 const setupLensProxyInjectable = getInjectable({
   id: "setup-lens-proxy",
@@ -27,7 +27,7 @@ const setupLensProxyInjectable = getInjectable({
       const lensProxyPort = di.inject(lensProxyPortInjectable);
       const isWindows = di.inject(isWindowsInjectable);
       const showErrorPopup = di.inject(showErrorPopupInjectable);
-      const buildVersion = di.inject(buildVersionInjectable);
+      const buildVersion = di.inject(buildVersionInitializable.stateToken);
       const lensProxyCertificate = di.inject(lensProxyCertificateInjectable);
       const fetch = di.inject(fetchInjectable);
 
@@ -51,7 +51,7 @@ const setupLensProxyInjectable = getInjectable({
 
         const { version: versionFromProxy } = await versionResponse.json() as { version: string };
 
-        if (buildVersion.get() !== versionFromProxy) {
+        if (buildVersion !== versionFromProxy) {
           logger.error("Proxy server responded with invalid response");
 
           return forceAppExit();
@@ -76,7 +76,7 @@ const setupLensProxyInjectable = getInjectable({
         return forceAppExit();
       }
     },
-    runAfter: initializeBuildVersionInjectable,
+    runAfter: buildVersionInitializationInjectable,
   }),
 
   causesSideEffects: true,
