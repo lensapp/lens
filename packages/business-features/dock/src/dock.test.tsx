@@ -5,10 +5,38 @@ import { DockHost } from "./dock/dock-host";
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import { act } from "@testing-library/react";
-import { dockTabInjectionToken } from "./dock-tab";
+import { dockTabTypeInjectionToken } from "./dock-tab-type";
 import { Discover, discoverFor } from "@k8slens/react-testing-library-discovery";
 import { registerFeature } from "@k8slens/feature-core";
 import { dockFeature } from "./feature";
+import { createDockTabInjectionToken } from "./dock/create-dock-tab.injectable";
+import { getRandomIdInjectionToken } from "./dock/get-random-id.injectable";
+
+const dockTabTypeInjectable1 = getInjectable({
+  id: "some-dock-tab-type-1",
+
+  instantiate: () => ({
+    id: "some-dock-tab-type-1",
+    TitleComponent: () => <div data-dock-tab-title-test="some-title-1">Some title 1</div>,
+
+    ContentComponent: () => <div data-dock-tab-content-test="some-content-1">Some content 1</div>,
+  }),
+
+  injectionToken: dockTabTypeInjectionToken,
+});
+
+const dockTabTypeInjectable2 = getInjectable({
+  id: "some-dock-tab-type-2",
+
+  instantiate: () => ({
+    id: "some-dock-tab-type-2",
+    TitleComponent: () => <div data-dock-tab-title-test="some-title-2">Some title 2</div>,
+
+    ContentComponent: () => <div data-dock-tab-content-test="some-content-2">Some content 2</div>,
+  }),
+
+  injectionToken: dockTabTypeInjectionToken,
+});
 
 describe("DockHost, given rendered", () => {
   let di: DiContainer;
@@ -20,50 +48,26 @@ describe("DockHost, given rendered", () => {
 
     registerFeature(di, dockFeature);
 
+    di.override(getRandomIdInjectionToken, () => {
+      let index = 0;
+
+      return () => `some-random-id-${index++}`;
+    });
+
     const render = renderFor(di);
 
     rendered = render(<DockHost />);
     discover = discoverFor(() => rendered);
   });
 
-  it("given no implementations of dock tabs, renders", () => {
+  it("given no implementations of dock tab types, renders", () => {
     expect(rendered.baseElement).toMatchSnapshot();
   });
 
-  describe("given implementations of dock tabs emerge", () => {
+  describe("given implementations of dock tab types emerge", () => {
     beforeEach(() => {
-      const dockTabInjectable1 = getInjectable({
-        id: "some-dock-tab-1",
-
-        instantiate: () => ({
-          id: "some-dock-tab-1",
-          TitleComponent: () => <div data-dock-tab-title-test="some-title-1">Some title 1</div>,
-
-          ContentComponent: () => (
-            <div data-dock-tab-content-test="some-content-1">Some content 1</div>
-          ),
-        }),
-
-        injectionToken: dockTabInjectionToken,
-      });
-
-      const dockTabInjectable2 = getInjectable({
-        id: "some-dock-tab-2",
-
-        instantiate: () => ({
-          id: "some-dock-tab-2",
-          TitleComponent: () => <div data-dock-tab-title-test="some-title-2">Some title 2</div>,
-
-          ContentComponent: () => (
-            <div data-dock-tab-content-test="some-content-2">Some content 2</div>
-          ),
-        }),
-
-        injectionToken: dockTabInjectionToken,
-      });
-
       runInAction(() => {
-        di.register(dockTabInjectable1, dockTabInjectable2);
+        di.register(dockTabTypeInjectable1, dockTabTypeInjectable2);
       });
     });
 
@@ -71,34 +75,82 @@ describe("DockHost, given rendered", () => {
       expect(rendered.baseElement).toMatchSnapshot();
     });
 
-    it("renders the titles of all the dock tabs in order", () => {
-      expect(discover.queryAllElements("dock-tab-title").attributeValues).toEqual([
-        "some-title-1",
-        "some-title-2",
-      ]);
+    it("renders no tabs", () => {
+      const { discovered } = discover.querySingleElement("dock-tab");
+
+      expect(discovered).toBeNull();
     });
 
-    it("renders only the content of the first dock tab", () => {
-      expect(discover.queryAllElements("dock-tab-content").attributeValues).toEqual([
-        "some-content-1",
-      ]);
+    it("renders no content", () => {
+      const { discovered } = discover.querySingleElement("dock-tab-content");
+
+      expect(discovered).toBeNull();
     });
 
-    describe("when the second dock tab is clicked", () => {
+    describe("when dock tab of one of the types is created", () => {
       beforeEach(() => {
-        act(() => {
-          discover.getSingleElement("dock-tab", "some-dock-tab-2").click();
-        });
+        const dockTabType1 = di.inject(dockTabTypeInjectable1);
+
+        const createDockTab = di.inject(createDockTabInjectionToken);
+
+        createDockTab({ type: dockTabType1 });
       });
 
       it("renders", () => {
         expect(rendered.baseElement).toMatchSnapshot();
       });
 
-      it("renders only the content of the second dock tab", () => {
-        expect(discover.queryAllElements("dock-tab-content").attributeValues).toEqual([
-          "some-content-2",
+      it("renders the title for the dock tab", () => {
+        expect(discover.queryAllElements("dock-tab-title").attributeValues).toEqual([
+          "some-title-1",
         ]);
+      });
+
+      it("renders the content of the first dock tab", () => {
+        expect(discover.queryAllElements("dock-tab-content").attributeValues).toEqual([
+          "some-content-1",
+        ]);
+      });
+
+      describe("given another dock tab is created", () => {
+        beforeEach(() => {
+          const dockTabType2 = di.inject(dockTabTypeInjectable2);
+
+          const createDockTab = di.inject(createDockTabInjectionToken);
+
+          createDockTab({ type: dockTabType2 });
+        });
+
+        it("renders the titles of all the dock tabs in order of creating", () => {
+          expect(discover.queryAllElements("dock-tab-title").attributeValues).toEqual([
+            "some-title-1",
+            "some-title-2",
+          ]);
+        });
+
+        it("renders only the content of the just created dock tab", () => {
+          expect(discover.queryAllElements("dock-tab-content").attributeValues).toEqual([
+            "some-content-2",
+          ]);
+        });
+
+        describe("when the second dock tab is clicked", () => {
+          beforeEach(() => {
+            act(() => {
+              discover.getSingleElement("dock-tab", "some-random-id-1").click();
+            });
+          });
+
+          it("renders", () => {
+            expect(rendered.baseElement).toMatchSnapshot();
+          });
+
+          it("renders only the content of the second dock tab", () => {
+            expect(discover.queryAllElements("dock-tab-content").attributeValues).toEqual([
+              "some-content-2",
+            ]);
+          });
+        });
       });
     });
   });

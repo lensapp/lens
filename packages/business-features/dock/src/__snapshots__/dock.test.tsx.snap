@@ -1,44 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DockHost, given rendered given implementations of dock tabs emerge renders 1`] = `
+exports[`DockHost, given rendered given implementations of dock tab types emerge renders 1`] = `
 <body>
   <div>
     <div>
       <div
         class="flex align-center"
-      >
-        <div
-          data-dock-tab-test="some-dock-tab-1"
-        >
-          <div
-            data-dock-tab-title-test="some-title-1"
-          >
-            Some title 1
-          </div>
-        </div>
-        <div
-          data-dock-tab-test="some-dock-tab-2"
-        >
-          <div
-            data-dock-tab-title-test="some-title-2"
-          >
-            Some title 2
-          </div>
-        </div>
-      </div>
-      <div>
-        <div
-          data-dock-tab-content-test="some-content-1"
-        >
-          Some content 1
-        </div>
-      </div>
+      />
+      <div />
     </div>
   </div>
 </body>
 `;
 
-exports[`DockHost, given rendered given implementations of dock tabs emerge when the second dock tab is clicked renders 1`] = `
+exports[`DockHost, given rendered given implementations of dock tab types emerge when dock tab of one of the types is created given another dock tab is created when the second dock tab is clicked renders 1`] = `
 <body>
   <div>
     <div>
@@ -46,7 +21,7 @@ exports[`DockHost, given rendered given implementations of dock tabs emerge when
         class="flex align-center"
       >
         <div
-          data-dock-tab-test="some-dock-tab-1"
+          data-dock-tab-test="some-random-id-0"
         >
           <div
             data-dock-tab-title-test="some-title-1"
@@ -55,7 +30,7 @@ exports[`DockHost, given rendered given implementations of dock tabs emerge when
           </div>
         </div>
         <div
-          data-dock-tab-test="some-dock-tab-2"
+          data-dock-tab-test="some-random-id-1"
         >
           <div
             data-dock-tab-title-test="some-title-2"
@@ -76,7 +51,36 @@ exports[`DockHost, given rendered given implementations of dock tabs emerge when
 </body>
 `;
 
-exports[`DockHost, given rendered given no implementations of dock tabs, renders 1`] = `
+exports[`DockHost, given rendered given implementations of dock tab types emerge when dock tab of one of the types is created renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="flex align-center"
+      >
+        <div
+          data-dock-tab-test="some-random-id-0"
+        >
+          <div
+            data-dock-tab-title-test="some-title-1"
+          >
+            Some title 1
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          data-dock-tab-content-test="some-content-1"
+        >
+          Some content 1
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`DockHost, given rendered given no implementations of dock tab types, renders 1`] = `
 <body>
   <div>
     <div>
