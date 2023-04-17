@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../../../renderer/before-frame-starts/tokens";
-import initDefaultUpdateChannelInjectable from "../../../renderer/vars/default-update-channel/init.injectable";
+import { buildVersionInitializationInjectable } from "../../vars/build-version/renderer/init.injectable";
 import userPreferencesPersistentStorageInjectable from "../common/storage.injectable";
 
 const loadUserPreferencesStorageInjectable = getInjectable({
@@ -15,7 +15,7 @@ const loadUserPreferencesStorageInjectable = getInjectable({
 
       return storage.loadAndStartSyncing();
     },
-    runAfter: initDefaultUpdateChannelInjectable,
+    runAfter: buildVersionInitializationInjectable,
   }),
   injectionToken: beforeFrameStartsSecondInjectionToken,
 });

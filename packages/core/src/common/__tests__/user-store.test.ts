@@ -8,7 +8,6 @@ import { defaultThemeId } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
-import defaultUpdateChannelInjectable from "../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
 import writeFileSyncInjectable from "../fs/write-file-sync.injectable";
 import type { UserPreferencesState } from "../../features/user-preferences/common/state.injectable";
@@ -31,8 +30,6 @@ describe("user store tests", () => {
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 
     di.override(releaseChannelInjectable, () => "latest");
-
-    await di.inject(defaultUpdateChannelInjectable).init();
 
     state = di.inject(userPreferencesStateInjectable);
     resetTheme = di.inject(resetThemeInjectable);

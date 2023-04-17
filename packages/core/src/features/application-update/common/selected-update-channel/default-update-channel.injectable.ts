@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { updateChannels } from "../update-channels";
-import { createInitializableState } from "../../../../common/initializable-state/create";
 import releaseChannelInjectable from "../../../vars/common/release-channel.injectable";
+import { getInjectable } from "@ogre-tools/injectable";
 
-const defaultUpdateChannelInjectable = createInitializableState({
+const defaultUpdateChannelInjectable = getInjectable({
   id: "default-update-channel",
-  init: (di) => updateChannels[di.inject(releaseChannelInjectable)],
+  instantiate: (di) => updateChannels[di.inject(releaseChannelInjectable)],
 });
 
 export default defaultUpdateChannelInjectable;
