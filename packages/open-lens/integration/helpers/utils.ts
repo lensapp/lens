@@ -116,7 +116,7 @@ function minikubeEntityId() {
 /**
  * From the catalog, click the minikube entity and wait for it to connect, returning its frame
  */
-export async function lauchMinikubeClusterFromCatalog(window: Page): Promise<Frame> {
+export async function launchMinikubeClusterFromCatalog(window: Page): Promise<Frame> {
   await window.click("div.TableCell >> text='minikube'");
 
   const minikubeFrame = await window.waitForSelector(`#cluster-frame-${minikubeEntityId()}`);
