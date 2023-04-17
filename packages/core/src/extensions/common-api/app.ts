@@ -10,11 +10,11 @@ import isSnapPackageInjectable from "../../common/vars/is-snap-package.injectabl
 import isWindowsInjectable from "../../common/vars/is-windows.injectable";
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import { issuesTrackerUrl } from "../../common/vars";
-import { buildVersionInjectionToken } from "../../common/vars/build-semantic-version.injectable";
 import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import enabledExtensionsInjectable from "../../features/extensions/enabled/common/enabled-extensions.injectable";
 import userPreferencesStateInjectable from "../../features/user-preferences/common/state.injectable";
 import { lensBuildEnvironmentInjectionToken } from "@k8slens/application";
+import { buildVersionInitializable } from "../../features/vars/build-version/common/token";
 
 const userStore = asLegacyGlobalForExtensionApi(userPreferencesStateInjectable);
 const enabledExtensions = asLegacyGlobalForExtensionApi(enabledExtensionsInjectable);
@@ -27,7 +27,7 @@ export const App = {
   get version() {
     const di = getLegacyGlobalDiForExtensionApi();
 
-    return di.inject(buildVersionInjectionToken).get();
+    return di.inject(buildVersionInitializable.stateToken);
   },
   get appName() {
     const di = getLegacyGlobalDiForExtensionApi();

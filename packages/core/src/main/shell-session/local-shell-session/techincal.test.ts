@@ -14,13 +14,13 @@ import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable
 import statInjectable from "../../../common/fs/stat.injectable";
 import writeJsonSyncInjectable from "../../../common/fs/write-json-sync.injectable";
 import platformInjectable from "../../../common/vars/platform.injectable";
+import { buildVersionStateInjectable } from "../../../features/vars/build-version/main/init.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { KubeconfigManager } from "../../kubeconfig-manager/kubeconfig-manager";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 import createKubectlInjectable from "../../kubectl/create-kubectl.injectable";
 import type { Kubectl } from "../../kubectl/kubectl";
 import lensProxyPortInjectable from "../../lens-proxy/lens-proxy-port.injectable";
-import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
 import type { OpenShellSession } from "../create-shell-session.injectable";
 import type { SpawnPty } from "../spawn-pty.injectable";
 import spawnPtyInjectable from "../spawn-pty.injectable";
@@ -34,9 +34,7 @@ describe("technical unit tests for local shell sessions", () => {
 
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "/some-directory-for-tmp");
-    di.override(buildVersionInjectable, () => ({
-      get: () => "1.1.1",
-    }));
+    di.override(buildVersionStateInjectable, () => "1.1.1");
     di.override(pathExistsInjectable, () => () => { throw new Error("tried call pathExists without override"); });
     di.override(pathExistsSyncInjectable, () => () => { throw new Error("tried call pathExistsSync without override"); });
     di.override(readJsonSyncInjectable, () => () => { throw new Error("tried call readJsonSync without override"); });

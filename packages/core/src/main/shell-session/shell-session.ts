@@ -15,7 +15,6 @@ import { type TerminalMessage, TerminalChannels } from "../../common/terminal/ch
 import type { Logger } from "../../common/logger";
 import type { ComputeShellEnvironment } from "../../features/shell-sync/main/compute-shell-environment.injectable";
 import type { SpawnPty } from "./spawn-pty.injectable";
-import type { InitializableState } from "../../common/initializable-state/create";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
 import type { Stat } from "../../common/fs/stat.injectable";
 import type { IComputedValue } from "mobx";
@@ -112,7 +111,7 @@ export interface ShellSessionDependencies {
   readonly logger: Logger;
   readonly userShellSetting: IComputedValue<string>;
   readonly appName: string;
-  readonly buildVersion: InitializableState<string>;
+  readonly buildVersion: string;
   readonly proxyKubeconfigPath: string;
   readonly directoryContainingKubectl: string;
   readonly shellSessionEnvs: ShellSessionEnvs;
@@ -363,7 +362,7 @@ export abstract class ShellSession {
     env.PTYPID = process.pid.toString();
     env.KUBECONFIG = this.dependencies.proxyKubeconfigPath;
     env.TERM_PROGRAM = this.dependencies.appName;
-    env.TERM_PROGRAM_VERSION = this.dependencies.buildVersion.get();
+    env.TERM_PROGRAM_VERSION = this.dependencies.buildVersion;
 
     if (this.cluster.preferences.httpsProxy) {
       env.HTTPS_PROXY = this.cluster.preferences.httpsProxy;

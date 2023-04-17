@@ -4,23 +4,19 @@
  */
 import { getRouteInjectable } from "../../router/router.injectable";
 import { route } from "../../router/route";
-import buildVersionInjectable from "../../vars/build-version/build-version.injectable";
+import { buildVersionInitializable } from "../../../features/vars/build-version/common/token";
 
 const getVersionRouteInjectable = getRouteInjectable({
   id: "get-version-route",
 
-  instantiate: (di) => {
-    const buildVersion = di.inject(buildVersionInjectable);
-
-    return route({
-      method: "get",
-      path: `/version`,
-    })(() => ({
-      response: {
-        version: buildVersion.get(),
-      },
-    }));
-  },
+  instantiate: (di) => route({
+    method: "get",
+    path: `/version`,
+  })(() => ({
+    response: {
+      version: di.inject(buildVersionInitializable.stateToken),
+    },
+  })),
 });
 
 export default getVersionRouteInjectable;

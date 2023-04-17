@@ -7,16 +7,16 @@ import showMessagePopupInjectable from "../../../../../../main/electron-app/feat
 import isWindowsInjectable from "../../../../../../common/vars/is-windows.injectable";
 import appNameInjectable from "../../../../../../common/vars/app-name.injectable";
 import productNameInjectable from "../../../../../../common/vars/product-name.injectable";
-import buildVersionInjectable from "../../../../../../main/vars/build-version/build-version.injectable";
 import extensionApiVersionInjectable from "../../../../../../common/vars/extension-api-version.injectable";
 import applicationCopyrightInjectable from "../../../../../../common/vars/application-copyright.injectable";
 import specificVersionsInjectable from "./about-bundled-extensions.injectable";
+import { buildVersionInitializable } from "../../../../../vars/build-version/common/token";
 
 const showAboutInjectable = getInjectable({
   id: "show-about",
 
   instantiate: (di) => {
-    const buildVersion = di.inject(buildVersionInjectable);
+    const buildVersion = di.inject(buildVersionInitializable.stateToken);
     const extensionApiVersion = di.inject(extensionApiVersionInjectable);
     const showMessagePopup = di.inject(showMessagePopupInjectable);
     const isWindows = di.inject(isWindowsInjectable);
@@ -27,7 +27,7 @@ const showAboutInjectable = getInjectable({
 
     return () => {
       const appInfo = [
-        `${appName}: ${buildVersion.get()}`,
+        `${appName}: ${buildVersion}`,
         `Extension API: ${extensionApiVersion}`,
         `Electron: ${process.versions.electron}`,
         `Chrome: ${process.versions.chrome}`,
