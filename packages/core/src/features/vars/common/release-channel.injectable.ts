@@ -3,12 +3,12 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { semanticBuildVersionInitializable } from "../semantic-build-version/common/token";
+import semanticBuildVersionInjectable from "./semantic-build-version.injectable";
 
 const releaseChannelInjectable = getInjectable({
   id: "release-channel",
   instantiate: (di) => {
-    const buildSemanticVersion = di.inject(semanticBuildVersionInitializable.stateToken);
+    const buildSemanticVersion = di.inject(semanticBuildVersionInjectable);
     const currentReleaseChannel = buildSemanticVersion.prerelease[0];
 
     switch (currentReleaseChannel) {
