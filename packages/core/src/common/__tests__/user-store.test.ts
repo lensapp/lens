@@ -8,7 +8,6 @@ import { defaultThemeId } from "../vars";
 import writeFileInjectable from "../fs/write-file.injectable";
 import { getDiForUnitTesting } from "../../main/getDiForUnitTesting";
 import storeMigrationVersionInjectable from "../vars/store-migration-version.injectable";
-import releaseChannelInjectable from "../vars/release-channel.injectable";
 import defaultUpdateChannelInjectable from "../../features/application-update/common/selected-update-channel/default-update-channel.injectable";
 import writeJsonSyncInjectable from "../fs/write-json-sync.injectable";
 import writeFileSyncInjectable from "../fs/write-file-sync.injectable";
@@ -18,6 +17,7 @@ import userPreferencesPersistentStorageInjectable from "../../features/user-pref
 import type { ResetTheme } from "../../features/user-preferences/common/reset-theme.injectable";
 import resetThemeInjectable from "../../features/user-preferences/common/reset-theme.injectable";
 import type { ClusterStoreModel } from "../../features/cluster/storage/common/storage.injectable";
+import releaseChannelInjectable from "../../features/vars/common/release-channel.injectable";
 
 describe("user store tests", () => {
   let state: UserPreferencesState;
@@ -30,10 +30,7 @@ describe("user store tests", () => {
     di.override(writeFileInjectable, () => () => Promise.resolve());
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
 
-    di.override(releaseChannelInjectable, () => ({
-      get: () => "latest" as const,
-      init: async () => {},
-    }));
+    di.override(releaseChannelInjectable, () => "latest");
 
     await di.inject(defaultUpdateChannelInjectable).init();
 
