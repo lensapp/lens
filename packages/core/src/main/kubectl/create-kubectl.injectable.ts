@@ -34,7 +34,7 @@ const createKubectlInjectable = getInjectable({
       normalizedDownloadPlatform: di.inject(normalizedPlatformInjectable),
       kubectlBinaryName: di.inject(kubectlBinaryNameInjectable),
       bundledKubectlBinaryPath: di.inject(bundledKubectlBinaryPathInjectable),
-      baseBundeledBinariesDirectory: di.inject(baseBundledBinariesDirectoryInjectable),
+      baseBundledBinariesDirectory: di.inject(baseBundledBinariesDirectoryInjectable),
       bundledKubectlVersion: di.inject(bundledKubectlVersionInjectable),
       kubectlVersionMap: di.inject(kubectlVersionMapInjectable),
       logger: di.inject(loggerInjectable),

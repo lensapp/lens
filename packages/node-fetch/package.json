@@ -8,29 +8,20 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
+  "type": "module",
   "files": [
     "dist"
   ],
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "webpack --config webpack.ts",
-    "lint": "exit 0",
-    "prepare": "npm run build",
-    "prepare:dev": "npm run build",
-    "prepare:test": "npm run build"
+    "build": "webpack"
   },
   "dependencies": {
-    "node-fetch": "^3.3.0",
-    "rimraf": "^4.4.1"
+    "node-fetch": "^3.3.0"
   },
   "devDependencies": {
-    "rimraf": "^4.4.1",
-    "ts-loader": "^9.4.2",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.9.5",
-    "webpack": "^5.77.0",
-    "webpack-cli": "^5.0.1"
+    "rimraf": "^4.4.1"
   }
 }

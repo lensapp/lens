@@ -1,18 +1,4 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "dist/",
-    "paths": {
-      "*": [
-        "node_modules/*",
-        "types/*"
-      ]
-    },
-  },
-  "include": [
-    "src/**/*",
-  ],
-  "exclude": [
-    "node_modules",
-  ]
+  "extends": "@k8slens/typescript/config/base.json",
+  "include": ["**/*.ts"]
 }

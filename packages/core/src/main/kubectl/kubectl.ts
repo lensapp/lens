@@ -29,7 +29,7 @@ export interface KubectlDependencies {
   readonly normalizedDownloadArch: "amd64" | "arm64" | "386";
   readonly kubectlBinaryName: string;
   readonly bundledKubectlBinaryPath: string;
-  readonly baseBundeledBinariesDirectory: string;
+  readonly baseBundledBinariesDirectory: string;
   readonly state: {
     readonly kubectlBinariesPath?: string;
     readonly downloadBinariesPath?: string;
@@ -302,7 +302,7 @@ export class Kubectl {
   }
 
   protected async writeInitScripts() {
-    const binariesDir = this.dependencies.baseBundeledBinariesDirectory;
+    const binariesDir = this.dependencies.baseBundledBinariesDirectory;
     const kubectlPath = this.dependencies.state.downloadKubectlBinaries
       ? this.dirname
       : this.dependencies.getDirnameOfPath(this.getPathFromPreferences());

@@ -1,14 +1,10 @@
-/**
- * Copyright (c) OpenLens Authors. All rights reserved.
- * Licensed under MIT License. See LICENSE in root directory for more information.
- */
 import path from "path";
 
 export default {
-  entry: "./src/index.ts",
+  entry: "./index.ts",
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "index.js",
+    path: path.resolve("dist"),
+    filename: "index.cjs",
     library: {
       type: "commonjs",
     },
@@ -26,8 +22,8 @@ export default {
   },
   module: {
     rules: [
-      { 
-        test: /\.(ts|tsx)$/, 
+      {
+        test: /\.(ts|tsx)$/,
         loader: "ts-loader",
         options: {
           compilerOptions: {
@@ -41,5 +37,5 @@ export default {
   },
   resolve: {
     extensions: [".ts"],
-  },
+  }
 };

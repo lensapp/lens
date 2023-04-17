@@ -7,14 +7,7 @@
   "scripts": {
     "clean": "rimraf dist/",
     "build": "swc ./src/index.ts -d ./dist/",
-    "postbuild": "run-script-os",
-    "postbuild:windows": "",
-    "postbuild:nix": "chmod u+x ./dist/index.js",
-    "prepare:dev": "npm run build",
-    "prepare": "npm run build"
-  },
-  "bin": {
-    "ensure-binaries": "./dist/index.js"
+    "ensure": "node ./dist/index.js"
   },
   "type": "module",
   "files": [
@@ -34,14 +27,13 @@
     "zod": "^3.20.6"
   },
   "devDependencies": {
-    "@swc/cli": "^0.1.61",
+    "@swc/cli": "^0.1.62",
     "@swc/core": "^1.3.44",
     "@types/cli-progress": "^3.11.0",
     "@types/gunzip-maybe": "^1.4.0",
     "@types/node": "^16.18.11",
     "@types/semver": "^7.3.13",
     "@types/tar-stream": "^2.2.2",
-    "rimraf": "^4.4.1",
-    "run-script-os": "^1.1.6"
+    "rimraf": "^4.4.1"
   }
 }
