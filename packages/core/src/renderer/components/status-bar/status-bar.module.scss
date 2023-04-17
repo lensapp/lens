@@ -13,10 +13,7 @@
 
   display: inline-grid;
   grid-template-columns: 1fr 1fr;
-
-  &.status-default {
-    background-color: var(--colorInfo);
-  }
+  background-color: var(--colorInfo);
 
   &.status-warning {
     background-color: var(--colorWarning);

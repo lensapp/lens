@@ -27,9 +27,13 @@ const NonInjectedStatusBar = observer(({
   status,
 }: Dependencies & StatusBarProps) => {
   const { left, right } = items.get();
+  const barStatus = status.get();
+  const barStyle = barStatus === "default"
+    ? undefined
+    : styles[`status-${barStatus}`];
 
   return (
-    <div className={cssNames(styles.StatusBar, styles[`status-${status.get()}`])} data-testid="status-bar">
+    <div className={cssNames(styles.StatusBar, barStyle)} data-testid="status-bar">
       <div className={styles.leftSide} data-testid="status-bar-left">
         {left.map((Item, index) => (
           <div

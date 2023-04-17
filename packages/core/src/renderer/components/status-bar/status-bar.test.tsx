@@ -4,7 +4,6 @@
  */
 
 import React from "react";
-import "@testing-library/jest-dom/extend-expect";
 import type { ApplicationBuilder } from "../test-utils/get-application-builder";
 import { getApplicationBuilder } from "../test-utils/get-application-builder";
 import setStatusBarStatusInjectable from "./set-status-bar-status.injectable";
@@ -155,7 +154,7 @@ describe("<StatusBar />", () => {
   });
 
   it("has the default status by default", () => {
-    expect([...result.getByTestId("status-bar").classList]).toContain("status-default");
+    expect([...result.getByTestId("status-bar").classList]).toEqual(["StatusBar"]);
   });
 
   describe.each([
