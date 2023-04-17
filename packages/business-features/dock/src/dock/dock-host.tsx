@@ -16,9 +16,20 @@ const NonInjectedDockHost = observer(({ dockTabs, activeDockTab }: Dependencies)
     <Div>
       <Tabs>
         <Map items={dockTabs.get()}>
-          {({ id, type: { TitleComponent }, activate }) => (
+          {({ id, type: { TitleComponent }, activate, close }) => (
             <Tabs.Tab data-dock-tab-test={id} onClick={activate}>
               <TitleComponent />
+
+              <Div
+                data-close-tab-test={id}
+                onClick={(e: any) => {
+                  e.stopPropagation();
+
+                  close();
+                }}
+              >
+                Close
+              </Div>
             </Tabs.Tab>
           )}
         </Map>

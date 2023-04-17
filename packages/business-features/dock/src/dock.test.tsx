@@ -49,7 +49,7 @@ describe("DockHost, given rendered", () => {
     registerFeature(di, dockFeature);
 
     di.override(getRandomIdInjectionToken, () => {
-      let index = 0;
+      let index = 1;
 
       return () => `some-random-id-${index++}`;
     });
@@ -112,6 +112,33 @@ describe("DockHost, given rendered", () => {
         ]);
       });
 
+      describe("when all dock tabs are closed WIP(PASSES BUT IS CLEARLY WRONG)", () => {
+        beforeEach(() => {
+          act(() => {
+            discover
+              .getSingleElement("dock-tab", "some-random-id-1")
+              .getSingleElement("close-tab")
+              .click();
+          });
+        });
+
+        fit("renders", () => {
+          expect(rendered.baseElement).toMatchSnapshot();
+        });
+
+        it("renders no tabs", () => {
+          const { discovered } = discover.querySingleElement("dock-tab");
+
+          expect(discovered).toBeNull();
+        });
+
+        it("renders no content", () => {
+          const { discovered } = discover.querySingleElement("dock-tab-content");
+
+          expect(discovered).toBeNull();
+        });
+      });
+
       describe("given another dock tab is created", () => {
         beforeEach(() => {
           const dockTabType2 = di.inject(dockTabTypeInjectable2);
@@ -134,10 +161,64 @@ describe("DockHost, given rendered", () => {
           ]);
         });
 
+        describe("when dock tab being active is closed", () => {
+          beforeEach(() => {
+            act(() => {
+              discover
+                .getSingleElement("dock-tab", "some-random-id-2")
+                .getSingleElement("close-tab")
+                .click();
+            });
+          });
+
+          it("renders", () => {
+            expect(rendered.baseElement).toMatchSnapshot();
+          });
+
+          it("renders the title for the dock tab", () => {
+            expect(discover.queryAllElements("dock-tab-title").attributeValues).toEqual([
+              "some-title-1",
+            ]);
+          });
+
+          it("renders the content of the previous dock tab", () => {
+            expect(discover.queryAllElements("dock-tab-content").attributeValues).toEqual([
+              "some-content-1",
+            ]);
+          });
+        });
+
+        describe("when dock tab not being active is closed", () => {
+          beforeEach(() => {
+            act(() => {
+              discover
+                .getSingleElement("dock-tab", "some-random-id-1")
+                .getSingleElement("close-tab")
+                .click();
+            });
+          });
+
+          it("renders", () => {
+            expect(rendered.baseElement).toMatchSnapshot();
+          });
+
+          it("renders the title for the dock tab", () => {
+            expect(discover.queryAllElements("dock-tab-title").attributeValues).toEqual([
+              "some-title-2",
+            ]);
+          });
+
+          it("still renders the content of the active dock tab", () => {
+            expect(discover.queryAllElements("dock-tab-content").attributeValues).toEqual([
+              "some-content-2",
+            ]);
+          });
+        });
+
         describe("when the second dock tab is clicked", () => {
           beforeEach(() => {
             act(() => {
-              discover.getSingleElement("dock-tab", "some-random-id-1").click();
+              discover.getSingleElement("dock-tab", "some-random-id-2").click();
             });
           });
 

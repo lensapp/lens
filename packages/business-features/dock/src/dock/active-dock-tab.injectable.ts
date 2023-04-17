@@ -2,7 +2,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import activeDockTabIdStateInjectable from "./active-dock-tab-id-state.injectable";
 import { pipeline } from "@ogre-tools/fp";
-import { defaults, find, first } from "lodash/fp";
+import { defaults, find } from "lodash/fp";
 import dockTabsInjectable, { DockTabViewModel } from "./dock-tabs.injectable";
 
 const nullTab: DockTabViewModel = {
@@ -15,6 +15,7 @@ const nullTab: DockTabViewModel = {
   },
 
   activate: () => {},
+  close: () => {},
 };
 
 const activeDockTabInjectable = getInjectable({
@@ -30,7 +31,6 @@ const activeDockTabInjectable = getInjectable({
       return pipeline(
         tabs,
         find((tab) => tab.id === activeDockTabId.get()),
-        defaults(first(tabs)),
         defaults(nullTab),
       );
     });

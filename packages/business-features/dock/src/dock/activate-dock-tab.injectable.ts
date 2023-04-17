@@ -8,7 +8,9 @@ const activateDockTabInjectable = getInjectable({
   instantiate: (di) => {
     const activeDockTabId = di.inject(activeDockTabIdStateInjectable);
 
-    return action((tabId: string) => activeDockTabId.set(tabId));
+    return action((tabId: string) => {
+      return activeDockTabId.set(tabId);
+    });
   },
 });
 

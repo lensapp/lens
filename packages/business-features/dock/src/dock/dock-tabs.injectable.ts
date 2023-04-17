@@ -6,11 +6,13 @@ import type { DockTabType } from "../dock-tab-type";
 import { dockTabStateInjectable } from "./dock-tab-state.injectable";
 import activateDockTabInjectable from "./activate-dock-tab.injectable";
 import dockTabTypesInjectable from "./dock-tabs-types.injectable";
+import closeDockTabInjectable from "./close-dock-tab.injectable";
 
 export interface DockTabViewModel {
   id: string;
   type: DockTabType;
   activate: () => void;
+  close: () => void;
 }
 
 const dockTabsInjectable = getInjectable({
@@ -20,6 +22,7 @@ const dockTabsInjectable = getInjectable({
     const dockTabTypes = di.inject(dockTabTypesInjectable);
     const dockTabState = di.inject(dockTabStateInjectable);
     const activateDockTab = di.inject(activateDockTabInjectable);
+    const closeDockTab = di.inject(closeDockTabInjectable);
 
     return computed((): DockTabViewModel[] => {
       const dereferencedDockTabTypes = dockTabTypes.get();
@@ -38,6 +41,7 @@ const dockTabsInjectable = getInjectable({
           id: tab.id,
           type: type as DockTabType,
           activate: () => activateDockTab(tab.id),
+          close: () => closeDockTab(tab),
         })),
       );
     });
