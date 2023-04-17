@@ -141,14 +141,14 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
       await monacoEditor.press("Enter", { delay: 10 });
       await monacoEditor.type("metadata:", { delay: 10 });
       await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type(`  name: ${testPodName}`, { delay: 10 });
+      await monacoEditor.type(`name: ${testPodName}`, { delay: 10 });
       await monacoEditor.press("Enter", { delay: 10 });
       await monacoEditor.type(`namespace: ${TEST_NAMESPACE}`, { delay: 10 });
       await monacoEditor.press("Enter", { delay: 10 });
       await monacoEditor.press("Backspace", { delay: 10 });
       await monacoEditor.type("spec:", { delay: 10 });
       await monacoEditor.press("Enter", { delay: 10 });
-      await monacoEditor.type("  containers:", { delay: 10 });
+      await monacoEditor.type("containers:", { delay: 10 });
       await monacoEditor.press("Enter", { delay: 10 });
       await monacoEditor.type(`- name: ${testPodName}`, { delay: 10 });
       await monacoEditor.press("Enter", { delay: 10 });
