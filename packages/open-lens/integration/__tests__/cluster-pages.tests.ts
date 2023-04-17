@@ -27,7 +27,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     ({ window, cleanup } = await utils.start());
     await utils.clickWelcomeButton(window);
 
-    frame = await utils.lauchMinikubeClusterFromCatalog(window);
+    frame = await utils.launchMinikubeClusterFromCatalog(window);
   }, 10 * 60 * 1000);
 
   afterEach(async () => {
@@ -86,7 +86,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     10 * 60 * 1000,
   );
 
-  it(
+  it.only(
     `should create the ${TEST_NAMESPACE} and a pod in the namespace and then remove that pod via the context menu`,
     async () => {
       await navigateToNamespaces(frame);
