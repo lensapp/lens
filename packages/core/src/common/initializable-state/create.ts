@@ -3,8 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import type { Runnable } from "@k8slens/run-many";
 import type { DiContainerForInjection, Injectable, InjectionToken } from "@ogre-tools/injectable";
-import { getInjectable } from "@ogre-tools/injectable";
+import { getInjectionToken, getInjectable } from "@ogre-tools/injectable";
+import assert from "assert";
 
 export interface CreateInitializableStateArgs<T> {
   id: string;
@@ -20,6 +22,67 @@ export interface InitializableState<T> {
 type InitializableStateValue<T> =
   | { set: false }
   | { set: true; value: T } ;
+
+export interface Initializable<T> {
+  readonly rootId: string;
+  readonly stateToken: InjectionToken<T, void>;
+}
+
+export const getInitializable = <T>(rootId: string): Initializable<T> => ({
+  rootId,
+  stateToken: getInjectionToken<T>({
+    id: `${rootId}-state-token`,
+  }),
+});
+
+type InitState<T> = { set: true; value: T } | { set: false };
+
+export interface ImplInitializableInjectionTokensArgs<T> {
+  token: Initializable<T>;
+  init: (di: DiContainerForInjection) => T | Promise<T>;
+  phase: InjectionToken<Runnable<void>, void>;
+  runAfter?: Runnable<void>["runAfter"];
+}
+
+export const getInjectablesForInitializable = <T>({
+  init,
+  phase,
+  token: {
+    rootId,
+    stateToken,
+  },
+  runAfter,
+}: ImplInitializableInjectionTokensArgs<T>) => {
+  let state: InitState<T> = { set: false };
+
+  const stateInjectable = getInjectable({
+    id: `${rootId}-state`,
+    instantiate: () => {
+      assert(state.set, `Tried to inject "${rootId}" before initialization was complete`);
+
+      return state.value;
+    },
+    injectionToken: stateToken,
+  });
+  const initializationInjectable = getInjectable({
+    id: `${rootId}-initialization`,
+    instantiate: (di) => ({
+      run: async () => {
+        state = {
+          set: true,
+          value: await init(di),
+        };
+      },
+      runAfter,
+    }),
+    injectionToken: phase,
+  });
+
+  return {
+    stateInjectable,
+    initializationInjectable,
+  };
+};
 
 export function createInitializableState<T>(args: CreateInitializableStateArgs<T>): Injectable<InitializableState<T>, unknown, void> {
   const { id, init, injectionToken } = args;
