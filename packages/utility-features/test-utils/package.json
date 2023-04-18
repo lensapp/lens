@@ -1,6 +1,6 @@
 {
   "name": "@k8slens/test-utils",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "A collection of utilities for testing",
   "type": "commonjs",
   "main": "dist/index.js",
