@@ -86,7 +86,7 @@ describeIf(minikubeReady(TEST_NAMESPACE))("Minikube based tests", () => {
     10 * 60 * 1000,
   );
 
-  it.only(
+  it(
     `should create the ${TEST_NAMESPACE} and a pod in the namespace and then remove that pod via the context menu`,
     async () => {
       await navigateToNamespaces(frame);
