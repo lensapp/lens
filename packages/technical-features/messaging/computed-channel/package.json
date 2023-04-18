@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/computed-channel",
   "private": false,
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "MobX-like computed between channels",
   "type": "commonjs",
   "publishConfig": {
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@k8slens/eslint-config": "^6.5.0-alpha.2",
-    "@k8slens/messaging-fake-bridge": "^1.0.0-alpha.2",
+    "@k8slens/messaging-fake-bridge": "^1.0.0-alpha.3",
     "type-fest": "^2.14.0"
   }
 }

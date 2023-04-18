@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/messaging-fake-bridge",
   "private": false,
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "Fake implementation to bridge multiple dependency injection containers.",
   "type": "commonjs",
   "publishConfig": {
