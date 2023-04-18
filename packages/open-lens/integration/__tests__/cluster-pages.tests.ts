@@ -366,6 +366,18 @@ const scenarios = [
     parentSidebarItemTestId: null,
     sidebarItemTestId: "sidebar-item-link-for-custom-resources",
   },
+
+  {
+    expectedSelector: "h5.title",
+    parentSidebarItemTestId: "sidebar-item-link-for-config",
+    sidebarItemTestId: "sidebar-item-link-for-validating-webhook-configurations",
+  },
+
+  {
+    expectedSelector: "h5.title",
+    parentSidebarItemTestId: "sidebar-item-link-for-config",
+    sidebarItemTestId: "sidebar-item-link-for-mutating-webhook-configurations",
+  },
 ];
 
 const navigateToPods = async (frame: Frame) => {

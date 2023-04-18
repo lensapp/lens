@@ -43,7 +43,7 @@ interface RuleWithOperations {
   scope?: string;
 }
 
-interface MutatingWebhook {
+export interface Webhook {
   // The name of the webhook configuration.
   name: string;
 
@@ -92,6 +92,9 @@ interface MutatingWebhook {
   // reinvocationPolicy indicates whether this webhook should be called multiple times as part of a
   // single admission evaluation. Allowed values are "Never" and "IfNeeded"
   reinvocationPolicy?: "Never" | "IfNeeded";
+}
+
+export interface MutatingWebhook extends Webhook {
 }
 
 interface ServiceReference {

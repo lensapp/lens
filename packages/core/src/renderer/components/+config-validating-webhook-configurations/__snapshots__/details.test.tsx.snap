@@ -1,0 +1,234 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ValidatingWebhookConfigsDetails renders 1`] = `
+<body>
+  <div>
+    <div
+      class="ValidatingWebhookDetails"
+    >
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          API version
+        </span>
+        <span
+          class="value"
+        >
+          admissionregistration.k8s.io/v1
+        </span>
+      </div>
+      <div
+        class="DrawerTitle title"
+      >
+        Webhooks
+      </div>
+      <div
+        class="DrawerItem firstItem"
+      >
+        <span
+          class="name"
+        >
+          Name
+        </span>
+        <span
+          class="value"
+        >
+          <strong>
+            pod-policy.example.com
+          </strong>
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Client Config
+        </span>
+        <span
+          class="value"
+        >
+          <div>
+            <div>
+              Name:
+               
+              service-name
+            </div>
+            <div>
+              Namespace:
+               
+              service-namespace
+            </div>
+          </div>
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Match Policy
+        </span>
+        <span
+          class="value"
+        />
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Failure Policy
+        </span>
+        <span
+          class="value"
+        >
+          Fail
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Admission Review Versions
+        </span>
+        <span
+          class="value"
+        >
+          v1, v1beta1
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Side Effects
+        </span>
+        <span
+          class="value"
+        >
+          None
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Timeout Seconds
+        </span>
+        <span
+          class="value"
+        >
+          5
+        </span>
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Namespace Selector
+        </span>
+        <span
+          class="value"
+        />
+      </div>
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          Object Selector
+        </span>
+        <span
+          class="value"
+        />
+      </div>
+      <div
+        class="DrawerItem lastItem"
+      >
+        <span
+          class="name"
+        >
+          Rules
+        </span>
+        <span
+          class="value"
+        >
+          <div>
+            <div>
+              API Groups:
+               
+              , apps, extensions
+            </div>
+            <div>
+              API Versions:
+               
+              v1, v1beta1
+            </div>
+            <div>
+              Operations:
+               
+              CREATE, UPDATE
+            </div>
+            <div>
+              Resources:
+               
+              pods, deployments
+            </div>
+          </div>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`ValidatingWebhookConfigsDetails renders with no webhooks 1`] = `
+<body>
+  <div>
+    <div
+      class="ValidatingWebhookDetails"
+    >
+      <div
+        class="DrawerItem"
+      >
+        <span
+          class="name"
+        >
+          API version
+        </span>
+        <span
+          class="value"
+        >
+          admissionregistration.k8s.io/v1
+        </span>
+      </div>
+      <div
+        class="DrawerTitle title"
+      >
+        Webhooks
+      </div>
+      <div
+        style="opacity: 0.6;"
+      >
+        No webhooks set
+      </div>
+    </div>
+  </div>
+</body>
+`;
