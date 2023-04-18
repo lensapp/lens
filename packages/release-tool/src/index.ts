@@ -134,12 +134,7 @@ async function getCurrentVersionOfSubPackage(packageName: string): Promise<SemVe
 }
 
 async function checkCurrentWorkingDirectory(): Promise<void> {
-  const repoRoot = await getAbsolutePathToRepoRoot();
-
-  if (process.cwd() !== repoRoot) {
-    console.error("It looks like you are running this script from the 'scripts' directory. This script assumes it is run from the root of the git repo");
-    process.exit(1);
-  }
+  process.chdir(await getAbsolutePathToRepoRoot());
 }
 
 function formatSemverForMilestone(version: SemVer): string {
@@ -158,7 +153,7 @@ async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prB
   const prBranch = `release/v${version.format()}`;
 
   await pipeExecFile("git", ["checkout", "-b", prBranch]);
-  await pipeExecFile("git", ["add", "packages/*/package.json"]);
+  await pipeExecFile("git", ["add", "packages/*/package.json", "package-lock.json"]);
   await pipeExecFile("git", ["commit", "-sm", `Release ${version.format()}`]);
   await pipeExecFile("git", ["push", "--set-upstream", "origin", prBranch]);
 
