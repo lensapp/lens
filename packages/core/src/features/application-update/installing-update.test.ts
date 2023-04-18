@@ -308,6 +308,29 @@ describe("installing update", () => {
                   expect(electronQuitAndInstallUpdateMock).toHaveBeenCalled();
                 });
               });
+
+              describe("when download fails", () => {
+                beforeEach(async () => {
+                  await downloadPlatformUpdateMock.resolve({ downloadWasSuccessful: false });
+                });
+
+                it("does not show the update button", () => {
+                  const button =
+                    rendered.queryByTestId("update-button");
+
+                  expect(button).not.toBeInTheDocument();
+                });
+
+                it("shows normal tray icon", () => {
+                  expect(builder.tray.getIconPath()).toBe(
+                    "/some-static-files-directory/build/tray/trayIconTemplate.png",
+                  );
+                });
+
+                it("renders", () => {
+                  expect(rendered.baseElement).toMatchSnapshot();
+                });
+              });
             });
           });
         });
