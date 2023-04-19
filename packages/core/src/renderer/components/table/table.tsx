@@ -36,23 +36,61 @@ export type TableSortCallback<Item> = (data: Item) => undefined | string | numbe
 export type TableSortCallbacks<Item> = Record<string, TableSortCallback<Item>>;
 
 export interface TableProps<Item> extends React.DOMAttributes<HTMLDivElement> {
-  tableId?: string;
-  items?: Item[];  // Raw items data
-  className?: string;
-  autoSize?: boolean;   // Setup auto-sizing for all columns (flex: 1 0)
-  selectable?: boolean; // Highlight rows on hover
-  scrollable?: boolean; // Use scrollbar if content is bigger than parent's height
-  storageKey?: string;  // Keep some data in localStorage & restore on page reload, e.g sorting params
   /**
-   * Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead>
-   * @sortItem argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/>
+   * Used for persisting sort order and visible columns
+   */
+  tableId?: string;
+  /**
+   * The raw data for the table
+   */
+  items?: Item[];
+  /**
+   * Optional addition class names for the root HTML element
+   */
+  className?: string;
+  /**
+   * Setup auto-sizing for all columns (flex: 1 0)
+   */
+  autoSize?: boolean;
+  /**
+   * Highlight rows on hover
+   */
+  selectable?: boolean;
+  /**
+   * Use scrollbar if content is bigger than parent's height
+   */
+  scrollable?: boolean;
+  /**
+   * @deprecated Unused
+   */
+  storageKey?: string;
+  /**
+   * Define sortable callbacks for every column in `<TableHead><TableCell sortBy="someCol"></TableCell></TableHead>`
+   * @sortItem argument in the callback is an object, provided in `<TableRow sortItem={someColDataItem}></TableRow>`
    */
   sortable?: TableSortCallbacks<Item>;
-  sortSyncWithUrl?: boolean; // sorting state is managed globally from url params
-  sortByDefault?: Partial<TableSortParams>; // default sorting params
-  onSort?: (params: TableSortParams) => void; // callback on sort change, default: global sync with url
-  noItems?: React.ReactNode; // Show no items state table list is empty
-  selectedItemId?: string;  // Allows to scroll list to selected item
+  /**
+   * sorting state is managed globally from url params
+   */
+  sortSyncWithUrl?: boolean;
+  /**
+   * default sorting params
+   */
+  sortByDefault?: Partial<TableSortParams>;
+  /**
+   * callback on sort change
+   *
+   * Default: global sync with url
+   */
+  onSort?: (params: TableSortParams) => void;
+  /**
+   * This is shown when {@link TableProps.items} is empty
+   */
+  noItems?: React.ReactNode;
+  /**
+   * Allows to scroll list to selected item
+   */
+  selectedItemId?: string;
 
   /**
    * Use virtual list component to render only visible rows. By default uses a
