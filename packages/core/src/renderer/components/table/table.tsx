@@ -20,7 +20,7 @@ import { getSorted } from "./sorting";
 import type { TableModel } from "./table-model/table-model";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import tableModelInjectable from "./table-model/table-model.injectable";
-import type { ItemObject } from "../../../common/item.store";
+import type { ItemObject } from "@k8slens/list-layout";
 import assert from "assert";
 import orderByUrlParamInjectable from "./order-by-url-param.injectable";
 import sortByUrlParamInjectable from "./sort-by-url-param.injectable";

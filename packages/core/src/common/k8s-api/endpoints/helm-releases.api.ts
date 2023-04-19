@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { ItemObject } from "../../item.store";
+import type { ItemObject } from "@k8slens/list-layout";
 import type { HelmReleaseDetails } from "./helm-releases.api/request-details.injectable";
 
 export interface HelmReleaseUpdateDetails {

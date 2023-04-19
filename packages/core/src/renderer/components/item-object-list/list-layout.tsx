@@ -14,7 +14,7 @@ import type { TableCellProps, TableProps, TableRowProps, TableSortCallbacks } fr
 import type { IClassName, SingleOrMany } from "@k8slens/utilities";
 import { cssNames, noop } from "@k8slens/utilities";
 import type { AddRemoveButtonsProps } from "../add-remove-buttons";
-import type { ItemObject } from "../../../common/item.store";
+import type { ItemObject } from "@k8slens/list-layout";
 import type { SearchInputUrlProps } from "../input";
 import type { PageFiltersStore } from "./page-filters/store";
 import { FilterType } from "./page-filters/store";

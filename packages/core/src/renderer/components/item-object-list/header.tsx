@@ -10,7 +10,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import type { IClassName } from "@k8slens/utilities";
 import { cssNames, isDefined } from "@k8slens/utilities";
-import type { ItemObject } from "../../../common/item.store";
+import type { ItemObject } from "@k8slens/list-layout";
 import type { Filter } from "./page-filters/store";
 import type { HeaderCustomizer, HeaderPlaceholders, ItemListStore, SearchFilter } from "./list-layout";
 import { SearchInputUrl } from "../input";
