@@ -118,7 +118,7 @@ export interface CatalogCategoryMetadata {
    */
   readonly name: string;
   /**
-   * Either an `<svg>` or the name of an icon from {@link IconProps}
+   * Either an `<svg>` or one of the provided svg names from {@link Renderer.Component.NamedSvg}
    */
   readonly icon: string;
 }

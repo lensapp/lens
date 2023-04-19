@@ -73,6 +73,29 @@ const localSvgIcons = new Map([
   ["workloads", Workloads],
 ]);
 
+export type NamedSvg =
+  | "configuration"
+  | "crane"
+  | "group"
+  | "helm"
+  | "install"
+  | "kube"
+  | "lens-logo"
+  | "license"
+  | "logo-lens"
+  | "logout"
+  | "nodes"
+  | "push_off"
+  | "push_pin"
+  | "spinner"
+  | "ssh"
+  | "storage"
+  | "terminal"
+  | "user"
+  | "users"
+  | "wheel"
+  | "workloads";
+
 export interface BaseIconProps {
    /**
    * One of the names from https://material.io/icons/
@@ -80,30 +103,9 @@ export interface BaseIconProps {
   material?: string;
 
   /**
-   * Either an SVG XML or one of the following names
-   * - configuration
-   * - crane
-   * - group
-   * - helm
-   * - install
-   * - kube
-   * - lens-logo
-   * - license
-   * - logo-lens
-   * - logout
-   * - nodes
-   * - push_off
-   * - push_pin
-   * - spinner
-   * - ssh
-   * - storage
-   * - terminal
-   * - user
-   * - users
-   * - wheel
-   * - workloads
+   * Either an SVG XML or one of {@link NamedSvg}
    */
-  svg?: string;
+  svg?: NamedSvg | string;
 
   /**
    * render icon as NavLink from react-router-dom

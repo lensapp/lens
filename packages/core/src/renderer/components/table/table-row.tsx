@@ -15,9 +15,19 @@ export interface TableRowProps<Item> extends React.DOMAttributes<HTMLDivElement>
   className?: string;
   selected?: boolean;
   style?: CSSProperties;
-  nowrap?: boolean; // white-space: nowrap, align inner <TableCell> in one line
-  sortItem?: Item; // data for sorting callback in <Table sortable={}/>
-  searchItem?: Item; // data for searching filters in <Table searchable={}/>
+  /**
+   * Should the inner `<TableCell>` be aligned to one line
+   * `white-space: nowrap`
+   */
+  nowrap?: boolean;
+  /**
+   * data for sorting callback in `<Table sortable={}></Table>`
+   */
+  sortItem?: Item;
+  /**
+   * data for searching filters in `<Table searchable={}></Table>`
+   */
+  searchItem?: Item;
   disabled?: boolean;
   testId?: string;
 }
