@@ -235,7 +235,7 @@
     "@types/webpack-env": "^1.18.0",
     "@types/webpack-node-externals": "^2.5.3",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
+    "@typescript-eslint/parser": "^5.59.0",
     "adr": "^1.4.3",
     "ansi_up": "^5.2.1",
     "chalk": "^4.1.2",
