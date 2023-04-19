@@ -86,7 +86,7 @@ export abstract class BaseExtensionStore<T extends object> {
   }
 
   /**
-   * @deprecated Never use this method. Instead call {@link BaseExtensionStore.loadExtension}
+   * @deprecated Never use this method. Instead call {@link Common.Store.ExtensionStore.loadExtension}
    */
   load() {
     this.persistentStorage?.loadAndStartSyncing();

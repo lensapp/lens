@@ -47,7 +47,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   isChecked?: boolean;
 
   /**
-   * column name, must be same as key in sortable object <Table sortable={}/>
+   * column name, must be same as key in sortable object `<Table sortable={}></Table>`
    */
   sortBy?: TableSortBy;
 
