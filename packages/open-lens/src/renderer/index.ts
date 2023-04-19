@@ -1,5 +1,6 @@
 import "@k8slens/core/styles";
 import "@k8slens/tooltip/dist/index.css";
+import "@k8slens/resizing-anchor/dist/index.css";
 import { runInAction } from "mobx";
 import {
   rendererExtensionApi as Renderer,
