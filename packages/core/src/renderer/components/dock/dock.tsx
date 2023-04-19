@@ -10,7 +10,7 @@ import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
-import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
+import { ResizeDirection, ResizingAnchor } from "@k8slens/resizing-anchor";
 import { CreateResource } from "./create-resource/view";
 import { DockTabs } from "./dock-tabs";
 import type { DockStore, DockTab } from "./dock/store";
