@@ -21,7 +21,7 @@
     
     
       
-        <title>Interface: TableProps - Lens Extension Development</title>
+        <title>Renderer.Component.TableProps - Lens Extension Development</title>
       
     
     
@@ -125,7 +125,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: TableProps<Item\>
+              Renderer.Component.TableProps
             
           </span>
         </div>
@@ -912,6 +912,7 @@
                   
 
 
+<p><a href="../../">@k8slens/extensions</a> / <a href="../../modules/">Exports</a> / <a href="../../modules/Renderer/">Renderer</a> / <a href="../../modules/Renderer.Component/">Component</a> / TableProps</p>
 <h1 id="interface-tablepropsitem">Interface: TableProps&lt;Item><a class="headerlink" href="#interface-tablepropsitem" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Renderer/">Renderer</a>.<a href="../../modules/Renderer.Component/">Component</a>.TableProps</p>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
@@ -959,9 +960,11 @@
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="autosize">autoSize<a class="headerlink" href="#autosize" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>autoSize</strong>: <code>boolean</code></p>
+<p>Setup auto-sizing for all columns (flex: 1 0)</p>
 <hr />
 <h3 id="classname">className<a class="headerlink" href="#classname" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>className</strong>: <code>string</code></p>
+<p>Optional addition class names for the root HTML element</p>
 <hr />
 <h3 id="customrowheights">customRowHeights<a class="headerlink" href="#customrowheights" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>customRowHeights</strong>: (<code>item</code>: <code>Item</code>, <code>lineHeight</code>: <code>number</code>, <code>paddings</code>: <code>number</code>) =&gt; <code>number</code></p>
@@ -1017,14 +1020,18 @@
 <hr />
 <h3 id="items">items<a class="headerlink" href="#items" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>items</strong>: <code>Item</code>[]</p>
+<p>The raw data for the table</p>
 <hr />
 <h3 id="noitems">noItems<a class="headerlink" href="#noitems" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>noItems</strong>: <code>ReactNode</code></p>
+<p>This is shown when <a href="./#items">items</a> is empty</p>
 <hr />
 <h3 id="onsort">onSort<a class="headerlink" href="#onsort" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>onSort</strong>: (<code>params</code>: <a href="../Renderer.Component.TableSortParams/"><code>TableSortParams</code></a>) =&gt; <code>void</code></p>
 <h4 id="type-declaration_2">Type declaration<a class="headerlink" href="#type-declaration_2" title="Permanent link">#</a></h4>
 <p>▸ (<code>params</code>): <code>void</code></p>
+<p>callback on sort change</p>
+<p>Default: global sync with url</p>
 <h5 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">#</a></h5>
 <table>
 <thead>
@@ -1075,30 +1082,38 @@
 <hr />
 <h3 id="scrollable">scrollable<a class="headerlink" href="#scrollable" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>scrollable</strong>: <code>boolean</code></p>
+<p>Use scrollbar if content is bigger than parent's height</p>
 <hr />
 <h3 id="selectable">selectable<a class="headerlink" href="#selectable" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>selectable</strong>: <code>boolean</code></p>
+<p>Highlight rows on hover</p>
 <hr />
 <h3 id="selecteditemid">selectedItemId<a class="headerlink" href="#selecteditemid" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>selectedItemId</strong>: <code>string</code></p>
+<p>Allows to scroll list to selected item</p>
 <hr />
 <h3 id="sortbydefault">sortByDefault<a class="headerlink" href="#sortbydefault" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>sortByDefault</strong>: <code>Partial</code>&lt;<a href="../Renderer.Component.TableSortParams/"><code>TableSortParams</code></a>></p>
+<p>default sorting params</p>
 <hr />
 <h3 id="sortsyncwithurl">sortSyncWithUrl<a class="headerlink" href="#sortsyncwithurl" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>sortSyncWithUrl</strong>: <code>boolean</code></p>
+<p>sorting state is managed globally from url params</p>
 <hr />
 <h3 id="sortable">sortable<a class="headerlink" href="#sortable" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>sortable</strong>: <a href="../../modules/Renderer.Component/#tablesortcallbacks"><code>TableSortCallbacks</code></a>&lt;<code>Item</code>></p>
-<p>Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead></p>
+<p>Define sortable callbacks for every column in <code>&lt;TableHead&gt;&lt;TableCell sortBy="someCol"&gt;&lt;/TableCell&gt;&lt;/TableHead&gt;</code></p>
 <p><strong><code>Sort Item</code></strong></p>
-<p>argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/></p>
+<p>argument in the callback is an object, provided in <code>&lt;TableRow sortItem={someColDataItem}&gt;&lt;/TableRow&gt;</code></p>
 <hr />
 <h3 id="storagekey">storageKey<a class="headerlink" href="#storagekey" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>storageKey</strong>: <code>string</code></p>
+<p><strong><code>Deprecated</code></strong></p>
+<p>Unused</p>
 <hr />
 <h3 id="tableid">tableId<a class="headerlink" href="#tableid" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>tableId</strong>: <code>string</code></p>
+<p>Used for persisting sort order and visible columns</p>
 <hr />
 <h3 id="virtual">virtual<a class="headerlink" href="#virtual" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>virtual</strong>: <code>boolean</code></p>

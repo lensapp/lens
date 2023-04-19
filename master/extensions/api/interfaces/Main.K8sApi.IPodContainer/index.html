@@ -21,7 +21,7 @@
     
     
       
-        <title>Interface: IPodContainer - Lens Extension Development</title>
+        <title>Main.K8sApi.IPodContainer - Lens Extension Development</title>
       
     
     
@@ -125,7 +125,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: IPodContainer
+              Main.K8sApi.IPodContainer
             
           </span>
         </div>
@@ -912,6 +912,7 @@
                   
 
 
+<p><a href="../../">@k8slens/extensions</a> / <a href="../../modules/">Exports</a> / <a href="../../modules/Main/">Main</a> / <a href="../../modules/Main.K8sApi/">K8sApi</a> / IPodContainer</p>
 <h1 id="interface-ipodcontainer">Interface: IPodContainer<a class="headerlink" href="#interface-ipodcontainer" title="Permanent link">#</a></h1>
 <p><a href="../../modules/Main/">Main</a>.<a href="../../modules/Main.K8sApi/">K8sApi</a>.IPodContainer</p>
 <p>A single application container that you want to run within a pod.</p>
@@ -1025,7 +1026,8 @@ network. Cannot be updated.</p>
 <p>Whether this container should allocate a buffer for stdin in the container runtime. If this is
 not set, reads from stdin in the container will always result in EOF.</p>
 <p><strong><code>Default</code></strong></p>
-<p>false</p>
+<div class="highlight"><pre><span></span><code><span class="kc">false</span>
+</code></pre></div>
 <hr />
 <h3 id="stdinonce">stdinOnce<a class="headerlink" href="#stdinonce" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>stdinOnce</strong>: <code>boolean</code></p>
@@ -1037,7 +1039,8 @@ client attaches to stdin, and then remains open and accepts data until the clien
 at which time stdin is closed and remains closed until the container is restarted.</p>
 <p>If this flag is false, a container processes that reads from stdin will never receive an EOF.</p>
 <p><strong><code>Default</code></strong></p>
-<p>false</p>
+<div class="highlight"><pre><span></span><code><span class="kc">false</span>
+</code></pre></div>
 <hr />
 <h3 id="terminationmessagepath">terminationMessagePath<a class="headerlink" href="#terminationmessagepath" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>terminationMessagePath</strong>: <code>string</code></p>
@@ -1047,7 +1050,8 @@ status, such as an assertion failure message.</p>
 <p>Will be truncated by the node if greater than 4096 bytes.
 The total message length across all containers will be limited to 12kb. Cannot be updated.</p>
 <p><strong><code>Default</code></strong></p>
-<p>"/dev/termination-log"</p>
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;/dev/termination-log&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="terminationmessagepolicy">terminationMessagePolicy<a class="headerlink" href="#terminationmessagepolicy" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>terminationMessagePolicy</strong>: <code>"File"</code> | <code>"FallbackToLogsOnError"</code></p>
@@ -1064,13 +1068,15 @@ termination message file is empty and the container exited with an error.</p>
 </ul>
 <p>The log output is limited to 2048 bytes or 80 lines, whichever is smaller. Cannot be updated.</p>
 <p><strong><code>Default</code></strong></p>
-<p>"File"</p>
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;File&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="tty">tty<a class="headerlink" href="#tty" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>tty</strong>: <code>boolean</code></p>
 <p>Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.</p>
 <p><strong><code>Default</code></strong></p>
-<p>false</p>
+<div class="highlight"><pre><span></span><code><span class="kc">false</span>
+</code></pre></div>
 <hr />
 <h3 id="volumedevices">volumeDevices<a class="headerlink" href="#volumedevices" title="Permanent link">#</a></h3>
 <p>• <code>Optional</code> <strong>volumeDevices</strong>: <code>VolumeDevice</code>[]</p>
