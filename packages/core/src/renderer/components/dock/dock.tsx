@@ -150,7 +150,7 @@ class NonInjectedDock extends React.Component<DockProps & Dependencies> {
           maxExtent={dockStore.maxHeight}
           direction={ResizeDirection.VERTICAL}
           onStart={dockStore.open}
-          onMinExtentSubceed={dockStore.close}
+          onMinExtentSucceed={dockStore.close}
           onMinExtentExceed={dockStore.open}
           onDrag={extent => dockStore.height = extent}
         />
