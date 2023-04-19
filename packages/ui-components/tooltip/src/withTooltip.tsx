@@ -3,8 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-// Tooltip decorator for simple composition with other components
-
 import type { ReactNode } from "react";
 import React, { useState } from "react";
 import type { TooltipProps } from "./tooltip";

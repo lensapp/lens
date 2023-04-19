@@ -17,6 +17,7 @@ exports[`<Tooltip /> renders to DOM when forced to by visible prop 1`] = `
   <div>
     <div
       class="Tooltip right visible"
+      data-testid="tooltip"
       role="tooltip"
       style="left: 10px; top: 0px;"
     >
@@ -36,6 +37,7 @@ exports[`<Tooltip /> renders to DOM when hovering over target 1`] = `
   <div>
     <div
       class="Tooltip right visible"
+      data-testid="tooltip"
       role="tooltip"
       style="left: 10px; top: 0px;"
     >
@@ -45,6 +47,198 @@ exports[`<Tooltip /> renders to DOM when hovering over target 1`] = `
       id="my-target"
     >
       Target Text
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<Tooltip /> uses a portal if usePortal is specified 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        id="my-target"
+      >
+        Target Text
+      </div>
+    </div>
+  </div>
+  <div
+    class="Tooltip right visible"
+    data-testid="tooltip"
+    role="tooltip"
+    style="left: 10px; top: 0px;"
+  >
+    I am a tooltip
+  </div>
+</body>
+`;
+
+exports[`<Tooltip /> when specifying a tooltip for a component renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        data-testid="target"
+        id="my-target"
+      >
+        Target Text
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<Tooltip /> when specifying a tooltip for a component that doesn't exist with show on parent hover renders 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`<Tooltip /> when specifying a tooltip for a component when hovering over the target element renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        data-testid="target"
+        id="my-target"
+      >
+        Target Text
+      </div>
+    </div>
+  </div>
+  <div
+    class="Tooltip right visible"
+    data-testid="tooltip"
+    role="tooltip"
+    style="left: 10px; top: 0px;"
+  >
+    I am a tooltip
+  </div>
+</body>
+`;
+
+exports[`<Tooltip /> when specifying a tooltip for a component when hovering over the target element when no longer hovering the target renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        data-testid="target"
+        id="my-target"
+      >
+        Target Text
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<Tooltip /> when specifying a tooltip for a component with show on parent hover renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        data-testid="target-parent"
+      >
+        <div
+          data-testid="target"
+          id="my-target"
+        >
+          Target Text
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<Tooltip /> when specifying a tooltip for a component with show on parent hover when hovering over the target element renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        data-testid="target-parent"
+      >
+        <div
+          data-testid="target"
+          id="my-target"
+        >
+          Target Text
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Tooltip right visible"
+    data-testid="tooltip"
+    role="tooltip"
+    style="left: 10px; top: 0px;"
+  >
+    I am a tooltip
+  </div>
+</body>
+`;
+
+exports[`<Tooltip /> when specifying a tooltip for a component with show on parent hover when hovering over the target element when no longer hovering the target renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        data-testid="target-parent"
+      >
+        <div
+          data-testid="target"
+          id="my-target"
+        >
+          Target Text
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`<Tooltip /> when specifying a tooltip for a component with show on parent hover when hovering over the target's parent element renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        data-testid="target-parent"
+      >
+        <div
+          data-testid="target"
+          id="my-target"
+        >
+          Target Text
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="Tooltip right visible"
+    data-testid="tooltip"
+    role="tooltip"
+    style="left: 10px; top: 0px;"
+  >
+    I am a tooltip
+  </div>
+</body>
+`;
+
+exports[`<Tooltip /> when specifying a tooltip for a component with show on parent hover when hovering over the target's parent element when no longer hovering the target's parent renders 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        data-testid="target-parent"
+      >
+        <div
+          data-testid="target"
+          id="my-target"
+        >
+          Target Text
+        </div>
+      </div>
     </div>
   </div>
 </body>
