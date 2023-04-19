@@ -8,6 +8,5 @@
   "entryPoints": [
     "src/extension-api.ts",
   ],
-  "hideBreadcrumbs": true,
   "disableSources": true,
 }
