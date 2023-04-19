@@ -84,7 +84,7 @@
       "<rootDir>/static/build"
     ],
     "setupFiles": [
-      "<rootDir>/src/jest.setup.tsx",
+      "<rootDir>/src/jest.setup.ts",
       "jest-canvas-mock"
     ],
     "globalSetup": "<rootDir>/src/jest.timezone.ts",
