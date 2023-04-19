@@ -93,7 +93,7 @@ export interface ResizingAnchorProps {
    */
   onMaxExtentExceed?: () => void;
   onMaxExtentSubceed?: () => void;
-  onMinExtentSubceed?: () => void;
+  onMinExtentSucceed?: () => void;
   onMinExtentExceed?: () => void;
 }
 
@@ -255,7 +255,7 @@ export class ResizingAnchor extends React.PureComponent<ResizingAnchorProps> {
     }
 
     const { maxExtent, minExtent, getCurrentExtent, growthDirection } = this.props;
-    const { onDrag, onMaxExtentExceed, onMinExtentSubceed, onMaxExtentSubceed, onMinExtentExceed } = this.props;
+    const { onDrag, onMaxExtentExceed, onMinExtentSucceed: onMinExtentSubceed, onMaxExtentSubceed, onMinExtentExceed } = this.props;
     const delta = this.calculateDelta(this.lastMouseEvent, event);
 
     // always update the last mouse event
