@@ -20,7 +20,7 @@ class ProtectFromImportingNonDependencies {
           const dependencyName = getDependencyName(toBeResolved.request);
 
           const dependencyWeAreInterested =
-            !isSassDependency && !isLocalDependency && !isDependencyOfDependency && dependencyName;
+              !isSassDependency && !isLocalDependency && !isDependencyOfDependency && dependencyName;
 
           if (dependencyWeAreInterested) {
             nodeModulesToBeResolved.add(dependencyName);
