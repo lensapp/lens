@@ -9,4 +9,7 @@
     "src/extension-api.ts",
   ],
   "disableSources": true,
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ]
 }
