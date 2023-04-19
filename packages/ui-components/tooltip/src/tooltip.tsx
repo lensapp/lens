@@ -10,7 +10,7 @@ import { createPortal } from "react-dom";
 import { observer } from "mobx-react";
 import type { IClassName } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
-import { observable, makeObservable, action } from "mobx";
+import { observable, makeObservable, action, runInAction } from "mobx";
 import autoBindReact from "auto-bind/react";
 
 export enum TooltipPosition {
@@ -45,13 +45,13 @@ export interface TooltipContentFormatters {
   tableView?: boolean;
 }
 
-const defaultProps: Partial<TooltipProps> = {
+const defaultProps = {
   usePortal: true,
   offset: 10,
 };
 
 @observer
-export class Tooltip extends React.Component<TooltipProps> {
+class DefaultedTooltip extends React.Component<TooltipProps & typeof defaultProps> {
   static defaultProps = defaultProps as object;
 
   @observable.ref elem: HTMLDivElement | null = null;
@@ -62,7 +62,7 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @observable isContentVisible = false; // animation manager
 
-  constructor(props: TooltipProps) {
+  constructor(props: TooltipProps & typeof defaultProps) {
     super(props);
     makeObservable(this);
     autoBindReact(this);
@@ -141,8 +141,10 @@ export class Tooltip extends React.Component<TooltipProps> {
         left >= 0 && top >= 0 && right <= viewportWidth && bottom <= viewportHeight;
 
       if (fitsToWindow) {
-        this.activePosition = pos;
-        this.setPosition(elem, { top, left });
+        runInAction(() => {
+          this.activePosition = pos;
+          this.setPosition(elem, { top, left });
+        });
 
         return;
       }
@@ -164,8 +166,7 @@ export class Tooltip extends React.Component<TooltipProps> {
   protected getPosition(position: TooltipPosition, tooltipBounds: DOMRect, targetBounds: DOMRect) {
     let left: number;
     let top: number;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const offset = this.props.offset!;
+    const offset = this.props.offset;
     const horizontalCenter = targetBounds.left + (targetBounds.width - tooltipBounds.width) / 2;
     const verticalCenter = targetBounds.top + (targetBounds.height - tooltipBounds.height) / 2;
     const topCenter = targetBounds.top - tooltipBounds.height - offset;
@@ -205,7 +206,7 @@ export class Tooltip extends React.Component<TooltipProps> {
         left = targetBounds.right - tooltipBounds.width;
         break;
       default:
-        throw new TypeError("Invalid props.postition value");
+        throw new TypeError("Invalid props.position value");
     }
 
     return {
@@ -240,3 +241,5 @@ export class Tooltip extends React.Component<TooltipProps> {
     return tooltip;
   }
 }
+
+export const Tooltip = DefaultedTooltip as React.ComponentClass<TooltipProps>;
