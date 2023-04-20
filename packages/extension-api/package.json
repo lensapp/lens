@@ -28,7 +28,7 @@
     "@k8slens/core": "6.5.0-alpha.8"
   },
   "devDependencies": {
-    "@types/node": "^16.18.6",
+    "@types/node": "^16.18.24",
     "@types/webpack": "^5.28.1",
     "@types/webpack-env": "^1.18.0",
     "@types/webpack-node-externals": "2.5.3",
