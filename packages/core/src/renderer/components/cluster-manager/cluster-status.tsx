@@ -12,7 +12,7 @@ import { ipcRendererOn } from "../../../common/ipc";
 import type { Cluster } from "../../../common/cluster/cluster";
 import type { IClassName } from "@k8slens/utilities";
 import { hasTypedProperty, isObject, isString, cssNames } from "@k8slens/utilities";
-import { Button } from "../button";
+import { Button } from "@k8slens/button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import type { KubeAuthUpdate } from "../../../common/cluster-types";

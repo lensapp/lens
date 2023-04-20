@@ -8,7 +8,7 @@ import React from "react";
 import type { IObservableValue } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "@k8slens/utilities";
-import { Button } from "../button";
+import { Button } from "@k8slens/button";
 import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Icon } from "../icon";

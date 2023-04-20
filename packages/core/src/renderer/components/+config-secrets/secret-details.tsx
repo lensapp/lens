@@ -10,7 +10,7 @@ import { autorun, observable, makeObservable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Input } from "../input";
-import { Button } from "../button";
+import { Button } from "@k8slens/button";
 import type { ShowNotification } from "../notifications";
 import { base64, toggle } from "@k8slens/utilities";
 import { Icon } from "../icon";

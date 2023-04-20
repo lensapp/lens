@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import navigateToPortForwardsInjectable from "../../common/front-end-routing/routes/cluster/network/port-forwards/navigate-to-port-forwards.injectable";
 import showErrorNotificationInjectable from "../components/notifications/show-error-notification.injectable";
 import React from "react";
-import { Button } from "../components/button";
+import { Button } from from "@k8slens/button";
 
 const notifyErrorPortForwardingInjectable = getInjectable({
   id: "notify-error-port-forwarding",

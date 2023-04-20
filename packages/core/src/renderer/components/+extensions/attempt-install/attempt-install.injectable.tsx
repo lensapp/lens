@@ -15,7 +15,7 @@ import extensionInstallationStateStoreInjectable from "../../../../extensions/ex
 import type { Disposer } from "@k8slens/utilities";
 import { disposer } from "@k8slens/utilities";
 import type { ShowNotification } from "../../notifications";
-import { Button } from "../../button";
+import { Button } from "@k8slens/button";
 import type { ExtensionLoader } from "../../../../extensions/extension-loader";
 import React from "react";
 import { remove as removeDir } from "fs-extra";

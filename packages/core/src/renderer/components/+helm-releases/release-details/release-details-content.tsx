@@ -14,7 +14,7 @@ import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { ConfigurationInput, MinimalResourceGroup, OnlyUserSuppliedValuesAreShownToggle, ReleaseDetailsModel } from "./release-details-model/release-details-model.injectable";
 import releaseDetailsModelInjectable from "./release-details-model/release-details-model.injectable";
-import { Button } from "../../button";
+import { Button } from "@k8slens/button";
 import { kebabCase } from "lodash/fp";
 import { Badge } from "../../badge";
 import { SubTitle } from "../../layout/sub-title";
