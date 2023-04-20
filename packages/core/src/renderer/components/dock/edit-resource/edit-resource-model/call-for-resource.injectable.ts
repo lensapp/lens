@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { KubeObject } from "../../../../../../common/k8s-api/kube-object";
-import { parseKubeApi } from "../../../../../../common/k8s-api/kube-api-parse";
+import { KubeObject } from "../../../../../common/k8s-api/kube-object";
+import { parseKubeApi } from "../../../../../common/k8s-api/kube-api-parse";
 import type { AsyncResult } from "@k8slens/utilities";
-import { getErrorMessage } from "../../../../../../common/utils/get-error-message";
-import apiKubeInjectable from "../../../../../k8s/api-kube.injectable";
+import { getErrorMessage } from "../../../../../common/utils/get-error-message";
+import apiKubeInjectable from "../../../../k8s/api-kube.injectable";
 
 export type CallForResource = (selfLink: string) => AsyncResult<KubeObject | undefined>;
 

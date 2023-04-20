@@ -12,8 +12,8 @@ import createEditResourceTabInjectable from "../../../renderer/components/dock/e
 import getRandomIdForEditResourceTabInjectable from "../../../renderer/components/dock/edit-resource/get-random-id-for-edit-resource-tab.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { CallForPatchResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-patch-resource/call-for-patch-resource.injectable";
-import callForPatchResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-patch-resource/call-for-patch-resource.injectable";
+import type { CallForPatchResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-patch-resource.injectable";
+import callForPatchResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-patch-resource.injectable";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import showSuccessNotificationInjectable from "../../../renderer/components/notifications/show-success-notification.injectable";
@@ -21,8 +21,8 @@ import showErrorNotificationInjectable from "../../../renderer/components/notifi
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
-import type { CallForResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
-import callForResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
+import type { CallForResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource.injectable";
+import callForResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource.injectable";
 
 describe("cluster/namespaces - edit namespace from new tab", () => {
   let builder: ApplicationBuilder;
