@@ -22,8 +22,16 @@ describe("NetworkPolicyDetails", () => {
 
   it("should render w/o errors", () => {
     const policy = new NetworkPolicy({
-      metadata: {} as never,
-      spec: {} as never,
+      metadata: {
+        name: "some-network-policy-name",
+        namespace: "some-namespace",
+        resourceVersion: "1",
+        selfLink: "/apis/networking.k8s.io/v1/namespace/some-namespace/some-network-policy-name",
+        uid: "1",
+      },
+      spec: {
+        podSelector: {},
+      },
       apiVersion: "networking.k8s.io/v1",
       kind: "NetworkPolicy",
     });
@@ -34,7 +42,13 @@ describe("NetworkPolicyDetails", () => {
 
   it("should render egress nodeSelector", async () => {
     const policy = new NetworkPolicy({
-      metadata: {} as never,
+      metadata: {
+        name: "some-network-policy-name",
+        namespace: "some-namespace",
+        resourceVersion: "1",
+        selfLink: "/apis/networking.k8s.io/v1/namespace/some-namespace/some-network-policy-name",
+        uid: "1",
+      },
       spec: {
         egress: [{
           to: [{
@@ -58,7 +72,13 @@ describe("NetworkPolicyDetails", () => {
 
   it("should not crash if egress nodeSelector doesn't have matchLabels", async () => {
     const policy = new NetworkPolicy({
-      metadata: {} as never,
+      metadata: {
+        name: "some-network-policy-name",
+        namespace: "some-namespace",
+        resourceVersion: "1",
+        selfLink: "/apis/networking.k8s.io/v1/namespace/some-namespace/some-network-policy-name",
+        uid: "1",
+      },
       spec: {
         egress: [{
           to: [{
