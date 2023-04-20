@@ -17,6 +17,8 @@ const listHelmReleasesInjectable = getInjectable({
       const args = [
         "ls",
         "--all",
+        // By default 256 results are listed, we want to list practically all
+        "--max", "9999",
         "--output", "json",
       ];
 
