@@ -324,7 +324,11 @@ export class KubeObjectStore<
 
   @action
   async loadFromPath(resourcePath: string) {
-    const { namespace, name } = parseKubeApi(resourcePath);
+    const parsedApi = parseKubeApi(resourcePath);
+
+    assert(parsedApi, "resourcePath must be a valid kube api");
+
+    const { namespace, name } = parsedApi;
 
     assert(name, "name must be part of resourcePath");
 

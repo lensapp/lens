@@ -21,7 +21,7 @@ describe("emit telemetry with params for calls to showDetails", () => {
     showDetails = di.inject(showDetailsInjectable);
   });
 
-  it("when showDetails is called with no selflink (ie closing) should emit telemetry with param indicating closing the drawer", () => {
+  it("when showDetails is called with no selfLink (ie closing) should emit telemetry with param indicating closing the drawer", () => {
     showDetails(undefined);
 
     expect(emitAppEventMock).toBeCalledWith({
@@ -34,7 +34,7 @@ describe("emit telemetry with params for calls to showDetails", () => {
     });
   });
 
-  it("when showDetails is called with empty selflink (ie closing) should emit telemetry with param indicating closing the drawer", () => {
+  it("when showDetails is called with empty selfLink (ie closing) should emit telemetry with param indicating closing the drawer", () => {
     showDetails("");
 
     expect(emitAppEventMock).toBeCalledWith({
@@ -47,7 +47,7 @@ describe("emit telemetry with params for calls to showDetails", () => {
     });
   });
 
-  it("when showDetails is called with valid selflink should emit telemetry with param indicating opening the drawer with that resource", () => {
+  it("when showDetails is called with valid selfLink should emit telemetry with param indicating opening the drawer with that resource", () => {
     showDetails("/api/v1/namespaces/default/pods/some-name");
 
     expect(emitAppEventMock).toBeCalledWith({
@@ -68,7 +68,7 @@ describe("emit telemetry with params for calls to showDetails", () => {
     });
   });
 
-  it("when showDetails is called with invalid selflink should emit telemetry with param indicating opening the drawer but also show error", () => {
+  it("when showDetails is called with invalid selfLink should emit telemetry with param indicating opening the drawer but also show error", () => {
     showDetails("some-non-self-link-value");
 
     expect(emitAppEventMock).toBeCalledWith({
@@ -77,7 +77,7 @@ describe("emit telemetry with params for calls to showDetails", () => {
       name: "show-details",
       params: {
         action: "open",
-        error: "Error: invalid apiPath: /some-non-self-link-value",
+        error: "invalid apiPath: 'some-non-self-link-value'",
       },
     });
   });
