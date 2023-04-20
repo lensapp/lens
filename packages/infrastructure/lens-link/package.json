@@ -1,0 +1,40 @@
+{
+  "name": "@k8slens/lens-link",
+  "private": false,
+  "version": "1.0.0-alpha.0",
+  "description": "Equivalent for npm link, but doing it properly.",
+  "type": "commonjs",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "main": "dist/index.js",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "dependencies": {
+    "fs-extra": "^9.0.1"
+  },
+
+  "devDependencies": {
+    "@async-fn/jest": "^1.6.4"
+  },
+
+  "scripts": {
+    "clean": "rimraf dist/",
+    "build": "webpack",
+    "dev-build": "webpack --watch",
+    "test:unit": "jest --coverage --runInBand",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix",
+
+    "mikko": "chmod +x ./dist/index.js; node ./dist/index.js"
+  }
+}
