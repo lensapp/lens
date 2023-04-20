@@ -4,6 +4,7 @@
  */
 import { getInjectable, createInstantiationTargetDecorator, instantiationDecoratorToken } from "@ogre-tools/injectable";
 import { pick } from "lodash";
+import { inspect } from "util";
 import { parseKubeApi } from "../../../common/k8s-api/kube-api-parse";
 import showDetailsInjectable from "../../../renderer/components/kube-detail-params/show-details.injectable";
 import emitTelemetryInjectable from "./emit-telemetry.injectable";
@@ -21,13 +22,15 @@ const telemetryDecoratorForShowDetailsInjectable = getInjectable({
           ? {
             action: "open",
             ...(() => {
-              try {
-                return {
-                  resource: pick(parseKubeApi(args[0]), "apiPrefix", "apiVersion", "apiGroup", "namespace", "resource", "name"),
-                };
-              } catch (error) {
-                return { error: `${error}` };
+              const parsedApi = parseKubeApi(args[0]);
+
+              if (!parsedApi) {
+                return { error: `invalid apiPath: ${inspect(args[0])}` };
               }
+
+              return {
+                resource: pick(parsedApi, "apiPrefix", "apiVersion", "apiGroup", "namespace", "resource", "name"),
+              };
             })(),
           }
           : {

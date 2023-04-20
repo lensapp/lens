@@ -74,9 +74,13 @@ export class ApiManager {
       return iter.find(this.apis.values(), pathOrCallback);
     }
 
-    const { apiBase } = parseKubeApi(pathOrCallback);
+    const parsedApi = parseKubeApi(pathOrCallback);
 
-    return this.apis.get(apiBase);
+    if (!parsedApi) {
+      return undefined;
+    }
+
+    return this.apis.get(parsedApi.apiBase);
   }
 
   getApiByKind(kind: string, apiVersion: string) {
@@ -141,9 +145,10 @@ export class ApiManager {
     }
 
     const { apiBase } = typeof apiOrBase === "string"
-      ? parseKubeApi(apiOrBase)
+      ? parseKubeApi(apiOrBase) ?? {}
       : apiOrBase;
-    const api = this.getApi(apiBase);
+
+    const api = apiBase && this.getApi(apiBase);
 
     if (!api) {
       return undefined;

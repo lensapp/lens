@@ -20,7 +20,7 @@ const callForResourceInjectable = getInjectable({
     return async (apiPath: string) => {
       const parsed = parseKubeApi(apiPath);
 
-      if (!parsed.name) {
+      if (!parsed?.name) {
         return { callWasSuccessful: false, error: "Invalid API path" };
       }
 

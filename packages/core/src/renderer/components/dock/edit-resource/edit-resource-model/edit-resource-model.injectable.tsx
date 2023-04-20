@@ -59,11 +59,17 @@ interface Dependencies {
   readonly tabId: string;
 }
 
-function getEditSelfLinkFor(object: RawKubeObject): string {
+function getEditSelfLinkFor(object: RawKubeObject): string | undefined {
   const lensVersionLabel = object.metadata.labels?.[EditResourceLabelName];
 
   if (lensVersionLabel) {
-    const { apiVersionWithGroup, ...parsedApi } = parseKubeApi(object.metadata.selfLink);
+    const parsedKubeApi = parseKubeApi(object.metadata.selfLink);
+
+    if (!parsedKubeApi) {
+      return undefined;
+    }
+
+    const { apiVersionWithGroup, ...parsedApi } = parsedKubeApi;
 
     parsedApi.apiVersion = lensVersionLabel;
 
@@ -139,6 +145,10 @@ export class EditResourceModel {
     if (result?.response?.metadata.labels?.[EditResourceLabelName]) {
       const parsed = parseKubeApi(this.selfLink);
 
+      if (!parsed) {
+        return void this.dependencies.showErrorNotification(`Object's selfLink is invalid: "${this.selfLink}"`);
+      }
+
       parsed.apiVersion = result.response.metadata.labels[EditResourceLabelName];
 
       result = await this.dependencies.callForResource(createKubeApiURL(parsed));
@@ -186,6 +196,17 @@ export class EditResourceModel {
 
     const patches = createPatch(firstVersion, currentVersion);
     const selfLink = getEditSelfLinkFor(currentVersion);
+
+    if (!selfLink) {
+      this.dependencies.showErrorNotification((
+        <p>
+          {`Cannot save resource, unknown selfLink: "${currentVersion.metadata.selfLink}"`}
+        </p>
+      ));
+
+      return null;
+    }
+
     const result = await this.dependencies.callForPatchResource(this.resource, patches);
 
     if (!result.callWasSuccessful) {

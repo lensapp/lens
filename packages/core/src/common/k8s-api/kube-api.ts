@@ -264,12 +264,16 @@ export class KubeApi<
       allowedUsableVersions,
     } = opts;
 
-    assert(fullApiPathname, "apiBase MUST be provied either via KubeApiOptions.apiBase or KubeApiOptions.objectConstructor.apiBase");
+    assert(fullApiPathname, "apiBase MUST be provided either via KubeApiOptions.apiBase or KubeApiOptions.objectConstructor.apiBase");
     assert(request, "request MUST be provided if not in a cluster page frame context");
 
-    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(fullApiPathname);
+    const parsedApi = parseKubeApi(fullApiPathname);
 
-    assert(kind, "kind MUST be provied either via KubeApiOptions.kind or KubeApiOptions.objectConstructor.kind");
+    assert(parsedApi, "apiBase MUST be a valid kube api pathname");
+
+    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parsedApi;
+
+    assert(kind, "kind MUST be provided either via KubeApiOptions.kind or KubeApiOptions.objectConstructor.kind");
     assert(apiPrefix, "apiBase MUST be parsable as a kubeApi selfLink style string");
 
     this.doCheckPreferredVersion = doCheckPreferredVersion;
@@ -308,24 +312,26 @@ export class KubeApi<
     const apiBases = new Set(rawApiBases);
 
     for (const apiUrl of apiBases) {
-      try {
-        const { apiPrefix, apiGroup, resource } = parseKubeApi(apiUrl);
-        const list = await this.request.get(`${apiPrefix}/${apiGroup}`) as KubeApiResourceVersionList;
-        const resourceVersions = getOrderedVersions(list, this.allowedUsableVersions?.[apiGroup]);
+      const parsedApi = parseKubeApi(apiUrl);
 
-        for (const resourceVersion of resourceVersions) {
-          const { resources } = await this.request.get(`${apiPrefix}/${resourceVersion.groupVersion}`) as KubeApiResourceList;
+      if (!parsedApi) {
+        continue;
+      }
 
-          if (resources.some(({ name }) => name === resource)) {
-            return {
-              apiPrefix,
-              apiGroup,
-              apiVersionPreferred: resourceVersion.version,
-            };
-          }
+      const { apiPrefix, apiGroup, resource } = parsedApi;
+      const list = await this.request.get(`${apiPrefix}/${apiGroup}`) as KubeApiResourceVersionList;
+      const resourceVersions = getOrderedVersions(list, this.allowedUsableVersions?.[apiGroup]);
+
+      for (const resourceVersion of resourceVersions) {
+        const { resources } = await this.request.get(`${apiPrefix}/${resourceVersion.groupVersion}`) as KubeApiResourceList;
+
+        if (resources.some(({ name }) => name === resource)) {
+          return {
+            apiPrefix,
+            apiGroup,
+            apiVersionPreferred: resourceVersion.version,
+          };
         }
-      } catch (error) {
-        // Exception is ignored as we can try the next url
       }
     }
 
