@@ -10,7 +10,7 @@ import { autorun, makeObservable, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerTitle } from "../drawer";
 import type { ShowNotification } from "../notifications";
-import { Button } from "../button";
+import { Button } from "@k8slens/button";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ConfigMap } from "../../../common/k8s-api/endpoints";
 import type { Logger } from "../../../common/logger";

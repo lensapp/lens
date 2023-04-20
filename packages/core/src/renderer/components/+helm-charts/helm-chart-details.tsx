@@ -12,7 +12,7 @@ import { Drawer, DrawerItem } from "../drawer";
 import { stopPropagation } from "@k8slens/utilities";
 import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
-import { Button } from "../button";
+import { Button } from "@k8slens/button";
 import { Select } from "../select";
 import { Badge } from "../badge";
 import { Tooltip, withStyles } from "@material-ui/core";

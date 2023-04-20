@@ -12,12 +12,12 @@
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  border-radius: $radius;
+  border-radius: var(--border-radius);
   background: var(--buttonDefaultBackground);
-  padding: round($padding * .9) $padding * 1.5;
+  padding: round(8px * .9) 8px * 1.5;
   flex-shrink: 0;
   line-height: 1;
-  font-size: $font-size;
+  font-size: var(--font-size);
   user-select: none;
 
   &[href] {
@@ -66,7 +66,7 @@
   }
 
   &.big {
-    font-size: 2.2 * $unit;
+    font-size: 2.2 * 8px;
     border-radius: 50px;
     padding: .75em 1em;
   }

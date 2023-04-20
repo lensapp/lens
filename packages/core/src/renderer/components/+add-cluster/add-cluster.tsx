@@ -15,7 +15,7 @@ import * as uuid from "uuid";
 import { loadConfigFromString, splitConfig } from "../../../common/kube-helpers";
 import { docsUrl } from "../../../common/vars";
 import { isDefined, iter } from "@k8slens/utilities";
-import { Button } from "../button";
+import { Button } from "@k8slens/button";
 import type { ShowNotification } from "../notifications";
 import { SettingLayout } from "../layout/setting-layout";
 import { MonacoEditor } from "../monaco-editor";

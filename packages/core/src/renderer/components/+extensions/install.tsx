@@ -6,7 +6,7 @@
 import styles from "./install.module.scss";
 import React, { useEffect, useRef, useState } from "react";
 import { prevDefault } from "@k8slens/utilities";
-import { Button } from "../button";
+import { Button } from "@k8slens/button";
 import { Icon } from "../icon";
 import { observer } from "mobx-react";
 import { Input, InputValidators } from "../input";

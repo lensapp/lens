@@ -12,7 +12,7 @@ import { Badge } from "../../badge";
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
 import { prevDefault } from "@k8slens/utilities";
 import { Icon } from "../../icon";
-import { Button } from "../../button";
+import { Button } from "@k8slens/button";
 import { LogsDialog } from "../../dialog/logs-dialog";
 import { Select } from "../../select";
 import { Input } from "../../input";

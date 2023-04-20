@@ -10,7 +10,7 @@ import React from "react";
 import type { OpenPathPickingDialog } from "../../../features/path-picking-dialog/renderer/pick-paths.injectable";
 import openPathPickingDialogInjectable from "../../../features/path-picking-dialog/renderer/pick-paths.injectable";
 import { cssNames } from "@k8slens/utilities";
-import { Button } from "../button";
+import { Button } from "@k8slens/button";
 
 export interface PathPickOpts {
   message: string;

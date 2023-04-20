@@ -17,7 +17,7 @@ import { systemName } from "../../input/input_validators";
 import type { IResourceQuotaValues, ResourceQuotaApi } from "../../../../common/k8s-api/endpoints";
 import { Select } from "../../select";
 import { Icon } from "../../icon";
-import { Button } from "../../button";
+import { Button } from "@k8slens/button";
 import { NamespaceSelect } from "../../+namespaces/namespace-select";
 import { SubTitle } from "../../layout/sub-title";
 import { withInjectables } from "@ogre-tools/injectable-react";

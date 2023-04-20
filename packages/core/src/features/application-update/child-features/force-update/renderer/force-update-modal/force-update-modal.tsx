@@ -10,7 +10,7 @@ import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import installUpdateCountdownInjectable from "./install-update-countdown.injectable";
 import { Dialog } from "../../../../../../renderer/components/dialog";
-import { Button } from "../../../../../../renderer/components/button";
+import { Button } from "@k8slens/button";
 import styles from "./force-update-modal.module.scss";
 
 interface Dependencies {

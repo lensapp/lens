@@ -10,7 +10,7 @@ import type { DialogProps } from "../dialog";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import type { ShowNotification } from "../notifications";
-import { Button } from "../button";
+import { Button } from "@k8slens/button";
 import { Icon } from "../icon";
 import { clipboard } from "electron";
 import { kebabCase } from "lodash/fp";

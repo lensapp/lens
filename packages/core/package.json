@@ -323,6 +323,7 @@
     "@k8slens/startable-stoppable": "^1.0.0-alpha.1",
     "@k8slens/test-utils": "^1.0.0-alpha.1",
     "@k8slens/tooltip": "^1.0.0-alpha.0",
+    "@k8slens/button": "^1.0.0-alpha.0",
     "@k8slens/utilities": "^1.0.0-alpha.1",
     "@ogre-tools/fp": "^15.3.1",
     "@ogre-tools/injectable": "^15.3.1",

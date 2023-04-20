@@ -1,4 +1,5 @@
 import "@k8slens/core/styles";
+import "@k8slens/button/dist/index.css";
 import "@k8slens/tooltip/dist/index.css";
 import { runInAction } from "mobx";
 import {
