@@ -227,7 +227,7 @@ metadata:
 
               it("calls for save with just the adding version label", () => {
                 expect(requestPatchKubeResourceMock).toHaveBeenCalledWith(
-                  someNamespace,
+                  "/apis/some-api-version/namespaces/some-uid",
                   [{
                     op: "add",
                     path: "/metadata/labels",
@@ -527,7 +527,7 @@ metadata:
 
                 it("calls for save with changed configuration", () => {
                   expect(requestPatchKubeResourceMock).toHaveBeenCalledWith(
-                    someNamespace,
+                    "/apis/some-api-version/namespaces/some-uid",
                     [
                       {
                         op: "remove",
@@ -594,7 +594,7 @@ metadata:
                   fireEvent.click(saveButton);
 
                   expect(requestPatchKubeResourceMock).toHaveBeenCalledWith(
-                    someNamespace,
+                    "/apis/some-api-version/namespaces/some-uid",
                     [
                       {
                         op: "add",
@@ -782,7 +782,7 @@ metadata:
                   fireEvent.click(saveButton);
 
                   expect(requestPatchKubeResourceMock).toHaveBeenCalledWith(
-                    someOtherNamespace,
+                    "/apis/some-api-version/namespaces/some-other-uid",
                     [{
                       op: "add",
                       path: "/metadata/labels",
@@ -855,7 +855,7 @@ metadata:
                     fireEvent.click(saveButton);
 
                     expect(requestPatchKubeResourceMock).toHaveBeenCalledWith(
-                      someNamespace,
+                      "/apis/some-api-version/namespaces/some-uid",
                       [ {
                         op: "add",
                         path: "/metadata/labels",

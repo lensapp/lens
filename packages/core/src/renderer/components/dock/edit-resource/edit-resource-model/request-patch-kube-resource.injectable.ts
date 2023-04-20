@@ -4,42 +4,36 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { AsyncResult } from "@k8slens/utilities";
-import apiManagerInjectable from "../../../../../common/k8s-api/api-manager/manager.injectable";
 import type { JsonPatch } from "../../../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
-import assert from "assert";
 import { getErrorMessage } from "../../../../../common/utils/get-error-message";
+import apiKubeInjectable from "../../../../k8s/api-kube.injectable";
+import { patchTypeHeaders } from "../../../../../common/k8s-api/kube-api";
 
-export type RequestPatchKubeResource = (
-  item: KubeObject,
-  patch: JsonPatch
-) => AsyncResult<{ name: string; kind: string }>;
+export type RequestPatchKubeResource = (selfLink: string, patch: JsonPatch) => AsyncResult<{ name: string; kind: string }>;
 
 const requestPatchKubeResourceInjectable = getInjectable({
   id: "request-patch-kube-resource",
   instantiate: (di): RequestPatchKubeResource => {
-    const apiManager = di.inject(apiManagerInjectable);
+    const apiKube = di.inject(apiKubeInjectable);
 
-    return async (item, patch) => {
-      const store = apiManager.getStore(item.selfLink);
-
-      assert(store);
-
-      let kubeObject: KubeObject;
-
+    return async (selfLink, patch) => {
       try {
-        kubeObject = await store.patch(item, patch);
-      } catch (e: any) {
+        const kubeObject = await apiKube.patch(selfLink, { data: patch }, {
+          headers: {
+            "content-type": patchTypeHeaders.json,
+          },
+        });
+
+        return {
+          callWasSuccessful: true,
+          response: { name: kubeObject.metadata.name, kind: kubeObject.kind },
+        };
+      } catch (e) {
         return {
           callWasSuccessful: false,
           error: getErrorMessage(e),
         };
       }
-
-      return {
-        callWasSuccessful: true,
-        response: { name: kubeObject.getName(), kind: kubeObject.kind },
-      };
     };
   },
 

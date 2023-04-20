@@ -205,7 +205,7 @@ export class EditResourceModel {
       return null;
     }
 
-    const result = await this.dependencies.callForPatchResource(this.resource, patches);
+    const result = await this.dependencies.callForPatchResource(selfLink, patches);
 
     if (!result.callWasSuccessful) {
       this.dependencies.showErrorNotification((
