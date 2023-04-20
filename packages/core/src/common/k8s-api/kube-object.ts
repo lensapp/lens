@@ -548,12 +548,28 @@ export class KubeObject<
   }
 
   constructor(data: KubeJsonApiData<Metadata, Status, Spec>) {
-    if (typeof data !== "object") {
+    if (!isObject(data)) {
       throw new TypeError(`Cannot create a KubeObject from ${typeof data}`);
     }
 
-    if (!data.metadata || typeof data.metadata !== "object") {
+    if (!isObject(data.metadata)) {
       throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata`, data);
+    }
+
+    if (!isString(data.metadata.name)) {
+      throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata.name being a string`, data);
+    }
+
+    if (!isString(data.metadata.uid)) {
+      throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata.uid being a string`, data);
+    }
+
+    if (!isString(data.metadata.resourceVersion)) {
+      throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata.resourceVersion being a string`, data);
+    }
+
+    if (!isString(data.metadata.selfLink)) {
+      throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata.selfLink being a string`, data);
     }
 
     Object.assign(this, data);
