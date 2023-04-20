@@ -10,14 +10,14 @@ import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
 import assert from "assert";
 import { getErrorMessage } from "../../../../../common/utils/get-error-message";
 
-export type CallForPatchResource = (
+export type RequestPatchKubeResource = (
   item: KubeObject,
   patch: JsonPatch
 ) => AsyncResult<{ name: string; kind: string }>;
 
-const callForPatchResourceInjectable = getInjectable({
-  id: "call-for-patch-resource",
-  instantiate: (di): CallForPatchResource => {
+const requestPatchKubeResourceInjectable = getInjectable({
+  id: "request-patch-kube-resource",
+  instantiate: (di): RequestPatchKubeResource => {
     const apiManager = di.inject(apiManagerInjectable);
 
     return async (item, patch) => {
@@ -46,4 +46,4 @@ const callForPatchResourceInjectable = getInjectable({
   causesSideEffects: true,
 });
 
-export default callForPatchResourceInjectable;
+export default requestPatchKubeResourceInjectable;

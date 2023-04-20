@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getGlobalOverride } from "@k8slens/test-utils";
-import callForResourceInjectable from "./call-for-resource.injectable";
+import requestKubeResourceInjectable from "./request-kube-resource.injectable";
 
-export default getGlobalOverride(callForResourceInjectable, () => () => {
+export default getGlobalOverride(requestKubeResourceInjectable, () => () => {
   throw new Error(
     "Tried to call for kube resource without explicit override.",
   );

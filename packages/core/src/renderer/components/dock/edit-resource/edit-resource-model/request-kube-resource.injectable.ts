@@ -9,12 +9,12 @@ import type { AsyncResult } from "@k8slens/utilities";
 import { getErrorMessage } from "../../../../../common/utils/get-error-message";
 import apiKubeInjectable from "../../../../k8s/api-kube.injectable";
 
-export type CallForResource = (selfLink: string) => AsyncResult<KubeObject | undefined>;
+export type RequestKubeResource = (selfLink: string) => AsyncResult<KubeObject | undefined>;
 
-const callForResourceInjectable = getInjectable({
-  id: "call-for-resource",
+const requestKubeResourceInjectable = getInjectable({
+  id: "request-kube-resource",
 
-  instantiate: (di): CallForResource => {
+  instantiate: (di): RequestKubeResource => {
     const apiKube = di.inject(apiKubeInjectable);
 
     return async (apiPath: string) => {
@@ -38,4 +38,4 @@ const callForResourceInjectable = getInjectable({
   causesSideEffects: true,
 });
 
-export default callForResourceInjectable;
+export default requestKubeResourceInjectable;
