@@ -3,7 +3,7 @@
   "productName": "",
   "description": "Lens Desktop Core",
   "homepage": "https://github.com/lensapp/lens",
-  "version": "6.5.0-alpha.7",
+  "version": "6.5.0-alpha.8",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lensapp/lens.git"
@@ -112,10 +112,10 @@
     "@astronautlabs/jsonpath": "^1.1.0",
     "@hapi/call": "^9.0.1",
     "@hapi/subtext": "^7.1.0",
-    "@k8slens/metrics": "^6.5.0-alpha.3",
+    "@k8slens/list-layout": "^1.0.0-alpha.1",
+    "@k8slens/metrics": "^6.5.0-alpha.4",
     "@k8slens/node-fetch": "^6.5.0-alpha.3",
     "@k8slens/react-application": "^1.0.0-alpha.2",
-    "@k8slens/list-layout": "^1.0.0-alpha.0",
     "@kubernetes/client-node": "^0.18.1",
     "@material-ui/styles": "^4.11.5",
     "@sentry/electron": "^3.0.8",
@@ -313,6 +313,7 @@
   "peerDependencies": {
     "@k8slens/application": "^6.5.0-alpha.0",
     "@k8slens/application-for-electron-main": "^6.5.0-alpha.0",
+    "@k8slens/button": "^1.0.0-alpha.0",
     "@k8slens/cluster-settings": "^6.5.0-alpha.1",
     "@k8slens/kubectl-versions": "^1.0.0-alpha.0",
     "@k8slens/legacy-extensions": "^1.0.0-alpha.0",
@@ -323,7 +324,6 @@
     "@k8slens/startable-stoppable": "^1.0.0-alpha.1",
     "@k8slens/test-utils": "^1.0.0-alpha.1",
     "@k8slens/tooltip": "^1.0.0-alpha.0",
-    "@k8slens/button": "^1.0.0-alpha.0",
     "@k8slens/utilities": "^1.0.0-alpha.1",
     "@ogre-tools/fp": "^15.3.1",
     "@ogre-tools/injectable": "^15.3.1",
