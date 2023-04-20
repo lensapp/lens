@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getGlobalOverride } from "@k8slens/test-utils";
-import callForPatchResourceInjectable from "./call-for-patch-resource.injectable";
+import requestPatchKubeResourceInjectable from "./request-patch-kube-resource.injectable";
 
-export default getGlobalOverride(callForPatchResourceInjectable, () => () => {
+export default getGlobalOverride(requestPatchKubeResourceInjectable, () => () => {
   throw new Error(
     "Tried to call patching of kube resource without explicit override.",
   );

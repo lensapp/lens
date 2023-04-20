@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import type { CallForResource } from "./call-for-resource.injectable";
-import callForResourceInjectable from "./call-for-resource.injectable";
+import type { RequestKubeResource } from "./request-kube-resource.injectable";
+import requestKubeResourceInjectable from "./request-kube-resource.injectable";
 import { waitUntilDefined } from "@k8slens/utilities";
 import editResourceTabStoreInjectable from "../store.injectable";
 import type { EditingResource, EditResourceTabStore } from "../store";
@@ -12,8 +12,8 @@ import { action, computed, observable, runInAction } from "mobx";
 import type { KubeObject, RawKubeObject } from "../../../../../common/k8s-api/kube-object";
 import yaml from "js-yaml";
 import assert from "assert";
-import type { CallForPatchResource } from "./call-for-patch-resource.injectable";
-import callForPatchResourceInjectable from "./call-for-patch-resource.injectable";
+import type { RequestPatchKubeResource } from "./request-patch-kube-resource.injectable";
+import requestPatchKubeResourceInjectable from "./request-patch-kube-resource.injectable";
 import { createPatch } from "rfc6902";
 import type { ShowNotification } from "../../../notifications";
 import showSuccessNotificationInjectable from "../../../notifications/show-success-notification.injectable";
@@ -28,8 +28,8 @@ const editResourceModelInjectable = getInjectable({
     const store = di.inject(editResourceTabStoreInjectable);
 
     const model = new EditResourceModel({
-      callForResource: di.inject(callForResourceInjectable),
-      callForPatchResource: di.inject(callForPatchResourceInjectable),
+      callForResource: di.inject(requestKubeResourceInjectable),
+      callForPatchResource: di.inject(requestPatchKubeResourceInjectable),
       showSuccessNotification: di.inject(showSuccessNotificationInjectable),
       showErrorNotification: di.inject(showErrorNotificationInjectable),
       store,
@@ -50,8 +50,8 @@ const editResourceModelInjectable = getInjectable({
 export default editResourceModelInjectable;
 
 interface Dependencies {
-  callForResource: CallForResource;
-  callForPatchResource: CallForPatchResource;
+  callForResource: RequestKubeResource;
+  callForPatchResource: RequestPatchKubeResource;
   waitForEditingResource: () => Promise<EditingResource>;
   showSuccessNotification: ShowNotification;
   showErrorNotification: ShowNotification;
