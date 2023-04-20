@@ -22,7 +22,7 @@ import {
   isTypedArray,
   isRecord,
 } from "@k8slens/utilities";
-import type { ItemObject } from "../item.store";
+import type { ItemObject } from "@k8slens/list-layout";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { JsonObject } from "type-fest";

@@ -21,6 +21,7 @@ import directoryForKubeConfigsInjectable from "../../../common/app-paths/directo
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import type { PodStore } from "../+workloads-pods/store";
 import { Cluster } from "../../../common/cluster/cluster";
+import isTableColumnHiddenInjectable from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
 
 describe("kube-object-list-layout", () => {
   let di: DiContainer;
@@ -33,6 +34,7 @@ describe("kube-object-list-layout", () => {
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
     di.override(directoryForKubeConfigsInjectable, () => "/some-kube-configs");
     di.override(storesAndApisCanBeCreatedInjectable, () => true);
+    di.override(isTableColumnHiddenInjectable, () => () => false);
 
     di.override(hostedClusterInjectable, () => new Cluster({
       contextName: "some-context-name",

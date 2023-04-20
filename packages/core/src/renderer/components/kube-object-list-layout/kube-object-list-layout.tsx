@@ -29,6 +29,9 @@ import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details
 import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
 import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";
 import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
+import type { KubeObjectListLayoutColumn, ItemObject } from "@k8slens/list-layout";
+import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
+import { sortBy } from "lodash";
 
 export interface KubeObjectListLayoutProps<
   K extends KubeObject,
@@ -53,6 +56,7 @@ interface Dependencies {
   subscribeToStores: SubscribeStores;
   kubeSelectedUrlParam: PageParam<string>;
   toggleKubeDetailsPane: ToggleKubeDetailsPane;
+  columns: KubeObjectListLayoutColumn<ItemObject>[];
 }
 
 const getLoadErrorMessage = (error: unknown): string => {
@@ -140,9 +144,25 @@ class NonInjectedKubeObjectListLayout<
       dependentStores,
       toggleKubeDetailsPane: toggleDetails,
       onDetails,
+      renderTableContents,
+      renderTableHeader,
+      columns,
+      sortingCallbacks = {},
       ...layoutProps
     } = this.props;
     const resourceName = this.props.resourceName || ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
+    const targetColumns = columns.filter((col) => col.kind === store.api.kind && col.apiVersion === store.api.apiVersionWithGroup);
+
+    targetColumns.forEach((col) => {
+      if (col.sortingCallBack) {
+        sortingCallbacks[col.id] = col.sortingCallBack;
+      }
+    });
+
+    const headers = sortBy([
+      ...(renderTableHeader || []).map((header, index) => ({ priority: (20 - index), header })),
+      ...targetColumns,
+    ], (v) => -v.priority).map((col) => col.header);
 
     return (
       <ItemListLayout<K, false>
@@ -175,6 +195,15 @@ class NonInjectedKubeObjectListLayout<
         ]}
         renderItemMenu={item => <KubeObjectMenu object={item} />}
         onDetails={onDetails ?? ((item) => toggleDetails(item.selfLink))}
+        sortingCallbacks={sortingCallbacks}
+        renderTableHeader={headers}
+        renderTableContents={(item) => {
+          return sortBy([
+            ...(renderTableContents(item).map((content, index) => ({ priority: (20 - index), content }))),
+            ...targetColumns.map((col) => ({ priority: col.priority, content: col.content(item) })),
+          ], (item) => -item.priority).map((value) => value.content);
+        }}
+        spinnerTestId="kube-object-list-layout-spinner"
         {...layoutProps}
       />
     );
@@ -191,6 +220,7 @@ export const KubeObjectListLayout = withInjectables<
     subscribeToStores: di.inject(subscribeStoresInjectable),
     kubeSelectedUrlParam: di.inject(kubeSelectedUrlParamInjectable),
     toggleKubeDetailsPane: di.inject(toggleKubeDetailsPaneInjectable),
+    columns: di.injectMany(kubeObjectListLayoutColumnInjectionToken),
   }),
 }) as <
   K extends KubeObject,
