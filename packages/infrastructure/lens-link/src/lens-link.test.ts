@@ -1,17 +1,24 @@
-import {
-  EnsureDirectory,
-  CreateSymlink,
-  Exists,
-  lensLinkFor,
-  ReadJsonFile,
-  WriteJsonFile,
-  RemoveDirectory,
-} from "./lens-link";
-import type { LensLink } from "./lens-link";
+import type { LensLink } from "./lens-link.injectable";
 import asyncFn from "@async-fn/jest";
 import type { AsyncFnMock } from "@async-fn/jest";
 import { getPromiseStatus } from "@k8slens/test-utils";
 import path from "path";
+import lensLinkInjectable from "./lens-link.injectable";
+import type { Exists } from "./fs/exists.injectable";
+import type { ReadJsonFile } from "./fs/read-json-file.injectable";
+import type { WriteJsonFile } from "./fs/write-json-file.injectable";
+import type { CreateSymlink } from "./fs/create-symlink.injectable";
+import type { EnsureDirectory } from "./fs/ensure-directory.injectable";
+import type { RemoveDirectory } from "./fs/remove-directory.injectable";
+import { workingDirectoryInjectable } from "./working-directory.injectable";
+import { resolvePathInjectable } from "./path/resolve-path.injectable";
+import { existsInjectable } from "./fs/exists.injectable";
+import { readJsonFileInjectable } from "./fs/read-json-file.injectable";
+import { writeJsonFileInjectable } from "./fs/write-json-file.injectable";
+import { createSymlinkInjectable } from "./fs/create-symlink.injectable";
+import { ensureDirectoryInjectable } from "./fs/ensure-directory.injectable";
+import { removeDirectoryInjectable } from "./fs/remove-directory.injectable";
+import { getDi } from "./get-di";
 
 describe("lens-link", () => {
   let lensLink: LensLink;
@@ -30,16 +37,18 @@ describe("lens-link", () => {
     ensureDirectoryMock = asyncFn();
     removeDirectoryMock = asyncFn();
 
-    lensLink = lensLinkFor({
-      workingDirectory: "/some-directory/some-project",
-      resolvePath: path.posix.resolve,
-      exists: existsMock,
-      readJsonFile: readJsonFileMock,
-      writeJsonFile: writeJsonFileMock,
-      createSymlink: createSymlinkMock,
-      ensureDirectory: ensureDirectoryMock,
-      removeDirectory: removeDirectoryMock,
-    });
+    const di = getDi();
+
+    di.override(workingDirectoryInjectable, () => "/some-directory/some-project");
+    di.override(resolvePathInjectable, () => path.posix.resolve);
+    di.override(existsInjectable, () => existsMock);
+    di.override(readJsonFileInjectable, () => readJsonFileMock);
+    di.override(writeJsonFileInjectable, () => writeJsonFileMock);
+    di.override(createSymlinkInjectable, () => createSymlinkMock);
+    di.override(ensureDirectoryInjectable, () => ensureDirectoryMock);
+    di.override(removeDirectoryInjectable, () => removeDirectoryMock);
+
+    lensLink = di.inject(lensLinkInjectable);
   });
 
   describe("when called", () => {
@@ -259,150 +268,6 @@ describe("lens-link", () => {
                     ],
                   ]);
                 });
-              });
-            });
-          });
-        });
-      });
-    });
-
-    xdescribe("normally", () => {
-      it("checks for existence of package.jsons", () => {
-        expect(existsMock.mock.calls).toEqual([["some-target-directory/package.json"]]);
-      });
-
-      it("when package.json for target directory is missing, throws", () => {
-        existsMock.resolveSpecific(
-          ([packageJsonPath]) => packageJsonPath === "some-target-directory/package.json",
-          false,
-        );
-
-        existsMock.resolveSpecific(([packageJsonPath]) => packageJsonPath === "some-to-directory/package.json", true);
-
-        return expect(actualPromise).rejects.toThrow(
-          `Tried to link package but package.json is missing in "some-target-directory/package.json"`,
-        );
-      });
-
-      it("when package.json for to directory is missing, throws", () => {
-        existsMock.resolveSpecific(
-          ([packageJsonPath]) => packageJsonPath === "some-target-directory/package.json",
-          true,
-        );
-
-        existsMock.resolveSpecific(([packageJsonPath]) => packageJsonPath === "some-to-directory/package.json", false);
-
-        return expect(actualPromise).rejects.toThrow(
-          `Tried to link package but package.json is missing in "some-to-directory/package.json"`,
-        );
-      });
-
-      it("when both package.jsons are missing, throws", () => {
-        existsMock.resolveSpecific(
-          ([packageJsonPath]) => packageJsonPath === "some-target-directory/package.json",
-          false,
-        );
-
-        existsMock.resolveSpecific(([packageJsonPath]) => packageJsonPath === "some-to-directory/package.json", false);
-
-        return expect(actualPromise).rejects.toThrow(
-          `Tried to link package but package.jsons are missing in "some-target-directory/package.json", "some-to-directory/package.json"`,
-        );
-      });
-
-      describe("when check for package.jsons resolves with both existing", () => {
-        beforeEach(async () => {
-          await existsMock.resolve(true);
-          await existsMock.resolve(true);
-        });
-
-        it("reads the target package json", () => {
-          expect(readJsonFileMock).toHaveBeenCalledWith("some-target-directory/package.json");
-        });
-
-        it("does not read the to package json", () => {
-          expect(readJsonFileMock).not.toHaveBeenCalledWith("some-to-directory/package.json");
-        });
-
-        describe("when package json resolves with enough data", () => {
-          beforeEach(async () => {
-            existsMock.mockClear();
-
-            await readJsonFileMock.resolve({
-              name: "some-npm-package",
-              main: "some-directory-in-package/some-entrypoint.js",
-              files: ["some-directory-in-package", "some-other-directory-in-package"],
-
-              irrelevant: "property",
-            });
-          });
-
-          it("checks for existence of target npm package in node modules of the to-package", () => {
-            expect(existsMock).toHaveBeenCalledWith("some-to-directory/node_modules/some-npm-package");
-          });
-
-          it("when check for existence of target npm package in node_modules resolves with existing directory, throws", () => {
-            existsMock.resolve(true);
-
-            // Note, this shouldn't throw, it should ask whether user wants to override existing
-            return expect(actualPromise).rejects.toThrow("Asd");
-          });
-
-          describe("when check for existence of target npm package in node_modules resolves with non existing directory", () => {
-            beforeEach(async () => {
-              await existsMock.resolve(false);
-            });
-
-            it("ensures directory for the target npm package in node modules", () => {
-              expect(ensureDirectoryMock).toHaveBeenCalledWith("some-to-directory/node_modules/some-npm-package");
-            });
-
-            describe("when ensuring directory resolves", () => {
-              beforeEach(async () => {
-                await ensureDirectoryMock.resolve();
-              });
-
-              it("creates minimal package.json in the node_modules", () => {
-                expect(writeJsonFileMock).toHaveBeenCalledWith(
-                  "some-to-directory/node_modules/some-npm-package/package.json",
-
-                  {
-                    name: "some-npm-package",
-                    main: "some-directory-in-package/some-entrypoint.js",
-                    files: ["some-directory-in-package", "some-other-directory-in-package"],
-                  },
-                );
-              });
-
-              it("creates the symlinks for the files or directories in package.json", () => {
-                expect(createSymlinkMock.mock.calls).toEqual([
-                  [
-                    "some-target-directory/some-directory-in-package",
-                    "some-to-directory/node_modules/some-npm-package/some-directory-in-package",
-                    "dir",
-                  ],
-                  [
-                    "some-target-directory/some-other-directory-in-package",
-                    "some-to-directory/node_modules/some-npm-package/some-other-directory-in-package",
-                    "dir",
-                  ],
-                ]);
-              });
-
-              it("does not resolve yet", async () => {
-                const promiseStatus = await getPromiseStatus(actualPromise);
-
-                expect(promiseStatus.fulfilled).toBe(false);
-              });
-
-              it("when creation files and symlinks resolve, resolves", async () => {
-                writeJsonFileMock.resolve();
-                createSymlinkMock.resolve();
-                createSymlinkMock.resolve();
-
-                const promiseStatus = await getPromiseStatus(actualPromise);
-
-                expect(promiseStatus.fulfilled).toBe(true);
               });
             });
           });

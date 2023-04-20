@@ -19,7 +19,11 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens",
+
   "dependencies": {
+    "@ogre-tools/fp": "^15.3.1",
+    "@ogre-tools/injectable": "^15.3.1",
+    "@ogre-tools/injectable-extension-for-auto-registration": "^15.3.1",
     "fs-extra": "^9.0.1"
   },
 

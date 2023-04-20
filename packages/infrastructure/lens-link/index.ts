@@ -1,13 +1,8 @@
-import { lensLinkFor } from "./src/lens-link";
-import path from "path";
+import { getDi } from "./src/get-di";
+import lensLinkInjectable from "./src/lens-link.injectable";
 
-const lensIde = path.join("/Users/jsavolainen/Documents/work/test-lens-link", "lens-ide");
+const di = getDi();
 
-const mikkoFeature = path.join("/Users/jsavolainen/Documents/work/test-lens-link", "mikko-feature");
+const lensLink = di.inject(lensLinkInjectable);
 
-const lensLink = lensLinkFor();
-
-lensLink({
-  targetDirectory: mikkoFeature,
-  toDirectory: lensIde,
-});
+lensLink();
