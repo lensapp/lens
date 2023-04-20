@@ -4,11 +4,11 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { AsyncResult } from "@k8slens/utilities";
-import apiManagerInjectable from "../../../../../../common/k8s-api/api-manager/manager.injectable";
-import type { JsonPatch } from "../../../../../../common/k8s-api/kube-object.store";
-import type { KubeObject } from "../../../../../../common/k8s-api/kube-object";
+import apiManagerInjectable from "../../../../../common/k8s-api/api-manager/manager.injectable";
+import type { JsonPatch } from "../../../../../common/k8s-api/kube-object.store";
+import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
 import assert from "assert";
-import { getErrorMessage } from "../../../../../../common/utils/get-error-message";
+import { getErrorMessage } from "../../../../../common/utils/get-error-message";
 
 export type CallForPatchResource = (
   item: KubeObject,

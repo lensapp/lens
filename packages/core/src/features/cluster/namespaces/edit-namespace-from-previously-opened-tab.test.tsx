@@ -8,8 +8,8 @@ import type { ApplicationBuilder } from "../../../renderer/components/test-utils
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { CallForResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
-import callForResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
+import type { CallForResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource.injectable";
+import callForResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 import { TabKind } from "../../../renderer/components/dock/dock/store";

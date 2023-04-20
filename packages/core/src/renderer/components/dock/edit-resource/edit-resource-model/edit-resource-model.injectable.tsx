@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import type { CallForResource } from "./call-for-resource/call-for-resource.injectable";
-import callForResourceInjectable from "./call-for-resource/call-for-resource.injectable";
+import type { CallForResource } from "./call-for-resource.injectable";
+import callForResourceInjectable from "./call-for-resource.injectable";
 import { waitUntilDefined } from "@k8slens/utilities";
 import editResourceTabStoreInjectable from "../store.injectable";
 import type { EditingResource, EditResourceTabStore } from "../store";
@@ -12,8 +12,8 @@ import { action, computed, observable, runInAction } from "mobx";
 import type { KubeObject, RawKubeObject } from "../../../../../common/k8s-api/kube-object";
 import yaml from "js-yaml";
 import assert from "assert";
-import type { CallForPatchResource } from "./call-for-patch-resource/call-for-patch-resource.injectable";
-import callForPatchResourceInjectable from "./call-for-patch-resource/call-for-patch-resource.injectable";
+import type { CallForPatchResource } from "./call-for-patch-resource.injectable";
+import callForPatchResourceInjectable from "./call-for-patch-resource.injectable";
 import { createPatch } from "rfc6902";
 import type { ShowNotification } from "../../../notifications";
 import showSuccessNotificationInjectable from "../../../notifications/show-success-notification.injectable";
