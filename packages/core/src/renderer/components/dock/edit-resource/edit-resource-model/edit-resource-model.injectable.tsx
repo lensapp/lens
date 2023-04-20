@@ -71,11 +71,9 @@ function getEditSelfLinkFor(object: RawKubeObject): string | undefined {
 
     const { apiVersionWithGroup, ...parsedApi } = parsedKubeApi;
 
-    parsedApi.apiVersion = lensVersionLabel;
-
     return createKubeApiURL({
       ...parsedApi,
-      apiVersion: `${parsedApi.apiGroup}/${parsedApi.apiVersion}`,
+      apiVersion: lensVersionLabel,
     });
   }
 
