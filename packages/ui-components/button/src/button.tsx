@@ -27,14 +27,35 @@ export interface ButtonProps extends ButtonHTMLAttributes<any> {
 
 export const Button = withTooltip((props: ButtonProps) => {
   const {
-    waiting, label, primary, accent, plain, hidden, active, big,
-    round, outlined, light, children, ...btnProps
+    waiting,
+    label,
+    primary,
+    accent,
+    plain,
+    hidden,
+    active,
+    big,
+    round,
+    outlined,
+    light,
+    children,
+    ...btnProps
   } = props;
 
-  if (hidden) return null;
+  if (hidden) {
+    return null;
+  }
 
   btnProps.className = cssNames("Button", btnProps.className, {
-    waiting, primary, accent, plain, active, big, round, outlined, light,
+    waiting,
+    primary,
+    accent,
+    plain,
+    active,
+    big,
+    round,
+    outlined,
+    light,
   });
 
   // render as link
