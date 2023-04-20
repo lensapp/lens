@@ -330,6 +330,10 @@ async function pickRelevantPrs(prs: ExtendedGithubPrData[], isMasterBranch: bool
   return selectedPrs;
 }
 
+async function setExtensionApiDepAsExact(coreVersion: SemVer) {
+  await pipeExecFile("npm", ["install", "--save-exact", "--workspace=@k8slens/extensions", `@k8slens/core@${coreVersion.format()}`]);
+}
+
 async function createRelease(): Promise<void> {
   await checkCurrentWorkingDirectory();
 
@@ -358,6 +362,7 @@ async function createRelease(): Promise<void> {
 
   const newK8slensCoreVersion = await getCurrentVersionOfSubPackage("core");
 
+  await setExtensionApiDepAsExact(newK8slensCoreVersion);
   await createReleaseBranchAndCommit(prBase, newK8slensCoreVersion, prBody);
 }
 
