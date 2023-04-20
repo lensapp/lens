@@ -8,7 +8,7 @@ import React from "react";
 import type { Pod } from "../../../../common/k8s-api/endpoints";
 import type { KubeObjectListLayoutColumn } from "@k8slens/list-layout";
 import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
-import { Tooltip } from "../../tooltip";
+import { Tooltip } from "@k8slens/tooltip";
 
 export const podsNameColumnInjectable = getInjectable({
   id: "pods-name-column",
