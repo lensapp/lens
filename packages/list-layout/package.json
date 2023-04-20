@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/list-layout",
   "private": false,
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Injection tokens for list layout",
   "type": "commonjs",
   "publishConfig": {
@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@k8slens/eslint-config": "^6.5.0-alpha.2",
-    "@k8slens/jest": "^6.5.0-alpha.2",
+    "@k8slens/jest": "^6.5.0-alpha.4",
     "@k8slens/typescript": "^6.5.0-alpha.2"
   }
 }
