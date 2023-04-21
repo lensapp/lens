@@ -6,6 +6,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        data-testid="menu-actions-for-kube-object-menu-for-some-uid"
         id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
@@ -13,7 +14,7 @@ exports[`kube-object-menu given kube object renders 1`] = `
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-delete"
+          data-testid="menu-action-delete-for-/foo"
           tabindex="0"
         >
           <i
@@ -48,6 +49,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        data-testid="menu-actions-for-kube-object-menu-for-some-uid"
         id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
@@ -55,7 +57,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-delete"
+          data-testid="menu-action-delete-for-/foo"
           tabindex="0"
         >
           <i
@@ -109,7 +111,7 @@ exports[`kube-object-menu given kube object when removing kube object renders 1`
           </b>
            from 
           <b>
-            Some name
+            some-context-name
           </b>
           ?
         </p>
@@ -143,11 +145,12 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        data-testid="menu-actions-for-kube-object-menu-for-some-other-uid"
         id="menu-actions-for-kube-object-menu-for-some-other-uid"
       >
         <li
           class="MenuItem"
-          data-testid="menu-action-delete"
+          data-testid="menu-action-delete-for-/some-other-api-version/some-other-kind/some-other-namespace/some-other-name"
           tabindex="0"
         >
           <i
@@ -182,11 +185,12 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        data-testid="menu-actions-for-kube-object-menu-for-some-other-uid"
         id="menu-actions-for-kube-object-menu-for-some-other-uid"
       >
         <li
           class="MenuItem"
-          data-testid="menu-action-delete"
+          data-testid="menu-action-delete-for-/some-other-api-version/some-other-kind/some-other-namespace/some-other-name"
           tabindex="0"
         >
           <i
@@ -240,7 +244,7 @@ exports[`kube-object-menu given kube object when rerendered with different kube 
           </b>
            from 
           <b>
-            Some name
+            some-context-name
           </b>
           ?
         </p>
@@ -274,6 +278,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        data-testid="menu-actions-for-kube-object-menu-for-some-uid"
         id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
@@ -281,7 +286,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-delete"
+          data-testid="menu-action-delete-for-/foo"
           tabindex="0"
         >
           <i
@@ -335,7 +340,7 @@ exports[`kube-object-menu given kube object with namespace when removing kube ob
           </b>
            from 
           <b>
-            Some name
+            some-context-name
           </b>
           ?
         </p>
@@ -369,6 +374,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
     <div>
       <ul
         class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+        data-testid="menu-actions-for-kube-object-menu-for-some-uid"
         id="menu-actions-for-kube-object-menu-for-some-uid"
       >
         <li>
@@ -376,7 +382,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
         </li>
         <li
           class="MenuItem"
-          data-testid="menu-action-delete"
+          data-testid="menu-action-delete-for-/foo"
           tabindex="0"
         >
           <i
@@ -430,7 +436,7 @@ exports[`kube-object-menu given kube object without namespace when removing kube
           </b>
            from 
           <b>
-            Some name
+            some-context-name
           </b>
           ?
         </p>
@@ -463,6 +469,7 @@ exports[`kube-object-menu given no kube object, renders 1`] = `
   <div>
     <ul
       class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+      data-testid="menu-actions-for-kube-object-menu-for-undefined"
       id="menu-actions-for-kube-object-menu-for-undefined"
     />
   </div>
