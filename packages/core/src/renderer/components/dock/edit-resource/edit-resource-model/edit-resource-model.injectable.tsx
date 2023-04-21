@@ -28,8 +28,8 @@ const editResourceModelInjectable = getInjectable({
     const store = di.inject(editResourceTabStoreInjectable);
 
     const model = new EditResourceModel({
-      callForResource: di.inject(requestKubeResourceInjectable),
-      callForPatchResource: di.inject(requestPatchKubeResourceInjectable),
+      requestKubeResource: di.inject(requestKubeResourceInjectable),
+      requestPatchKubeResource: di.inject(requestPatchKubeResourceInjectable),
       showSuccessNotification: di.inject(showSuccessNotificationInjectable),
       showErrorNotification: di.inject(showErrorNotificationInjectable),
       store,
@@ -50,8 +50,8 @@ const editResourceModelInjectable = getInjectable({
 export default editResourceModelInjectable;
 
 interface Dependencies {
-  callForResource: RequestKubeResource;
-  callForPatchResource: RequestPatchKubeResource;
+  requestKubeResource: RequestKubeResource;
+  requestPatchKubeResource: RequestPatchKubeResource;
   waitForEditingResource: () => Promise<EditingResource>;
   showSuccessNotification: ShowNotification;
   showErrorNotification: ShowNotification;
@@ -134,7 +134,7 @@ export class EditResourceModel {
   load = async (): Promise<void> => {
     await this.dependencies.waitForEditingResource();
 
-    let result = await this.dependencies.callForResource(this.selfLink);
+    let result = await this.dependencies.requestKubeResource(this.selfLink);
 
     if (!result.callWasSuccessful) {
       return void this.dependencies.showErrorNotification(`Loading resource failed: ${result.error}`);
@@ -149,7 +149,7 @@ export class EditResourceModel {
 
       parsed.apiVersion = result.response.metadata.labels[EditResourceLabelName];
 
-      result = await this.dependencies.callForResource(createKubeApiURL(parsed));
+      result = await this.dependencies.requestKubeResource(createKubeApiURL(parsed));
     }
 
     if (!result.callWasSuccessful) {
@@ -205,7 +205,7 @@ export class EditResourceModel {
       return null;
     }
 
-    const result = await this.dependencies.callForPatchResource(selfLink, patches);
+    const result = await this.dependencies.requestPatchKubeResource(selfLink, patches);
 
     if (!result.callWasSuccessful) {
       this.dependencies.showErrorNotification((

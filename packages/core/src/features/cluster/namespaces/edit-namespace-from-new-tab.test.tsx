@@ -12,8 +12,6 @@ import createEditResourceTabInjectable from "../../../renderer/components/dock/e
 import getRandomIdForEditResourceTabInjectable from "../../../renderer/components/dock/edit-resource/get-random-id-for-edit-resource-tab.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { RequestPatchKubeResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/request-patch-kube-resource.injectable";
-import requestPatchKubeResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/request-patch-kube-resource.injectable";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
 import { Namespace } from "../../../common/k8s-api/endpoints";
 import showSuccessNotificationInjectable from "../../../renderer/components/notifications/show-success-notification.injectable";
@@ -21,13 +19,17 @@ import showErrorNotificationInjectable from "../../../renderer/components/notifi
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import hostedClusterIdInjectable from "../../../renderer/cluster-frame-context/hosted-cluster-id.injectable";
-import type { RequestKubeResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/request-kube-resource.injectable";
-import requestKubeResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/request-kube-resource.injectable";
+import type { ApiKubePatch } from "../../../renderer/k8s/api-kube-patch.injectable";
+import type { ApiKubeGet } from "../../../renderer/k8s/api-kube-get.injectable";
+import apiKubePatchInjectable from "../../../renderer/k8s/api-kube-patch.injectable";
+import apiKubeGetInjectable from "../../../renderer/k8s/api-kube-get.injectable";
+import type { KubeJsonApiData } from "../../../common/k8s-api/kube-json-api";
+import type { BaseKubeJsonApiObjectMetadata, KubeObjectScope } from "../../../common/k8s-api/kube-object";
 
 describe("cluster/namespaces - edit namespace from new tab", () => {
   let builder: ApplicationBuilder;
-  let requestKubeResourceMock: AsyncFnMock<RequestKubeResource>;
-  let requestPatchKubeResourceMock: AsyncFnMock<RequestPatchKubeResource>;
+  let apiKubePatchMock: AsyncFnMock<ApiKubePatch>;
+  let apiKubeGetMock: AsyncFnMock<ApiKubeGet>;
   let showSuccessNotificationMock: jest.Mock;
   let showErrorNotificationMock: jest.Mock;
 
@@ -57,11 +59,11 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
           .mockReturnValueOnce("some-second-tab-id"),
       );
 
-      requestKubeResourceMock = asyncFn();
-      windowDi.override(requestKubeResourceInjectable, () => requestKubeResourceMock);
+      apiKubePatchMock = asyncFn();
+      windowDi.override(apiKubePatchInjectable, () => apiKubePatchMock);
 
-      requestPatchKubeResourceMock = asyncFn();
-      windowDi.override(requestPatchKubeResourceInjectable, () => requestPatchKubeResourceMock);
+      apiKubeGetMock = asyncFn();
+      windowDi.override(apiKubeGetInjectable, () => apiKubeGetMock);
     });
 
     builder.afterWindowStart(() => {
@@ -156,16 +158,16 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
           });
 
           it("calls for namespace", () => {
-            expect(requestKubeResourceMock).toHaveBeenCalledWith(
+            expect(apiKubeGetMock).toHaveBeenCalledWith(
               "/apis/some-api-version/namespaces/some-uid",
             );
           });
 
           describe("when call for namespace resolves with namespace", () => {
-            let someNamespace: Namespace;
+            let someNamespaceData: KubeJsonApiData<BaseKubeJsonApiObjectMetadata<KubeObjectScope.Cluster>, unknown, unknown>;
 
             beforeEach(async () => {
-              someNamespace = new Namespace({
+              someNamespaceData = ({
                 apiVersion: "some-api-version",
                 kind: "Namespace",
 
@@ -173,16 +175,12 @@ describe("cluster/namespaces - edit namespace from new tab", () => {
                   uid: "some-uid",
                   name: "some-name",
                   resourceVersion: "some-resource-version",
-                  selfLink: "/apis/some-api-version/namespaces/some-uid",
                   somePropertyToBeRemoved: "some-value",
                   somePropertyToBeChanged: "some-old-value",
                 },
               });
 
-              await requestKubeResourceMock.resolve({
-                callWasSuccessful: true,
-                response: someNamespace,
-              });
+              await apiKubeGetMock.resolve(someNamespaceData);
             });
 
             it("renders", () => {
@@ -206,9 +204,9 @@ metadata:
   uid: some-uid
   name: some-name
   resourceVersion: some-resource-version
-  selfLink: /apis/some-api-version/namespaces/some-uid
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
+  selfLink: /apis/some-api-version/namespaces/some-uid
 `);
             });
 
@@ -226,15 +224,22 @@ metadata:
               });
 
               it("calls for save with just the adding version label", () => {
-                expect(requestPatchKubeResourceMock).toHaveBeenCalledWith(
+                expect(apiKubePatchMock).toHaveBeenCalledWith(
                   "/apis/some-api-version/namespaces/some-uid",
-                  [{
-                    op: "add",
-                    path: "/metadata/labels",
-                    value: {
-                      "k8slens-edit-resource-version": "some-api-version",
+                  {
+                    data: [{
+                      op: "add",
+                      path: "/metadata/labels",
+                      value: {
+                        "k8slens-edit-resource-version": "some-api-version",
+                      },
+                    }],
+                  },
+                  {
+                    headers: {
+                      "content-type": "application/json-patch+json",
                     },
-                  }],
+                  },
                 );
               });
 
@@ -262,9 +267,11 @@ metadata:
 
               describe("when saving resolves with success", () => {
                 beforeEach(async () => {
-                  await requestPatchKubeResourceMock.resolve({
-                    callWasSuccessful: true,
-                    response: { name: "some-name", kind: "Namespace" },
+                  await apiKubePatchMock.resolve({
+                    kind: "Namespace",
+                    metadata: {
+                      name: "some-name",
+                    },
                   });
                 });
 
@@ -309,12 +316,9 @@ metadata:
                 });
               });
 
-              describe("when saving resolves with failure", () => {
+              describe("when saving fails", () => {
                 beforeEach(async () => {
-                  await requestPatchKubeResourceMock.resolve({
-                    callWasSuccessful: false,
-                    error: "some-error",
-                  });
+                  await apiKubePatchMock.reject(new Error("some-error"));
                 });
 
                 it("renders", () => {
@@ -380,9 +384,11 @@ metadata:
 
               describe("when saving resolves with success", () => {
                 beforeEach(async () => {
-                  await requestPatchKubeResourceMock.resolve({
-                    callWasSuccessful: true,
-                    response: { name: "some-name", kind: "Namespace" },
+                  await apiKubePatchMock.resolve({
+                    kind: "Namespace",
+                    metadata: {
+                      name: "some-name",
+                    },
                   });
                 });
 
@@ -397,12 +403,9 @@ metadata:
                 });
               });
 
-              describe("when saving resolves with failure", () => {
+              describe("when saving failings", () => {
                 beforeEach(async () => {
-                  await requestPatchKubeResourceMock.resolve({
-                    callWasSuccessful: false,
-                    error: "Some error",
-                  });
+                  await apiKubePatchMock.reject(new Error("some-error"));
                 });
 
                 it("renders", () => {
@@ -451,9 +454,9 @@ metadata:
   uid: some-uid
   name: some-name
   resourceVersion: some-resource-version
-  selfLink: /apis/some-api-version/namespaces/some-uid
   somePropertyToBeChanged: some-changed-value
   someAddedProperty: some-new-value
+  selfLink: /apis/some-api-version/namespaces/some-uid
 `,
                   },
                 });
@@ -474,9 +477,9 @@ metadata:
   uid: some-uid
   name: some-name
   resourceVersion: some-resource-version
-  selfLink: /apis/some-api-version/namespaces/some-uid
   somePropertyToBeChanged: some-changed-value
   someAddedProperty: some-new-value
+  selfLink: /apis/some-api-version/namespaces/some-uid
 `);
               });
 
@@ -499,9 +502,9 @@ metadata:
   uid: some-uid
   name: some-name
   resourceVersion: some-resource-version
-  selfLink: /apis/some-api-version/namespaces/some-uid
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
+  selfLink: /apis/some-api-version/namespaces/some-uid
 `,
                   draft: `apiVersion: some-api-version
 kind: Namespace
@@ -509,9 +512,9 @@ metadata:
   uid: some-uid
   name: some-name
   resourceVersion: some-resource-version
-  selfLink: /apis/some-api-version/namespaces/some-uid
   somePropertyToBeChanged: some-changed-value
   someAddedProperty: some-new-value
+  selfLink: /apis/some-api-version/namespaces/some-uid
 `,
                 });
               });
@@ -526,41 +529,46 @@ metadata:
                 });
 
                 it("calls for save with changed configuration", () => {
-                  expect(requestPatchKubeResourceMock).toHaveBeenCalledWith(
+                  expect(apiKubePatchMock).toHaveBeenCalledWith(
                     "/apis/some-api-version/namespaces/some-uid",
-                    [
-                      {
-                        op: "remove",
-                        path: "/metadata/somePropertyToBeRemoved",
-                      },
-                      {
-                        op: "add",
-                        path: "/metadata/someAddedProperty",
-                        value: "some-new-value",
-                      },
-                      {
-                        op: "add",
-                        path: "/metadata/labels",
-                        value: {
-                          "k8slens-edit-resource-version": "some-api-version",
+                    {
+                      data: [
+                        {
+                          op: "remove",
+                          path: "/metadata/somePropertyToBeRemoved",
                         },
+                        {
+                          op: "add",
+                          path: "/metadata/someAddedProperty",
+                          value: "some-new-value",
+                        },
+                        {
+                          op: "add",
+                          path: "/metadata/labels",
+                          value: {
+                            "k8slens-edit-resource-version": "some-api-version",
+                          },
+                        },
+                        {
+                          op: "replace",
+                          path: "/metadata/somePropertyToBeChanged",
+                          value: "some-changed-value",
+                        },
+                      ],
+                    },
+                    {
+                      headers: {
+                        "content-type": "application/json-patch+json",
                       },
-                      {
-                        op: "replace",
-                        path: "/metadata/somePropertyToBeChanged",
-                        value: "some-changed-value",
-                      },
-                    ],
+                    },
                   );
                 });
 
                 it("given save resolves and another change in configuration, when saving, calls for save with changed configuration", async () => {
-                  await requestPatchKubeResourceMock.resolve({
-                    callWasSuccessful: true,
-
-                    response: {
+                  await apiKubePatchMock.resolve({
+                    kind: "Namespace",
+                    metadata: {
                       name: "some-name",
-                      kind: "Namespace",
                     },
                   });
 
@@ -585,7 +593,7 @@ metadata:
                   });
 
 
-                  requestPatchKubeResourceMock.mockClear();
+                  apiKubePatchMock.mockClear();
 
                   const saveButton = rendered.getByTestId(
                     "save-edit-resource-from-tab-for-some-first-tab-id",
@@ -593,15 +601,22 @@ metadata:
 
                   fireEvent.click(saveButton);
 
-                  expect(requestPatchKubeResourceMock).toHaveBeenCalledWith(
+                  expect(apiKubePatchMock).toHaveBeenCalledWith(
                     "/apis/some-api-version/namespaces/some-uid",
-                    [
-                      {
-                        op: "add",
-                        path: "/metadata/someOtherAddedProperty",
-                        value: "some-other-new-value",
+                    {
+                      data: [
+                        {
+                          op: "add",
+                          path: "/metadata/someOtherAddedProperty",
+                          value: "some-other-new-value",
+                        },
+                      ],
+                    },
+                    {
+                      headers: {
+                        "content-type": "application/json-patch+json",
                       },
-                    ],
+                    },
                   );
                 });
               });
@@ -692,7 +707,7 @@ metadata:
 
             describe("given clicking the context menu for second namespace, when clicking to edit namespace", () => {
               beforeEach(() => {
-                requestKubeResourceMock.mockClear();
+                apiKubeGetMock.mockClear();
 
                 // TODO: Make implementation match the description
                 const namespaceStub = new Namespace(someOtherNamespaceDataStub);
@@ -725,7 +740,7 @@ metadata:
               });
 
               it("calls for second namespace", () => {
-                expect(requestKubeResourceMock).toHaveBeenCalledWith(
+                expect(apiKubeGetMock).toHaveBeenCalledWith(
                   "/apis/some-api-version/namespaces/some-other-uid",
                 );
               });
@@ -747,10 +762,7 @@ metadata:
                     },
                   });
 
-                  await requestKubeResourceMock.resolve({
-                    callWasSuccessful: true,
-                    response: someOtherNamespace,
-                  });
+                  await apiKubeGetMock.resolve(someOtherNamespace);
                 });
 
                 it("renders", () => {
@@ -773,7 +785,7 @@ metadata:
                 });
 
                 it("when selecting to save, calls for save of second namespace with just the add edit version label", () => {
-                  requestPatchKubeResourceMock.mockClear();
+                  apiKubePatchMock.mockClear();
 
                   const saveButton = rendered.getByTestId(
                     "save-edit-resource-from-tab-for-some-second-tab-id",
@@ -781,21 +793,28 @@ metadata:
 
                   fireEvent.click(saveButton);
 
-                  expect(requestPatchKubeResourceMock).toHaveBeenCalledWith(
+                  expect(apiKubePatchMock).toHaveBeenCalledWith(
                     "/apis/some-api-version/namespaces/some-other-uid",
-                    [{
-                      op: "add",
-                      path: "/metadata/labels",
-                      value: {
-                        "k8slens-edit-resource-version": "some-api-version",
+                    {
+                      data: [{
+                        op: "add",
+                        path: "/metadata/labels",
+                        value: {
+                          "k8slens-edit-resource-version": "some-api-version",
+                        },
+                      }],
+                    },
+                    {
+                      headers: {
+                        "content-type": "application/json-patch+json",
                       },
-                    }],
+                    },
                   );
                 });
 
                 describe("when clicking dock tab for the first namespace", () => {
                   beforeEach(() => {
-                    requestKubeResourceMock.mockClear();
+                    apiKubeGetMock.mockClear();
 
                     const tab = rendered.getByTestId("dock-tab-for-some-first-tab-id");
 
@@ -825,7 +844,7 @@ metadata:
                   });
 
                   it("does not call for namespace", () => {
-                    expect(requestKubeResourceMock).not.toHaveBeenCalledWith("/apis/some-api-version/namespaces/some-uid");
+                    expect(apiKubeGetMock).not.toHaveBeenCalledWith("/apis/some-api-version/namespaces/some-uid");
                   });
 
                   it("has configuration in the editor", () => {
@@ -839,14 +858,14 @@ metadata:
   uid: some-uid
   name: some-name
   resourceVersion: some-resource-version
-  selfLink: /apis/some-api-version/namespaces/some-uid
   somePropertyToBeRemoved: some-value
   somePropertyToBeChanged: some-old-value
+  selfLink: /apis/some-api-version/namespaces/some-uid
 `);
                   });
 
                   it("when selecting to save, calls for save of first namespace with just the new edit version label", () => {
-                    requestPatchKubeResourceMock.mockClear();
+                    apiKubePatchMock.mockClear();
 
                     const saveButton = rendered.getByTestId(
                       "save-edit-resource-from-tab-for-some-first-tab-id",
@@ -854,15 +873,22 @@ metadata:
 
                     fireEvent.click(saveButton);
 
-                    expect(requestPatchKubeResourceMock).toHaveBeenCalledWith(
+                    expect(apiKubePatchMock).toHaveBeenCalledWith(
                       "/apis/some-api-version/namespaces/some-uid",
-                      [ {
-                        op: "add",
-                        path: "/metadata/labels",
-                        value: {
-                          "k8slens-edit-resource-version": "some-api-version",
+                      {
+                        data: [{
+                          op: "add",
+                          path: "/metadata/labels",
+                          value: {
+                            "k8slens-edit-resource-version": "some-api-version",
+                          },
+                        }],
+                      },
+                      {
+                        headers: {
+                          "content-type": "application/json-patch+json",
                         },
-                      }],
+                      },
                     );
                   });
                 });
@@ -870,41 +896,9 @@ metadata:
             });
           });
 
-          describe("when call for namespace resolves without namespace", () => {
-            beforeEach(async () => {
-              await requestKubeResourceMock.resolve({
-                callWasSuccessful: true,
-                response: undefined,
-              });
-            });
-
-            it("renders", () => {
-              expect(rendered.baseElement).toMatchSnapshot();
-            });
-
-            it("still shows the dock tab for editing namespace", () => {
-              expect(
-                rendered.getByTestId("dock-tab-for-some-first-tab-id"),
-              ).toBeInTheDocument();
-            });
-
-            it("shows error message", () => {
-              expect(
-                rendered.getByTestId("dock-tab-content-for-some-first-tab-id"),
-              ).toHaveTextContent("Resource not found");
-            });
-
-            it("does not show error notification", () => {
-              expect(showErrorNotificationMock).not.toHaveBeenCalled();
-            });
-          });
-
           describe("when call for namespace resolves with failure", () => {
             beforeEach(async () => {
-              await requestKubeResourceMock.resolve({
-                callWasSuccessful: false,
-                error: "some-error",
-              });
+              await apiKubeGetMock.reject(new Error("some-error-missing-namespace"));
             });
 
             it("renders", () => {
