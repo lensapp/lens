@@ -1,0 +1,77 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+body.resizing {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+.ResizingAnchor {
+  $dimension: 12px;
+
+  position: absolute;
+  z-index: 10;
+
+  &::after {
+    content: " ";
+    display: block;
+    width: 3px;
+    height: 100%;
+    margin-left: 50%;
+    background: transparent;
+    transition: background 0.2s 0s;
+  }
+
+  &:hover, &.resizing {
+    &::after {
+      background: var(--blue);
+      transition: background 0.2s 0.5s;
+    }
+  }
+
+  &:hover.wasDragging {
+    &::after {
+      background: transparent;
+      transition: background 0.2s 0s;
+    }
+  }
+
+  &.disabled {
+    display: none;
+  }
+
+  &.vertical {
+    left: 0;
+    right: 0;
+    cursor: row-resize;
+    height: $dimension;
+
+    &::after {
+      height: 3px;
+      width: 100%;
+      margin-left: 0;
+    }
+
+    &.trailing {
+      bottom: -$dimension * 0.5;
+    }
+  }
+
+  &.horizontal {
+    top: 0;
+    bottom: 0;
+    cursor: col-resize;
+    width: $dimension;
+
+    &.leading {
+      left: -$dimension * 0.5;
+    }
+
+    &.trailing {
+      right: -$dimension * 0.5;
+    }
+  }
+}
