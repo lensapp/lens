@@ -6,8 +6,8 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { action } from "mobx";
 import addNamespaceDialogStateInjectable from "./state.injectable";
 
-const openAddNamepaceDialogInjectable = getInjectable({
-  id: "open-add-namepace-dialog",
+const openAddNamespaceDialogInjectable = getInjectable({
+  id: "open-add-namespace-dialog",
   instantiate: (di) => {
     const state = di.inject(addNamespaceDialogStateInjectable);
 
@@ -17,4 +17,4 @@ const openAddNamepaceDialogInjectable = getInjectable({
   },
 });
 
-export default openAddNamepaceDialogInjectable;
+export default openAddNamespaceDialogInjectable;

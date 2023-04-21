@@ -15,7 +15,7 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable from "./store.injectable";
 import { KubeObjectAge } from "../kube-object/age";
-import openAddNamepaceDialogInjectable from "./add-dialog/open.injectable";
+import openAddNamespaceDialogInjectable from "./add-dialog/open.injectable";
 import { SubnamespaceBadge } from "./subnamespace-badge";
 
 enum columnId {
@@ -86,6 +86,6 @@ const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog }: 
 export const NamespacesRoute = withInjectables<Dependencies>(NonInjectedNamespacesRoute, {
   getProps: (di) => ({
     namespaceStore: di.inject(namespaceStoreInjectable),
-    openAddNamespaceDialog: di.inject(openAddNamepaceDialogInjectable),
+    openAddNamespaceDialog: di.inject(openAddNamespaceDialogInjectable),
   }),
 });
