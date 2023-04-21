@@ -106,6 +106,7 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
 
       if (isRemovable) {
         this.menuItems.push({
+          id: "delete-kube-object",
           title: "Delete",
           icon: "delete",
           onClick: withConfirmation({
@@ -126,6 +127,7 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
 
       if (isEditable) {
         this.menuItems.push({
+          id: "edit-kube-object",
           title: "Edit",
           icon: "edit",
           onClick: async () => {

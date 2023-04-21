@@ -4,11 +4,13 @@
  */
 
 import { getInjectionToken } from "@ogre-tools/injectable";
+import type { IObservableArray } from "mobx";
 import type { RequireAtLeastOne } from "type-fest";
 import type { KubeObject } from "../../common/k8s-api/kube-object";
 import type { BaseIconProps } from "../components/icon";
 
 export interface KubeObjectContextMenuItem {
+  id?: string;
   /**
    * If the type is `string` then it is shorthand for {@link BaseIconProps.material}
    *
@@ -29,7 +31,7 @@ export interface KubeObjectContextMenuItem {
 }
 
 export interface KubeObjectOnContextMenuOpenContext {
-  menuItems: KubeObjectContextMenuItem[];
+  readonly menuItems: IObservableArray<KubeObjectContextMenuItem>;
   navigate: (location: string) => void;
 }
 
