@@ -236,6 +236,8 @@ describe("lens-link", () => {
               await readJsonFileMock.resolveSpecific(([path]) => path === "/some-directory/some-module/package.json", {
                 name: "@some-scope/some-module",
                 files: [
+                  "some-duplicate-file",
+                  "some-duplicate-file",
                   "some-build-directory-with-asterisk/*",
                   "some-build-directory-with-wild-card/**",
                   "some-build-directory-with-wild-card-before-asterisk/**/*",
@@ -286,8 +288,9 @@ describe("lens-link", () => {
 
               describe("when globbing resolves and files or directories are identified", () => {
                 beforeEach(async () => {
-                  await globMock.resolve(["some-directory-from-glob/some-file-from-glob.txt"]);
+                  await globMock.resolve(["some-directory-from-glob/some-file-from-glob.txt", "some-duplicate-file"]);
 
+                  await isFileOrDirectoryMock.resolve("file");
                   await isFileOrDirectoryMock.resolve("dir");
                   await isFileOrDirectoryMock.resolve("dir");
                   await isFileOrDirectoryMock.resolve("dir");
@@ -304,6 +307,12 @@ describe("lens-link", () => {
                     [
                       "/some-directory/some-module/some-directory-from-glob/some-file-from-glob.txt",
                       "/some-directory/some-project/node_modules/@some-scope/some-module/some-directory-from-glob/some-file-from-glob.txt",
+                      "file",
+                    ],
+
+                    [
+                      "/some-directory/some-module/some-duplicate-file",
+                      "/some-directory/some-project/node_modules/@some-scope/some-module/some-duplicate-file",
                       "file",
                     ],
 

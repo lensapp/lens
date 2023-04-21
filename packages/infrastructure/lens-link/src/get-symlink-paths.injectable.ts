@@ -1,8 +1,8 @@
+import { flatten, map, partition, uniq, uniqBy } from "lodash/fp";
 import type { PackageJsonAndPath } from "./package-json-and-path";
 import { globInjectable } from "./fs/glob.injectable";
 import { resolvePathInjectable } from "./path/resolve-path.injectable";
 import { awaitAll } from "./await-all";
-import { flatten, map, partition } from "lodash/fp";
 import { getInjectable } from "@ogre-tools/injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { getLensLinkDirectoryInjectable } from "./get-lens-link-directory.injectable";
@@ -44,6 +44,8 @@ export const getSymlinkPathsInjectable = getInjectable({
           const notGlobbedFilesOrDirectories = await pipeline(
             toNotBeGlobbed,
 
+            uniq,
+
             map(async (fileOrDirectory) => {
               const target = resolvePath(moduleDirectory, fileOrDirectory);
 
@@ -77,6 +79,8 @@ export const getSymlinkPathsInjectable = getInjectable({
         awaitAll,
 
         flatten,
+
+        uniqBy((x) => x.source),
       );
     };
   },
