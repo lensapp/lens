@@ -286,7 +286,7 @@ describe("lens-link", () => {
 
               describe("when globbing resolves and files or directories are identified", () => {
                 beforeEach(async () => {
-                  await globMock.resolve(["/some-directory/some-module/some-file-from-glob.txt"]);
+                  await globMock.resolve(["some-directory-from-glob/some-file-from-glob.txt"]);
 
                   await isFileOrDirectoryMock.resolve("dir");
                   await isFileOrDirectoryMock.resolve("dir");
@@ -302,8 +302,8 @@ describe("lens-link", () => {
                     ],
 
                     [
-                      "/some-directory/some-module/some-file-from-glob.txt",
-                      "/some-directory/some-module/some-file-from-glob.txt",
+                      "/some-directory/some-module/some-directory-from-glob/some-file-from-glob.txt",
+                      "/some-directory/some-project/node_modules/@some-scope/some-module/some-directory-from-glob/some-file-from-glob.txt",
                       "file",
                     ],
 
