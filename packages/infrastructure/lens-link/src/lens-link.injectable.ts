@@ -1,5 +1,4 @@
-import { removeExistingLensLinkDirectoriesInjectable } from "./remove-existing-lens-link-directories.injectable";
-import { createLensLinkDirectoriesInjectable } from "./create-lens-link-directories.injectable";
+import { ensureEmptyLensLinkDirectoriesInjectable } from "./ensure-empty-lens-link-directories.injectable";
 import { getPackageJsonsInjectable } from "./get-package-jsons.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { createSymlinksInjectable } from "./create-symlinks.injectable";
@@ -13,8 +12,7 @@ const lensLinkInjectable = getInjectable({
 
   instantiate: (di): LensLink => {
     const getPackageJsons = di.inject(getPackageJsonsInjectable);
-    const removeExistingLensLinkDirectories = di.inject(removeExistingLensLinkDirectoriesInjectable);
-    const createLensLinkDirectories = di.inject(createLensLinkDirectoriesInjectable);
+    const ensureEmptyLensLinkDirectories = di.inject(ensureEmptyLensLinkDirectoriesInjectable);
     const createSymlinks = di.inject(createSymlinksInjectable);
     const getConfig = di.inject(getConfigInjectable);
     const createEmptyConfig = di.inject(createEmptyConfigInjectable);
@@ -30,8 +28,7 @@ const lensLinkInjectable = getInjectable({
 
       const packageJsons = await getPackageJsons(config);
 
-      await removeExistingLensLinkDirectories(packageJsons);
-      await createLensLinkDirectories(packageJsons);
+      await ensureEmptyLensLinkDirectories(packageJsons);
       await createSymlinks(packageJsons);
     };
   },

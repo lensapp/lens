@@ -4,17 +4,17 @@ import { map } from "lodash/fp";
 import type { PackageJsonAndPath } from "./package-json-and-path";
 
 import { getInjectable } from "@ogre-tools/injectable";
-import { ensureDirectoryInjectable } from "./fs/ensure-directory.injectable";
+import { ensureEmptyDirectoryInjectable } from "./fs/ensure-empty-directory.injectable";
 import { getLensLinkDirectoryInjectable } from "./get-lens-link-directory.injectable";
 
 export type CreateLensLinkDirectories = (packageJsons: PackageJsonAndPath[]) => Promise<void>;
 
-export const createLensLinkDirectoriesInjectable = getInjectable({
-  id: "create-lens-link-directories",
+export const ensureEmptyLensLinkDirectoriesInjectable = getInjectable({
+  id: "ensure-empty-lens-link-directories",
 
   instantiate: (di): CreateLensLinkDirectories => {
     const getLensLinkDirectory = di.inject(getLensLinkDirectoryInjectable);
-    const ensureDirectory = di.inject(ensureDirectoryInjectable);
+    const ensureDirectory = di.inject(ensureEmptyDirectoryInjectable);
 
     return async (packageJsons: PackageJsonAndPath[]) => {
       await pipeline(
