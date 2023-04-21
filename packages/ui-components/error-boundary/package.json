@@ -29,6 +29,9 @@
     "lint": "lens-lint",
     "lint:fix": "lens-lint --fix"
   },
+  "dependencies": {
+    "@ogre-tools/injectable-react": "12.0.1"
+  },
   "peerDependencies": {
     "@k8slens/utilities": "^1.0.0-alpha.1",
     "auto-bind": "^4.0.0",
