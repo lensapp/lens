@@ -318,20 +318,24 @@ export class KubeApi<
         continue;
       }
 
-      const { apiPrefix, apiGroup, resource } = parsedApi;
-      const list = await this.request.get(`${apiPrefix}/${apiGroup}`) as KubeApiResourceVersionList;
-      const resourceVersions = getOrderedVersions(list, this.allowedUsableVersions?.[apiGroup]);
+      try {
+        const { apiPrefix, apiGroup, resource } = parsedApi;
+        const list = await this.request.get(`${apiPrefix}/${apiGroup}`) as KubeApiResourceVersionList;
+        const resourceVersions = getOrderedVersions(list, this.allowedUsableVersions?.[apiGroup]);
 
-      for (const resourceVersion of resourceVersions) {
-        const { resources } = await this.request.get(`${apiPrefix}/${resourceVersion.groupVersion}`) as KubeApiResourceList;
+        for (const resourceVersion of resourceVersions) {
+          const { resources } = await this.request.get(`${apiPrefix}/${resourceVersion.groupVersion}`) as KubeApiResourceList;
 
-        if (resources.some(({ name }) => name === resource)) {
-          return {
-            apiPrefix,
-            apiGroup,
-            apiVersionPreferred: resourceVersion.version,
-          };
+          if (resources.some(({ name }) => name === resource)) {
+            return {
+              apiPrefix,
+              apiGroup,
+              apiVersionPreferred: resourceVersion.version,
+            };
+          }
         }
+      } catch {
+        // ignore exception to try next url
       }
     }
 
