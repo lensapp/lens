@@ -778,6 +778,7 @@ exports[`workloads / pods when navigating to workloads / pods view given a names
                                 <div>
                                   <i
                                     class="Icon material interactive focusable"
+                                    data-testid="icon-for-menu-actions-for-kube-object-menu-for-uuid-1"
                                     id="menu-actions-for-kube-object-menu-for-uuid-1"
                                     tabindex="0"
                                   >

@@ -34,6 +34,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
           </div>
           <ul
             class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+            data-testid="menu-actions-for-kube-object-menu-for-some-uid"
             id="menu-actions-for-kube-object-menu-for-some-uid"
           />
           <i
@@ -654,6 +655,7 @@ exports[`disable kube object detail items when cluster is not relevant given ext
           </div>
           <ul
             class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+            data-testid="menu-actions-for-kube-object-menu-for-some-uid"
             id="menu-actions-for-kube-object-menu-for-some-uid"
           />
           <i
@@ -1269,6 +1271,7 @@ exports[`disable kube object detail items when cluster is not relevant given not
           </div>
           <ul
             class="Menu MenuActions flex KubeObjectMenu toolbar gaps right bottom"
+            data-testid="menu-actions-for-kube-object-menu-for-some-uid"
             id="menu-actions-for-kube-object-menu-for-some-uid"
           />
           <i
