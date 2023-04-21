@@ -11,9 +11,8 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import type { Disposer } from "@k8slens/utilities";
 import { hasTypedProperty, isObject, isString, cssNames, isDefined } from "@k8slens/utilities";
 import type { KubeJsonApiDataFor, KubeObject } from "../../../common/k8s-api/kube-object";
-import type { ItemListLayoutProps } from "../item-object-list/list-layout";
+import type { ItemListLayoutProps, ItemListStore } from "../item-object-list/list-layout";
 import { ItemListLayout } from "../item-object-list/list-layout";
-import type { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectMenu } from "../kube-object-menu";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
@@ -33,14 +32,20 @@ import type { KubeObjectListLayoutColumn, ItemObject } from "@k8slens/list-layou
 import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 import { sortBy } from "lodash";
 
+export type KubeItemListStore<K extends KubeObject> = ItemListStore<K, false> & SubscribableStore & {
+  getByPath: (path: string) => K | undefined;
+  readonly contextItems: K[];
+};
+
 export interface KubeObjectListLayoutProps<
   K extends KubeObject,
+  // eslint-disable-next-line unused-imports/no-unused-vars-ts
   A extends KubeApi<K, D>,
   D extends KubeJsonApiDataFor<K>,
 > extends Omit<ItemListLayoutProps<K, false>, "getItems" | "dependentStores" | "preloadStores"> {
   items?: K[];
   getItems?: () => K[];
-  store: KubeObjectStore<K, A, D>;
+  store: KubeItemListStore<K>;
   dependentStores?: SubscribableStore[];
   subscribeStores?: boolean;
 

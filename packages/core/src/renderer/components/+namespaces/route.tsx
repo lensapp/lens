@@ -17,6 +17,8 @@ import namespaceStoreInjectable from "./store.injectable";
 import { KubeObjectAge } from "../kube-object/age";
 import openAddNamespaceDialogInjectable from "./add-dialog/open.injectable";
 import { SubnamespaceBadge } from "./subnamespace-badge";
+import type { RequestDeleteNamespace } from "./request-delete-namespace.injectable";
+import requestDeleteNamespaceInjectable from "./request-delete-namespace.injectable";
 
 enum columnId {
   name = "name",
@@ -28,15 +30,45 @@ enum columnId {
 interface Dependencies {
   namespaceStore: NamespaceStore;
   openAddNamespaceDialog: () => void;
+  requestDeleteNamespace: RequestDeleteNamespace;
 }
 
-const NonInjectedNamespacesRoute = ({ namespaceStore, openAddNamespaceDialog }: Dependencies) => (
+const NonInjectedNamespacesRoute = ({
+  namespaceStore,
+  openAddNamespaceDialog,
+  requestDeleteNamespace,
+}: Dependencies) => (
   <TabLayout>
     <KubeObjectListLayout
       isConfigurable
       tableId="namespaces"
       className="Namespaces"
-      store={namespaceStore}
+      store={{
+        api: namespaceStore.api,
+        get contextItems() {
+          return namespaceStore.contextItems;
+        },
+        get failedLoading() {
+          return namespaceStore.failedLoading;
+        },
+        get isLoaded() {
+          return namespaceStore.isLoaded;
+        },
+        get selectedItems() {
+          return namespaceStore.selectedItems;
+        },
+        getByPath: (...params) => namespaceStore.getByPath(...params),
+        getTotalCount: (...params) => namespaceStore.getTotalCount(...params),
+        isSelected: (...params) => namespaceStore.isSelected(...params),
+        isSelectedAll: (...params) => namespaceStore.isSelectedAll(...params),
+        loadAll: (...params) => namespaceStore.loadAll(...params),
+        subscribe: () => namespaceStore.subscribe(),
+        toggleSelection: (...params) => namespaceStore.toggleSelection(...params),
+        toggleSelectionAll: (...params) => namespaceStore.toggleSelectionAll(...params),
+        pickOnlySelected: (...params) => namespaceStore.pickOnlySelected(...params),
+        removeItems: async (items) => { await Promise.all(items.map(requestDeleteNamespace)); },
+        removeSelectedItems: async () => { await Promise.all(namespaceStore.selectedItems.map(requestDeleteNamespace)); },
+      }}
       sortingCallbacks={{
         [columnId.name]: namespace => namespace.getName(),
         [columnId.labels]: namespace => namespace.getLabels(),
@@ -87,5 +119,6 @@ export const NamespacesRoute = withInjectables<Dependencies>(NonInjectedNamespac
   getProps: (di) => ({
     namespaceStore: di.inject(namespaceStoreInjectable),
     openAddNamespaceDialog: di.inject(openAddNamespaceDialogInjectable),
+    requestDeleteNamespace: di.inject(requestDeleteNamespaceInjectable),
   }),
 });
