@@ -1,0 +1,92 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+
+.Tooltip {
+
+  position: fixed;
+  margin: 0 !important;
+  background: var(--mainBackground);
+  font-size: small;
+  font-weight: normal;
+  border-radius: 3px;
+  color: var(--textColorAccent);
+  white-space: normal;
+  padding: .5em;
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 150ms 150ms ease-in-out;
+  z-index: 100000;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.24);
+  left: 0;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &:empty {
+    display: none;
+  }
+
+  &.formatter {
+    &.nowrap {
+      &, * {
+        white-space: nowrap;
+      }
+    }
+
+    &.narrow {
+      max-width: 300px;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      text-align: left;
+    }
+
+    &.small {
+      font-size: 12px;
+    }
+
+    &.warning {
+      color: var(--colorError);
+    }
+
+    &.tableView {
+      display: grid;
+      gap: var(--padding);
+      grid-template-columns: max-content 1fr;
+      grid-template-rows: repeat(2, 1fr);
+
+      > .flex {
+        display: contents;
+      }
+
+      > * {
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .title {
+        grid-column: 1 / 3;
+        color: var(--textColorAccent);
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .name {
+        text-align: right;
+        color: var(--textColorAccent);
+      }
+
+      .value {
+        text-align: left;
+        color: var(--textColorSecondary);
+      }
+    }
+  }
+}
