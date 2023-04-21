@@ -17,7 +17,7 @@ import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import { computed, runInAction } from "mobx";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
-import type { Cluster } from "../../../common/cluster/cluster";
+import { Cluster } from "../../../common/cluster/cluster";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import { KubeObjectMenu } from "./index";
@@ -27,6 +27,9 @@ import { kubeObjectMenuItemInjectionToken } from "./kube-object-menu-item-inject
 import activeEntityInternalClusterInjectable from "../../api/catalog/entity/get-active-cluster-entity.injectable";
 import directoryForTempInjectable from "../../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
+import clustersStateInjectable from "../../../features/cluster/storage/common/state.injectable";
+import activeEntityIdInjectable from "../../api/catalog/entity/active-entity-id.injectable";
 
 // TODO: make `animated={false}` not required to make tests deterministic
 describe("kube-object-menu", () => {
@@ -36,8 +39,16 @@ describe("kube-object-menu", () => {
   beforeEach(() => {
     di = getDiForUnitTesting();
 
+    di.override(hostedClusterIdInjectable, () => "some-cluster-id");
     di.override(directoryForUserDataInjectable, () => "/some-directory-for-user-data");
     di.override(directoryForTempInjectable, () => "/some-directory-for-temp");
+
+    di.inject(clustersStateInjectable).set("some-cluster-id", new Cluster({
+      id: "some-cluster-id",
+      contextName: "some-context-name",
+      kubeConfigPath: "/some-path-to-a-kubeconfig",
+    }));
+    di.override(activeEntityIdInjectable, () => computed(() => "some-cluster-id"));
 
     runInAction(() => {
       di.register(
@@ -48,13 +59,6 @@ describe("kube-object-menu", () => {
     });
 
     render = renderFor(di);
-
-    di.override(
-      activeEntityInternalClusterInjectable,
-      () => computed(() => ({
-        name: computed(() => "Some name"),
-      } as Cluster)),
-    );
 
     di.override(
       apiManagerInjectable,
@@ -138,7 +142,7 @@ describe("kube-object-menu", () => {
             name: "some-other-name",
             resourceVersion: "some-other-resource-version",
             namespace: "some-other-namespace",
-            selfLink: "some-other-api-version/some-other-kind/some-other-namespace/some-other-name",
+            selfLink: "/some-other-api-version/some-other-kind/some-other-namespace/some-other-name",
           },
         });
 
@@ -161,7 +165,7 @@ describe("kube-object-menu", () => {
 
       describe("when removing new kube object", () => {
         beforeEach(async () => {
-          userEvent.click(await screen.findByTestId("menu-action-delete"));
+          userEvent.click(await screen.findByTestId("menu-action-delete-for-/some-other-api-version/some-other-kind/some-other-namespace/some-other-name"));
         });
 
         it("renders", async () => {
@@ -173,7 +177,7 @@ describe("kube-object-menu", () => {
 
     describe("when removing kube object", () => {
       beforeEach(async () => {
-        userEvent.click(await screen.findByTestId("menu-action-delete"));
+        userEvent.click(await screen.findByTestId("menu-action-delete-for-/foo"));
       });
 
       it("renders", async () => {
@@ -236,7 +240,7 @@ describe("kube-object-menu", () => {
     });
 
     it("when removing kube object, renders confirmation dialog with namespace", async () => {
-      const menuItem = await screen.findByTestId("menu-action-delete");
+      const menuItem = await screen.findByTestId("menu-action-delete-for-/foo");
 
       userEvent.click(menuItem);
 
@@ -274,7 +278,7 @@ describe("kube-object-menu", () => {
     });
 
     it("when removing kube object, renders confirmation dialog without namespace", async () => {
-      const menuItem = await screen.findByTestId("menu-action-delete");
+      const menuItem = await screen.findByTestId("menu-action-delete-for-/foo");
 
       userEvent.click(menuItem);
 

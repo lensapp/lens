@@ -5,16 +5,16 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import getClusterByIdInjectable from "../../../../features/cluster/storage/common/get-by-id.injectable";
-import catalogEntityRegistryInjectable from "./registry.injectable";
+import activeEntityIdInjectable from "./active-entity-id.injectable";
 
 const activeEntityInternalClusterInjectable = getInjectable({
   id: "active-entity-internal-cluster",
   instantiate: (di) => {
     const getClusterById = di.inject(getClusterByIdInjectable);
-    const entityRegistry = di.inject(catalogEntityRegistryInjectable);
+    const activeEntityId = di.inject(activeEntityIdInjectable);
 
     return computed(() => {
-      const entityId = entityRegistry.activeEntity?.getId();
+      const entityId = activeEntityId.get();
 
       if (entityId) {
         return getClusterById(entityId);
