@@ -13,7 +13,7 @@ import type { RemoveDirectory } from "./fs/remove-directory.injectable";
 import { workingDirectoryInjectable } from "./working-directory.injectable";
 import { resolvePathInjectable } from "./path/resolve-path.injectable";
 import { existsInjectable } from "./fs/exists.injectable";
-import { readJsonFileInjectable } from "./fs/read-json-file.injectable";
+import { readJsonFileWithoutErrorHandlingInjectable } from "./fs/read-json-file.injectable";
 import { writeJsonFileInjectable } from "./fs/write-json-file.injectable";
 import { createSymlinkInjectable } from "./fs/create-symlink.injectable";
 import { ensureDirectoryInjectable } from "./fs/ensure-directory.injectable";
@@ -42,7 +42,7 @@ describe("lens-link", () => {
     di.override(workingDirectoryInjectable, () => "/some-directory/some-project");
     di.override(resolvePathInjectable, () => path.posix.resolve);
     di.override(existsInjectable, () => existsMock);
-    di.override(readJsonFileInjectable, () => readJsonFileMock);
+    di.override(readJsonFileWithoutErrorHandlingInjectable, () => readJsonFileMock);
     di.override(writeJsonFileInjectable, () => writeJsonFileMock);
     di.override(createSymlinkInjectable, () => createSymlinkMock);
     di.override(ensureDirectoryInjectable, () => ensureDirectoryMock);
@@ -153,13 +153,120 @@ describe("lens-link", () => {
             ]);
           });
 
-          xit("when any of the reading fails, throws", () => {});
+          it("when any of the reading fails, throws", () => {
+            readJsonFileMock.reject(new Error("some-error"));
 
-          xit("given some of the package is scoped, when all contents resolve", () => {});
+            return expect(actualPromise).rejects.toThrow(
+              'Tried to read file "/some-directory/some-module/package.json", but error was thrown: "some-error"',
+            );
+          });
+
+          describe("given some of the packages are NPM-scoped, when all contents resolve", () => {
+            beforeEach(async () => {
+              existsMock.mockClear();
+
+              await readJsonFileMock.resolveSpecific(([path]) => path === "/some-directory/some-module/package.json", {
+                name: "@some-scope/some-module",
+                files: ["some-build-directory"],
+                main: "some-build-directory/index.js",
+              });
+
+              await readJsonFileMock.resolveSpecific(
+                ([path]) => path === "/some-other-directory/some-other-module/package.json",
+                {
+                  name: "@some-scope/some-other-module",
+                  files: ["some-other-build-directory"],
+                  main: "some-other-build-directory/index.js",
+                },
+              );
+            });
+
+            it("checks for existing Lens link directories using scope as directory", () => {
+              expect(existsMock.mock.calls).toEqual([
+                ["/some-directory/some-project/node_modules/@some-scope/some-module"],
+                ["/some-directory/some-project/node_modules/@some-scope/some-other-module"],
+              ]);
+            });
+
+            describe("given some Lens link directories exist", () => {
+              beforeEach(async () => {
+                await existsMock.resolveSpecific(
+                  ([path]) => path === "/some-directory/some-project/node_modules/@some-scope/some-module",
+                  false,
+                );
+
+                await existsMock.resolveSpecific(
+                  ([path]) => path === "/some-directory/some-project/node_modules/@some-scope/some-other-module",
+                  true,
+                );
+              });
+
+              it("removes the existing Lens link directories", () => {
+                expect(removeDirectoryMock.mock.calls).toEqual([
+                  ["/some-directory/some-project/node_modules/@some-scope/some-other-module"],
+                ]);
+              });
+
+              it("when removing resolves, creates the Lens link directories", async () => {
+                await removeDirectoryMock.resolve();
+
+                expect(ensureDirectoryMock.mock.calls).toEqual([
+                  ["/some-directory/some-project/node_modules/@some-scope/some-module"],
+                  ["/some-directory/some-project/node_modules/@some-scope/some-other-module"],
+                ]);
+              });
+            });
+
+            describe("given Lens link directories does not exist", () => {
+              beforeEach(async () => {
+                await existsMock.resolve(false);
+                await existsMock.resolve(false);
+              });
+
+              it("creates the Lens link directories to scoped directories", () => {
+                expect(ensureDirectoryMock.mock.calls).toEqual([
+                  ["/some-directory/some-project/node_modules/@some-scope/some-module"],
+                  ["/some-directory/some-project/node_modules/@some-scope/some-other-module"],
+                ]);
+              });
+
+              describe("when creation of Lens link directories resolve", () => {
+                beforeEach(async () => {
+                  await ensureDirectoryMock.resolve();
+                  await ensureDirectoryMock.resolve();
+                });
+
+                it("creates the symlinks to scoped directories", () => {
+                  expect(createSymlinkMock.mock.calls).toEqual([
+                    [
+                      "/some-directory/some-module/package.json",
+                      "/some-directory/some-project/node_modules/@some-scope/some-module/package.json",
+                      "file",
+                    ],
+                    [
+                      "/some-directory/some-module/some-build-directory",
+                      "/some-directory/some-project/node_modules/@some-scope/some-module/some-build-directory",
+                      "dir",
+                    ],
+                    [
+                      "/some-other-directory/some-other-module/package.json",
+                      "/some-directory/some-project/node_modules/@some-scope/some-other-module/package.json",
+                      "file",
+                    ],
+                    [
+                      "/some-other-directory/some-other-module/some-other-build-directory",
+                      "/some-directory/some-project/node_modules/@some-scope/some-other-module/some-other-build-directory",
+                      "dir",
+                    ],
+                  ]);
+                });
+              });
+            });
+          });
 
           describe("when all contents resolve", () => {
             beforeEach(async () => {
-              await existsMock.mockClear();
+              existsMock.mockClear();
 
               await readJsonFileMock.resolveSpecific(([path]) => path === "/some-directory/some-module/package.json", {
                 name: "some-module",
