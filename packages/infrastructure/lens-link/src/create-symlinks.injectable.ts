@@ -3,16 +3,20 @@ import { awaitAll } from "./await-all";
 import { getInjectable } from "@ogre-tools/injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { createSymlinkInjectable } from "./fs/create-symlink.injectable";
+import type { PackageJsonAndPath } from "./package-json-and-path";
+import { getSymlinkPathsInjectable } from "./get-symlink-paths.injectable";
 
-export const createSymLinksInjectable = getInjectable({
-  id: "create-sym-links",
+export const createSymlinksInjectable = getInjectable({
+  id: "create-symlinks",
 
   instantiate: (di) => {
+    const getSymlinkPaths = di.inject(getSymlinkPathsInjectable);
     const createSymlink = di.inject(createSymlinkInjectable);
 
-    return async (symlinkPaths: { target: string; source: string; type: "file" | "dir" }[]) => {
+    return async (packageJsons: PackageJsonAndPath[]) => {
       await pipeline(
-        symlinkPaths,
+        packageJsons,
+        getSymlinkPaths,
         map(({ target, source, type }) => createSymlink(target, source, type)),
         awaitAll,
       );
