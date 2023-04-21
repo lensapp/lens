@@ -19,6 +19,8 @@ import { createSymlinkInjectable } from "./fs/create-symlink.injectable";
 import { ensureDirectoryInjectable } from "./fs/ensure-directory.injectable";
 import { removeDirectoryInjectable } from "./fs/remove-directory.injectable";
 import { getDi } from "./get-di";
+import type { Glob } from "./fs/glob.injectable";
+import { globInjectable } from "./fs/glob.injectable";
 
 describe("lens-link", () => {
   let lensLink: LensLink;
@@ -28,6 +30,7 @@ describe("lens-link", () => {
   let createSymlinkMock: AsyncFnMock<CreateSymlink>;
   let ensureDirectoryMock: AsyncFnMock<EnsureDirectory>;
   let removeDirectoryMock: AsyncFnMock<RemoveDirectory>;
+  let globMock: AsyncFnMock<Glob>;
 
   beforeEach(() => {
     existsMock = asyncFn();
@@ -36,6 +39,7 @@ describe("lens-link", () => {
     createSymlinkMock = asyncFn();
     ensureDirectoryMock = asyncFn();
     removeDirectoryMock = asyncFn();
+    globMock = asyncFn();
 
     const di = getDi();
 
@@ -47,6 +51,7 @@ describe("lens-link", () => {
     di.override(createSymlinkInjectable, () => createSymlinkMock);
     di.override(ensureDirectoryInjectable, () => ensureDirectoryMock);
     di.override(removeDirectoryInjectable, () => removeDirectoryMock);
+    di.override(globInjectable, () => globMock);
 
     lensLink = di.inject(lensLinkInjectable);
   });
@@ -264,6 +269,112 @@ describe("lens-link", () => {
             });
           });
 
+          describe("given some of the packages have globs as files, when all contents resolve", () => {
+            beforeEach(async () => {
+              existsMock.mockClear();
+
+              await readJsonFileMock.resolveSpecific(([path]) => path === "/some-directory/some-module/package.json", {
+                name: "@some-scope/some-module",
+                files: [
+                  "some-build-directory-with-asterisk/*",
+                  "some-build-directory-with-wild-card/**",
+                  "some-build-directory-with-wild-card-before-asterisk/**/*",
+                  "some-build-directory-with-asterisk-and-file-suffix/*.some-file-suffix",
+                  "some-build-directory-with-file-name-and-asterisk/some-filename.*",
+                  "some-build-directory-with-wild-card-and-asterisk-and-file-suffix/**/*.some-file-suffix",
+                ],
+                main: "some-build-directory/index.js",
+              });
+
+              await readJsonFileMock.resolveSpecific(
+                ([path]) => path === "/some-other-directory/some-other-module/package.json",
+                {
+                  name: "@some-scope/some-other-module",
+                  files: [],
+                  main: "some-other-build-directory/index.js",
+                },
+              );
+            });
+
+            describe("given Lens link directories are handled", () => {
+              beforeEach(async () => {
+                await existsMock.resolve(false);
+                await existsMock.resolve(false);
+
+                await ensureDirectoryMock.resolve();
+                await ensureDirectoryMock.resolve();
+              });
+
+              it("does not create symlinks yet", () => {
+                expect(createSymlinkMock).not.toHaveBeenCalled();
+              });
+
+              it("calls for glob of file-strings for which glob cannot be avoided", () => {
+                expect(globMock.mock.calls).toEqual([
+                  [
+                    [
+                      "some-build-directory-with-asterisk-and-file-suffix/*.some-file-suffix",
+                      "some-build-directory-with-file-name-and-asterisk/some-filename.*",
+                      "some-build-directory-with-wild-card-and-asterisk-and-file-suffix/**/*.some-file-suffix",
+                    ],
+
+                    { cwd: "/some-directory/some-module" },
+                  ],
+                ]);
+              });
+
+              it("doesn't create symlinks yet", () => {
+                expect(createSymlinkMock).not.toHaveBeenCalled();
+              });
+
+              describe("when globbing resolves", () => {
+                beforeEach(async () => {
+                  await globMock.resolve(["/some-directory/some-module/some-file-from-glob.txt"]);
+                });
+
+                it("creates the symlinks to files and directories that were both globbed and that avoided globbing", () => {
+                  expect(createSymlinkMock.mock.calls).toEqual([
+                    [
+                      "/some-directory/some-module/package.json",
+                      "/some-directory/some-project/node_modules/@some-scope/some-module/package.json",
+                      "file",
+                    ],
+
+                    [
+                      "/some-directory/some-module/some-file-from-glob.txt",
+                      "/some-directory/some-module/some-file-from-glob.txt",
+                      "file",
+                    ],
+
+                    [
+                      "/some-directory/some-module/some-build-directory-with-asterisk",
+                      "/some-directory/some-project/node_modules/@some-scope/some-module/some-build-directory-with-asterisk",
+                      "dir",
+                    ],
+
+                    [
+                      "/some-directory/some-module/some-build-directory-with-wild-card",
+                      "/some-directory/some-project/node_modules/@some-scope/some-module/some-build-directory-with-wild-card",
+                      "dir",
+                    ],
+
+                    [
+                      "/some-directory/some-module/some-build-directory-with-wild-card-before-asterisk",
+                      "/some-directory/some-project/node_modules/@some-scope/some-module/some-build-directory-with-wild-card-before-asterisk",
+                      "dir",
+                    ],
+
+                    [
+                      "/some-other-directory/some-other-module/package.json",
+                      "/some-directory/some-project/node_modules/@some-scope/some-other-module/package.json",
+                      "file",
+                    ],
+                  ]);
+                });
+              });
+            });
+          });
+
           describe("when all contents resolve", () => {
             beforeEach(async () => {
               existsMock.mockClear();
@@ -374,6 +485,27 @@ describe("lens-link", () => {
                       "dir",
                     ],
                   ]);
+                });
+
+                it("given all symlink creations have not resolved, does not resolve yet", async () => {
+                  createSymlinkMock.resolve();
+                  createSymlinkMock.resolve();
+                  createSymlinkMock.resolve();
+
+                  const promiseStatus = await getPromiseStatus(actualPromise);
+
+                  expect(promiseStatus.fulfilled).toBe(false);
+                });
+
+                it("when symlink creations resolve, ends script", async () => {
+                  createSymlinkMock.resolve();
+                  createSymlinkMock.resolve();
+                  createSymlinkMock.resolve();
+                  createSymlinkMock.resolve();
+
+                  const promiseStatus = await getPromiseStatus(actualPromise);
+
+                  expect(promiseStatus.fulfilled).toBe(true);
                 });
               });
             });

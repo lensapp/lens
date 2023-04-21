@@ -1,6 +1,7 @@
+import { partition } from "lodash/fp";
 import { dirname } from "path";
 import { pipeline } from "@ogre-tools/fp";
-import { flatMap, map } from "lodash/fp";
+import { flatten, map } from "lodash/fp";
 import { removeExistingLensLinkDirectoriesInjectable } from "./remove-existing-lens-link-directories.injectable";
 import { createLensLinkDirectoriesInjectable } from "./create-lens-link-directories.injectable";
 import { getMissingPackageJsonsInjectable } from "./get-missing-package-jsons.injectable";
@@ -13,8 +14,15 @@ import { existsInjectable } from "./fs/exists.injectable";
 import { writeJsonFileInjectable } from "./fs/write-json-file.injectable";
 import { createSymlinkInjectable } from "./fs/create-symlink.injectable";
 import { workingDirectoryInjectable } from "./working-directory.injectable";
+import { globInjectable } from "./fs/glob.injectable";
+import { awaitAll } from "./await-all";
 
 export type LensLink = () => Promise<void>;
+
+const shouldBeGlobbed = (possibleGlobString: string) => possibleGlobString.includes("*");
+
+const simplifyGlobbing = new RegExp("(\\/\\*\\/\\*\\*|\\/\\*\\*|\\/\\*\\*\\/\\*|\\/\\*)$");
+const toAvoidableGlobStrings = (reference: string) => reference.replace(simplifyGlobbing, "");
 
 const lensLinkInjectable = getInjectable({
   id: "lens-link",
@@ -31,6 +39,7 @@ const lensLinkInjectable = getInjectable({
     const writeJsonFile = di.inject(writeJsonFileInjectable);
     const createSymlink = di.inject(createSymlinkInjectable);
     const workingDirectory = di.inject(workingDirectoryInjectable);
+    const glob = di.inject(globInjectable);
 
     return async () => {
       const configFilePath = resolvePath(workingDirectory, ".lens-links.json");
@@ -61,11 +70,23 @@ const lensLinkInjectable = getInjectable({
 
       await createLensLinkDirectories(packageJsons);
 
-      pipeline(
+      await pipeline(
         packageJsons,
 
-        flatMap(({ packageJsonPath, content }) => {
+        map(async ({ packageJsonPath, content }) => {
           const lensLinkDirectory = getLensLinkDirectory(content.name);
+
+          const fileStrings = content.files.map(toAvoidableGlobStrings);
+
+          const [toBeGlobbed, toNotBeGlobbed] = partition(shouldBeGlobbed)(fileStrings);
+
+          const moduleDirectory = dirname(packageJsonPath);
+
+          let globbeds: string[] = [];
+
+          if (toBeGlobbed.length) {
+            globbeds = await glob(toBeGlobbed, { cwd: moduleDirectory });
+          }
 
           return [
             {
@@ -74,15 +95,27 @@ const lensLinkInjectable = getInjectable({
               type: "file" as const,
             },
 
-            ...content.files.map((x) => ({
-              target: resolvePath(dirname(packageJsonPath), x),
-              source: resolvePath(lensLinkDirectory, x),
+            ...globbeds.map((fileString) => ({
+              target: resolvePath(moduleDirectory, fileString),
+              source: resolvePath(lensLinkDirectory, fileString),
+              type: "file" as const,
+            })),
+
+            ...toNotBeGlobbed.map((fileOrDirectory) => ({
+              target: resolvePath(moduleDirectory, fileOrDirectory),
+              source: resolvePath(lensLinkDirectory, fileOrDirectory),
               type: "dir" as const,
             })),
           ];
         }),
 
+        awaitAll,
+
+        flatten,
+
         map(({ target, source, type }) => createSymlink(target, source, type)),
+
+        awaitAll,
       );
     };
   },
