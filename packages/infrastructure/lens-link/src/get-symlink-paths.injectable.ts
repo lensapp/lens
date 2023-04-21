@@ -7,6 +7,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { getLensLinkDirectoryInjectable } from "./get-lens-link-directory.injectable";
 import path from "path";
+import { isFileOrDirectoryInjectable } from "./fs/is-file-or-directory.injectable";
 
 const shouldBeGlobbed = (possibleGlobString: string) => possibleGlobString.includes("*");
 const simplifyGlobbing = new RegExp("(\\/\\*\\/\\*\\*|\\/\\*\\*|\\/\\*\\*\\/\\*|\\/\\*)$");
@@ -19,6 +20,7 @@ export const getSymlinkPathsInjectable = getInjectable({
     const glob = di.inject(globInjectable);
     const resolvePath = di.inject(resolvePathInjectable);
     const getLensLinkDirectory = di.inject(getLensLinkDirectoryInjectable);
+    const isFileOrDirectory = di.inject(isFileOrDirectoryInjectable);
 
     return async (packageJsons: PackageJsonAndPath[]) => {
       return pipeline(
@@ -39,6 +41,22 @@ export const getSymlinkPathsInjectable = getInjectable({
             globbeds = await glob(toBeGlobbed, { cwd: moduleDirectory });
           }
 
+          const notGlobbedFilesOrDirectories = await pipeline(
+            toNotBeGlobbed,
+
+            map(async (fileOrDirectory) => {
+              const target = resolvePath(moduleDirectory, fileOrDirectory);
+
+              return {
+                target,
+                source: resolvePath(lensLinkDirectory, fileOrDirectory),
+                type: await isFileOrDirectory(target),
+              };
+            }),
+
+            awaitAll,
+          );
+
           return [
             {
               target: packageJsonPath,
@@ -52,11 +70,7 @@ export const getSymlinkPathsInjectable = getInjectable({
               type: "file" as const,
             })),
 
-            ...toNotBeGlobbed.map((fileOrDirectory) => ({
-              target: resolvePath(moduleDirectory, fileOrDirectory),
-              source: resolvePath(lensLinkDirectory, fileOrDirectory),
-              type: "dir" as const,
-            })),
+            ...notGlobbedFilesOrDirectories,
           ];
         }),
 
