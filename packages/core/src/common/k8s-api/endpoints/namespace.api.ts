@@ -34,7 +34,7 @@ export class Namespace extends KubeObject<
     return this.status?.phase ?? "-";
   }
 
-  isSubnamespace() {  
+  isSubnamespace() {
     return this.getAnnotations().find(annotation => annotation.includes("hnc.x-k8s.io/subnamespace-of"));
   }
 
@@ -43,9 +43,7 @@ export class Namespace extends KubeObject<
   }
 
   isControlledByHNC() {
-    const hierarchicalNamesaceControllerLabel = "hnc.x-k8s.io/included-namespace=true";
-
-    return this.getLabels().find(label => label === hierarchicalNamesaceControllerLabel);
+    return this.getLabels().includes("hnc.x-k8s.io/included-namespace=true");
   }
 }
 
