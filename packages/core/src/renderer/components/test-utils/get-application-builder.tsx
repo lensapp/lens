@@ -77,18 +77,33 @@ type WindowDiCallback = (container: { windowDi: DiContainer }) => void | Promise
 
 type LensWindowWithHelpers = LensWindow & { rendered: RenderResult; di: DiContainer };
 
-const createNamespacesFor = (namespaces: Set<string>): Namespace[] => (
-  Array.from(namespaces, (namespace) => new Namespace({
-    apiVersion: "v1",
-    kind: "Namespace",
-    metadata: {
-      name: namespace,
-      resourceVersion: "1",
-      selfLink: `/api/v1/namespaces/${namespace}`,
-      uid: `namespace-${namespace}`,
+const createNamespace = (namespace: string) => new Namespace({
+  apiVersion: "v1",
+  kind: "Namespace",
+  metadata: {
+    name: namespace,
+    resourceVersion: "1",
+    selfLink: `/api/v1/namespaces/${namespace}`,
+    uid: `namespace-${namespace}`,
+  },
+});
+
+const createSubNamespace = (namespace: string, parent: Namespace) => new Namespace({
+  apiVersion: "v1",
+  kind: "Namespace",
+  metadata: {
+    name: namespace,
+    resourceVersion: "1",
+    selfLink: `/api/v1/namespaces/${namespace}`,
+    uid: `namespace-${namespace}`,
+    annotations: {
+      "hnc.x-k8s.io/subnamespace-of": parent.getName(),
     },
-  }))
-);
+    labels: {
+      [`${parent.getName()}.tree.hnc.x-k8s.io/depth`]: "1",
+    },
+  },
+});
 
 export interface ApplicationBuilder {
   mainDi: DiContainer;
@@ -144,6 +159,7 @@ export interface ApplicationBuilder {
   };
   namespaces: {
     add: (namespace: string) => void;
+    addSubNamespace: (namespace: string, parent: string) => void;
     select: (namespace: string) => void;
   };
   helmCharts: {
@@ -303,7 +319,6 @@ export const getApplicationBuilder = () => {
 
   let applicationHasStarted = false;
 
-  const namespaces = observable.set<string>();
   const namespaceItems = observable.array<Namespace>();
   const selectedNamespaces = observable.set<string>();
   const startApplication = mainDi.inject(startApplicationInjectionToken);
@@ -385,8 +400,14 @@ export const getApplicationBuilder = () => {
     },
     namespaces: {
       add: action((namespace) => {
-        namespaces.add(namespace);
-        namespaceItems.replace(createNamespacesFor(namespaces));
+        namespaceItems.push(createNamespace(namespace));
+      }),
+      addSubNamespace: action((namespace, parent) => {
+        const parentNamespace = namespaceItems.find((n) => n.getName() === parent);
+
+        assert(parentNamespace, `Cannot find namespace with name="${parent}"`);
+
+        namespaceItems.push(createSubNamespace(namespace, parentNamespace));
       }),
       select: action((namespace) => {
         const selectedNamespacesStorage = builder.applicationWindow.only.di.inject(selectedNamespacesStorageInjectable);
@@ -545,7 +566,7 @@ export const getApplicationBuilder = () => {
             return Array.from(selectedNamespaces);
           },
           get allowedNamespaces() {
-            return Array.from(namespaces);
+            return Array.from(namespaceItems, n => n.getName());
           },
           contextItems: namespaceItems,
           api: windowDi.inject(namespaceApiInjectable),
@@ -556,6 +577,7 @@ export const getApplicationBuilder = () => {
           pickOnlySelected: () => [],
           isSelectedAll: () => false,
           getTotalCount: () => namespaceItems.length,
+          isSelected: () => false,
         } as Partial<NamespaceStore> as NamespaceStore));
       });
 
