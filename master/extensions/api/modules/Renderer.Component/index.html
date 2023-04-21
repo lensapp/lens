@@ -857,6 +857,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#kubeitemliststore" class="md-nav__link">
+    KubeItemListStore
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#legacyautoconvertedoptions" class="md-nav__link">
     LegacyAutoConvertedOptions
   </a>
@@ -1565,6 +1572,7 @@
 <li><a href="./#inputvalidation">InputValidation</a></li>
 <li><a href="./#inputvalidationresult">InputValidationResult</a></li>
 <li><a href="./#inputvalidator">InputValidator</a></li>
+<li><a href="./#kubeitemliststore">KubeItemListStore</a></li>
 <li><a href="./#legacyautoconvertedoptions">LegacyAutoConvertedOptions</a></li>
 <li><a href="./#monacocustomtheme">MonacoCustomTheme</a></li>
 <li><a href="./#monacoeditorid">MonacoEditorId</a></li>
@@ -1769,6 +1777,24 @@
 </tbody>
 </table>
 <hr />
+<h3 id="kubeitemliststore">KubeItemListStore<a class="headerlink" href="#kubeitemliststore" title="Permanent link">#</a></h3>
+<p>Ƭ <strong>KubeItemListStore</strong>&lt;<code>K</code>>: <code>ItemListStore</code>&lt;<code>K</code>, <code>false</code>> &amp; <code>SubscribableStore</code> &amp; { <code>contextItems</code>: <code>K</code>[] ; <code>getByPath</code>: (<code>path</code>: <code>string</code>) =&gt; <code>K</code> | <code>undefined</code>  }</p>
+<h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>K</code></td>
+<td align="left">extends <a href="../../classes/Main.K8sApi.KubeObject/"><code>KubeObject</code></a></td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h3 id="legacyautoconvertedoptions">LegacyAutoConvertedOptions<a class="headerlink" href="#legacyautoconvertedoptions" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>LegacyAutoConvertedOptions</strong>: <code>string</code>[]</p>
 <p><strong><code>Deprecated</code></strong></p>
@@ -1858,7 +1884,7 @@
 <hr />
 <h3 id="tablerowelem">TableRowElem<a class="headerlink" href="#tablerowelem" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableRowElem</strong>&lt;<code>Item</code>>: <code>React.ReactElement</code>&lt;<a href="../../interfaces/Renderer.Component.TableRowProps/"><code>TableRowProps</code></a>&lt;<code>Item</code>>></p>
-<h4 id="type-parameters_3">Type parameters<a class="headerlink" href="#type-parameters_3" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_4">Type parameters<a class="headerlink" href="#type-parameters_4" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1877,7 +1903,7 @@
 <hr />
 <h3 id="tablesortcallback">TableSortCallback<a class="headerlink" href="#tablesortcallback" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableSortCallback</strong>&lt;<code>Item</code>>: (<code>data</code>: <code>Item</code>) =&gt; <code>undefined</code> | <code>string</code> | <code>number</code> | (<code>string</code> | <code>number</code>)[]</p>
-<h4 id="type-parameters_4">Type parameters<a class="headerlink" href="#type-parameters_4" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_5">Type parameters<a class="headerlink" href="#type-parameters_5" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -1912,7 +1938,7 @@
 <hr />
 <h3 id="tablesortcallbacks">TableSortCallbacks<a class="headerlink" href="#tablesortcallbacks" title="Permanent link">#</a></h3>
 <p>Ƭ <strong>TableSortCallbacks</strong>&lt;<code>Item</code>>: <code>Record</code>&lt;<code>string</code>, <a href="./#tablesortcallback"><code>TableSortCallback</code></a>&lt;<code>Item</code>>></p>
-<h4 id="type-parameters_5">Type parameters<a class="headerlink" href="#type-parameters_5" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_6">Type parameters<a class="headerlink" href="#type-parameters_6" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2383,7 +2409,7 @@
 <hr />
 <h3 id="kubeobjectlistlayout">KubeObjectListLayout<a class="headerlink" href="#kubeobjectlistlayout" title="Permanent link">#</a></h3>
 <p>▸ <strong>KubeObjectListLayout</strong>&lt;<code>K</code>, <code>A</code>, <code>D</code>>(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
-<h4 id="type-parameters_6">Type parameters<a class="headerlink" href="#type-parameters_6" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_7">Type parameters<a class="headerlink" href="#type-parameters_7" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2426,7 +2452,7 @@
 <hr />
 <h3 id="kubeobjectmenu">KubeObjectMenu<a class="headerlink" href="#kubeobjectmenu" title="Permanent link">#</a></h3>
 <p>▸ <strong>KubeObjectMenu</strong>&lt;<code>T</code>>(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
-<h4 id="type-parameters_7">Type parameters<a class="headerlink" href="#type-parameters_7" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_8">Type parameters<a class="headerlink" href="#type-parameters_8" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2602,7 +2628,7 @@
 <hr />
 <h3 id="namespaceselect">NamespaceSelect<a class="headerlink" href="#namespaceselect" title="Permanent link">#</a></h3>
 <p>▸ <strong>NamespaceSelect</strong>&lt;<code>IsMulti</code>>(<code>props</code>): <code>JSX.Element</code></p>
-<h4 id="type-parameters_8">Type parameters<a class="headerlink" href="#type-parameters_8" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_9">Type parameters<a class="headerlink" href="#type-parameters_9" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2714,7 +2740,7 @@
 <hr />
 <h3 id="radio">Radio<a class="headerlink" href="#radio" title="Permanent link">#</a></h3>
 <p>▸ <strong>Radio</strong>&lt;<code>T</code>>(<code>«destructured»</code>): <code>JSX.Element</code></p>
-<h4 id="type-parameters_9">Type parameters<a class="headerlink" href="#type-parameters_9" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_10">Type parameters<a class="headerlink" href="#type-parameters_10" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2747,7 +2773,7 @@
 <hr />
 <h3 id="radiogroup">RadioGroup<a class="headerlink" href="#radiogroup" title="Permanent link">#</a></h3>
 <p>▸ <strong>RadioGroup</strong>&lt;<code>T</code>>(<code>«destructured»</code>): <code>JSX.Element</code></p>
-<h4 id="type-parameters_10">Type parameters<a class="headerlink" href="#type-parameters_10" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_11">Type parameters<a class="headerlink" href="#type-parameters_11" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2780,7 +2806,7 @@
 <hr />
 <h3 id="resourcemetrics">ResourceMetrics<a class="headerlink" href="#resourcemetrics" title="Permanent link">#</a></h3>
 <p>▸ <strong>ResourceMetrics</strong>&lt;<code>Keys</code>>(<code>«destructured»</code>): <code>Element</code></p>
-<h4 id="type-parameters_11">Type parameters<a class="headerlink" href="#type-parameters_11" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_12">Type parameters<a class="headerlink" href="#type-parameters_12" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2839,7 +2865,7 @@
 <hr />
 <h3 id="select">Select<a class="headerlink" href="#select" title="Permanent link">#</a></h3>
 <p>▸ <strong>Select</strong>&lt;<code>Value</code>, <code>Option</code>, <code>IsMulti</code>, <code>Group</code>>(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
-<h4 id="type-parameters_12">Type parameters<a class="headerlink" href="#type-parameters_12" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_13">Type parameters<a class="headerlink" href="#type-parameters_13" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -2996,7 +3022,7 @@
 <hr />
 <h3 id="table">Table<a class="headerlink" href="#table" title="Permanent link">#</a></h3>
 <p>▸ <strong>Table</strong>&lt;<code>Item</code>>(<code>props</code>): <code>ReactElement</code>&lt;<code>any</code>, <code>string</code> | <code>JSXElementConstructor</code>&lt;<code>any</code>>></p>
-<h4 id="type-parameters_13">Type parameters<a class="headerlink" href="#type-parameters_13" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_14">Type parameters<a class="headerlink" href="#type-parameters_14" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -3161,7 +3187,7 @@
 <hr />
 <h3 id="onmultiselectfor">onMultiSelectFor<a class="headerlink" href="#onmultiselectfor" title="Permanent link">#</a></h3>
 <p>▸ <strong>onMultiSelectFor</strong>&lt;<code>Value</code>, <code>Option</code>, <code>Group</code>>(<code>collection</code>): <a href="../../interfaces/Renderer.Component.SelectProps/"><code>SelectProps</code></a>&lt;<code>Value</code>, <code>Option</code>, <code>true</code>, <code>Group</code>>[<code>"onChange"</code>]</p>
-<h4 id="type-parameters_14">Type parameters<a class="headerlink" href="#type-parameters_14" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_15">Type parameters<a class="headerlink" href="#type-parameters_15" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
@@ -3264,7 +3290,7 @@ valid if one of the input validators matches the input</p>
 <hr />
 <h3 id="withtooltip">withTooltip<a class="headerlink" href="#withtooltip" title="Permanent link">#</a></h3>
 <p>▸ <strong>withTooltip</strong>&lt;<code>TargetProps</code>>(<code>Target</code>): <code>React.FunctionComponent</code>&lt;<code>TargetProps</code> &amp; <a href="../../interfaces/Renderer.Component.TooltipDecoratorProps/"><code>TooltipDecoratorProps</code></a>></p>
-<h4 id="type-parameters_15">Type parameters<a class="headerlink" href="#type-parameters_15" title="Permanent link">#</a></h4>
+<h4 id="type-parameters_16">Type parameters<a class="headerlink" href="#type-parameters_16" title="Permanent link">#</a></h4>
 <table>
 <thead>
 <tr>
