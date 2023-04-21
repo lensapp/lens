@@ -162,7 +162,7 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
         <MenuItem
           key={`context-menu-item-${index}`}
           onClick={() => item.onClick(object)}
-          data-testid={`menu-action-${item.title.toLowerCase().replace(/\s+/, "-")}`}
+          data-testid={`menu-action-${item.title.toLowerCase().replace(/\s+/, "-")}-for-${object.selfLink}`}
         >
           <Icon
             {...item.icon}
@@ -191,6 +191,7 @@ class NonInjectedKubeObjectMenu<Kube extends KubeObject> extends React.Component
     return (
       <MenuActions
         id={`menu-actions-for-kube-object-menu-for-${object?.getId()}`}
+        data-testid={`menu-actions-for-kube-object-menu-for-${object?.getId()}`}
         className={cssNames("KubeObjectMenu", className)}
         onOpen={object ? () => this.emitOnContextMenuOpen(object) : undefined}
         {...menuProps}
