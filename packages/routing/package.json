@@ -2,7 +2,7 @@
   "name": "@k8slens/routing",
   "private": false,
   "version": "1.0.0-alpha.0",
-  "description": "Highly extendable error-boundary in the Lens.",
+  "description": "Highly extendable routing in the Lens.",
   "type": "commonjs",
   "files": [
     "dist"
