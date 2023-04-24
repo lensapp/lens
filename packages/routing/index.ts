@@ -3,8 +3,4 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import observableHistoryInjectable from "./src/observable-history.injectable";
-
 export * from "./src";
-
-export default observableHistoryInjectable;

@@ -9,8 +9,8 @@ $ npm install @k8slens/routing
 ```
 
 ```typescript
-import observableHistoryInjectable from "@k8slens/routing";
-
+import { observableHistoryInjectable } from "@k8slens/routing";
+import { searchParamsOptions } from "@k8slens/routing";
 ```
 
 ## Extendability

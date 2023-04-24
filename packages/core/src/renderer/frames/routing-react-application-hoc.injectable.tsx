@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { Router } from "react-router";
-import historyInjectable from "@k8slens/routing";
+import { observableHistoryInjectable } from "@k8slens/routing";
 import React from "react";
 
 import {
@@ -15,7 +15,7 @@ const routingReactApplicationHocInjectable = getInjectable({
   id: "routing-react-application-hoc",
 
   instantiate: (di) => {
-    const history = di.inject(historyInjectable);
+    const history = di.inject(observableHistoryInjectable);
 
     return ({ children }) =>
       (

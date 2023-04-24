@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { createMemoryHistory } from "@k8slens/routing";
+import { createMemoryHistory } from "history";
 import { getGlobalOverride } from "@k8slens/test-utils";
-import historyInjectable from "@k8slens/routing";
+import { observableHistoryInjectable } from "@k8slens/routing";
 
-export default getGlobalOverride(historyInjectable, () => createMemoryHistory());
+export default getGlobalOverride(observableHistoryInjectable, () => createMemoryHistory());

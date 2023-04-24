@@ -12,7 +12,7 @@ import { Button } from "@k8slens/button";
 import type { SingleOrMany } from "@k8slens/utilities";
 import type { ObservableHistory } from "mobx-observable-history";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import observableHistoryInjectable from "@k8slens/routing";
+import { observableHistoryInjectable } from "@k8slens/routing";
 
 const issuesTrackerUrl = "https://github.com/lensapp/lens/issues";
 const forumsUrl = "https://forums.k8slens.dev";

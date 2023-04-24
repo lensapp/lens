@@ -12,7 +12,7 @@ import { frontEndRouteInjectionToken } from "../../common/front-end-routing/fron
 import { computed, runInAction } from "mobx";
 import React from "react";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
-import observableHistoryInjectable from "@k8slens/routing";
+import { observableHistoryInjectable } from "@k8slens/routing";
 import { createMemoryHistory } from "history";
 import { createObservableHistory } from "mobx-observable-history";
 import navigateToFrontPageInjectable from "../../common/front-end-routing/navigate-to-front-page.injectable";
