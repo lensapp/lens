@@ -12,7 +12,7 @@ import { DiContextProvider } from "@ogre-tools/injectable-react";
 import { Router } from "react-router";
 import { DefaultProps } from "../../mui-base-theme";
 import { ClusterFrame } from "./cluster-frame";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { historyInjectable } from "@k8slens/routing";
 import { computed } from "mobx";
 import { Cluster } from "../../../common/cluster/cluster";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
@@ -34,7 +34,7 @@ describe("<ClusterFrame />", () => {
     di = getDiForUnitTesting();
     render = () => testingLibraryRender((
       <DiContextProvider value={{ di }}>
-        <Router history={di.inject(observableHistoryInjectable)}>
+        <Router history={di.inject(historyInjectable)}>
           {DefaultProps(ClusterFrame)}
         </Router>
       </DiContextProvider>
