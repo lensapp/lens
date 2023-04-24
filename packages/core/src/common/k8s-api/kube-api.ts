@@ -264,12 +264,16 @@ export class KubeApi<
       allowedUsableVersions,
     } = opts;
 
-    assert(fullApiPathname, "apiBase MUST be provied either via KubeApiOptions.apiBase or KubeApiOptions.objectConstructor.apiBase");
+    assert(fullApiPathname, "apiBase MUST be provided either via KubeApiOptions.apiBase or KubeApiOptions.objectConstructor.apiBase");
     assert(request, "request MUST be provided if not in a cluster page frame context");
 
-    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(fullApiPathname);
+    const parsedApi = parseKubeApi(fullApiPathname);
 
-    assert(kind, "kind MUST be provied either via KubeApiOptions.kind or KubeApiOptions.objectConstructor.kind");
+    assert(parsedApi, "apiBase MUST be a valid kube api pathname");
+
+    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parsedApi;
+
+    assert(kind, "kind MUST be provided either via KubeApiOptions.kind or KubeApiOptions.objectConstructor.kind");
     assert(apiPrefix, "apiBase MUST be parsable as a kubeApi selfLink style string");
 
     this.doCheckPreferredVersion = doCheckPreferredVersion;
@@ -308,8 +312,14 @@ export class KubeApi<
     const apiBases = new Set(rawApiBases);
 
     for (const apiUrl of apiBases) {
+      const parsedApi = parseKubeApi(apiUrl);
+
+      if (!parsedApi) {
+        continue;
+      }
+
       try {
-        const { apiPrefix, apiGroup, resource } = parseKubeApi(apiUrl);
+        const { apiPrefix, apiGroup, resource } = parsedApi;
         const list = await this.request.get(`${apiPrefix}/${apiGroup}`) as KubeApiResourceVersionList;
         const resourceVersions = getOrderedVersions(list, this.allowedUsableVersions?.[apiGroup]);
 
@@ -324,8 +334,8 @@ export class KubeApi<
             };
           }
         }
-      } catch (error) {
-        // Exception is ignored as we can try the next url
+      } catch {
+        // ignore exception to try next url
       }
     }
 

@@ -16,7 +16,6 @@ const showInfoNotificationInjectable = getInjectable({
     return (message, customOpts = {}) =>
       notificationsStore.add({
         status: NotificationStatus.INFO,
-        timeout: 5000,
         message,
         ...customOpts,
       });

@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
-import type { CallForResource } from "./call-for-resource/call-for-resource.injectable";
-import callForResourceInjectable from "./call-for-resource/call-for-resource.injectable";
+import type { RequestKubeResource } from "./request-kube-resource.injectable";
+import requestKubeResourceInjectable from "./request-kube-resource.injectable";
 import { waitUntilDefined } from "@k8slens/utilities";
 import editResourceTabStoreInjectable from "../store.injectable";
 import type { EditingResource, EditResourceTabStore } from "../store";
@@ -12,8 +12,8 @@ import { action, computed, observable, runInAction } from "mobx";
 import type { KubeObject, RawKubeObject } from "../../../../../common/k8s-api/kube-object";
 import yaml from "js-yaml";
 import assert from "assert";
-import type { CallForPatchResource } from "./call-for-patch-resource/call-for-patch-resource.injectable";
-import callForPatchResourceInjectable from "./call-for-patch-resource/call-for-patch-resource.injectable";
+import type { RequestPatchKubeResource } from "./request-patch-kube-resource.injectable";
+import requestPatchKubeResourceInjectable from "./request-patch-kube-resource.injectable";
 import { createPatch } from "rfc6902";
 import type { ShowNotification } from "../../../notifications";
 import showSuccessNotificationInjectable from "../../../notifications/show-success-notification.injectable";
@@ -28,8 +28,8 @@ const editResourceModelInjectable = getInjectable({
     const store = di.inject(editResourceTabStoreInjectable);
 
     const model = new EditResourceModel({
-      callForResource: di.inject(callForResourceInjectable),
-      callForPatchResource: di.inject(callForPatchResourceInjectable),
+      requestKubeResource: di.inject(requestKubeResourceInjectable),
+      requestPatchKubeResource: di.inject(requestPatchKubeResourceInjectable),
       showSuccessNotification: di.inject(showSuccessNotificationInjectable),
       showErrorNotification: di.inject(showErrorNotificationInjectable),
       store,
@@ -50,8 +50,8 @@ const editResourceModelInjectable = getInjectable({
 export default editResourceModelInjectable;
 
 interface Dependencies {
-  callForResource: CallForResource;
-  callForPatchResource: CallForPatchResource;
+  requestKubeResource: RequestKubeResource;
+  requestPatchKubeResource: RequestPatchKubeResource;
   waitForEditingResource: () => Promise<EditingResource>;
   showSuccessNotification: ShowNotification;
   showErrorNotification: ShowNotification;
@@ -59,17 +59,21 @@ interface Dependencies {
   readonly tabId: string;
 }
 
-function getEditSelfLinkFor(object: RawKubeObject): string {
+function getEditSelfLinkFor(object: RawKubeObject): string | undefined {
   const lensVersionLabel = object.metadata.labels?.[EditResourceLabelName];
 
   if (lensVersionLabel) {
-    const { apiVersionWithGroup, ...parsedApi } = parseKubeApi(object.metadata.selfLink);
+    const parsedKubeApi = parseKubeApi(object.metadata.selfLink);
 
-    parsedApi.apiVersion = lensVersionLabel;
+    if (!parsedKubeApi) {
+      return undefined;
+    }
+
+    const { apiVersionWithGroup, ...parsedApi } = parsedKubeApi;
 
     return createKubeApiURL({
       ...parsedApi,
-      apiVersion: `${parsedApi.apiGroup}/${parsedApi.apiVersion}`,
+      apiVersion: lensVersionLabel,
     });
   }
 
@@ -130,7 +134,7 @@ export class EditResourceModel {
   load = async (): Promise<void> => {
     await this.dependencies.waitForEditingResource();
 
-    let result = await this.dependencies.callForResource(this.selfLink);
+    let result = await this.dependencies.requestKubeResource(this.selfLink);
 
     if (!result.callWasSuccessful) {
       return void this.dependencies.showErrorNotification(`Loading resource failed: ${result.error}`);
@@ -139,9 +143,13 @@ export class EditResourceModel {
     if (result?.response?.metadata.labels?.[EditResourceLabelName]) {
       const parsed = parseKubeApi(this.selfLink);
 
+      if (!parsed) {
+        return void this.dependencies.showErrorNotification(`Object's selfLink is invalid: "${this.selfLink}"`);
+      }
+
       parsed.apiVersion = result.response.metadata.labels[EditResourceLabelName];
 
-      result = await this.dependencies.callForResource(createKubeApiURL(parsed));
+      result = await this.dependencies.requestKubeResource(createKubeApiURL(parsed));
     }
 
     if (!result.callWasSuccessful) {
@@ -186,7 +194,18 @@ export class EditResourceModel {
 
     const patches = createPatch(firstVersion, currentVersion);
     const selfLink = getEditSelfLinkFor(currentVersion);
-    const result = await this.dependencies.callForPatchResource(this.resource, patches);
+
+    if (!selfLink) {
+      this.dependencies.showErrorNotification((
+        <p>
+          {`Cannot save resource, unknown selfLink: "${currentVersion.metadata.selfLink}"`}
+        </p>
+      ));
+
+      return null;
+    }
+
+    const result = await this.dependencies.requestPatchKubeResource(selfLink, patches);
 
     if (!result.callWasSuccessful) {
       this.dependencies.showErrorNotification((
