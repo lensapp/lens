@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@ogre-tools/injectable": "^15.3.1",
-    "@ogre-tools/injectable-react": "12.0.1",
+    "@ogre-tools/injectable-react": "^15.3.0",
     "history": "^4.10.1",
     "mobx-observable-history": "^2.0.3"
   },
