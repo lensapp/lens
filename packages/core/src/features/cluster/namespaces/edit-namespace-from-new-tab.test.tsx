@@ -25,13 +25,16 @@ import apiKubePatchInjectable from "../../../renderer/k8s/api-kube-patch.injecta
 import apiKubeGetInjectable from "../../../renderer/k8s/api-kube-get.injectable";
 import type { KubeJsonApiData } from "../../../common/k8s-api/kube-json-api";
 import type { BaseKubeJsonApiObjectMetadata, KubeObjectScope } from "../../../common/k8s-api/kube-object";
+import { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
+import type { ShowNotification } from "../../../renderer/components/notifications";
+import React from "react";
 
 describe("cluster/namespaces - edit namespace from new tab", () => {
   let builder: ApplicationBuilder;
   let apiKubePatchMock: AsyncFnMock<ApiKubePatch>;
   let apiKubeGetMock: AsyncFnMock<ApiKubeGet>;
-  let showSuccessNotificationMock: jest.Mock;
-  let showErrorNotificationMock: jest.Mock;
+  let showSuccessNotificationMock: jest.MockedFunction<ShowNotification>;
+  let showErrorNotificationMock: jest.MockedFunction<ShowNotification>;
 
   beforeEach(() => {
     builder = getApplicationBuilder();
@@ -416,6 +419,57 @@ metadata:
                   expect(
                     rendered.getByTestId("dock-tab-for-some-first-tab-id"),
                   ).toBeInTheDocument();
+                });
+              });
+
+              describe("when saving failings with a JsonApiError", () => {
+                beforeEach(async () => {
+                  await apiKubePatchMock.reject(new JsonApiErrorParsed(
+                    {
+                      kind: "Status",
+                      apiVersion: "v1",
+                      metadata: {},
+                      status: "Failure",
+                      message: "PodDisruptionBudget.policy \"frontend-pdb\" is invalid: spec.minAvailable: Invalid value: -10: must be greater than or equal to 0",
+                      reason: "Invalid",
+                      details: {
+                        name: "frontend-pdb",
+                        group: "policy",
+                        kind: "PodDisruptionBudget",
+                        causes: [
+                          {
+                            reason: "FieldValueInvalid",
+                            message: "Invalid value: -10: must be greater than or equal to 0",
+                            field: "spec.minAvailable",
+                          },
+                        ],
+                      },
+                      code: 422,
+                    },
+                    [
+                      "PodDisruptionBudget.policy \"frontend-pdb\" is invalid: spec.minAvailable: Invalid value: -10: must be greater than or equal to 0",
+                    ],
+                  ));
+                });
+
+                it("renders", () => {
+                  expect(rendered.baseElement).toMatchSnapshot();
+                });
+
+                it("does not close the dock tab", () => {
+                  expect(
+                    rendered.getByTestId("dock-tab-for-some-first-tab-id"),
+                  ).toBeInTheDocument();
+                });
+
+                it("shows an error notification with a condensed message", () => {
+                  expect(showErrorNotificationMock).toBeCalledWith(
+                    <p>
+                      {"Failed to save resource:"}
+                      {" "}
+                      {'PodDisruptionBudget.policy "frontend-pdb" is invalid: spec.minAvailable: Invalid value: -10: must be greater than or equal to 0'}
+                    </p>,
+                  );
                 });
               });
             });
