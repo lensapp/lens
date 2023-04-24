@@ -1,5 +1,5 @@
 {
-  "name": "@k8slens/error-boundary",
+  "name": "@k8slens/routing",
   "private": false,
   "version": "1.0.0-alpha.0",
   "description": "Highly extendable error-boundary in the Lens.",
@@ -30,14 +30,11 @@
   },
   "dependencies": {
     "@ogre-tools/injectable": "^15.3.1",
-    "@ogre-tools/injectable-react": "12.0.1",
+    "@ogre-tools/injectable-react": "^15.3.0",
     "history": "^4.10.1",
     "mobx-observable-history": "^2.0.3"
   },
   "peerDependencies": {
-    "@k8slens/button": "^1.0.0-alpha.1",
-    "@k8slens/utilities": "^1.0.0-alpha.1",
-    "@k8slens/routing": "^1.0.0-alpha.0",
     "auto-bind": "^4.0.0",
     "lodash": "^4.17.21",
     "mobx": "^6.8.0",
