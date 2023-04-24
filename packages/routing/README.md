@@ -1,4 +1,4 @@
-# @k8slens/error-boundary
+# @k8slens/routing
 
 This package contains stuff related to creating Lens-applications. 
 
