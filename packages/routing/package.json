@@ -45,6 +45,6 @@
     "@k8slens/eslint-config": "6.5.0-alpha.1",
     "@k8slens/react-testing-library-discovery": "^1.0.0-alpha.0",
     "@testing-library/react": "^12.1.5",
-    "@testing-library/user-event": "^12.8.3"
+    "@testing-library/user-event": "^13.5.0"
   }
 }
