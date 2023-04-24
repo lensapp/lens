@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "chalk": "^5.2.0",
-    "inquirer": "^9.1.4",
+    "inquirer": "^9.2.0",
     "semver": "^7.3.8"
   }
 }
