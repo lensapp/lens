@@ -8,8 +8,8 @@ import type { ApplicationBuilder } from "../../../renderer/components/test-utils
 import { getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
-import type { CallForResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
-import callForResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/call-for-resource/call-for-resource.injectable";
+import type { RequestKubeResource } from "../../../renderer/components/dock/edit-resource/edit-resource-model/request-kube-resource.injectable";
+import requestKubeResourceInjectable from "../../../renderer/components/dock/edit-resource/edit-resource-model/request-kube-resource.injectable";
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 import { TabKind } from "../../../renderer/components/dock/dock/store";
@@ -17,14 +17,14 @@ import { Namespace } from "../../../common/k8s-api/endpoints";
 
 describe("cluster/namespaces - edit namespaces from previously opened tab", () => {
   let builder: ApplicationBuilder;
-  let callForNamespaceMock: AsyncFnMock<CallForResource>;
+  let requestKubeResourceMock: AsyncFnMock<RequestKubeResource>;
 
   beforeEach(() => {
     builder = getApplicationBuilder();
 
     builder.setEnvironmentToClusterFrame();
 
-    callForNamespaceMock = asyncFn();
+    requestKubeResourceMock = asyncFn();
 
     builder.beforeWindowStart(({ windowDi }) => {
       windowDi.override(
@@ -32,7 +32,7 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
         () => "/some-directory-for-lens-local-storage",
       );
 
-      windowDi.override(callForResourceInjectable, () => callForNamespaceMock);
+      windowDi.override(requestKubeResourceInjectable, () => requestKubeResourceMock);
     });
 
     builder.afterWindowStart(() => {
@@ -97,7 +97,7 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
     });
 
     it("calls for namespace", () => {
-      expect(callForNamespaceMock).toHaveBeenCalledWith(
+      expect(requestKubeResourceMock).toHaveBeenCalledWith(
         "/apis/some-api-version/namespaces/some-uid",
       );
     });
@@ -122,7 +122,7 @@ describe("cluster/namespaces - edit namespaces from previously opened tab", () =
 
         // TODO: Figure out why act is needed here. In CI it works without it.
         await act(async () => {
-          await callForNamespaceMock.resolve({
+          await requestKubeResourceMock.resolve({
             callWasSuccessful: true,
             response: someNamespace,
           });

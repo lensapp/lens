@@ -22,16 +22,16 @@ export interface IKubeApiParsed extends IKubeApiLinkRef {
   apiVersionWithGroup: string;
 }
 
-export function parseKubeApi(path: string): IKubeApiParsed {
+export function parseKubeApi(path: string): IKubeApiParsed | undefined {
   const apiPath = new URL(path, "https://localhost").pathname;
   const [, prefix, ...parts] = apiPath.split("/");
   const apiPrefix = `/${prefix}`;
   const [left, right, namespaced] = array.split(parts, "namespaces");
-  let apiGroup!: string;
-  let apiVersion!: string;
-  let namespace!: string;
-  let resource!: string;
-  let name!: string;
+  let apiGroup: string;
+  let apiVersion: string | undefined;
+  let namespace: string | undefined;
+  let resource: string;
+  let name: string | undefined;
 
   if (namespaced) {
     switch (right.length) {
@@ -46,26 +46,21 @@ export function parseKubeApi(path: string): IKubeApiParsed {
         break;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    apiVersion = left.pop()!;
-    apiGroup = left.join("/");
+    let rest: string[];
+
+    [apiVersion, ...rest] = left;
+    apiGroup = rest.join("/");
   } else {
-    switch (left.length) {
-      case 0:
-        throw new Error(`invalid apiPath: ${apiPath}`);
-      case 4:
-        [apiGroup, apiVersion, resource, name] = left;
-        break;
-      case 2:
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        resource = left.pop()!;
-        // fallthrough
-      case 1:
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        apiVersion = left.pop()!;
-        apiGroup = "";
-        break;
-      default:
+    if (left.length === 0) {
+      return undefined;
+    }
+
+    if (left.length === 1 || left.length === 2) {
+      [apiVersion, resource] = left;
+      apiGroup = "";
+    } else if (left.length === 4) {
+      [apiGroup, apiVersion, resource, name] = left;
+    } else {
       /**
        * Given that
        *  - `apiVersion` is `GROUP/VERSION` and
@@ -82,15 +77,14 @@ export function parseKubeApi(path: string): IKubeApiParsed {
        * 3. otherwise assume apiVersion <- left[0]
        * 4. always resource, name <- left[(0 or 1)+1..]
        */
-        if (left[0].includes(".") || left[1].match(/^v[0-9]/)) {
-          [apiGroup, apiVersion] = left;
-          resource = left.slice(2).join("/");
-        } else {
-          apiGroup = "";
-          apiVersion = left[0];
-          [resource, name] = left.slice(1);
-        }
-        break;
+      if (left[0].includes(".") || left[1].match(/^v[0-9]/)) {
+        [apiGroup, apiVersion] = left;
+        resource = left.slice(2).join("/");
+      } else {
+        apiGroup = "";
+        apiVersion = left[0];
+        [resource, name] = left.slice(1);
+      }
     }
   }
 
@@ -98,7 +92,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
   const apiBase = [apiPrefix, apiGroup, apiVersion, resource].filter(v => v).join("/");
 
   if (!apiBase) {
-    throw new Error(`invalid apiPath: ${apiPath}`);
+    return undefined;
   }
 
   return {
@@ -110,7 +104,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
 }
 
 function isIKubeApiParsed(refOrParsed: IKubeApiLinkRef | IKubeApiParsed): refOrParsed is IKubeApiParsed {
-  return "apiGroup" in refOrParsed;
+  return "apiGroup" in refOrParsed && !!refOrParsed.apiGroup;
 }
 
 export function createKubeApiURL(linkRef: IKubeApiLinkRef): string;

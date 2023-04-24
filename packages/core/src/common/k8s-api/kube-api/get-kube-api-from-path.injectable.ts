@@ -7,18 +7,18 @@ import { parseKubeApi } from "../kube-api-parse";
 import { kubeApiInjectionToken } from "./kube-api-injection-token";
 import type { KubeApi } from "../kube-api";
 
+export type GetKubeApiFromPath = (apiPath: string) => KubeApi | undefined;
+
 const getKubeApiFromPathInjectable = getInjectable({
   id: "get-kube-api-from-path",
 
-  instantiate: (di) => {
+  instantiate: (di): GetKubeApiFromPath => {
     const kubeApis = di.injectMany(kubeApiInjectionToken);
 
     return (apiPath: string) => {
       const parsed = parseKubeApi(apiPath);
 
-      const kubeApi = kubeApis.find((api) => api.apiBase === parsed.apiBase);
-
-      return (kubeApi as KubeApi) || undefined;
+      return kubeApis.find((api) => api.apiBase === parsed?.apiBase);
     };
   },
 });

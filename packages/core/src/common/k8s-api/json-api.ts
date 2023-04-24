@@ -26,6 +26,30 @@ export interface JsonApiError {
   errors?: { id: string; title: string; status?: number }[];
 }
 
+export interface KubeJsonApiErrorCause {
+  reason: string;
+  message: string;
+  field: string;
+}
+
+export interface KubeJsonApiErrorDetails {
+  name: string;
+  group: string;
+  kind: string;
+  causes: KubeJsonApiErrorCause[];
+}
+
+export interface KubeJsonApiError {
+  kind: "Status";
+  apiVersion: "v1";
+  metadata: object;
+  status: string;
+  message: string;
+  reason: string;
+  details: KubeJsonApiErrorDetails;
+  code: number;
+}
+
 export interface JsonApiParams<D> {
   data?: PartialDeep<D>; // request body
 }
@@ -246,7 +270,7 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
 export class JsonApiErrorParsed {
   isUsedForNotification = false;
 
-  constructor(private error: JsonApiError | DOMException, private messages: string[]) {
+  constructor(private error: JsonApiError | DOMException | KubeJsonApiError, private messages: string[]) {
   }
 
   get isAborted() {

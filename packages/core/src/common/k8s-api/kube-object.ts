@@ -26,15 +26,11 @@ import type { ItemObject } from "@k8slens/list-layout";
 import type { Patch } from "rfc6902";
 import assert from "assert";
 import type { JsonObject } from "type-fest";
-import requestKubeObjectPatchInjectable
-  from "./endpoints/resource-applier.api/request-patch.injectable";
+import requestKubeObjectPatchInjectable from "./endpoints/resource-applier.api/request-patch.injectable";
 import { apiKubeInjectionToken } from "./api-kube";
-import requestKubeObjectCreationInjectable
-  from "./endpoints/resource-applier.api/request-update.injectable";
+import requestKubeObjectCreationInjectable from "./endpoints/resource-applier.api/request-update.injectable";
 import { dump } from "js-yaml";
-import {
-  getLegacyGlobalDiForExtensionApi,
-} from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import autoBind from "auto-bind";
 
 export type KubeJsonApiDataFor<K> = K extends KubeObject<infer Metadata, infer Status, infer Spec>
@@ -552,12 +548,28 @@ export class KubeObject<
   }
 
   constructor(data: KubeJsonApiData<Metadata, Status, Spec>) {
-    if (typeof data !== "object") {
+    if (!isObject(data)) {
       throw new TypeError(`Cannot create a KubeObject from ${typeof data}`);
     }
 
-    if (!data.metadata || typeof data.metadata !== "object") {
+    if (!isObject(data.metadata)) {
       throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata`, data);
+    }
+
+    if (!isString(data.metadata.name)) {
+      throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata.name being a string`, data);
+    }
+
+    if (!isString(data.metadata.uid)) {
+      throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata.uid being a string`, data);
+    }
+
+    if (!isString(data.metadata.resourceVersion)) {
+      throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata.resourceVersion being a string`, data);
+    }
+
+    if (!isString(data.metadata.selfLink)) {
+      throw new KubeCreationError(`Cannot create a KubeObject from an object without metadata.selfLink being a string`, data);
     }
 
     Object.assign(this, data);
