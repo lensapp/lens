@@ -16,7 +16,6 @@ const showErrorNotificationInjectable = getInjectable({
     return (message, customOpts = {}) =>
       notificationsStore.add({
         status: NotificationStatus.ERROR,
-        timeout: 5000,
         message,
         ...customOpts,
       });
