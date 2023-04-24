@@ -4,11 +4,7 @@ on:
     - cron: 0 0 30 * 1-5 # At 12:30am UTC work day
   workflow_dispatch: # for testing
 jobs:
-  tag:
-    outputs:
-      tagname: v${{ steps.version.outputs.VERSION }}
-      version: ${{ steps.version.outputs.VERSION }}
-      continue: ${{ steps.create-branch.outputs.CONTINUE }}
+  create-alpha-release-pr:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,81 +18,10 @@ jobs:
       - name: Install deps
         run: |
           npm install
-          sudo apt-get install -y ripgrep
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Bump version
-        id: version
-        run: |
-          npm run --workspace @k8slens/bump-version-for-cron build
-          npm run --workspace @k8slens/bump-version-for-cron bump -- --path packages/core/package.json
-      - name: Check if branch already exists
-        id: check-branch
-        run: git ls-remote --exit-code --tags origin v${{ steps.version.outputs.VERSION }}
-        continue-on-error: true
-      - name: Create branch and tag and push
-        id: create-branch
-        run: |
-          # failure means that the tag doesn't exist so we should create it
-          if [ ${{ steps.check-branch.outcome }} != 'failure' ]; then
-            echo "CONTINUE=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
 
-          git config --global user.email "bot@k8slens.dev"
-          git config --global user.name "k8slens bot"
-
-          git checkout -b release/v${{ steps.version.outputs.VERSION }}
-          git add .
-          git commit -sm "Release ${{ steps.version.outputs.VERSION }}"
-          git tag v${{ steps.version.outputs.VERSION }}
-          git push origin v${{ steps.version.outputs.VERSION }}
-          echo "CONTINUE=true" >> "$GITHUB_OUTPUT"
-  create_release:
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-      version: ${{ needs.tag.outputs.version }}
-    needs: [tag]
-    if: ${{ needs.tag.outputs.continue == 'true' }}
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
-        id: create_release
+      - name: Create PR
+        run: npm run create-release-pr
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ needs.tag.outputs.tagname }}
-          name: ${{ needs.tag.outputs.tagname }}
-          generate_release_notes: true
-          prerelease: true
-  release_packages:
-    needs: [create_release]
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: v${{ needs.create_release.outputs.version }}
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: "16.x"
-          registry-url: "https://npm.pkg.github.com"
-      - name: Build package
-        shell: bash
-        run: |
-          npm ci
-          npm run build
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Release to GitHub NPM registry
-        run: |
-          npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
-          npx lerna \
-            publish from-package \
-            --no-push \
-            --no-git-tag-version \
-            --yes \
-            --dist-tag cron
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          BUMP_PACKAGE_ARGS: -- --conventional-commits --conventional-prerelease --yes

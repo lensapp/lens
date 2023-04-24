@@ -79,8 +79,9 @@ async function fetchAllGitTags(): Promise<string[]> {
 }
 
 function bumpPackageVersions() {
-  const bumpPackages = spawn("npm", ["run", "bump-version"], {
-    stdio: "inherit"
+  const bumpPackages = spawn(`npm run bump-version ${process.env.BUMP_PACKAGE_ARGS ?? ""}`, {
+    stdio: "inherit",
+    shell: true,
   });
   const cleaners: (() => void)[] = [
     () => bumpPackages.stdout?.unpipe(),
@@ -153,7 +154,7 @@ async function createReleaseBranchAndCommit(prBase: string, version: SemVer, prB
   const prBranch = `release/v${version.format()}`;
 
   await pipeExecFile("git", ["checkout", "-b", prBranch]);
-  await pipeExecFile("git", ["add", "packages/*/package.json", "package-lock.json"]);
+  await pipeExecFile("git", ["add", "."]);
   await pipeExecFile("git", ["commit", "-sm", `Release ${version.format()}`]);
   await pipeExecFile("git", ["push", "--set-upstream", "origin", prBranch]);
 
@@ -354,6 +355,12 @@ async function createRelease(): Promise<void> {
   }
 
   const selectedPrs = await pickRelevantPrs(relevantPrs, isMasterBranch);
+
+  if (selectedPrs.length === 0) {
+    console.log(`No PRs have been found relating to ${previousReleasedVersion}, stopping...`);
+    return;
+  }
+
   const prBody = formatChangelog(previousReleasedVersion, selectedPrs);
 
   if (!isMasterBranch) {
