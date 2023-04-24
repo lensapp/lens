@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/button",
   "private": false,
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.4",
   "description": "Highly extendable button in the Lens.",
   "type": "commonjs",
   "files": [
