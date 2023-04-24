@@ -1,4 +1,4 @@
-import { flatten, map, partition, uniq, uniqBy } from "lodash/fp";
+import { flatten, map, partition, uniq, uniqBy, filter } from "lodash/fp";
 import type { PackageJsonAndPath } from "./package-json-and-path";
 import { globInjectable } from "./fs/glob.injectable";
 import { resolvePathInjectable } from "./path/resolve-path.injectable";
@@ -8,6 +8,7 @@ import { pipeline } from "@ogre-tools/fp";
 import { getLensLinkDirectoryInjectable } from "./get-lens-link-directory.injectable";
 import path from "path";
 import { isFileOrDirectoryInjectable } from "./fs/is-file-or-directory.injectable";
+import { existsInjectable } from "./fs/exists.injectable";
 
 const shouldBeGlobbed = (possibleGlobString: string) => possibleGlobString.includes("*");
 const simplifyGlobbing = new RegExp("(\\/\\*\\/\\*\\*|\\/\\*\\*|\\/\\*\\*\\/\\*|\\/\\*)$");
@@ -21,6 +22,7 @@ export const getSymlinkPathsInjectable = getInjectable({
     const resolvePath = di.inject(resolvePathInjectable);
     const getLensLinkDirectory = di.inject(getLensLinkDirectoryInjectable);
     const isFileOrDirectory = di.inject(isFileOrDirectoryInjectable);
+    const exists = di.inject(existsInjectable);
 
     return async (packageJsons: PackageJsonAndPath[]) => {
       return pipeline(
@@ -46,7 +48,13 @@ export const getSymlinkPathsInjectable = getInjectable({
 
             uniq,
 
-            map(async (fileOrDirectory) => {
+            map(async (fileOrDirectory) => ({ fileOrDirectory, exists: await exists(fileOrDirectory) })),
+
+            awaitAll,
+
+            filter(({ exists }) => exists),
+
+            map(async ({ fileOrDirectory }) => {
               const target = resolvePath(moduleDirectory, fileOrDirectory);
 
               return {

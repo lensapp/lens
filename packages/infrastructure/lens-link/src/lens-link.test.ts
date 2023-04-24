@@ -198,6 +198,9 @@ describe("lens-link", () => {
                 await ensureEmptyDirectoryMock.resolve();
                 await ensureEmptyDirectoryMock.resolve();
 
+                await existsMock.resolve(true);
+                await existsMock.resolve(true);
+
                 await isFileOrDirectoryMock.resolve("dir");
                 await isFileOrDirectoryMock.resolve("dir");
               });
@@ -290,6 +293,11 @@ describe("lens-link", () => {
                 beforeEach(async () => {
                   await globMock.resolve(["some-directory-from-glob/some-file-from-glob.txt", "some-duplicate-file"]);
 
+                  await existsMock.resolve(true);
+                  await existsMock.resolve(true);
+                  await existsMock.resolve(true);
+                  await existsMock.resolve(true);
+
                   await isFileOrDirectoryMock.resolve("file");
                   await isFileOrDirectoryMock.resolve("dir");
                   await isFileOrDirectoryMock.resolve("dir");
@@ -351,7 +359,7 @@ describe("lens-link", () => {
 
               await readJsonFileMock.resolveSpecific(([path]) => path === "/some-directory/some-module/package.json", {
                 name: "some-module",
-                files: ["some-build-directory", "some-file"],
+                files: ["some-build-directory", "some-file", "some-non-existing-file.txt"],
                 main: "some-build-directory/index.js",
               });
 
@@ -386,84 +394,106 @@ describe("lens-link", () => {
                 expect(createSymlinkMock).not.toHaveBeenCalled();
               });
 
-              it("calls for if symlinks to be created are for files or directories", () => {
-                expect(isFileOrDirectoryMock.mock.calls).toEqual([
-                  ["/some-directory/some-module/some-build-directory"],
-                  ["/some-directory/some-module/some-file"],
-                  ["/some-other-directory/some-other-module/some-other-build-directory"],
+              it("calls to detect if file or directory exists", () => {
+                expect(existsMock.mock.calls).toEqual([
+                  ["some-build-directory"],
+                  ["some-file"],
+                  ["some-non-existing-file.txt"],
+                  ["some-other-build-directory"],
                 ]);
               });
 
-              describe("given calls for files or directories resolve", () => {
+              it("does not check for files and directories yet", () => {
+                expect(isFileOrDirectoryMock).not.toHaveBeenCalled();
+              });
+
+              describe("when existence of files and directories resolve with some non existing", () => {
                 beforeEach(async () => {
-                  await isFileOrDirectoryMock.resolveSpecific(
-                    ["/some-directory/some-module/some-build-directory"],
-                    "dir",
-                  );
-
-                  await isFileOrDirectoryMock.resolveSpecific(["/some-directory/some-module/some-file"], "file");
-
-                  await isFileOrDirectoryMock.resolveSpecific(
-                    ["/some-other-directory/some-other-module/some-other-build-directory"],
-                    "dir",
-                  );
+                  await existsMock.resolve(true);
+                  await existsMock.resolve(true);
+                  await existsMock.resolve(false);
+                  await existsMock.resolve(true);
                 });
 
-                it("creates the symlinks", () => {
-                  expect(createSymlinkMock.mock.calls).toEqual([
-                    [
-                      "/some-directory/some-module/package.json",
-                      "/some-directory/some-project/node_modules/some-module/package.json",
-                      "file",
-                    ],
-
-                    [
-                      "/some-directory/some-module/some-build-directory",
-                      "/some-directory/some-project/node_modules/some-module/some-build-directory",
-                      "dir",
-                    ],
-
-                    [
-                      "/some-directory/some-module/some-file",
-                      "/some-directory/some-project/node_modules/some-module/some-file",
-                      "file",
-                    ],
-
-                    [
-                      "/some-other-directory/some-other-module/package.json",
-                      "/some-directory/some-project/node_modules/some-other-module/package.json",
-                      "file",
-                    ],
-
-                    [
-                      "/some-other-directory/some-other-module/some-other-build-directory",
-                      "/some-directory/some-project/node_modules/some-other-module/some-other-build-directory",
-                      "dir",
-                    ],
+                it("calls for if symlinks to be created are for files or directories", () => {
+                  expect(isFileOrDirectoryMock.mock.calls).toEqual([
+                    ["/some-directory/some-module/some-build-directory"],
+                    ["/some-directory/some-module/some-file"],
+                    ["/some-other-directory/some-other-module/some-other-build-directory"],
                   ]);
                 });
 
-                it("given all symlink creations have not resolved, does not resolve yet", async () => {
-                  createSymlinkMock.resolve();
-                  createSymlinkMock.resolve();
-                  createSymlinkMock.resolve();
-                  createSymlinkMock.resolve();
+                describe("given calls for files or directories resolve", () => {
+                  beforeEach(async () => {
+                    await isFileOrDirectoryMock.resolveSpecific(
+                      ["/some-directory/some-module/some-build-directory"],
+                      "dir",
+                    );
 
-                  const promiseStatus = await getPromiseStatus(actualPromise);
+                    await isFileOrDirectoryMock.resolveSpecific(["/some-directory/some-module/some-file"], "file");
 
-                  expect(promiseStatus.fulfilled).toBe(false);
-                });
+                    await isFileOrDirectoryMock.resolveSpecific(
+                      ["/some-other-directory/some-other-module/some-other-build-directory"],
+                      "dir",
+                    );
+                  });
 
-                it("when symlink creations resolve, ends script", async () => {
-                  createSymlinkMock.resolve();
-                  createSymlinkMock.resolve();
-                  createSymlinkMock.resolve();
-                  createSymlinkMock.resolve();
-                  createSymlinkMock.resolve();
+                  it("creates the symlinks", () => {
+                    expect(createSymlinkMock.mock.calls).toEqual([
+                      [
+                        "/some-directory/some-module/package.json",
+                        "/some-directory/some-project/node_modules/some-module/package.json",
+                        "file",
+                      ],
 
-                  const promiseStatus = await getPromiseStatus(actualPromise);
+                      [
+                        "/some-directory/some-module/some-build-directory",
+                        "/some-directory/some-project/node_modules/some-module/some-build-directory",
+                        "dir",
+                      ],
 
-                  expect(promiseStatus.fulfilled).toBe(true);
+                      [
+                        "/some-directory/some-module/some-file",
+                        "/some-directory/some-project/node_modules/some-module/some-file",
+                        "file",
+                      ],
+
+                      [
+                        "/some-other-directory/some-other-module/package.json",
+                        "/some-directory/some-project/node_modules/some-other-module/package.json",
+                        "file",
+                      ],
+
+                      [
+                        "/some-other-directory/some-other-module/some-other-build-directory",
+                        "/some-directory/some-project/node_modules/some-other-module/some-other-build-directory",
+                        "dir",
+                      ],
+                    ]);
+                  });
+
+                  it("given all symlink creations have not resolved, does not resolve yet", async () => {
+                    createSymlinkMock.resolve();
+                    createSymlinkMock.resolve();
+                    createSymlinkMock.resolve();
+                    createSymlinkMock.resolve();
+
+                    const promiseStatus = await getPromiseStatus(actualPromise);
+
+                    expect(promiseStatus.fulfilled).toBe(false);
+                  });
+
+                  it("when symlink creations resolve, ends script", async () => {
+                    createSymlinkMock.resolve();
+                    createSymlinkMock.resolve();
+                    createSymlinkMock.resolve();
+                    createSymlinkMock.resolve();
+                    createSymlinkMock.resolve();
+
+                    const promiseStatus = await getPromiseStatus(actualPromise);
+
+                    expect(promiseStatus.fulfilled).toBe(true);
+                  });
                 });
               });
             });
