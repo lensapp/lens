@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { parse as parseQueryString } from "query-string";
-import observableHistoryInjectable from "../navigation/observable-history.injectable";
+import observableHistoryInjectable from "@k8slens/routing";
 
 const queryParametersInjectable = getInjectable({
   id: "query-parameters",

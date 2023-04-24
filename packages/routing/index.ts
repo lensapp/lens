@@ -5,6 +5,8 @@
 
 import observableHistoryInjectable from "./src/observable-history.injectable";
 
+export * from "./src/history.injectable";
 export * from "./src/observable-history.injectable";
+export * from "./src/search-params";
 
 export default observableHistoryInjectable;

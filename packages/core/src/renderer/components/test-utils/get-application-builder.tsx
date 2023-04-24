@@ -24,7 +24,7 @@ import navigateToHelmChartsInjectable from "../../../common/front-end-routing/ro
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { Cluster } from "../../../common/cluster/cluster";
 import type { NamespaceStore } from "../+namespaces/store";
-import historyInjectable from "../../navigation/history.injectable";
+import historyInjectable from "@k8slens/routing";
 import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/electron-tray.injectable";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";

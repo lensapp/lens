@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { Router } from "react-router";
-import historyInjectable from "../navigation/history.injectable";
+import historyInjectable from "@k8slens/routing";
 import React from "react";
 
 import {

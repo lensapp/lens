@@ -9,7 +9,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { cssNames } from "@k8slens/utilities";
 import { Tab, Tabs } from "../tabs";
-import { ErrorBoundary } from "../error-boundary";
+import { ErrorBoundary } from "@k8slens/error-boundary";
 import type { HierarchicalSidebarItem } from "./sidebar-items.injectable";
 
 export interface TabLayoutProps {

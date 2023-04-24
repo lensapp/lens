@@ -8,7 +8,7 @@ import styles from "./main-layout.module.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { cssNames } from "@k8slens/utilities";
-import { ErrorBoundary } from "../error-boundary";
+import { ErrorBoundary } from "@k8slens/error-boundary";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SidebarStorageState } from "./sidebar-storage/sidebar-storage.injectable";

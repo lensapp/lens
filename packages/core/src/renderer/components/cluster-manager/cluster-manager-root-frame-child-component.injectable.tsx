@@ -7,7 +7,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { rootFrameChildComponentInjectionToken } from "../../frames/root-frame/root-frame-child-component-injection-token";
 import { ClusterManager } from "./cluster-manager";
 import { computed } from "mobx";
-import { ErrorBoundary } from "../error-boundary";
+import { ErrorBoundary } from "@k8slens/error-boundary";
 
 const clusterManagerRootFrameChildComponentInjectable = getInjectable({
   id: "cluster-manager-root-frame-child-component",

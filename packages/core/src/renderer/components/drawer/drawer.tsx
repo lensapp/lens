@@ -16,7 +16,7 @@ import { Animate } from "../animate";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
 import drawerStorageInjectable, { defaultDrawerWidth } from "./drawer-storage/drawer-storage.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import historyInjectable from "../../navigation/history.injectable";
+import historyInjectable from "@k8slens/routing";
 import type { History } from "history";
 import type { StorageLayer } from "../../utils/storage-helper";
 

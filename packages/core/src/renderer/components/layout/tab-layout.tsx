@@ -12,10 +12,10 @@ import { observer } from "mobx-react";
 import type { IClassName } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { Tab, Tabs } from "../tabs";
-import { ErrorBoundary } from "../error-boundary";
+import { ErrorBoundary } from "@k8slens/error-boundary";
 import type { ObservableHistory } from "mobx-observable-history";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import observableHistoryInjectable from "../../navigation/observable-history.injectable";
+import observableHistoryInjectable from "@k8slens/routing";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
 
