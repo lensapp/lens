@@ -28,13 +28,11 @@
     "lint": "lens-lint",
     "lint:fix": "lens-lint --fix"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@ogre-tools/injectable": "^15.3.1",
     "@ogre-tools/injectable-react": "^15.3.0",
     "history": "^4.10.1",
-    "mobx-observable-history": "^2.0.3"
-  },
-  "peerDependencies": {
+    "mobx-observable-history": "^2.0.3",
     "@k8slens/button": "^1.0.0-alpha.1",
     "@k8slens/utilities": "^1.0.0-alpha.1",
     "@k8slens/routing": "^1.0.0-alpha.0",
