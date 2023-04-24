@@ -51,7 +51,7 @@ jobs:
           command: npm ci
 
       - name: Build library parts
-        run: run npm build -- --ignore open-lens
+        run: npm run build -- --ignore open-lens
 
       - run: npm run test:unit
         name: Run tests
