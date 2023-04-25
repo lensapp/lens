@@ -5,13 +5,13 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { parse as parseQueryString } from "query-string";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 
 const queryParametersInjectable = getInjectable({
   id: "query-parameters",
 
   instantiate: (di) => {
-    const observableHistory = di.inject(observableHistoryInjectable);
+    const observableHistory = di.inject(observableHistoryInjectionToken);
 
     return computed(() => parseQueryString(observableHistory.location.search));
   },

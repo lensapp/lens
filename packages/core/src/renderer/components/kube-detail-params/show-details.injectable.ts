@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 import getDetailsUrlInjectable from "./get-details-url.injectable";
 
 /**
@@ -16,7 +16,7 @@ export type ShowDetails = (selfLink: string | undefined, resetSelected?: boolean
 const showDetailsInjectable = getInjectable({
   id: "show-details",
   instantiate: (di): ShowDetails => {
-    const observableHistory = di.inject(observableHistoryInjectable);
+    const observableHistory = di.inject(observableHistoryInjectionToken);
     const getDetailsUrl = di.inject(getDetailsUrlInjectable);
 
     return (selfLink = "", resetSelected = true) => {

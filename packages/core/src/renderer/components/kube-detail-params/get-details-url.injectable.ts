@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 import kubeDetailsUrlParamInjectable from "./kube-details-url.injectable";
 import kubeSelectedUrlParamInjectable from "./kube-selected-url.injectable";
 
@@ -12,7 +12,7 @@ export type GetDetailsUrl = (selfLink: string, resetSelected?: boolean, mergeGlo
 const getDetailsUrlInjectable = getInjectable({
   id: "get-details-url",
   instantiate: (di): GetDetailsUrl => {
-    const observableHistory = di.inject(observableHistoryInjectable);
+    const observableHistory = di.inject(observableHistoryInjectionToken);
     const kubeDetailsUrlParam = di.inject(kubeDetailsUrlParamInjectable);
     const kubeSelectedUrlParam = di.inject(kubeSelectedUrlParamInjectable);
 

@@ -4,13 +4,13 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 
 const currentPathInjectable = getInjectable({
   id: "current-path",
 
   instantiate: (di) => {
-    const observableHistory = di.inject(observableHistoryInjectable);
+    const observableHistory = di.inject(observableHistoryInjectionToken);
 
     return computed(() => observableHistory.location.pathname);
   },

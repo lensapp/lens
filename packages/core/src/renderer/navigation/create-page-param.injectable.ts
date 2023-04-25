@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 import type { PageParamDependencies, PageParamInit } from "./page-param";
 import { PageParam } from "./page-param";
 
@@ -13,7 +13,7 @@ const createPageParamInjectable = getInjectable({
   id: "create-page-param",
   instantiate: (di): CreatePageParam => {
     const deps: PageParamDependencies = {
-      history: di.inject(observableHistoryInjectable),
+      history: di.inject(observableHistoryInjectionToken),
     };
 
     return (init) => new PageParam(deps, init);

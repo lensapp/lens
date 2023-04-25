@@ -3,10 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
-import type { History } from "history";
+import type { History, LocationState } from "history";
 import { createBrowserHistory } from "history";
 
-export const historyInjectionToken = getInjectionToken<History>({
+export const historyInjectionToken = getInjectionToken<History<LocationState>>({
   id: "history-injection-token",
 });
 

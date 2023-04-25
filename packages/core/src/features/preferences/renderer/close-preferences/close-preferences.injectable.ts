@@ -3,14 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 import navigateToFrontPageInjectable from "../../../../common/front-end-routing/navigate-to-front-page.injectable";
 
 const closePreferencesInjectable = getInjectable({
   id: "close-preferences",
 
   instantiate: (di) => {
-    const observableHistory = di.inject(observableHistoryInjectable);
+    const observableHistory = di.inject(observableHistoryInjectionToken);
     const navigateToFrontPage = di.inject(navigateToFrontPageInjectable);
 
     return () => {

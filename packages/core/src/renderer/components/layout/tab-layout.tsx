@@ -15,7 +15,7 @@ import { Tab, Tabs } from "../tabs";
 import { ErrorBoundary } from "../error-boundary";
 import type { ObservableHistory } from "mobx-observable-history";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 import type { Navigate } from "../../navigation/navigate.injectable";
 import navigateInjectable from "../../navigation/navigate.injectable";
 
@@ -94,7 +94,7 @@ const NonInjectedTabLayout = observer((props: TabLayoutProps & Dependencies) => 
 export const TabLayout = withInjectables<Dependencies, TabLayoutProps>(NonInjectedTabLayout, {
   getProps: (di, props) => ({
     ...props,
-    observableHistory: di.inject(observableHistoryInjectable),
+    observableHistory: di.inject(observableHistoryInjectionToken),
     navigate: di.inject(navigateInjectable),
   }),
 });
