@@ -12,7 +12,7 @@ import { cssNames } from "@k8slens/utilities";
 import { CloseButton } from "./close-button";
 import { getLegacyGlobalDiForExtensionApi } from "../../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 
 export interface SettingLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
@@ -31,7 +31,7 @@ const defaultProps: Partial<SettingLayoutProps> = {
   back: () => {
     const di = getLegacyGlobalDiForExtensionApi();
     const navigateToCatalog = di.inject(navigateToCatalogInjectable);
-    const observableHistory = di.inject(observableHistoryInjectable);
+    const observableHistory = di.inject(observableHistoryInjectionToken);
 
     if (observableHistory.length <= 1) {
       navigateToCatalog();

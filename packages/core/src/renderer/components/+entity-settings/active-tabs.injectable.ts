@@ -6,7 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { action } from "mobx";
 import { byOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
 import type { CatalogEntity } from "../../api/catalog-entity";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 import type { RegisteredEntitySetting } from "./extension-registrator.injectable";
 import catalogEntitySettingItemsInjectable from "./settings.injectable";
 
@@ -54,7 +54,7 @@ const getSettingGroups = (items: RegisteredEntitySetting[]): SettingGroup[] => {
 const activeEntitySettingsTabInjectable = getInjectable({
   id: "active-entity-settings-tab",
   instantiate: (di, entity): ActiveEntitySettings => {
-    const observableHistory = di.inject(observableHistoryInjectable);
+    const observableHistory = di.inject(observableHistoryInjectionToken);
     const items = di.inject(catalogEntitySettingItemsInjectable, entity);
 
     return {

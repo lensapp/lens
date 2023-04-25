@@ -13,7 +13,7 @@ import { issuesTrackerUrl, forumsUrl } from "../../../common/vars";
 import type { SingleOrMany } from "@k8slens/utilities";
 import type { ObservableHistory } from "mobx-observable-history";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 
 export interface ErrorBoundaryProps {
   children?: SingleOrMany<React.ReactNode>;
@@ -98,6 +98,6 @@ class NonInjectedErrorBoundary extends React.Component<ErrorBoundaryProps & Depe
 export const ErrorBoundary = withInjectables<Dependencies, ErrorBoundaryProps>(NonInjectedErrorBoundary, {
   getProps: (di, props) => ({
     ...props,
-    observableHistory: di.inject(observableHistoryInjectable),
+    observableHistory: di.inject(observableHistoryInjectionToken),
   }),
 });

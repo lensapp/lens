@@ -5,6 +5,6 @@
 
 import { createMemoryHistory } from "history";
 import { getGlobalOverride } from "@k8slens/test-utils";
-import { historyInjectionToken } from "@k8slens/routing";
+import { historyInjectable } from "@k8slens/routing";
 
-export default getGlobalOverride(historyInjectionToken, () => createMemoryHistory());
+export default getGlobalOverride(historyInjectable, () => createMemoryHistory());

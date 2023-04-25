@@ -2,10 +2,15 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
-import { createObservableHistory } from "mobx-observable-history";
+import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
+import { createObservableHistory, ObservableHistory } from "mobx-observable-history";
 import { searchParamsOptions } from "./search-params";
 import { historyInjectable } from "./history.injectable";
+import type { LocationState } from "history";
+
+export const observableHistoryInjectionToken = getInjectionToken<ObservableHistory<LocationState>>({
+  id: "observable-history-injection-token",
+});
 
 export const observableHistoryInjectable = getInjectable({
   id: "observable-history",
@@ -18,4 +23,5 @@ export const observableHistoryInjectable = getInjectable({
 
     return navigation;
   },
+  injectionToken: observableHistoryInjectionToken,
 });

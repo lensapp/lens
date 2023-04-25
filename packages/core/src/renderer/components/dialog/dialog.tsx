@@ -13,7 +13,7 @@ import { Animate } from "../animate";
 import { cssNames, noop, stopPropagation } from "@k8slens/utilities";
 import type { ObservableHistory } from "mobx-observable-history";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 import requestAnimationFrameInjectable from "../animate/request-animation-frame.injectable";
 
 // todo: refactor + handle animation-end in props.onClose()?
@@ -181,7 +181,7 @@ class NonInjectedDialog extends React.PureComponent<DialogProps & Dependencies &
 export const Dialog = withInjectables<Dependencies, DialogProps>((props) => <NonInjectedDialog {...props} />, {
   getProps: (di, props) => ({
     ...props,
-    navigation: di.inject(observableHistoryInjectable),
+    navigation: di.inject(observableHistoryInjectionToken),
     requestAnimationFrame: di.inject(requestAnimationFrameInjectable),
   }),
 });

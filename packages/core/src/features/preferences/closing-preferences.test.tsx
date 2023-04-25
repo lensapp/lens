@@ -12,7 +12,7 @@ import { frontEndRouteInjectionToken } from "../../common/front-end-routing/fron
 import { computed, runInAction } from "mobx";
 import React from "react";
 import { routeSpecificComponentInjectionToken } from "../../renderer/routes/route-specific-component-injection-token";
-import { observableHistoryInjectable, searchParamsOptions } from "@k8slens/routing";
+import { observableHistoryInjectionToken, searchParamsOptions } from "@k8slens/routing";
 import { createMemoryHistory } from "history";
 import { createObservableHistory } from "mobx-observable-history";
 import navigateToFrontPageInjectable from "../../common/front-end-routing/navigate-to-front-page.injectable";
@@ -54,7 +54,7 @@ describe("preferences - closing-preferences", () => {
 
     beforeEach(async () => {
       builder.beforeWindowStart(({ windowDi }) => {
-        windowDi.override(observableHistoryInjectable, () => {
+        windowDi.override(observableHistoryInjectionToken, () => {
           const historyFake = createMemoryHistory({
             initialEntries: ["/some-page"],
             initialIndex: 0,
@@ -135,7 +135,7 @@ describe("preferences - closing-preferences", () => {
 
     beforeEach(async () => {
       builder.beforeWindowStart(({ windowDi }) => {
-        windowDi.override(observableHistoryInjectable, () => {
+        windowDi.override(observableHistoryInjectionToken, () => {
           const historyFake = createMemoryHistory({
             initialEntries: ["/preferences/app"],
             initialIndex: 0,

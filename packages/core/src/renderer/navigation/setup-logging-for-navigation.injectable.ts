@@ -5,14 +5,14 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import loggerInjectable from "../../common/logger.injectable";
 import { beforeFrameStartsSecondInjectionToken } from "../before-frame-starts/tokens";
-import { observableHistoryInjectable } from "@k8slens/routing";
+import { observableHistoryInjectionToken } from "@k8slens/routing";
 
 const setupLoggingForNavigationInjectable = getInjectable({
   id: "setup-logging-for-navigation",
   instantiate: (di) => ({
     run: () => {
       const logger = di.inject(loggerInjectable);
-      const observableHistory = di.inject(observableHistoryInjectable);
+      const observableHistory = di.inject(observableHistoryInjectionToken);
 
       observableHistory.listen((location, action) => {
         const isClusterView = !process.isMainFrame;
