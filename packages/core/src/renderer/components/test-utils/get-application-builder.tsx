@@ -24,7 +24,6 @@ import navigateToHelmChartsInjectable from "../../../common/front-end-routing/ro
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { Cluster } from "../../../common/cluster/cluster";
 import type { NamespaceStore } from "../+namespaces/store";
-import { historyInjectable } from "@k8slens/routing";
 import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/electron-tray.injectable";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
@@ -71,6 +70,7 @@ import { applicationFeature, startApplicationInjectionToken } from "@k8slens/app
 import { testUsingFakeTime } from "../../../test-utils/use-fake-time";
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import { getMessageBridgeFake } from "@k8slens/messaging-fake-bridge";
+import { historyInjectionToken } from "@k8slens/routing";
 
 type MainDiCallback = (container: { mainDi: DiContainer }) => void | Promise<void>;
 type WindowDiCallback = (container: { windowDi: DiContainer }) => void | Promise<void>;
@@ -292,7 +292,7 @@ export const getApplicationBuilder = () => {
           await callback({ windowDi });
         }
 
-        const history = windowDi.inject(historyInjectable);
+        const history = windowDi.inject(historyInjectionToken);
 
         const render = renderFor(windowDi);
 
