@@ -6,7 +6,7 @@ import type { ApplicationBuilder } from "../../../../renderer/components/test-ut
 import { getApplicationBuilder } from "../../../../renderer/components/test-utils/get-application-builder";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "../../main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
+import publishIsConfiguredInjectable from "../../child-features/updating-is-enabled/main/publish-is-configured.injectable";
 import processCheckingForUpdatesInjectable from "../../main/process-checking-for-updates.injectable";
 import periodicalCheckForUpdatesInjectable from "./main/periodical-check-for-updates.injectable";
 import { testUsingFakeTime, advanceFakeTime } from "../../../../test-utils/use-fake-time";

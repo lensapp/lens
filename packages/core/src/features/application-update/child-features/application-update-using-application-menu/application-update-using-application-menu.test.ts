@@ -15,7 +15,7 @@ import type { ShowMessagePopup } from "../../../../main/electron-app/features/sh
 import electronUpdaterIsActiveInjectable
   from "../../../../main/electron-app/features/electron-updater-is-active.injectable";
 import publishIsConfiguredInjectable
-  from "../../main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
+  from "../../child-features/updating-is-enabled/main/publish-is-configured.injectable";
 
 describe("installing update using application menu", () => {
   let applicationBuilder: ApplicationBuilder;

@@ -4,6 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { preferenceItemInjectionToken } from "../../../../../preferences/renderer/preference-items/preference-item-injection-token";
+import { updatingIsEnabledInitializable } from "../../../updating-is-enabled/common/token";
 import { UpdateChannel } from "./update-channel";
 
 const updateChannelPreferenceBlockInjectable = getInjectable({
@@ -15,6 +16,7 @@ const updateChannelPreferenceBlockInjectable = getInjectable({
     parentId: "application-page",
     orderNumber: 50,
     Component: UpdateChannel,
+    isShown: di.inject(updatingIsEnabledInitializable.stateToken),
   }),
 
   injectionToken: preferenceItemInjectionToken,

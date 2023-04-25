@@ -7,7 +7,7 @@ import { getApplicationBuilder } from "../../renderer/components/test-utils/get-
 import quitAndInstallUpdateInjectable from "./main/quit-and-install-update.injectable";
 import type { RenderResult } from "@testing-library/react";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "./main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
+import publishIsConfiguredInjectable from "./child-features/updating-is-enabled/main/publish-is-configured.injectable";
 import type { CheckForPlatformUpdates } from "./main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
 import checkForPlatformUpdatesInjectable from "./main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";

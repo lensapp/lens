@@ -5,7 +5,7 @@
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import electronUpdaterIsActiveInjectable from "../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "./main/updating-is-enabled/publish-is-configured/publish-is-configured.injectable";
+import publishIsConfiguredInjectable from "./child-features/updating-is-enabled/main/publish-is-configured.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { CheckForPlatformUpdates } from "./main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
