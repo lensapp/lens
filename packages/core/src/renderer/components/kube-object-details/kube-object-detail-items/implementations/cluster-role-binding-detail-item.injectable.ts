@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
 import { computed } from "mobx";
-import { ClusterRoleBindingDetails } from "../../../+user-management/+cluster-role-bindings";
+import { ClusterRoleBindingDetails } from "../../../user-management/cluster-role-bindings";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
 

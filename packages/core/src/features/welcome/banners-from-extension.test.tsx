@@ -6,7 +6,7 @@
 import React from "react";
 import type { RenderResult } from "@testing-library/react";
 import { screen } from "@testing-library/react";
-import { defaultWidth } from "../../renderer/components/+welcome/welcome";
+import { defaultWidth } from "../../renderer/components/welcome/welcome";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 

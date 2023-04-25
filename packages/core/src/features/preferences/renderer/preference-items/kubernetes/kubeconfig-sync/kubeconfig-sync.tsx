@@ -6,7 +6,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import { computed, makeObservable, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import React from "react";
-import { Notice } from "../../../../../../renderer/components/+extensions/notice";
+import { Notice } from "../../../../../../renderer/components/extensions/notice";
 import { iter, tuple } from "@k8slens/utilities";
 import { SubTitle } from "../../../../../../renderer/components/layout/sub-title";
 import { PathPicker } from "../../../../../../renderer/components/path-picker/path-picker";

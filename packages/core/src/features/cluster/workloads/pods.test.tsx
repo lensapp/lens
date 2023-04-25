@@ -6,7 +6,7 @@
 import type { RenderResult } from "@testing-library/react";
 import navigateToPodsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/pods/navigate-to-pods.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
-import podStoreInjectable from "../../../renderer/components/+workloads-pods/store.injectable";
+import podStoreInjectable from "../../../renderer/components/workloads-pods/store.injectable";
 import type { PodMetrics } from "../../../common/k8s-api/endpoints";
 import { Pod } from "../../../common/k8s-api/endpoints";
 import podMetricsApiInjectable from "../../../common/k8s-api/endpoints/pod-metrics.api.injectable";
@@ -26,7 +26,7 @@ describe("workloads / pods", () => {
         apiName: "pods",
         group: "",
       });
-      
+
       windowDi.override(podMetricsApiInjectable, () => ({
         list: async () => podMetrics,
       } as any));
@@ -43,11 +43,11 @@ describe("workloads / pods", () => {
       beforeEach(async () => {
         applicationBuilder.afterWindowStart(({ windowDi }) => {
           const podStore = windowDi.inject(podStoreInjectable);
-          
+
           podStore.items.clear();
           podStore.isLoaded = false;
           podStore.isLoading = true;
-        }); 
+        });
 
         rendered = await applicationBuilder.render();
         applicationBuilder.navigateWith(navigateToPodsInjectable);
@@ -66,10 +66,10 @@ describe("workloads / pods", () => {
       beforeEach(async () => {
         applicationBuilder.afterWindowStart(({ windowDi }) => {
           const podStore = windowDi.inject(podStoreInjectable);
-          
+
           podStore.items.clear();
           podStore.isLoaded = true;
-        }); 
+        });
 
         rendered = await applicationBuilder.render();
         applicationBuilder.navigateWith(navigateToPodsInjectable);
@@ -88,9 +88,9 @@ describe("workloads / pods", () => {
       beforeEach(async () => {
         applicationBuilder.afterWindowStart(({ windowDi }) => {
           windowDi.override(requestMetricsInjectable, () => () => ({} as any));
-          
+
           const podStore = windowDi.inject(podStoreInjectable);
-          
+
           podStore.items.push(new Pod({
             apiVersion: "v1",
             kind: "Pod",
@@ -114,7 +114,7 @@ describe("workloads / pods", () => {
             status: {} as any,
           }));
           podStore.isLoaded = true;
-        }); 
+        });
 
         rendered = await applicationBuilder.render();
         applicationBuilder.navigateWith(navigateToPodsInjectable);

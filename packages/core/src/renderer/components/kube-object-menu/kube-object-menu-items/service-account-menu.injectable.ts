@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { KubeObjectMenuItemComponent } from "../kube-object-menu-item-injection-token";
 import { kubeObjectMenuItemInjectionToken } from "../kube-object-menu-item-injection-token";
-import { ServiceAccountMenu } from "../../+user-management/+service-accounts/service-account-menu";
+import { ServiceAccountMenu } from "../../user-management/service-accounts/service-account-menu";
 import { computed } from "mobx";
 
 const serviceAccountMenuInjectable = getInjectable({

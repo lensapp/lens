@@ -2,8 +2,8 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import type { CronJobStore } from "../+workloads-cronjobs/store";
-import cronJobStoreInjectable from "../+workloads-cronjobs/store.injectable";
+import type { CronJobStore } from "../workloads-cronjobs/store";
+import cronJobStoreInjectable from "../workloads-cronjobs/store.injectable";
 import { CronJob } from "../../../common/k8s-api/endpoints";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";

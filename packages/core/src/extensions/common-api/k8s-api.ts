@@ -32,7 +32,7 @@ import type { KubeJsonApi as InternalKubeJsonApi } from "../../common/k8s-api/ku
 import createKubeJsonApiInjectable from "../../common/k8s-api/create-kube-json-api.injectable";
 import type { RequestInit } from "@k8slens/node-fetch";
 import createKubeJsonApiForClusterInjectable from "../../common/k8s-api/create-kube-json-api-for-cluster.injectable";
-import getPodsByOwnerIdInjectable from "../../renderer/components/+workloads-pods/get-pods-by-owner-id.injectable";
+import getPodsByOwnerIdInjectable from "../../renderer/components/workloads-pods/get-pods-by-owner-id.injectable";
 
 export const apiManager = asLegacyGlobalForExtensionApi(apiManagerInjectable);
 export const forCluster = asLegacyGlobalFunctionForExtensionApi(createKubeApiForClusterInjectable);

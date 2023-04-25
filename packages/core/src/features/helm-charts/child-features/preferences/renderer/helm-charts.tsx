@@ -14,7 +14,7 @@ import type { HelmRepositoriesErrorState } from "./helm-repositories-error-state
 import helmRepositoriesErrorStateInjectable from "./helm-repositories-error-state.injectable";
 import type { IObservableValue } from "mobx";
 import { observer } from "mobx-react";
-import { Notice } from "../../../../../renderer/components/+extensions/notice";
+import { Notice } from "../../../../../renderer/components/extensions/notice";
 
 interface Dependencies {
   helmRepositoriesErrorState: IObservableValue<HelmRepositoriesErrorState>;

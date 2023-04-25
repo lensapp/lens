@@ -9,7 +9,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { InfoPanel } from "../info-panel";
 import { Badge } from "../../badge";
-import { NamespaceSelect } from "../../+namespaces/namespace-select";
+import { NamespaceSelect } from "../../namespaces/namespace-select";
 import { prevDefault } from "@k8slens/utilities";
 import { Icon } from "../../icon";
 import { Button } from "@k8slens/button";

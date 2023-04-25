@@ -23,7 +23,7 @@ import type { NavigateToHelmCharts } from "../../../common/front-end-routing/rou
 import navigateToHelmChartsInjectable from "../../../common/front-end-routing/routes/cluster/helm/charts/navigate-to-helm-charts.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { Cluster } from "../../../common/cluster/cluster";
-import type { NamespaceStore } from "../+namespaces/store";
+import type { NamespaceStore } from "../namespaces/store";
 import type { MinimalTrayMenuItem } from "../../../main/tray/electron-tray/electron-tray.injectable";
 import electronTrayInjectable from "../../../main/tray/electron-tray/electron-tray.injectable";
 import { getDiForUnitTesting as getRendererDi } from "../../getDiForUnitTesting";
@@ -44,7 +44,7 @@ import { ClusterFrame } from "../../frames/cluster-frame/cluster-frame";
 import hostedClusterIdInjectable from "../../cluster-frame-context/hosted-cluster-id.injectable";
 import activeKubernetesClusterInjectable from "../../cluster-frame-context/active-kubernetes-cluster.injectable";
 import { catalogEntityFromCluster } from "../../../main/cluster/manager";
-import namespaceStoreInjectable from "../+namespaces/store.injectable";
+import namespaceStoreInjectable from "../namespaces/store.injectable";
 import createApplicationWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-application-window.injectable";
 import type { CreateElectronWindow } from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";
 import createElectronWindowInjectable from "../../../main/start-main-application/lens-window/application-window/create-electron-window.injectable";

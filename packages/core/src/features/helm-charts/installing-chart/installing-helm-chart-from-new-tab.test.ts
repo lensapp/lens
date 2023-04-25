@@ -26,8 +26,8 @@ import requestHelmChartsInjectable from "../../../common/k8s-api/endpoints/helm-
 import requestHelmChartVersionsInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-versions.injectable";
 import requestHelmChartReadmeInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-readme.injectable";
 import requestHelmChartValuesInjectable from "../../../common/k8s-api/endpoints/helm-charts.api/request-values.injectable";
-import type { RequestDetailedHelmRelease } from "../../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
-import requestDetailedHelmReleaseInjectable from "../../../renderer/components/+helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
+import type { RequestDetailedHelmRelease } from "../../../renderer/components/helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
+import requestDetailedHelmReleaseInjectable from "../../../renderer/components/helm-releases/release-details/release-details-model/request-detailed-helm-release.injectable";
 import type { RequestHelmReleases } from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
 import requestHelmReleasesInjectable from "../../../common/k8s-api/endpoints/helm-releases.api/request-releases.injectable";
 import { flushPromises } from "@k8slens/test-utils";

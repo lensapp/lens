@@ -7,10 +7,10 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import type { RenderResult } from "@testing-library/react";
 import navigateToNamespacesInjectable from "../../common/front-end-routing/routes/cluster/namespaces/navigate-to-namespaces.injectable";
-import type { RequestDeleteNormalNamespace } from "../../renderer/components/+namespaces/request-delete-normal-namespace.injectable";
-import requestDeleteNormalNamespaceInjectable from "../../renderer/components/+namespaces/request-delete-normal-namespace.injectable";
-import type { RequestDeleteSubNamespaceAnchor } from "../../renderer/components/+namespaces/request-delete-sub-namespace.injectable";
-import requestDeleteSubNamespaceAnchorInjectable from "../../renderer/components/+namespaces/request-delete-sub-namespace.injectable";
+import type { RequestDeleteNormalNamespace } from "../../renderer/components/namespaces/request-delete-normal-namespace.injectable";
+import requestDeleteNormalNamespaceInjectable from "../../renderer/components/namespaces/request-delete-normal-namespace.injectable";
+import type { RequestDeleteSubNamespaceAnchor } from "../../renderer/components/namespaces/request-delete-sub-namespace.injectable";
+import requestDeleteSubNamespaceAnchorInjectable from "../../renderer/components/namespaces/request-delete-sub-namespace.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 

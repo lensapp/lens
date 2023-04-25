@@ -18,7 +18,7 @@ import { Select } from "../../select";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { UpgradeChartModel } from "./upgrade-chart-model.injectable";
 import upgradeChartModelInjectable from "./upgrade-chart-model.injectable";
-import type { HelmChartVersion } from "../../+helm-charts/helm-charts/versions";
+import type { HelmChartVersion } from "../../helm-charts/helm-charts/versions";
 
 export interface UpgradeChartProps {
   className?: string;

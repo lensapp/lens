@@ -4,8 +4,8 @@
  */
 
 import { Pod } from "../../../common/k8s-api/endpoints";
-import type { PodStore } from "../+workloads-pods/store";
-import podStoreInjectable from "../+workloads-pods/store.injectable";
+import type { PodStore } from "../workloads-pods/store";
+import podStoreInjectable from "../workloads-pods/store.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";

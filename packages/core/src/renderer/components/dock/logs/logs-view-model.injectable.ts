@@ -16,8 +16,8 @@ import stopLoadingLogsInjectable from "./stop-loading-logs.injectable";
 import renameTabInjectable from "../dock/rename-tab.injectable";
 import areLogsPresentInjectable from "./are-logs-present.injectable";
 import searchStoreInjectable from "../../../search-store/search-store.injectable";
-import getPodsByOwnerIdInjectable from "../../+workloads-pods/get-pods-by-owner-id.injectable";
-import getPodByIdInjectable from "../../+workloads-pods/get-pod-by-id.injectable";
+import getPodsByOwnerIdInjectable from "../../workloads-pods/get-pods-by-owner-id.injectable";
+import getPodByIdInjectable from "../../workloads-pods/get-pod-by-id.injectable";
 import downloadLogsInjectable from "./download-logs.injectable";
 import downloadAllLogsInjectable from "./download-all-logs.injectable";
 

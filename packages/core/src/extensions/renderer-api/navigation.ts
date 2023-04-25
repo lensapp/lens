@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import hideEntityDetailsInjectable from "../../renderer/components/+catalog/entity-details/hide.injectable";
-import showEntityDetailsInjectable from "../../renderer/components/+catalog/entity-details/show.injectable";
+import hideEntityDetailsInjectable from "../../renderer/components/catalog/entity-details/hide.injectable";
+import showEntityDetailsInjectable from "../../renderer/components/catalog/entity-details/show.injectable";
 import getDetailsUrlInjectable from "../../renderer/components/kube-detail-params/get-details-url.injectable";
 import hideDetailsInjectable from "../../renderer/components/kube-detail-params/hide-details.injectable";
 import showDetailsInjectable from "../../renderer/components/kube-detail-params/show-details.injectable";

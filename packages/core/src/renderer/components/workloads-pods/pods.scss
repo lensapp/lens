@@ -1,0 +1,60 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+@import "../workloads/workloads-mixins";
+
+.Pods {
+  .TableCell {
+    &.name {
+      flex-grow: 2;
+    }
+
+    &.age {
+      flex-grow: 0.5;
+    }
+
+    &.qos {
+      flex-grow: 0.8;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.containers {
+      .StatusBrick {
+        @include pod-status-bgs;
+
+        &.running:not(.ready) {
+          background-color: #ff9800a0;;
+          border: 1px solid var(--colorWarning);
+        }
+
+        &.running {
+          background-color: #49c54e;
+        }
+
+        &.terminated {
+          background-color: transparent;
+          border: 1px solid var(--colorTerminated);
+        }
+
+        &.failed {
+          background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHBhdGggZD0iTTI4OS45NCAyNTZsOTUtOTVBMjQgMjQgMCAwIDAgMzUxIDEyN2wtOTUgOTVsLTk1LTk1YTI0IDI0IDAgMCAwLTM0IDM0bDk1IDk1bC05NSA5NWEyNCAyNCAwIDEgMCAzNCAzNGw5NS05NWw5NSA5NWEyNCAyNCAwIDAgMCAzNC0zNHoiIGZpbGw9IiNmM2I3YjQiPjwvcGF0aD48L3N2Zz4K");
+        }
+
+        &.waiting {
+          background-color: #ff980090;
+          border: 1px solid var(--colorWarning);
+        }
+      }
+    }
+
+    &.status {
+      @include pod-status-colors;
+      flex-grow: 0.7;
+    }
+  }
+}

@@ -4,9 +4,9 @@
  */
 
 import { observable } from "mobx";
-import type { JobStore } from "../+workloads-jobs/store";
-import jobStoreInjectable from "../+workloads-jobs/store.injectable";
-import podStoreInjectable from "../+workloads-pods/store.injectable";
+import type { JobStore } from "../workloads-jobs/store";
+import jobStoreInjectable from "../workloads-jobs/store.injectable";
+import podStoreInjectable from "../workloads-pods/store.injectable";
 import { Job, Pod } from "../../../common/k8s-api/endpoints";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";

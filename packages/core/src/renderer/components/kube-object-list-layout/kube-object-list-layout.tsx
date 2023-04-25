@@ -14,7 +14,7 @@ import type { KubeJsonApiDataFor, KubeObject } from "../../../common/k8s-api/kub
 import type { ItemListLayoutProps, ItemListStore } from "../item-object-list/list-layout";
 import { ItemListLayout } from "../item-object-list/list-layout";
 import { KubeObjectMenu } from "../kube-object-menu";
-import { NamespaceSelectFilter } from "../+namespaces/namespace-select-filter";
+import { NamespaceSelectFilter } from "../namespaces/namespace-select-filter";
 import { ResourceKindMap, ResourceNames } from "../../utils/rbac";
 import { Icon } from "../icon";
 import { TooltipPosition } from "@k8slens/tooltip";

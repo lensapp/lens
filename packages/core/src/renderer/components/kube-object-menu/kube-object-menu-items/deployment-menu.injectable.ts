@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { KubeObjectMenuItemComponent } from "../kube-object-menu-item-injection-token";
 import { kubeObjectMenuItemInjectionToken } from "../kube-object-menu-item-injection-token";
 import { computed } from "mobx";
-import { DeploymentMenu } from "../../+workloads-deployments/deployment-menu";
+import { DeploymentMenu } from "../../workloads-deployments/deployment-menu";
 
 const deploymentMenuInjectable = getInjectable({
   id: "deployment-menu-kube-object-menu",

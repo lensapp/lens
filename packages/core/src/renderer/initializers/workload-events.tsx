@@ -8,7 +8,7 @@ import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { shouldShowResourceInjectionToken } from "../../features/cluster/showing-kube-resources/common/allowed-resources-injection-token";
-import { Events } from "../components/+events/events";
+import { Events } from "../components/events/events";
 
 export interface WorkloadEventsProps {}
 
