@@ -25,7 +25,7 @@
     "test:unit": "jest --coverage --runInBand"
   },
   "peerDependencies": {
-    "@k8slens/test-utils": "^1.0.0-alpha.1",
+    "@k8slens/test-utils": "^1.0.0-alpha.3",
     "@k8slens/utilities": "^1.0.0-alpha.1",
     "@ogre-tools/fp": "^15.3.1",
     "@ogre-tools/injectable": "^15.3.1",
