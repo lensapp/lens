@@ -4,9 +4,9 @@
  */
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import type { Logger } from "./logger";
-import loggerInjectable from "./logger.injectable";
+import { loggerInjectable } from "./logger.injectable";
 
-const prefixedLoggerInjectable = getInjectable({
+export const prefixedLoggerInjectable = getInjectable({
   id: "prefixed-logger",
   instantiate: (di, prefix): Logger => {
     const logger = di.inject(loggerInjectable);
@@ -33,5 +33,3 @@ const prefixedLoggerInjectable = getInjectable({
     getInstanceKey: (di, prefix: string) => prefix,
   }),
 });
-
-export default prefixedLoggerInjectable;

@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { createLogger, format } from "winston";
 import { loggerTransportInjectionToken } from "./transports";
 
-const winstonLoggerInjectable = getInjectable({
+export const winstonLoggerInjectable = getInjectable({
   id: "winston-logger",
   instantiate: (di) =>
     createLogger({
@@ -14,5 +14,3 @@ const winstonLoggerInjectable = getInjectable({
       transports: di.injectMany(loggerTransportInjectionToken),
     }),
 });
-
-export default winstonLoggerInjectable;
