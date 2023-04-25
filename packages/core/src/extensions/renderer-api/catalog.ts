@@ -8,7 +8,7 @@ import type { CatalogCategory, CatalogEntity } from "../../common/catalog";
 import type { CatalogEntityOnBeforeRun } from "../../renderer/api/catalog/entity/registry";
 import type { Disposer } from "@k8slens/utilities";
 import catalogCategoryRegistryInjectable from "../../common/catalog/category-registry.injectable";
-import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import { asLegacyGlobalForExtensionApi } from "@k8slens/legacy-global-di";
 import catalogEntityRegistryInjectable from "../../renderer/api/catalog/entity/registry.injectable";
 import activeKubernetesClusterInjectable from "../../renderer/cluster-frame-context/active-kubernetes-cluster.injectable";
 

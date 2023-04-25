@@ -10,7 +10,7 @@
 import { ipcMain, ipcRenderer, webContents } from "electron";
 import { toJS } from "../utils/toJS";
 import type { Disposer } from "@k8slens/utilities";
-import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
 import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
 import loggerInjectable from "../logger.injectable";
 import ipcMainInjectionToken from "./ipc-main-injection-token";

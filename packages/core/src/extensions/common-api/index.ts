@@ -4,7 +4,7 @@
  */
 
 import loggerInjectable from "../../common/logger.injectable";
-import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import { asLegacyGlobalForExtensionApi } from "@k8slens/legacy-global-di";
 
 // APIs
 export { App } from "./app";

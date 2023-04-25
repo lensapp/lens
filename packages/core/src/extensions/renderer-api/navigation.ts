@@ -11,7 +11,7 @@ import showDetailsInjectable from "../../renderer/components/kube-detail-params/
 import createPageParamInjectable from "../../renderer/navigation/create-page-param.injectable";
 import isActiveRouteInjectable from "../../renderer/navigation/is-route-active.injectable";
 import navigateInjectable from "../../renderer/navigation/navigate.injectable";
-import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import { asLegacyGlobalFunctionForExtensionApi } from "@k8slens/legacy-global-di";
 
 export type { PageParamInit, PageParam } from "../../renderer/navigation/page-param";
 export type { URLParams } from "@k8slens/utilities";

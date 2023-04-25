@@ -4,11 +4,10 @@
  */
 import type { KubeResource } from "../../common/rbac";
 import { apiResourceRecord } from "../../common/rbac";
-import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getLegacyGlobalDiForExtensionApi, asLegacyGlobalForExtensionApi, asLegacyGlobalFunctionForExtensionApi } from "@k8slens/legacy-global-di";
 import clusterRoleBindingApiInjectable from "../../common/k8s-api/endpoints/cluster-role-binding.api.injectable";
 import clusterRoleApiInjectable from "../../common/k8s-api/endpoints/cluster-role.api.injectable";
 import serviceAccountApiInjectable from "../../common/k8s-api/endpoints/service-account.api.injectable";
-import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import roleApiInjectable from "../../common/k8s-api/endpoints/role.api.injectable";
 import podApiInjectable from "../../common/k8s-api/endpoints/pod.api.injectable";
 import daemonSetApiInjectable from "../../common/k8s-api/endpoints/daemon-set.api.injectable";
@@ -38,7 +37,6 @@ import kubeEventApiInjectable from "../../common/k8s-api/endpoints/events.api.in
 import roleBindingApiInjectable from "../../common/k8s-api/endpoints/role-binding.api.injectable";
 import customResourceDefinitionApiInjectable from "../../common/k8s-api/endpoints/custom-resource-definition.api.injectable";
 import { shouldShowResourceInjectionToken } from "../../features/cluster/showing-kube-resources/common/allowed-resources-injection-token";
-import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
 import requestMetricsInjectable from "../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 
 export function isAllowedResource(resources: KubeResource | KubeResource[]) {

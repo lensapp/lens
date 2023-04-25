@@ -4,7 +4,7 @@
  */
 
 import appEventBusInjectable from "../../common/app-event-bus/app-event-bus.injectable";
-import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import { asLegacyGlobalForExtensionApi } from "@k8slens/legacy-global-di";
 import type { AppEvent } from "../../common/app-event-bus/event-bus";
 import type { EventEmitter, EventEmitterCallback, EventEmitterOptions } from "@k8slens/event-emitter";
 
