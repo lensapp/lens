@@ -6,9 +6,8 @@ import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import { createObservableHistory, ObservableHistory } from "mobx-observable-history";
 import { searchParamsOptions } from "./search-params";
 import { historyInjectable } from "./history.injectable";
-import type { LocationState } from "history";
 
-export const observableHistoryInjectionToken = getInjectionToken<ObservableHistory<LocationState>>({
+export const observableHistoryInjectionToken = getInjectionToken<ObservableHistory<unknown>>({
   id: "observable-history-injection-token",
 });
 
