@@ -60,11 +60,11 @@ export class PodDisruptionBudget extends KubeObject<
   }
 
   getMinAvailable() {
-    return this.spec.minAvailable || "N/A";
+    return this.spec.minAvailable ?? "N/A";
   }
 
   getMaxUnavailable() {
-    return this.spec.maxUnavailable || "N/A";
+    return this.spec.maxUnavailable ?? "N/A";
   }
 
   getCurrentHealthy() {
