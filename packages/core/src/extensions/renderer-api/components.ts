@@ -2,10 +2,9 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { asLegacyGlobalFunctionForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-function-for-extension-api";
+import { asLegacyGlobalFunctionForExtensionApi, asLegacyGlobalForExtensionApi } from "@k8slens/legacy-global-di";
 import createTerminalTabInjectable from "../../renderer/components/dock/terminal/create-terminal-tab.injectable";
 import terminalStoreInjectable from "../../renderer/components/dock/terminal/store.injectable";
-import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
 import logTabStoreInjectable from "../../renderer/components/dock/logs/tab-store.injectable";
 
 import commandOverlayInjectable from "../../renderer/components/command-palette/command-overlay.injectable";
@@ -13,7 +12,6 @@ import createPodLogsTabInjectable from "../../renderer/components/dock/logs/crea
 import createWorkloadLogsTabInjectable from "../../renderer/components/dock/logs/create-workload-logs-tab.injectable";
 import sendCommandInjectable from "../../renderer/components/dock/terminal/send-command.injectable";
 import renameTabInjectable from "../../renderer/components/dock/dock/rename-tab.injectable";
-import { asLegacyGlobalObjectForExtensionApiWithModifications } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api-with-modifications";
 import { ConfirmDialog as _ConfirmDialog } from "../../renderer/components/confirm-dialog";
 import type { ConfirmDialogBooleanParams, ConfirmDialogParams, ConfirmDialogProps } from "../../renderer/components/confirm-dialog";
 import openConfirmDialogInjectable from "../../renderer/components/confirm-dialog/open.injectable";
@@ -131,8 +129,8 @@ export * from "../../renderer/components/status-brick";
 
 export const createTerminalTab = asLegacyGlobalFunctionForExtensionApi(createTerminalTabInjectable);
 
-export const terminalStore = asLegacyGlobalObjectForExtensionApiWithModifications(
-  terminalStoreInjectable,
+export const terminalStore = Object.assign(
+  asLegacyGlobalForExtensionApi(terminalStoreInjectable),
   {
     sendCommand: asLegacyGlobalFunctionForExtensionApi(sendCommandInjectable),
   },
@@ -141,8 +139,8 @@ export const terminalStore = asLegacyGlobalObjectForExtensionApiWithModification
 const renameTab = asLegacyGlobalFunctionForExtensionApi(renameTabInjectable);
 const podStore = asLegacyGlobalForExtensionApi(podStoreInjectable);
 
-export const logTabStore = asLegacyGlobalObjectForExtensionApiWithModifications(
-  logTabStoreInjectable,
+export const logTabStore = Object.assign(
+  asLegacyGlobalForExtensionApi(logTabStoreInjectable),
   {
     createPodTab: asLegacyGlobalFunctionForExtensionApi(createPodLogsTabInjectable),
     createWorkloadTab: asLegacyGlobalFunctionForExtensionApi(createWorkloadLogsTabInjectable),

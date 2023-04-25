@@ -4,7 +4,7 @@
  */
 
 import type { CatalogEntity } from "../../common/catalog";
-import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import { asLegacyGlobalForExtensionApi } from "@k8slens/legacy-global-di";
 import catalogCategoryRegistryInjectable from "../../common/catalog/category-registry.injectable";
 import catalogEntityRegistryInjectable from "../../main/catalog/entity-registry.injectable";
 

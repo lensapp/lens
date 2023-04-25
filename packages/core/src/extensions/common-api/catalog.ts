@@ -5,7 +5,7 @@
 
 import type { KubernetesClusterCategory } from "../../common/catalog-entities/kubernetes-cluster";
 import kubernetesClusterCategoryInjectable from "../../common/catalog/categories/kubernetes-cluster.injectable";
-import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import { asLegacyGlobalForExtensionApi } from "@k8slens/legacy-global-di";
 
 export {
   KubernetesCluster,

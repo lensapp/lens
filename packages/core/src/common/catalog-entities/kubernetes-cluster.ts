@@ -9,7 +9,7 @@ import { broadcastMessage } from "../ipc";
 import type { CatalogEntityConstructor, CatalogEntitySpec } from "../catalog/catalog-entity";
 import { IpcRendererNavigationEvents } from "../ipc/navigation-events";
 import KubeClusterCategoryIcon from "./icons/kubernetes.svg";
-import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
 import { requestClusterActivationInjectionToken, requestClusterDeactivationInjectionToken } from "../../features/cluster/activation/common/request-token";
 
 export interface KubernetesClusterPrometheusMetrics {

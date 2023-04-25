@@ -5,7 +5,7 @@
 
 import activeThemeInjectable from "../../renderer/themes/active.injectable";
 import type { LensTheme } from "../../renderer/themes/lens-theme";
-import { asLegacyGlobalForExtensionApi } from "../as-legacy-globals-for-extension-api/as-legacy-global-object-for-extension-api";
+import { asLegacyGlobalForExtensionApi } from "@k8slens/legacy-global-di";
 
 export const activeTheme = asLegacyGlobalForExtensionApi(activeThemeInjectable);
 

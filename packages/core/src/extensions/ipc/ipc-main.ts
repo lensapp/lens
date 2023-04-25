@@ -10,7 +10,7 @@ import type { Disposer } from "@k8slens/utilities";
 import { once } from "lodash";
 import { ipcMainHandle } from "../../common/ipc";
 import type { Logger } from "../common-api";
-import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
 import loggerInjectable from "../../common/logger.injectable";
 
 interface Dependencies {

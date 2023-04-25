@@ -4,7 +4,6 @@
  */
 
 // @experimental
-export type { Environments } from "../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 export { registerLensCore } from "./register-lens-core";
 export { nodeEnvInjectionToken } from "../common/vars/node-env-injection-token";
 

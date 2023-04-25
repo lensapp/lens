@@ -30,7 +30,7 @@ import requestKubeObjectPatchInjectable from "./endpoints/resource-applier.api/r
 import { apiKubeInjectionToken } from "./api-kube";
 import requestKubeObjectCreationInjectable from "./endpoints/resource-applier.api/request-update.injectable";
 import { dump } from "js-yaml";
-import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
+import { getLegacyGlobalDiForExtensionApi } from "@k8slens/legacy-global-di";
 import autoBind from "auto-bind";
 
 export type KubeJsonApiDataFor<K> = K extends KubeObject<infer Metadata, infer Status, infer Spec>
@@ -443,7 +443,7 @@ export interface RawKubeObject<
   metadata: Metadata;
   status?: Status;
   spec?: Spec;
-  managedFields?: any;
+  [otherFields: string]: unknown;
 }
 
 export class KubeObject<
