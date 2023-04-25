@@ -43,11 +43,12 @@ export const getRequestChannelListenerInjectable = <
   getInjectable({
     id: `${info.channel.id}-request-listener-${info.id}`,
 
-    instantiate: (di) => ({
-      id: `${info.channel.id}-request-listener-${info.id}`,
-      channel: info.channel,
-      handler: info.getHandler(di),
-    }),
+    instantiate: (di) =>
+      ({
+        id: `${info.channel.id}-request-listener-${info.id}`,
+        channel: info.channel,
+        handler: info.getHandler(di),
+      } as RequestChannelListener<Channel>),
 
     injectionToken: requestChannelListenerInjectionToken,
   });
