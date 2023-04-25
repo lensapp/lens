@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { computed } from "mobx";
 import moment from "moment";
-import updateDownloadedDateTimeInjectable from "../../../../common/update-downloaded-date-time/update-downloaded-date-time.injectable";
+import updateDownloadedDateTimeInjectable from "../../../../common/update-downloaded-date-time.injectable";
 import { reactiveNow } from "../../../../../../common/utils/reactive-now/reactive-now";
 
 const timeSinceUpdateWasDownloadedInjectable = getInjectable({

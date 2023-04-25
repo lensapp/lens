@@ -9,7 +9,7 @@ import { UpdateChannel } from "./update-channel";
 const updateChannelPreferenceBlockInjectable = getInjectable({
   id: "update-channel-preference-item",
 
-  instantiate: () => ({
+  instantiate: (di) => ({
     kind: "block" as const,
     id: "update-channel",
     parentId: "application-page",

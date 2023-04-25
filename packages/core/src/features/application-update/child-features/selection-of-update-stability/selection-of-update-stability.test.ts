@@ -16,7 +16,7 @@ import type { UpdateChannel, ReleaseChannel } from "../../common/update-channels
 import { updateChannels } from "../../common/update-channels";
 import type { DownloadPlatformUpdate } from "../../main/download-update/download-platform-update/download-platform-update.injectable";
 import downloadPlatformUpdateInjectable from "../../main/download-update/download-platform-update/download-platform-update.injectable";
-import selectedUpdateChannelInjectable from "../../common/selected-update-channel/selected-update-channel.injectable";
+import selectedUpdateChannelInjectable from "../../common/selected-update-channel.injectable";
 import type { IComputedValue } from "mobx";
 import setUpdateOnQuitInjectable from "../../../../main/electron-app/features/set-update-on-quit.injectable";
 import showInfoNotificationInjectable from "../../../../renderer/components/notifications/show-info-notification.injectable";

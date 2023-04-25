@@ -4,8 +4,8 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import discoveredUpdateVersionInjectable from "../../../common/discovered-update-version/discovered-update-version.injectable";
-import updateIsBeingDownloadedInjectable from "../../../common/update-is-being-downloaded/update-is-being-downloaded.injectable";
+import discoveredUpdateVersionInjectable from "../../../common/discovered-update-version.injectable";
+import updateIsBeingDownloadedInjectable from "../../../common/update-is-being-downloaded.injectable";
 
 const updateIsReadyToBeInstalledInjectable = getInjectable({
   id: "update-is-ready-to-be-installed",

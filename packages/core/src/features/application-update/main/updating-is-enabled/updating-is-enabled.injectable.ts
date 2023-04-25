@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronUpdaterIsActiveInjectable from "../../../../main/electron-app/features/electron-updater-is-active.injectable";
-import publishIsConfiguredInjectable from "./publish-is-configured/publish-is-configured.injectable";
+import publishIsConfiguredInjectable from "./publish-is-configured.injectable";
 
 const updatingIsEnabledInjectable = getInjectable({
   id: "updating-is-enabled",
