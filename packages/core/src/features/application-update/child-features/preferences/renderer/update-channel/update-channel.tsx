@@ -7,8 +7,8 @@ import { SubTitle } from "../../../../../../renderer/components/layout/sub-title
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { Select } from "../../../../../../renderer/components/select";
 import { updateChannels } from "../../../../common/update-channels";
-import type { SelectedUpdateChannel } from "../../../../common/selected-update-channel/selected-update-channel.injectable";
-import selectedUpdateChannelInjectable from "../../../../common/selected-update-channel/selected-update-channel.injectable";
+import type { SelectedUpdateChannel } from "../../../../common/selected-update-channel.injectable";
+import selectedUpdateChannelInjectable from "../../../../common/selected-update-channel.injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { map, toPairs } from "lodash/fp";
 import { observer } from "mobx-react";

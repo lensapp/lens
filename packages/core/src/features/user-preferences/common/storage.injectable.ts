@@ -10,7 +10,7 @@ import persistentStorageMigrationsInjectable from "../../../common/persistent-st
 import { userPreferencesMigrationInjectionToken } from "./migrations-token";
 import { toJS } from "../../../common/utils";
 import storeMigrationVersionInjectable from "../../../common/vars/store-migration-version.injectable";
-import selectedUpdateChannelInjectable from "../../application-update/common/selected-update-channel/selected-update-channel.injectable";
+import selectedUpdateChannelInjectable from "../../application-update/common/selected-update-channel.injectable";
 import type { ReleaseChannel } from "../../application-update/common/update-channels";
 import userPreferencesStateInjectable from "./state.injectable";
 import userPreferenceDescriptorsInjectable from "./preference-descriptors.injectable";

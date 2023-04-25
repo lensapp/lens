@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { trayMenuItemInjectionToken } from "../../../../../../main/tray/tray-menu-item/tray-menu-item-injection-token";
-import discoveredUpdateVersionInjectable from "../../../../common/discovered-update-version/discovered-update-version.injectable";
+import discoveredUpdateVersionInjectable from "../../../../common/discovered-update-version.injectable";
 import { withErrorSuppression } from "../../../../../../common/utils/with-error-suppression/with-error-suppression";
 import { pipeline } from "@ogre-tools/fp";
 import withErrorLoggingInjectable from "../../../../../../common/utils/with-error-logging/with-error-logging.injectable";

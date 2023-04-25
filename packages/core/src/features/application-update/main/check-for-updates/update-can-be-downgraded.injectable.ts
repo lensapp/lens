@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import releaseChannelInjectable from "../../../vars/common/release-channel.injectable";
-import selectedUpdateChannelInjectable from "../../common/selected-update-channel/selected-update-channel.injectable";
+import selectedUpdateChannelInjectable from "../../common/selected-update-channel.injectable";
 
 const updateCanBeDowngradedInjectable = getInjectable({
   id: "update-can-be-downgraded",

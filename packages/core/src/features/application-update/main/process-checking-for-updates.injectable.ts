@@ -3,9 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import selectedUpdateChannelInjectable from "../common/selected-update-channel/selected-update-channel.injectable";
-import updatesAreBeingDiscoveredInjectable from "../common/updates-are-being-discovered/updates-are-being-discovered.injectable";
-import discoveredUpdateVersionInjectable from "../common/discovered-update-version/discovered-update-version.injectable";
+import selectedUpdateChannelInjectable from "../common/selected-update-channel.injectable";
+import updatesAreBeingDiscoveredInjectable from "../common/updates-are-being-discovered.injectable";
+import discoveredUpdateVersionInjectable from "../common/discovered-update-version.injectable";
 import { runInAction } from "mobx";
 import downloadUpdateInjectable from "./download-update/download-update.injectable";
 import checkForUpdatesStartingFromChannelInjectable from "./check-for-updates/check-for-updates-starting-from-channel.injectable";

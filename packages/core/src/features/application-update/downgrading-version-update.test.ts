@@ -11,7 +11,7 @@ import asyncFn from "@async-fn/jest";
 import type { CheckForPlatformUpdates } from "./main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
 import checkForPlatformUpdatesInjectable from "./main/check-for-updates/check-for-platform-updates/check-for-platform-updates.injectable";
 import processCheckingForUpdatesInjectable from "./main/process-checking-for-updates.injectable";
-import selectedUpdateChannelInjectable from "./common/selected-update-channel/selected-update-channel.injectable";
+import selectedUpdateChannelInjectable from "./common/selected-update-channel.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { updateChannels } from "./common/update-channels";
 import getBuildVersionInjectable from "../../main/electron-app/features/get-build-version.injectable";

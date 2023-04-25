@@ -7,7 +7,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 
 const publishIsConfiguredInjectable = getInjectable({
   id: "publish-is-configured",
-  instantiate: (di) => Boolean(di.inject(applicationInformationToken).updatingIsEnabled),
+  instantiate: (di) => di.inject(applicationInformationToken).updatingIsEnabled,
 });
 
 export default publishIsConfiguredInjectable;
