@@ -16,7 +16,7 @@ import { Animate } from "../animate";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
 import drawerStorageInjectable, { defaultDrawerWidth } from "./drawer-storage/drawer-storage.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { historyInjectable } from "@k8slens/routing";
+import { historyInjectionToken } from "@k8slens/routing";
 import type { History } from "history";
 import type { StorageLayer } from "../../utils/storage-helper";
 
@@ -251,7 +251,7 @@ class NonInjectedDrawer extends React.Component<DrawerProps & Dependencies & typ
 export const Drawer = withInjectables<Dependencies, DrawerProps>(NonInjectedDrawer as React.ElementType<DrawerProps & Dependencies>, {
   getProps: (di, props) => ({
     ...props,
-    history: di.inject(historyInjectable),
+    history: di.inject(historyInjectionToken),
     drawerStorage: di.inject(drawerStorageInjectable),
   }),
 });
