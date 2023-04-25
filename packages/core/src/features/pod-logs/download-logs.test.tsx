@@ -5,8 +5,8 @@
 
 import type { RenderResult } from "@testing-library/react";
 import { act, waitFor } from "@testing-library/react";
-import getPodByIdInjectable from "../../renderer/components/+workloads-pods/get-pod-by-id.injectable";
-import getPodsByOwnerIdInjectable from "../../renderer/components/+workloads-pods/get-pods-by-owner-id.injectable";
+import getPodByIdInjectable from "../../renderer/components/workloads-pods/get-pod-by-id.injectable";
+import getPodsByOwnerIdInjectable from "../../renderer/components/workloads-pods/get-pods-by-owner-id.injectable";
 import openSaveFileDialogInjectable from "../../renderer/utils/save-file.injectable";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";

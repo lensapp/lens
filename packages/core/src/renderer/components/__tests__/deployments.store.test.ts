@@ -4,9 +4,9 @@
  */
 
 import { observable } from "mobx";
-import type { DeploymentStore } from "../+workloads-deployments/store";
-import deploymentStoreInjectable from "../+workloads-deployments/store.injectable";
-import podStoreInjectable from "../+workloads-pods/store.injectable";
+import type { DeploymentStore } from "../workloads-deployments/store";
+import deploymentStoreInjectable from "../workloads-deployments/store.injectable";
+import podStoreInjectable from "../workloads-pods/store.injectable";
 import type { PodSpec } from "../../../common/k8s-api/endpoints";
 import { Deployment, Pod } from "../../../common/k8s-api/endpoints";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";

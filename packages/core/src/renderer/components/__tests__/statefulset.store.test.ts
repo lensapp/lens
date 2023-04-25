@@ -4,9 +4,9 @@
  */
 
 import { observable } from "mobx";
-import podStoreInjectable from "../+workloads-pods/store.injectable";
-import type { StatefulSetStore } from "../+workloads-statefulsets/store";
-import statefulSetStoreInjectable from "../+workloads-statefulsets/store.injectable";
+import podStoreInjectable from "../workloads-pods/store.injectable";
+import type { StatefulSetStore } from "../workloads-statefulsets/store";
+import statefulSetStoreInjectable from "../workloads-statefulsets/store.injectable";
 import { StatefulSet, Pod } from "../../../common/k8s-api/endpoints";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";

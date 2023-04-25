@@ -4,9 +4,9 @@
  */
 
 import { observable } from "mobx";
-import podStoreInjectable from "../+workloads-pods/store.injectable";
-import replicasetsStoreInjectable from "../+workloads-replicasets/store.injectable";
-import type { ReplicaSetStore } from "../+workloads-replicasets/store";
+import podStoreInjectable from "../workloads-pods/store.injectable";
+import replicasetsStoreInjectable from "../workloads-replicasets/store.injectable";
+import type { ReplicaSetStore } from "../workloads-replicasets/store";
 import { ReplicaSet, Pod } from "../../../common/k8s-api/endpoints";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";

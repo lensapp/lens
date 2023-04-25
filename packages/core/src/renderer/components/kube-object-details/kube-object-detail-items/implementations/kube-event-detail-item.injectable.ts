@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
-import { KubeEventDetails } from "../../../+events/kube-event-details";
+import { KubeEventDetails } from "../../../events/kube-event-details";
 
 const kubeEventDetailItemInjectable = getInjectable({
   id: "kube-event-detail-item",

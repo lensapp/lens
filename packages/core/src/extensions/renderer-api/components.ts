@@ -19,7 +19,7 @@ import type { ConfirmDialogBooleanParams, ConfirmDialogParams, ConfirmDialogProp
 import openConfirmDialogInjectable from "../../renderer/components/confirm-dialog/open.injectable";
 import confirmInjectable from "../../renderer/components/confirm-dialog/confirm.injectable";
 import notificationsStoreInjectable from "../../renderer/components/notifications/notifications-store.injectable";
-import podStoreInjectable from "../../renderer/components/+workloads-pods/store.injectable";
+import podStoreInjectable from "../../renderer/components/workloads-pods/store.injectable";
 import getDetailsUrlInjectable from "../../renderer/components/kube-detail-params/get-details-url.injectable";
 import showDetailsInjectable from "../../renderer/components/kube-detail-params/show-details.injectable";
 import showCheckedErrorNotificationInjectable from "../../renderer/components/notifications/show-checked-error.injectable";
@@ -50,7 +50,7 @@ export const CommandOverlay = asLegacyGlobalForExtensionApi(commandOverlayInject
 export type {
   CategoryColumnRegistration,
   AdditionalCategoryColumnRegistration,
-} from "../../renderer/components/+catalog/custom-category-columns";
+} from "../../renderer/components/catalog/custom-category-columns";
 
 // other components
 export type {
@@ -94,9 +94,9 @@ export const Notifications = {
 export * from "../../renderer/components/spinner";
 export * from "../../renderer/components/stepper";
 export * from "../../renderer/components/wizard";
-export * from "../../renderer/components/+workloads-pods/pod-details-list";
-export * from "../../renderer/components/+namespaces/namespace-select";
-export * from "../../renderer/components/+namespaces/namespace-select-filter";
+export * from "../../renderer/components/workloads-pods/pod-details-list";
+export * from "../../renderer/components/namespaces/namespace-select";
+export * from "../../renderer/components/namespaces/namespace-select-filter";
 export * from "../../renderer/components/layout/sub-title";
 export * from "../../renderer/components/input/search-input";
 export * from "../../renderer/components/chart/bar-chart";
@@ -107,7 +107,7 @@ export {
   type MonacoTheme, type MonacoCustomTheme,
 } from "../../renderer/components/monaco-editor";
 export * from "../../renderer/components/resource-metrics/resource-metrics";
-export * from "../../renderer/components/+workloads-pods/pod-charts";
+export * from "../../renderer/components/workloads-pods/pod-charts";
 
 /**
  * @deprecated Use `Renderer.Navigation.getDetailsUrl`
@@ -124,7 +124,7 @@ export * from "../../renderer/components/kube-object-details";
 export * from "../../renderer/components/kube-object-list-layout";
 export * from "../../renderer/components/kube-object-menu";
 export * from "../../renderer/components/kube-object-meta";
-export * from "../../renderer/components/+events/kube-event-details";
+export * from "../../renderer/components/events/kube-event-details";
 
 // specific exports
 export * from "../../renderer/components/status-brick";

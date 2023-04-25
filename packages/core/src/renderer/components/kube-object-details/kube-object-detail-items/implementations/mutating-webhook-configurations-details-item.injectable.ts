@@ -7,7 +7,7 @@ import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-i
 import { computed } from "mobx";
 import { kubeObjectMatchesToKindAndApiVersion } from "../kube-object-matches-to-kind-and-api-version";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
-import { MutatingWebhookDetails } from "../../../+config-mutating-webhook-configurations";
+import { MutatingWebhookDetails } from "../../../config-mutating-webhook-configurations";
 
 const mutatingWebhookConfigurationDetailItemInjectable = getInjectable({
   id: "mutating-webhook-configuration-detail-item",

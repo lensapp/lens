@@ -14,12 +14,12 @@ import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import { KubeObjectListLayout } from "./index";
 import appPathsStateInjectable from "../../../common/app-paths/app-paths-state.injectable";
-import podStoreInjectable from "../+workloads-pods/store.injectable";
+import podStoreInjectable from "../workloads-pods/store.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
-import type { PodStore } from "../+workloads-pods/store";
+import type { PodStore } from "../workloads-pods/store";
 import { Cluster } from "../../../common/cluster/cluster";
 import isTableColumnHiddenInjectable from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
 

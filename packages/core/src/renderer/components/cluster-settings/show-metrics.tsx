@@ -9,7 +9,7 @@ import type { Cluster } from "../../../common/cluster/cluster";
 import { observable, reaction, makeObservable } from "mobx";
 import { Badge } from "../badge/badge";
 import { Icon } from "../icon/icon";
-import { Notice } from "../+extensions/notice";
+import { Notice } from "../extensions/notice";
 
 export interface ShowMetricsSettingProps {
   cluster: Cluster;

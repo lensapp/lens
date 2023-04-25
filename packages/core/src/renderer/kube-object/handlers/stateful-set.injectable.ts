@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { StatefulSet } from "../../../common/k8s-api/endpoints";
-import openStatefulSetScaleDialogInjectable from "../../components/+workloads-statefulsets/scale/open-dialog.injectable";
+import openStatefulSetScaleDialogInjectable from "../../components/workloads-statefulsets/scale/open-dialog.injectable";
 import { staticKubeObjectHandlerInjectionToken } from "../handler";
 
 const statefulSetKubeObjectHandlerInjectable = getInjectable({

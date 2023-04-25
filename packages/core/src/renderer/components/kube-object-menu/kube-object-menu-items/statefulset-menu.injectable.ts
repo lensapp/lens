@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { KubeObjectMenuItemComponent } from "../kube-object-menu-item-injection-token";
 import { kubeObjectMenuItemInjectionToken } from "../kube-object-menu-item-injection-token";
 import { computed } from "mobx";
-import { StatefulSetMenu } from "../../+workloads-statefulsets/statefulset-menu";
+import { StatefulSetMenu } from "../../workloads-statefulsets/statefulset-menu";
 
 const statefulsetMenuInjectable = getInjectable({
   id: "statefulset-menu-kube-object-menu",

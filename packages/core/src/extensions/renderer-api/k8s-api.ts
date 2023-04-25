@@ -112,40 +112,40 @@ export {
 } from "../../common/k8s-api/kube-object-status";
 
 // stores
-export type { EventStore } from "../../renderer/components/+events/store";
-export type { PodStore as PodsStore } from "../../renderer/components/+workloads-pods/store";
-export type { NodeStore as NodesStore } from "../../renderer/components/+nodes/store";
-export type { DeploymentStore } from "../../renderer/components/+workloads-deployments/store";
-export type { DaemonSetStore } from "../../renderer/components/+workloads-daemonsets/store";
-export type { StatefulSetStore } from "../../renderer/components/+workloads-statefulsets/store";
-export type { JobStore } from "../../renderer/components/+workloads-jobs/store";
-export type { CronJobStore } from "../../renderer/components/+workloads-cronjobs/store";
-export type { ConfigMapStore as ConfigMapsStore } from "../../renderer/components/+config-maps/store";
-export type { SecretStore as SecretsStore } from "../../renderer/components/+config-secrets/store";
-export type { ReplicaSetStore } from "../../renderer/components/+workloads-replicasets/store";
-export type { ResourceQuotaStore as ResourceQuotasStore } from "../../renderer/components/+config-resource-quotas/store";
-export type { LimitRangeStore as LimitRangesStore } from "../../renderer/components/+config-limit-ranges/store";
+export type { EventStore } from "../../renderer/components/events/store";
+export type { PodStore as PodsStore } from "../../renderer/components/workloads-pods/store";
+export type { NodeStore as NodesStore } from "../../renderer/components/nodes/store";
+export type { DeploymentStore } from "../../renderer/components/workloads-deployments/store";
+export type { DaemonSetStore } from "../../renderer/components/workloads-daemonsets/store";
+export type { StatefulSetStore } from "../../renderer/components/workloads-statefulsets/store";
+export type { JobStore } from "../../renderer/components/workloads-jobs/store";
+export type { CronJobStore } from "../../renderer/components/workloads-cronjobs/store";
+export type { ConfigMapStore as ConfigMapsStore } from "../../renderer/components/config-maps/store";
+export type { SecretStore as SecretsStore } from "../../renderer/components/config-secrets/store";
+export type { ReplicaSetStore } from "../../renderer/components/workloads-replicasets/store";
+export type { ResourceQuotaStore as ResourceQuotasStore } from "../../renderer/components/config-resource-quotas/store";
+export type { LimitRangeStore as LimitRangesStore } from "../../renderer/components/config-limit-ranges/store";
 export type {
   /**
    * @deprecated
    */
   HorizontalPodAutoscalerStore as HPAStore,
   HorizontalPodAutoscalerStore,
-} from "../../renderer/components/+config-horizontal-pod-autoscalers/store";
-export type { VerticalPodAutoscalerStore } from "../../renderer/components/+config-vertical-pod-autoscalers/store";
-export type { PodDisruptionBudgetStore as PodDisruptionBudgetsStore } from "../../renderer/components/+config-pod-disruption-budgets/store";
-export type { PriorityClassStore as PriorityClassStoreStore } from "../../renderer/components/+config-priority-classes/store";
-export type { ServiceStore } from "../../renderer/components/+network-services/store";
-export type { EndpointsStore as EndpointStore } from "../../renderer/components/+network-endpoints/store";
-export type { IngressStore } from "../../renderer/components/+network-ingresses/ingress-store";
-export type { IngressClassStore } from "../../renderer/components/+network-ingresses/ingress-class-store";
-export type { NetworkPolicyStore } from "../../renderer/components/+network-policies/store";
-export type { PersistentVolumeStore as PersistentVolumesStore } from "../../renderer/components/+storage-volumes/store";
-export type { PersistentVolumeClaimStore as VolumeClaimStore } from "../../renderer/components/+storage-volume-claims/store";
-export type { StorageClassStore } from "../../renderer/components/+storage-classes/store";
-export type { NamespaceStore } from "../../renderer/components/+namespaces/store";
-export type { ServiceAccountStore as ServiceAccountsStore } from "../../renderer/components/+user-management/+service-accounts/store";
-export type { RoleStore as RolesStore } from "../../renderer/components/+user-management/+roles/store";
-export type { RoleBindingStore as RoleBindingsStore } from "../../renderer/components/+user-management/+role-bindings/store";
-export type { CustomResourceDefinitionStore as CRDStore } from "../../renderer/components/+custom-resources/definition.store";
+} from "../../renderer/components/config-horizontal-pod-autoscalers/store";
+export type { VerticalPodAutoscalerStore } from "../../renderer/components/config-vertical-pod-autoscalers/store";
+export type { PodDisruptionBudgetStore as PodDisruptionBudgetsStore } from "../../renderer/components/config-pod-disruption-budgets/store";
+export type { PriorityClassStore as PriorityClassStoreStore } from "../../renderer/components/config-priority-classes/store";
+export type { ServiceStore } from "../../renderer/components/network-services/store";
+export type { EndpointsStore as EndpointStore } from "../../renderer/components/network-endpoints/store";
+export type { IngressStore } from "../../renderer/components/network-ingresses/ingress-store";
+export type { IngressClassStore } from "../../renderer/components/network-ingresses/ingress-class-store";
+export type { NetworkPolicyStore } from "../../renderer/components/network-policies/store";
+export type { PersistentVolumeStore as PersistentVolumesStore } from "../../renderer/components/storage-volumes/store";
+export type { PersistentVolumeClaimStore as VolumeClaimStore } from "../../renderer/components/storage-volume-claims/store";
+export type { StorageClassStore } from "../../renderer/components/storage-classes/store";
+export type { NamespaceStore } from "../../renderer/components/namespaces/store";
+export type { ServiceAccountStore as ServiceAccountsStore } from "../../renderer/components/user-management/service-accounts/store";
+export type { RoleStore as RolesStore } from "../../renderer/components/user-management/roles/store";
+export type { RoleBindingStore as RoleBindingsStore } from "../../renderer/components/user-management/role-bindings/store";
+export type { CustomResourceDefinitionStore as CRDStore } from "../../renderer/components/custom-resources/definition.store";
 export type { CustomResourceStore as CRDResourceStore } from "../../common/k8s-api/api-manager/resource.store";

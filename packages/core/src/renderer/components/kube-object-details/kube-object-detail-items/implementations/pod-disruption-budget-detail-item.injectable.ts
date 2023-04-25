@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { kubeObjectDetailItemInjectionToken } from "../kube-object-detail-item-injection-token";
 import { computed } from "mobx";
-import { PodDisruptionBudgetDetails } from "../../../+config-pod-disruption-budgets";
+import { PodDisruptionBudgetDetails } from "../../../config-pod-disruption-budgets";
 import currentKubeObjectInDetailsInjectable from "../../current-kube-object-in-details.injectable";
 import { PodDisruptionBudget } from "../../../../../common/k8s-api/endpoints";
 

@@ -12,7 +12,7 @@ import editResourceModelInjectable from "./edit-resource-model/edit-resource-mod
 import { EditorPanel } from "../editor-panel";
 import { InfoPanel } from "../info-panel";
 import { Badge } from "../../badge";
-import { Notice } from "../../+extensions/notice";
+import { Notice } from "../../extensions/notice";
 
 export interface EditResourceProps {
   tabId: string;

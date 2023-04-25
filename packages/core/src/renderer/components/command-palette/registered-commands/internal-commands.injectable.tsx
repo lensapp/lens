@@ -39,8 +39,8 @@ import navigateToEntitySettingsInjectable from "../../../../common/front-end-rou
 
 // TODO: Importing from features is not OK. Make commands to comply with Open Closed Principle to allow moving implementation under a feature
 import navigateToPreferencesInjectable from "../../../../features/preferences/common/navigate-to-preferences.injectable";
-import type { HasCatalogEntitySettingItems } from "../../+entity-settings/has-settings.injectable";
-import hasCatalogEntitySettingItemsInjectable from "../../+entity-settings/has-settings.injectable";
+import type { HasCatalogEntitySettingItems } from "../../entity-settings/has-settings.injectable";
+import hasCatalogEntitySettingItemsInjectable from "../../entity-settings/has-settings.injectable";
 
 export function isKubernetesClusterActive(context: CommandContext): boolean {
   return context.entity?.kind === "KubernetesCluster";

@@ -18,8 +18,8 @@ import type { DockTab } from "../dock/store";
 import { cssNames } from "@k8slens/utilities";
 import type { SubscribeStores } from "../../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../../kube-watch-api/subscribe-stores.injectable";
-import type { PodStore } from "../../+workloads-pods/store";
-import podStoreInjectable from "../../+workloads-pods/store.injectable";
+import type { PodStore } from "../../workloads-pods/store";
+import podStoreInjectable from "../../workloads-pods/store.injectable";
 
 export interface LogsDockTabProps {
   className?: string;

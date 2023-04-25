@@ -1,0 +1,42 @@
+/**
+ * Copyright (c) OpenLens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+@import "../storage/storage-mixins";
+
+.PersistentVolumes {
+  .TableCell {
+    &.name {
+      flex-grow: 3;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.storage {
+      flex: 0.6;
+    }
+
+    &.storageClass {
+      flex-grow: 1.5;
+    }
+
+    &.capacity {
+      flex: 0.6;
+    }
+
+    &.claim {
+      flex-grow: 3;
+    }
+
+    &.status {
+      @include pv-status-colors;
+    }
+
+    &.age {
+      flex: 0.4;
+    }
+  }
+}
