@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import catalogCategoryRegistryInjectable from "../../../../common/catalog/category-registry.injectable";
 import navigateInjectable from "../../../navigation/navigate.injectable";
 import { CatalogEntityRegistry } from "./registry";
-import loggerInjectable from "../../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 const catalogEntityRegistryInjectable = getInjectable({
   id: "catalog-entity-registry",

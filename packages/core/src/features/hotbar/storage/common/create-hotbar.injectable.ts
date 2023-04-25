@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { CreateHotbarData } from "./types";
-import prefixedLoggerInjectable from "../../../../common/logger/prefixed-logger.injectable";
+import { prefixedLoggerInjectable } from "@k8slens/logging";
 import type { HotbarDependencies } from "./hotbar";
 import { Hotbar } from "./hotbar";
 

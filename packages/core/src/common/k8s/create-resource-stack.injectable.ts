@@ -7,7 +7,7 @@ import type { KubernetesCluster } from "../catalog-entities";
 import readDirectoryInjectable from "../fs/read-directory.injectable";
 import readFileInjectable from "../fs/read-file.injectable";
 import { kubectlApplyAllInjectionToken, kubectlDeleteAllInjectionToken } from "../kube-helpers/channels";
-import loggerInjectable from "../logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 import joinPathsInjectable from "../path/join-paths.injectable";
 import type { ResourceApplyingStack, ResourceStackDependencies } from "./resource-stack";
 import { ResourceStack } from "./resource-stack";

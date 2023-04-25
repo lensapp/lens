@@ -11,6 +11,7 @@ import { registerFeature } from "@k8slens/feature-core";
 import { applicationFeature, startApplicationInjectionToken } from '@k8slens/application'
 import { applicationFeatureForElectronMain } from '@k8slens/application-for-electron-main'
 import { messagingFeatureForMain } from "@k8slens/messaging-for-main";
+import { loggingFeature } from "@k8slens/logging";
 
 const environment = "main";
 
@@ -23,7 +24,13 @@ registerMobX(di);
 runInAction(() => {
   registerLensCore(di, environment);
 
-  registerFeature(di, applicationFeature, applicationFeatureForElectronMain, messagingFeatureForMain);
+  registerFeature(
+    di,
+    applicationFeature,
+    applicationFeatureForElectronMain,
+    messagingFeatureForMain,
+    loggingFeature
+  );
 
   try {
     autoRegister({

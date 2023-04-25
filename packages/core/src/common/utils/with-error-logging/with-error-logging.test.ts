@@ -9,7 +9,7 @@ import { pipeline } from "@ogre-tools/fp";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "@k8slens/test-utils";
-import logErrorInjectable from "../../log-error.injectable";
+import { logErrorInjectable } from "@k8slens/logging";
 
 describe("with-error-logging", () => {
   describe("given decorated sync function", () => {

@@ -9,7 +9,7 @@ import type { ApplicationBuilder } from "../../renderer/components/test-utils/ge
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 import applicationMenuItemInjectionToken from "./main/menu-items/application-menu-item-injection-token";
-import logErrorInjectable from "../../common/log-error.injectable";
+import { logErrorInjectable } from "@k8slens/logging";
 
 describe("application-menu-in-legacy-extension-api", () => {
   let builder: ApplicationBuilder;

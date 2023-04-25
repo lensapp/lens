@@ -12,13 +12,13 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { cssNames } from "@k8slens/utilities";
 import { LocaleDate } from "../locale-date";
 import type { EventStore } from "./store";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
 
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import eventStoreInjectable from "./store.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 export interface KubeEventDetailsProps {
   object: KubeObject;

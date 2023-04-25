@@ -15,7 +15,7 @@ import type {
 } from "./menu-items/application-menu-item-injection-token";
 import applicationMenuItemInjectionToken from "./menu-items/application-menu-item-injection-token";
 import type { MenuRegistration } from "./menu-registration";
-import logErrorInjectable from "../../../common/log-error.injectable";
+import { logErrorInjectable } from "@k8slens/logging";
 
 const applicationMenuItemRegistratorInjectable = getInjectable({
   id: "application-menu-item-registrator",

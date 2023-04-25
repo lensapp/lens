@@ -11,14 +11,14 @@ import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { LocaleDate } from "../locale-date";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import { KubeObjectAge } from "../kube-object/age";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 import type { NamespaceApi } from "../../../common/k8s-api/endpoints";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 

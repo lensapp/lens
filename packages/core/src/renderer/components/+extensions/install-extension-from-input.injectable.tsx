@@ -13,7 +13,7 @@ import extensionInstallationStateStoreInjectable from "../../../extensions/exten
 import readFileNotifyInjectable from "./read-file-notify/read-file-notify.injectable";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 import downloadBinaryInjectable from "../../../common/fetch/download-binary.injectable";
 import { withTimeout } from "../../../common/fetch/timeout-controller";
 

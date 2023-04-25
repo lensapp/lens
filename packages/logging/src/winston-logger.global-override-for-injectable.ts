@@ -8,16 +8,20 @@ import { getGlobalOverride } from "@k8slens/test-utils";
 import { noop } from "@k8slens/utilities";
 import winstonLoggerInjectable from "./winston-logger.injectable";
 
-export default getGlobalOverride(winstonLoggerInjectable, () => ({
-  log: noop,
-  add: noop,
-  remove: noop,
-  clear: noop,
-  close: noop,
+export default getGlobalOverride(
+  winstonLoggerInjectable,
+  () =>
+    ({
+      log: noop,
+      add: noop,
+      remove: noop,
+      clear: noop,
+      close: noop,
 
-  warn: noop,
-  debug: noop,
-  error: noop,
-  info: noop,
-  silly: noop,
-}) as winston.Logger);
+      warn: noop,
+      debug: noop,
+      error: noop,
+      info: noop,
+      silly: noop,
+    } as winston.Logger),
+);

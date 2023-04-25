@@ -9,7 +9,7 @@ import tempy from "tempy";
 import type { Patch } from "rfc6902";
 import type { KubernetesObject } from "@kubernetes/client-node";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";
-import type { Logger } from "../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import type { WriteFile } from "../../common/fs/write-file.injectable";
 import type { RemovePath } from "../../common/fs/remove.injectable";
 import type { ExecFile } from "../../common/fs/exec-file.injectable";

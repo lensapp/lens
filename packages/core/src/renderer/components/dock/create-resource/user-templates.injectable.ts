@@ -15,7 +15,7 @@ import homeDirectoryPathInjectable from "../../../../common/os/home-directory-pa
 import getDirnameOfPathInjectable from "../../../../common/path/get-dirname.injectable";
 import parsePathInjectable from "../../../../common/path/parse.injectable";
 import { waitForPath } from "../../../../common/utils/wait-for-path";
-import prefixedLoggerInjectable from "../../../../common/logger/prefixed-logger.injectable";
+import { prefixedLoggerInjectable } from "@k8slens/logging";
 
 const userCreateResourceTemplatesInjectable = getInjectable({
   id: "user-create-resource-templates",

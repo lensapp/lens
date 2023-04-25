@@ -11,9 +11,9 @@ import { DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Endpoints } from "../../../common/k8s-api/endpoints";
 import { EndpointSubsetList } from "./endpoint-subset-list";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 export interface EndpointsDetailsProps extends KubeObjectDetailsProps<Endpoints> {
 }

@@ -16,7 +16,7 @@ import { requestExtensionLoaderInitialState } from "../../renderer/ipc";
 import assert from "assert";
 import { EventEmitter } from "../../common/event-emitter";
 import type { Extension } from "./extension/extension.injectable";
-import type { Logger } from "../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import type { JoinPaths } from "../../common/path/join-paths.injectable";
 import type { GetDirnameOfPath } from "../../common/path/get-dirname.injectable";
 import type { UpdateExtensionsState } from "../../features/extensions/enabled/common/update-state.injectable";

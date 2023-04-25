@@ -14,14 +14,14 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import { DurationAbsoluteTimestamp } from "./duration-absolute";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import { cssNames } from "@k8slens/utilities";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 export interface EventDetailsProps extends KubeObjectDetailsProps<KubeEvent> {
 }

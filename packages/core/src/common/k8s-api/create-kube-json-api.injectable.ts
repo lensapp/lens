@@ -7,7 +7,7 @@ import { Agent } from "https";
 import type { RequestInit } from "@k8slens/node-fetch";
 import lensProxyCertificateInjectable from "../certificate/lens-proxy-certificate.injectable";
 import fetchInjectable from "../fetch/fetch.injectable";
-import loggerInjectable from "../logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 import type { JsonApiConfig, JsonApiDependencies } from "./json-api";
 import { KubeJsonApi } from "./kube-json-api";
 
@@ -28,13 +28,13 @@ const createKubeJsonApiInjectable = getInjectable({
           const agent = new Agent({
             ca: lensProxyCert.get().cert,
           });
-  
+
           return {
             agent,
           };
         };
       }
-      
+
       return new KubeJsonApi(dependencies, config, reqInit);
     };
   },

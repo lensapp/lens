@@ -12,9 +12,9 @@ import type { LimitRangeItem } from "../../../common/k8s-api/endpoints/limit-ran
 import { LimitPart, LimitRange, Resource } from "../../../common/k8s-api/endpoints/limit-range.api";
 import { DrawerItem } from "../drawer/drawer-item";
 import { Badge } from "../badge";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 export interface LimitRangeDetailsProps extends KubeObjectDetailsProps<LimitRange> {
 }

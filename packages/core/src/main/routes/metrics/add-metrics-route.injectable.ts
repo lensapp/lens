@@ -13,7 +13,7 @@ import { isObject } from "lodash";
 import { isRequestError, object } from "@k8slens/utilities";
 import type { GetMetrics } from "../../get-metrics.injectable";
 import getMetricsInjectable from "../../get-metrics.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 import prometheusHandlerInjectable from "../../cluster/prometheus-handler/prometheus-handler.injectable";
 import { runInAction } from "mobx";
 

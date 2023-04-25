@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import extensionLoaderInjectable from "../../../extensions/extension-loader/extension-loader.injectable";
 import { LensProtocolRouterRenderer } from "./lens-protocol-router-renderer";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 import showErrorNotificationInjectable from "../../components/notifications/show-error-notification.injectable";
 import showShortInfoNotificationInjectable from "../../components/notifications/show-short-info.injectable";
 import isExtensionEnabledInjectable from "../../../features/extensions/enabled/common/is-enabled.injectable";

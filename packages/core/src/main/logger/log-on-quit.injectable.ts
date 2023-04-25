@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import loggerInjectable from "../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 import { onQuitOfBackEndInjectionToken } from "../start-main-application/runnable-tokens/phases";
 
 const logOnQuitOfBackendInjectable = getInjectable({

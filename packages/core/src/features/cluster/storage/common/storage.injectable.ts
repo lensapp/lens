@@ -8,7 +8,7 @@ import { comparer, action } from "mobx";
 import { clusterStoreMigrationInjectionToken } from "./migration-token";
 import type { ClusterId, ClusterModel } from "../../../../common/cluster-types";
 import { Cluster } from "../../../../common/cluster/cluster";
-import loggerInjectable from "../../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 import createPersistentStorageInjectable from "../../../../common/persistent-storage/create.injectable";
 import persistentStorageMigrationsInjectable from "../../../../common/persistent-storage/migrations.injectable";
 import storeMigrationVersionInjectable from "../../../../common/vars/store-migration-version.injectable";

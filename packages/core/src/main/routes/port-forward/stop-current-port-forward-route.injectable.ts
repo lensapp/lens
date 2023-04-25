@@ -6,7 +6,7 @@ import { getRouteInjectable } from "../../router/router.injectable";
 import { apiPrefix } from "../../../common/vars";
 import { PortForward } from "./functionality/port-forward";
 import { clusterRoute } from "../../router/route";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 const stopCurrentPortForwardRouteInjectable = getRouteInjectable({
   id: "stop-current-port-forward-route",

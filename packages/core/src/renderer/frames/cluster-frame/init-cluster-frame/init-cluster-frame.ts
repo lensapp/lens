@@ -8,7 +8,7 @@ import type { ShowNotification } from "../../../components/notifications";
 import { when } from "mobx";
 import { requestSetClusterFrameId } from "../../../ipc";
 import type { EmitAppEvent } from "../../../../common/app-event-bus/emit-event.injectable";
-import type { Logger } from "../../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 
 interface Dependencies {
   hostedCluster: Cluster;

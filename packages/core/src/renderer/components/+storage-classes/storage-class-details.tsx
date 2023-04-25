@@ -15,13 +15,13 @@ import { StorageClass } from "../../../common/k8s-api/endpoints";
 import type { StorageClassStore } from "./store";
 import { VolumeDetailsList } from "../+storage-volumes/volume-details-list";
 import type { PersistentVolumeStore } from "../+storage-volumes/store";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import storageClassStoreInjectable from "./store.injectable";
 import persistentVolumeStoreInjectable from "../+storage-volumes/store.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 export interface StorageClassDetailsProps extends KubeObjectDetailsProps<StorageClass> {
 }

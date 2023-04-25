@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerTransportInjectionToken } from "../../../common/logger/transports";
+import { loggerTransportInjectionToken } from "@k8slens/logging";
 import type winston from "winston";
 import { MESSAGE } from "triple-beam";
 

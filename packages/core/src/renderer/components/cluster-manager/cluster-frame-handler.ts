@@ -8,7 +8,7 @@ import type { ClusterId } from "../../../common/cluster-types";
 import type { Disposer } from "@k8slens/utilities";
 import { onceDefined } from "@k8slens/utilities";
 import assert from "assert";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import { getClusterFrameUrl } from "../../../common/utils";
 import type { GetClusterById } from "../../../features/cluster/storage/common/get-by-id.injectable";
 

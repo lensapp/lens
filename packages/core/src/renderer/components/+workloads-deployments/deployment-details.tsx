@@ -18,13 +18,13 @@ import type { DeploymentStore } from "./store";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import type { ReplicaSetStore } from "../+workloads-replicasets/store";
 import { DeploymentReplicaSets } from "./deployment-replicasets";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import replicaSetStoreInjectable from "../+workloads-replicasets/store.injectable";
 import deploymentStoreInjectable from "./store.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 export interface DeploymentDetailsProps extends KubeObjectDetailsProps<Deployment> {
 }

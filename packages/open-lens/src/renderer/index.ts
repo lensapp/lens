@@ -20,6 +20,7 @@ import { registerInjectableReact } from "@ogre-tools/injectable-react";
 import { messagingFeatureForRenderer } from "@k8slens/messaging-for-renderer";
 import { keyboardShortcutsFeature } from "@k8slens/keyboard-shortcuts";
 import { reactApplicationFeature } from "@k8slens/react-application";
+import { loggingFeature } from "@k8slens/logging";
 
 const environment = "renderer";
 
@@ -38,7 +39,8 @@ runInAction(() => {
     messagingFeatureForRenderer,
     keyboardShortcutsFeature,
     reactApplicationFeature,
-    metricsFeature
+    metricsFeature,
+    loggingFeature,
   );
 
   autoRegister({

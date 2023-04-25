@@ -11,7 +11,7 @@ import { once } from "lodash";
 import { ipcMainHandle } from "../../common/ipc";
 import type { Logger } from "../common-api";
 import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
-import loggerInjectable from "../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 interface Dependencies {
   readonly logger: Logger;

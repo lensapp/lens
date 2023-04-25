@@ -28,8 +28,8 @@ import type { VisitEntityContextMenu } from "../../../common/catalog/visit-entit
 import visitEntityContextMenuInjectable from "../../../common/catalog/visit-entity-context-menu.injectable";
 import type { NavigateToCatalog } from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
 import navigateToCatalogInjectable from "../../../common/front-end-routing/routes/catalog/navigate-to-catalog.injectable";
-import type { Logger } from "../../../common/logger";
-import loggerInjectable from "../../../common/logger.injectable";
+import type { Logger } from "@k8slens/logging";
+import { loggerInjectable } from "@k8slens/logging";
 import type { NormalizeCatalogEntityContextMenu } from "../../catalog/normalize-menu-item.injectable";
 import normalizeCatalogEntityContextMenuInjectable from "../../catalog/normalize-menu-item.injectable";
 import type { Navigate } from "../../navigation/navigate.injectable";

@@ -34,9 +34,9 @@ import User from "./user.svg";
 import Users from "./users.svg";
 import Wheel from "./wheel.svg";
 import Workloads from "./workloads.svg";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 const hrefValidation = /https?:\/\//;
 

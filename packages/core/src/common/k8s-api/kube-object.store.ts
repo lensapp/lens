@@ -14,7 +14,7 @@ import type { KubeApiQueryParams, KubeApi, KubeApiWatchCallback } from "./kube-a
 import { parseKubeApi } from "./kube-api-parse";
 import type { RequestInit } from "@k8slens/node-fetch";
 import type { Patch } from "rfc6902";
-import type { Logger } from "../logger";
+import type { Logger } from "@k8slens/logging";
 import assert from "assert";
 import type { PartialDeep } from "type-fest";
 import type { ClusterContext } from "../../renderer/cluster-frame-context/cluster-frame-context";

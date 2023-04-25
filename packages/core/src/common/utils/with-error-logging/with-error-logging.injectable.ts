@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import logErrorInjectable from "../../log-error.injectable";
+import { logErrorInjectable } from "@k8slens/logging";
 
 export type WithErrorLoggingFor = (
   getErrorMessage: (error: unknown) => string

@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { format, transports } from "winston";
 import { ConsoleFormat } from "./console-format";
-import { loggerTransportInjectionToken } from "../../common/logger/transports";
+import { loggerTransportInjectionToken } from "@k8slens/logging";
 import logLevelInjectable from "./level.injectable";
 
 const consoleLoggerTransportInjectable = getInjectable({

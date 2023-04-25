@@ -7,7 +7,7 @@ import { sortBy } from "lodash/fp";
 import proxyDownloadJsonInjectable from "../../../../../../../common/fetch/download-json/proxy.injectable";
 import { withTimeout } from "../../../../../../../common/fetch/timeout-controller";
 import type { HelmRepo } from "../../../../../../../common/helm/helm-repo";
-import loggerInjectable from "../../../../../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 const publicHelmReposUrl = "https://github.com/lensapp/artifact-hub-repositories/releases/download/latest/repositories.json";
 

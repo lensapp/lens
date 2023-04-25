@@ -9,7 +9,7 @@ import isEqual from "lodash/isEqual";
 import url from "url";
 import { makeObservable, observable } from "mobx";
 import { ipcRenderer } from "electron";
-import type { Logger } from "../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import { once } from "lodash";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
 

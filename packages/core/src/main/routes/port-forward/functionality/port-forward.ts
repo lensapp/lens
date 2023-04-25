@@ -7,7 +7,7 @@ import type { ChildProcessWithoutNullStreams } from "child_process";
 import { spawn } from "child_process";
 import * as tcpPortUsed from "tcp-port-used";
 import { TypedRegEx } from "typed-regex";
-import type { Logger } from "../../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 
 const internalPortMatcher = "^forwarding from (?<address>.+) ->";
 const internalPortRegex = Object.assign(TypedRegEx(internalPortMatcher, "i"), {

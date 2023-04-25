@@ -16,13 +16,13 @@ import type { CronJobStore } from "./store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { Job } from "../../../common/k8s-api/endpoints";
 import { CronJob } from "../../../common/k8s-api/endpoints";
-import type { Logger } from "../../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import cronJobStoreInjectable from "./store.injectable";
 import jobStoreInjectable from "../+workloads-jobs/store.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 

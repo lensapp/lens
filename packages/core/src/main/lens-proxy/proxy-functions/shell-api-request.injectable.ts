@@ -8,7 +8,7 @@ import openShellSessionInjectable from "../../shell-session/create-shell-session
 import type { LensProxyApiRequest } from "../lens-proxy";
 import URLParse from "url-parse";
 import { Server as WebSocketServer } from "ws";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 import getClusterForRequestInjectable from "../get-cluster-for-request.injectable";
 
 const shellApiRequestInjectable = getInjectable({

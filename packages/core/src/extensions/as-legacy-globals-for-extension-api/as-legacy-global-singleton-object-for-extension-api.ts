@@ -5,7 +5,7 @@
 import type { Injectable } from "@ogre-tools/injectable";
 import { asLegacyGlobalForExtensionApi } from "./as-legacy-global-object-for-extension-api";
 import { getLegacyGlobalDiForExtensionApi } from "./legacy-global-di-for-extension-api";
-import loggerInjectable from "../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 export interface LegacySingleton<T> {
   createInstance(): T;

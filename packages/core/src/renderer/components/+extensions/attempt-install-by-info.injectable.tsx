@@ -18,7 +18,7 @@ import downloadBinaryInjectable from "../../../common/fetch/download-binary.inje
 import downloadJsonInjectable from "../../../common/fetch/download-json/normal.injectable";
 import type { PackageJson } from "type-fest";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
-import loggerInjectable from "../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 
 export interface ExtensionInfo {
   name: string;

@@ -6,7 +6,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
 import withOrphanPromiseInjectable from "./with-orphan-promise.injectable";
-import logErrorInjectable from "../../log-error.injectable";
+import { logErrorInjectable } from "@k8slens/logging";
 
 describe("with orphan promise, when called", () => {
   let toBeDecorated: AsyncFnMock<(arg1: string, arg2: string) => Promise<string>>;

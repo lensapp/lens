@@ -6,7 +6,7 @@ import { comparer, reaction } from "mobx";
 import type { Disposer } from "@k8slens/utilities";
 import { disposer, getOrInsert, noop, WrappedAbortController } from "@k8slens/utilities";
 import { once } from "lodash";
-import type { Logger } from "../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import type { KubeObjectStoreLoadAllParams, KubeObjectStoreSubscribeParams } from "../../common/k8s-api/kube-object.store";
 import type { ClusterContext } from "../cluster-frame-context/cluster-frame-context";
 

@@ -12,7 +12,7 @@ import { ipcMainOn } from "../../common/ipc";
 import { once } from "lodash";
 import type { ClusterId } from "../../common/cluster-types";
 import type { CatalogEntityRegistry } from "../catalog";
-import type { Logger } from "../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import type { UpdateEntityMetadata } from "./update-entity-metadata.injectable";
 import type { UpdateEntitySpec } from "./update-entity-spec.injectable";
 import type { ClusterConnection } from "./cluster-connection.injectable";

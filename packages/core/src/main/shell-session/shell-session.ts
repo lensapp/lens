@@ -12,7 +12,7 @@ import os from "os";
 import type * as pty from "node-pty";
 import { getOrInsertWith } from "@k8slens/utilities";
 import { type TerminalMessage, TerminalChannels } from "../../common/terminal/channels";
-import type { Logger } from "../../common/logger";
+import type { Logger } from "@k8slens/logging";
 import type { ComputeShellEnvironment } from "../../features/shell-sync/main/compute-shell-environment.injectable";
 import type { SpawnPty } from "./spawn-pty.injectable";
 import type { EmitAppEvent } from "../../common/app-event-bus/emit-event.injectable";

@@ -9,7 +9,7 @@ import type { Draft } from "immer";
 import { produce, isDraft } from "immer";
 import { isEqual, isPlainObject } from "lodash";
 import assert from "assert";
-import type { Logger } from "../../common/logger";
+import type { Logger } from "@k8slens/logging";
 
 export interface StorageChange<T> {
   key: string;

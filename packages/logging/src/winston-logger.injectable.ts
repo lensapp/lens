@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { createLogger, format } from "winston";
-import { loggerTransportInjectionToken } from "./logger/transports";
+import { loggerTransportInjectionToken } from "./transports";
 
 const winstonLoggerInjectable = getInjectable({
   id: "winston-logger",

@@ -11,7 +11,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "@k8slens/test-utils";
 import type { DiContainer } from "@ogre-tools/injectable";
-import loggerInjectable from "../../../../../common/logger.injectable";
+import { loggerInjectable } from "@k8slens/logging";
 import { noop } from "@k8slens/utilities";
 
 describe("download-platform-update", () => {
