@@ -110,7 +110,6 @@ describe("showing details for helm release", () => {
       });
 
       it("calls for releases for each selected namespace", () => {
-        console.log(requestHelmReleasesMock.mock.calls);
         expect(requestHelmReleasesMock).toBeCalledTimes(2);
         expect(requestHelmReleasesMock).toBeCalledWith("some-namespace");
         expect(requestHelmReleasesMock).toBeCalledWith("some-other-namespace");
