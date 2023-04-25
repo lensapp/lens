@@ -6,9 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { createBrowserHistory } from "history";
 import type { History } from "history";
 
-const historyInjectable = getInjectable({
+export const historyInjectable = getInjectable({
   id: "history",
   instantiate: (): History => createBrowserHistory(),
 });
-
-export default historyInjectable;
