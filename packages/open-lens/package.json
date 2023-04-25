@@ -189,6 +189,7 @@
     "@k8slens/kubectl-versions": "^1.0.0-alpha.2",
     "@k8slens/legacy-extension-example": "^1.0.0-alpha.6",
     "@k8slens/legacy-extensions": "^1.0.0-alpha.3",
+    "@k8slens/logging": "^1.0.0-alpha.1",
     "@k8slens/messaging": "^1.0.0-alpha.3",
     "@k8slens/messaging-for-main": "^1.0.0-alpha.3",
     "@k8slens/messaging-for-renderer": "^1.0.0-alpha.3",
