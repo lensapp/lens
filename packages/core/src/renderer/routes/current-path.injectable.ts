@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { computed } from "mobx";
-import observableHistoryInjectable from "../navigation/observable-history.injectable";
+import { observableHistoryInjectable } from "@k8slens/routing";
 
 const currentPathInjectable = getInjectable({
   id: "current-path",

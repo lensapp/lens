@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import observableHistoryInjectable from "../../../../renderer/navigation/observable-history.injectable";
+import { observableHistoryInjectable } from "@k8slens/routing";
 import navigateToFrontPageInjectable from "../../../../common/front-end-routing/navigate-to-front-page.injectable";
 
 const closePreferencesInjectable = getInjectable({

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import observableHistoryInjectable from "../navigation/observable-history.injectable";
+import { observableHistoryInjectable } from "@k8slens/routing";
 import { runInAction } from "mobx";
 import type { NavigateToUrl } from "../../common/front-end-routing/navigate-to-url-injection-token";
 import { navigateToUrlInjectionToken } from "../../common/front-end-routing/navigate-to-url-injection-token";

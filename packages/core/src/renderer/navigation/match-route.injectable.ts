@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { match, RouteProps } from "react-router";
 import { matchPath } from "react-router";
-import observableHistoryInjectable from "./observable-history.injectable";
+import { observableHistoryInjectable } from "@k8slens/routing";
 
 export type MatchRoute = <Params extends { [K in keyof Params]?: string }>(route: string | string[] | RouteProps) => match<Params> | null;
 

@@ -6,7 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { action } from "mobx";
 import { byOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
 import type { CatalogEntity } from "../../api/catalog-entity";
-import observableHistoryInjectable from "../../navigation/observable-history.injectable";
+import { observableHistoryInjectable } from "@k8slens/routing";
 import type { RegisteredEntitySetting } from "./extension-registrator.injectable";
 import catalogEntitySettingItemsInjectable from "./settings.injectable";
 
