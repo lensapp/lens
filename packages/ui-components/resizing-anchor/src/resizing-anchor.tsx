@@ -150,8 +150,11 @@ function directionDelta(P1: number, P2: number, M: number): number | false {
 @observer
 export class ResizingAnchor extends React.PureComponent<ResizingAnchorProps> {
   @observable lastMouseEvent?: MouseEvent;
+
   ref = React.createRef<HTMLDivElement>();
+
   @observable isDragging = false;
+
   @observable wasDragging = false;
 
   static defaultProps = {
@@ -169,6 +172,7 @@ export class ResizingAnchor extends React.PureComponent<ResizingAnchorProps> {
     minExtent: 0,
     placement: ResizeSide.LEADING,
   };
+
   static IS_RESIZING = "resizing";
 
   constructor(props: ResizingAnchorProps) {
@@ -220,11 +224,12 @@ export class ResizingAnchor extends React.PureComponent<ResizingAnchorProps> {
     const boundingBox = node.getBoundingClientRect();
 
     if (this.props.direction === ResizeDirection.HORIZONTAL) {
-      const barX = Math.round(boundingBox.x + (boundingBox.width / 2));
+      const barX = Math.round(boundingBox.x + boundingBox.width / 2);
 
       return directionDelta(from.pageX, to.pageX, barX);
-    } else { // direction === ResizeDirection.VERTICAL
-      const barY = Math.round(boundingBox.y + (boundingBox.height / 2));
+    } else {
+      // direction === ResizeDirection.VERTICAL
+      const barY = Math.round(boundingBox.y + boundingBox.height / 2);
 
       return directionDelta(from.pageY, to.pageY, barY);
     }
@@ -254,8 +259,15 @@ export class ResizingAnchor extends React.PureComponent<ResizingAnchorProps> {
       return;
     }
 
-    const { maxExtent, minExtent, getCurrentExtent, growthDirection } = this.props;
-    const { onDrag, onMaxExtentExceed, onMinExtentSucceed: onMinExtentSubceed, onMaxExtentSubceed, onMinExtentExceed } = this.props;
+    const { maxExtent, minExtent, getCurrentExtent, growthDirection } =
+      this.props;
+    const {
+      onDrag,
+      onMaxExtentExceed,
+      onMinExtentSucceed: onMinExtentSubceed,
+      onMaxExtentSubceed,
+      onMinExtentExceed,
+    } = this.props;
     const delta = this.calculateDelta(this.lastMouseEvent, event);
 
     // always update the last mouse event
@@ -266,8 +278,10 @@ export class ResizingAnchor extends React.PureComponent<ResizingAnchorProps> {
     }
 
     const previousExtent = getCurrentExtent();
-    const unboundedExtent = previousExtent + (delta * growthDirection);
-    const boundedExtent = Math.round(Math.max(minExtent, Math.min(maxExtent, unboundedExtent)));
+    const unboundedExtent = previousExtent + delta * growthDirection;
+    const boundedExtent = Math.round(
+      Math.max(minExtent, Math.min(maxExtent, unboundedExtent))
+    );
 
     onDrag(boundedExtent);
 
@@ -292,7 +306,7 @@ export class ResizingAnchor extends React.PureComponent<ResizingAnchorProps> {
     this.isDragging = false;
     this.wasDragging = true;
 
-    setTimeout(() => this.wasDragging = false, 200);
+    setTimeout(() => (this.wasDragging = false), 200);
   });
 
   render() {
@@ -301,7 +315,11 @@ export class ResizingAnchor extends React.PureComponent<ResizingAnchorProps> {
     return (
       <div
         ref={this.ref}
-        className={cssNames("ResizingAnchor", direction, placement, { disabled, resizing: this.isDragging, wasDragging: this.wasDragging })}
+        className={cssNames("ResizingAnchor", direction, placement, {
+          disabled,
+          resizing: this.isDragging,
+          wasDragging: this.wasDragging,
+        })}
         onMouseDown={this.onDragInit}
         onDoubleClick={onDoubleClick}
       />

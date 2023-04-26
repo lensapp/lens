@@ -13,7 +13,7 @@ import { cssNames, noop } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import type { AnimateName } from "../animate";
 import { Animate } from "../animate";
-import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
+import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "@k8slens/resizing-anchor";
 import drawerStorageInjectable, { defaultDrawerWidth } from "./drawer-storage/drawer-storage.injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { historyInjectionToken } from "@k8slens/routing";

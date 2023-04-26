@@ -3,4 +3,4 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export * from "./resizing-anchor";
+export * from "./src/resizing-anchor";
