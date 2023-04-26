@@ -1,6 +1,6 @@
 # Cluster Connection
 
-## Current Flow for local cluster
+## The New Flow for local cluster
 
 1. A kubeconfig file is discovered by the "kubeconfig sync"
 1. The kubeconfig file is read and verified to have a correctly shaped `context`, `cluster`, and `user` entries
@@ -10,9 +10,17 @@
 1. A new iframe is initialized for that specific cluster using the cluster ID as part of the src field as a means of communication into the iframe about which cluster the iframe is for
 1. Then the cluster is requested to be "activated" on main
 1. Activation is as follows:
-    1. Bind intervals to refresh connection status, accessibility, and metadata
-    1. Bind reactions to update prometheus settings when the user changes them on the front end
-    1. Bind reaction to recreate the proxy kubeconfig when the user changes the default namespace setting
+    1. ~~Bind intervals to refresh connection status, accessibility, and metadata~~
+        - **Replace With:**
+        1. Create an IAsyncComputed for connection status
+        1. Create an IAsyncComputed for accessibility
+        1. Create an IAsyncComputed for metadata
+    1. ~~Bind reactions to update prometheus settings when the user changes them on the front end~~
+        - **Relocate reaction to better place**
+    1. ~~Bind reaction to recreate the proxy kubeconfig when the user changes the default namespace setting~~
+        - **Relocate reaction to better place**
+        1. Actually creating the file is the responsibility of local shell session
+        1. All other uses of the proxy kubeconfig can be switched to just using an "in memory" instance
     1. The KubeAuthProxy (spawns a k8s-lens-proxy instance) server is started and the flow waits for the server to report back the port it is using over STDOUT and also waits for that port to become used as reported by the OS
     1. The connection status is checked by "detecting the cluster version"
       1. By making a request to the Lens Proxy using the cluster id and the `/version` pathname
