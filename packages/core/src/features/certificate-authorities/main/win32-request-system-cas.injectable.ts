@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import execFileInjectable from "../../../common/fs/exec-file.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { platformSpecificRequestSystemCAsInjectionToken } from "../common/request-system-cas-token";
 
 const pemEncoding = (hexEncodedCert: String) => {
@@ -27,7 +27,7 @@ const win32RequestSystemCAsInjectable = getInjectable({
     instantiate: () => {
       const winCARootsExePath: string = __non_webpack_require__.resolve("win-ca/lib/roots.exe");
       const execFile = di.inject(execFileInjectable);
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
 
       return async () => {
       /**

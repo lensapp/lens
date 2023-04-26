@@ -7,7 +7,7 @@ import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { RoleApi } from "./role.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
 const roleApiInjectable = getInjectable({
@@ -16,7 +16,7 @@ const roleApiInjectable = getInjectable({
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "roleApi is only available in certain environments");
 
     return new RoleApi({
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     });
   },

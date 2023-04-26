@@ -13,7 +13,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { userPreferencesMigrationInjectionToken } from "../../../features/user-preferences/common/migrations-token";
 import readJsonSyncInjectable from "../../../common/fs/read-json-sync.injectable";
 import homeDirectoryPathInjectable from "../../../common/os/home-directory-path.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
 import type { ClusterStoreModel } from "../../../features/cluster/storage/common/storage.injectable";
 import type { UserPreferencesModel, KubeconfigSyncEntry } from "../common/preferences-helpers";
@@ -24,7 +24,7 @@ const v503Beta1UserPreferencesStorageMigrationInjectable = getInjectable({
     const userDataPath = di.inject(directoryForUserDataInjectable);
     const kubeConfigsPath = di.inject(directoryForKubeConfigsInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const isLogicalChildPath = di.inject(isLogicalChildPathInjectable);
     const getDirnameOfPath = di.inject(getDirnameOfPathInjectable);
     const readJsonSync = di.inject(readJsonSyncInjectable);

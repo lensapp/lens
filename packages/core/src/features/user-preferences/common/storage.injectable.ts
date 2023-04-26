@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { action } from "mobx";
-import { prefixedLoggerInjectable } from "@k8slens/logging";
+import { prefixedLoggerInjectionToken } from "@k8slens/logging";
 import createPersistentStorageInjectable from "../../../common/persistent-storage/create.injectable";
 import persistentStorageMigrationsInjectable from "../../../common/persistent-storage/migrations.injectable";
 import { userPreferencesMigrationInjectionToken } from "./migrations-token";
@@ -24,7 +24,7 @@ const userPreferencesPersistentStorageInjectable = getInjectable({
   id: "user-preferences-persistent-storage",
   instantiate: (di) => {
     const createPersistentStorage = di.inject(createPersistentStorageInjectable);
-    const logger = di.inject(prefixedLoggerInjectable, "USER-PREFERENCES");
+    const logger = di.inject(prefixedLoggerInjectionToken, "USER-PREFERENCES");
     const descriptors = di.inject(userPreferenceDescriptorsInjectable);
     const selectedUpdateChannel = di.inject(selectedUpdateChannelInjectable);
     const state = di.inject(userPreferencesStateInjectable);

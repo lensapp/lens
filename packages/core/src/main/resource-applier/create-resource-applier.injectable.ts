@@ -7,7 +7,7 @@ import emitAppEventInjectable from "../../common/app-event-bus/emit-event.inject
 import removePathInjectable from "../../common/fs/remove.injectable";
 import execFileInjectable from "../../common/fs/exec-file.injectable";
 import writeFileInjectable from "../../common/fs/write-file.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import { ResourceApplier } from "./resource-applier";
 import createKubectlInjectable from "../kubectl/create-kubectl.injectable";
@@ -22,7 +22,7 @@ const resourceApplierInjectable = getInjectable({
       emitAppEvent: di.inject(emitAppEventInjectable),
       execFile: di.inject(execFileInjectable),
       joinPaths: di.inject(joinPathsInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       writeFile: di.inject(writeFileInjectable),
       createKubectl: di.inject(createKubectlInjectable),
       proxyKubeconfigManager: di.inject(kubeconfigManagerInjectable, cluster),

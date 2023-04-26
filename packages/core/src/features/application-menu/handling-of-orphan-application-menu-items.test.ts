@@ -10,7 +10,7 @@ import { getCompositePaths } from "../../common/utils/composite/get-composite-pa
 import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuItemInjectionToken from "./main/menu-items/application-menu-item-injection-token";
 import { runInAction } from "mobx";
-import { logErrorInjectable } from "@k8slens/logging";
+import { logErrorInjectionToken } from "@k8slens/logging";
 
 describe("handling-of-orphan-application-menu-items, given orphan menu item", () => {
   let builder: ApplicationBuilder;
@@ -44,7 +44,7 @@ describe("handling-of-orphan-application-menu-items, given orphan menu item", ()
         mainDi.register(someOrphanMenuItemInjectable);
       });
 
-      mainDi.override(logErrorInjectable, () => logErrorMock);
+      mainDi.override(logErrorInjectionToken, () => logErrorMock);
 
       mainDi.override(
         populateApplicationMenuInjectable,

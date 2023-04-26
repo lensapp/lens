@@ -8,7 +8,7 @@ import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-c
 import { CustomResourceDefinitionApi } from "./custom-resource-definition.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 const customResourceDefinitionApiInjectable = getInjectable({
   id: "custom-resource-definition-api",
@@ -16,7 +16,7 @@ const customResourceDefinitionApiInjectable = getInjectable({
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "customResourceDefinitionApi is only available in certain environments");
 
     return new CustomResourceDefinitionApi({
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     });
   },

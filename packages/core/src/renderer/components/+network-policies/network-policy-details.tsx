@@ -17,7 +17,7 @@ import type { Logger } from "@k8slens/logging";
 import type { LabelMatchExpression, LabelSelector } from "../../../common/k8s-api/kube-object";
 import { isEmpty } from "lodash";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface NetworkPolicyDetailsProps extends KubeObjectDetailsProps<NetworkPolicy> {
 }
@@ -214,6 +214,6 @@ class NonInjectedNetworkPolicyDetails extends React.Component<NetworkPolicyDetai
 export const NetworkPolicyDetails = withInjectables<Dependencies, NetworkPolicyDetailsProps>(NonInjectedNetworkPolicyDetails, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

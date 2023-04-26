@@ -15,7 +15,7 @@ import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { computeRuleDeclarations } from "../../../common/k8s-api/endpoints/ingress.api";
 import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface IngressDetailsProps extends KubeObjectDetailsProps<Ingress> {
 }
@@ -138,6 +138,6 @@ class NonInjectedIngressDetails extends React.Component<IngressDetailsProps & De
 export const IngressDetails = withInjectables<Dependencies, IngressDetailsProps>(NonInjectedIngressDetails, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

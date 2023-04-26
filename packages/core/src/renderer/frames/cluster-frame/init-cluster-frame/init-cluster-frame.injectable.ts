@@ -10,7 +10,7 @@ import hostedClusterInjectable from "../../../cluster-frame-context/hosted-clust
 import assert from "assert";
 import emitAppEventInjectable from "../../../../common/app-event-bus/emit-event.injectable";
 import loadExtensionsInjectable from "../../load-extensions.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import showErrorNotificationInjectable from "../../../components/notifications/show-error-notification.injectable";
 
 const initClusterFrameInjectable = getInjectable({
@@ -27,7 +27,7 @@ const initClusterFrameInjectable = getInjectable({
       catalogEntityRegistry: di.inject(catalogEntityRegistryInjectable),
       frameRoutingId: di.inject(frameRoutingIdInjectable),
       emitAppEvent: di.inject(emitAppEventInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       showErrorNotification: di.inject(showErrorNotificationInjectable),
     });
   },

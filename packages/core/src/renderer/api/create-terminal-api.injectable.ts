@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import hostedClusterIdInjectable from "../cluster-frame-context/hosted-cluster-id.injectable";
 import defaultWebsocketApiParamsInjectable from "./default-websocket-api-params.injectable";
 import type { TerminalApiDependencies, TerminalApiQuery } from "./terminal-api";
@@ -17,7 +17,7 @@ const createTerminalApiInjectable = getInjectable({
   instantiate: (di): CreateTerminalApi => {
     const hostedClusterId = di.inject(hostedClusterIdInjectable);
     const deps: Omit<TerminalApiDependencies, "hostedClusterId"> = {
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       defaultParams: di.inject(defaultWebsocketApiParamsInjectable),
     };
 

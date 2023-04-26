@@ -21,7 +21,7 @@ import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.inject
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import { cssNames } from "@k8slens/utilities";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface EventDetailsProps extends KubeObjectDetailsProps<KubeEvent> {
 }
@@ -104,6 +104,6 @@ export const EventDetails = withInjectables<Dependencies, EventDetailsProps>(Non
     ...props,
     apiManager: di.inject(apiManagerInjectable),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

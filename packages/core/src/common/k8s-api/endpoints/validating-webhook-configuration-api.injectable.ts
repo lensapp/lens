@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 import { ValidatingWebhookConfigurationApi } from "./validating-webhook-configuration.api";
 
@@ -16,7 +16,7 @@ const validatingWebhookConfigurationApiInjectable = getInjectable({
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "validatingWebhookApi is only available in certain environments");
 
     return new ValidatingWebhookConfigurationApi({
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     });
   },

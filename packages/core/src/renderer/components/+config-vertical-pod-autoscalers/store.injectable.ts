@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/kube-object-store-token";
 import verticalPodAutoscalerApiInjectable from "../../../common/k8s-api/endpoints/vertical-pod-autoscaler.api.injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
@@ -20,7 +20,7 @@ const verticalPodAutoscalerStoreInjectable = getInjectable({
 
     return new VerticalPodAutoscalerStore({
       context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

@@ -27,7 +27,7 @@ import nodeApiInjectable from "../../../common/k8s-api/endpoints/node.api.inject
 import runtimeClassApiInjectable from "../../../common/k8s-api/endpoints/runtime-class.api.injectable";
 import serviceAccountApiInjectable from "../../../common/k8s-api/endpoints/service-account.api.injectable";
 import priorityClassApiInjectable from "../../../common/k8s-api/endpoints/priority-class.api.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { PodDetailsContainers } from "./details/containers/pod-details-containers";
 import { PodDetailsInitContainers } from "./details/containers/pod-details-init-containers";
 
@@ -180,6 +180,6 @@ export const PodDetails = withInjectables<Dependencies, PodDetailsProps>(NonInje
     priorityClassApi: di.inject(priorityClassApiInjectable),
     runtimeClassApi: di.inject(runtimeClassApiInjectable),
     serviceAccountApi: di.inject(serviceAccountApiInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

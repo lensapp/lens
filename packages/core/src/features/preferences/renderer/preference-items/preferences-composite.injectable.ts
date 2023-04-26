@@ -10,7 +10,7 @@ import { preferenceItemInjectionToken } from "./preference-item-injection-token"
 import { pipeline } from "@ogre-tools/fp";
 import type { PreferenceTabsRoot } from "./preference-tab-root";
 import { preferenceTabsRoot } from "./preference-tab-root";
-import { logErrorInjectable } from "@k8slens/logging";
+import { logErrorInjectionToken } from "@k8slens/logging";
 import { isShown } from "../../../../common/utils/composable-responsibilities/showable/showable";
 import { orderByOrderNumber } from "../../../../common/utils/composable-responsibilities/orderable/orderable";
 import { getCompositeFor } from "../../../../common/utils/composite/get-composite/get-composite";
@@ -21,7 +21,7 @@ const preferencesCompositeInjectable = getInjectable({
   instantiate: (di) => {
     const computedInjectMany = di.inject(computedInjectManyInjectable);
     const preferenceItems = computedInjectMany(preferenceItemInjectionToken);
-    const logError = di.inject(logErrorInjectable);
+    const logError = di.inject(logErrorInjectionToken);
 
     const getComposite = getCompositeFor<PreferenceItemTypes | PreferenceTabsRoot>({
       getId: (x) => x.id,

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { CreateHotbarData } from "./types";
-import { prefixedLoggerInjectable } from "@k8slens/logging";
+import { prefixedLoggerInjectionToken } from "@k8slens/logging";
 import type { HotbarDependencies } from "./hotbar";
 import { Hotbar } from "./hotbar";
 
@@ -14,7 +14,7 @@ const createHotbarInjectable = getInjectable({
   id: "create-hotbar",
   instantiate: (di): CreateHotbar => {
     const deps: HotbarDependencies = {
-      logger: di.inject(prefixedLoggerInjectable, "HOTBAR"),
+      logger: di.inject(prefixedLoggerInjectionToken, "HOTBAR"),
     };
 
     return (data) => new Hotbar(deps, data);

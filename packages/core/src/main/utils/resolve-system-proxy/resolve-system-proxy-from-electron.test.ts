@@ -9,7 +9,7 @@ import resolveSystemProxyWindowInjectable from "./resolve-system-proxy-window.in
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "@k8slens/test-utils";
-import { logErrorInjectable } from "@k8slens/logging";
+import { logErrorInjectionToken } from "@k8slens/logging";
 import type { DiContainer } from "@ogre-tools/injectable";
 import type { BrowserWindow, Session, WebContents } from "electron";
 
@@ -23,7 +23,7 @@ describe("technical: resolve-system-proxy-from-electron", () => {
     di = getDiForUnitTesting();
 
     logErrorMock = jest.fn();
-    di.override(logErrorInjectable, () => logErrorMock);
+    di.override(logErrorInjectionToken, () => logErrorMock);
   });
 
   describe("given there are no unexpected issues, when called with URL", () => {

@@ -12,7 +12,7 @@ import { statusBarItemInjectionToken } from "./status-bar-item-injection-token";
 import type { StatusBarRegistration } from "./status-bar-registration";
 import React from "react";
 import getRandomIdInjectable from "../../../common/utils/get-random-id.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import type { Logger } from "@k8slens/logging";
 
 const statusBarItemRegistratorInjectable = getInjectable({
@@ -21,7 +21,7 @@ const statusBarItemRegistratorInjectable = getInjectable({
   instantiate: (di) => (extension) => {
     const rendererExtension = extension as LensRendererExtension;
     const getRandomId = di.inject(getRandomIdInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return rendererExtension.statusBarItems.flatMap(
       toItemInjectableFor(rendererExtension, getRandomId, logger),

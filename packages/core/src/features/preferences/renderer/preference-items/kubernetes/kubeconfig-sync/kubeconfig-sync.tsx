@@ -13,7 +13,7 @@ import { PathPicker } from "../../../../../../renderer/components/path-picker/pa
 import { Spinner } from "../../../../../../renderer/components/spinner";
 import { RemovableItem } from "../../../removable-item/removable-item";
 import isWindowsInjectable from "../../../../../../common/vars/is-windows.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import type { Logger } from "@k8slens/logging";
 import type { DiscoverAllKubeconfigSyncKinds } from "./discover-all-sync-kinds.injectable";
 import type { DiscoverKubeconfigSyncKind, SyncKind } from "./discover-sync-kind.injectable";
@@ -179,7 +179,7 @@ export const KubeconfigSync = withInjectables<Dependencies>(NonInjectedKubeconfi
   getProps: (di) => ({
     state: di.inject(userPreferencesStateInjectable),
     isWindows: di.inject(isWindowsInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     discoverAllKubeconfigSyncKinds: di.inject(discoverAllKubeconfigSyncKindsInjectable),
     discoverKubeconfigSyncKind: di.inject(discoverKubeconfigSyncKindInjectable),
   }),

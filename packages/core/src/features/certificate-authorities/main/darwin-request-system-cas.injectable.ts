@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import execFileInjectable from "../../../common/fs/exec-file.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import type { AsyncResult } from "@k8slens/utilities";
 import { platformSpecificRequestSystemCAsInjectionToken } from "../common/request-system-cas-token";
 
@@ -17,7 +17,7 @@ const darwinRequestSystemCAsInjectable = getInjectable({
     platform: "darwin" as const,
     instantiate: () => {
       const execFile = di.inject(execFileInjectable);
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
 
       const execSecurity = async (...args: string[]): AsyncResult<string[]> => {
         const result = await execFile("/usr/bin/security", args);

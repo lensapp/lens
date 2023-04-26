@@ -6,7 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import type { KubeAuthUpdate } from "../../common/cluster-types";
 import type { Cluster } from "../../common/cluster/cluster";
 import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export type BroadcastConnectionUpdate = (update: KubeAuthUpdate) => void;
 
@@ -14,7 +14,7 @@ const broadcastConnectionUpdateInjectable = getInjectable({
   id: "broadcast-connection-update",
   instantiate: (di, cluster): BroadcastConnectionUpdate => {
     const broadcastMessage = di.inject(broadcastMessageInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return (update) => {
       logger.debug(`[CLUSTER]: broadcasting connection update`, { ...update, meta: cluster.getMeta() });

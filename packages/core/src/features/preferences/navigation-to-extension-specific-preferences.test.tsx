@@ -10,7 +10,7 @@ import "@testing-library/jest-dom/extend-expect";
 import type { FakeExtensionOptions } from "../../renderer/components/test-utils/get-extension-fake";
 import type { Discover } from "@k8slens/react-testing-library-discovery";
 import { discoverFor } from "@k8slens/react-testing-library-discovery";
-import { logErrorInjectable } from "@k8slens/logging";
+import { logErrorInjectionToken } from "@k8slens/logging";
 
 describe("preferences - navigation to extension specific preferences", () => {
   let builder: ApplicationBuilder;
@@ -28,7 +28,7 @@ describe("preferences - navigation to extension specific preferences", () => {
       logErrorMock = jest.fn();
 
       builder.beforeWindowStart(({ windowDi }) => {
-        windowDi.override(logErrorInjectable, () => logErrorMock);
+        windowDi.override(logErrorInjectionToken, () => logErrorMock);
 
         builder.preferences.navigate();
       });

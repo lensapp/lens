@@ -9,7 +9,7 @@ import { pipeline } from "@ogre-tools/fp";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getPromiseStatus } from "@k8slens/test-utils";
-import { logErrorInjectable } from "@k8slens/logging";
+import { logErrorInjectionToken } from "@k8slens/logging";
 
 describe("with-error-logging", () => {
   describe("given decorated sync function", () => {
@@ -22,7 +22,7 @@ describe("with-error-logging", () => {
 
       logErrorMock = jest.fn();
 
-      di.override(logErrorInjectable, () => logErrorMock);
+      di.override(logErrorInjectionToken, () => logErrorMock);
 
       const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
 
@@ -120,7 +120,7 @@ describe("with-error-logging", () => {
 
       logErrorMock = jest.fn();
 
-      di.override(logErrorInjectable, () => logErrorMock);
+      di.override(logErrorInjectionToken, () => logErrorMock);
 
       const withErrorLoggingFor = di.inject(withErrorLoggingInjectable);
 

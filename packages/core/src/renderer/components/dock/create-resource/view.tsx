@@ -29,7 +29,7 @@ import getDetailsUrlInjectable from "../../kube-detail-params/get-details-url.in
 import navigateInjectable from "../../../navigation/navigate.injectable";
 import type { RequestKubeObjectCreation } from "../../../../common/k8s-api/endpoints/resource-applier.api/request-update.injectable";
 import requestKubeObjectCreationInjectable from "../../../../common/k8s-api/endpoints/resource-applier.api/request-update.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showSuccessNotificationInjectable from "../../notifications/show-success-notification.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
@@ -184,7 +184,7 @@ export const CreateResource = withInjectables<Dependencies, CreateResourceProps>
     createResourceTabStore: di.inject(createResourceTabStoreInjectable),
     createResourceTemplates: await di.inject(createResourceTemplatesInjectable),
     apiManager: di.inject(apiManagerInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     navigate: di.inject(navigateInjectable),
     requestKubeObjectCreation: di.inject(requestKubeObjectCreationInjectable),

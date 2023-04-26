@@ -21,7 +21,7 @@ import portForwardStoreInjectable from "../../port-forward/port-forward-store/po
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import endpointsStoreInjectable from "../+network-endpoints/store.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface ServiceDetailsProps extends KubeObjectDetailsProps<Service> {
 }
@@ -157,6 +157,6 @@ export const ServiceDetails = withInjectables<Dependencies, ServiceDetailsProps>
     subscribeStores: di.inject(subscribeStoresInjectable),
     portForwardStore: di.inject(portForwardStoreInjectable),
     endpointsStore: di.inject(endpointsStoreInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

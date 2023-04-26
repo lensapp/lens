@@ -2,9 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
+import { getInjectable, getInjectionToken, lifecycleEnum } from "@ogre-tools/injectable";
 import type { Logger } from "./logger";
 import { loggerInjectable } from "./logger.injectable";
+
+export const prefixedLoggerInjectionToken = getInjectionToken<Logger, string>({
+  id: "prefixed-logger",
+});
 
 export const prefixedLoggerInjectable = getInjectable({
   id: "prefixed-logger",
@@ -32,4 +36,5 @@ export const prefixedLoggerInjectable = getInjectable({
   lifecycle: lifecycleEnum.keyedSingleton({
     getInstanceKey: (di, prefix: string) => prefix,
   }),
+  injectionToken: prefixedLoggerInjectionToken,
 });

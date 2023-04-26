@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { prefixedLoggerInjectable } from "@k8slens/logging";
+import { prefixedLoggerInjectionToken } from "@k8slens/logging";
 
 const kubeconfigSyncLoggerInjectable = getInjectable({
   id: "kubeconfig-sync-logger",
-  instantiate: (di) => di.inject(prefixedLoggerInjectable, "KUBECONFIG-SYNC"),
+  instantiate: (di) => di.inject(prefixedLoggerInjectionToken, "KUBECONFIG-SYNC"),
 });
 
 export default kubeconfigSyncLoggerInjectable;

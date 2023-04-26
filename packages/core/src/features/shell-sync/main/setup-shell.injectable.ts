@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
 import isSnapPackageInjectable from "../../../common/vars/is-snap-package.injectable";
 import electronAppInjectable from "../../../main/electron-app/electron-app.injectable";
@@ -17,7 +17,7 @@ const setupShellInjectable = getInjectable({
 
   instantiate: (di) => ({
     run: async () => {
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
       const isSnapPackage = di.inject(isSnapPackageInjectable);
       const electronApp = di.inject(electronAppInjectable);
       const resolvedUserShellSetting = di.inject(userShellSettingInjectable);

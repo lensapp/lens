@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import type { DiContainer } from "@ogre-tools/injectable";
-import { winstonLoggerInjectable } from "@k8slens/logging";
+import { winstonLoggerInjectionToken } from "@k8slens/logging";
 import type { ApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import { getApplicationBuilder } from "../../renderer/components/test-utils/get-application-builder";
 import type winston from "winston";
@@ -52,7 +52,7 @@ describe("Population of logs to a file", () => {
     });
 
     builder.beforeWindowStart(({ windowDi }) => {
-      windowDi.unoverride(winstonLoggerInjectable);
+      windowDi.unoverride(winstonLoggerInjectionToken);
 
       // Now that we have the actual winston logger in use, let's not be noisy and deregister console transport
       runInAction(() => {
@@ -69,7 +69,7 @@ describe("Population of logs to a file", () => {
 
     await builder.render();
     windowDi = builder.applicationWindow.only.di;
-    const winstonLogger = windowDi.inject(winstonLoggerInjectable);
+    const winstonLogger = windowDi.inject(winstonLoggerInjectionToken);
 
     logWarningInRenderer = winstonLogger.warn;
   }

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { ServerResponse } from "http";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { object } from "@k8slens/utilities";
 import type { LensApiRequest, Route } from "./route";
 import { contentTypes } from "./router-content-types";
@@ -44,7 +44,7 @@ const writeServerResponseFor = (serverResponse: ServerResponse) => ({
 const createHandlerForRouteInjectable = getInjectable({
   id: "create-handler-for-route",
   instantiate: (di): CreateHandlerForRoute => {
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return (route) => async (request, response) => {
       const writeServerResponse = writeServerResponseFor(response);

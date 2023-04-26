@@ -19,7 +19,7 @@ import { Secret } from "../../../common/k8s-api/endpoints";
 import type { Logger } from "@k8slens/logging";
 import type { SecretStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import secretStoreInjectable from "./store.injectable";
 import showSuccessNotificationInjectable from "../notifications/show-success-notification.injectable";
 import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
@@ -172,7 +172,7 @@ class NonInjectedSecretDetails extends React.Component<SecretDetailsProps & Depe
 export const SecretDetails = withInjectables<Dependencies, SecretDetailsProps>(NonInjectedSecretDetails, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     secretStore: di.inject(secretStoreInjectable),
     showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
     showSuccessNotification: di.inject(showSuccessNotificationInjectable),

@@ -13,7 +13,7 @@ import { Endpoints } from "../../../common/k8s-api/endpoints";
 import { EndpointSubsetList } from "./endpoint-subset-list";
 import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface EndpointsDetailsProps extends KubeObjectDetailsProps<Endpoints> {
 }
@@ -57,6 +57,6 @@ class NonInjectedEndpointsDetails extends React.Component<EndpointsDetailsProps 
 export const EndpointsDetails = withInjectables<Dependencies, EndpointsDetailsProps>(NonInjectedEndpointsDetails, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

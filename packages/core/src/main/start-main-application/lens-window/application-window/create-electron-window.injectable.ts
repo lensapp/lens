@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import applicationWindowStateInjectable from "./application-window-state.injectable";
 import { BrowserWindow } from "electron";
 import type { ElectronWindow } from "./create-lens-window.injectable";
@@ -49,7 +49,7 @@ const createElectronWindowInjectable = getInjectable({
   id: "create-electron-window",
 
   instantiate: (di): CreateElectronWindow => {
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const openLinkInBrowser = di.inject(openLinkInBrowserInjectable);
     const getAbsolutePath = di.inject(getAbsolutePathInjectable);
     const lensResourcesDir = di.inject(lensResourcesDirInjectable);

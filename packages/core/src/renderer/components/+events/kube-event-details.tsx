@@ -18,7 +18,7 @@ import { withInjectables } from "@ogre-tools/injectable-react";
 import type { SubscribeStores } from "../../kube-watch-api/kube-watch-api";
 import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.injectable";
 import eventStoreInjectable from "./store.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface KubeEventDetailsProps {
   object: KubeObject;
@@ -100,7 +100,7 @@ export const KubeEventDetails = withInjectables<Dependencies, KubeEventDetailsPr
     ...props,
     subscribeStores: di.inject(subscribeStoresInjectable),
     eventStore: di.inject(eventStoreInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });
 

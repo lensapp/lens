@@ -15,13 +15,13 @@ import type {
 } from "./menu-items/application-menu-item-injection-token";
 import applicationMenuItemInjectionToken from "./menu-items/application-menu-item-injection-token";
 import type { MenuRegistration } from "./menu-registration";
-import { logErrorInjectable } from "@k8slens/logging";
+import { logErrorInjectionToken } from "@k8slens/logging";
 
 const applicationMenuItemRegistratorInjectable = getInjectable({
   id: "application-menu-item-registrator",
 
   instantiate: (di) => {
-    const logError = di.inject(logErrorInjectable);
+    const logError = di.inject(logErrorInjectionToken);
     const toRecursedInjectables = toRecursedInjectablesFor(logError);
 
     return (ext) => {

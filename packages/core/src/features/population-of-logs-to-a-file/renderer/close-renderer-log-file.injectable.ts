@@ -4,7 +4,7 @@
  */
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import { getInjectable } from "@ogre-tools/injectable";
-import { winstonLoggerInjectable } from "@k8slens/logging";
+import { winstonLoggerInjectionToken } from "@k8slens/logging";
 import { closeIpcFileLoggerChannel } from "../common/ipc-file-logger-channel";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
 import ipcLogTransportInjectable from "./ipc-transport.injectable";
@@ -12,7 +12,7 @@ import ipcLogTransportInjectable from "./ipc-transport.injectable";
 const closeRendererLogFileInjectable = getInjectable({
   id: "close-renderer-log-file",
   instantiate: (di) => {
-    const winstonLogger = di.inject(winstonLoggerInjectable);
+    const winstonLogger = di.inject(winstonLoggerInjectionToken);
     const ipcLogTransport = di.inject(ipcLogTransportInjectable);
     const messageToChannel = di.inject(sendMessageToChannelInjectionToken);
     const fileId = di.inject(rendererLogFileIdInjectable);

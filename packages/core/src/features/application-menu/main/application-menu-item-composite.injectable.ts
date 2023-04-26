@@ -12,7 +12,7 @@ import type { ApplicationMenuItemTypes } from "./menu-items/application-menu-ite
 import type { RootComposite } from "../../../common/utils/composite/interfaces";
 import type { Discriminable } from "../../../common/utils/composable-responsibilities/discriminable/discriminable";
 import { orderByOrderNumber } from "../../../common/utils/composable-responsibilities/orderable/orderable";
-import { logErrorInjectable } from "@k8slens/logging";
+import { logErrorInjectionToken } from "@k8slens/logging";
 import { isShown } from "../../../common/utils/composable-responsibilities/showable/showable";
 
 export type MenuItemRoot = Discriminable<"root"> & RootComposite<"root">;
@@ -22,7 +22,7 @@ const applicationMenuItemCompositeInjectable = getInjectable({
 
   instantiate: (di) => {
     const menuItems = di.inject(applicationMenuItemsInjectable);
-    const logError = di.inject(logErrorInjectable);
+    const logError = di.inject(logErrorInjectionToken);
 
     return computed((): Composite<ApplicationMenuItemTypes | MenuItemRoot> => {
       const items = menuItems.get();

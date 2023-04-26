@@ -5,7 +5,7 @@
 
 import type { AuthorizationV1Api, V1ResourceAttributes } from "@kubernetes/client-node";
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 /**
  * Requests the permissions for actions on the kube cluster
@@ -19,7 +19,7 @@ export type CreateCanI = (api: AuthorizationV1Api) => CanI;
 const createCanIInjectable = getInjectable({
   id: "create-can-i",
   instantiate: (di): CreateCanI => {
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return (api) => async (resourceAttributes: V1ResourceAttributes): Promise<boolean> => {
       try {

@@ -25,7 +25,7 @@ import broadcastMessageInjectable from "../../common/ipc/broadcast-message.injec
 import createListNamespacesInjectable from "../../common/cluster/list-namespaces.injectable";
 import kubeAuthProxyServerInjectable from "./kube-auth-proxy-server.injectable";
 import loadProxyKubeconfigInjectable from "./load-proxy-kubeconfig.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import prometheusHandlerInjectable from "./prometheus-handler/prometheus-handler.injectable";
 import removeProxyKubeconfigInjectable from "./remove-proxy-kubeconfig.injectable";
 import requestApiResourcesInjectable from "./request-api-resources.injectable";
@@ -407,7 +407,7 @@ const clusterConnectionInjectable = getInjectable({
     {
       clusterVersionDetector: di.inject(clusterVersionDetectorInjectable),
       kubeAuthProxyServer: di.inject(kubeAuthProxyServerInjectable, cluster),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       prometheusHandler: di.inject(prometheusHandlerInjectable, cluster),
       broadcastConnectionUpdate: di.inject(broadcastConnectionUpdateInjectable, cluster),
       broadcastMessage: di.inject(broadcastMessageInjectable),

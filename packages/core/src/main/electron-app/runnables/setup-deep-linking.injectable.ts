@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import electronAppInjectable from "../electron-app.injectable";
 import openDeepLinkInjectable from "../../protocol-handler/lens-protocol-router-main/open-deep-link-for-url/open-deep-link.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import commandLineArgumentsInjectable from "../../utils/command-line-arguments.injectable";
 import { startsWith, toLower } from "lodash/fp";
 import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
@@ -17,7 +17,7 @@ const setupDeepLinkingInjectable = getInjectable({
   instantiate: (di) => ({
     run: async () => {
       const app = di.inject(electronAppInjectable);
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
       const openDeepLinkForUrl = di.inject(openDeepLinkInjectable);
       const showApplicationWindow = di.inject(showApplicationWindowInjectable);
       const firstInstanceCommandLineArguments = di.inject(commandLineArgumentsInjectable);

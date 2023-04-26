@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "./kube-api";
 import maybeKubeApiInjectable from "./maybe-kube-api.injectable";
 
@@ -15,7 +15,7 @@ const createKubeApiInjectable = getInjectable({
   id: "create-kube-api",
   instantiate: (di): CreateKubeApi => {
     const deps: KubeApiDependencies = {
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     };
 

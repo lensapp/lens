@@ -10,7 +10,7 @@ import type { IEqualsComparer } from "mobx";
 import { reaction } from "mobx";
 import directoryForUserDataInjectable from "../app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import getConfigurationFileModelInjectable from "../get-configuration-file-model/get-configuration-file-model.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import getBasenameOfPathInjectable from "../path/get-basename.injectable";
 import { enlistMessageChannelListenerInjectionToken, sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import type { MessageChannel } from "@k8slens/messaging";
@@ -63,7 +63,7 @@ const createPersistentStorageInjectable = getInjectable({
   instantiate: (di): CreatePersistentStorage => {
     const directoryForUserData = di.inject(directoryForUserDataInjectable);
     const getConfigurationFileModel = di.inject(getConfigurationFileModelInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
     const ipcChannelPrefixes = di.inject(persistentStorageIpcChannelPrefixesInjectionToken);
     const persistStateToConfig = di.inject(persistStateToConfigInjectionToken);

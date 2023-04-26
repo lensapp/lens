@@ -8,7 +8,7 @@ import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-c
 import { ComponentStatusApi } from "./component-status.api";
 import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 const componentStatusApiInjectable = getInjectable({
   id: "component-status-api",
@@ -16,7 +16,7 @@ const componentStatusApiInjectable = getInjectable({
     assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "componentStatusApi is only available in certain environments");
 
     return new ComponentStatusApi({
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     });
   },

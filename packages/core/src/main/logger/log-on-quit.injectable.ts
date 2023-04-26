@@ -3,14 +3,14 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { onQuitOfBackEndInjectionToken } from "../start-main-application/runnable-tokens/phases";
 
 const logOnQuitOfBackendInjectable = getInjectable({
   id: "log-on-quit-of-backend",
   instantiate: (di) => ({
     run: () => {
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
 
       logger.info("Quitting application ...");
     },

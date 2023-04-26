@@ -8,7 +8,7 @@ import { comparer, action } from "mobx";
 import { clusterStoreMigrationInjectionToken } from "./migration-token";
 import type { ClusterId, ClusterModel } from "../../../../common/cluster-types";
 import { Cluster } from "../../../../common/cluster/cluster";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import createPersistentStorageInjectable from "../../../../common/persistent-storage/create.injectable";
 import persistentStorageMigrationsInjectable from "../../../../common/persistent-storage/migrations.injectable";
 import storeMigrationVersionInjectable from "../../../../common/vars/store-migration-version.injectable";
@@ -23,7 +23,7 @@ const clustersPersistentStorageInjectable = getInjectable({
   instantiate: (di) => {
     const createPersistentStorage = di.inject(createPersistentStorageInjectable);
     const clustersState = di.inject(clustersStateInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return createPersistentStorage<ClusterStoreModel>({
       configName: "lens-cluster-store",

@@ -14,7 +14,7 @@ import { DrawerItem } from "../drawer/drawer-item";
 import { Badge } from "../badge";
 import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface LimitRangeDetailsProps extends KubeObjectDetailsProps<LimitRange> {
 }
@@ -107,6 +107,6 @@ class NonInjectedLimitRangeDetails extends React.Component<LimitRangeDetailsProp
 export const LimitRangeDetails = withInjectables<Dependencies, LimitRangeDetailsProps>(NonInjectedLimitRangeDetails, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

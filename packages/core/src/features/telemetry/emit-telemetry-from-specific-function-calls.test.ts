@@ -8,7 +8,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { getDiForUnitTesting } from "../../renderer/getDiForUnitTesting";
 import telemetryWhiteListForParameterlessFunctionsInjectable from "./renderer/telemetry-white-list-for-parameterless-functions.injectable";
 import emitEventInjectable from "../../common/app-event-bus/emit-event.injectable";
-import { logErrorInjectable } from "@k8slens/logging";
+import { logErrorInjectionToken } from "@k8slens/logging";
 import telemetryDecoratorInjectable from "./renderer/telemetry-decorator.injectable";
 
 describe("emit-telemetry-from-specific-function-calls", () => {
@@ -57,7 +57,7 @@ describe("emit-telemetry-from-specific-function-calls", () => {
           );
         });
 
-        di.override(logErrorInjectable, () => logErrorMock);
+        di.override(logErrorInjectionToken, () => logErrorMock);
 
         whiteListedFunction = di.inject(whiteListedInjectable);
         nonWhiteListedFunction = di.inject(nonWhiteListedInjectable);

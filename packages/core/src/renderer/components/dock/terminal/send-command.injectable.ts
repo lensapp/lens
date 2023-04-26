@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { when } from "mobx";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { TerminalChannels } from "../../../../common/terminal/channels";
 import { waitUntilDefined, noop } from "@k8slens/utilities";
 import showSuccessNotificationInjectable from "../../notifications/show-success-notification.injectable";
@@ -40,7 +40,7 @@ const sendCommandInjectable = getInjectable({
     const selectTab = di.inject(selectDockTabInjectable);
     const getTerminalApi = di.inject(getTerminalApiInjectable);
     const showSuccessNotification = di.inject(showSuccessNotificationInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return async (command: string, options: SendCommandOptions = {}): Promise<void> => {
       let tabId: string | undefined = options.tabId;

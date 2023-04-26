@@ -6,7 +6,7 @@ import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import type { Cluster } from "../../common/cluster/cluster";
 import directoryForTempInjectable from "../../common/app-paths/directory-for-temp/directory-for-temp.injectable";
 import { KubeconfigManager } from "./kubeconfig-manager";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import getDirnameOfPathInjectable from "../../common/path/get-dirname.injectable";
 import pathExistsInjectable from "../../common/fs/path-exists.injectable";
@@ -23,7 +23,7 @@ const kubeconfigManagerInjectable = getInjectable({
   instantiate: (di, cluster) => new KubeconfigManager(
     {
       directoryForTemp: di.inject(directoryForTempInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
       joinPaths: di.inject(joinPathsInjectable),
       getDirnameOfPath: di.inject(getDirnameOfPathInjectable),
       removePath: di.inject(removePathInjectable),

@@ -23,7 +23,7 @@ import aboutPortForwardingInjectable from "../../port-forward/about-port-forward
 import notifyErrorPortForwardingInjectable from "../../port-forward/notify-error-port-forwarding.injectable";
 import type { OpenPortForward } from "../../port-forward/open-port-forward.injectable";
 import openPortForwardInjectable from "../../port-forward/open-port-forward.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
 
 export interface PodContainerPortProps {
@@ -206,7 +206,7 @@ export const PodContainerPort = withInjectables<Dependencies, PodContainerPortPr
     aboutPortForwarding: di.inject(aboutPortForwardingInjectable),
     notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
     openPortForward: di.inject(openPortForwardInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     showErrorNotification: di.inject(showErrorNotificationInjectable),
   }),
 });

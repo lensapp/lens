@@ -13,7 +13,7 @@ import extensionInstallationStateStoreInjectable from "../../../extensions/exten
 import readFileNotifyInjectable from "./read-file-notify/read-file-notify.injectable";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 import showErrorNotificationInjectable from "../notifications/show-error-notification.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import downloadBinaryInjectable from "../../../common/fetch/download-binary.injectable";
 import { withTimeout } from "../../../common/fetch/timeout-controller";
 
@@ -29,7 +29,7 @@ const installExtensionFromInputInjectable = getInjectable({
     const readFileNotify = di.inject(readFileNotifyInjectable);
     const getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const downloadBinary = di.inject(downloadBinaryInjectable);
 
     return async (input) => {

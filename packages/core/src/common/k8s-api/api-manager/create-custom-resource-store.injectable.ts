@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import type { KubeApi } from "../kube-api";
 import type { KubeObject } from "../kube-object";
 import type { KubeObjectStoreDependencies } from "../kube-object.store";
@@ -17,7 +17,7 @@ const createCustomResourceStoreInjectable = getInjectable({
   instantiate: (di): CreateCustomResourceStore => {
     const deps: KubeObjectStoreDependencies = {
       context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     };
 
     return (api) => new CustomResourceStore(deps, api);

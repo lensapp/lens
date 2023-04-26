@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { PodLogsQuery } from "../../../../common/k8s-api/endpoints";
 import type { ResourceDescriptor } from "../../../../common/k8s-api/kube-api";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import openSaveFileDialogInjectable from "../../../utils/save-file.injectable";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
 import callForLogsInjectable from "./call-for-logs.injectable";
@@ -16,7 +16,7 @@ const downloadAllLogsInjectable = getInjectable({
   instantiate: (di) => {
     const callForLogs = di.inject(callForLogsInjectable);
     const openSaveFileDialog = di.inject(openSaveFileDialogInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
 
     return async (params: ResourceDescriptor, query: PodLogsQuery) => {

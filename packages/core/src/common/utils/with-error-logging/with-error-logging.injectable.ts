@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { logErrorInjectable } from "@k8slens/logging";
+import { logErrorInjectionToken } from "@k8slens/logging";
 
 export type WithErrorLoggingFor = (
   getErrorMessage: (error: unknown) => string
@@ -15,7 +15,7 @@ const withErrorLoggingInjectable = getInjectable({
   id: "with-error-logging",
 
   instantiate: (di): WithErrorLoggingFor => {
-    const logError = di.inject(logErrorInjectable);
+    const logError = di.inject(logErrorInjectionToken);
 
     return (getErrorMessage) =>
       (toBeDecorated) =>

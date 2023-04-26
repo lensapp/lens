@@ -9,7 +9,7 @@ import directoryForUserDataInjectable from "../../../common/app-paths/directory-
 import { isDefined } from "@k8slens/utilities";
 import joinPathsInjectable from "../../../common/path/join-paths.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { clusterStoreMigrationInjectionToken } from "../../../features/cluster/storage/common/migration-token";
 import { generateNewIdFor } from "../../../common/utils/generate-new-id-for";
 
@@ -77,7 +77,7 @@ const v500Beta13ClusterStoreMigrationInjectable = getInjectable({
   instantiate: (di) => {
     const userDataPath = di.inject(directoryForUserDataInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     const moveStorageFolder = ({ folder, newId, oldId }: { folder: string; newId: string; oldId: string }): void => {
       const oldPath = joinPaths(folder, `${oldId}.json`);

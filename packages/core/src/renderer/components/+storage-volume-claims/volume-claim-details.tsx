@@ -21,7 +21,7 @@ import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injec
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import { stopPropagation } from "@k8slens/utilities";
 import storageClassApiInjectable from "../../../common/k8s-api/endpoints/storage-class.api.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface PersistentVolumeClaimDetailsProps extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }
@@ -109,6 +109,6 @@ export const PersistentVolumeClaimDetails = withInjectables<Dependencies, Persis
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     podStore: di.inject(podStoreInjectable),
     storageClassApi: di.inject(storageClassApiInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

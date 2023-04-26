@@ -11,7 +11,7 @@ import joinPathsInjectable from "../../../../common/path/join-paths.injectable";
 import { getInjectable } from "@ogre-tools/injectable";
 import { hotbarStoreMigrationInjectionToken } from "../common/migrations-token";
 import readJsonSyncInjectable from "../../../../common/fs/read-json-sync.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { generateNewIdFor } from "../../../../common/utils/generate-new-id-for";
 import type { ClusterModel } from "../../../../common/cluster-types";
 import { defaultHotbarCells } from "../common/types";
@@ -43,7 +43,7 @@ const v500Beta10HotbarStoreMigrationInjectable = getInjectable({
       const joinPaths = di.inject(joinPathsInjectable);
       const readJsonSync = di.inject(readJsonSyncInjectable);
       const catalogCatalogEntity = di.inject(catalogCatalogEntityInjectable);
-      const logger = di.inject(loggerInjectable);
+      const logger = di.inject(loggerInjectionToken);
       const createHotbar = di.inject(createHotbarInjectable);
       const rawHotbars = store.get("hotbars");
       const hotbars: HotbarData[] = Array.isArray(rawHotbars) ? rawHotbars.filter(h => h && typeof h === "object") : [];

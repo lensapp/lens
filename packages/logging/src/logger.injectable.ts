@@ -2,9 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-import { getInjectable } from "@ogre-tools/injectable";
+import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
 import type { Logger } from "./logger";
 import { winstonLoggerInjectable } from "./winston-logger.injectable";
+
+export const loggerInjectionToken = getInjectionToken<Logger>({
+  id: "logger",
+});
 
 export const loggerInjectable = getInjectable({
   id: "logger",
@@ -19,6 +23,6 @@ export const loggerInjectable = getInjectable({
       silly: (message, ...data) => baseLogger.silly(message, ...data),
     };
   },
-
+  injectionToken: loggerInjectionToken,
   decorable: false,
 });

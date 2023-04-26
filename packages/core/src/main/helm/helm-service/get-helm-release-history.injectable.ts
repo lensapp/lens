@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { Cluster } from "../../../common/cluster/cluster";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import kubeconfigManagerInjectable from "../../kubeconfig-manager/kubeconfig-manager.injectable";
 import type { GetHelmReleaseHistoryData } from "../get-helm-release-history.injectable";
 import getHelmReleaseHistoryInjectable from "../get-helm-release-history.injectable";
@@ -13,7 +13,7 @@ const getClusterHelmReleaseHistoryInjectable = getInjectable({
   id: "get-cluster-helm-release-history",
 
   instantiate: (di) => {
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const getHelmReleaseHistory = di.inject(getHelmReleaseHistoryInjectable);
 
     return async (cluster: Cluster, data: GetHelmReleaseHistoryData) => {

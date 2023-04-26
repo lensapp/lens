@@ -6,14 +6,14 @@ import { getInjectable } from "@ogre-tools/injectable";
 import catalogCategoryRegistryInjectable from "../../../../common/catalog/category-registry.injectable";
 import navigateInjectable from "../../../navigation/navigate.injectable";
 import { CatalogEntityRegistry } from "./registry";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 const catalogEntityRegistryInjectable = getInjectable({
   id: "catalog-entity-registry",
   instantiate: (di) => new CatalogEntityRegistry({
     categoryRegistry: di.inject(catalogCategoryRegistryInjectable),
     navigate: di.inject(navigateInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });
 

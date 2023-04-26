@@ -6,14 +6,14 @@ import { getInjectable } from "@ogre-tools/injectable";
 import applicationMenuItemInjectionToken from "../../application-menu-item-injection-token";
 import { supportUrl } from "../../../../../../common/vars";
 import openLinkInBrowserInjectable from "../../../../../../common/utils/open-link-in-browser.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 const openSupportItemInjectable = getInjectable({
   id: "open-support-menu-item",
 
   instantiate: (di) => {
     const openLinkInBrowser = di.inject(openLinkInBrowserInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return {
       kind: "clickable-menu-item" as const,

@@ -7,7 +7,7 @@ import { fork } from "child_process";
 import AwaitLock from "await-lock";
 import pathToNpmCliInjectable from "../../common/app-paths/path-to-npm-cli.injectable";
 import extensionPackageRootDirectoryInjectable from "./extension-package-root-directory.injectable";
-import { prefixedLoggerInjectable } from "@k8slens/logging";
+import { prefixedLoggerInjectionToken } from "@k8slens/logging";
 import readJsonFileInjectable from "../../common/fs/read-json-file.injectable";
 import joinPathsInjectable from "../../common/path/join-paths.injectable";
 import type { PackageJson } from "../common-api";
@@ -36,7 +36,7 @@ const installExtensionInjectable = getInjectable({
     const readJsonFile = di.inject(readJsonFileInjectable);
     const writeJsonFile = di.inject(writeJsonFileInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
-    const logger = di.inject(prefixedLoggerInjectable, "EXTENSION-INSTALLER");
+    const logger = di.inject(prefixedLoggerInjectionToken, "EXTENSION-INSTALLER");
 
     const forkNpm = (...args: string[]) => new Promise<void>((resolve, reject) => {
       const child = fork(pathToNpmCli, args, {

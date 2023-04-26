@@ -11,7 +11,7 @@ import type { CheckForPlatformUpdates } from "./check-for-platform-updates.injec
 import checkForPlatformUpdatesInjectable from "./check-for-platform-updates.injectable";
 import type { UpdateChannel, ReleaseChannel } from "../../../common/update-channels";
 import { getPromiseStatus } from "@k8slens/test-utils";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { noop } from "@k8slens/utilities";
 
 describe("check-for-platform-updates", () => {
@@ -39,7 +39,7 @@ describe("check-for-platform-updates", () => {
 
     logErrorMock = jest.fn();
 
-    di.override(loggerInjectable, () => ({
+    di.override(loggerInjectionToken, () => ({
       error: logErrorMock,
       debug: noop,
       info: noop,

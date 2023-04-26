@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import { kubeObjectStoreInjectionToken } from "../../../common/k8s-api/api-manager/kube-object-store-token";
 import { ReplicationControllerStore } from "./replicationcontroller-store";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import replicationControllerApiInjectable
   from "../../../common/k8s-api/endpoints/replication-controller.api.injectable";
 
@@ -17,7 +17,7 @@ const replicationControllerStoreInjectable = getInjectable({
 
     return new ReplicationControllerStore({
       context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

@@ -9,7 +9,7 @@ import ingressClassApiInjectable from "../../../common/k8s-api/endpoints/ingress
 import { IngressClassStore } from "./ingress-class-store";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
 import clusterFrameContextForClusterScopedResourcesInjectable from "../../cluster-frame-context/for-cluster-scoped-resources.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 const ingressClassStoreInjectable = getInjectable({
   id: "ingress-class-store",
@@ -21,7 +21,7 @@ const ingressClassStoreInjectable = getInjectable({
 
     return new IngressClassStore({
       context: di.inject(clusterFrameContextForClusterScopedResourcesInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     }, api);
   },
 

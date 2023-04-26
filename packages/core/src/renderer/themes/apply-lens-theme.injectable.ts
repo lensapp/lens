@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { object } from "@k8slens/utilities";
 import type { LensTheme } from "./lens-theme";
 import resetThemeInjectable from "../../features/user-preferences/common/reset-theme.injectable";
@@ -13,7 +13,7 @@ export type ApplyLensTheme = (theme: LensTheme) => void;
 const applyLensThemeInjectable = getInjectable({
   id: "apply-lens-theme",
   instantiate: (di): ApplyLensTheme => {
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const resetTheme = di.inject(resetThemeInjectable);
 
     return (theme) => {

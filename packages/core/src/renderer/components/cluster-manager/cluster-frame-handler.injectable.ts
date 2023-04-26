@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import getClusterByIdInjectable from "../../../features/cluster/storage/common/get-by-id.injectable";
 import { ClusterFrameHandler } from "./cluster-frame-handler";
 import emitClusterVisibilityInjectable from "./emit-cluster-visibility.injectable";
@@ -13,7 +13,7 @@ const clusterFrameHandlerInjectable = getInjectable({
   instantiate: (di) => new ClusterFrameHandler({
     emitClusterVisibility: di.inject(emitClusterVisibilityInjectable),
     getClusterById: di.inject(getClusterByIdInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });
 

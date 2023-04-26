@@ -15,7 +15,7 @@ import { LineProgress } from "../line-progress";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface ResourceQuotaDetailsProps extends KubeObjectDetailsProps<ResourceQuota> {
 }
@@ -135,6 +135,6 @@ class NonInjectedResourceQuotaDetails extends React.Component<ResourceQuotaDetai
 export const ResourceQuotaDetails = withInjectables<Dependencies, ResourceQuotaDetailsProps>(NonInjectedResourceQuotaDetails, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

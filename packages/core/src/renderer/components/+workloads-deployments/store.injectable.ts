@@ -10,7 +10,7 @@ import { storesAndApisCanBeCreatedInjectionToken } from "../../../common/k8s-api
 import deploymentApiInjectable from "../../../common/k8s-api/endpoints/deployment.api.injectable";
 import { DeploymentStore } from "./store";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../cluster-frame-context/for-namespaced-resources.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 const deploymentStoreInjectable = getInjectable({
   id: "deployment-store",
@@ -22,7 +22,7 @@ const deploymentStoreInjectable = getInjectable({
     return new DeploymentStore({
       podStore: di.inject(podStoreInjectable),
       context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     }, api);
   },
   injectionToken: kubeObjectStoreInjectionToken,

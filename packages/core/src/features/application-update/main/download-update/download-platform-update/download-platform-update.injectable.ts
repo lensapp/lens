@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import electronUpdaterInjectable from "../../../../../main/electron-app/features/electron-updater.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import type { ProgressInfo } from "electron-updater";
 import type { ProgressOfDownload } from "../../../common/progress-of-update-download/progress-of-update-download.injectable";
 
@@ -17,7 +17,7 @@ const downloadPlatformUpdateInjectable = getInjectable({
 
   instantiate: (di): DownloadPlatformUpdate => {
     const electronUpdater = di.inject(electronUpdaterInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return async (onDownloadProgress) => {
       onDownloadProgress({ percentage: 0 });

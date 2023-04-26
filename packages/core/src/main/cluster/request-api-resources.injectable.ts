@@ -4,7 +4,7 @@
  */
 
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import type { KubeApiResource } from "../../common/rbac";
 import type { Cluster } from "../../common/cluster/cluster";
 import { apiVersionsRequesterInjectionToken } from "./api-versions-requester";
@@ -24,7 +24,7 @@ export interface KubeResourceListGroup {
 const requestApiResourcesInjectable = getInjectable({
   id: "request-api-resources",
   instantiate: (di): RequestApiResources => {
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const apiVersionRequesters = di.injectMany(apiVersionsRequesterInjectionToken)
       .sort(byOrderNumber);
     const requestKubeApiResourcesFor = di.inject(requestKubeApiResourcesForInjectable);

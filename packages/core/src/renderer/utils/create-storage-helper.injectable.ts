@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import type { StorageHelperDependencies, StorageHelperOptions } from "./storage-helper";
 import { StorageHelper } from "./storage-helper";
 
@@ -13,7 +13,7 @@ const createStorageHelperInjectable = getInjectable({
   id: "create-storage-helper",
   instantiate: (di): CreateStorageHelper => {
     const deps: StorageHelperDependencies = {
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     };
 
     return (key, options) => new StorageHelper(deps, key, options);

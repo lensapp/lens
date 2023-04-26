@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { AgentOptions } from "https";
 import { Agent } from "https";
 import type { RequestInit } from "@k8slens/node-fetch";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import isDevelopmentInjectable from "../vars/is-development.injectable";
 import createKubeJsonApiInjectable from "./create-kube-json-api.injectable";
 import type { KubeApiOptions } from "./kube-api";
@@ -53,7 +53,7 @@ const createKubeApiForRemoteClusterInjectable = getInjectable({
   instantiate: (di): CreateKubeApiForRemoteCluster => {
     const isDevelopment = di.inject(isDevelopmentInjectable);
     const createKubeJsonApi = di.inject(createKubeJsonApiInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return (
       config: CreateKubeApiForRemoteClusterConfig,

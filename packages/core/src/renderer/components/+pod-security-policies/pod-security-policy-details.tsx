@@ -14,7 +14,7 @@ import { Badge } from "../badge";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface PodSecurityPolicyDetailsProps extends KubeObjectDetailsProps<PodSecurityPolicy> {
 }
@@ -235,6 +235,6 @@ class NonInjectedPodSecurityPolicyDetails extends React.Component<PodSecurityPol
 export const PodSecurityPolicyDetails = withInjectables<Dependencies, PodSecurityPolicyDetailsProps>(NonInjectedPodSecurityPolicyDetails, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

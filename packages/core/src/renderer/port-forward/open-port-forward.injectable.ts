@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import openLinkInBrowserInjectable from "../../common/utils/open-link-in-browser.injectable";
 import showErrorNotificationInjectable from "../components/notifications/show-error-notification.injectable";
 import type { ForwardedPort } from "./port-forward-item";
@@ -16,7 +16,7 @@ const openPortForwardInjectable = getInjectable({
   instantiate: (di): OpenPortForward => {
     const openLinkInBrowser = di.inject(openLinkInBrowserInjectable);
     const showErrorNotification = di.inject(showErrorNotificationInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return (portForward) => {
       const browseTo = portForwardAddress(portForward);

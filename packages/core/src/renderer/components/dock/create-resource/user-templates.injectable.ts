@@ -15,7 +15,7 @@ import homeDirectoryPathInjectable from "../../../../common/os/home-directory-pa
 import getDirnameOfPathInjectable from "../../../../common/path/get-dirname.injectable";
 import parsePathInjectable from "../../../../common/path/parse.injectable";
 import { waitForPath } from "../../../../common/utils/wait-for-path";
-import { prefixedLoggerInjectable } from "@k8slens/logging";
+import { prefixedLoggerInjectionToken } from "@k8slens/logging";
 
 const userCreateResourceTemplatesInjectable = getInjectable({
   id: "user-create-resource-templates",
@@ -25,7 +25,7 @@ const userCreateResourceTemplatesInjectable = getInjectable({
     const getRelativePath = di.inject(getRelativePathInjectable);
     const homeDirectoryPath = di.inject(homeDirectoryPathInjectable);
     const getDirnameOfPath = di.inject(getDirnameOfPathInjectable);
-    const logger = di.inject(prefixedLoggerInjectable, "USER-CREATE-RESOURCE-TEMPLATES");
+    const logger = di.inject(prefixedLoggerInjectionToken, "USER-CREATE-RESOURCE-TEMPLATES");
     const parsePath = di.inject(parsePathInjectable);
 
     const userTemplatesFolder = joinPaths(homeDirectoryPath, ".k8slens", "templates");

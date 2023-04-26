@@ -6,7 +6,7 @@ import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { getDiForUnitTesting } from "../../../main/getDiForUnitTesting";
 import withOrphanPromiseInjectable from "./with-orphan-promise.injectable";
-import { logErrorInjectable } from "@k8slens/logging";
+import { logErrorInjectionToken } from "@k8slens/logging";
 
 describe("with orphan promise, when called", () => {
   let toBeDecorated: AsyncFnMock<(arg1: string, arg2: string) => Promise<string>>;
@@ -18,7 +18,7 @@ describe("with orphan promise, when called", () => {
 
     logErrorMock = jest.fn();
 
-    di.override(logErrorInjectable, () => logErrorMock);
+    di.override(logErrorInjectionToken, () => logErrorMock);
 
     const withOrphanPromise = di.inject(withOrphanPromiseInjectable);
 

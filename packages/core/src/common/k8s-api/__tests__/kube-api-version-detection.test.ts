@@ -20,7 +20,7 @@ import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kub
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import ingressApiInjectable from "../endpoints/ingress.api.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 import { Cluster } from "../../cluster/cluster";
 
@@ -709,7 +709,7 @@ describe("KubeApi", () => {
 
     beforeEach(async () => {
       horizontalPodAutoscalerApi = new HorizontalPodAutoscalerApi({
-        logger: di.inject(loggerInjectable),
+        logger: di.inject(loggerInjectionToken),
         maybeKubeApi: di.inject(maybeKubeApiInjectable),
       }, {
         allowedUsableVersions: {

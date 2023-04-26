@@ -39,7 +39,7 @@ import type { InstalledExtension } from "./common-api";
 import { getEnvironmentSpecificLegacyGlobalDiForExtensionApi } from "./as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import catalogCategoryRegistryInjectable from "../common/catalog/category-registry.injectable";
 import catalogEntityRegistryInjectable from "../renderer/api/catalog/entity/registry.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import getExtensionPageParametersInjectable from "../renderer/routes/get-extension-page-parameters.injectable";
 import navigateToRouteInjectable from "../renderer/routes/navigate-to-route.injectable";
 import routesInjectable from "../renderer/routes/routes.injectable";
@@ -89,7 +89,7 @@ export class LensRendererExtension extends LensExtension {
       categoryRegistry: di.inject(catalogCategoryRegistryInjectable),
       entityRegistry: di.inject(catalogEntityRegistryInjectable),
       routes: di.inject(routesInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     };
 
     super(deps, extension);

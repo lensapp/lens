@@ -4,12 +4,12 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { persistStateToConfigInjectionToken } from "../../common/persistent-storage/save-to-file";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 const persistStateToConfigInjectable = getInjectable({
   id: "persist-state-to-config",
   instantiate: (di) => {
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
 
     return (config, state) => {
       logger.info(`[BASE-STORE]: saving ${config.path}...`);

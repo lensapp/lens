@@ -7,7 +7,7 @@
 
 import { getInjectable } from "@ogre-tools/injectable";
 import { clusterStoreMigrationInjectionToken } from "../../../features/cluster/storage/common/migration-token";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import isSnapPackageInjectable from "../../../common/vars/is-snap-package.injectable";
 import type { ClusterModel } from "../../../common/cluster-types";
 import pathExistsSyncInjectable from "../../../common/fs/path-exists-sync.injectable";
@@ -17,7 +17,7 @@ const clusterStoreSnapMigrationInjectable = getInjectable({
   id: "cluster-store-snap-migration",
   instantiate: (di) => {
     const { version } = di.inject(applicationInformationToken);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const isSnapPackage = di.inject(isSnapPackageInjectable);
     const pathExistsSync = di.inject(pathExistsSyncInjectable);
 

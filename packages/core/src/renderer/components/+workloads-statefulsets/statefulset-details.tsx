@@ -23,7 +23,7 @@ import subscribeStoresInjectable from "../../kube-watch-api/subscribe-stores.inj
 import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import statefulSetStoreInjectable from "./store.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface StatefulSetDetailsProps extends KubeObjectDetailsProps<StatefulSet> {
 }
@@ -105,7 +105,7 @@ export const StatefulSetDetails = withInjectables<Dependencies, StatefulSetDetai
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
     statefulSetStore: di.inject(statefulSetStoreInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });
 

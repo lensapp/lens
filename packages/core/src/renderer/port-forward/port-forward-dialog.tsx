@@ -24,7 +24,7 @@ import aboutPortForwardingInjectable from "./about-port-forwarding.injectable";
 import notifyErrorPortForwardingInjectable from "./notify-error-port-forwarding.injectable";
 import type { OpenPortForward } from "./open-port-forward.injectable";
 import openPortForwardInjectable from "./open-port-forward.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface PortForwardDialogProps extends Partial<DialogProps> {}
 
@@ -180,6 +180,6 @@ export const PortForwardDialog = withInjectables<Dependencies, PortForwardDialog
     aboutPortForwarding: di.inject(aboutPortForwardingInjectable),
     notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
     openPortForward: di.inject(openPortForwardInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

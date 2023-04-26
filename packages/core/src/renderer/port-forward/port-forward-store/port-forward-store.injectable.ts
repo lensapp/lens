@@ -9,7 +9,7 @@ import createStorageInjectable from "../../utils/create-storage/create-storage.i
 import notifyErrorPortForwardingInjectable from "../notify-error-port-forwarding.injectable";
 import requestActivePortForwardInjectable from "./request-active-port-forward.injectable";
 import apiBaseInjectable from "../../../common/k8s-api/api-base.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 const portForwardStoreInjectable = getInjectable({
   id: "port-forward-store",
@@ -25,7 +25,7 @@ const portForwardStoreInjectable = getInjectable({
       notifyErrorPortForwarding: di.inject(notifyErrorPortForwardingInjectable),
       apiBase: di.inject(apiBaseInjectable),
       requestActivePortForward: di.inject(requestActivePortForwardInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     });
   },
 });

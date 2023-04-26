@@ -20,7 +20,7 @@ interface Pre360ClusterModel extends ClusterModel {
 import { getInjectable } from "@ogre-tools/injectable";
 import { clusterStoreMigrationInjectionToken } from "../../../features/cluster/storage/common/migration-token";
 import readFileBufferSyncInjectable from "../../../common/fs/read-file-buffer-sync.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import writeFileSyncInjectable from "../../../common/fs/write-file-sync.injectable";
 
 const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
@@ -31,7 +31,7 @@ const v360Beta1ClusterStoreMigrationInjectable = getInjectable({
     const readFileSync = di.inject(readFileSyncInjectable);
     const readFileBufferSync = di.inject(readFileBufferSyncInjectable);
     const joinPaths = di.inject(joinPathsInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const writeFileSync = di.inject(writeFileSyncInjectable);
 
     return {

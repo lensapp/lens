@@ -22,7 +22,7 @@ import type { DerivedKubeApiOptions, KubeApiDependencies, KubeApiOptions } from 
 import { KubeApi as InternalKubeApi } from "../../common/k8s-api/kube-api";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
 import type { ClusterContext } from "../../renderer/cluster-frame-context/cluster-frame-context";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import { getLegacyGlobalDiForExtensionApi } from "../as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import maybeKubeApiInjectable from "../../common/k8s-api/maybe-kube-api.injectable";
 import { DeploymentApi as InternalDeploymentApi, IngressApi as InternalIngressApi, NodeApi, PersistentVolumeClaimApi, PodApi } from "../../common/k8s-api/endpoints";
@@ -44,7 +44,7 @@ const getKubeApiDeps = (): KubeApiDependencies => {
   const di = getLegacyGlobalDiForExtensionApi();
 
   return {
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     maybeKubeApi: di.inject(maybeKubeApiInjectable),
   };
 };
@@ -185,7 +185,7 @@ export abstract class KubeObjectStore<
     super(
       {
         context: di.inject(clusterFrameContextForNamespacedResourcesInjectable),
-        logger: di.inject(loggerInjectable),
+        logger: di.inject(loggerInjectionToken),
       },
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       api!,

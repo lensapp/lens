@@ -7,7 +7,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import getBasenameOfPathInjectable from "../../../common/path/get-basename.injectable";
 import spawnInjectable from "../../../main/child-process/spawn.injectable";
 import randomUUIDInjectable from "../../../main/crypto/random-uuid.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import processExecPathInjectable from "./execPath.injectable";
 import processEnvInjectable from "./env.injectable";
 import { object } from "@k8slens/utilities";
@@ -56,7 +56,7 @@ const computeUnixShellEnvironmentInjectable = getInjectable({
 
     const getBasenameOfPath = di.inject(getBasenameOfPathInjectable);
     const spawn = di.inject(spawnInjectable);
-    const logger = di.inject(loggerInjectable);
+    const logger = di.inject(loggerInjectionToken);
     const randomUUID = di.inject(randomUUIDInjectable);
     const processExecPath = di.inject(processExecPathInjectable);
     const processEnv = di.inject(processEnvInjectable);

@@ -22,7 +22,7 @@ import type { PodStore } from "../+workloads-pods/store";
 import podStoreInjectable from "../+workloads-pods/store.injectable";
 import type { ReplicaSetStore } from "./store";
 import replicaSetStoreInjectable from "./store.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface ReplicaSetDetailsProps extends KubeObjectDetailsProps<ReplicaSet> {
 }
@@ -105,6 +105,6 @@ export const ReplicaSetDetails = withInjectables<Dependencies, ReplicaSetDetails
     subscribeStores: di.inject(subscribeStoresInjectable),
     podStore: di.inject(podStoreInjectable),
     replicaSetStore: di.inject(replicaSetStoreInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

@@ -12,7 +12,7 @@ import { toJS } from "../utils/toJS";
 import type { Disposer } from "@k8slens/utilities";
 import { getLegacyGlobalDiForExtensionApi } from "../../extensions/as-legacy-globals-for-extension-api/legacy-global-di-for-extension-api";
 import ipcRendererInjectable from "../../renderer/utils/channel/ipc-renderer.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import ipcMainInjectionToken from "./ipc-main-injection-token";
 import clusterFramesInjectable from "../cluster-frames.injectable";
 
@@ -38,7 +38,7 @@ export async function broadcastMessage(channel: string, ...args: any[]): Promise
   }
 
   const di = getLegacyGlobalDiForExtensionApi();
-  const logger = di.inject(loggerInjectable);
+  const logger = di.inject(loggerInjectionToken);
   const clusterFrames = di.inject(clusterFramesInjectable);
 
   ipcMain.listeners(channel).forEach((func) => func({

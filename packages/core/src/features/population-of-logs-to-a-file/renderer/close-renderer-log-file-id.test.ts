@@ -6,7 +6,7 @@ import type winston from "winston";
 import type { SendMessageToChannel } from "@k8slens/messaging";
 import { sendMessageToChannelInjectionToken } from "@k8slens/messaging";
 import type { DiContainer } from "@ogre-tools/injectable";
-import { winstonLoggerInjectable } from "@k8slens/logging";
+import { winstonLoggerInjectionToken } from "@k8slens/logging";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import closeRendererLogFileInjectable from "./close-renderer-log-file.injectable";
 import rendererLogFileIdInjectable from "./renderer-log-file-id.injectable";
@@ -27,7 +27,7 @@ describe("close renderer file logging", () => {
     } as any as winston.Logger;
     ipcTransportMock = { name: "ipc-renderer-transport" } as IpcLogTransport;
 
-    di.override(winstonLoggerInjectable, () => winstonMock);
+    di.override(winstonLoggerInjectionToken, () => winstonMock);
     di.override(sendMessageToChannelInjectionToken, () => sendIpcMock);
     di.override(rendererLogFileIdInjectable, () => "some-log-id");
     di.override(ipcLogTransportInjectable, () => ipcTransportMock);

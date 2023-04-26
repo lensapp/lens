@@ -17,7 +17,7 @@ import { Input } from "../input";
 import { MonacoEditor } from "../monaco-editor";
 import type { Logger } from "@k8slens/logging";
 import { withInjectables } from "@ogre-tools/injectable-react";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 
 export interface CRDDetailsProps extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
@@ -162,6 +162,6 @@ class NonInjectedCRDDetails extends React.Component<CRDDetailsProps & Dependenci
 export const CRDDetails = withInjectables<Dependencies, CRDDetailsProps>(NonInjectedCRDDetails, {
   getProps: (di, props) => ({
     ...props,
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
   }),
 });

@@ -18,7 +18,7 @@ import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import type { NamespaceApi } from "../../../common/k8s-api/endpoints";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
 
@@ -131,7 +131,7 @@ export const KubeObjectMeta = withInjectables<Dependencies, KubeObjectMetaProps>
     ...props,
     getDetailsUrl: di.inject(getDetailsUrlInjectable),
     apiManager: di.inject(apiManagerInjectable),
-    logger: di.inject(loggerInjectable),
+    logger: di.inject(loggerInjectionToken),
     namespaceApi: di.inject(namespaceApiInjectable),
   }),
 });

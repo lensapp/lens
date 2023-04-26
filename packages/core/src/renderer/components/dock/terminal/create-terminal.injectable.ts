@@ -11,7 +11,7 @@ import terminalSpawningPoolInjectable from "./terminal-spawning-pool.injectable"
 import isMacInjectable from "../../../../common/vars/is-mac.injectable";
 import openLinkInBrowserInjectable from "../../../../common/utils/open-link-in-browser.injectable";
 import xtermColorThemeInjectable from "../../../themes/terminal-colors.injectable";
-import { loggerInjectable } from "@k8slens/logging";
+import { loggerInjectionToken } from "@k8slens/logging";
 import terminalConfigInjectable from "../../../../features/user-preferences/common/terminal-config.injectable";
 import terminalCopyOnSelectInjectable from "../../../../features/user-preferences/common/terminal-copy-on-select.injectable";
 
@@ -27,7 +27,7 @@ const createTerminalInjectable = getInjectable({
       isMac: di.inject(isMacInjectable),
       openLinkInBrowser: di.inject(openLinkInBrowserInjectable),
       xtermColorTheme: di.inject(xtermColorThemeInjectable),
-      logger: di.inject(loggerInjectable),
+      logger: di.inject(loggerInjectionToken),
     };
 
     return (tabId, api) => new Terminal(dependencies, { tabId, api });

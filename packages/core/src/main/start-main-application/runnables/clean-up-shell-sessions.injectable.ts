@@ -5,7 +5,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import { onQuitOfBackEndInjectionToken } from "../runnable-tokens/phases";
 import shellSessionProcessesInjectable from "../../shell-session/processes.injectable";
-import { prefixedLoggerInjectable } from "@k8slens/logging";
+import { prefixedLoggerInjectionToken } from "@k8slens/logging";
 
 const cleanUpShellSessionsInjectable = getInjectable({
   id: "clean-up-shell-sessions",
@@ -13,7 +13,7 @@ const cleanUpShellSessionsInjectable = getInjectable({
   instantiate: (di) => ({
     run: () => {
       const shellSessionProcesses = di.inject(shellSessionProcessesInjectable);
-      const logger = di.inject(prefixedLoggerInjectable, "SHELL-SESSIONS");
+      const logger = di.inject(prefixedLoggerInjectionToken, "SHELL-SESSIONS");
 
       logger.info("Killing all remaining shell sessions");
 
