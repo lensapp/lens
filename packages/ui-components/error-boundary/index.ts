@@ -3,4 +3,4 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-export * from "./error-boundary";
+export { ErrorBoundary } from "./src/error-boundary";

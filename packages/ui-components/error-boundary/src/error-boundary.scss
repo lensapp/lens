@@ -4,7 +4,7 @@
  */
 
 .ErrorBoundary {
-  --flex-gap: #{$padding * 2};
+  --flex-gap: #{8px * 2};
 
   padding: var(--flex-gap);
   word-break: break-all;

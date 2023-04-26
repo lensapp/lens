@@ -4,7 +4,7 @@
  */
 import React, { useEffect } from "react";
 import { Observer, observer } from "mobx-react";
-import { ErrorBoundary } from "../../components/error-boundary";
+import { ErrorBoundary } from "@k8slens/error-boundary";
 import type { NamespaceStore } from "../../components/+namespaces/store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import namespaceStoreInjectable  from "../../components/+namespaces/store.injectable";
