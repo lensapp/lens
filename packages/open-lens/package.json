@@ -218,7 +218,7 @@
     "@types/color": "^3.0.3",
     "@types/crypto-js": "^3.1.47",
     "@types/lodash": "^4.14.191",
-    "@types/node": "^16.18.24",
+    "@types/node": "^16.18.25",
     "@types/proper-lockfile": "^4.1.2",
     "@types/react-dom": "^17.0.16",
     "@types/react-router-dom": "^5.3.3",
