@@ -25,7 +25,7 @@
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "webpack",
+    "build": "lens-webpack-build",
     "test:unit": "jest --coverage --runInBand",
     "lint:fix": "lens-lint --fix",
     "lint": "lens-lint"
@@ -41,6 +41,7 @@
     "mobx": "^6.7.0"
   },
   "devDependencies": {
+    "@k8slens/webpack": "^6.5.0-alpha.4",
     "@k8slens/eslint-config": "^6.5.0-alpha.2"
   }
 }

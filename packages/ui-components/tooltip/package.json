@@ -24,7 +24,7 @@
   "license": "MIT",
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
-    "build": "webpack",
+    "build": "lens-webpack-build",
     "test:unit": "jest --coverage --runInBand",
     "lint": "lens-lint",
     "lint:fix": "lens-lint --fix"
@@ -39,6 +39,7 @@
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@k8slens/webpack": "^6.5.0-alpha.4",
     "@async-fn/jest": "^1.6.4",
     "@k8slens/eslint-config": "6.5.0-alpha.1",
     "@k8slens/react-testing-library-discovery": "^1.0.0-alpha.0",
