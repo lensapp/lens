@@ -9,6 +9,7 @@ import hostedClusterInjectable from "./hosted-cluster.injectable";
 import assert from "assert";
 import { computed } from "mobx";
 import selectedNamespacesStorageInjectable from "../../features/namespace-filtering/renderer/storage.injectable";
+import { clusterFrameContextForNamespacedResourcesInjectionToken } from "./for-namespaced-resources-injection-token";
 
 const clusterFrameContextForNamespacedResourcesInjectable = getInjectable({
   id: "cluster-frame-context-for-namespaced-resources",
@@ -67,6 +68,7 @@ const clusterFrameContextForNamespacedResourcesInjectable = getInjectable({
       },
     };
   },
+  injectionToken: clusterFrameContextForNamespacedResourcesInjectionToken,
 });
 
 export default clusterFrameContextForNamespacedResourcesInjectable;

@@ -24,3 +24,4 @@ export * as rendererExtensionApi from "../extensions/renderer-api";
 export * as commonExtensionApi from "../extensions/common-api";
 export { metricsFeature } from "../features/metrics/metrics-feature";
 export { podMetricsApiInjectionToken } from "../common/k8s-api/endpoints/pod-metrics-api-injection-token";
+export { clusterFrameContextForNamespacedResourcesInjectionToken } from "./cluster-frame-context/for-namespaced-resources-injection-token";
