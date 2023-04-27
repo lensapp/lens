@@ -32,6 +32,7 @@
     "lint:fix": "lens-lint --fix"
   },
   "peerDependencies": {
+    "@k8slens/kube-object": "^1.0.0-alpha.1",
     "@ogre-tools/injectable": "^15.1.2",
     "react": "^17.0.2"
   },
