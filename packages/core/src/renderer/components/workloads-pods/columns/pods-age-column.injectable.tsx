@@ -4,27 +4,21 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import React from "react";
-import type { Pod } from "../../../../common/k8s-api/endpoints";
-import type { KubeObjectListLayoutColumn } from "@k8slens/list-layout";
-import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 import { KubeObjectAge } from "../../kube-object/age";
+import { podListLayoutColumnInjectionToken } from "@k8slens/list-layout";
+
+const columnId = "age";
 
 export const podsAgeColumnInjectable = getInjectable({
   id: "pods-age-column",
-  instantiate: (): KubeObjectListLayoutColumn<Pod> => {
-    const columnId = "age";
-
-    return {
-      id: columnId,
-      kind: "Pod",
-      apiVersion: "v1",
-      priority: 30,
-      content: (pod: Pod) => {
-        return <KubeObjectAge key="age" object={pod} />;
-      },
-      header: { title: "Age", className: "age", sortBy: columnId, id: columnId },
-      sortingCallBack: (pod: Pod) => -pod.getCreationTimestamp(),
-    };
-  },
-  injectionToken: kubeObjectListLayoutColumnInjectionToken,
+  instantiate: () => ({
+    id: columnId,
+    kind: "Pod",
+    apiVersion: "v1",
+    priority: 30,
+    content: (pod) => <KubeObjectAge key="age" object={pod} />,
+    header: { title: "Age", className: "age", sortBy: columnId, id: columnId },
+    sortingCallBack: (pod) => -pod.getCreationTimestamp(),
+  }),
+  injectionToken: podListLayoutColumnInjectionToken,
 });

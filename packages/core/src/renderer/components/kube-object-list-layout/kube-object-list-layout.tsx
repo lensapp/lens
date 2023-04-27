@@ -28,7 +28,7 @@ import type { ToggleKubeDetailsPane } from "../kube-detail-params/toggle-details
 import kubeSelectedUrlParamInjectable from "../kube-detail-params/kube-selected-url.injectable";
 import toggleKubeDetailsPaneInjectable from "../kube-detail-params/toggle-details.injectable";
 import type { ClusterContext } from "../../cluster-frame-context/cluster-frame-context";
-import type { KubeObjectListLayoutColumn, ItemObject } from "@k8slens/list-layout";
+import type { GeneralKubeObjectListLayoutColumn, SpecificKubeListLayoutColumn } from "@k8slens/list-layout";
 import { kubeObjectListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 import { sortBy } from "lodash";
 
@@ -54,6 +54,7 @@ export interface KubeObjectListLayoutProps<
    * If not provided, ResourceNames is used instead with a fallback to resource kind.
    */
   resourceName?: string;
+  columns?: SpecificKubeListLayoutColumn<K>[];
 }
 
 interface Dependencies {
@@ -61,8 +62,17 @@ interface Dependencies {
   subscribeToStores: SubscribeStores;
   kubeSelectedUrlParam: PageParam<string>;
   toggleKubeDetailsPane: ToggleKubeDetailsPane;
-  columns: KubeObjectListLayoutColumn<ItemObject>[];
+  generalColumns: GeneralKubeObjectListLayoutColumn[];
 }
+
+const matchesApiFor = (api: SubscribableStore["api"]) => (column: GeneralKubeObjectListLayoutColumn) => (
+  column.kind === api.kind
+  && (
+    isString(api.apiVersionWithGroup)
+      ? [column.apiVersion].flat().includes(api.apiVersionWithGroup)
+      : true
+  )
+);
 
 const getLoadErrorMessage = (error: unknown): string => {
   if (error instanceof Error) {
@@ -77,7 +87,7 @@ const getLoadErrorMessage = (error: unknown): string => {
     return error.message;
   }
 
-  return `${error}`;
+  return `${String(error)}`;
 };
 
 @observer
@@ -152,11 +162,18 @@ class NonInjectedKubeObjectListLayout<
       renderTableContents,
       renderTableHeader,
       columns,
+      generalColumns,
       sortingCallbacks = {},
       ...layoutProps
     } = this.props;
     const resourceName = this.props.resourceName || ResourceNames[ResourceKindMap[store.api.kind]] || store.api.kind;
-    const targetColumns = columns.filter((col) => col.kind === store.api.kind && col.apiVersion === store.api.apiVersionWithGroup);
+    const targetColumns = [
+      ...(columns ?? []),
+      ...generalColumns.filter(matchesApiFor(store.api)),
+    ];
+
+    void items;
+    void dependentStores;
 
     targetColumns.forEach((col) => {
       if (col.sortingCallBack) {
@@ -202,12 +219,16 @@ class NonInjectedKubeObjectListLayout<
         onDetails={onDetails ?? ((item) => toggleDetails(item.selfLink))}
         sortingCallbacks={sortingCallbacks}
         renderTableHeader={headers}
-        renderTableContents={(item) => {
-          return sortBy([
-            ...(renderTableContents(item).map((content, index) => ({ priority: (20 - index), content }))),
-            ...targetColumns.map((col) => ({ priority: col.priority, content: col.content(item) })),
-          ], (item) => -item.priority).map((value) => value.content);
-        }}
+        renderTableContents={(item) => (
+          sortBy(
+            [
+              ...(renderTableContents(item).map((content, index) => ({ priority: (20 - index), content }))),
+              ...targetColumns.map((col) => ({ priority: col.priority, content: col.content(item) })),
+            ],
+            (item) => -item.priority,
+          )
+            .map((value) => value.content)
+        )}
         spinnerTestId="kube-object-list-layout-spinner"
         {...layoutProps}
       />
@@ -225,7 +246,7 @@ export const KubeObjectListLayout = withInjectables<
     subscribeToStores: di.inject(subscribeStoresInjectable),
     kubeSelectedUrlParam: di.inject(kubeSelectedUrlParamInjectable),
     toggleKubeDetailsPane: di.inject(toggleKubeDetailsPaneInjectable),
-    columns: di.injectMany(kubeObjectListLayoutColumnInjectionToken),
+    generalColumns: di.injectMany(kubeObjectListLayoutColumnInjectionToken),
   }),
 }) as <
   K extends KubeObject,
