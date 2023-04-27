@@ -6,9 +6,10 @@ import { getInjectable } from "@ogre-tools/injectable";
 import assert from "assert";
 import { storesAndApisCanBeCreatedInjectionToken } from "../stores-apis-can-be-created.token";
 import { PodMetricsApi } from "./pod-metrics.api";
-import { kubeApiInjectionToken } from "../kube-api/kube-api-injection-token";
 import loggerInjectable from "../../logger.injectable";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
+import { podMetricsApiInjectionToken } from "./pod-metrics-api-injection-token";
+
 
 const podMetricsApiInjectable = getInjectable({
   id: "pod-metrics-api",
@@ -20,8 +21,7 @@ const podMetricsApiInjectable = getInjectable({
       maybeKubeApi: di.inject(maybeKubeApiInjectable),
     });
   },
-
-  injectionToken: kubeApiInjectionToken,
+  injectionToken: podMetricsApiInjectionToken,
 });
 
 export default podMetricsApiInjectable;

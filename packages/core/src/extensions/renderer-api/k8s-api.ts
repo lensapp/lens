@@ -105,6 +105,9 @@ export type {
   MetricData,
   MetricResult,
 } from "../../common/k8s-api/endpoints/metrics.api";
+export type {
+  PodMetrics,
+} from "../../common/k8s-api/endpoints/pod-metrics.api";
 
 export {
   KubeObjectStatusLevel,
