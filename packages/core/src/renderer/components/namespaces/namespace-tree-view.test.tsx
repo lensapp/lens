@@ -5,7 +5,7 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import { fireEvent } from "@testing-library/react";
 import React from "react";
-import { Namespace } from "../../../common/k8s-api/endpoints";
+import { Namespace } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
@@ -104,7 +104,7 @@ const levelDeepSubChildA = createNamespace("level-deep-subchild-a", {
 describe("<NamespaceTreeView />", () => {
   let di: DiContainer;
   let render: DiRender;
-  
+
   beforeEach(async () => {
     di = getDiForUnitTesting();
 

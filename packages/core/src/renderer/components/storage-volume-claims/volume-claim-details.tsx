@@ -12,7 +12,7 @@ import { Badge } from "../badge";
 import { Link } from "react-router-dom";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { StorageClassApi } from "../../../common/k8s-api/endpoints";
-import { PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
+import { PersistentVolumeClaim } from "@k8slens/kube-object";
 import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";

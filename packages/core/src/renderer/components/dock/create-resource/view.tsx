@@ -96,7 +96,7 @@ class NonInjectedCreateResource extends React.Component<CreateResourceProps & De
 
       if (!result.callWasSuccessful) {
         this.props.logger.warn("Failed to create resource", { resource }, result.error);
-        this.props.showCheckedErrorNotification(result.error, "Unknown error occured while creating resources");
+        this.props.showCheckedErrorNotification(result.error, "Unknown error occurred while creating resources");
 
         throw result.error;
       }

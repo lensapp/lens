@@ -4,10 +4,11 @@
  */
 
 import type { GetPodsByOwnerId } from "../workloads-pods/get-pods-by-owner-id.injectable";
-import type { DaemonSet, DaemonSetApi, Pod } from "../../../common/k8s-api/endpoints";
-import { PodStatusPhase } from "../../../common/k8s-api/endpoints";
+import type { DaemonSet, Pod } from "@k8slens/kube-object";
+import { PodStatusPhase } from "@k8slens/kube-object";
 import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
+import type { DaemonSetApi } from "../../../common/k8s-api/endpoints";
 
 export interface DaemonSetStoreDependencies extends KubeObjectStoreDependencies {
   readonly getPodsByOwnerId: GetPodsByOwnerId;

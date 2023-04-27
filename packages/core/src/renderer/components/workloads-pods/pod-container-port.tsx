@@ -7,7 +7,7 @@ import "./pod-container-port.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import type { ContainerPort, Pod } from "../../../common/k8s-api/endpoints";
+import type { ContainerPort, Pod } from "@k8slens/kube-object";
 import { action, makeObservable, observable, reaction } from "mobx";
 import { cssNames } from "@k8slens/utilities";
 import type { ShowNotification } from "../notifications";

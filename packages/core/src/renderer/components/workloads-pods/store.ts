@@ -8,8 +8,8 @@ import { observable } from "mobx";
 import type { KubeObjectStoreDependencies, KubeObjectStoreOptions } from "../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
 import { cpuUnitsToNumber, unitsToBytes } from "@k8slens/utilities";
-import type { Pod, PodMetrics, PodApi, PodMetricsApi } from "../../../common/k8s-api/endpoints";
-import type { KubeObject, NamespaceScopedMetadata } from "../../../common/k8s-api/kube-object";
+import type { Pod, PodMetrics, KubeObject, NamespaceScopedMetadata } from "@k8slens/kube-object";
+import type { PodApi, PodMetricsApi } from "../../../common/k8s-api/endpoints";
 
 export interface PodStoreDependencies extends KubeObjectStoreDependencies {
   readonly podMetricsApi: PodMetricsApi;

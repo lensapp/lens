@@ -5,7 +5,7 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import { now } from "mobx-utils";
-import type { Job } from "../../../common/k8s-api/endpoints";
+import type { Job } from "@k8slens/kube-object";
 import requestPodMetricsForJobsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-jobs.injectable";
 
 const jobMetricsInjectable = getInjectable({

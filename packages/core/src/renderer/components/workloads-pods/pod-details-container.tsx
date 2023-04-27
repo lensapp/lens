@@ -6,7 +6,7 @@
 import "./pod-details-container.scss";
 
 import React from "react";
-import type { Container, PodContainerStatus, Pod } from "../../../common/k8s-api/endpoints";
+import type { Container, PodContainerStatus, Pod } from "@k8slens/kube-object";
 import { DrawerItem } from "../drawer";
 import { cssNames, isDefined } from "@k8slens/utilities";
 import { StatusBrick } from "../status-brick";

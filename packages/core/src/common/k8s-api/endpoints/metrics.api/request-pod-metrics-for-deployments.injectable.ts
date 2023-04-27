@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Deployment } from "../deployment.api";
+import type { Deployment } from "@k8slens/kube-object";
 import type { MetricData } from "../metrics.api";
 import requestMetricsInjectable from "./request-metrics.injectable";
 

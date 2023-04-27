@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { CronJob, Job } from "../../../common/k8s-api/endpoints";
+import type { CronJob, Job } from "@k8slens/kube-object";
 import { getInjectable } from "@ogre-tools/injectable";
 import jobStoreInjectable from "./store.injectable";
 

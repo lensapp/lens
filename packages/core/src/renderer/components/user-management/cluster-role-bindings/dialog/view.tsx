@@ -10,7 +10,7 @@ import { action, computed, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 
-import type { ClusterRole, ServiceAccount } from "../../../../../common/k8s-api/endpoints";
+import type { ClusterRole, ServiceAccount, Subject } from "@k8slens/kube-object";
 import type { DialogProps } from "../../../dialog";
 import { Dialog } from "../../../dialog";
 import { EditableList } from "../../../editable-list";
@@ -21,7 +21,6 @@ import { Wizard, WizardStep } from "../../../wizard";
 import { ObservableHashSet, iter } from "@k8slens/utilities";
 import { Input } from "../../../input";
 import { TooltipPosition } from "@k8slens/tooltip";
-import type { Subject } from "../../../../../common/k8s-api/endpoints/types/subject";
 import type { ClusterRoleBindingDialogState } from "./state.injectable";
 import type { ClusterRoleStore } from "../../cluster-roles/store";
 import type { ServiceAccountStore } from "../../service-accounts/store";
@@ -169,7 +168,7 @@ class NonInjectedClusterRoleBindingDialog extends React.Component<ClusterRoleBin
       showDetails(selfLink);
       closeClusterRoleBindingDialog();
     } catch (err) {
-      this.props.showCheckedErrorNotification(err, `Unknown error occured while ${this.isEditing ? "editing the" : "creating a"} ClusterRoleBinding`);
+      this.props.showCheckedErrorNotification(err, `Unknown error occurred while ${this.isEditing ? "editing the" : "creating a"} ClusterRoleBinding`);
     }
   };
 
@@ -245,7 +244,8 @@ class NonInjectedClusterRoleBindingDialog extends React.Component<ClusterRoleBin
           formatOptionLabel={option => (
             <>
               <Icon small material="account_box" />
-              {` ${option.label}`}
+              {" "}
+              {option.label}
             </>
           )}
           onChange={onMultiSelectFor(this.selectedAccounts)}
@@ -267,6 +267,10 @@ class NonInjectedClusterRoleBindingDialog extends React.Component<ClusterRoleBin
     } = this.props;
     const [action, nextLabel] = this.isEditing ? ["Edit", "Update"] : ["Add", "Create"];
     const disableNext = !this.selectedRoleRef || !this.selectedBindings.length || !editBindingNameState.get();
+
+    void openClusterRoleBindingDialog;
+    void clusterRoleStore;
+    void serviceAccountStore;
 
     return (
       <Dialog

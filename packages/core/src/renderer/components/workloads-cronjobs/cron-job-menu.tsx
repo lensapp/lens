@@ -4,7 +4,7 @@
  */
 import React from "react";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
-import type { CronJob, CronJobApi } from "../../../common/k8s-api/endpoints";
+import type { CronJob } from "@k8slens/kube-object";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
@@ -15,6 +15,7 @@ import openCronJobTriggerDialogInjectable from "./trigger-dialog/open.injectable
 import cronJobApiInjectable from "../../../common/k8s-api/endpoints/cron-job.api.injectable";
 import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
+import type { CronJobApi } from "../../../common/k8s-api/endpoints";
 
 export interface CronJobMenuProps extends KubeObjectMenuProps<CronJob> {}
 
@@ -51,7 +52,7 @@ const NonInjectedCronJobMenu = ({
               try {
                 await cronJobApi.resume({ namespace: object.getNs(), name: object.getName() });
               } catch (err) {
-                showCheckedErrorNotification(err, "Unknown error occured while resuming CronJob");
+                showCheckedErrorNotification(err, "Unknown error occurred while resuming CronJob");
               }
             },
             labelOk: `Resume`,
@@ -79,7 +80,7 @@ const NonInjectedCronJobMenu = ({
               try {
                 await cronJobApi.suspend({ namespace: object.getNs(), name: object.getName() });
               } catch (err) {
-                showCheckedErrorNotification(err, "Unknown error occured while suspending CronJob");
+                showCheckedErrorNotification(err, "Unknown error occurred while suspending CronJob");
               }
             },
             labelOk: `Suspend`,

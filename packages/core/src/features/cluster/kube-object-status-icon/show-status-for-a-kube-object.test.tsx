@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
-import { KubeObject } from "../../../common/k8s-api/kube-object";
+import { KubeObject } from "@k8slens/kube-object";
 import React from "react";
 import type { DiContainer } from "@ogre-tools/injectable";
 import { getInjectable } from "@ogre-tools/injectable";

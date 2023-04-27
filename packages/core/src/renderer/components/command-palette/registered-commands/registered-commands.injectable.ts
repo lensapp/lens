@@ -6,7 +6,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
 import { computed } from "mobx";
-import type { CustomResourceDefinition } from "../../../../common/k8s-api/endpoints";
+import type { CustomResourceDefinition } from "@k8slens/kube-object";
 import customResourceDefinitionsInjectable from "../../custom-resources/custom-resources.injectable";
 import type { LensRendererExtension } from "../../../../extensions/lens-renderer-extension";
 import rendererExtensionsInjectable from "../../../../extensions/renderer-extensions.injectable";
@@ -33,6 +33,8 @@ const instantiateRegisteredCommands = ({ extensions, customResourceDefinitions, 
   ];
 
   for (const { scope, isActive = () => true, ...command } of commands) {
+    void scope;
+
     if (!result.has(command.id)) {
       result.set(command.id, { ...command, isActive });
     }

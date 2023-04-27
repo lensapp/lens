@@ -3,8 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { CustomResourceDefinitionSpec } from "../endpoints";
-import { CustomResourceDefinition } from "../endpoints";
+import type { CustomResourceDefinitionSpec } from "@k8slens/kube-object";
+import { CustomResourceDefinition } from "@k8slens/kube-object";
 
 describe("Crds", () => {
   describe("getVersion()", () => {

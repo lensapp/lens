@@ -5,7 +5,7 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import { now } from "mobx-utils";
-import type { PersistentVolumeClaim } from "../../../common/k8s-api/endpoints";
+import type { PersistentVolumeClaim } from "@k8slens/kube-object";
 import requestPersistentVolumeClaimMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-persistent-volume-claim-metrics.injectable";
 
 const persistentVolumeClaimMetricsInjectable = getInjectable({

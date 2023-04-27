@@ -5,7 +5,7 @@
 import { getInjectable, lifecycleEnum } from "@ogre-tools/injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
 import { now } from "mobx-utils";
-import type { ReplicaSet } from "../../../common/k8s-api/endpoints";
+import type { ReplicaSet } from "@k8slens/kube-object";
 import requestPodMetricsForReplicaSetsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-for-replica-sets.injectable";
 
 const replicaSetMetricsInjectable = getInjectable({

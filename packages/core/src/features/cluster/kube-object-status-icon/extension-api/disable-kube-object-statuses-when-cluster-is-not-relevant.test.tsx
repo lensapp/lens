@@ -15,7 +15,7 @@ import React from "react";
 import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../../renderer/routes/route-specific-component-injection-token";
 import { KubeObjectStatusIcon } from "../../../../renderer/components/kube-object-status-icon/kube-object-status-icon";
-import { KubeObject } from "../../../../common/k8s-api/kube-object";
+import { KubeObject } from "@k8slens/kube-object";
 import { KubeObjectStatusLevel } from "../../../../common/k8s-api/kube-object-status";
 
 describe("disable kube object statuses when cluster is not relevant", () => {

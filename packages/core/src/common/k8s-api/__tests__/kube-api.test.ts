@@ -4,38 +4,27 @@
  */
 import type { KubeApiWatchCallback } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { KubeJsonApiData } from "../kube-json-api";
 import { PassThrough } from "stream";
-import type { DeploymentApi, NamespaceApi } from "../endpoints";
-import { Deployment, Pod, PodApi } from "../endpoints";
+import { PodApi } from "../endpoints";
+import type { DeploymentApi, NamespaceApi  } from "../endpoints";
+import { Deployment, Pod } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import type { Fetch } from "../../fetch/fetch.injectable";
 import fetchInjectable from "../../fetch/fetch.injectable";
-import type {
-  CreateKubeApiForRemoteCluster,
-} from "../create-kube-api-for-remote-cluster.injectable";
-import createKubeApiForRemoteClusterInjectable
-  from "../create-kube-api-for-remote-cluster.injectable";
+import type { CreateKubeApiForRemoteCluster } from "../create-kube-api-for-remote-cluster.injectable";
+import createKubeApiForRemoteClusterInjectable from "../create-kube-api-for-remote-cluster.injectable";
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import { flushPromises } from "@k8slens/test-utils";
 import createKubeJsonApiInjectable from "../create-kube-json-api.injectable";
 import type { IKubeWatchEvent } from "../kube-watch-event";
-import type { KubeJsonApiDataFor, KubeStatusData } from "../kube-object";
-import setupAutoRegistrationInjectable
-  from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
-import {
-  createMockResponseFromStream,
-  createMockResponseFromString,
-} from "../../../test-utils/mock-responses";
-import storesAndApisCanBeCreatedInjectable
-  from "../../../renderer/stores-apis-can-be-created.injectable";
-import directoryForUserDataInjectable
-  from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
-import hostedClusterInjectable
-  from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
-import directoryForKubeConfigsInjectable
-  from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
+import type { KubeJsonApiDataFor, KubeStatusData, KubeJsonApiData } from "@k8slens/kube-object";
+import setupAutoRegistrationInjectable from "../../../renderer/before-frame-starts/runnables/setup-auto-registration.injectable";
+import { createMockResponseFromStream, createMockResponseFromString } from "../../../test-utils/mock-responses";
+import storesAndApisCanBeCreatedInjectable from "../../../renderer/stores-apis-can-be-created.injectable";
+import directoryForUserDataInjectable from "../../app-paths/directory-for-user-data/directory-for-user-data.injectable";
+import hostedClusterInjectable from "../../../renderer/cluster-frame-context/hosted-cluster.injectable";
+import directoryForKubeConfigsInjectable from "../../app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import apiKubeInjectable from "../../../renderer/k8s/api-kube.injectable";
 import type { DiContainer } from "@ogre-tools/injectable";
 import deploymentApiInjectable from "../endpoints/deployment.api.injectable";
@@ -51,7 +40,7 @@ describe("createKubeApiForRemoteCluster", () => {
   let createKubeApiForRemoteCluster: CreateKubeApiForRemoteCluster;
   let fetchMock: AsyncFnMock<Fetch>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
@@ -70,7 +59,7 @@ describe("createKubeApiForRemoteCluster", () => {
     createKubeApiForRemoteCluster = di.inject(createKubeApiForRemoteClusterInjectable);
   });
 
-  it("builds api client for KubeObject", async () => {
+  it("builds api client for KubeObject", () => {
     const api = createKubeApiForRemoteCluster({
       cluster: {
         server: "https://127.0.0.1:6443",
@@ -150,7 +139,7 @@ describe("KubeApi", () => {
   let fetchMock: AsyncFnMock<Fetch>;
   let di: DiContainer;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     di = getDiForUnitTesting();
 
     di.override(directoryForUserDataInjectable, () => "/some-user-store-path");
@@ -374,7 +363,7 @@ describe("KubeApi", () => {
 
       describe("when request resolves", () => {
         beforeEach(async () => {
-          fetchMock.resolveSpecific(
+          await fetchMock.resolveSpecific(
             ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background", "{}"),
           );
@@ -410,7 +399,7 @@ describe("KubeApi", () => {
 
       describe("when request resolves", () => {
         beforeEach(async () => {
-          fetchMock.resolveSpecific(
+          await fetchMock.resolveSpecific(
             ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/default/pods/foo?propagationPolicy=Background", "{}"),
           );
@@ -446,7 +435,7 @@ describe("KubeApi", () => {
 
       describe("when request resolves", () => {
         beforeEach(async () => {
-          fetchMock.resolveSpecific(
+          await fetchMock.resolveSpecific(
             ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo?propagationPolicy=Background"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo?propagationPolicy=Background", "{}"),
           );
@@ -461,7 +450,7 @@ describe("KubeApi", () => {
     describe("eviction-api as better replacement for pod.delete() request", () => {
       let evictRequest: Promise<string>;
 
-      beforeEach(async () => {
+      beforeEach(() => {
         evictRequest = api.evict({ name: "foo", namespace: "test" });
       });
 
@@ -478,7 +467,7 @@ describe("KubeApi", () => {
       });
 
       it("should resolve the call with >=200 <300 http code", async () => {
-        fetchMock.resolveSpecific(
+        await fetchMock.resolveSpecific(
           ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction"],
           createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction", JSON.stringify({
             apiVersion: "policy/v1",
@@ -492,7 +481,7 @@ describe("KubeApi", () => {
       });
 
       it("should throw in case of error", async () => {
-        fetchMock.resolveSpecific(
+        await fetchMock.resolveSpecific(
           ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction"],
           createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction", JSON.stringify({
             apiVersion: "policy/v1",
@@ -502,12 +491,12 @@ describe("KubeApi", () => {
           } as KubeStatusData)),
         );
 
-        expect(async () => evictRequest).rejects.toBe("500: something went wrong");
+        await expect(async () => evictRequest).rejects.toBe("500: something went wrong");
       });
     });
   });
 
-  describe("deleting namespaces (cluser scoped resource)", () => {
+  describe("deleting namespaces (cluster scoped resource)", () => {
     let api: NamespaceApi;
 
     beforeEach(() => {
@@ -538,7 +527,7 @@ describe("KubeApi", () => {
 
       describe("when request resolves", () => {
         beforeEach(async () => {
-          fetchMock.resolveSpecific(
+          await fetchMock.resolveSpecific(
             ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background", "{}"),
           );
@@ -574,7 +563,7 @@ describe("KubeApi", () => {
 
       describe("when request resolves", () => {
         beforeEach(async () => {
-          fetchMock.resolveSpecific(
+          await fetchMock.resolveSpecific(
             ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background"],
             createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/foo?propagationPolicy=Background", "{}"),
           );
@@ -587,8 +576,8 @@ describe("KubeApi", () => {
     });
 
     describe("when deleting by name and namespace", () => {
-      it("rejects request", () => {
-        expect(api.delete({ name: "foo", namespace: "test" })).rejects.toBeDefined();
+      it("rejects request", async () => {
+        await expect(api.delete({ name: "foo", namespace: "test" })).rejects.toBeDefined();
       });
     });
   });

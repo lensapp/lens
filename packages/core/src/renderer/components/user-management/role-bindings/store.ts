@@ -3,11 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { RoleBinding, RoleBindingApi, RoleBindingData } from "../../../../common/k8s-api/endpoints";
-import type { Subject } from "../../../../common/k8s-api/endpoints/types/subject";
+import type { RoleBinding, RoleBindingData, Subject } from "@k8slens/kube-object";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import { HashSet } from "@k8slens/utilities";
 import { hashSubject } from "../hashers";
+import type { RoleBindingApi } from "../../../../common/k8s-api/endpoints";
 
 export class RoleBindingStore extends KubeObjectStore<RoleBinding, RoleBindingApi, RoleBindingData> {
   protected sortItems(items: RoleBinding[]) {

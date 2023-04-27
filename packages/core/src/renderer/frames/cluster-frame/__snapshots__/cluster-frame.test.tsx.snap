@@ -15,7 +15,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
         <div
           class="drawer-title-text flex gaps align-center"
         >
-          
+
         </div>
         <i
           class="Icon material interactive focusable"
@@ -368,7 +368,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
         <div
           class="error"
         >
-          An error has occured. No route can be found matching the current route, which is also the starting route.
+          An error has occurred. No route can be found matching the current route, which is also the starting route.
         </div>
       </div>
     </div>
@@ -519,7 +519,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
         <div
           class="drawer-title-text flex gaps align-center"
         >
-          
+
         </div>
         <i
           class="Icon material interactive focusable"
@@ -1030,7 +1030,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
         <div
           class="drawer-title-text flex gaps align-center"
         >
-          
+
         </div>
         <i
           class="Icon material interactive focusable"

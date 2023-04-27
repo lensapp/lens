@@ -4,7 +4,7 @@
  */
 import React from "react";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
-import type { StatefulSet, StatefulSetApi } from "../../../common/k8s-api/endpoints";
+import type { StatefulSet } from "@k8slens/kube-object";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -13,17 +13,18 @@ import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
+import type { StatefulSetApi } from "../../../common/k8s-api/endpoints";
 
 export interface StatefulSetMenuProps extends KubeObjectMenuProps<StatefulSet> {}
 
 interface Dependencies {
-  statefulsetApi: StatefulSetApi;
+  statefulSetApi: StatefulSetApi;
   openConfirmDialog: OpenConfirmDialog;
   showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
 const NonInjectedStatefulSetMenu = ({
-  statefulsetApi,
+  statefulSetApi,
   object,
   toolbar,
   showCheckedErrorNotification,
@@ -35,18 +36,18 @@ const NonInjectedStatefulSetMenu = ({
         ok: async () =>
         {
           try {
-            await statefulsetApi.restart({
+            await statefulSetApi.restart({
               namespace: object.getNs(),
               name: object.getName(),
             });
           } catch (err) {
-            showCheckedErrorNotification(err, "Unknown error occured while restarting statefulset");
+            showCheckedErrorNotification(err, "Unknown error occurred while restarting StatefulSet");
           }
         },
         labelOk: "Restart",
         message: (
           <p>
-            {"Are you sure you want to restart statefulset "}
+            {"Are you sure you want to restart StatefulSet "}
             <b>{object.getName()}</b>
             ?
           </p>
@@ -67,7 +68,7 @@ export const StatefulSetMenu = withInjectables<Dependencies, StatefulSetMenuProp
   getProps: (di, props) => ({
     ...props,
     showCheckedErrorNotification: di.inject(showCheckedErrorNotificationInjectable),
-    statefulsetApi: di.inject(statefulSetApiInjectable),
+    statefulSetApi: di.inject(statefulSetApiInjectable),
     openConfirmDialog: di.inject(openConfirmDialogInjectable),
   }),
 });

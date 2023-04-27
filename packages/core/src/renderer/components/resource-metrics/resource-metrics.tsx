@@ -7,7 +7,7 @@ import "./resource-metrics.scss";
 
 import React, { createContext, useState } from "react";
 import { Radio, RadioGroup } from "../radio";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { KubeObject } from "@k8slens/kube-object";
 import { cssNames } from "@k8slens/utilities";
 import { Spinner } from "../spinner";
 import type { MetricsTab } from "../chart/options";
@@ -27,7 +27,7 @@ export interface ResourceMetricsProps<Keys extends string> {
 }
 
 function isAsyncComputedMetrics<Keys extends string>(metrics: IAsyncComputed<Partial<Record<Keys, MetricData>> | null | undefined> | Partial<Record<Keys, MetricData>>): metrics is IAsyncComputed<Partial<Record<Keys, MetricData>> | null | undefined> {
-  return isComputed((metrics as any).value);
+  return isComputed((metrics as IAsyncComputed<unknown>).value);
 }
 
 export interface ResourceMetricsValue {

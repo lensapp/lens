@@ -10,7 +10,7 @@ import React from "react";
 
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
-import type { ClusterRole } from "../../../../common/k8s-api/endpoints";
+import type { ClusterRole } from "@k8slens/kube-object";
 
 export interface ClusterRoleDetailsProps extends KubeObjectDetailsProps<ClusterRole> {
 }

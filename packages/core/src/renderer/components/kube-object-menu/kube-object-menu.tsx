@@ -5,7 +5,7 @@
 
 import React from "react";
 import { cssNames } from "@k8slens/utilities";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { KubeObject } from "@k8slens/kube-object";
 import type { MenuActionsProps } from "../menu";
 import { MenuItem, MenuActions } from "../menu";
 import identity from "lodash/identity";

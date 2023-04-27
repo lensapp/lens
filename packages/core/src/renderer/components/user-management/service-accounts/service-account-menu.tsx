@@ -5,7 +5,7 @@
 import React from "react";
 
 import type { KubeObjectMenuProps } from "../../kube-object-menu";
-import type { ServiceAccount } from "../../../../common/k8s-api/endpoints";
+import type { ServiceAccount } from "@k8slens/kube-object";
 import { MenuItem } from "../../menu";
 import { Icon } from "../../icon";
 import type { OpenServiceAccountKubeConfigDialog } from "../../kubeconfig-dialog/open-service-account-kube-config-dialog.injectable";

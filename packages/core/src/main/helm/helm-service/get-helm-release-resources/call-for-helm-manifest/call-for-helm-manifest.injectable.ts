@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import type { AsyncResult } from "@k8slens/utilities";
 import execHelmInjectable from "../../../exec-helm/exec-helm.injectable";
 import yaml from "js-yaml";
-import type { KubeJsonApiData, KubeJsonApiDataList } from "../../../../../common/k8s-api/kube-json-api";
+import type { KubeJsonApiData, KubeJsonApiDataList } from "@k8slens/kube-object";
 
 const callForHelmManifestInjectable = getInjectable({
   id: "call-for-helm-manifest",

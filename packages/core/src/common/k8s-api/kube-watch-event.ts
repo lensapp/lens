@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { KubeStatusData } from "./kube-object";
+import type { KubeStatusData } from "@k8slens/kube-object";
 
 export type IKubeWatchEvent<T> = {
   readonly type: "ADDED" | "MODIFIED" | "DELETED";

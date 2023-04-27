@@ -7,7 +7,6 @@ import { getSecondsFromUnixEpoch } from "../../../utils/date/get-current-date-ti
 import apiBaseInjectable from "../../api-base.injectable";
 import type { MetricData } from "../metrics.api";
 
-
 export interface RequestMetricsParams {
   /**
    * timestamp in seconds or valid date-string

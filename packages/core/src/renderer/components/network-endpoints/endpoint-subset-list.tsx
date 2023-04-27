@@ -7,7 +7,7 @@ import "./endpoint-subset-list.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { EndpointSubset, Endpoints, EndpointAddress } from "../../../common/k8s-api/endpoints";
+import type { EndpointSubset, Endpoints, EndpointAddress } from "@k8slens/kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";

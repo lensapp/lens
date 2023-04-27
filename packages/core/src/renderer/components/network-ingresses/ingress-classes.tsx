@@ -12,7 +12,7 @@ import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import type { IngressClassStore } from "./ingress-class-store";
 import ingressClassStoreInjectable from "./ingress-class-store.injectable";
-import type { IngressClass } from "../../../common/k8s-api/endpoints/ingress-class.api";
+import type { IngressClass } from "@k8slens/kube-object";
 import { cssNames } from "@k8slens/utilities";
 import { Icon } from "../icon";
 

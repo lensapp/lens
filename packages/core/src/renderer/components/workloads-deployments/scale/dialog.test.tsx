@@ -5,11 +5,9 @@
 
 import React from "react";
 import { waitFor, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
-
 import { DeploymentScaleDialog } from "./dialog";
 import type { DeploymentApi } from "../../../../common/k8s-api/endpoints/deployment.api";
-import { Deployment } from "../../../../common/k8s-api/endpoints/deployment.api";
+import { Deployment } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import deploymentApiInjectable from "../../../../common/k8s-api/endpoints/deployment.api.injectable";
 import type { OpenDeploymentScaleDialog } from "./open.injectable";
@@ -108,7 +106,7 @@ describe("<DeploymentScaleDialog />", () => {
     // when <DeploymentScaleDialog /> rendered.
     const initReplicas = 3;
 
-    deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
+    deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => Promise.resolve(initReplicas));
     const { findByTestId } = render(<DeploymentScaleDialog />);
 
     openDeploymentScaleDialog(dummyDeployment);
@@ -129,7 +127,7 @@ describe("<DeploymentScaleDialog />", () => {
   it("changes the desired scale when clicking the icon buttons +/-", async () => {
     const initReplicas = 1;
 
-    deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
+    deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => Promise.resolve(initReplicas));
     const component = render(<DeploymentScaleDialog />);
 
     openDeploymentScaleDialog(dummyDeployment);

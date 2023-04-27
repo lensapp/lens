@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { action } from "mobx";
-import type { RoleBinding } from "../../../../../common/k8s-api/endpoints";
+import type { RoleBinding } from "@k8slens/kube-object";
 import roleBindingDialogStateInjectable from "./state.injectable";
 
 export type OpenRoleBindingDialog = (roleBinding?: RoleBinding | undefined) => void;

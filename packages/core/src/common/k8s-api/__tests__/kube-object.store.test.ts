@@ -5,7 +5,7 @@
 
 import { noop } from "@k8slens/utilities";
 import type { KubeApi } from "../kube-api";
-import { KubeObject } from "../kube-object";
+import { KubeObject } from "@k8slens/kube-object";
 import type { KubeObjectStoreLoadingParams } from "../kube-object.store";
 import { KubeObjectStore } from "../kube-object.store";
 
@@ -30,7 +30,7 @@ class FakeKubeObjectStore extends KubeObjectStore<KubeObject> {
   }
 
   async loadItems(params: KubeObjectStoreLoadingParams) {
-    return this._loadItems(params);
+    return Promise.resolve(this._loadItems(params));
   }
 }
 

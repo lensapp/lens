@@ -1,0 +1,49 @@
+{
+  "name": "@k8slens/kube-object",
+  "private": false,
+  "version": "1.0.0-alpha.1",
+  "description": "Injection tokens for list layout",
+  "type": "commonjs",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lensapp/lens.git"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": {
+    "name": "OpenLens Authors",
+    "email": "info@k8slens.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/lensapp/lens",
+  "scripts": {
+    "build": "webpack",
+    "clean": "rimraf dist/",
+    "dev": "webpack --mode=development --watch",
+    "test": "jest --coverage --runInBand",
+    "lint": "lens-lint",
+    "lint:fix": "lens-lint --fix"
+  },
+  "peerDependencies": {
+    "@k8slens/list-layout": "^1.0.0-alpha.1",
+    "@k8slens/utilities": "^1.0.0-alpha.2",
+    "@ogre-tools/injectable": "^15.1.2",
+    "auto-bind": "^4.0.0",
+    "moment": "^2.29.4",
+    "rfc6902": "^5.0.1",
+    "type-fest": "^2.19.0",
+    "typed-regex": "^0.0.8"
+  },
+  "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0-alpha.2",
+    "@k8slens/jest": "^6.5.0-alpha.4",
+    "@k8slens/typescript": "^6.5.0-alpha.2"
+  }
+}

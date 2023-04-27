@@ -12,7 +12,7 @@ import { observable, runInAction, computed } from "mobx";
 import React from "react";
 import { navigateToRouteInjectionToken } from "../../../../common/front-end-routing/navigate-to-route-injection-token";
 import { routeSpecificComponentInjectionToken } from "../../../../renderer/routes/route-specific-component-injection-token";
-import { KubeObject } from "../../../../common/k8s-api/kube-object";
+import { KubeObject } from "@k8slens/kube-object";
 import { KubeObjectStatusLevel } from "../../../../common/k8s-api/kube-object-status";
 import { KubeObjectStatusIcon } from "../../../../renderer/components/kube-object-status-icon";
 

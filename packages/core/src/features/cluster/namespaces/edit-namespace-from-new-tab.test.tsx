@@ -13,7 +13,7 @@ import getRandomIdForEditResourceTabInjectable from "../../../renderer/component
 import type { AsyncFnMock } from "@async-fn/jest";
 import asyncFn from "@async-fn/jest";
 import dockStoreInjectable from "../../../renderer/components/dock/dock/store.injectable";
-import { Namespace } from "../../../common/k8s-api/endpoints";
+import { Namespace } from "@k8slens/kube-object";
 import showSuccessNotificationInjectable from "../../../renderer/components/notifications/show-success-notification.injectable";
 import showErrorNotificationInjectable from "../../../renderer/components/notifications/show-error-notification.injectable";
 import readJsonFileInjectable from "../../../common/fs/read-json-file.injectable";
@@ -23,8 +23,7 @@ import type { ApiKubePatch } from "../../../renderer/k8s/api-kube-patch.injectab
 import type { ApiKubeGet } from "../../../renderer/k8s/api-kube-get.injectable";
 import apiKubePatchInjectable from "../../../renderer/k8s/api-kube-patch.injectable";
 import apiKubeGetInjectable from "../../../renderer/k8s/api-kube-get.injectable";
-import type { KubeJsonApiData } from "../../../common/k8s-api/kube-json-api";
-import type { BaseKubeJsonApiObjectMetadata, KubeObjectScope } from "../../../common/k8s-api/kube-object";
+import type { BaseKubeJsonApiObjectMetadata, KubeObjectScope, KubeJsonApiData } from "@k8slens/kube-object";
 import { JsonApiErrorParsed } from "../../../common/k8s-api/json-api";
 import type { ShowNotification } from "../../../renderer/components/notifications";
 import React from "react";
@@ -542,9 +541,9 @@ metadata:
                   readJsonFileInjectable,
                 );
 
-                const actual = (await readJsonFile(
+                const actual = await readJsonFile(
                   "/some-directory-for-lens-local-storage/some-cluster-id.json",
-                )) as any;
+                ) as Record<string, Record<string, unknown>>;
 
                 expect(
                   actual.edit_resource_store["some-first-tab-id"],

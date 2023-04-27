@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Pod } from "../../../common/k8s-api/endpoints";
+import type { Pod } from "@k8slens/kube-object";
 import podStoreInjectable from "./store.injectable";
 
 export type GetPodsByOwnerId = (ownerId: string) => Pod[];

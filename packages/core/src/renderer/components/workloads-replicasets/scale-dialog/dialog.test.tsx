@@ -2,14 +2,11 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
-
-import "@testing-library/jest-dom/extend-expect";
-
 import { ReplicaSetScaleDialog } from "./dialog";
 import { waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
 import type { ReplicaSetApi } from "../../../../common/k8s-api/endpoints/replica-set.api";
-import { ReplicaSet } from "../../../../common/k8s-api/endpoints/replica-set.api";
+import { ReplicaSet } from "@k8slens/kube-object";
 import type { OpenReplicaSetScaleDialog } from "./open.injectable";
 import replicaSetApiInjectable from "../../../../common/k8s-api/endpoints/replica-set.api.injectable";
 import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";
@@ -101,7 +98,7 @@ describe("<ReplicaSetScaleDialog />", () => {
     // when <ReplicaSetScaleDialog /> rendered.
     const initReplicas = 1;
 
-    replicaSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
+    replicaSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => Promise.resolve(initReplicas));
     const { getByTestId } = render(<ReplicaSetScaleDialog />);
 
     openReplicaSetScaleDialog(dummyReplicaSet);
@@ -121,7 +118,7 @@ describe("<ReplicaSetScaleDialog />", () => {
   it("changes the desired scale when clicking the icon buttons +/-", async () => {
     const initReplicas = 1;
 
-    replicaSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
+    replicaSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => Promise.resolve(initReplicas));
     const component = render(<ReplicaSetScaleDialog />);
 
     openReplicaSetScaleDialog(dummyReplicaSet);

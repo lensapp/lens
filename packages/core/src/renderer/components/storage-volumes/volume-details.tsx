@@ -12,7 +12,7 @@ import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { PersistentVolumeClaimApi, StorageClassApi } from "../../../common/k8s-api/endpoints";
-import { PersistentVolume } from "../../../common/k8s-api/endpoints";
+import { PersistentVolume } from "@k8slens/kube-object";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { Logger } from "../../../common/logger";
 import { stopPropagation } from "@k8slens/utilities";

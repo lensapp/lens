@@ -12,7 +12,7 @@ import { PodDetailsTolerations } from "../workloads-pods/pod-details-tolerations
 import { PodDetailsAffinities } from "../workloads-pods/pod-details-affinities";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { ReplicaSet } from "../../../common/k8s-api/endpoints";
+import { ReplicaSet } from "@k8slens/kube-object";
 import { PodDetailsList } from "../workloads-pods/pod-details-list";
 import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";

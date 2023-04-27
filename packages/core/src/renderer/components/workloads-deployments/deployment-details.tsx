@@ -10,7 +10,7 @@ import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { Deployment } from "../../../common/k8s-api/endpoints";
+import { Deployment } from "@k8slens/kube-object";
 import { PodDetailsTolerations } from "../workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../workloads-pods/pod-details-affinities";
 import type { KubeObjectDetailsProps } from "../kube-object-details";

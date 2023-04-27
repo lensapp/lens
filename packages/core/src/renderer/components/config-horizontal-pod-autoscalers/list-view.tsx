@@ -8,7 +8,7 @@ import "./list-view.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { HorizontalPodAutoscaler } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
+import type { HorizontalPodAutoscaler } from "@k8slens/kube-object";
 import { Badge } from "../badge";
 import { cssNames } from "@k8slens/utilities";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";

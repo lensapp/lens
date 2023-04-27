@@ -7,9 +7,11 @@ import type { RenderResult } from "@testing-library/react";
 import navigateToPodsInjectable from "../../../common/front-end-routing/routes/cluster/workloads/pods/navigate-to-pods.injectable";
 import { type ApplicationBuilder, getApplicationBuilder } from "../../../renderer/components/test-utils/get-application-builder";
 import podStoreInjectable from "../../../renderer/components/workloads-pods/store.injectable";
-import type { PodMetrics } from "../../../common/k8s-api/endpoints";
-import { Pod } from "../../../common/k8s-api/endpoints";
+import type { PodMetrics, PodStatus } from "@k8slens/kube-object";
+import { Pod } from "@k8slens/kube-object";
+import type { PodMetricsApi } from "../../../common/k8s-api/endpoints/pod-metrics.api";
 import podMetricsApiInjectable from "../../../common/k8s-api/endpoints/pod-metrics.api.injectable";
+import type { RequestMetrics } from "../../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 import requestMetricsInjectable from "../../../common/k8s-api/endpoints/metrics.api/request-metrics.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 
@@ -18,7 +20,7 @@ describe("workloads / pods", () => {
   let applicationBuilder: ApplicationBuilder;
   const podMetrics: PodMetrics[] = [];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     applicationBuilder = getApplicationBuilder().setEnvironmentToClusterFrame();
     applicationBuilder.namespaces.add("default");
     applicationBuilder.beforeWindowStart(({ windowDi }) => {
@@ -28,8 +30,8 @@ describe("workloads / pods", () => {
       });
 
       windowDi.override(podMetricsApiInjectable, () => ({
-        list: async () => podMetrics,
-      } as any));
+        list: async () => Promise.resolve(podMetrics),
+      } as PodMetricsApi));
 
       const apiManager = windowDi.inject(apiManagerInjectable);
       const podStore = windowDi.inject(podStoreInjectable);
@@ -79,7 +81,7 @@ describe("workloads / pods", () => {
         expect(rendered.baseElement).toMatchSnapshot();
       });
 
-      it("shows item list is empty", async () => {
+      it("shows item list is empty", () => {
         expect(rendered.getByText("Item list is empty")).toBeInTheDocument();
       });
     });
@@ -87,7 +89,7 @@ describe("workloads / pods", () => {
     describe("given a namespace has pods", () => {
       beforeEach(async () => {
         applicationBuilder.afterWindowStart(({ windowDi }) => {
-          windowDi.override(requestMetricsInjectable, () => () => ({} as any));
+          windowDi.override(requestMetricsInjectable, () => (() => Promise.resolve({})) as unknown as RequestMetrics);
 
           const podStore = windowDi.inject(podStoreInjectable);
 
@@ -111,7 +113,7 @@ describe("workloads / pods", () => {
                 },
               ],
             },
-            status: {} as any,
+            status: {} as PodStatus,
           }));
           podStore.isLoaded = true;
         });

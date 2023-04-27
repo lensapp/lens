@@ -51,7 +51,7 @@ class NonInjectedAddClusterRoleDialog extends React.Component<AddClusterRoleDial
       showDetails(role.selfLink);
       closeAddClusterRoleDialog();
     } catch (error) {
-      showCheckedErrorNotification(error, "Unknown error occured while creating the role");
+      showCheckedErrorNotification(error, "Unknown error occurred while creating the role");
     }
   };
 

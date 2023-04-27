@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { KubeJsonApiData } from "../../kube-json-api";
+import type { KubeJsonApiData } from "@k8slens/kube-object";
 import { urlBuilderFor } from "@k8slens/utilities";
 import apiBaseInjectable from "../../api-base.injectable";
 
@@ -26,7 +26,7 @@ export interface HelmReleaseDetails {
 
 export type CallForHelmReleaseDetails = (name: string, namespace: string) => Promise<HelmReleaseDetails>;
 
-const requestDetailsEnpoint = urlBuilderFor("/v2/releases/:namespace/:name");
+const requestDetailsEndpoint = urlBuilderFor("/v2/releases/:namespace/:name");
 
 const requestHelmReleaseDetailsInjectable = getInjectable({
   id: "call-for-helm-release-details",
@@ -34,7 +34,7 @@ const requestHelmReleaseDetailsInjectable = getInjectable({
   instantiate: (di): CallForHelmReleaseDetails => {
     const apiBase = di.inject(apiBaseInjectable);
 
-    return (name, namespace) => apiBase.get(requestDetailsEnpoint.compile({ name, namespace }));
+    return (name, namespace) => apiBase.get(requestDetailsEndpoint.compile({ name, namespace }));
   },
 });
 

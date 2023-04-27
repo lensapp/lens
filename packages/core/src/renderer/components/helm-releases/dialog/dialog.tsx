@@ -73,7 +73,7 @@ class NonInjectedReleaseRollbackDialog extends React.Component<ReleaseRollbackDi
       await this.props.rollbackRelease(release.getName(), release.getNs(), revision.revision);
       this.close();
     } catch (err) {
-      this.props.showCheckedErrorNotification(err, "Unknown error occured while rolling back release");
+      this.props.showCheckedErrorNotification(err, "Unknown error occurred while rolling back release");
     }
   };
 

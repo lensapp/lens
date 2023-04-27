@@ -8,7 +8,7 @@ import "./details.scss";
 import { observer } from "mobx-react";
 import React from "react";
 
-import type { Role } from "../../../../common/k8s-api/endpoints";
+import type { Role } from "@k8slens/kube-object";
 import { DrawerTitle } from "../../drawer";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
 

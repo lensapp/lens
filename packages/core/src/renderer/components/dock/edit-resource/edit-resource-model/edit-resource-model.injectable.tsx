@@ -9,7 +9,7 @@ import { waitUntilDefined } from "@k8slens/utilities";
 import editResourceTabStoreInjectable from "../store.injectable";
 import type { EditingResource, EditResourceTabStore } from "../store";
 import { action, computed, observable, runInAction } from "mobx";
-import type { KubeObject, RawKubeObject } from "../../../../../common/k8s-api/kube-object";
+import type { KubeObject, RawKubeObject } from "@k8slens/kube-object";
 import yaml from "js-yaml";
 import assert from "assert";
 import type { RequestPatchKubeResource } from "./request-patch-kube-resource.injectable";

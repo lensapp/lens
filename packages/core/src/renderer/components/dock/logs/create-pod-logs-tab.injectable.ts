@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Container, Pod } from "../../../../common/k8s-api/endpoints";
+import type { Container, Pod } from "@k8slens/kube-object";
 import type { TabId } from "../dock/store";
 import createLogsTabInjectable from "./create-logs-tab.injectable";
 

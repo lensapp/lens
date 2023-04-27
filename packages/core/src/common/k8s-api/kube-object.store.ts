@@ -6,8 +6,8 @@
 import { action, computed, makeObservable, observable, reaction } from "mobx";
 import type { Disposer } from "@k8slens/utilities";
 import { waitUntilDefined, includes, rejectPromiseBy, object } from "@k8slens/utilities";
-import type { KubeJsonApiDataFor, KubeObject } from "./kube-object";
-import { KubeStatus } from "./kube-object";
+import type { KubeJsonApiDataFor, KubeObject } from "@k8slens/kube-object";
+import { KubeStatus } from "@k8slens/kube-object";
 import type { IKubeWatchEvent } from "./kube-watch-event";
 import { ItemStore } from "../item.store";
 import type { KubeApiQueryParams, KubeApi, KubeApiWatchCallback } from "./kube-api";
@@ -398,18 +398,18 @@ export class KubeObjectStore<
   }
 
   async removeSelectedItems() {
-    await Promise.all(this.selectedItems.map(this.remove));
+    await Promise.all(this.selectedItems.map(item => this.remove(item)));
   }
 
   async removeItems(items: K[]) {
-    await Promise.all(items.map(this.remove));
+    await Promise.all(items.map(item => this.remove(item)));
   }
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
   protected readonly eventsBuffer = observable.array<IKubeWatchEvent<D>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {
-    reaction(() => [...this.eventsBuffer], this.updateFromEventsBuffer, {
+    reaction(() => [...this.eventsBuffer], () => this.updateFromEventsBuffer(), {
       delay,
     });
   }
@@ -456,7 +456,7 @@ export class KubeObjectStore<
     const signal = abortController.signal;
 
     const callback: KubeApiWatchCallback<D> = (data, error) => {
-      if (!this.isLoaded || error?.type === "aborted") return;
+      if (!this.isLoaded || (error as Record<string, unknown> | null)?.type === "aborted") return;
 
       if (error instanceof Response) {
         if (error.status === 404 || error.status === 401) {
@@ -471,7 +471,7 @@ export class KubeObjectStore<
         clearTimeout(timedRetry);
         // resourceVersion has gone, let's try to reload
         timedRetry = setTimeout(() => {
-          (
+          void (
             namespace
               ? this.loadAll({ namespaces: [namespace], reqInit: { signal }, ...opts })
               : this.loadAll({ merge: false, reqInit: { signal }, ...opts })

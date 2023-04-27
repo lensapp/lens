@@ -13,8 +13,8 @@ import { TabLayout } from "../layout/tab-layout-2";
 import type { EventStore } from "./store";
 import type { KubeObjectListLayoutProps } from "../kube-object-list-layout";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { KubeEvent, KubeEventApi, KubeEventData } from "../../../common/k8s-api/endpoints/events.api";
-import type { TableSortCallbacks, TableSortParams } from "../table";
+import type { KubeEvent, KubeEventData } from "@k8slens/kube-object";
+import type { TableSortParams, TableSortCallbacks } from "../table";
 import type { HeaderCustomizer } from "../item-object-list";
 import { Tooltip } from "@k8slens/tooltip";
 import { Link } from "react-router-dom";
@@ -31,6 +31,7 @@ import eventStoreInjectable from "./store.injectable";
 import type { GetDetailsUrl } from "../kube-detail-params/get-details-url.injectable";
 import getDetailsUrlInjectable from "../kube-detail-params/get-details-url.injectable";
 import { NamespaceSelectBadge } from "../namespaces/namespace-select-badge";
+import type { KubeEventApi } from "../../../common/k8s-api/endpoints";
 
 enum columnId {
   message = "message",
@@ -64,10 +65,10 @@ interface Dependencies {
 class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
   static defaultProps = defaultProps as object;
 
-  @observable sorting: TableSortParams = {
+  readonly sorting = observable.object<TableSortParams>({
     sortBy: columnId.age,
     orderBy: "asc",
-  };
+  });
 
   private sortingCallbacks: TableSortCallbacks<KubeEvent> = {
     [columnId.namespace]: event => event.getNs(),
@@ -162,7 +163,7 @@ class NonInjectedEvents extends React.Component<Dependencies & EventsProps> {
         tableProps={{
           sortSyncWithUrl: false,
           sortByDefault: this.sorting,
-          onSort: params => this.sorting = params,
+          onSort: params => Object.assign(this.sorting, params),
         }}
         sortingCallbacks={this.sortingCallbacks}
         searchFilters={[

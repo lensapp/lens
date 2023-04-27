@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Namespace } from "../../../common/k8s-api/endpoints";
+import type { Namespace } from "@k8slens/kube-object";
 import requestDeleteNormalNamespaceInjectable from "./request-delete-normal-namespace.injectable";
 import requestDeleteSubNamespaceAnchorInjectable from "./request-delete-sub-namespace.injectable";
 

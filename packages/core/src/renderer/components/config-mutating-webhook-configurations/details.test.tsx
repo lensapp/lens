@@ -4,15 +4,14 @@
  */
 import type { RenderResult } from "@testing-library/react";
 import React from "react";
-import {
-  MutatingWebhookConfiguration,
-} from "../../../common/k8s-api/endpoints";
+import type { MutatingWebhookConfigurationData } from "@k8slens/kube-object";
+import { MutatingWebhookConfiguration } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import { MutatingWebhookDetails } from "./mutating-webhook-configurations-details";
 
-const mutatingWebhookConfig = {
+const mutatingWebhookConfig: MutatingWebhookConfigurationData = {
   apiVersion: "admissionregistration.k8s.io/v1",
   kind: "MutatingWebhookConfiguration",
   metadata: {
@@ -51,7 +50,7 @@ describe("MutatingWebhookConfigsDetails", () => {
   let result: RenderResult;
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting();
 
     render = renderFor(di);

@@ -15,7 +15,7 @@ import loggerInjectable from "../../logger.injectable";
 import type { ApiManager } from "../api-manager";
 import apiManagerInjectable from "../api-manager/manager.injectable";
 import { KubeApi } from "../kube-api";
-import { KubeObject } from "../kube-object";
+import { KubeObject } from "@k8slens/kube-object";
 import { KubeObjectStore } from "../kube-object.store";
 import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 
@@ -27,8 +27,8 @@ import { customResourceDefinitionApiInjectionToken } from "../api-manager/crd-ap
 import assert from "assert";
 
 class TestApi extends KubeApi<KubeObject> {
-  protected async checkPreferredVersion() {
-    return;
+  protected checkPreferredVersion() {
+    return Promise.resolve();
   }
 }
 

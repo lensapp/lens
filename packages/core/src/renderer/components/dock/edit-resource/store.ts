@@ -5,7 +5,7 @@
 
 import type { DockTabStoreDependencies } from "../dock-tab-store/dock-tab.store";
 import { DockTabStore } from "../dock-tab-store/dock-tab.store";
-import type { KubeObject } from "../../../../common/k8s-api/kube-object";
+import type { KubeObject } from "@k8slens/kube-object";
 
 export interface EditingResource {
   resource: string; // resource path, e.g. /api/v1/namespaces/default

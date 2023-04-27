@@ -5,11 +5,9 @@
 
 import moment from "moment";
 
-import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies, NamespacedResourceDescriptor } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { PodSpec } from "./pod.api";
-import type { KubeObjectStatus, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
-import { KubeObject } from "../kube-object";
+import { Deployment } from "@k8slens/kube-object";
 import { hasTypedProperty, isNumber, isObject } from "@k8slens/utilities";
 
 export class DeploymentApi extends KubeApi<Deployment> {
@@ -20,11 +18,11 @@ export class DeploymentApi extends KubeApi<Deployment> {
     });
   }
 
-  protected getScaleApiUrl(params: { namespace: string; name: string }) {
-    return `${this.getUrl(params)}/scale`;
+  protected getScaleApiUrl(params: NamespacedResourceDescriptor) {
+    return `${this.formatUrlForNotListing(params)}/scale`;
   }
 
-  async getReplicas(params: { namespace: string; name: string }): Promise<number> {
+  async getReplicas(params: NamespacedResourceDescriptor): Promise<number> {
     const { status } = await this.request.get(this.getScaleApiUrl(params));
 
     if (isObject(status) && hasTypedProperty(status, "replicas", isNumber)) {
@@ -34,7 +32,7 @@ export class DeploymentApi extends KubeApi<Deployment> {
     return 0;
   }
 
-  scale(params: { namespace: string; name: string }, replicas: number) {
+  scale(params: NamespacedResourceDescriptor, replicas: number) {
     return this.request.patch(this.getScaleApiUrl(params), {
       data: {
         spec: {
@@ -49,105 +47,15 @@ export class DeploymentApi extends KubeApi<Deployment> {
     });
   }
 
-  restart(params: { namespace: string; name: string }) {
-    return this.request.patch(this.getUrl(params), {
-      data: {
-        spec: {
-          template: {
-            metadata: {
-              annotations: { "kubectl.kubernetes.io/restartedAt" : moment.utc().format() },
-            },
+  restart(params: NamespacedResourceDescriptor) {
+    return this.patch(params, {
+      spec: {
+        template: {
+          metadata: {
+            annotations: { "kubectl.kubernetes.io/restartedAt" : moment.utc().format() },
           },
         },
       },
-    },
-    {
-      headers: {
-        "content-type": "application/strategic-merge-patch+json",
-      },
-    });
-  }
-}
-
-export interface DeploymentSpec {
-  replicas: number;
-  selector: LabelSelector;
-  template: {
-    metadata: {
-      creationTimestamp?: string;
-      labels: Partial<Record<string, string>>;
-      annotations?: Partial<Record<string, string>>;
-    };
-    spec: PodSpec;
-  };
-  strategy: {
-    type: string;
-    rollingUpdate: {
-      maxUnavailable: number;
-      maxSurge: number;
-    };
-  };
-}
-
-export interface DeploymentStatus extends KubeObjectStatus {
-  observedGeneration: number;
-  replicas: number;
-  updatedReplicas: number;
-  readyReplicas: number;
-  availableReplicas?: number;
-  unavailableReplicas?: number;
-}
-
-export class Deployment extends KubeObject<
-  NamespaceScopedMetadata,
-  DeploymentStatus,
-  DeploymentSpec
-> {
-  static kind = "Deployment";
-  static namespaced = true;
-  static apiBase = "/apis/apps/v1/deployments";
-
-  getSelectors(): string[] {
-    return KubeObject.stringifyLabels(this.spec.selector.matchLabels);
-  }
-
-  getNodeSelectors(): string[] {
-    return KubeObject.stringifyLabels(this.spec.template.spec.nodeSelector);
-  }
-
-  getTemplateLabels(): string[] {
-    return KubeObject.stringifyLabels(this.spec.template.metadata.labels);
-  }
-
-  getTolerations() {
-    return this.spec.template.spec.tolerations ?? [];
-  }
-
-  getAffinity() {
-    return this.spec.template.spec.affinity;
-  }
-
-  getAffinityNumber() {
-    return Object.keys(this.getAffinity() ?? {}).length;
-  }
-
-  getConditions(activeOnly = false) {
-    const { conditions = [] } = this.status ?? {};
-
-    if (activeOnly) {
-      return conditions.filter(c => c.status === "True");
-    }
-
-    return conditions;
-  }
-
-  getConditionsText(activeOnly = true) {
-    return this.getConditions(activeOnly)
-      .map(({ type }) => type)
-      .join(" ");
-  }
-
-  getReplicas() {
-    return this.spec.replicas || 0;
+    }, "strategic");
   }
 }

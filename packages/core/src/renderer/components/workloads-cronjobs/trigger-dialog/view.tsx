@@ -12,7 +12,7 @@ import { observer } from "mobx-react";
 import type { DialogProps } from "../../dialog";
 import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
-import type { CronJob, JobApi } from "../../../../common/k8s-api/endpoints";
+import type { CronJob } from "@k8slens/kube-object";
 import type { ShowNotification } from "../../notifications";
 import { cssNames } from "@k8slens/utilities";
 import { Input } from "../../input";
@@ -24,6 +24,7 @@ import cronJobTriggerDialogStateInjectable from "./state.injectable";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
 import showErrorNotificationInjectable from "../../notifications/show-error-notification.injectable";
+import type { JobApi } from "../../../../common/k8s-api/endpoints";
 
 export interface CronJobTriggerDialogProps extends Partial<DialogProps> {
 }
@@ -124,6 +125,8 @@ class NonInjectedCronJobTriggerDialog extends Component<CronJobTriggerDialogProp
   render() {
     const { className, state, closeCronJobTriggerDialog, jobApi, ...dialogProps } = this.props;
     const cronJob = state.get();
+
+    void jobApi;
 
     return (
       <Dialog

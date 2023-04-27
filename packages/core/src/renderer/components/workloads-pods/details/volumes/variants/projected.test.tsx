@@ -5,8 +5,8 @@
 
 import { render } from "@testing-library/react";
 import React from "react";
-import type { ProjectedSource } from "../../../../../../common/k8s-api/endpoints";
-import { Pod } from "../../../../../../common/k8s-api/endpoints";
+import type { ProjectedSource } from "@k8slens/kube-object";
+import { Pod } from "@k8slens/kube-object";
 import { Projected } from "./projected";
 
 describe("<Projected />", () => {

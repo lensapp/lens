@@ -15,12 +15,13 @@ import { Wizard, WizardStep } from "../../wizard";
 import { Icon } from "../../icon";
 import { Slider } from "../../slider";
 import { cssNames } from "@k8slens/utilities";
-import type { ReplicaSet, ReplicaSetApi } from "../../../../common/k8s-api/endpoints";
+import type { ReplicaSet } from "@k8slens/kube-object";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import replicaSetApiInjectable from "../../../../common/k8s-api/endpoints/replica-set.api.injectable";
 import replicaSetScaleDialogStateInjectable from "./state.injectable";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
+import type { ReplicaSetApi } from "../../../../common/k8s-api/endpoints";
 
 export interface ReplicaSetScaleDialogProps extends Partial<DialogProps> {
 }
@@ -84,7 +85,7 @@ class NonInjectedReplicaSetScaleDialog extends Component<ReplicaSetScaleDialogPr
       }
       close();
     } catch (err) {
-      this.props.showCheckedErrorNotification(err, "Unknown error occured while scaling ReplicaSet");
+      this.props.showCheckedErrorNotification(err, "Unknown error occurred while scaling ReplicaSet");
     }
   };
 

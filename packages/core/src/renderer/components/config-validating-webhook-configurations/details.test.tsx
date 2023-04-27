@@ -4,15 +4,14 @@
  */
 import type { RenderResult } from "@testing-library/react";
 import React from "react";
-import {
-  ValidatingWebhookConfiguration,
-} from "../../../common/k8s-api/endpoints";
+import type { ValidatingWebhookConfigurationData } from "@k8slens/kube-object";
+import { ValidatingWebhookConfiguration } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import type { DiRender } from "../test-utils/renderFor";
 import { renderFor } from "../test-utils/renderFor";
 import { ValidatingWebhookDetails } from "./validating-webhook-configurations-details";
 
-const validatingWebhookConfig = {
+const validatingWebhookConfig: ValidatingWebhookConfigurationData = {
   apiVersion: "admissionregistration.k8s.io/v1",
   kind: "ValidatingWebhookConfiguration",
   metadata: {
@@ -52,7 +51,7 @@ describe("ValidatingWebhookConfigsDetails", () => {
   let result: RenderResult;
   let render: DiRender;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const di = getDiForUnitTesting();
 
     render = renderFor(di);

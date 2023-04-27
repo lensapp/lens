@@ -8,7 +8,7 @@ import { getApplicationBuilder } from "../../../../renderer/components/test-util
 import type { IObservableValue } from "mobx";
 import { runInAction, computed, observable } from "mobx";
 import React from "react";
-import { KubeObject } from "../../../../common/k8s-api/kube-object";
+import { KubeObject } from "@k8slens/kube-object";
 import apiManagerInjectable from "../../../../common/k8s-api/api-manager/manager.injectable";
 import type { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
 import type { KubeApi } from "../../../../common/k8s-api/kube-api";
@@ -33,7 +33,7 @@ describe("reactively hide kube object detail item", () => {
       } as Partial<KubeApi<KubeObject>> as KubeApi<KubeObject>;
       const store = {
         api,
-        loadFromPath: async () => getKubeObjectStub("some-kind", "some-api-version"),
+        loadFromPath: async () => Promise.resolve(getKubeObjectStub("some-kind", "some-api-version")),
         getByPath() {
         },
       } as Partial<KubeObjectStore<KubeObject>> as KubeObjectStore<KubeObject>;

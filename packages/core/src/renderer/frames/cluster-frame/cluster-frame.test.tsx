@@ -92,7 +92,7 @@ describe("<ClusterFrame />", () => {
           const result = render();
 
           expect(
-            result.getByText("An error has occured. No route can be found matching the current route, which is also the starting route."),
+            result.getByText("An error has occurred. No route can be found matching the current route, which is also the starting route."),
           ).toBeInTheDocument();
         });
       });

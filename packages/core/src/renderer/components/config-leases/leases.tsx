@@ -7,7 +7,7 @@ import "./leases.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
-import type { Lease } from "../../../common/k8s-api/endpoints/lease.api";
+import type { Lease } from "@k8slens/kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { KubeObjectListLayout } from "../kube-object-list-layout";

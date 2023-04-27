@@ -14,7 +14,8 @@ import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
 import { Input } from "../../input";
 import { systemName } from "../../input/input_validators";
-import type { IResourceQuotaValues, ResourceQuotaApi } from "../../../../common/k8s-api/endpoints";
+import type { ResourceQuotaValues } from "@k8slens/kube-object";
+import type { ResourceQuotaApi } from "../../../../common/k8s-api/endpoints";
 import { Select } from "../../select";
 import { Icon } from "../../icon";
 import { Button } from "@k8slens/button";
@@ -37,7 +38,7 @@ interface Dependencies {
   showCheckedErrorNotification: ShowCheckedErrorNotification;
 }
 
-const defaultQuotas = JSON.stringify({
+const getDefaultQuotas = (): ResourceQuotaValues => ({
   "limits.cpu": "",
   "limits.memory": "",
   "requests.cpu": "",
@@ -56,7 +57,7 @@ const defaultQuotas = JSON.stringify({
   "count/jobs.batch": "",
   "count/cronjobs.batch": "",
   "count/deployments.extensions": "",
-} as IResourceQuotaValues);
+});
 
 @observer
 class NonInjectedAddQuotaDialog extends React.Component<AddQuotaDialogProps & Dependencies> {
@@ -67,7 +68,7 @@ class NonInjectedAddQuotaDialog extends React.Component<AddQuotaDialogProps & De
   @observable quotaSelectValue: string | null = null;
   @observable quotaInputValue = "";
   @observable namespace: string | null = this.defaultNamespace;
-  @observable quotas: IResourceQuotaValues = JSON.parse(defaultQuotas);
+  readonly quotas = observable.box(getDefaultQuotas());
 
   constructor(props: AddQuotaDialogProps & Dependencies) {
     super(props);
@@ -75,7 +76,7 @@ class NonInjectedAddQuotaDialog extends React.Component<AddQuotaDialogProps & De
   }
 
   @computed get quotaEntries() {
-    return Object.entries(this.quotas)
+    return Object.entries(this.quotas.get())
       .filter(([, value]) => !!value?.trim());
   }
 
@@ -97,7 +98,7 @@ class NonInjectedAddQuotaDialog extends React.Component<AddQuotaDialogProps & De
 
   setQuota = () => {
     if (!this.quotaSelectValue) return;
-    this.quotas[this.quotaSelectValue] = this.quotaInputValue;
+    this.quotas.get()[this.quotaSelectValue] = this.quotaInputValue;
     this.quotaInputValue = "";
   };
 
@@ -110,7 +111,7 @@ class NonInjectedAddQuotaDialog extends React.Component<AddQuotaDialogProps & De
     this.quotaSelectValue = "";
     this.quotaInputValue = "";
     this.namespace = this.defaultNamespace;
-    this.quotas = JSON.parse(defaultQuotas);
+    this.quotas.set(getDefaultQuotas());
   };
 
   addQuota = async () => {
@@ -130,7 +131,7 @@ class NonInjectedAddQuotaDialog extends React.Component<AddQuotaDialogProps & De
       });
       this.close();
     } catch (err) {
-      this.props.showCheckedErrorNotification(err, "Unknown error occured while creating ResourceQuota");
+      this.props.showCheckedErrorNotification(err, "Unknown error occurred while creating ResourceQuota");
     }
   };
 
@@ -146,6 +147,9 @@ class NonInjectedAddQuotaDialog extends React.Component<AddQuotaDialogProps & De
   render() {
     const { closeAddQuotaDialog, isAddQuotaDialogOpen, resourceQuotaApi, ...dialogProps } = this.props;
     const header = <h5>Create ResourceQuota</h5>;
+
+    void closeAddQuotaDialog;
+    void resourceQuotaApi;
 
     return (
       <Dialog
@@ -225,7 +229,7 @@ class NonInjectedAddQuotaDialog extends React.Component<AddQuotaDialogProps & De
                 onClick={this.setQuota}
               >
                 <Icon
-                  material={this.quotaSelectValue && this.quotas[this.quotaSelectValue] ? "edit" : "add"}
+                  material={this.quotaSelectValue && this.quotas.get()[this.quotaSelectValue] ? "edit" : "add"}
                   tooltip="Set quota"
                 />
               </Button>
@@ -235,7 +239,7 @@ class NonInjectedAddQuotaDialog extends React.Component<AddQuotaDialogProps & De
                 <div key={quota} className="quota gaps inline align-center">
                   <div className="name">{quota}</div>
                   <div className="value">{value}</div>
-                  <Icon material="clear" onClick={() => this.quotas[quota] = ""} />
+                  <Icon material="clear" onClick={() => this.quotas.get()[quota] = ""} />
                 </div>
               ))}
             </div>

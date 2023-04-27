@@ -5,7 +5,7 @@
 
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { ClusterRole } from "../../../../../common/k8s-api/endpoints";
+import { ClusterRole } from "@k8slens/kube-object";
 import { RoleBindingDialog } from "../dialog/view";
 import { getDiForUnitTesting } from "../../../../getDiForUnitTesting";
 import type { DiRender } from "../../../test-utils/renderFor";

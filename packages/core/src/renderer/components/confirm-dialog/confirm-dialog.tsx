@@ -79,7 +79,7 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
                 ? error.message
                 : typeof error === "string"
                   ? error
-                  : "Unknown error occured while ok-ing"
+                  : "Unknown error occurred while ok-ing"
             )}
           </p>
         </>,
@@ -107,7 +107,7 @@ class NonInjectedConfirmDialog extends React.Component<ConfirmDialogProps & Depe
                 ? error.message
                 : typeof error === "string"
                   ? error
-                  : "Unknown error occured while cancelling"
+                  : "Unknown error occurred while cancelling"
             )}
           </p>
         </>,

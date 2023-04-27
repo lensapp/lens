@@ -53,7 +53,7 @@ import type { LensWindow } from "../../../main/start-main-application/lens-windo
 import type { FakeExtensionOptions } from "./get-extension-fake";
 import { getExtensionFakeForMain, getExtensionFakeForRenderer } from "./get-extension-fake";
 import namespaceApiInjectable from "../../../common/k8s-api/endpoints/namespace.api.injectable";
-import { Namespace } from "../../../common/k8s-api/endpoints";
+import { Namespace } from "@k8slens/kube-object";
 import { getOverrideFsWithFakes } from "../../../test-utils/override-fs-with-fakes";
 import applicationMenuItemCompositeInjectable from "../../../features/application-menu/main/application-menu-item-composite.injectable";
 import { getCompositePaths } from "../../../common/utils/composite/get-composite-paths/get-composite-paths";

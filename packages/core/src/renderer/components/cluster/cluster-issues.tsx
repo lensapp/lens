@@ -13,7 +13,6 @@ import { Icon } from "../icon";
 import { SubHeader } from "../layout/sub-header";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { cssNames, prevDefault } from "@k8slens/utilities";
-import type { ItemObject } from "@k8slens/list-layout";
 import { Spinner } from "../spinner";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { KubeObjectAge } from "../kube-object/age";
@@ -34,7 +33,9 @@ export interface ClusterIssuesProps {
   className?: string;
 }
 
-interface Warning extends ItemObject {
+interface Warning {
+  getId: () => string;
+  getName: () => string;
   kind: string;
   message: string | undefined;
   selfLink: string;
@@ -70,8 +71,8 @@ class NonInjectedClusterIssues extends React.Component<ClusterIssuesProps & Depe
         node.getWarningConditions()
           .map(({ message }) => ({
             selfLink: node.selfLink,
-            getId: node.getId,
-            getName: node.getName,
+            getId: () => node.getId(),
+            getName: () => node.getName(),
             kind: node.kind,
             message,
             renderAge: () => <KubeObjectAge key="age" object={node} />,
