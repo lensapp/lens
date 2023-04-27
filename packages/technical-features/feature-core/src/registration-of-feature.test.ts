@@ -98,14 +98,15 @@ describe("register-feature", () => {
   });
 
   it("given di-container and registered Features with injectables forming a cycle, when an injectable is injected, throws with namespaced error about cycle", () => {
-    const someInjectable: Injectable<any> = getInjectable({
+    const someInjectable: Injectable<unknown> = getInjectable({
       id: "some-injectable-1",
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       instantiate: (di) => di.inject(someInjectable2),
     });
 
-    const someInjectable2: Injectable<any> = getInjectable({
+    const someInjectable2: Injectable<unknown> = getInjectable({
       id: "some-injectable-2",
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       instantiate: (di) => di.inject(someInjectable),
     });
 

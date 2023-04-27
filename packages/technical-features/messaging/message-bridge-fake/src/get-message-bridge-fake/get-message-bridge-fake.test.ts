@@ -16,7 +16,7 @@ import {
 import { registerMobX } from "@ogre-tools/injectable-extension-for-mobx";
 import { runInAction } from "mobx";
 import { getPromiseStatus } from "@k8slens/test-utils";
-import { getMessageBridgeFake } from "./get-message-bridge-fake";
+import { getMessageBridgeFake, MessageBridgeFake } from "./get-message-bridge-fake";
 import { startApplicationInjectionToken } from "@k8slens/application";
 
 type SomeMessageChannel = MessageChannel<string>;
@@ -33,7 +33,7 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
 
 [{ scenarioIsAsync: true }, { scenarioIsAsync: false }].forEach(({ scenarioIsAsync }) =>
   describe(`get-message-bridge-fake, given running as ${scenarioIsAsync ? "async" : "sync"}`, () => {
-    let messageBridgeFake: any;
+    let messageBridgeFake: MessageBridgeFake;
 
     beforeEach(() => {
       messageBridgeFake = getMessageBridgeFake();
@@ -142,15 +142,14 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
               ? "when all message steps are propagated using a wrapper"
               : "immediately";
 
-            // eslint-disable-next-line jest/valid-title
             describe(scenarioTitle, () => {
-              let someWrapper: jest.Mock;
+              let someWrapper: jest.MockedFunction<() => Promise<void>>;
 
               beforeEach((done) => {
-                someWrapper = jest.fn((propagation) => propagation());
+                someWrapper = jest.fn().mockImplementation((propagation: () => Promise<void>) => propagation());
 
                 if (scenarioIsAsync) {
-                  messageBridgeFake.messagePropagationRecursive(someWrapper).then(done);
+                  void messageBridgeFake.messagePropagationRecursive(someWrapper).then(done);
                 } else {
                   done();
                 }
@@ -163,21 +162,21 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
                 });
               });
 
-              scenarioIsAsync &&
+              if (scenarioIsAsync) {
                 it("the wrapper gets called with the both propagations", () => {
                   expect(someWrapper).toHaveBeenCalledTimes(2);
                 });
+              }
             });
 
             const scenarioName: string = scenarioIsAsync
               ? "when all message steps are propagated not using a wrapper"
               : "immediately";
 
-            // eslint-disable-next-line jest/valid-title
             describe(scenarioName, () => {
               beforeEach((done) => {
                 if (scenarioIsAsync) {
-                  messageBridgeFake.messagePropagationRecursive().then(done);
+                  void messageBridgeFake.messagePropagationRecursive().then(done);
                 } else {
                   done();
                 }
@@ -204,19 +203,19 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
             expect(someHandler1MockInDi1).not.toHaveBeenCalled();
           });
 
-          scenarioIsAsync &&
+          if (scenarioIsAsync) {
             it("listeners in other than sending DIs do not handle the message yet", () => {
               expect(someHandler1MockInDi2).not.toHaveBeenCalled();
               expect(someHandler2MockInDi2).not.toHaveBeenCalled();
             });
+          }
 
           const scenarioName = scenarioIsAsync ? "when messages are propagated" : "immediately";
 
-          // eslint-disable-next-line jest/valid-title
           describe(scenarioName, () => {
             beforeEach((done) => {
               if (scenarioIsAsync) {
-                messageBridgeFake.messagePropagation().then(done);
+                void messageBridgeFake.messagePropagation().then(done);
               } else {
                 done();
               }
@@ -235,12 +234,12 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
             });
           });
 
-          scenarioIsAsync &&
+          if (scenarioIsAsync) {
             describe("when messages are propagated using a wrapper, such as act() in react testing lib", () => {
-              let someWrapper: jest.Mock;
+              let someWrapper: jest.MockedFunction<() => Promise<void>>;
 
               beforeEach(async () => {
-                someWrapper = jest.fn((observation) => observation());
+                someWrapper = jest.fn().mockImplementation((propagation: () => Promise<void>) => propagation());
 
                 await messageBridgeFake.messagePropagation(someWrapper);
               });
@@ -261,6 +260,7 @@ const someRequestChannelWithoutListeners: SomeRequestChannel = {
                 });
               });
             });
+          }
         });
 
         it("given a listener is deregistered, when sending message, deregistered listener does not handle the message", () => {

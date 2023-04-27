@@ -57,6 +57,7 @@ describe("enlist message channel listener in renderer", () => {
 
     describe("when message arrives", () => {
       beforeEach(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         onMock.mock.calls[0][1]({} as IpcRendererEvent, "some-message");
       });
 
@@ -72,18 +73,21 @@ describe("enlist message channel listener in renderer", () => {
     });
 
     it("given number as message, when message arrives, calls the handler with the message", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       onMock.mock.calls[0][1]({} as IpcRendererEvent, 42);
 
       expect(handlerMock).toHaveBeenCalledWith(42);
     });
 
     it("given boolean as message, when message arrives, calls the handler with the message", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       onMock.mock.calls[0][1]({} as IpcRendererEvent, true);
 
       expect(handlerMock).toHaveBeenCalledWith(true);
     });
 
     it("given object as message, when message arrives, calls the handler with the message", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       onMock.mock.calls[0][1]({} as IpcRendererEvent, { some: "object" });
 
       expect(handlerMock).toHaveBeenCalledWith({ some: "object" });

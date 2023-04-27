@@ -48,7 +48,6 @@ describe("enlist request channel listener in main", () => {
       handlerMock = asyncFn();
 
       disposer = enlistRequestChannelListener({
-        id: "some-listener",
         channel: testRequestChannel,
         handler: handlerMock,
       });
@@ -67,9 +66,11 @@ describe("enlist request channel listener in main", () => {
     });
 
     describe("when request arrives", () => {
-      let actualPromise: Promise<any>;
+      let actualPromise: Promise<unknown>;
 
       beforeEach(() => {
+        // eslint-disable-next-line max-len
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         actualPromise = handleMock.mock.calls[0][1]({} as IpcMainInvokeEvent, "some-request");
       });
 
@@ -127,18 +128,21 @@ describe("enlist request channel listener in main", () => {
     });
 
     it("given number as request, when request arrives, calls the handler with the request", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       handleMock.mock.calls[0][1]({} as IpcMainInvokeEvent, 42);
 
       expect(handlerMock).toHaveBeenCalledWith(42);
     });
 
     it("given boolean as request, when request arrives, calls the handler with the request", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       handleMock.mock.calls[0][1]({} as IpcMainInvokeEvent, true);
 
       expect(handlerMock).toHaveBeenCalledWith(true);
     });
 
     it("given object as request, when request arrives, calls the handler with the request", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       handleMock.mock.calls[0][1]({} as IpcMainInvokeEvent, { some: "object" });
 
       expect(handlerMock).toHaveBeenCalledWith({ some: "object" });

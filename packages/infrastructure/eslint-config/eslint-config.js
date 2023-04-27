@@ -1,6 +1,7 @@
 module.exports = {
   extends: [
     "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "react-app",
     "react-app/jest",
     "airbnb-typescript",
@@ -15,13 +16,15 @@ module.exports = {
     "xss",
     "no-unsanitized"
   ],
-  ignorePatterns: [
-    "dist/*"
-  ],
+  ignorePatterns: ["**/dist/**"],
   rules: {
     "react/react-in-jsx-scope": 0,
     "security/detect-object-injection": "off",
     "security/detect-non-literal-fs-filename": "off"
+  },
+  parserOptions: {
+    project: true,
+    tsconfigRootDir: ['./tsconfig.eslint.json', './packages/*/tsconfig.json'],
   },
   overrides: [
     {
@@ -121,6 +124,9 @@ module.exports = {
         "template-curly-spacing": "error",
         "keyword-spacing": "off",
 
+        // jest rules
+        "jest/valid-title": "off",
+
         // testing-library
         "testing-library/no-node-access": "off",
         "testing-library/no-container": "off",
@@ -132,11 +138,9 @@ module.exports = {
         "@typescript-eslint/ban-types": "off",
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-interface": "off",
-        "@typescript-eslint/no-floating-promises": "off",
         "@typescript-eslint/interface-name-prefix": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-useless-constructor": "off",
         "@typescript-eslint/comma-dangle": "off",
         "@typescript-eslint/no-shadow": "off",
@@ -148,15 +152,25 @@ module.exports = {
             allowTemplateLiterals: true,
           },
         ],
-        "@typescript-eslint/no-unused-expressions": [
+        "@typescript-eslint/no-unused-expressions": "error",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/keyword-spacing": "error",
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/restrict-template-expressions": [
           "error",
           {
-            allowShortCircuit: true,
+            allowNumber: true,
+            allowBoolean: true,
+            allowNullish: true,
           },
         ],
-        "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/keyword-spacing": ["error"],
-        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/no-use-before-define": [
+          "error",
+          {
+            functions: false,
+            classes: false,
+          }
+        ],
 
         // React specific rules
         "react-hooks/rules-of-hooks": "error",

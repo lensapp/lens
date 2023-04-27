@@ -1,42 +1,38 @@
 import { onLoadOfApplicationInjectionToken } from "@k8slens/application";
-import { pipeline } from "@ogre-tools/fp";
+import { iter } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
-import { filter, groupBy, nth, map, toPairs } from "lodash/fp";
 import { reaction } from "mobx";
 import { computedChannelObserverInjectionToken } from "./computed-channel.injectable";
 
 export const duplicateChannelObserverGuardInjectable = getInjectable({
   id: "duplicate-channel-observer-guard",
 
-  instantiate: (di) => {
-    const computedInjectMany = di.inject(computedInjectManyInjectable);
+  instantiate: (di) => ({
+    run: () => {
+      const computedInjectMany = di.inject(computedInjectManyInjectable);
+      const computedObservers = computedInjectMany(computedChannelObserverInjectionToken);
 
-    return {
-      run: () => {
-        reaction(
-          () => computedInjectMany(computedChannelObserverInjectionToken).get(),
-          (observers) => {
-            const duplicateObserverChannelIds = pipeline(
-              observers,
-              groupBy((observer) => observer.channel.id),
-              toPairs,
-              filter(([, channelObservers]) => channelObservers.length > 1),
-              map(nth(0)),
-            );
+      reaction(
+        () => computedObservers.get(),
+        (observers) => {
+          const observersByChannelId = iter
+            .chain(observers.values())
+            .map((observer) => [observer.channel.id, observer] as const)
+            .groupIntoMap();
+          const duplicateIds = iter
+            .chain(observersByChannelId.entries())
+            .filter(([, channelObservers]) => channelObservers.length > 1)
+            .map(([id]) => id)
+            .toArray();
 
-            if (duplicateObserverChannelIds.length) {
-              throw new Error(
-                `Tried to register duplicate channel observer for channels "${duplicateObserverChannelIds.join(
-                  '", "',
-                )}"`,
-              );
-            }
-          },
-        );
-      },
-    };
-  },
+          if (duplicateIds.length) {
+            throw new Error(`Tried to register duplicate channel observer for channels "${duplicateIds.join('", "')}"`);
+          }
+        },
+      );
+    },
+  }),
 
   injectionToken: onLoadOfApplicationInjectionToken,
 });

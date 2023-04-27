@@ -4,7 +4,11 @@ import ipcRendererInjectable from "../ipc/ipc-renderer.injectable";
 const invokeIpcInjectable = getInjectable({
   id: "invoke-ipc",
 
-  instantiate: (di) => di.inject(ipcRendererInjectable).invoke,
+  instantiate: (di) => {
+    const ipcRenderer = di.inject(ipcRendererInjectable);
+
+    return (channel: string, ...args: unknown[]) => ipcRenderer.invoke(channel, ...args);
+  },
 });
 
 export default invokeIpcInjectable;

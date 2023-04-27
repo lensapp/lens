@@ -4,12 +4,12 @@
  */
 
 import "./button.scss";
-import type { ButtonHTMLAttributes } from "react";
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
 import React from "react";
 import { cssNames, StrictReactNode } from "@k8slens/utilities";
 import { withTooltip } from "@k8slens/tooltip";
 
-export interface ButtonProps extends ButtonHTMLAttributes<any> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label?: StrictReactNode;
   waiting?: boolean;
   primary?: boolean;
@@ -21,7 +21,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<any> {
   active?: boolean;
   big?: boolean;
   round?: boolean;
-  href?: string; // render as hyperlink
+  href?: string;
   target?: "_blank"; // in case of using @href
   children?: StrictReactNode;
 }
@@ -46,19 +46,21 @@ export const Button = withTooltip((props: ButtonProps) => {
     light,
   });
 
-  // render as link
   if (props.href) {
     return (
-      <a {...btnProps}>
+      <a {...(btnProps as AnchorHTMLAttributes<HTMLAnchorElement>)}>
         {label}
         {children}
       </a>
     );
   }
 
-  // render as button
   return (
-    <button type="button" {...btnProps} data-waiting={typeof waiting === "boolean" ? String(waiting) : undefined}>
+    <button
+      type="button"
+      {...(btnProps as ButtonHTMLAttributes<HTMLButtonElement>)}
+      data-waiting={typeof waiting === "boolean" ? String(waiting) : undefined}
+    >
       {label}
       {children}
     </button>

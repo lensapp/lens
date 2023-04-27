@@ -17,7 +17,7 @@ describe("send-message-to-channel", () => {
     registerFeature(di, messagingFeatureForMain);
   });
 
-  it("given no web contents, when sending a message, does not do anything", () => {
+  it("given no web contents, when sending a message, does not do an unknown thing", () => {
     di.override(getWebContentsInjectable, () => () => []);
 
     const sendMessageToChannel = di.inject(sendMessageToChannelInjectionToken);
@@ -26,8 +26,8 @@ describe("send-message-to-channel", () => {
   });
 
   describe("given web content that is alive", () => {
-    let sendToFrameMock: jest.Mock;
-    let sendMessageMock: jest.Mock;
+    let sendToFrameMock: jest.MockedFunction<(...args: unknown[]) => void>;
+    let sendMessageMock: jest.MockedFunction<(...args: unknown[]) => void>;
 
     beforeEach(() => {
       sendToFrameMock = jest.fn();
@@ -35,14 +35,14 @@ describe("send-message-to-channel", () => {
 
       di.override(getWebContentsInjectable, () => () => [
         {
-          send: (...args: any[]) => sendMessageMock("first", ...args),
-          sendToFrame: (...args: any[]) => sendToFrameMock("first", ...args),
+          send: (...args: unknown[]) => sendMessageMock("first", ...args),
+          sendToFrame: (...args: unknown[]) => sendToFrameMock("first", ...args),
           isDestroyed: () => false,
           isCrashed: () => false,
         } as unknown as WebContents,
         {
-          send: (...args: any[]) => sendMessageMock("second", ...args),
-          sendToFrame: (...args: any[]) => sendToFrameMock("second", ...args),
+          send: (...args: unknown[]) => sendMessageMock("second", ...args),
+          sendToFrame: (...args: unknown[]) => sendToFrameMock("second", ...args),
           isDestroyed: () => false,
           isCrashed: () => false,
         } as unknown as WebContents,

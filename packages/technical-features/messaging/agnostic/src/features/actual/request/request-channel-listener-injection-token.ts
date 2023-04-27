@@ -12,7 +12,6 @@ export type RequestChannelHandler<Channel> = Channel extends RequestChannel<infe
   : never;
 
 export interface RequestChannelListener<Channel> {
-  id: string;
   channel: Channel;
   handler: RequestChannelHandler<Channel>;
 }

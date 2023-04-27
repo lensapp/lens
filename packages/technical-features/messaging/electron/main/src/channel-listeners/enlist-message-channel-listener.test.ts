@@ -57,6 +57,7 @@ describe("enlist message channel listener in main", () => {
 
     describe("when message arrives", () => {
       beforeEach(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         onMock.mock.calls[0][1]({ frameId: 42, processId: 84 } as IpcMainEvent, "some-message");
       });
 
@@ -72,18 +73,21 @@ describe("enlist message channel listener in main", () => {
     });
 
     it("given number as message, when message arrives, calls the handler with the message", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       onMock.mock.calls[0][1]({ frameId: 42, processId: 84 } as IpcMainEvent, 42);
 
       expect(handlerMock).toHaveBeenCalledWith(42, { frameId: 42, processId: 84 });
     });
 
     it("given boolean as message, when message arrives, calls the handler with the message", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       onMock.mock.calls[0][1]({ frameId: 42, processId: 84 } as IpcMainEvent, true);
 
       expect(handlerMock).toHaveBeenCalledWith(true, { frameId: 42, processId: 84 });
     });
 
     it("given object as message, when message arrives, calls the handler with the message", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       onMock.mock.calls[0][1]({ frameId: 42, processId: 84 } as IpcMainEvent, { some: "object" });
 
       expect(handlerMock).toHaveBeenCalledWith({ some: "object" }, { frameId: 42, processId: 84 });

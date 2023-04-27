@@ -323,7 +323,7 @@ describe("computeNextPosition technical tests", () => {
     it("doesn't throw if the preferredPosition is invalid", () => {
       expect(
         computeNextPosition({
-          preferredPositions: "some-invalid-data" as any,
+          preferredPositions: "some-invalid-data" as unknown as TooltipPosition,
           offset: 10,
           target: {
             getBoundingClientRect: () =>

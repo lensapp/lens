@@ -1,7 +1,7 @@
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IpcMainEvent } from "electron";
 import ipcMainInjectable from "../ipc-main/ipc-main.injectable";
-import { enlistMessageChannelListenerInjectionToken } from "@k8slens/messaging";
+import { enlistMessageChannelListenerInjectionToken, MessageChannel, MessageChannelListener } from "@k8slens/messaging";
 
 const enlistMessageChannelListenerInjectable = getInjectable({
   id: "enlist-message-channel-listener",
@@ -9,8 +9,8 @@ const enlistMessageChannelListenerInjectable = getInjectable({
   instantiate: (di) => {
     const ipcMain = di.inject(ipcMainInjectable);
 
-    return ({ channel, handler }) => {
-      const nativeOnCallback = (nativeEvent: IpcMainEvent, message: any) => {
+    return <T>({ channel, handler }: MessageChannelListener<MessageChannel<T>>) => {
+      const nativeOnCallback = (nativeEvent: IpcMainEvent, message: T) => {
         handler(message, { frameId: nativeEvent.frameId, processId: nativeEvent.processId });
       };
 

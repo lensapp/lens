@@ -17,6 +17,7 @@ import {
   ComputedChannelAdminMessage,
 } from "./computed-channel-administration-channel.injectable";
 import { computedChannelFeature } from "../feature";
+import type { RenderResult } from "@testing-library/react";
 
 const testChannel: MessageChannel<string> = { id: "some-channel-id" };
 const testChannel2: MessageChannel<string> = { id: "some-other-channel-id" };
@@ -110,7 +111,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
         });
 
         describe("when observing the computed value in a component in di-1", () => {
-          let rendered: any;
+          let rendered: RenderResult;
 
           beforeEach(() => {
             const render = renderFor(di2);
@@ -118,13 +119,10 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
             rendered = render(<TestComponent someComputed={computedTestChannel} />);
           });
 
-          const scenarioName = scenarioIsAsync ? "when all messages are propagated" : "immediately";
-
-          // eslint-disable-next-line jest/valid-title
-          describe(scenarioName, () => {
+          describe(scenarioIsAsync ? "when all messages are propagated" : "immediately", () => {
             beforeEach((done) => {
               if (scenarioIsAsync) {
-                messageBridgeFake.messagePropagationRecursive(act).then(done);
+                void messageBridgeFake.messagePropagationRecursive(act).then(done);
               } else {
                 done();
               }
@@ -155,15 +153,13 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
             );
           });
 
-          scenarioIsAsync &&
+          if (scenarioIsAsync) {
             it("computed test channel value is observed as the pending value", () => {
               expect(observedValue).toBe("some-pending-value");
             });
+          }
 
-          const scenarioName = scenarioIsAsync ? "when admin messages are propagated" : "immediately";
-
-          // eslint-disable-next-line jest/valid-title
-          describe(scenarioName, () => {
+          describe(scenarioIsAsync ? "when admin messages are propagated" : "immediately", () => {
             beforeEach((done) => {
               if (scenarioIsAsync) {
                 void messageBridgeFake.messagePropagation().then(done);
@@ -179,10 +175,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
               });
             });
 
-            const scenarioName = scenarioIsAsync ? "when returning value-messages propagate" : "immediately";
-
-            // eslint-disable-next-line jest/valid-title
-            describe(scenarioName, () => {
+            describe(scenarioIsAsync ? "when returning value-messages propagate" : "immediately", () => {
               beforeEach((done) => {
                 if (scenarioIsAsync) {
                   void messageBridgeFake.messagePropagation().then(done);
@@ -208,10 +201,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                   });
                 });
 
-                const scenarioName = scenarioIsAsync ? "when value-messages propagate" : "immediately";
-
-                // eslint-disable-next-line jest/valid-title
-                describe(scenarioName, () => {
+                describe(scenarioIsAsync ? "when value-messages propagate" : "immediately", () => {
                   beforeEach((done) => {
                     if (scenarioIsAsync) {
                       void messageBridgeFake.messagePropagation().then(done);
@@ -237,10 +227,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                   stopObserving();
                 });
 
-                const scenarioName = scenarioIsAsync ? "when admin-messages propagate" : "immediately";
-
-                // eslint-disable-next-line jest/valid-title
-                describe(scenarioName, () => {
+                describe(scenarioIsAsync ? "when admin-messages propagate" : "immediately", () => {
                   beforeEach((done) => {
                     if (scenarioIsAsync) {
                       void messageBridgeFake.messagePropagation().then(done);
@@ -289,15 +276,13 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                         );
                       });
 
-                      scenarioIsAsync &&
+                      if (scenarioIsAsync) {
                         it("computed test channel value is observed as the pending value again", () => {
                           expect(observedValue).toBe("some-pending-value");
                         });
+                      }
 
-                      const scenarioName = scenarioIsAsync ? "when admin messages propagate" : "immediately";
-
-                      // eslint-disable-next-line jest/valid-title
-                      describe(scenarioName, () => {
+                      describe(scenarioIsAsync ? "when admin messages propagate" : "immediately", () => {
                         beforeEach((done) => {
                           if (scenarioIsAsync) {
                             latestAdminMessage = undefined;
@@ -315,14 +300,14 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                           });
                         });
 
-                        scenarioIsAsync &&
+                        if (scenarioIsAsync) {
                           it("computed test channel value is still observed as the pending value", () => {
                             expect(observedValue).toBe("some-pending-value");
                           });
+                        }
 
                         const scenarioTitle = scenarioIsAsync ? "when value-messages propagate back" : "immediately";
 
-                        // eslint-disable-next-line jest/valid-title
                         describe(scenarioTitle, () => {
                           beforeEach((done) => {
                             if (scenarioIsAsync) {
@@ -381,17 +366,23 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                   },
                 );
 
-                scenarioIsAsync && (await messageBridgeFake.messagePropagation());
+                if (scenarioIsAsync) {
+                  await messageBridgeFake.messagePropagation();
+                }
 
                 stopObserving();
 
-                scenarioIsAsync && (await messageBridgeFake.messagePropagation());
+                if (scenarioIsAsync) {
+                  await messageBridgeFake.messagePropagation();
+                }
 
                 runInAction(() => {
                   someOtherObservable.set("some-value");
                 });
 
-                scenarioIsAsync && (await messageBridgeFake.messagePropagation());
+                if (scenarioIsAsync) {
+                  await messageBridgeFake.messagePropagation();
+                }
 
                 expect(observedValue).toBe("some-value");
               });
@@ -439,10 +430,7 @@ const TestComponent = observer(({ someComputed }: { someComputed: IComputedValue
                   expect(nonReactiveValue).toBe("some-initial-value");
                 });
 
-                const scenarioName = scenarioIsAsync ? "when messages would be propagated" : "immediately";
-
-                // eslint-disable-next-line jest/valid-title
-                describe(scenarioName, () => {
+                describe(scenarioIsAsync ? "when messages would be propagated" : "immediately", () => {
                   beforeEach((done) => {
                     if (scenarioIsAsync) {
                       void messageBridgeFake.messagePropagation().then(done);

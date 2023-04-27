@@ -11,7 +11,6 @@ import { observer } from "mobx-react";
 import type { IClassName, StrictReactNode } from "@k8slens/utilities";
 import { cssNames } from "@k8slens/utilities";
 import { observable, makeObservable, action, runInAction } from "mobx";
-import autoBindReact from "auto-bind/react";
 import { computeNextPosition } from "./helpers";
 
 export enum TooltipPosition {
@@ -67,7 +66,6 @@ class DefaultedTooltip extends React.Component<TooltipProps & typeof defaultProp
   constructor(props: TooltipProps & typeof defaultProps) {
     super(props);
     makeObservable(this);
-    autoBindReact(this);
   }
 
   get targetElem(): HTMLElement | null {
@@ -97,17 +95,15 @@ class DefaultedTooltip extends React.Component<TooltipProps & typeof defaultProp
     this.hoverTarget?.removeEventListener("mouseleave", this.onLeaveTarget);
   }
 
-  @action
-  protected onEnterTarget() {
+  onEnterTarget = action(() => {
     this.isVisible = true;
     requestAnimationFrame(action(() => (this.isContentVisible = true)));
-  }
+  });
 
-  @action
-  protected onLeaveTarget() {
+  onLeaveTarget = action(() => {
     this.isVisible = false;
     this.isContentVisible = false;
-  }
+  });
 
   refreshPosition() {
     const { preferredPositions, offset } = this.props;

@@ -9,8 +9,8 @@ const startListeningOfChannelsInjectable = getInjectable({
     const listeningOfChannels = di.inject(listeningOfChannelsInjectionToken);
 
     return {
-      run: async () => {
-        await listeningOfChannels.start();
+      run: () => {
+        listeningOfChannels.start();
       },
     };
   },

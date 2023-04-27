@@ -18,7 +18,7 @@ import platformInjectable from "./platform.injectable";
 
 describe("keyboard-shortcuts", () => {
   let di: DiContainer;
-  let invokeMock: jest.Mock;
+  let invokeMock: jest.MockedFunction<(val?: string) => void>;
   let rendered: RenderResult;
 
   beforeEach(() => {

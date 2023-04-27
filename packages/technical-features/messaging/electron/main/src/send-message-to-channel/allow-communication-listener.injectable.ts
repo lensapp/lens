@@ -10,8 +10,10 @@ const allowCommunicationListenerInjectable = getMessageChannelListenerInjectable
   getHandler: (di) => {
     const frameIds = di.inject(frameIdsInjectable);
 
-    return (_, { frameId, processId }) => {
-      frameIds.add({ frameId, processId });
+    return (_, info) => {
+      if (info) {
+        frameIds.add(info);
+      }
     };
   },
 });

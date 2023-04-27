@@ -3,6 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
+import { getOrInsert } from "./collection-functions";
+
 export type Falsy = false | 0 | "" | null | undefined;
 
 interface Iterator<T> extends Iterable<T> {
@@ -11,7 +13,8 @@ interface Iterator<T> extends Iterable<T> {
   find(fn: (val: T) => unknown): T | undefined;
   collect<U>(fn: (values: Iterable<T>) => U): U;
   toArray(): T[];
-  toMap(): T extends readonly [infer K, infer V] ? Map<K, V[]> : never;
+  toMap(): T extends readonly [infer K, infer V] ? Map<K, V> : never;
+  groupIntoMap(): T extends readonly [infer K, infer V] ? Map<K, V[]> : never;
   toSet(): Set<T>;
   map<U>(fn: (val: T) => U): Iterator<U>;
   flatMap<U>(fn: (val: T) => U[]): Iterator<U>;
@@ -30,21 +33,15 @@ function chain<T>(src: IterableIterator<T>): Iterator<T> {
     join: (sep) => join(src, sep),
     collect: (fn) => fn(src),
     toArray: () => [...src],
-    toMap: () => {
-      const res = new Map();
+    toMap: () => new Map(src as IterableIterator<[any, any]>) as any,
+    groupIntoMap: () => {
+      const res = new Map() as T extends readonly [infer K, infer V] ? Map<K, V[]> : never;
 
-      for (const item of src[Symbol.iterator]()) {
-        const [key, val] = item as [unknown, unknown];
-        const existing = res.get(key);
-
-        if (existing) {
-          existing.push(val);
-        } else {
-          res.set(key, [val]);
-        }
+      for (const [key, value] of src as IterableIterator<[any, any]>) {
+        getOrInsert(res, key, []).push(value);
       }
 
-      return res as T extends readonly [infer K, infer V] ? Map<K, V[]> : never;
+      return res;
     },
     toSet: () => new Set(src),
     concat: (src2) => chain(concat(src, src2)),

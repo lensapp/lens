@@ -21,11 +21,10 @@ export const observableHistoryInjectable = getInjectable({
 
   instantiate: (di) => {
     const history = di.inject(historyInjectable);
-    const navigation = createObservableHistory(history, {
+
+    return createObservableHistory(history, {
       searchParams: searchParamsOptions,
     });
-
-    return navigation;
   },
   injectionToken: observableHistoryInjectionToken,
 });
