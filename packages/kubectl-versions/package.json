@@ -22,7 +22,7 @@
     "precompute-versions": "swc ./build/compute-versions.ts -o ./build/compute-versions.mjs",
     "compute-versions": "node ./build/compute-versions.mjs",
     "prebuild": "npm run compute-versions",
-    "build": "webpack",
+    "build": "lens-webpack-build",
     "dev": "webpack --mode=development --watch",
     "test": "jest --coverage --runInBand"
   },
@@ -30,6 +30,7 @@
     "@ogre-tools/injectable": "^15.1.1"
   },
   "devDependencies": {
+    "@k8slens/webpack": "^6.5.0-alpha.4",
     "@swc/cli": "^0.1.62",
     "@swc/core": "^1.3.53",
     "fast-xml-parser": "^4.2.2",

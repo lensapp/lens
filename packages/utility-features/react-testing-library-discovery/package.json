@@ -25,11 +25,12 @@
   "homepage": "https://github.com/lensapp/lens",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "webpack",
+    "build": "lens-webpack-build",
     "lint": "lens-lint",
     "lint:fix": "lens-lint --fix"
   },
   "peerDependencies": {
+    "@k8slens/webpack": "^6.5.0-alpha.4",
     "@testing-library/dom": "^8.19.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5"
