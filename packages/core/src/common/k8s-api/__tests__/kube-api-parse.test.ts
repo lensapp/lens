@@ -3,7 +3,6 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-jest.mock("../kube-object");
 jest.mock("../kube-api");
 jest.mock("../api-manager", () => ({
   apiManager() {

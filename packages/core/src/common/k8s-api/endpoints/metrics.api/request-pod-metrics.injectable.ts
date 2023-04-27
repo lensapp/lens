@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { MetricData } from "../metrics.api";
-import type { Pod } from "../pod.api";
+import type { Pod } from "@k8slens/kube-object";
 import requestMetricsInjectable from "./request-metrics.injectable";
 
 export interface PodMetricData {

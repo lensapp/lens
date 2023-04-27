@@ -6,7 +6,7 @@ import { waitUntilDefined } from "@k8slens/utilities";
 import { getInjectable } from "@ogre-tools/injectable";
 import customResourceDefinitionStoreInjectable from "../custom-resources/definition.store.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
-import type { Namespace } from "../../../common/k8s-api/endpoints";
+import type { Namespace } from "@k8slens/kube-object";
 
 export type RequestDeleteSubNamespaceAnchor = (namespace: Namespace) => Promise<void>;
 

@@ -7,16 +7,11 @@ import React from "react";
 import { getInjectable } from "@ogre-tools/injectable";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { computed } from "mobx";
-import type {
-  KubeObjectMenuItemComponent,
-  KubeObjectMenuItem,
-} from "../kube-object-menu/kube-object-menu-item-injection-token";
-import {
-  kubeObjectMenuItemInjectionToken,
-} from "../kube-object-menu/kube-object-menu-item-injection-token";
+import type { KubeObjectMenuItemComponent, KubeObjectMenuItem } from "../kube-object-menu/kube-object-menu-item-injection-token";
+import { kubeObjectMenuItemInjectionToken } from "../kube-object-menu/kube-object-menu-item-injection-token";
 import { ingressClassSetDefaultInjectable } from "./ingress-class-set-default.injectable";
 import { MenuItem } from "../menu";
-import type { IngressClass } from "../../../common/k8s-api/endpoints/ingress-class.api";
+import type { IngressClass } from "@k8slens/kube-object";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
 import { Icon } from "../icon";
 import hideDetailsInjectable from "../kube-detail-params/hide-details.injectable";
@@ -25,20 +20,20 @@ export interface IngressClassMenuProps extends KubeObjectMenuProps<IngressClass>
 }
 
 export interface Dependencies {
-  setDefault: (item: IngressClass) => void;
+  setDefault: (item: IngressClass) => Promise<void>;
   hideDetails: () => void;
 }
 
-export function NonInjectedIngressClassMenu(
-  {
+export function NonInjectedIngressClassMenu(props: IngressClassMenuProps & Dependencies) {
+  const {
     object,
     toolbar,
     setDefault,
     hideDetails,
-  }: IngressClassMenuProps & Dependencies) {
+  } = props;
 
   function markItemAsDefaultIngressClass() {
-    setDefault(object);
+    void setDefault(object);
     hideDetails();
   }
 

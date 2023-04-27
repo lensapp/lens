@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { KubeObject } from "@k8slens/kube-object";
 import type { KubeObjectOnContextMenuOpenContext } from "../../kube-object/handler";
 import kubeObjectHandlersInjectable from "../../kube-object/handlers.injectable";
 

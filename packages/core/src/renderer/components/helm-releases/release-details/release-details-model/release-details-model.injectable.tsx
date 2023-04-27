@@ -13,7 +13,7 @@ import type { RequestHelmReleaseConfiguration } from "../../../../../common/k8s-
 import requestHelmReleaseConfigurationInjectable from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-configuration.injectable";
 import { pipeline } from "@ogre-tools/fp";
 import { groupBy, map } from "lodash/fp";
-import type { KubeJsonApiData } from "../../../../../common/k8s-api/kube-json-api";
+import type { KubeJsonApiData } from "@k8slens/kube-object";
 import type { GetResourceDetailsUrl } from "./get-resource-details-url.injectable";
 import getResourceDetailsUrlInjectable from "./get-resource-details-url.injectable";
 import type { RequestHelmReleaseUpdate } from "../../../../../common/k8s-api/endpoints/helm-releases.api/request-update.injectable";
@@ -131,7 +131,7 @@ export class ReleaseDetailsModel {
       if (!result.callWasSuccessful) {
         this.dependencies.showCheckedErrorNotification(
           result.error,
-          "Unknown error occured while updating release",
+          "Unknown error occurred while updating release",
         );
 
         return;

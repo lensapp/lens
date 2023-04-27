@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { StatefulSet } from "../../../common/k8s-api/endpoints";
+import type { StatefulSet } from "@k8slens/kube-object";
 import openStatefulSetScaleDialogInjectable from "../../components/workloads-statefulsets/scale/open-dialog.injectable";
 import { staticKubeObjectHandlerInjectionToken } from "../handler";
 

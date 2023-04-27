@@ -57,7 +57,7 @@ class NonInjectedCreateServiceAccountDialog extends React.Component<CreateServic
       showDetails(serviceAccount.selfLink);
       closeCreateServiceAccountDialog();
     } catch (err) {
-      showCheckedErrorNotification(err, "Unknown error occured while creating service account");
+      showCheckedErrorNotification(err, "Unknown error occurred while creating service account");
     }
   };
 

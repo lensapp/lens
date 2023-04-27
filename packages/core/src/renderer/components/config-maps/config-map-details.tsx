@@ -12,7 +12,7 @@ import { DrawerTitle } from "../drawer";
 import type { ShowNotification } from "../notifications";
 import { Button } from "@k8slens/button";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { ConfigMap } from "../../../common/k8s-api/endpoints";
+import { ConfigMap } from "@k8slens/kube-object";
 import type { Logger } from "../../../common/logger";
 import type { ConfigMapStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -42,7 +42,7 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
     makeObservable(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     disposeOnUnmount(this, [
       autorun(() => {
         const { object: configMap } = this.props;
@@ -54,27 +54,29 @@ class NonInjectedConfigMapDetails extends React.Component<ConfigMapDetailsProps 
     ]);
   }
 
-  save = async () => {
+  save = () => {
     const { object: configMap, configMapStore } = this.props;
 
-    try {
-      this.isSaving = true;
-      await configMapStore.update(configMap, {
-        ...configMap,
-        data: Object.fromEntries(this.data),
-      });
-      this.props.showSuccessNotification((
-        <p>
-          {"ConfigMap "}
-          <b>{configMap.getName()}</b>
-          {" successfully updated."}
-        </p>
-      ));
-    } catch (error) {
-      this.props.showErrorNotification(`Failed to save config map: ${error}`);
-    } finally {
-      this.isSaving = false;
-    }
+    void (async () => {
+      try {
+        this.isSaving = true;
+        await configMapStore.update(configMap, {
+          ...configMap,
+          data: Object.fromEntries(this.data),
+        });
+        this.props.showSuccessNotification((
+          <p>
+            {"ConfigMap "}
+            <b>{configMap.getName()}</b>
+            {" successfully updated."}
+          </p>
+        ));
+      } catch (error) {
+        this.props.showErrorNotification(`Failed to save config map: ${String(error)}`);
+      } finally {
+        this.isSaving = false;
+      }
+    })();
   };
 
   render() {

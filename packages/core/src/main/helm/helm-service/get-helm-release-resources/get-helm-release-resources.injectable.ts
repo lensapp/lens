@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import callForHelmManifestInjectable from "./call-for-helm-manifest/call-for-helm-manifest.injectable";
-import type { KubeJsonApiData, KubeJsonApiDataList } from "../../../../common/k8s-api/kube-json-api";
+import type { KubeJsonApiData, KubeJsonApiDataList } from "@k8slens/kube-object";
 import type { AsyncResult } from "@k8slens/utilities";
 
 export type GetHelmReleaseResources = (

@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { HorizontalPodAutoscaler, HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricStatus } from "../../../common/k8s-api/endpoints";
-import { HpaMetricType } from "../../../common/k8s-api/endpoints";
+import type { HorizontalPodAutoscaler, HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricStatus } from "@k8slens/kube-object";
 import { getMetricName } from "./get-metric-name";
 import { HorizontalPodAutoscalerV1MetricParser } from "./metric-parser-v1";
 import { HorizontalPodAutoscalerV2MetricParser } from "./metric-parser-v2";
@@ -48,15 +47,15 @@ const getHorizontalPodAutoscalerMetrics = getInjectable({
 
 function getMetricValues<Type extends Parser>(parser: Type, current: HorizontalPodAutoscalerMetricStatus | undefined, target: HorizontalPodAutoscalerMetricSpec) {
   switch (target.type) {
-    case HpaMetricType.Resource:
+    case "Resource":
       return parser.getResource({ current: current?.resource, target: target.resource });
-    case HpaMetricType.Pods:
+    case "Pods":
       return parser.getPods({ current: current?.pods, target: target.pods });
-    case HpaMetricType.Object:
+    case "Object":
       return parser.getObject({ current: current?.object, target: target.object });
-    case HpaMetricType.External:
+    case "External":
       return parser.getExternal({ current: current?.external, target: target.external });
-    case HpaMetricType.ContainerResource:
+    case "ContainerResource":
       return parser.getContainerResource({ current: current?.containerResource, target: target.containerResource });
     default:
       return {};

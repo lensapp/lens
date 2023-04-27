@@ -13,7 +13,7 @@ import requestKubeResourceInjectable from "../../../renderer/components/dock/edi
 import directoryForLensLocalStorageInjectable from "../../../common/directory-for-lens-local-storage/directory-for-lens-local-storage.injectable";
 import writeJsonFileInjectable from "../../../common/fs/write-json-file.injectable";
 import { TabKind } from "../../../renderer/components/dock/dock/store";
-import { Namespace } from "../../../common/k8s-api/endpoints";
+import { Namespace } from "@k8slens/kube-object";
 
 describe("cluster/namespaces - edit namespaces from previously opened tab", () => {
   let builder: ApplicationBuilder;

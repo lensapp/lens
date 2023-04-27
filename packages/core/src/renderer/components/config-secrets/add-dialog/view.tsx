@@ -15,7 +15,7 @@ import { Wizard, WizardStep } from "../../wizard";
 import { Input } from "../../input";
 import { systemName } from "../../input/input_validators";
 import type { SecretApi } from "../../../../common/k8s-api/endpoints";
-import { reverseSecretTypeMap, SecretType } from "../../../../common/k8s-api/endpoints";
+import { reverseSecretTypeMap, SecretType } from "@k8slens/kube-object";
 import { SubTitle } from "../../layout/sub-title";
 import { NamespaceSelect } from "../../namespaces/namespace-select";
 import { Select } from "../../select";
@@ -117,7 +117,7 @@ class NonInjectedAddSecretDialog extends React.Component<AddSecretDialogProps & 
       this.props.showDetails(newSecret?.selfLink);
       this.close();
     } catch (err) {
-      this.props.showCheckedErrorNotification(err, "Unknown error occured while creating a Secret");
+      this.props.showCheckedErrorNotification(err, "Unknown error occurred while creating a Secret");
     }
   };
 
@@ -189,6 +189,10 @@ class NonInjectedAddSecretDialog extends React.Component<AddSecretDialogProps & 
     const { closeAddSecretDialog, isAddSecretDialogOpen, secretApi, showDetails, ...dialogProps } = this.props;
     const { namespace, name, type } = this;
     const header = <h5>Create Secret</h5>;
+
+    void closeAddSecretDialog;
+    void secretApi;
+    void showDetails;
 
     return (
       <Dialog

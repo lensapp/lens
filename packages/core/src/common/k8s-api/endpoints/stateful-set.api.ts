@@ -5,12 +5,9 @@
 
 import moment from "moment";
 
-import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies, NamespacedResourceDescriptor } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { LabelSelector, NamespaceScopedMetadata } from "../kube-object";
-import { KubeObject } from "../kube-object";
-import type { PodTemplateSpec } from "./types/pod-template-spec";
-import type { PersistentVolumeClaimTemplateSpec } from "./types/persistent-volume-claim-template-spec";
+import { StatefulSet } from "@k8slens/kube-object";
 
 export class StatefulSetApi extends KubeApi<StatefulSet> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
@@ -20,109 +17,34 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
     });
   }
 
-  protected getScaleApiUrl(params: { namespace: string; name: string }) {
-    return `${this.getUrl(params)}/scale`;
+  protected getScaleApiUrl(params: NamespacedResourceDescriptor) {
+    return `${this.formatUrlForNotListing(params)}/scale`;
   }
 
-  getReplicas(params: { namespace: string; name: string }): Promise<number> {
-    return this.request
-      .get(this.getScaleApiUrl(params))
-      .then(({ status }: any) => status?.replicas);
+  async getReplicas(params: NamespacedResourceDescriptor): Promise<number> {
+    const apiUrl = this.getScaleApiUrl(params);
+    const { status = 0 } = await this.request.get(apiUrl) as { status?: number };
+
+    return status;
   }
 
-  scale(params: { namespace: string; name: string }, replicas: number) {
-    return this.request.patch(this.getScaleApiUrl(params), {
-      data: {
-        spec: {
-          replicas,
-        },
+  scale(params: NamespacedResourceDescriptor, replicas: number) {
+    return this.patch(params, {
+      spec: {
+        replicas,
       },
-    },
-    {
-      headers: {
-        "content-type": "application/merge-patch+json",
-      },
-    });
+    }, "merge");
   }
 
-  restart(params: { namespace: string; name: string }) {
-    return this.request.patch(this.getUrl(params), {
-      data: {
-        spec: {
-          template: {
-            metadata: {
-              annotations: { "kubectl.kubernetes.io/restartedAt" : moment.utc().format() },
-            },
+  restart(params: NamespacedResourceDescriptor) {
+    return this.patch(params, {
+      spec: {
+        template: {
+          metadata: {
+            annotations: { "kubectl.kubernetes.io/restartedAt" : moment.utc().format() },
           },
         },
       },
-    },
-    {
-      headers: {
-        "content-type": "application/strategic-merge-patch+json",
-      },
-    });
-  }
-}
-
-export interface StatefulSetSpec {
-  serviceName: string;
-  replicas: number;
-  selector: LabelSelector;
-  template: PodTemplateSpec;
-  volumeClaimTemplates: PersistentVolumeClaimTemplateSpec[];
-}
-
-export interface StatefulSetStatus {
-  observedGeneration: number;
-  replicas: number;
-  currentReplicas: number;
-  readyReplicas: number;
-  currentRevision: string;
-  updateRevision: string;
-  collisionCount: number;
-}
-
-export class StatefulSet extends KubeObject<
-  NamespaceScopedMetadata,
-  StatefulSetStatus,
-  StatefulSetSpec
-> {
-  static readonly kind = "StatefulSet";
-  static readonly namespaced = true;
-  static readonly apiBase = "/apis/apps/v1/statefulsets";
-
-  getSelectors(): string[] {
-    return KubeObject.stringifyLabels(this.spec.selector.matchLabels);
-  }
-
-  getNodeSelectors(): string[] {
-    return KubeObject.stringifyLabels(this.spec.template.spec?.nodeSelector);
-  }
-
-  getTemplateLabels(): string[] {
-    return KubeObject.stringifyLabels(this.spec.template.metadata?.labels);
-  }
-
-  getTolerations() {
-    return this.spec.template.spec?.tolerations ?? [];
-  }
-
-  getAffinity() {
-    return this.spec.template.spec?.affinity ?? {};
-  }
-
-  getAffinityNumber() {
-    return Object.keys(this.getAffinity()).length;
-  }
-
-  getReplicas() {
-    return this.spec.replicas || 0;
-  }
-
-  getImages() {
-    const containers = this.spec.template?.spec?.containers ?? [];
-
-    return containers.map(container => container.image);
+    }, "strategic");
   }
 }

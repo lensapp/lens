@@ -11,7 +11,7 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
+import { KubeEvent } from "@k8slens/kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import type { Logger } from "../../../common/logger";

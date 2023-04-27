@@ -249,12 +249,14 @@ export class JsonApi<Data = JsonApiData, Params extends JsonApiParams<Data> = Js
       return [];
     }
 
-    if (Array.isArray(error.errors)) {
-      return error.errors.map(error => error.title);
+    const { errors, message } = error as { errors?: { title: string }[]; message?: string };
+
+    if (Array.isArray(errors)) {
+      return errors.map(error => error.title);
     }
 
-    if (isString(error.message)) {
-      return [error.message];
+    if (isString(message)) {
+      return [message];
     }
 
     return [res.statusText || "Error!"];

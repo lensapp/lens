@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { Pod } from "../../../../../common/k8s-api/endpoints";
+import { Pod } from "@k8slens/kube-object";
 
 export const dockerPod = new Pod({
   apiVersion: "v1",

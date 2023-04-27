@@ -5,7 +5,7 @@
 import type { DiContainer } from "@ogre-tools/injectable";
 import getHorizontalPodAutoscalerMetrics from "./get-metrics.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
-import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints";
+import { HorizontalPodAutoscaler } from "@k8slens/kube-object";
 
 const hpaV2 = {
   apiVersion: "autoscaling/v2",
@@ -71,7 +71,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 target: {
@@ -94,7 +94,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 target: {
@@ -110,7 +110,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           desiredReplicas: 10,
           currentMetrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 current: {
@@ -133,7 +133,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 target: {
@@ -149,7 +149,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           desiredReplicas: 10,
           currentMetrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 current: {
@@ -172,7 +172,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.ContainerResource,
+                type: "ContainerResource",
                 containerResource: {
                   name: "cpu",
                   container: "nginx",
@@ -198,7 +198,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.ContainerResource,
+                type: "ContainerResource",
                 containerResource: {
                   name: "cpu",
                   container: "nginx",
@@ -215,7 +215,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             desiredReplicas: 10,
             currentMetrics: [
               {
-                type: HpaMetricType.ContainerResource,
+                type: "ContainerResource",
                 containerResource: {
                   name: "cpu",
                   current: {
@@ -239,7 +239,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.Pods,
+                type: "Pods",
                 pods: {
                   metric: {
                     name: "packets-per-second",
@@ -266,7 +266,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.Pods,
+                type: "Pods",
                 pods: {
                   metric: {
                     name: "packets-per-second",
@@ -284,7 +284,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             desiredReplicas: 10,
             currentMetrics: [
               {
-                type: HpaMetricType.Pods,
+                type: "Pods",
                 pods: {
                   metric: {
                     name: "packets-per-second",
@@ -310,7 +310,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.Object,
+                type: "Object",
                 object: {
                   metric: {
                     name: "requests-per-second",
@@ -337,7 +337,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.Object,
+                type: "Object",
                 object: {
                   metric: {
                     name: "requests-per-second",
@@ -364,7 +364,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.Object,
+                type: "Object",
                 object: {
                   metric: {
                     name: "requests-per-second",
@@ -382,7 +382,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             desiredReplicas: 10,
             currentMetrics: [
               {
-                type: HpaMetricType.Object,
+                type: "Object",
                 object: {
                   metric: {
                     name: "requests-per-second",
@@ -408,7 +408,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metric: {
                     name: "queue_messages_ready",
@@ -438,7 +438,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metric: {
                     name: "queue_messages_ready",
@@ -468,7 +468,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metric: {
                     name: "queue_messages_ready",
@@ -489,7 +489,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             desiredReplicas: 10,
             currentMetrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metric: {
                     name: "queue_messages_ready",
@@ -515,7 +515,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metric: {
                     name: "queue_messages_ready",
@@ -536,7 +536,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             desiredReplicas: 10,
             currentMetrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metric: {
                     name: "queue_messages_ready",
@@ -562,7 +562,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2.spec,
             metrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metric: {
                     name: "queue_messages_ready",
@@ -583,7 +583,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             desiredReplicas: 10,
             currentMetrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metric: {
                     name: "queue_messages_NOT_ready",
@@ -616,7 +616,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           ...hpaV2Beta1.spec,
           metrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 targetAverageUtilization: 50,
@@ -636,7 +636,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           ...hpaV2Beta1.spec,
           metrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 targetAverageUtilization: 50,
@@ -649,7 +649,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           desiredReplicas: 10,
           currentMetrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 currentAverageUtilization: 10,
@@ -669,7 +669,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           ...hpaV2Beta1.spec,
           metrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 targetAverageValue: "100m",
@@ -682,7 +682,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           desiredReplicas: 10,
           currentMetrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 currentAverageValue: "500m",
@@ -703,7 +703,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2Beta1.spec,
             metrics: [
               {
-                type: HpaMetricType.ContainerResource,
+                type: "ContainerResource",
                 containerResource: {
                   name: "cpu",
                   container: "nginx",
@@ -726,7 +726,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2Beta1.spec,
             metrics: [
               {
-                type: HpaMetricType.ContainerResource,
+                type: "ContainerResource",
                 containerResource: {
                   name: "cpu",
                   container: "nginx",
@@ -740,7 +740,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             desiredReplicas: 10,
             currentMetrics: [
               {
-                type: HpaMetricType.ContainerResource,
+                type: "ContainerResource",
                 containerResource: {
                   name: "cpu",
                   currentAverageUtilization: 10,
@@ -762,7 +762,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2Beta1.spec,
             metrics: [
               {
-                type: HpaMetricType.Pods,
+                type: "Pods",
                 pods: {
                   metricName: "packets-per-second",
                   targetAverageValue: "1k",
@@ -784,7 +784,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2Beta1.spec,
             metrics: [
               {
-                type: HpaMetricType.Pods,
+                type: "Pods",
                 pods: {
                   metricName: "packets-per-second",
 
@@ -798,7 +798,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             desiredReplicas: 10,
             currentMetrics: [
               {
-                type: HpaMetricType.Pods,
+                type: "Pods",
                 pods: {
                   metricName: "packets-per-second",
                   currentAverageValue: "10",
@@ -820,7 +820,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2Beta1.spec,
             metrics: [
               {
-                type: HpaMetricType.Object,
+                type: "Object",
                 object: {
                   metricName: "packets-per-second",
                   targetValue: "10k",
@@ -842,7 +842,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2Beta1.spec,
             metrics: [
               {
-                type: HpaMetricType.Object,
+                type: "Object",
                 object: {
                   metricName: "packets-per-second",
                   averageValue: "5k",
@@ -864,7 +864,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2Beta1.spec,
             metrics: [
               {
-                type: HpaMetricType.Object,
+                type: "Object",
                 object: {
                   metricName: "packets-per-second",
                   targetValue: "5k",
@@ -877,7 +877,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             desiredReplicas: 10,
             currentMetrics: [
               {
-                type: HpaMetricType.Object,
+                type: "Object",
                 object: {
                   metricName: "packets-per-second",
                   currentValue: "10k",
@@ -899,7 +899,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2Beta1.spec,
             metrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metricName: "queue_messages_ready",
                   metricSelector: { matchLabels: { queue: "worker_tasks" }},
@@ -922,7 +922,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2Beta1.spec,
             metrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metricName: "queue_messages_ready",
                   metricSelector: { matchLabels: { queue: "worker_tasks" }},
@@ -945,7 +945,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2Beta1.spec,
             metrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metricName: "queue_messages_ready",
                   metricSelector: { matchLabels: { queue: "worker_tasks" }},
@@ -959,7 +959,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             desiredReplicas: 10,
             currentMetrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metricName: "queue_messages_ready",
                   currentValue: "10",
@@ -981,7 +981,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             ...hpaV2Beta1.spec,
             metrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metricName: "queue_messages_ready",
                   metricSelector: { matchLabels: { queue: "worker_tasks" }},
@@ -995,7 +995,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
             desiredReplicas: 10,
             currentMetrics: [
               {
-                type: HpaMetricType.External,
+                type: "External",
                 external: {
                   metricName: "queue_messages_ready",
                   currentAverageValue: "10",
@@ -1016,7 +1016,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           ...hpaV2Beta1.spec,
           metrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 targetAverageUtilization: 50,
@@ -1029,7 +1029,7 @@ describe("getHorizontalPodAutoscalerMetrics", () => {
           desiredReplicas: 10,
           currentMetrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "memory",
                 currentAverageUtilization: 10,

@@ -7,9 +7,8 @@ import "./kube-event-icon.scss";
 
 import React from "react";
 import { Icon } from "../icon";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { KubeObject, KubeEvent } from "@k8slens/kube-object";
 import { cssNames } from "@k8slens/utilities";
-import type { KubeEvent } from "../../../common/k8s-api/endpoints/events.api";
 import { KubeObjectAge } from "../kube-object/age";
 import type { EventStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";

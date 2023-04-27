@@ -13,7 +13,7 @@ import asyncFn from "@async-fn/jest";
 import type { ExecFileWithInput } from "./call-for-kube-resources-by-manifest/exec-file-with-input/exec-file-with-input.injectable";
 import execFileWithInputInjectable from "./call-for-kube-resources-by-manifest/exec-file-with-input/exec-file-with-input.injectable";
 import type { AsyncResult } from "@k8slens/utilities";
-import type { KubeJsonApiData } from "../../../../common/k8s-api/kube-json-api";
+import type { KubeJsonApiData } from "@k8slens/kube-object";
 
 describe("get helm release resources", () => {
   let getHelmReleaseResources: GetHelmReleaseResources;

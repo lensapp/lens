@@ -5,46 +5,7 @@
 
 import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { NamespaceScopedMetadata } from "../kube-object";
-import { KubeObject } from "../kube-object";
-
-export interface LeaseSpec {
-  acquireTime?: string;
-  holderIdentity: string;
-  leaseDurationSeconds: number;
-  leaseTransitions?: number;
-  renewTime: string;
-}
-
-export class Lease extends KubeObject<
-  NamespaceScopedMetadata,
-  void,
-  LeaseSpec
-> {
-  static readonly kind = "Lease";
-  static readonly namespaced = true;
-  static readonly apiBase = "/apis/coordination.k8s.io/v1/leases";
-
-  getAcquireTime(): string {
-    return this.spec.acquireTime || "";
-  }
-
-  getHolderIdentity(): string {
-    return this.spec.holderIdentity;
-  }
-
-  getLeaseDurationSeconds(): number {
-    return this.spec.leaseDurationSeconds;
-  }
-
-  getLeaseTransitions(): number | undefined {
-    return this.spec.leaseTransitions;
-  }
-
-  getRenewTime(): string {
-    return this.spec.renewTime;
-  }
-}
+import { Lease } from "@k8slens/kube-object";
 
 export class LeaseApi extends KubeApi<Lease> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {

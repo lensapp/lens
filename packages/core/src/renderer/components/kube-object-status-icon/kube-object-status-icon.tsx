@@ -10,7 +10,7 @@ import { Icon } from "../icon";
 import { cssNames, formatDuration, getOrInsert, isDefined } from "@k8slens/utilities";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import kubeObjectStatusTextsForObjectInjectable from "./kube-object-status-texts-for-object.injectable";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { KubeObject } from "@k8slens/kube-object";
 import type { KubeObjectStatus } from "../../../common/k8s-api/kube-object-status";
 import { KubeObjectStatusLevel } from "../../../common/k8s-api/kube-object-status";
 import type { IComputedValue } from "mobx";

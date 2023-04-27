@@ -13,8 +13,8 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { cssNames } from "@k8slens/utilities";
-import { ContainerScalingMode, ControlledValues, ResourceName, UpdateMode, VerticalPodAutoscaler } from "../../../common/k8s-api/endpoints/vertical-pod-autoscaler.api";
-import type { PodUpdatePolicy, PodResourcePolicy, VerticalPodAutoscalerStatus } from "../../../common/k8s-api/endpoints/vertical-pod-autoscaler.api";
+import { ContainerScalingMode, ControlledValues, ResourceName, UpdateMode, VerticalPodAutoscaler } from "@k8slens/kube-object";
+import type { PodUpdatePolicy, PodResourcePolicy, VerticalPodAutoscalerStatus } from "@k8slens/kube-object";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import loggerInjectable from "../../../common/logger.injectable";
 import type { Logger } from "../../../common/logger";
@@ -59,47 +59,45 @@ class NonInjectedVpaDetails extends React.Component<VpaDetailsProps & Dependenci
 
         {recommendation?.containerRecommendations && (
           recommendation.containerRecommendations
-            .map( ({ containerName, target, lowerBound, upperBound, uncappedTarget }) => {
-              return (
-                <div key={containerName}>
-                  <DrawerTitle>{`Container Recommendation for ${containerName}`}</DrawerTitle>
-                  <DrawerItem name="target" >
-                    {Object.entries(target).map(([name, value]) => (
+            .map( ({ containerName, target, lowerBound, upperBound, uncappedTarget }) => (
+              <div key={containerName}>
+                <DrawerTitle>{`Container Recommendation for ${containerName ?? "<unknown>"}`}</DrawerTitle>
+                <DrawerItem name="target">
+                  {Object.entries(target).map(([name, value]) => (
+                    <DrawerItem key={name} name={startCase(name)}>
+                      {value}
+                    </DrawerItem>
+                  ))}
+                </DrawerItem>
+                {lowerBound && (
+                  <DrawerItem name="lowerBound">
+                    {Object.entries(lowerBound).map(([name, value]) => (
                       <DrawerItem key={name} name={startCase(name)}>
                         {value}
                       </DrawerItem>
                     ))}
                   </DrawerItem>
-                  {lowerBound && (
-                    <DrawerItem name="lowerBound" >
-                      {Object.entries(lowerBound).map(([name, value]) => (
-                        <DrawerItem key={name} name={startCase(name)}>
-                          {value}
-                        </DrawerItem>
-                      ))}
-                    </DrawerItem>
-                  )}
-                  {upperBound && (
-                    <DrawerItem name="upperBound" >
-                      {Object.entries(upperBound).map(([name, value]) => (
-                        <DrawerItem key={name} name={startCase(name)}>
-                          {value}
-                        </DrawerItem>
-                      ))}
-                    </DrawerItem>
-                  )}
-                  {uncappedTarget && (
-                    <DrawerItem name="uncappedTarget" >
-                      {Object.entries(uncappedTarget).map(([name, value]) => (
-                        <DrawerItem key={name} name={startCase(name)}>
-                          {value}
-                        </DrawerItem>
-                      ))}
-                    </DrawerItem>
-                  )}
-                </div>
-              );
-            })
+                )}
+                {upperBound && (
+                  <DrawerItem name="upperBound">
+                    {Object.entries(upperBound).map(([name, value]) => (
+                      <DrawerItem key={name} name={startCase(name)}>
+                        {value}
+                      </DrawerItem>
+                    ))}
+                  </DrawerItem>
+                )}
+                {uncappedTarget && (
+                  <DrawerItem name="uncappedTarget">
+                    {Object.entries(uncappedTarget).map(([name, value]) => (
+                      <DrawerItem key={name} name={startCase(name)}>
+                        {value}
+                      </DrawerItem>
+                    ))}
+                  </DrawerItem>
+                )}
+              </div>
+            ))
         )}
       </div>
     );
@@ -128,7 +126,7 @@ class NonInjectedVpaDetails extends React.Component<VpaDetailsProps & Dependenci
               .map( ({ containerName, mode, minAllowed, maxAllowed, controlledResources, controlledValues }) => {
                 return (
                   <div key={containerName}>
-                    <DrawerTitle>{`Container Policy for ${containerName}`}</DrawerTitle>
+                    <DrawerTitle>{`Container Policy for ${containerName ?? "<unknown>"}`}</DrawerTitle>
                     <DrawerItem name="mode" >
                       {mode ?? ContainerScalingMode.ContainerScalingModeAuto}
                     </DrawerItem>

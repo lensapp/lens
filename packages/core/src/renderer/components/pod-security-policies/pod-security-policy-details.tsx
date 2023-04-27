@@ -9,7 +9,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { PodSecurityPolicy } from "../../../common/k8s-api/endpoints";
+import { PodSecurityPolicy } from "@k8slens/kube-object";
 import { Badge } from "../badge";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { Logger } from "../../../common/logger";

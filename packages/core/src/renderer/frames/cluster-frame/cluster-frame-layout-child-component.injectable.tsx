@@ -39,7 +39,7 @@ const NonInjectedClusterFrameLayout = observer((props: Dependencies) => {
         ) : (
           <div className={styles.centering}>
             <div className="error">
-              An error has occured. No route can be found matching the
+              An error has occurred. No route can be found matching the
               current route, which is also the starting route.
             </div>
           </div>

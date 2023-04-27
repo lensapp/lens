@@ -56,7 +56,7 @@ class NonInjectedAddRoleDialog extends React.Component<AddRoleDialogProps & Depe
       showDetails(role.selfLink);
       closeAddRoleDialog();
     } catch (err) {
-      showCheckedErrorNotification(err, "Unknown error occured while creating role");
+      showCheckedErrorNotification(err, "Unknown error occurred while creating role");
     }
   };
 

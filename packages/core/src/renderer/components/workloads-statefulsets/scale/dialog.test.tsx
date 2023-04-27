@@ -3,10 +3,8 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import "@testing-library/jest-dom/extend-expect";
-
 import type { StatefulSetApi } from "../../../../common/k8s-api/endpoints";
-import { StatefulSet } from "../../../../common/k8s-api/endpoints";
+import { StatefulSet } from "@k8slens/kube-object";
 import { StatefulSetScaleDialog } from "./dialog";
 import { waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
@@ -112,7 +110,7 @@ describe("<StatefulSetScaleDialog />", () => {
     // when <StatefulSetScaleDialog /> rendered.
     const initReplicas = 1;
 
-    statefulSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
+    statefulSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => Promise.resolve(initReplicas));
     const { getByTestId } = render(<StatefulSetScaleDialog />);
 
     openStatefulSetDialog(dummyStatefulSet);
@@ -132,7 +130,7 @@ describe("<StatefulSetScaleDialog />", () => {
   it("changes the desired scale when clicking the icon buttons +/-", async () => {
     const initReplicas = 1;
 
-    statefulSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
+    statefulSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => Promise.resolve(initReplicas));
     const component = render(<StatefulSetScaleDialog />);
 
     openStatefulSetDialog(dummyStatefulSet);

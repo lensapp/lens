@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import type { Pod, PodSpecVolume, PodVolumeKind } from "../../../../../common/k8s-api/endpoints";
+import type { Pod, PodSpecVolume, PodVolumeKind } from "@k8slens/kube-object";
 import { DrawerItem } from "../../../drawer";
 import { Icon } from "../../../icon";
 import { AwsElasticBlockStore } from "./variants/aws-elastic-block-store";

@@ -3,8 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { HpaMetricType } from "../../../common/k8s-api/endpoints";
-import type { LabelSelector } from "../../../common/k8s-api/kube-object";
+import type { HpaMetricType, LabelSelector } from "@k8slens/kube-object";
 
 type MetricNames = Partial<Record<"resource" | "pods" | "object" | "external" | "containerResource", {
   name?: string;
@@ -21,15 +20,15 @@ interface Metric extends MetricNames {
 
 export function getMetricName(metric: Metric | undefined): string | undefined {
   switch (metric?.type) {
-    case HpaMetricType.Resource:
+    case "Resource":
       return metric.resource?.name;
-    case HpaMetricType.Pods:
+    case "Pods":
       return metric.pods?.metricName || metric.pods?.metric?.name;
-    case HpaMetricType.Object:
+    case "Object":
       return metric.object?.metricName || metric.object?.metric?.name;
-    case HpaMetricType.External:
+    case "External":
       return metric.external?.metricName || metric.external?.metric?.name;
-    case HpaMetricType.ContainerResource:
+    case "ContainerResource":
       return metric.containerResource?.name;
     default:
       return undefined;

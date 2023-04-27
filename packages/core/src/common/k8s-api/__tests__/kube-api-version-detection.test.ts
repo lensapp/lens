@@ -4,7 +4,8 @@
  */
 import type { ApiManager } from "../api-manager";
 import type { IngressApi } from "../endpoints";
-import { Ingress, HorizontalPodAutoscalerApi } from "../endpoints";
+import { HorizontalPodAutoscalerApi } from "../endpoints";
+import { Ingress } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../../renderer/getDiForUnitTesting";
 import type { Fetch } from "../../fetch/fetch.injectable";
 import fetchInjectable from "../../fetch/fetch.injectable";

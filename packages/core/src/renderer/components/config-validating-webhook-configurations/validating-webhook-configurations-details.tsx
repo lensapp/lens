@@ -7,7 +7,7 @@ import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { WebhookConfig } from "../config-mutating-webhook-configurations/webhook-config";
-import type { ValidatingWebhookConfiguration } from "../../../common/k8s-api/endpoints";
+import type { ValidatingWebhookConfiguration } from "@k8slens/kube-object";
 
 export interface ValidatingWebhookProps extends KubeObjectDetailsProps<ValidatingWebhookConfiguration> {
 }

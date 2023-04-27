@@ -9,7 +9,7 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { Pod } from "../../../common/k8s-api/endpoints";
+import { Pod } from "@k8slens/kube-object";
 import type { NodeApi, PriorityClassApi, RuntimeClassApi, ServiceAccountApi } from "../../../common/k8s-api/endpoints";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
@@ -145,7 +145,7 @@ class NonInjectedPodDetails extends React.Component<PodDetailsProps & Dependenci
                 key={type}
                 label={type}
                 disabled={status === "False"}
-                tooltip={`Last transition time: ${lastTransitionTime}`}
+                tooltip={`Last transition time: ${lastTransitionTime ?? "<unknown>"}`}
               />
             ))
           }

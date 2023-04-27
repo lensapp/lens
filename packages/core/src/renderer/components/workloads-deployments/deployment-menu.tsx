@@ -4,7 +4,7 @@
  */
 import React from "react";
 import type { KubeObjectMenuProps } from "../kube-object-menu";
-import type { Deployment, DeploymentApi } from "../../../common/k8s-api/endpoints";
+import type { Deployment } from "@k8slens/kube-object";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import type { OpenDeploymentScaleDialog } from "./scale/open.injectable";
@@ -15,6 +15,7 @@ import type { OpenConfirmDialog } from "../confirm-dialog/open.injectable";
 import openConfirmDialogInjectable from "../confirm-dialog/open.injectable";
 import type { ShowCheckedErrorNotification } from "../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../notifications/show-checked-error.injectable";
+import type { DeploymentApi } from "../../../common/k8s-api/endpoints";
 
 export interface DeploymentMenuProps extends KubeObjectMenuProps<Deployment> {}
 
@@ -52,7 +53,7 @@ const NonInjectedDeploymentMenu = ({
               name: object.getName(),
             });
           } catch (err) {
-            showCheckedErrorNotification(err, "Unknown error occured while restarting deployment");
+            showCheckedErrorNotification(err, "Unknown error occurred while restarting deployment");
           }
         },
         labelOk: "Restart",

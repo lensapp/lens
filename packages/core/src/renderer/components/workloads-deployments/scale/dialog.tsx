@@ -12,7 +12,7 @@ import { observer } from "mobx-react";
 import type { DialogProps } from "../../dialog";
 import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
-import type { Deployment, DeploymentApi } from "../../../../common/k8s-api/endpoints";
+import type { Deployment } from "@k8slens/kube-object";
 import { Icon } from "../../icon";
 import { Slider } from "../../slider";
 import { cssNames } from "@k8slens/utilities";
@@ -21,6 +21,7 @@ import deploymentApiInjectable from "../../../../common/k8s-api/endpoints/deploy
 import deploymentScaleDialogStateInjectable from "./dialog-state.injectable";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
+import type { DeploymentApi } from "../../../../common/k8s-api/endpoints";
 
 export interface DeploymentScaleDialogProps extends Partial<DialogProps> {
 }
@@ -84,7 +85,7 @@ class NonInjectedDeploymentScaleDialog extends Component<DeploymentScaleDialogPr
       }
       close();
     } catch (err) {
-      this.props.showCheckedErrorNotification(err, "Unknown error occured while scaling Deployment");
+      this.props.showCheckedErrorNotification(err, "Unknown error occurred while scaling Deployment");
     }
   };
 

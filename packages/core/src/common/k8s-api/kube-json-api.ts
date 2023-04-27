@@ -3,35 +3,10 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { JsonApiData, JsonApiError } from "./json-api";
+import type { JsonApiError } from "./json-api";
 import { JsonApi } from "./json-api";
 import type { Response } from "@k8slens/node-fetch";
-import type { KubeJsonApiObjectMetadata } from "./kube-object";
-
-export interface KubeJsonApiListMetadata {
-  resourceVersion: string;
-  selfLink?: string;
-}
-
-export interface KubeJsonApiDataList<T = KubeJsonApiData> {
-  kind: string;
-  apiVersion: string;
-  items: T[];
-  metadata: KubeJsonApiListMetadata;
-}
-
-export interface KubeJsonApiData<
-  Metadata extends KubeJsonApiObjectMetadata = KubeJsonApiObjectMetadata,
-  Status = unknown,
-  Spec = unknown,
-> extends JsonApiData {
-  kind: string;
-  apiVersion: string;
-  metadata: Metadata;
-  status?: Status;
-  spec?: Spec;
-  [otherKeys: string]: unknown;
-}
+import type { KubeJsonApiData } from "@k8slens/kube-object";
 
 export interface KubeJsonApiError extends JsonApiError {
   code: number;

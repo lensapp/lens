@@ -16,7 +16,7 @@ import { asLegacyGlobalFunctionForExtensionApi, asLegacyGlobalForExtensionApi, g
 import type { KubernetesCluster } from "./catalog";
 import type { KubeApiDataFrom, KubeObjectStoreOptions } from "../../common/k8s-api/kube-object.store";
 import { KubeObjectStore as InternalKubeObjectStore } from "../../common/k8s-api/kube-object.store";
-import type { KubeJsonApiDataFor, KubeObject } from "../../common/k8s-api/kube-object";
+import type { KubeJsonApiDataFor, KubeObject } from "@k8slens/kube-object";
 import type { DerivedKubeApiOptions, KubeApiDependencies, KubeApiOptions } from "../../common/k8s-api/kube-api";
 import { KubeApi as InternalKubeApi } from "../../common/k8s-api/kube-api";
 import clusterFrameContextForNamespacedResourcesInjectable from "../../renderer/cluster-frame-context/for-namespaced-resources.injectable";
@@ -120,7 +120,17 @@ export type { CreateKubeApiForLocalClusterConfig as ILocalKubeApiConfig } from "
 export {
   KubeObject,
   KubeStatus,
-} from "../../common/k8s-api/kube-object";
+  isJsonApiData,
+  isJsonApiDataList,
+  isKubeJsonApiListMetadata,
+  isKubeJsonApiMetadata,
+  isKubeObjectNonSystem,
+  isKubeStatusData,
+  isPartialJsonApiData,
+  isPartialJsonApiMetadata,
+  createKubeObject,
+  stringifyLabels,
+} from "@k8slens/kube-object";
 export type {
   OwnerReference,
   KubeObjectMetadata,
@@ -130,11 +140,8 @@ export type {
   KubeJsonApiObjectMetadata,
   KubeStatusData,
   KubeJsonApiDataFor,
-} from "../../common/k8s-api/kube-object";
-
-export type {
   KubeJsonApiData,
-} from "../../common/k8s-api/kube-json-api";
+} from "@k8slens/kube-object";
 
 function KubeJsonApiCstr(config: JsonApiConfig, reqInit?: RequestInit) {
   const di = getLegacyGlobalDiForExtensionApi();
@@ -291,4 +298,4 @@ export {
   ClusterRole,
   ClusterRoleBinding,
   CustomResourceDefinition,
-} from "../../common/k8s-api/endpoints";
+} from "@k8slens/kube-object";

@@ -5,7 +5,7 @@
 
 import "./dialog.scss";
 
-import type { StatefulSet, StatefulSetApi } from "../../../../common/k8s-api/endpoints";
+import type { StatefulSet } from "@k8slens/kube-object";
 import React, { Component } from "react";
 import type { IObservableValue } from "mobx";
 import { computed, makeObservable, observable } from "mobx";
@@ -21,6 +21,7 @@ import statefulSetApiInjectable from "../../../../common/k8s-api/endpoints/state
 import statefulSetDialogStateInjectable from "./dialog-state.injectable";
 import type { ShowCheckedErrorNotification } from "../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../notifications/show-checked-error.injectable";
+import type { StatefulSetApi } from "../../../../common/k8s-api/endpoints";
 
 export interface StatefulSetScaleDialogProps extends Partial<DialogProps> {
 }
@@ -84,7 +85,7 @@ class NonInjectedStatefulSetScaleDialog extends Component<StatefulSetScaleDialog
       }
       close();
     } catch (error) {
-      this.props.showCheckedErrorNotification(error, "Unknown error occured while scaling StatefulSet");
+      this.props.showCheckedErrorNotification(error, "Unknown error occurred while scaling StatefulSet");
     }
   };
 

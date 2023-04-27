@@ -12,10 +12,8 @@ import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Input } from "../input";
-import type { AdditionalPrinterColumnsV1 } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
-import { CustomResourceDefinition } from "../../../common/k8s-api/endpoints/custom-resource-definition.api";
-import type { KubeObjectMetadata, KubeObjectStatus } from "../../../common/k8s-api/kube-object";
-import { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { AdditionalPrinterColumnsV1, KubeObjectMetadata, KubeObjectStatus } from "@k8slens/kube-object";
+import { CustomResourceDefinition, KubeObject } from "@k8slens/kube-object";
 import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import loggerInjectable from "../../../common/logger.injectable";
@@ -91,7 +89,7 @@ class NonInjectedCustomResourceDetails extends React.Component<CustomResourceDet
       }))
       .map(({ kind, message, status }, index) => (
         <Badge
-          key={kind + index}
+          key={`${kind}${index}`}
           label={kind}
           disabled={status === "False"}
           className={kind.toLowerCase()}

@@ -11,7 +11,7 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { disposeOnUnmount, observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { StorageClass } from "../../../common/k8s-api/endpoints";
+import { StorageClass } from "@k8slens/kube-object";
 import type { StorageClassStore } from "./store";
 import { VolumeDetailsList } from "../storage-volumes/volume-details-list";
 import type { PersistentVolumeStore } from "../storage-volumes/store";

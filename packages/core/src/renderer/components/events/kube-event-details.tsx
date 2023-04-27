@@ -7,7 +7,7 @@ import styles from "./kube-event-details.module.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { KubeObject } from "../../../common/k8s-api/kube-object";
+import { KubeObject } from "@k8slens/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { cssNames } from "@k8slens/utilities";
 import { LocaleDate } from "../locale-date";

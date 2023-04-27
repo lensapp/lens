@@ -4,12 +4,12 @@
  */
 import React from "react";
 import styles from "./webhook-config.module.css";
-import type { MutatingWebhook, ValidatingWebhook } from "../../../common/k8s-api/endpoints";
+import type { Webhook } from "@k8slens/kube-object";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 
 interface WebhookProps {
-  webhook: ValidatingWebhook | MutatingWebhook;
+  webhook: Webhook;
 }
 
 export const WebhookConfig: React.FC<WebhookProps> = ({ webhook }) => {
@@ -82,7 +82,7 @@ export const WebhookConfig: React.FC<WebhookProps> = ({ webhook }) => {
                 <div>Match Labels:</div>
                 <div className={styles.matchLabels}>
                   {Object.entries(webhook.namespaceSelector.matchLabels).map(([key, value], index) => (
-                    <Badge label={`${key}=${value}`} key={index} />
+                    <Badge label={`${key}=${value ?? ""}`} key={index} />
                   ))}
                 </div>
               </div>
@@ -118,7 +118,7 @@ export const WebhookConfig: React.FC<WebhookProps> = ({ webhook }) => {
                 <div>Match Labels:</div>
                 <div className={styles.matchLabels}>
                   {Object.entries(webhook.objectSelector.matchLabels).map(([key, value], index) => (
-                    <Badge label={`${key}=${value}`} key={index} />
+                    <Badge label={`${key}=${value ?? ""}`} key={index} />
                   ))}
                 </div>
               </div>

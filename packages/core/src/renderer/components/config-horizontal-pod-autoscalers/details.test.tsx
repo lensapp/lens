@@ -7,7 +7,7 @@ import React from "react";
 import directoryForKubeConfigsInjectable from "../../../common/app-paths/directory-for-kube-configs/directory-for-kube-configs.injectable";
 import directoryForUserDataInjectable from "../../../common/app-paths/directory-for-user-data/directory-for-user-data.injectable";
 import { Cluster } from "../../../common/cluster/cluster";
-import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints";
+import { HorizontalPodAutoscaler } from "@k8slens/kube-object";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";
 import storesAndApisCanBeCreatedInjectable from "../../stores-apis-can-be-created.injectable";
@@ -115,7 +115,7 @@ describe("<HpaDetails/>", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              type: HpaMetricType.ContainerResource,
+              type: "ContainerResource",
               containerResource: {
                 name: "cpu",
                 container: "nginx",
@@ -145,7 +145,7 @@ describe("<HpaDetails/>", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              type: HpaMetricType.Resource,
+              type: "Resource",
               resource: {
                 name: "cpu",
                 target: {
@@ -174,7 +174,7 @@ describe("<HpaDetails/>", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              type: HpaMetricType.Pods,
+              type: "Pods",
               pods: {
                 metric: {
                   name: "packets-per-second",
@@ -205,7 +205,7 @@ describe("<HpaDetails/>", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              type: HpaMetricType.Pods,
+              type: "Pods",
               pods: {
                 metricName: "packets-per-second",
               },
@@ -230,7 +230,7 @@ describe("<HpaDetails/>", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              type: HpaMetricType.Object,
+              type: "Object",
               object: {
                 metric: {
                   name: "requests-per-second",
@@ -266,7 +266,7 @@ describe("<HpaDetails/>", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              type: HpaMetricType.Object,
+              type: "Object",
               object: {
                 metricName: "requests-per-second",
               },
@@ -291,7 +291,7 @@ describe("<HpaDetails/>", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              type: HpaMetricType.External,
+              type: "External",
               external: {
                 metric: {
                   name: "queue_messages_ready",
@@ -325,7 +325,7 @@ describe("<HpaDetails/>", () => {
           ...hpaV2.spec,
           metrics: [
             {
-              type: HpaMetricType.External,
+              type: "External",
               external: {
                 metricName: "queue_messages_ready",
                 metricSelector: {

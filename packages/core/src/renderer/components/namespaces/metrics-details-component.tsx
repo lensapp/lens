@@ -6,7 +6,7 @@ import type { IAsyncComputed } from "@ogre-tools/injectable-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import React from "react";
 import { PodCharts, podMetricTabs } from "../workloads-pods/pod-charts";
-import type { Namespace } from "../../../common/k8s-api/endpoints";
+import type { Namespace } from "@k8slens/kube-object";
 import type { PodMetricInNamespaceData } from "../../../common/k8s-api/endpoints/metrics.api/request-pod-metrics-in-namespace.injectable";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { ResourceMetrics } from "../resource-metrics";

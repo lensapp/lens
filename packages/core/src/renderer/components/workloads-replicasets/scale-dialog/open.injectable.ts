@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { ReplicaSet } from "../../../../common/k8s-api/endpoints";
+import type { ReplicaSet } from "@k8slens/kube-object";
 import replicaSetScaleDialogStateInjectable from "./state.injectable";
 
 export type OpenReplicaSetScaleDialog = (obj: ReplicaSet) => void;

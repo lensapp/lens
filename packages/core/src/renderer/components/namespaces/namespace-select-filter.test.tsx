@@ -14,7 +14,7 @@ import directoryForUserDataInjectable from "../../../common/app-paths/directory-
 import { Cluster } from "../../../common/cluster/cluster";
 import type { Fetch } from "../../../common/fetch/fetch.injectable";
 import fetchInjectable from "../../../common/fetch/fetch.injectable";
-import { Namespace } from "../../../common/k8s-api/endpoints";
+import { Namespace } from "@k8slens/kube-object";
 import { createMockResponseFromString } from "../../../test-utils/mock-responses";
 import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.injectable";
 import { getDiForUnitTesting } from "../../getDiForUnitTesting";

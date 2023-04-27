@@ -15,6 +15,7 @@ import type { CreateKubeJsonApiForCluster } from "../../../common/k8s-api/create
 import type { CreateKubeApi } from "../../../common/k8s-api/create-kube-api.injectable";
 import { initialNodeShellImage } from "../../../common/cluster-types";
 import type { LoadProxyKubeconfig } from "../../cluster/load-proxy-kubeconfig.injectable";
+import type { Pod } from "@k8slens/kube-object";
 
 export interface NodeShellSessionArgs extends ShellSessionArgs {
   nodeName: string;
@@ -148,13 +149,13 @@ export class NodeShellSession extends ShellSession {
         .watch(`/api/v1/namespaces/kube-system/pods`,
           {},
           // callback is called for each received object.
-          (type, { metadata: { name }, status }) => {
+          (type, { metadata: { name }, status }: Pod) => {
             if (name === this.podName) {
-              switch (status.phase) {
+              switch (status?.phase) {
                 case "Running":
                   return resolve();
                 case "Failed":
-                  return reject(`Failed to be created: ${status.message || "unknown error"}`);
+                  return reject(`Failed to be created: ${(status as unknown as Record<string, string>).message || "unknown error"}`);
               }
             }
           },
@@ -167,12 +168,13 @@ export class NodeShellSession extends ShellSession {
         .then(req => {
           setTimeout(() => {
             this.dependencies.logger.error(`[NODE-SHELL]: aborting wait for ${this.podName}, timing out`);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             req.abort();
             reject("Pod creation timed out");
           }, 2 * 60 * 1000); // 2 * 60 * 1000
         })
         .catch(error => {
-          this.dependencies.logger.error(`[NODE-SHELL]: waiting for ${this.podName} failed: ${error}`);
+          this.dependencies.logger.error(`[NODE-SHELL]: waiting for ${this.podName} failed: ${String(error)}`);
           reject(error);
         });
     });

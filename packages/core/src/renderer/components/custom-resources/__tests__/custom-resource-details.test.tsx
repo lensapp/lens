@@ -4,8 +4,8 @@
  */
 
 import React from "react";
-import { CustomResourceDefinition } from "../../../../common/k8s-api/endpoints";
-import { KubeObject } from "../../../../common/k8s-api/kube-object";
+import { CustomResourceDefinition } from "@k8slens/kube-object";
+import { KubeObject } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";
 import { renderFor } from "../../test-utils/renderFor";

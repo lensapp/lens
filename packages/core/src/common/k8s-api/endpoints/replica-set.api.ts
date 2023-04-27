@@ -3,11 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type { DerivedKubeApiOptions, KubeApiDependencies } from "../kube-api";
+import type { DerivedKubeApiOptions, KubeApiDependencies, NamespacedResourceDescriptor } from "../kube-api";
 import { KubeApi } from "../kube-api";
-import type { KubeObjectStatus, LabelSelector, NamespaceScopedMetadata } from "../kube-object";
-import { KubeObject } from "../kube-object";
-import type { PodTemplateSpec } from "./types/pod-template-spec";
+import { ReplicaSet } from "@k8slens/kube-object";
 
 export class ReplicaSetApi extends KubeApi<ReplicaSet> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
@@ -17,17 +15,17 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
     });
   }
 
-  protected getScaleApiUrl(params: { namespace: string; name: string }) {
-    return `${this.getUrl(params)}/scale`;
+  protected getScaleApiUrl(params: NamespacedResourceDescriptor) {
+    return `${this.formatUrlForNotListing(params)}/scale`;
   }
 
-  async getReplicas(params: { namespace: string; name: string }): Promise<number> {
+  async getReplicas(params: NamespacedResourceDescriptor): Promise<number> {
     const { status } = await this.request.get(this.getScaleApiUrl(params));
 
     return (status as { replicas: number })?.replicas;
   }
 
-  scale(params: { namespace: string; name: string }, replicas: number) {
+  scale(params: NamespacedResourceDescriptor, replicas: number) {
     return this.request.put(this.getScaleApiUrl(params), {
       data: {
         metadata: params,
@@ -36,72 +34,5 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
         },
       },
     });
-  }
-}
-
-export interface ReplicaSetSpec {
-  replicas?: number;
-  selector: LabelSelector;
-  template?: PodTemplateSpec;
-  minReadySeconds?: number;
-}
-
-export interface ReplicaSetStatus extends KubeObjectStatus {
-  replicas: number;
-  fullyLabeledReplicas?: number;
-  readyReplicas?: number;
-  availableReplicas?: number;
-  observedGeneration?: number;
-}
-
-export class ReplicaSet extends KubeObject<
-  NamespaceScopedMetadata,
-  ReplicaSetStatus,
-  ReplicaSetSpec
-> {
-  static kind = "ReplicaSet";
-  static namespaced = true;
-  static apiBase = "/apis/apps/v1/replicasets";
-
-  getSelectors(): string[] {
-    return KubeObject.stringifyLabels(this.spec.selector.matchLabels);
-  }
-
-  getNodeSelectors(): string[] {
-    return KubeObject.stringifyLabels(this.spec.template?.spec?.nodeSelector);
-  }
-
-  getTemplateLabels(): string[] {
-    return KubeObject.stringifyLabels(this.spec.template?.metadata?.labels);
-  }
-
-  getTolerations() {
-    return this.spec.template?.spec?.tolerations ?? [];
-  }
-
-  getAffinity() {
-    return this.spec.template?.spec?.affinity;
-  }
-
-  getAffinityNumber() {
-    return Object.keys(this.getAffinity() ?? {}).length;
-  }
-
-  getDesired() {
-    return this.spec.replicas ?? 0;
-  }
-
-  getCurrent() {
-    return this.status?.availableReplicas ?? 0;
-  }
-
-  getReady() {
-    return this.status?.readyReplicas ?? 0;
-  }
-
-  getImages() {
-    const containers = this.spec.template?.spec?.containers ?? [];
-
-    return containers.map(container => container.image);
   }
 }

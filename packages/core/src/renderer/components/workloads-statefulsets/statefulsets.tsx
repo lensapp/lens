@@ -7,7 +7,7 @@ import "./statefulsets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import type { StatefulSet } from "../../../common/k8s-api/endpoints";
+import type { StatefulSet } from "@k8slens/kube-object";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";

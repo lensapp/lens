@@ -7,14 +7,13 @@ import styles from "./network-policy-details.module.scss";
 
 import React from "react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import type { IPolicyIpBlock, NetworkPolicyPeer, NetworkPolicyPort } from "../../../common/k8s-api/endpoints/network-policy.api";
-import { NetworkPolicy } from "../../../common/k8s-api/endpoints/network-policy.api";
+import type { PolicyIpBlock, NetworkPolicyPeer, NetworkPolicyPort, LabelMatchExpression, LabelSelector } from "@k8slens/kube-object";
+import { NetworkPolicy } from "@k8slens/kube-object";
 import { Badge } from "../badge";
 import { SubTitle } from "../layout/sub-title";
 import { observer } from "mobx-react";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import type { Logger } from "../../../common/logger";
-import type { LabelMatchExpression, LabelSelector } from "../../../common/k8s-api/kube-object";
 import { isEmpty } from "lodash";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import loggerInjectable from "../../../common/logger.injectable";
@@ -28,7 +27,7 @@ interface Dependencies {
 
 @observer
 class NonInjectedNetworkPolicyDetails extends React.Component<NetworkPolicyDetailsProps & Dependencies> {
-  renderIPolicyIpBlock(ipBlock: IPolicyIpBlock | undefined) {
+  renderIPolicyIpBlock(ipBlock: PolicyIpBlock | undefined) {
     if (!ipBlock) {
       return null;
     }
@@ -60,7 +59,7 @@ class NonInjectedNetworkPolicyDetails extends React.Component<NetworkPolicyDetai
     return Object.entries(matchLabels)
       .map(([key, value]) => (
         <li key={key}>
-          {`${key}: ${value}`}
+          {`${key}: ${value ?? ""}`}
         </li>
       ));
   }

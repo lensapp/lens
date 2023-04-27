@@ -13,7 +13,7 @@ import maybeKubeApiInjectable from "../maybe-kube-api.injectable";
 const daemonSetApiInjectable = getInjectable({
   id: "daemon-set-api",
   instantiate: (di) => {
-    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "daemonSetApi is only available in certain environements");
+    assert(di.inject(storesAndApisCanBeCreatedInjectionToken), "daemonSetApi is only available in certain environments");
 
     return new DaemonSetApi({
       logger: di.inject(loggerInjectable),

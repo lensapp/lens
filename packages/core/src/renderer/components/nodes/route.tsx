@@ -9,8 +9,8 @@ import { observer } from "mobx-react";
 import { bytesToUnits, cssNames, interval } from "@k8slens/utilities";
 import { TabLayout } from "../layout/tab-layout-2";
 import { KubeObjectListLayout } from "../kube-object-list-layout";
-import type { Node } from "../../../common/k8s-api/endpoints/node.api";
-import { formatNodeTaint } from "../../../common/k8s-api/endpoints/node.api";
+import type { Node } from "@k8slens/kube-object";
+import { formatNodeTaint } from "@k8slens/kube-object";
 import { LineProgress } from "../line-progress";
 import { Tooltip, TooltipPosition } from "@k8slens/tooltip";
 import kebabCase from "lodash/kebabCase";
@@ -59,14 +59,18 @@ interface Dependencies {
 class NonInjectedNodesRoute extends React.Component<Dependencies> {
   @observable metrics: NodeMetricData | null = null;
 
-  private metricsWatcher = interval(30, async () => this.metrics = await this.props.requestAllNodeMetrics());
+  private metricsWatcher = interval(30, () => {
+    void (async () => {
+      this.metrics = await this.props.requestAllNodeMetrics();
+    })();
+  });
 
   constructor(props: Dependencies) {
     super(props);
     makeObservable(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.metricsWatcher.start(true);
   }
 

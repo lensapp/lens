@@ -15,7 +15,7 @@ import type { ShowNotification } from "../notifications";
 import { base64, toggle } from "@k8slens/utilities";
 import { Icon } from "../icon";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { Secret } from "../../../common/k8s-api/endpoints";
+import { Secret } from "@k8slens/kube-object";
 import type { Logger } from "../../../common/logger";
 import type { SecretStore } from "./store";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -46,7 +46,7 @@ class NonInjectedSecretDetails extends React.Component<SecretDetailsProps & Depe
     makeObservable(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     disposeOnUnmount(this, [
       autorun(() => {
         const { object: secret } = this.props;
@@ -59,18 +59,20 @@ class NonInjectedSecretDetails extends React.Component<SecretDetailsProps & Depe
     ]);
   }
 
-  saveSecret = async () => {
+  saveSecret = () => {
     const { object: secret } = this.props;
 
-    this.isSaving = true;
+    void (async () => {
+      this.isSaving = true;
 
-    try {
-      await this.props.secretStore.update(secret, { ...secret, data: this.data });
-      this.props.showSuccessNotification("Secret successfully updated.");
-    } catch (err) {
-      this.props.showCheckedErrorNotification(err, "Unknown error occured while updating the secret");
-    }
-    this.isSaving = false;
+      try {
+        await this.props.secretStore.update(secret, { ...secret, data: this.data });
+        this.props.showSuccessNotification("Secret successfully updated.");
+      } catch (err) {
+        this.props.showCheckedErrorNotification(err, "Unknown error occurred while updating the secret");
+      }
+      this.isSaving = false;
+    })();
   };
 
   editData = (name: string, value: string, encoded: boolean) => {

@@ -15,7 +15,7 @@ import { PodDetailsAffinities } from "../workloads-pods/pod-details-affinities";
 import type { DaemonSetStore } from "./store";
 import type { PodStore } from "../workloads-pods/store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { DaemonSet } from "../../../common/k8s-api/endpoints";
+import { DaemonSet } from "@k8slens/kube-object";
 import { PodDetailsList } from "../workloads-pods/pod-details-list";
 import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";

@@ -9,7 +9,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import type { IngressClass } from "../../../common/k8s-api/endpoints";
+import type { IngressClass } from "@k8slens/kube-object";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { Badge } from "../badge";
 

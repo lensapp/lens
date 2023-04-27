@@ -3,10 +3,11 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import { action, observable, reaction, when, makeObservable } from "mobx";
+import { action, observable, reaction, when, makeObservable, runInAction } from "mobx";
 import type { KubeObjectStoreDependencies } from "../../../../common/k8s-api/kube-object.store";
 import { KubeObjectStore } from "../../../../common/k8s-api/kube-object.store";
-import type { Cluster, ClusterApi } from "../../../../common/k8s-api/endpoints";
+import type { ClusterApi } from "../../../../common/k8s-api/endpoints";
+import type { Cluster } from "@k8slens/kube-object";
 import type { StorageLayer } from "../../../utils/storage-helper";
 import type { NodeStore } from "../../nodes/store";
 import type { ClusterMetricData, RequestClusterMetricsByNodeNames } from "../../../../common/k8s-api/endpoints/metrics.api/request-cluster-metrics-by-node-names.injectable";
@@ -72,7 +73,7 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> i
     reaction(() => this.metricNodeRole, () => {
       if (this.metrics) {
         this.resetMetrics();
-        this.loadMetrics();
+        void this.loadMetrics();
       }
     });
 
@@ -85,13 +86,16 @@ export class ClusterOverviewStore extends KubeObjectStore<Cluster, ClusterApi> i
     });
   }
 
-  @action
   async loadMetrics(params?: RequestMetricsParams) {
     await when(() => this.dependencies.nodeStore.isLoaded);
     const { masterNodes, workerNodes } = this.dependencies.nodeStore;
     const nodes = this.metricNodeRole === MetricNodeRole.MASTER && masterNodes.length ? masterNodes : workerNodes;
 
-    this.metrics = await this.dependencies.requestClusterMetricsByNodeNames(nodes.map(node => node.getName()), params);
+    const metrics = await this.dependencies.requestClusterMetricsByNodeNames(nodes.map(node => node.getName()), params);
+
+    runInAction(() => {
+      this.metrics = metrics;
+    });
   }
 
   getMetricsValues(source: Partial<ClusterMetricData>): [number, string][] {

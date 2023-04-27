@@ -9,7 +9,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { DrawerItem } from "../drawer";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import type { PriorityClass } from "../../../common/k8s-api/endpoints";
+import type { PriorityClass } from "@k8slens/kube-object";
 
 export interface PriorityClassesDetailsProps extends KubeObjectDetailsProps<PriorityClass> {
 }

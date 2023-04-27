@@ -5,7 +5,7 @@
 import React from "react";
 import { DrawerTitle } from "../../../drawer";
 import { PodDetailsContainer } from "../../pod-details-container";
-import type { Pod } from "../../../../../common/k8s-api/endpoints";
+import type { Pod } from "@k8slens/kube-object";
 import { observer } from "mobx-react";
 
 interface PodDetailsContainersProps {

@@ -12,8 +12,8 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
 import { cssNames } from "@k8slens/utilities";
-import type { HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricTarget } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
-import { HorizontalPodAutoscaler, HpaMetricType } from "../../../common/k8s-api/endpoints/horizontal-pod-autoscaler.api";
+import type { HorizontalPodAutoscalerMetricSpec, HorizontalPodAutoscalerMetricTarget } from "@k8slens/kube-object";
+import { HorizontalPodAutoscaler } from "@k8slens/kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import type { Logger } from "../../../common/logger";
@@ -63,18 +63,18 @@ class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<HpaDetai
       const metricName = getMetricName(metric);
 
       switch (metric?.type) {
-        case HpaMetricType.ContainerResource:
+        case "ContainerResource":
 
         // fallthrough
-        case HpaMetricType.Resource: {
+        case "Resource": {
           const metricSpec = metric.resource ?? metric.containerResource;
 
           return `Resource ${metricSpec.name} on Pods`;
         }
-        case HpaMetricType.Pods:
-          return `${metricName} on Pods`;
+        case "Pods":
+          return `${metricName ?? ""} on Pods`;
 
-        case HpaMetricType.Object: {
+        case "Object": {
           return (
             <>
               {metricName}
@@ -83,8 +83,8 @@ class NonInjectedHorizontalPodAutoscalerDetails extends React.Component<HpaDetai
             </>
           );
         }
-        case HpaMetricType.External:
-          return `${metricName} on ${JSON.stringify(metric.external.metricSelector ?? metric.external.metric?.selector)}`;
+        case "External":
+          return `${metricName ?? ""} on ${JSON.stringify(metric.external.metricSelector ?? metric.external.metric?.selector)}`;
         default:
           return hpa.spec?.targetCPUUtilizationPercentage ? "CPU Utilization percentage" : "unknown";
       }

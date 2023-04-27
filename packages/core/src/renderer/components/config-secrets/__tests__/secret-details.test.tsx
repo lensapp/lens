@@ -5,7 +5,7 @@
 
 import React from "react";
 import { SecretDetails } from "../secret-details";
-import { Secret, SecretType } from "../../../../common/k8s-api/endpoints";
+import { Secret, SecretType } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { renderFor } from "../../test-utils/renderFor";
 import storesAndApisCanBeCreatedInjectable from "../../../stores-apis-can-be-created.injectable";

@@ -4,7 +4,7 @@
  */
 
 import React from "react";
-import { PodDisruptionBudget } from "../../../../common/k8s-api/endpoints";
+import { PodDisruptionBudget } from "@k8slens/kube-object";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import { renderFor } from "../../test-utils/renderFor";
 import { PodDisruptionBudgets } from "../pod-disruption-budgets";
@@ -106,7 +106,7 @@ describe("<PodDisruptionBudgets />", () => {
 
       expect(result.container.querySelector(".TableRow .min-available")?.textContent).toEqual("N/A");
     });
-  
+
     it("should display maxUnavailable as 0", () => {
       di.override(podDisruptionBudgetStoreInjectable, () => getPodDisruptionBudgetStoreInjectableMock(pdb));
       const result = renderFor(di)(<PodDisruptionBudgets object={pdb}/>);

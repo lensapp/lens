@@ -11,7 +11,7 @@ import { KubeObjectListLayout } from "../kube-object-list-layout";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { SiblingsInTabLayout } from "../layout/siblings-in-tab-layout";
 import { KubeObjectAge } from "../kube-object/age";
-import { computeRouteDeclarations } from "../../../common/k8s-api/endpoints";
+import { computeRouteDeclarations } from "@k8slens/kube-object";
 import type { IngressStore } from "./ingress-store";
 import { withInjectables } from "@ogre-tools/injectable-react";
 import ingressStoreInjectable from "./ingress-store.injectable";

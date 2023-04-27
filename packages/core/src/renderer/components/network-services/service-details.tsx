@@ -10,7 +10,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { Service } from "../../../common/k8s-api/endpoints";
+import { Service } from "@k8slens/kube-object";
 import { ServicePortComponent } from "./service-port-component";
 import type { EndpointsStore } from "../network-endpoints/store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";

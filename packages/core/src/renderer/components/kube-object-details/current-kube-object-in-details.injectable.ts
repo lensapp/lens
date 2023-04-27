@@ -6,7 +6,7 @@ import { getInjectable } from "@ogre-tools/injectable";
 import kubeDetailsUrlParamInjectable from "../kube-detail-params/kube-details-url.injectable";
 import apiManagerInjectable from "../../../common/k8s-api/api-manager/manager.injectable";
 import { asyncComputed } from "@ogre-tools/injectable-react";
-import type { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { KubeObject } from "@k8slens/kube-object";
 
 export type CurrentKubeObject =
   | undefined

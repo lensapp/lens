@@ -10,7 +10,7 @@ import { computed, observable, makeObservable, action } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { NamespaceSelect } from "../../../namespaces/namespace-select";
-import type { ClusterRole, Role, RoleApi, ServiceAccount } from "../../../../../common/k8s-api/endpoints";
+import type { ClusterRole, Role, ServiceAccount, Subject } from "@k8slens/kube-object";
 import type { DialogProps } from "../../../dialog";
 import { Dialog } from "../../../dialog";
 import { EditableList } from "../../../editable-list";
@@ -21,7 +21,6 @@ import { onMultiSelectFor, Select } from "../../../select";
 import { Wizard, WizardStep } from "../../../wizard";
 import { Input } from "../../../input";
 import { ObservableHashSet, iter } from "@k8slens/utilities";
-import type { Subject } from "../../../../../common/k8s-api/endpoints/types/subject";
 import type { RoleBindingDialogState } from "./state.injectable";
 import type { RoleBindingStore } from "../store";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -39,6 +38,7 @@ import serviceAccountStoreInjectable from "../../service-accounts/store.injectab
 import roleApiInjectable from "../../../../../common/k8s-api/endpoints/role.api.injectable";
 import type { ShowCheckedErrorNotification } from "../../../notifications/show-checked-error.injectable";
 import showCheckedErrorNotificationInjectable from "../../../notifications/show-checked-error.injectable";
+import type { RoleApi } from "../../../../../common/k8s-api/endpoints";
 
 export interface RoleBindingDialogProps extends Partial<DialogProps> {
 }
@@ -196,7 +196,7 @@ class NonInjectedRoleBindingDialog extends React.Component<RoleBindingDialogProp
       showDetails(newRoleBinding.selfLink);
       this.props.closeRoleBindingDialog();
     } catch (err) {
-      showCheckedErrorNotification(err, `Unknown error occured while ${this.isEditing ? "editing" : "creating"} role bindings.`);
+      showCheckedErrorNotification(err, `Unknown error occurred while ${this.isEditing ? "editing" : "creating"} role bindings.`);
     }
   };
 
@@ -265,7 +265,8 @@ class NonInjectedRoleBindingDialog extends React.Component<RoleBindingDialogProp
           formatOptionLabel={option => (
             <>
               <Icon small material="account_box" />
-              {` ${option.label}`}
+              {" "}
+              {option.label}
             </>
           )}
           onChange={onMultiSelectFor(this.selectedAccounts)}
@@ -279,6 +280,8 @@ class NonInjectedRoleBindingDialog extends React.Component<RoleBindingDialogProp
     const { closeRoleBindingDialog, roleBindingStore, state, ...dialogProps } = this.props;
     const [action, nextLabel] = this.isEditing ? ["Edit", "Update"] : ["Add", "Create"];
     const disableNext = !this.selectedRoleRef || !this.selectedBindings.length || !this.bindingNamespace || !this.bindingName;
+
+    void roleBindingStore;
 
     return (
       <Dialog

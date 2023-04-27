@@ -5,7 +5,7 @@
 
 import React from "react";
 import { findByTestId, findByText } from "@testing-library/react";
-import { NetworkPolicy } from "../../../../common/k8s-api/endpoints";
+import { NetworkPolicy } from "@k8slens/kube-object";
 import { NetworkPolicyDetails } from "../network-policy-details";
 import { getDiForUnitTesting } from "../../../getDiForUnitTesting";
 import type { DiRender } from "../../test-utils/renderFor";

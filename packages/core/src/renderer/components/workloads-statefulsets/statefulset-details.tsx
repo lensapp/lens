@@ -14,7 +14,7 @@ import { PodDetailsTolerations } from "../workloads-pods/pod-details-tolerations
 import { PodDetailsAffinities } from "../workloads-pods/pod-details-affinities";
 import type { StatefulSetStore } from "./store";
 import type { KubeObjectDetailsProps } from "../kube-object-details";
-import { StatefulSet } from "../../../common/k8s-api/endpoints";
+import { StatefulSet } from "@k8slens/kube-object";
 import { PodDetailsList } from "../workloads-pods/pod-details-list";
 import type { Logger } from "../../../common/logger";
 import { withInjectables } from "@ogre-tools/injectable-react";

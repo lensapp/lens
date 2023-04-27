@@ -7,7 +7,7 @@ import "./pod-container-env.scss";
 
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
-import type { Container } from "../../../common/k8s-api/endpoints";
+import type { Container } from "@k8slens/kube-object";
 import { DrawerItem } from "../drawer";
 import { autorun } from "mobx";
 import { object } from "@k8slens/utilities";

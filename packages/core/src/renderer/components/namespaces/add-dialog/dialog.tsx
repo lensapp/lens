@@ -12,7 +12,7 @@ import { observer } from "mobx-react";
 import type { DialogProps } from "../../dialog";
 import { Dialog } from "../../dialog";
 import { Wizard, WizardStep } from "../../wizard";
-import type { Namespace } from "../../../../common/k8s-api/endpoints";
+import type { Namespace } from "@k8slens/kube-object";
 import { Input } from "../../input";
 import { systemName } from "../../input/input_validators";
 import { withInjectables } from "@ogre-tools/injectable-react";
@@ -65,7 +65,7 @@ class NonInjectedAddNamespaceDialog extends React.Component<AddNamespaceDialogPr
       onSuccess?.(created);
       this.close();
     } catch (err) {
-      this.props.showCheckedErrorNotification(err, "Unknown error occured while creating the namespace");
+      this.props.showCheckedErrorNotification(err, "Unknown error occurred while creating the namespace");
       onError?.(err);
     }
   }

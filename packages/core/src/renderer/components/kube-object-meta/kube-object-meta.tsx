@@ -4,8 +4,8 @@
  */
 
 import React from "react";
-import type { KubeMetaField } from "../../../common/k8s-api/kube-object";
-import { KubeObject } from "../../../common/k8s-api/kube-object";
+import type { KubeMetaField } from "@k8slens/kube-object";
+import { KubeObject } from "@k8slens/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
 import type { ApiManager } from "../../../common/k8s-api/api-manager";
 import { Link } from "react-router-dom";
@@ -34,8 +34,8 @@ interface Dependencies {
   logger: Logger;
 }
 
-const NonInjectedKubeObjectMeta = observer((
-  {
+const NonInjectedKubeObjectMeta = observer((props : Dependencies & KubeObjectMetaProps) => {
+  const {
     apiManager,
     getDetailsUrl,
     object,
@@ -46,8 +46,8 @@ const NonInjectedKubeObjectMeta = observer((
     ],
     logger,
     namespaceApi,
-  }
-    : Dependencies & KubeObjectMetaProps) => {
+  } = props;
+
   if (!object) {
     return null;
   }
@@ -60,15 +60,12 @@ const NonInjectedKubeObjectMeta = observer((
 
   const isHidden = (field: KubeMetaField) => hideFields.includes(field);
 
-  const {
-    getNs, getLabels, getResourceVersion, selfLink, getAnnotations,
-    getFinalizers, getId, getName, metadata: { creationTimestamp },
-  } = object;
+  const { selfLink, metadata: { creationTimestamp }} = object;
   const ownerRefs = object.getOwnerRefs();
-  const namespace = getNs();
-  const namespaceDetailsUrl = namespace ? getDetailsUrl(
-    namespaceApi.formatUrlForNotListing({ name: namespace }),
-  ) : "";
+  const namespace = object.getNs();
+  const namespaceDetailsUrl = namespace
+    ? getDetailsUrl(namespaceApi.formatUrlForNotListing({ name: namespace }))
+    : "";
 
   return (
     <>
@@ -78,34 +75,34 @@ const NonInjectedKubeObjectMeta = observer((
         {creationTimestamp && <LocaleDate date={creationTimestamp} />}
       </DrawerItem>
       <DrawerItem name="Name" hidden={isHidden("name")}>
-        {getName()}
+        {object.getName()}
         <KubeObjectStatusIcon key="icon" object={object} />
       </DrawerItem>
       <DrawerItem name="Namespace" hidden={isHidden("namespace") || !namespace}>
         <Link to={namespaceDetailsUrl}>{namespace}</Link>
       </DrawerItem>
       <DrawerItem name="UID" hidden={isHidden("uid")}>
-        {getId()}
+        {object.getId()}
       </DrawerItem>
       <DrawerItem name="Link" hidden={isHidden("selfLink")}>
         {selfLink}
       </DrawerItem>
       <DrawerItem name="Resource Version" hidden={isHidden("resourceVersion")}>
-        {getResourceVersion()}
+        {object.getResourceVersion()}
       </DrawerItem>
       <DrawerItemLabels
         name="Labels"
-        labels={getLabels()}
+        labels={object.getLabels()}
         hidden={isHidden("labels")}
       />
       <DrawerItemLabels
         name="Annotations"
-        labels={getAnnotations()}
+        labels={object.getAnnotations()}
         hidden={isHidden("annotations")}
       />
       <DrawerItemLabels
         name="Finalizers"
-        labels={getFinalizers()}
+        labels={object.getFinalizers()}
         hidden={isHidden("finalizers")}
       />
       {ownerRefs?.length > 0 && (

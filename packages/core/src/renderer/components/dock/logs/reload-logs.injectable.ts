@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import type { IComputedValue } from "mobx";
-import type { Pod } from "../../../../common/k8s-api/endpoints";
+import type { Pod } from "@k8slens/kube-object";
 import logStoreInjectable from "./store.injectable";
 import type { LogTabData } from "./tab-store";
 

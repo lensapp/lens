@@ -4,7 +4,8 @@
  */
 
 import { KubeObjectStore } from "../../../common/k8s-api/kube-object.store";
-import type { Lease, LeaseApi } from "../../../common/k8s-api/endpoints/lease.api";
+import type { LeaseApi } from "../../../common/k8s-api/endpoints/lease.api";
+import type { Lease } from "@k8slens/kube-object";
 
 export class LeaseStore extends KubeObjectStore<Lease, LeaseApi> {
 }

@@ -4,7 +4,7 @@
  */
 import { getInjectable } from "@ogre-tools/injectable";
 import { observable } from "mobx";
-import type { Deployment } from "../../../../common/k8s-api/endpoints";
+import type { Deployment } from "@k8slens/kube-object";
 
 const deploymentScaleDialogStateInjectable = getInjectable({
   id: "deployment-scale-dialog-state",

@@ -3,7 +3,7 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable } from "@ogre-tools/injectable";
-import type { Deployment } from "../../../../common/k8s-api/endpoints";
+import type { Deployment } from "@k8slens/kube-object";
 import deploymentScaleDialogStateInjectable from "./dialog-state.injectable";
 
 export type OpenDeploymentScaleDialog = (obj: Deployment) => void;

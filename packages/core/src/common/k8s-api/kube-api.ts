@@ -8,11 +8,11 @@
 import { merge } from "lodash";
 import { stringify } from "querystring";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
-import type { KubeObjectConstructor, KubeJsonApiDataFor, KubeObjectMetadata } from "./kube-object";
-import { KubeObject, KubeStatus, isKubeStatusData } from "./kube-object";
+import type { KubeObjectConstructor, KubeJsonApiDataFor, KubeObjectMetadata, KubeJsonApiData, KubeObject, KubeObjectScope } from "@k8slens/kube-object";
+import { isJsonApiData, isJsonApiDataList, isPartialJsonApiData, KubeStatus, isKubeStatusData } from "@k8slens/kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-event";
-import type { KubeJsonApiData, KubeJsonApi } from "./kube-json-api";
+import type { KubeJsonApi } from "./kube-json-api";
 import type { Disposer } from "@k8slens/utilities";
 import { isDefined, noop, WrappedAbortController } from "@k8slens/utilities";
 import type { RequestInit, Response } from "@k8slens/node-fetch";
@@ -157,7 +157,7 @@ const getOrderedVersions = (list: KubeApiResourceVersionList, allowedUsableVersi
 
 export type PropagationPolicy = undefined | "Orphan" | "Foreground" | "Background";
 
-export type KubeApiWatchCallback<T extends KubeJsonApiData = KubeJsonApiData> = (data: IKubeWatchEvent<T> | null, error: KubeStatus | Response | null | any) => void;
+export type KubeApiWatchCallback<T extends KubeJsonApiData = KubeJsonApiData> = (data: IKubeWatchEvent<T> | null, error: KubeStatus | Response | null | Record<string, unknown>) => void;
 
 export interface KubeApiWatchOptions<Object extends KubeObject, Data extends KubeJsonApiDataFor<Object>> {
   /**
@@ -212,6 +212,29 @@ export interface ResourceDescriptor {
    */
   namespace?: string;
 }
+
+export type SpecificResourceDescriptor<Scope extends KubeObjectScope> = {
+  /**
+   * The name of the kubernetes resource
+   */
+  name: string;
+} & (
+  Scope extends KubeObjectScope.Cluster
+    ? {}
+    : Scope extends KubeObjectScope.Namespace
+      ? {
+        /**
+         * The namespace that the resource lives in
+         */
+        namespace: string;
+      }
+      : {
+        namespace?: string;
+      }
+);
+
+export type NamespacedResourceDescriptor = SpecificResourceDescriptor<KubeObjectScope.Namespace>;
+export type ClusterScopedResourceDescriptor = SpecificResourceDescriptor<KubeObjectScope.Cluster>;
 
 export interface DeleteResourceDescriptor extends ResourceDescriptor {
   /**
@@ -441,7 +464,7 @@ export class KubeApi<
     const KubeObjectConstructor = this.objectConstructor;
 
     // process items list response, check before single item since there is overlap
-    if (KubeObject.isJsonApiDataList(data, KubeObject.isPartialJsonApiData)) {
+    if (isJsonApiDataList(data, isPartialJsonApiData)) {
       const { apiVersion, items, metadata } = data;
 
       this.setResourceVersion(namespace, metadata.resourceVersion);
@@ -467,22 +490,21 @@ export class KubeApi<
     }
 
     // process a single item
-    if (KubeObject.isJsonApiData(data)) {
+    if (isJsonApiData(data)) {
       this.ensureMetadataSelfLink(data.metadata);
 
-      return new KubeObjectConstructor(data as never);
+      return new KubeObjectConstructor(data as Data);
+    }
+
+    if (!Array.isArray(data)) {
+      return null;
     }
 
     // custom apis might return array for list response, e.g. users, groups, etc.
-    if (Array.isArray(data)) {
-      return data.map(data => {
-        this.ensureMetadataSelfLink(data.metadata);
-
-        return new KubeObjectConstructor(data);
-      });
-    }
-
-    return null;
+    return data
+      .filter(isJsonApiData)
+      .map((data) => (this.ensureMetadataSelfLink(data.metadata), data))
+      .map((data) => new KubeObjectConstructor(data as Data));
   }
 
   private ensureMetadataSelfLink<T extends { selfLink?: string; namespace?: string; name: string }>(metadata: T): asserts metadata is T & { selfLink: string } {
@@ -595,7 +617,7 @@ export class KubeApi<
   /**
    * Some k8s resources might implement special "delete" (e.g. pod.api)
    * See also: https://kubernetes.io/docs/concepts/scheduling-eviction/api-eviction/
-   * By default should work same as KubeObject.remove()
+   * By default should work same as delete()
    */
   async evict(desc: DeleteResourceDescriptor): Promise<KubeStatus | KubeObject | unknown> {
     return this.delete(desc);
@@ -714,7 +736,7 @@ export class KubeApi<
           });
         }
 
-        byline(response.body).on("data", (line) => {
+        byline(response.body).on("data", (line: string) => {
           try {
             const event = JSON.parse(line) as IKubeWatchEvent<Data>;
 
@@ -731,11 +753,11 @@ export class KubeApi<
           }
         });
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         if (!abortController.signal.aborted) {
           this.dependencies.logger.error(`[KUBE-API] watch (${watchId}) threw ${watchUrl}`, error);
         }
-        callback(null, error);
+        callback(null, error as Record<string, unknown>);
       });
 
     return () => {
