@@ -6,17 +6,25 @@ import type { KubeObjectDetailMetrics } from "@k8slens/metrics";
 import type { IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import type { KubeObject } from "../../../../../common/k8s-api/kube-object";
+import type { KubeObject } from "@k8slens/kube-object";
 
-interface DetailsMetricsContainerProps<Kube extends KubeObject = KubeObject> {
-  metrics: IComputedValue<KubeObjectDetailMetrics[]>;
-  object?: Kube;
+export interface DetailsMetricsContainerProps<K extends KubeObject> {
+  metrics: IComputedValue<KubeObjectDetailMetrics<K>[]>;
+  object?: K;
 }
 
-export const DetailsMetricsContainer = observer(({ metrics, object }: DetailsMetricsContainerProps) => (
-  <>
-    {metrics.get().map((metrics) => (
-      <metrics.Component object={object} key={metrics.id} />
-    ))}
-  </>
-));
+function NonObservingDetailsMetricsContainer<K extends KubeObject>({ metrics, object }: DetailsMetricsContainerProps<K>) {
+  if (!object) {
+    return null;
+  }
+
+  return (
+    <>
+      {metrics.get().map((metrics) => (
+        <metrics.Component object={object} key={metrics.id} />
+      ))}
+    </>
+  );
+}
+
+export const DetailsMetricsContainer = observer(NonObservingDetailsMetricsContainer);
