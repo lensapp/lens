@@ -123,7 +123,7 @@ exports[`get-multi-export-config given maximal package.json, when creating confi
         {
           test: /\\.s?css$/,
           use: [
-            { some: 'miniCssExtractPluginLoader' },
+            'miniCssExtractPluginLoader',
             {
               loader: 'css-loader',
               options: {

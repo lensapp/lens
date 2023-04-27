@@ -1,28 +1,37 @@
-const getNodeConfig = require("./get-node-config");
-const getReactConfigFor = require("./get-react-config");
-const path = require("path");
-const {
-  map,
+import {
+  filter,
+  fromPairs,
   isEqual,
   keys,
-  fromPairs,
-  toPairs,
-  reject,
-  values,
+  map,
   nth,
-  filter,
-} = require("lodash/fp");
-const { pipeline } = require("@ogre-tools/fp");
+  reject,
+  toPairs,
+  values,
+} from "lodash/fp";
 
-module.exports = (
-  packageJson,
+import { pipeline } from "@ogre-tools/fp";
+import path from "path";
+import { getReactConfigFor } from "./get-react-config-for";
+import { getNodeConfig } from "./get-node-config";
 
-  dependencies = {
+type Dependencies = {
+  resolvePath: typeof path.resolve;
+  workingDirectory: string;
+  getReactConfig: ReturnType<typeof getReactConfigFor>;
+};
+
+export const getMultiExportConfig = (
+  packageJson: any,
+  _dependencies: Partial<Dependencies>
+) => {
+  const dependencies: Dependencies = {
     resolvePath: path.resolve,
     workingDirectory: process.cwd(),
-    getReactConfig: getReactConfigFor()
-  }
-) => {
+    getReactConfig: getReactConfigFor(),
+    ..._dependencies,
+  };
+
   if (!packageJson.lensMultiExportConfig) {
     throw new Error(
       `Tried to get multi export config for package "${packageJson.name}" but configuration is missing.`
@@ -90,7 +99,7 @@ module.exports = (
   );
 };
 
-const toExpectedExport = (externalImportPath) => {
+const toExpectedExport = (externalImportPath: string) => {
   const posixJoinForPackageJson = path.posix.join;
 
   const entrypointPath = `./${posixJoinForPackageJson(
@@ -116,10 +125,13 @@ const toExpectedExport = (externalImportPath) => {
 };
 
 const toExportSpecificWebpackConfigFor =
-  (dependencies) =>
-  ([externalImportPath, { buildType, entrypoint }]) => {
-    const outputDirectory = dependencies.resolvePath(
-      dependencies.workingDirectory,
+  (dependencies: Dependencies) =>
+  ([externalImportPath, { buildType, entrypoint }]: [
+    string,
+    { buildType: string; entrypoint: string }
+  ]) => {
+    const outputDirectory = dependencies.resolvePath!(
+      dependencies.workingDirectory!,
       "dist",
       externalImportPath
     );
@@ -129,7 +141,7 @@ const toExportSpecificWebpackConfigFor =
           entrypointFilePath: entrypoint,
           outputDirectory,
         })
-      : dependencies.getReactConfig({
+      : dependencies.getReactConfig!({
           entrypointFilePath: entrypoint,
           outputDirectory,
         });

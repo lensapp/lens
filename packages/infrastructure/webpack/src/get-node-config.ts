@@ -1,12 +1,17 @@
-const ForkTsCheckerPlugin = require("fork-ts-checker-webpack-plugin");
-const { MakePeerDependenciesExternalPlugin } = require("./plugins/make-peer-dependencies-external");
-const { ProtectFromImportingNonDependencies } = require("./plugins/protect-from-importing-non-dependencies");
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
+import type { Configuration } from "webpack";
+import { MakePeerDependenciesExternalPlugin } from "./plugins/make-peer-dependencies-external";
+import { ProtectFromImportingNonDependencies } from "./plugins/protect-from-importing-non-dependencies";
 
-/**
- *
- * @returns {import("webpack").Configuration}
- */
-module.exports = ({ entrypointFilePath, outputDirectory }) => ({
+export type Paths = {
+  entrypointFilePath: string;
+  outputDirectory: string;
+};
+
+export const getNodeConfig = ({
+  entrypointFilePath,
+  outputDirectory,
+}: Paths): Configuration => ({
   name: entrypointFilePath,
   entry: { index: entrypointFilePath },
   target: "node",
@@ -45,13 +50,13 @@ module.exports = ({ entrypointFilePath, outputDirectory }) => ({
     path: outputDirectory,
 
     filename: (pathData) =>
-      pathData.chunk.name === "index"
+      pathData.chunk?.name === "index"
         ? "index.js"
-        : `${pathData.chunk.name}/index.js`,
+        : `${pathData.chunk?.name}/index.js`,
 
     library: {
-      type: "commonjs2"
-    }
+      type: "commonjs2",
+    },
   },
 
   externalsPresets: { node: true },

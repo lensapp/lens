@@ -1,7 +1,7 @@
 import { toModuleMatcherRegExp } from "./to-module-matcher-reg-exp";
 
 describe('to-module-matcher-reg-exp', () => {
-  let regExp;
+  let regExp: RegExp;
 
   beforeEach(() => {
     regExp = toModuleMatcherRegExp("some-package");
@@ -10,7 +10,7 @@ describe('to-module-matcher-reg-exp', () => {
   it('given exactly matching package, matches', () => {
     const targetString = 'some-package';
 
-    const [match] = targetString.match(regExp);
+    const [match] = targetString.match(regExp)!;
 
     expect(match).toBeTruthy()
   });
@@ -18,7 +18,7 @@ describe('to-module-matcher-reg-exp', () => {
   it('given matching package with entrypoint, matches', () => {
     const targetString = 'some-package/some-entrypoint';
 
-    const [match] = targetString.match(regExp);
+    const [match] = targetString.match(regExp)!;
 
     expect(match).toBeTruthy()
   });
@@ -26,7 +26,7 @@ describe('to-module-matcher-reg-exp', () => {
   it('given matching package with directory, matches', () => {
     const targetString = 'some-package/some-directory/some-other-directory';
 
-    const [match] = targetString.match(regExp);
+    const [match] = targetString.match(regExp)!;
 
     expect(match).toBeTruthy()
   });
