@@ -48,5 +48,8 @@
     "@k8slens/typescript": "^6.5.0-alpha.2",
     "ts-node": "^10.9.1",
     "webpack-node-externals": "^3.0.0"
+  },
+  "bin": {
+    "lens-webpack-build": "bin/webpack-build"
   }
 }
