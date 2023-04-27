@@ -300,6 +300,7 @@
   "devDependencies": {
     "@electron/notarize": "^1.2.3",
     "@electron/rebuild": "^3.2.10",
+    "@k8slens/eslint-config": "^6.5.0",
     "@k8slens/generate-tray-icons": "^6.5.0",
     "@k8slens/test-utils": "^1.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",

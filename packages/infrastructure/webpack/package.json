@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@async-fn/jest": "^1.6.4",
+    "@k8slens/eslint-config": "^6.5.0",
     "@k8slens/typescript": "^6.5.0",
     "@ogre-tools/injectable-extension-for-auto-registration": "^17.2.0",
     "@ogre-tools/test-utils": "^17.2.0",

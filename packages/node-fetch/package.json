@@ -22,6 +22,7 @@
     "node-fetch": "^3.3.0"
   },
   "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0-alpha.3",
     "rimraf": "^4.4.1"
   }
 }

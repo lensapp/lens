@@ -34,6 +34,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0",
     "@k8slens/webpack": "^6.5.0",
     "@types/uuid": "^9.0.1"
   }

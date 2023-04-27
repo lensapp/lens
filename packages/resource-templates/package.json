@@ -11,5 +11,8 @@
   "author": "OpenLens Authors <info@k8slens.dev>",
   "files": [
     "templates/**/*"
-  ]
+  ],
+  "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0-alpha.3"
+  }
 }

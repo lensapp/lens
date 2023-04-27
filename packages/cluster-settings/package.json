@@ -19,6 +19,7 @@
     "build": "lens-webpack-build"
   },
   "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0",
     "@k8slens/webpack": "^6.5.0",
     "rimraf": "^4.4.1"
   },

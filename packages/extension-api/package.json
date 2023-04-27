@@ -28,6 +28,7 @@
     "@k8slens/core": "6.5.0"
   },
   "devDependencies": {
+    "@k8slens/eslint-config": "^6.5.0-alpha.3",
     "@types/node": "^16.18.25",
     "@types/webpack": "^5.28.1",
     "@types/webpack-env": "^1.18.0",
