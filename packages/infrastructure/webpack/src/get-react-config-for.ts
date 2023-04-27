@@ -1,18 +1,20 @@
-const getNodeConfig = require("./get-node-config");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+import { getNodeConfig, Paths } from "./get-node-config";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import type { Configuration } from "webpack";
 
-module.exports =
+export const getReactConfigFor =
   ({ miniCssExtractPluginLoader = MiniCssExtractPlugin.loader } = {}) =>
-  ({ entrypointFilePath, outputDirectory }) => {
+  ({ entrypointFilePath, outputDirectory }: Paths): Configuration => {
     const nodeConfig = getNodeConfig({
       entrypointFilePath,
       outputDirectory,
     });
+
     return {
       ...nodeConfig,
 
       plugins: [
-        ...nodeConfig.plugins,
+        ...nodeConfig.plugins!,
 
         new MiniCssExtractPlugin({
           filename: "[name].css",
@@ -23,7 +25,7 @@ module.exports =
         ...nodeConfig.module,
 
         rules: [
-          ...nodeConfig.module.rules,
+          ...nodeConfig.module!.rules!,
 
           {
             test: /\.s?css$/,
