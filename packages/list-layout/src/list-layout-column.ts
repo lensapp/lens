@@ -2,13 +2,13 @@
  * Copyright (c) OpenLens Authors. All rights reserved.
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
+
 import type { ReactNode } from "react";
 import type { SingleOrMany } from "@k8slens/utilities";
-import { getInjectionToken } from "@ogre-tools/injectable";
 
 export interface ItemObject {
-  getId(): string;
-  getName(): string;
+  getId: () => string;
+  getName: () => string;
 }
 
 export type TableSortBy = string;
@@ -80,18 +80,3 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
    */
   _nowrap?: boolean;
 }
-
-export interface KubeObjectListLayoutColumn<Item extends ItemObject> {
-  id: string;
-  kind: string;
-  apiVersion: string;
-  priority: number;
-  sortingCallBack?: TableSortCallback<Item>;
-  searchFilter?: SearchFilter<Item>;
-  header: TableCellProps | undefined | null;
-  content: (item: Item) => ReactNode | TableCellProps;
-}
-
-export const kubeObjectListLayoutColumnInjectionToken = getInjectionToken<KubeObjectListLayoutColumn<any>>({
-  id: "kube-object-list-layout-column",
-});
