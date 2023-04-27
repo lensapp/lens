@@ -12,20 +12,24 @@ import type { KubeObjectDetailItem } from "../kube-object-detail-item-injection-
 import { DetailsMetricsContainer } from "./details-metrics-container";
 import { computedInjectManyInjectable } from "@ogre-tools/injectable-extension-for-mobx";
 import type { KubeObjectDetailsProps } from "../../kube-object-details";
+import type { KubeObject } from "@k8slens/kube-object";
 
-type GetMetricsKubeObjectDetailItem = (token: InjectionToken<KubeObjectDetailMetrics, void>, metricResourceType: ClusterMetricsResourceType) => KubeObjectDetailItem;
+export type GetMetricsKubeObjectDetailItem = <K extends KubeObject>(token: InjectionToken<KubeObjectDetailMetrics<K>, void>, metricResourceType: ClusterMetricsResourceType) => KubeObjectDetailItem;
 
 export const getMetricsKubeObjectDetailItemInjectable = getInjectable({
   id: "get-metrics-kube-object-detail-item",
-  instantiate: (di) : GetMetricsKubeObjectDetailItem => (token, metricResourceType) => {
+  instantiate: (di): GetMetricsKubeObjectDetailItem => {
     const computedInjectedMany = di.inject(computedInjectManyInjectable);
-    const metrics = computedInjectedMany(token);
-    const Component = (props: KubeObjectDetailsProps<any>) => <DetailsMetricsContainer metrics={metrics} {...props} />;
 
-    return {
-      Component,
-      enabled: di.inject(metricsDetailsComponentEnabledInjectable, metricResourceType),
-      orderNumber: -1,
+    return <K extends KubeObject>(token: InjectionToken<KubeObjectDetailMetrics<K>, void>, metricResourceType: ClusterMetricsResourceType) => {
+      const metrics = computedInjectedMany(token);
+      const Component = (props: KubeObjectDetailsProps<K>) => <DetailsMetricsContainer<K> metrics={metrics} {...props} />;
+
+      return {
+        Component,
+        enabled: di.inject(metricsDetailsComponentEnabledInjectable, metricResourceType),
+        orderNumber: -1,
+      };
     };
   },
 });
