@@ -200,7 +200,7 @@
     "@ogre-tools/fp": "^15.3.1",
     "@ogre-tools/injectable": "^15.3.1",
     "@ogre-tools/injectable-extension-for-auto-registration": "^15.3.0",
-    "@ogre-tools/injectable-extension-for-mobx": "^15.6.1",
+    "@ogre-tools/injectable-extension-for-mobx": "^15.7.0",
     "@ogre-tools/injectable-react": "^15.3.0",
     "mobx": "^6.8.0",
     "rimraf": "^4.4.1"
