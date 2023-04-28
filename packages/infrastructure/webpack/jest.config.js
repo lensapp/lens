@@ -1,8 +1,5 @@
-const { configForNode } =
-  require("@k8slens/jest").monorepoPackageConfig(__dirname);
+const {
+  configForNode: { coverageThreshold, ...config },
+} = require("@k8slens/jest").monorepoPackageConfig(__dirname);
 
-module.exports = {
-  ...configForNode,
-
-  collectCoverageFrom: [...configForNode.collectCoverageFrom],
-};
+module.exports = config;
