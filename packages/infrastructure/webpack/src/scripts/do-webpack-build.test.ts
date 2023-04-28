@@ -2,7 +2,7 @@ import { getDi } from "./get-di";
 import { Exec, execInjectable } from "./exec.injectable";
 import asyncFn, { AsyncFnMock } from "@async-fn/jest";
 import { DoWebpackBuild, doWebpackBuildInjectable } from "./do-webpack-build";
-import { getPromiseStatus } from "@k8slens/test-utils";
+import { getPromiseStatus } from "@ogre-tools/test-utils";
 import { LogSuccess, logSuccessInjectable } from "./log-success.injectable";
 
 describe("do-webpack-build", () => {
