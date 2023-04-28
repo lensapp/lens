@@ -36,7 +36,8 @@
     "tailwindcss": "^3.3.2",
     "ts-loader": "^9.4.1",
     "webpack": "^5.81.0",
-    "webpack-cli": "^4.10.0"
+    "webpack-cli": "^4.10.0",
+    "@ogre-tools/linkable": "^15.8.0"
   },
   "peerDependencies": {
     "@ogre-tools/fp": "^15.8.0",
