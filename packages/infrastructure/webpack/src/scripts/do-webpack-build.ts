@@ -11,14 +11,20 @@ export const doWebpackBuildInjectable = getInjectable({
     const exec = di.inject(execInjectable);
     const logSuccess = di.inject(logSuccessInjectable);
 
-    return async () => {
-      const { stdout, stderr } = await exec("webpack");
+    const execWithResultHandling = async (command: string) => {
+      const { stdout, stderr } = await exec(command);
 
       if (stderr) {
         throw new Error(stderr);
       }
 
       logSuccess(stdout);
+    };
+
+    return async () => {
+      await execWithResultHandling("webpack");
+
+      await execWithResultHandling("linkable-push");
     };
   },
 });
