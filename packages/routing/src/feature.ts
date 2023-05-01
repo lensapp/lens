@@ -13,5 +13,4 @@ export const routingFeature = getFeature({
       ],
     });
   },
-
 });
