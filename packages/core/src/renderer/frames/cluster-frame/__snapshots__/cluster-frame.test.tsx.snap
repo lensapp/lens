@@ -15,7 +15,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
         <div
           class="drawer-title-text flex gaps align-center"
         >
-
+          
         </div>
         <i
           class="Icon material interactive focusable"
@@ -519,7 +519,7 @@ exports[`<ClusterFrame /> given cluster with list nodes and namespaces permissio
         <div
           class="drawer-title-text flex gaps align-center"
         >
-
+          
         </div>
         <i
           class="Icon material interactive focusable"
@@ -1030,7 +1030,7 @@ exports[`<ClusterFrame /> given cluster without list nodes, but with namespaces 
         <div
           class="drawer-title-text flex gaps align-center"
         >
-
+          
         </div>
         <i
           class="Icon material interactive focusable"
