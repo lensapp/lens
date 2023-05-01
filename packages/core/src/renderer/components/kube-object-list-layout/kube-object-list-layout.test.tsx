@@ -22,6 +22,7 @@ import hostedClusterInjectable from "../../cluster-frame-context/hosted-cluster.
 import type { PodStore } from "../workloads-pods/store";
 import { Cluster } from "../../../common/cluster/cluster";
 import isTableColumnHiddenInjectable from "../../../features/user-preferences/common/is-table-column-hidden.injectable";
+import { podListLayoutColumnInjectionToken } from "@k8slens/list-layout";
 
 describe("kube-object-list-layout", () => {
   let di: DiContainer;
@@ -71,6 +72,7 @@ describe("kube-object-list-layout", () => {
             renderTableContents={pod => [
               <div key={pod.getName()}>{pod.getName()}</div>,
             ]}
+            columns={di.injectMany(podListLayoutColumnInjectionToken)}
           />
         </div>
       ));
