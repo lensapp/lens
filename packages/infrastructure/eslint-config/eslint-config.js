@@ -16,8 +16,7 @@ module.exports = {
     "no-unsanitized"
   ],
   ignorePatterns: [
-    "dist/*",
-    "tailwind.config.js"
+    "dist/*"
   ],
   rules: {
     "react/react-in-jsx-scope": 0,
