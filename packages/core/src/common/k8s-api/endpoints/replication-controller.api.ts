@@ -25,17 +25,6 @@ export class ReplicationControllerApi extends KubeApi<ReplicationController> {
   }
 
   scale(params: NamespacedResourceDescriptor, replicas: number): Promise<Scale> {
-    return this.request.patch(this.getScaleApiUrl(params), {
-      data: {
-        metadata: params,
-        spec: {
-          replicas,
-        },
-      },
-    }, {
-      headers: {
-        "content-type": "application/strategic-merge-patch+json",
-      },
-    });
+    return this.scaleResource(params, { spec: { replicas }});
   }
 }

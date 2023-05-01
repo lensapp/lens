@@ -3,27 +3,9 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 
-import type {
-  KubeObjectMetadata,
-  KubeObjectStatus,
-  NamespaceScopedMetadata,
-  BaseKubeObjectCondition,
-} from "../api-types";
+import type { KubeObjectStatus, NamespaceScopedMetadata, BaseKubeObjectCondition } from "../api-types";
 import { KubeObject } from "../kube-object";
 import type { PodTemplateSpec } from "../types/pod-template-spec";
-
-export interface Scale {
-  apiVersion: "autoscaling/v1";
-  kind: "Scale";
-  metadata: KubeObjectMetadata;
-  spec: {
-    replicas: number;
-  };
-  status: {
-    replicas: number;
-    selector: string;
-  };
-}
 
 export interface ReplicationControllerSpec {
   /**

@@ -8,7 +8,7 @@
 import { merge } from "lodash";
 import { stringify } from "querystring";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
-import type { KubeObjectConstructor, KubeJsonApiDataFor, KubeObjectMetadata, KubeJsonApiData, KubeObject, KubeObjectScope } from "@k8slens/kube-object";
+import type { KubeObjectConstructor, KubeJsonApiDataFor, KubeObjectMetadata, KubeJsonApiData, KubeObject, KubeObjectScope, Scale } from "@k8slens/kube-object";
 import { isJsonApiData, isJsonApiDataList, isPartialJsonApiData, KubeStatus, isKubeStatusData } from "@k8slens/kube-object";
 import byline from "byline";
 import type { IKubeWatchEvent } from "./kube-watch-event";
@@ -22,6 +22,7 @@ import type { PartialDeep } from "type-fest";
 import type { Logger } from "../logger";
 import { matches } from "lodash/fp";
 import { makeObservable, observable } from "mobx";
+import type { ScaleCreateOptions } from "@k8slens/kube-object/src/types/scale";
 
 /**
  * The options used for creating a `KubeApi`
@@ -211,6 +212,10 @@ export interface ResourceDescriptor {
    * Note: if not provided and the resource kind is namespaced, then this defaults to `"default"`
    */
   namespace?: string;
+}
+
+export interface SubResourceDescriptor {
+  subResource: string;
 }
 
 export type SpecificResourceDescriptor<Scope extends KubeObjectScope> = {
@@ -590,6 +595,37 @@ export class KubeApi<
     }
 
     return parsed;
+  }
+
+  /**
+   * An internal method for requesting the `/scale` sub-resource if it exists
+   */
+  protected async getResourceScale(desc: ResourceDescriptor): Promise<Scale> {
+    await this.checkPreferredVersion();
+    const apiUrl = this.formatUrlForNotListing(desc);
+
+    const res = await this.request.get(`${apiUrl}/scale`);
+
+    return res as Scale;
+  }
+
+
+  /**
+   * An internal method for requesting the `/scale` sub-resource if it exists
+   */
+  protected async scaleResource(desc: ResourceDescriptor, data: ScaleCreateOptions): Promise<Scale> {
+    await this.checkPreferredVersion();
+    const apiUrl = this.formatUrlForNotListing(desc);
+
+    const res = await this.request.patch(`${apiUrl}/scale`, {
+      data: { ...data },
+    }, {
+      headers: {
+        "content-type": patchTypeHeaders.merge,
+      },
+    });
+
+    return res as Scale;
   }
 
   async patch(desc: ResourceDescriptor, data: PartialDeep<Object>): Promise<Object | null>;
