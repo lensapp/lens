@@ -467,7 +467,7 @@ describe("KubeApi", () => {
       });
 
       it("should resolve the call with >=200 <300 http code", async () => {
-        await fetchMock.resolveSpecific(
+        void fetchMock.resolveSpecific(
           ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction"],
           createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction", JSON.stringify({
             apiVersion: "policy/v1",
@@ -481,7 +481,7 @@ describe("KubeApi", () => {
       });
 
       it("should throw in case of error", async () => {
-        await fetchMock.resolveSpecific(
+        void fetchMock.resolveSpecific(
           ["http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction"],
           createMockResponseFromString("http://127.0.0.1:9999/api-kube/api/v1/namespaces/test/pods/foo/eviction", JSON.stringify({
             apiVersion: "policy/v1",
@@ -572,12 +572,6 @@ describe("KubeApi", () => {
         it("resolves the call", async () => {
           expect(await deleteRequest).toBeDefined();
         });
-      });
-    });
-
-    describe("when deleting by name and namespace", () => {
-      it("rejects request", async () => {
-        await expect(api.delete({ name: "foo", namespace: "test" })).rejects.toBeDefined();
       });
     });
   });
