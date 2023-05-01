@@ -3,11 +3,16 @@
  * Licensed under MIT License. See LICENSE in root directory for more information.
  */
 import { getInjectable, getInjectionToken } from "@ogre-tools/injectable";
-import { createObservableHistory, ObservableHistory } from "mobx-observable-history";
+import {
+  createObservableHistory,
+  ObservableHistory,
+} from "mobx-observable-history";
 import { searchParamsOptions } from "./search-params";
 import { historyInjectable } from "./history.injectable";
 
-export const observableHistoryInjectionToken = getInjectionToken<ObservableHistory<unknown>>({
+export const observableHistoryInjectionToken = getInjectionToken<
+  ObservableHistory<unknown>
+>({
   id: "observable-history-injection-token",
 });
 

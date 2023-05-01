@@ -15,7 +15,10 @@ module.exports = {
     "xss",
     "no-unsanitized"
   ],
-  ignorePatterns: ["dist/*"],
+  ignorePatterns: [
+    "dist/*",
+    "tailwind.config.js"
+  ],
   rules: {
     "react/react-in-jsx-scope": 0,
     "security/detect-object-injection": "off",
