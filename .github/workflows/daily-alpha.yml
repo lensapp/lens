@@ -22,7 +22,9 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create PR
-        run: npm run create-release-pr
+        run: |
+          git fetch
+          npm run create-release-pr
         env:
           BUMP_PACKAGE_ARGS: -- --conventional-commits --conventional-prerelease --yes
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
