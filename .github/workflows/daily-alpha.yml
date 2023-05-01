@@ -25,3 +25,4 @@ jobs:
         run: npm run create-release-pr
         env:
           BUMP_PACKAGE_ARGS: -- --conventional-commits --conventional-prerelease --yes
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
