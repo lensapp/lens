@@ -15,24 +15,13 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
     });
   }
 
-  protected getScaleApiUrl(params: NamespacedResourceDescriptor) {
-    return `${this.formatUrlForNotListing(params)}/scale`;
-  }
-
   async getReplicas(params: NamespacedResourceDescriptor): Promise<number> {
-    const { status } = await this.request.get(this.getScaleApiUrl(params));
+    const { status } = await this.getResourceScale(params);
 
-    return (status as { replicas: number })?.replicas;
+    return status.replicas;
   }
 
   scale(params: NamespacedResourceDescriptor, replicas: number) {
-    return this.request.put(this.getScaleApiUrl(params), {
-      data: {
-        metadata: params,
-        spec: {
-          replicas,
-        },
-      },
-    });
+    return this.scaleResource(params, { spec: { replicas }});
   }
 }

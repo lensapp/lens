@@ -17,23 +17,14 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
     });
   }
 
-  protected getScaleApiUrl(params: NamespacedResourceDescriptor) {
-    return `${this.formatUrlForNotListing(params)}/scale`;
-  }
-
   async getReplicas(params: NamespacedResourceDescriptor): Promise<number> {
-    const apiUrl = this.getScaleApiUrl(params);
-    const { status = 0 } = await this.request.get(apiUrl) as { status?: number };
+    const { status } = await this.getResourceScale(params);
 
-    return status;
+    return status.replicas;
   }
 
   scale(params: NamespacedResourceDescriptor, replicas: number) {
-    return this.patch(params, {
-      spec: {
-        replicas,
-      },
-    }, "merge");
+    return this.scaleResource(params, { spec: { replicas }});
   }
 
   restart(params: NamespacedResourceDescriptor) {

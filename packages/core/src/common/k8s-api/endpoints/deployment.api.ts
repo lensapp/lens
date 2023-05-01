@@ -8,7 +8,6 @@ import moment from "moment";
 import type { DerivedKubeApiOptions, KubeApiDependencies, NamespacedResourceDescriptor } from "../kube-api";
 import { KubeApi } from "../kube-api";
 import { Deployment } from "@k8slens/kube-object";
-import { hasTypedProperty, isNumber, isObject } from "@k8slens/utilities";
 
 export class DeploymentApi extends KubeApi<Deployment> {
   constructor(deps: KubeApiDependencies, opts?: DerivedKubeApiOptions) {
@@ -18,33 +17,14 @@ export class DeploymentApi extends KubeApi<Deployment> {
     });
   }
 
-  protected getScaleApiUrl(params: NamespacedResourceDescriptor) {
-    return `${this.formatUrlForNotListing(params)}/scale`;
-  }
-
   async getReplicas(params: NamespacedResourceDescriptor): Promise<number> {
-    const { status } = await this.request.get(this.getScaleApiUrl(params));
+    const { status } = await this.getResourceScale(params);
 
-    if (isObject(status) && hasTypedProperty(status, "replicas", isNumber)) {
-      return status.replicas;
-    }
-
-    return 0;
+    return status.replicas;
   }
 
   scale(params: NamespacedResourceDescriptor, replicas: number) {
-    return this.request.patch(this.getScaleApiUrl(params), {
-      data: {
-        spec: {
-          replicas,
-        },
-      },
-    },
-    {
-      headers: {
-        "content-type": "application/merge-patch+json",
-      },
-    });
+    return this.scaleResource(params, { spec: { replicas }});
   }
 
   restart(params: NamespacedResourceDescriptor) {
